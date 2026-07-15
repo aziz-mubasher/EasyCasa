@@ -88,11 +88,11 @@ git clone git@github.com:aziz-mubasher/EasyCasa.git .
 cp .env.example .env   # then edit .env with real secrets
 ```
 
-> **Traefik (shared VPS):** If ports 80/443 are already used by Traefik, `deploy.sh` auto-detects the `root_default` network and applies `infra/docker-compose.traefik.yml` instead of Caddy. Set `STAGING_DOMAIN=staging.easycasaita.com` in `.env` and point DNS at the VPS IP.
+> **Traefik (shared VPS):** If ports 80/443 are already used by Traefik, `deploy.sh` auto-detects the `root_default` network and applies `infra/docker-compose.traefik.yml` instead of Caddy. Set `STAGING_DOMAIN=easycasaita.com` in `.env` and point the apex (+ optional `www`) A records at the VPS IP.
 
 ## 7. First deploy
 ```bash
-# Set STAGING_DOMAIN in .env (e.g. staging.easycasaita.com)
+# Set STAGING_DOMAIN in .env (e.g. easycasaita.com)
 ./infra/deploy.sh
 ```
 Traefik issues TLS via the existing `mytlschallenge` resolver; Caddy is skipped automatically.

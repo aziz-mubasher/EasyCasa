@@ -5,7 +5,7 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 
 | Variable | Used by | Notes |
 |---|---|---|
-| STAGING_DOMAIN | Caddy / Traefik | Public hostname, e.g. `staging.easycasaita.com`. Use `localhost` for local dev with Caddy. |
+| STAGING_DOMAIN | Caddy / Traefik | Public hostname, e.g. `easycasaita.com`. Use `localhost` for local dev with Caddy. |
 | POSTGRES_USER / _PASSWORD / _DB | db, api | Database credentials. |
 | DATABASE_URL | api, migration | Full Postgres connection string. |
 | REDIS_URL | api | Cache / queues. |
