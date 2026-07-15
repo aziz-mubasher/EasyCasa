@@ -7,6 +7,7 @@ import { TaxonomyModule } from './taxonomy/taxonomy.module';
 import { UsersModule } from './users/users.module';
 import { MediaModule } from './media/media.module';
 import { AdminModule } from './admin/admin.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AdminModule } from './admin/admin.module';
     TaxonomyModule,
     MediaModule,
     AdminModule,
+    SearchModule,
   ],
   controllers: [HealthController],
 })

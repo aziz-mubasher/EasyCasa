@@ -5,15 +5,15 @@ Monorepo → Docker Compose → single VPS behind Traefik (or Caddy locally).
 
 ## What's here
 ```
-apps/web         Next.js (TypeScript) frontend — landing placeholder
-apps/api         NestJS (TypeScript) backend — /health
+apps/web         Next.js (TypeScript) — map-first search, i18n IT/EN/ES
+apps/api         NestJS (TypeScript) backend — listings, search, auth
 services/ai      FastAPI (Python) — /health
 packages/shared  Shared TS types + env schema (zod)
 migration        Phase 1 schema + WP ETL / geocode / media / redirects
 infra            docker-compose, Traefik overlay, Postgres(PostGIS+pgvector), deploy & backup
 .cursor/rules    Conventions Cursor reads automatically
 .github/workflows CI + deploy
-docs             phase-0.md, phase-1.md, schema.md, wp-audit.md, env.md, vps-setup.md
+docs             phase-0..3, schema.md, wp-audit.md, env.md, vps-setup.md
 ```
 
 ## Local quickstart
@@ -31,6 +31,13 @@ pnpm --filter @easycasa/migration migrate   # applies 0004 favorites/saved_searc
 pnpm --filter @easycasa/api start:dev
 # Swagger: http://localhost/api/docs (or :4000/docs)
 # Dev auth: DEV_AUTH=true + headers x-dev-user / x-dev-roles / x-dev-email
+```
+
+### Phase 3 — Frontend + Search
+See `docs/phase-3.md`.
+```bash
+pnpm --filter @easycasa/api search:backfill   # index listings into Meilisearch
+pnpm --filter @easycasa/web dev               # http://localhost:3000/it
 ```
 
 ### Python AI service (local tests)

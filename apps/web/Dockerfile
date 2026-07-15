@@ -3,6 +3,10 @@ FROM node:20-alpine AS build
 RUN corepack enable
 WORKDIR /repo
 ENV CI=true
+ARG NEXT_PUBLIC_API_URL=https://easycasaita.com/api
+ARG API_URL=http://api:4000
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV API_URL=$API_URL
 COPY . .
 RUN pnpm install --no-frozen-lockfile
 RUN pnpm --filter @easycasa/shared build
@@ -13,5 +17,7 @@ RUN corepack enable
 WORKDIR /repo
 COPY --from=build /repo /repo
 WORKDIR /repo/apps/web
+ENV API_URL=http://api:4000
+ENV NEXT_PUBLIC_API_URL=https://easycasaita.com/api
 EXPOSE 3000
 CMD ["pnpm", "start"]

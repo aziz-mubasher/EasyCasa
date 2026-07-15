@@ -1,0 +1,19 @@
+{
+  "brand": { "name": "EasyCasa", "tagline": "Compra, vendi e affitta senza commissioni d'agenzia." },
+  "nav": { "search": "Cerca", "add": "Pubblica annuncio", "favorites": "Preferiti", "signin": "Accedi" },
+  "home": {
+    "eyebrow": "Mercato immobiliare · Italia",
+    "title": "La casa, senza intermediari.",
+    "subtitle": "Cerca sulla mappa tra migliaia di immobili in tutte le regioni italiane. Zero commissioni.",
+    "cta": "Esplora la mappa"
+  },
+  "search": {
+    "title": "Cerca immobili",
+    "resultsCount": "{count} immobili",
+    "filters": { "all": "Tutti", "sale": "Vendita", "rent": "Affitto", "price": "Prezzo", "bedrooms": "Camere", "category": "Tipologia", "region": "Regione", "apply": "Applica", "clear": "Azzera" },
+    "empty": "Nessun immobile trovato. Allarga la ricerca o sposta la mappa."
+  },
+  "listing": { "perMonth": "/mese", "rooms": "locali", "baths": "bagni", "sqm": "m²", "contact": "Contatta", "save": "Salva", "saved": "Salvato" },
+  "add": { "title": "Pubblica il tuo immobile", "step": "Passo {n} di {total}", "next": "Avanti", "back": "Indietro", "publish": "Pubblica" },
+  "footer": { "rights": "Tutti i diritti riservati." }
+}

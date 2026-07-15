@@ -15,6 +15,10 @@ const Schema = z.object({
   OIDC_JWKS_URL: z.string().optional(),
   OIDC_ROLES_CLAIM: z.string().default('roles'),
 
+  // Search (Meilisearch)
+  MEILI_URL: z.string().default('http://meilisearch:7700'),
+  MEILI_MASTER_KEY: z.string().default('change_me_meili_key'),
+
   // Object storage (MinIO / S3)
   S3_ENDPOINT: z.string().default('http://minio:9000'),
   S3_REGION: z.string().default('us-east-1'),

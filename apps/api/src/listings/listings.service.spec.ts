@@ -2,6 +2,15 @@ import { describe, it, expect, vi } from 'vitest';
 import { ListingsService } from './listings.service';
 import type { ListingsRepository } from './listings.repository';
 import type { AuthUser } from '../auth/auth.types';
+import type { SearchService } from '../search/search.service';
+
+const searchMock = {
+  indexListing: vi.fn(),
+  remove: vi.fn(),
+  indexBatch: vi.fn(),
+  ensureSettings: vi.fn(),
+  search: vi.fn(),
+} as unknown as SearchService;
 
 const makeRepo = (over: Partial<ListingsRepository> = {}) =>
   ({
@@ -18,7 +27,7 @@ describe('ListingsService', () => {
   it('creates a draft with a slug and syncs location when coords present', async () => {
     const insert = vi.fn().mockResolvedValue({ id: 'l1' });
     const syncLocation = vi.fn().mockResolvedValue(undefined);
-    const svc = new ListingsService(makeRepo({ insert, syncLocation }));
+    const svc = new ListingsService(makeRepo({ insert, syncLocation }), searchMock);
 
     await svc.create(
       { title: 'Nice Flat', latitude: 45.5, longitude: 9.2 } as never,
@@ -35,7 +44,7 @@ describe('ListingsService', () => {
 
   it('blocks updating a listing you do not own (non-admin)', async () => {
     const findById = vi.fn().mockResolvedValue({ id: 'l1', agentId: 'someone-else' });
-    const svc = new ListingsService(makeRepo({ findById }));
+    const svc = new ListingsService(makeRepo({ findById }), searchMock);
     const user: AuthUser = { sub: 'u', roles: ['seller'] };
 
     await expect(svc.update('l1', { title: 'x' }, user, 'me')).rejects.toThrow('not your listing');
@@ -44,7 +53,7 @@ describe('ListingsService', () => {
   it('allows admin to update any listing', async () => {
     const findById = vi.fn().mockResolvedValue({ id: 'l1', agentId: 'someone-else' });
     const update = vi.fn().mockResolvedValue({ id: 'l1' });
-    const svc = new ListingsService(makeRepo({ findById, update }));
+    const svc = new ListingsService(makeRepo({ findById, update }), searchMock);
     const admin: AuthUser = { sub: 'a', roles: ['admin'] };
 
     const res = await svc.update('l1', { title: 'x' }, admin, 'me');

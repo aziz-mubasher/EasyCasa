@@ -7,7 +7,8 @@
     "start": "node dist/main.js",
     "start:dev": "ts-node-dev --respawn src/main.ts",
     "typecheck": "tsc --noEmit",
-    "test": "DATABASE_URL=postgresql://easycasa:change_me@localhost:5432/easycasa DEV_AUTH=true vitest run"
+    "test": "DATABASE_URL=postgresql://easycasa:change_me@localhost:5432/easycasa DEV_AUTH=true MEILI_URL=http://127.0.0.1:7700 MEILI_MASTER_KEY=test vitest run",
+    "search:backfill": "tsx src/search/backfill.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.670.0",
@@ -21,6 +22,7 @@
     "class-validator": "^0.14.1",
     "drizzle-orm": "^0.36.0",
     "jose": "^5.9.4",
+    "meilisearch": "^0.44.1",
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
@@ -30,6 +32,7 @@
     "@types/node": "^22.7.5",
     "@types/pg": "^8.11.10",
     "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.1",
     "typescript": "^5.6.3",
     "vitest": "^2.1.3"
   }

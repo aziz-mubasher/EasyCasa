@@ -33,3 +33,10 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | DEV_AUTH | api | `true` trusts `x-dev-user` / `x-dev-roles` / `x-dev-email` headers (local/dev). |
 | OIDC_ISSUER / OIDC_AUDIENCE / OIDC_JWKS_URL | api | Real Keycloak (or other OIDC) settings. |
 | OIDC_ROLES_CLAIM | api | Dot path to roles in JWT (default `realm_access.roles`). |
+
+## Phase 3 — web / search
+| Variable | Used by | Notes |
+|---|---|---|
+| API_URL | web (server) | Internal API base for server components (e.g. `http://api:4000`). |
+| NEXT_PUBLIC_API_URL | web (browser) | Public API base behind Traefik/Caddy (e.g. `https://easycasaita.com/api`). |
+| MEILI_URL / MEILI_MASTER_KEY | api | Meilisearch host + key (Phase 0 compose). |

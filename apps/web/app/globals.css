@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #16233b;      /* deep navy ink — brand + text */
+  --paper: #f5f4ef;    /* warm paper */
+  --azure: #1e5ae0;    /* majolica azure — actions, links */
+  --pine: #1f6f5c;     /* pine — rentals / success */
+  --sand: #e7dfcf;     /* muted panels */
+  --clay: #c4553b;     /* alerts only */
+  --line: #d9d5cc;     /* hairlines */
+  --muted: #6b6659;    /* secondary text */
+}
+
+html, body { background: var(--paper); color: var(--ink); }
+body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+
+/* Cadastral coordinate eyebrow: small mono label */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted);
+}
+/* measurements always in mono — reads like survey data */
+.data { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

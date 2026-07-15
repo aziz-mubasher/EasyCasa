@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ListingsRepository } from './listings.repository';
+import { SearchService } from '../search/search.service';
 import type { CreateListingDto } from './dto/create-listing.dto';
 import type { UpdateListingDto } from './dto/update-listing.dto';
 import type { QueryListingDto } from './dto/query-listing.dto';
@@ -12,7 +13,10 @@ function slugify(title: string): string {
 
 @Injectable()
 export class ListingsService {
-  constructor(private readonly repo: ListingsRepository) {}
+  constructor(
+    private readonly repo: ListingsRepository,
+    private readonly searchIndex: SearchService,
+  ) {}
 
   search(q: QueryListingDto) {
     return this.repo.search(q);
@@ -85,6 +89,30 @@ export class ListingsService {
     if (!user.roles.includes('admin') && existing.agentId !== ownerId) {
       throw new ForbiddenException('not your listing');
     }
-    return this.repo.update(id, { status: 'published', publishedAt: new Date() });
+    const published = await this.repo.update(id, { status: 'published', publishedAt: new Date() });
+    if (published) {
+      await this.searchIndex.indexListing({
+        id: published.id,
+        slug: published.slug ?? published.id,
+        title: published.title,
+        description: published.description,
+        city: published.city,
+        regionSlug: null,
+        categorySlug: null,
+        transactionType: published.transactionType,
+        price: published.price == null ? null : Number(published.price),
+        bedrooms: published.bedrooms,
+        bathrooms: published.bathrooms,
+        sizeSqm: published.sizeSqm == null ? null : Number(published.sizeSqm),
+        coverUrl: null,
+        status: 'published',
+        _geo:
+          published.latitude != null && published.longitude != null
+            ? { lat: published.latitude, lng: published.longitude }
+            : undefined,
+        publishedAt: published.publishedAt ? published.publishedAt.getTime() : Date.now(),
+      });
+    }
+    return published;
   }
 }

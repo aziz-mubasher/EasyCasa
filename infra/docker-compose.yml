@@ -60,12 +60,17 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      meilisearch:
+        condition: service_started
     networks: [internal]
 
   web:
     build:
       context: ..
       dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://easycasaita.com/api}
+        API_URL: ${API_URL:-http://api:4000}
     restart: unless-stopped
     env_file: ../.env
     depends_on:
