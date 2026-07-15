@@ -15,3 +15,8 @@ caddy_data/
 caddy_config/
 *.log
 .DS_Store
+migration/out/*.csv
+migration/out/*.md
+migration/out/*.caddy
+*.sql.gz
+wp-dump.sql

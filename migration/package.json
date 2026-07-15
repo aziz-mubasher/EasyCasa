@@ -1,0 +1,31 @@
+{
+  "name": "@easycasa/migration",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "migrate": "tsx src/migrate.ts",
+    "etl": "tsx src/etl/run.ts",
+    "geocode": "tsx src/geocode.ts",
+    "media": "tsx src/media.ts",
+    "reconcile": "tsx src/reconcile.ts",
+    "redirects": "tsx src/redirects.ts",
+    "all": "pnpm migrate && pnpm etl && pnpm geocode && pnpm media && pnpm reconcile && pnpm redirects",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.670.0",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.11.3",
+    "p-limit": "^6.1.0",
+    "pg": "^8.13.0",
+    "sharp": "^0.33.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}

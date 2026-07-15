@@ -1,7 +1,7 @@
-# EasyCasa — Phase 0 Skeleton
+# EasyCasa
 
 Foundation for re-platforming easycasaita.com into a modern PropTech app.
-Monorepo → Docker Compose → single VPS behind Caddy. Code agent: Cursor.
+Monorepo → Docker Compose → single VPS behind Traefik (or Caddy locally).
 
 ## What's here
 ```
@@ -9,16 +9,12 @@ apps/web         Next.js (TypeScript) frontend — landing placeholder
 apps/api         NestJS (TypeScript) backend — /health
 services/ai      FastAPI (Python) — /health
 packages/shared  Shared TS types + env schema (zod)
-infra            docker-compose, Caddy, Postgres(PostGIS+pgvector), deploy & backup scripts
+migration        Phase 1 schema + WP ETL / geocode / media / redirects
+infra            docker-compose, Traefik overlay, Postgres(PostGIS+pgvector), deploy & backup
 .cursor/rules    Conventions Cursor reads automatically
-.github/workflows CI (lint/typecheck/test/build + pytest) and staging deploy
-docs             env.md, vps-setup.md, phase-0.md (start here)
+.github/workflows CI + deploy
+docs             phase-0.md, phase-1.md, schema.md, wp-audit.md, env.md, vps-setup.md
 ```
-
-## Data layer (VPS-optimised)
-- **PostgreSQL + PostGIS + pgvector** — one database for relational + geo + embeddings.
-- **Meilisearch** — lightweight faceted search (no JVM).
-- **Redis**, **MinIO** (S3-compatible), all self-hosted via Compose.
 
 ## Local quickstart
 ```bash
@@ -28,24 +24,28 @@ cp .env.example .env
 docker compose -f infra/docker-compose.yml --env-file .env --profile caddy up -d --build
 ```
 
+### Phase 1 — schema & WordPress migration
+See `docs/phase-1.md` and `docs/wp-audit.md`.
+```bash
+# After Postgres is up (and WP MySQL available — live RO or local dump via docker-compose.migration.yml):
+pnpm --filter @easycasa/migration migrate
+pnpm --filter @easycasa/migration etl
+pnpm --filter @easycasa/migration geocode
+pnpm --filter @easycasa/migration media
+pnpm --filter @easycasa/migration reconcile
+pnpm --filter @easycasa/migration redirects
+```
+
 ### Python AI service (local tests)
-Requires Python 3.12+ (CI uses 3.12; 3.14 works with current deps).
 ```bash
 cd services/ai
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
 pytest   # from repo root: pytest services/ai
 ```
-- Web: http://localhost
-- API: http://localhost/api/health
-- AI:  http://localhost/ai/health
 
-## Deploy to the VPS
-See `docs/vps-setup.md` (harden the box, install Docker, clone, `./infra/deploy.sh`).
-CI deploys to staging on merge to `main` (set repo secrets: `STAGING_HOST`, `STAGING_USER`, `STAGING_SSH_KEY`).
+## Deploy
+See `docs/vps-setup.md`. On the shared Hostinger VPS, Traefik routes `easycasaita.com` (Caddy is skipped automatically).
 
-## Definition of Done (every change)
+## Definition of Done
 Spec in `/docs` → `pnpm lint && pnpm typecheck && pnpm test` pass → verified on staging → human-reviewed → no secrets in git.
-
-## Next
-Work through `docs/phase-0.md`, then move to Phase 1 (data backbone & WordPress migration).

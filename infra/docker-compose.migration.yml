@@ -1,0 +1,20 @@
+# Optional: local MySQL to load a WordPress dump for testing the ETL offline.
+#   docker compose -f infra/docker-compose.yml -f infra/docker-compose.migration.yml --env-file .env up -d wp-mysql
+#   docker exec -i easycasa-wp-mysql-1 mysql -uroot -p"$WP_DB_PASSWORD" wordpress < wp-dump.sql
+services:
+  wp-mysql:
+    image: mysql:8.0
+    container_name: easycasa-wp-mysql-1
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${WP_DB_PASSWORD}
+      MYSQL_DATABASE: ${WP_DB_NAME}
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    ports:
+      - "3306:3306"
+    volumes:
+      - wp_mysql_data:/var/lib/mysql
+    networks: [internal]
+
+volumes:
+  wp_mysql_data:

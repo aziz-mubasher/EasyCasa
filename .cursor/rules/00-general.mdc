@@ -12,7 +12,8 @@ You are working in a pnpm monorepo that deploys to a single VPS via Docker Compo
 - `/apps/api` — NestJS (TypeScript) backend
 - `/services/ai` — Python FastAPI service (embeddings, valuation)
 - `/packages/shared` — shared TypeScript types/config
-- `/infra` — docker-compose, Caddy, deploy & backup scripts
+- `/migration` — Phase 1 schema SQL + WordPress ETL tooling
+- `/infra` — docker-compose, Caddy/Traefik, deploy & backup scripts
 - `/docs` — specs. Read the relevant `/docs/<feature>.md` BEFORE writing code.
 
 ## Workflow

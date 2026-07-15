@@ -14,3 +14,15 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | API_PORT / WEB_PORT / AI_PORT | apps | Internal ports. |
 | NODE_ENV | apps | `production` on the VPS. |
 | RESTIC_REPOSITORY / RESTIC_PASSWORD | backup.sh | Optional offsite backups. |
+
+## Phase 1 — migration variables
+| Variable | Used by | Notes |
+|---|---|---|
+| WP_DB_HOST / _PORT / _USER / _PASSWORD / _NAME | migration | WordPress MySQL (read-only). |
+| WP_TABLE_PREFIX | migration | Usually `wp_`. |
+| WP_LISTING_POST_TYPE | migration | Custom post type of listings (from wp-audit). |
+| WP_PERMALINK_BASE | migration | Old permalink base for redirect map. |
+| WP_UPLOADS_BASE_URL | migration | Base URL of WP media. |
+| GEOCODER / NOMINATIM_URL / GEOCODER_USER_AGENT | migration | Geocoding provider + polite UA. |
+| MEDIA_PUBLIC_BASE | migration | Public CDN base for migrated media. |
+| S3_REGION | migration | MinIO region (any value; path-style). |
