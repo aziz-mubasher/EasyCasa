@@ -18,7 +18,7 @@ Goal: a skeleton that builds, runs locally, and deploys to the VPS before any fe
 ```bash
 pnpm install
 cp .env.example .env
-docker compose -f infra/docker-compose.yml --env-file .env up -d --build
+docker compose -f infra/docker-compose.yml --env-file .env --profile caddy up -d --build
 # web:  http://localhost
 # api:  http://localhost/api/health
 # ai:   http://localhost/ai/health

@@ -81,6 +81,7 @@ services:
     networks: [internal]
 
   caddy:
+    profiles: ["caddy"]
     image: caddy:2-alpine
     restart: unless-stopped
     ports:

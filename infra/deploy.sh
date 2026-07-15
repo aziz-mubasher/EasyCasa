@@ -11,6 +11,14 @@ if [ ! -f .env ]; then
 fi
 
 COMPOSE="docker compose -f infra/docker-compose.yml --env-file .env"
+EDGE="caddy"
+if docker network inspect root_default >/dev/null 2>&1; then
+  echo "==> Traefik network detected — using docker-compose.traefik.yml (no Caddy)"
+  COMPOSE="$COMPOSE -f infra/docker-compose.traefik.yml"
+  EDGE="traefik"
+else
+  COMPOSE="$COMPOSE --profile caddy"
+fi
 
 echo "==> Building images"
 $COMPOSE build
@@ -26,5 +34,11 @@ sleep 8
 
 echo "==> Health checks"
 $COMPOSE exec -T api node -e "fetch('http://localhost:4000/health').then(r=>r.json()).then(j=>{console.log('api',j.status)}).catch(e=>{console.error(e);process.exit(1)})" || echo "api check skipped"
-curl -fsS "http://localhost/api/health" && echo "" || echo "edge check pending TLS/DNS"
+if [ "$EDGE" = "traefik" ]; then
+  # shellcheck disable=SC1091
+  set -a; . ./.env; set +a
+  curl -fsS "https://${STAGING_DOMAIN}/api/health" && echo "" || echo "edge check pending TLS/DNS"
+else
+  curl -fsS "http://localhost/api/health" && echo "" || echo "edge check pending TLS/DNS"
+fi
 echo "==> Deploy complete"

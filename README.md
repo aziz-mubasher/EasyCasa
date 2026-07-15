@@ -25,7 +25,7 @@ docs             env.md, vps-setup.md, phase-0.md (start here)
 corepack enable
 pnpm install
 cp .env.example .env
-docker compose -f infra/docker-compose.yml --env-file .env up -d --build
+docker compose -f infra/docker-compose.yml --env-file .env --profile caddy up -d --build
 ```
 
 ### Python AI service (local tests)

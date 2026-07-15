@@ -1,5 +1,39 @@
 # VPS Setup & Hardening (Phase 0, Step 1)
 
+Run on your **Hostinger VPS** (not on your Mac). Cloning to `/opt/easycasa` on a local machine will fail with `Permission denied`.
+
+## Find your VPS (Hostinger CLI)
+
+Install the CLI (macOS):
+
+```bash
+curl -sL https://github.com/hostinger/api-cli/releases/download/v3.5.0/hostinger-3.5.0-darwin-arm64.tar.gz \
+  | tar -xz -C ~/.local/bin hostinger
+export PATH="$HOME/.local/bin:$PATH"
+# Token: hPanel → Profile → API, or reuse HOSTINGER_API_TOKEN
+hostinger vps virtual-machines list
+```
+
+SSH as root (replace with your VPS IP from the list above):
+
+```bash
+ssh root@<VPS_IP>
+```
+
+## Clone the repo (on the VPS)
+
+The GitHub repo is **private**, so `git clone https://...` on the VPS will fail unless you add a deploy key.
+Options:
+
+1. **Deploy key (recommended for CI/deploy)** — generate on the VPS, add the public key in GitHub → repo → Settings → Deploy keys.
+2. **Rsync from your Mac** (one-time bootstrap):
+
+```bash
+rsync -avz --exclude node_modules --exclude .next --exclude dist --exclude services/ai/.venv \
+  "/path/to/Easy Casa Platform/" root@<VPS_IP>:/opt/easycasa/
+ssh root@<VPS_IP> 'cd /opt/easycasa && cp .env.example .env && chmod +x infra/deploy.sh infra/backup.sh'
+```
+
 Run as root on a fresh Ubuntu 22.04/24.04 VPS. Do prod and staging on separate nodes.
 
 ## 1. Create a deploy user
@@ -50,15 +84,18 @@ usermod -aG docker deploy
 sudo mkdir -p /opt/easycasa && sudo chown deploy:deploy /opt/easycasa
 su - deploy
 cd /opt/easycasa
-git clone <YOUR_REPO_URL> .
+git clone git@github.com:aziz-mubasher/EasyCasa.git .
 cp .env.example .env   # then edit .env with real secrets
 ```
 
+> **Traefik (shared VPS):** If ports 80/443 are already used by Traefik, `deploy.sh` auto-detects the `root_default` network and applies `infra/docker-compose.traefik.yml` instead of Caddy. Set `STAGING_DOMAIN=staging.easycasaita.com` in `.env` and point DNS at the VPS IP.
+
 ## 7. First deploy
 ```bash
+# Set STAGING_DOMAIN in .env (e.g. staging.easycasaita.com)
 ./infra/deploy.sh
 ```
-Point your staging DNS A-record at the VPS IP; Caddy will provision TLS automatically.
+Traefik issues TLS via the existing `mytlschallenge` resolver; Caddy is skipped automatically.
 
 ## 8. Schedule backups
 ```bash
