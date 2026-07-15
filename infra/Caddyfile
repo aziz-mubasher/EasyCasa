@@ -1,0 +1,19 @@
+# Automatic HTTPS on the VPS. Use "localhost" locally.
+{$STAGING_DOMAIN:localhost} {
+	encode gzip zstd
+
+	# API — strip /api then proxy to the NestJS container
+	handle_path /api/* {
+		reverse_proxy api:4000
+	}
+
+	# AI service — strip /ai then proxy to FastAPI
+	handle_path /ai/* {
+		reverse_proxy ai:8000
+	}
+
+	# Everything else -> Next.js
+	handle {
+		reverse_proxy web:3000
+	}
+}

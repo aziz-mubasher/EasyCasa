@@ -1,0 +1,11 @@
+---
+description: NestJS API conventions
+globs: apps/api/**
+---
+
+# API (NestJS) Rules
+- Feature-module structure: `src/<feature>/` with controller, service, dto, entity.
+- Validate all input with DTOs (class-validator) once wired in Phase 2.
+- Controllers stay thin; business logic lives in services.
+- Every module ships unit tests (Vitest). A route is not done without a test.
+- Return typed responses; share cross-boundary types via `@easycasa/shared`.

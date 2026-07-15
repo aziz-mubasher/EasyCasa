@@ -1,0 +1,11 @@
+---
+description: Next.js web conventions
+globs: apps/web/**
+---
+
+# Web (Next.js) Rules
+- App Router + Server Components by default; Client Components only when needed.
+- Tailwind for styling; use design tokens/components, no ad-hoc inline styles.
+- All user-facing strings go through i18n (EN/IT/ES) — no hardcoded copy.
+- Fetch data through the typed API client; never call the DB directly.
+- Keep components small and accessible (labels, roles, keyboard support).

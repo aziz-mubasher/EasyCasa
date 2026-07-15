@@ -1,0 +1,11 @@
+---
+description: Python AI service conventions
+globs: services/ai/**
+---
+
+# AI Service (FastAPI) Rules
+- Keep it small: embeddings, valuation, and assistant endpoints only.
+- Type hints everywhere; pydantic models for request/response.
+- Never call external LLM/embedding APIs without a timeout and error handling.
+- Ground the assistant in real catalogue data (RAG) — never invent listings.
+- Tests with pytest; every endpoint has at least a health/contract test.

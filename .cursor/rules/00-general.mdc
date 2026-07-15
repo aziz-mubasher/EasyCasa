@@ -1,0 +1,31 @@
+---
+description: EasyCasa global engineering conventions
+alwaysApply: true
+---
+
+# EasyCasa — Global Rules
+
+You are working in a pnpm monorepo that deploys to a single VPS via Docker Compose + Caddy.
+
+## Structure
+- `/apps/web` — Next.js (TypeScript) frontend
+- `/apps/api` — NestJS (TypeScript) backend
+- `/services/ai` — Python FastAPI service (embeddings, valuation)
+- `/packages/shared` — shared TypeScript types/config
+- `/infra` — docker-compose, Caddy, deploy & backup scripts
+- `/docs` — specs. Read the relevant `/docs/<feature>.md` BEFORE writing code.
+
+## Workflow
+- One feature = one spec in `/docs` = one focused PR.
+- Before finishing ANY task, run and pass: `pnpm lint`, `pnpm typecheck`, `pnpm test`.
+- Keep changes small and scoped to the task. Do not refactor unrelated code.
+
+## Guardrails
+- NEVER commit secrets. Real values live only in `.env` (git-ignored). Update `.env.example` and `/docs/env.md` when adding a variable.
+- NEVER edit `/infra` deploy/secret handling without being explicitly asked.
+- TypeScript is strict. No `any` unless justified with a comment.
+- Prefer shared types from `@easycasa/shared` over duplicating shapes.
+
+## Style
+- Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`...).
+- Small pure functions; explicit error handling; no silent catches.

@@ -1,0 +1,17 @@
+node_modules/
+**/._*
+dist/
+.next/
+out/
+*.tsbuildinfo
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+!.env.example
+backups/
+caddy_data/
+caddy_config/
+*.log
+.DS_Store
