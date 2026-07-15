@@ -2,6 +2,7 @@
 FROM node:20-alpine AS build
 RUN corepack enable
 WORKDIR /repo
+ENV CI=true
 COPY . .
 RUN pnpm install --no-frozen-lockfile
 RUN pnpm --filter @easycasa/shared build

@@ -24,16 +24,13 @@ cp .env.example .env
 docker compose -f infra/docker-compose.yml --env-file .env --profile caddy up -d --build
 ```
 
-### Phase 1 — schema & WordPress migration
-See `docs/phase-1.md` and `docs/wp-audit.md`.
+### Phase 2 — Core API
+See `docs/phase-2.md` and `docs/api.md`.
 ```bash
-# After Postgres is up (and WP MySQL available — live RO or local dump via docker-compose.migration.yml):
-pnpm --filter @easycasa/migration migrate
-pnpm --filter @easycasa/migration etl
-pnpm --filter @easycasa/migration geocode
-pnpm --filter @easycasa/migration media
-pnpm --filter @easycasa/migration reconcile
-pnpm --filter @easycasa/migration redirects
+pnpm --filter @easycasa/migration migrate   # applies 0004 favorites/saved_searches
+pnpm --filter @easycasa/api start:dev
+# Swagger: http://localhost/api/docs (or :4000/docs)
+# Dev auth: DEV_AUTH=true + headers x-dev-user / x-dev-roles / x-dev-email
 ```
 
 ### Python AI service (local tests)

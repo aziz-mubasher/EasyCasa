@@ -25,4 +25,11 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WP_UPLOADS_BASE_URL | migration | Base URL of WP media. |
 | GEOCODER / NOMINATIM_URL / GEOCODER_USER_AGENT | migration | Geocoding provider + polite UA. |
 | MEDIA_PUBLIC_BASE | migration | Public CDN base for migrated media. |
-| S3_REGION | migration | MinIO region (any value; path-style). |
+| S3_REGION | migration / api | MinIO region (any value; path-style). |
+
+## Phase 2 — auth
+| Variable | Used by | Notes |
+|---|---|---|
+| DEV_AUTH | api | `true` trusts `x-dev-user` / `x-dev-roles` / `x-dev-email` headers (local/dev). |
+| OIDC_ISSUER / OIDC_AUDIENCE / OIDC_JWKS_URL | api | Real Keycloak (or other OIDC) settings. |
+| OIDC_ROLES_CLAIM | api | Dot path to roles in JWT (default `realm_access.roles`). |
