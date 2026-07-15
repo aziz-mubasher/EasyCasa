@@ -25,6 +25,7 @@ export interface ListingRow {
   latitude: number | null;
   longitude: number | null;
   qr_code_url: string | null;
+  attributes: Record<string, unknown>;
   wp_author_id: number;
   published_at: string | null;
 }
@@ -39,6 +40,21 @@ const int = (v?: string): number | null => {
   return n == null ? null : Math.round(n);
 };
 const str = (v?: string): string | null => (v && v.trim() ? v.trim() : null);
+
+/** Pull image URLs out of PremiumPress PHP-serialized `image_array` blobs. */
+export function extractGalleryUrls(serialized?: string): { url: string; ord: number }[] {
+  if (!serialized) return [];
+  const found = serialized.match(/https?:\/\/[^\s"']+\.(?:jpe?g|png|webp)/gi) ?? [];
+  const seen = new Set<string>();
+  const out: { url: string; ord: number }[] = [];
+  for (const raw of found) {
+    const url = raw.replace(/\\/g, '');
+    if (seen.has(url)) continue;
+    seen.add(url);
+    out.push({ url, ord: out.length });
+  }
+  return out;
+}
 
 function mapStatus(wp: string): ListingRow['status'] {
   if (wp === 'publish') return 'published';
@@ -71,6 +87,11 @@ export function transformListing(post: RawPost, meta: MetaBag): ListingRow {
     latitude: num(meta[META.latitude]),
     longitude: num(meta[META.longitude]),
     qr_code_url: str(meta[META.qrCode]),
+    attributes: {
+      gallery: extractGalleryUrls(meta[META.gallery]),
+      phone: str(meta.phone),
+      map_country: str(meta['map-country']),
+    },
     wp_author_id: post.post_author,
     published_at: post.post_date_gmt ? `${post.post_date_gmt}Z` : null,
   };

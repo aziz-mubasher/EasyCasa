@@ -4,11 +4,25 @@ The ETL maps plugin-specific data. These values differ by real-estate plugin,
 so discover them against the real database and update `migration/src/etl/meta-map.ts`
 and `WP_LISTING_POST_TYPE` / `WP_PERMALINK_BASE` in `.env`.
 
+## easycasaita.com (audited Jul 2026)
+
+| Setting | Value |
+|---|---|
+| `WP_LISTING_POST_TYPE` | `listing_type` (18 listings) |
+| Permalink | `/%postname%/` → keep `WP_PERMALINK_BASE` empty |
+| Price / size / lat / lng | `price`, `size`, `map-lat`, `map-log` |
+| Address / city | `map-location`, `map-city` |
+| Gallery | `image_array` (PHP serialized) |
+| Region taxonomy | `regions` / `country` |
+| Features taxonomy | `features`, `beds`, `baths`, `parking`, … |
+
+`meta-map.ts` already reflects this audit. Re-run the queries below if the WP schema changes.
+
 ## 1. Find the listing post type
 ```sql
 SELECT post_type, COUNT(*) FROM wp_posts GROUP BY post_type ORDER BY 2 DESC;
 ```
-Set `WP_LISTING_POST_TYPE` to the custom type (e.g. `estate_property`, `property`, `houzez_property`).
+Set `WP_LISTING_POST_TYPE` to the custom type (e.g. `listing_type`, `estate_property`).
 
 ## 2. Discover the meta keys used by listings
 ```sql
@@ -44,6 +58,6 @@ Check **Settings → Permalinks** (or `wp_options.permalink_structure`) and set
 ## 6. Gallery storage
 Find how images are stored (serialized IDs, JSON, or attachment children):
 ```sql
-SELECT meta_value FROM wp_postmeta WHERE post_id=<id> AND meta_key='<gallery_key>';
+SELECT meta_value FROM wp_postmeta WHERE post_id=<id> AND meta_key='image_array';
 ```
 Adjust `pendingMedia()` in `migration/src/media.ts` accordingly.
