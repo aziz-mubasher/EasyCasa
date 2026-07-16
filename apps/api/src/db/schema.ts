@@ -67,6 +67,7 @@ export const listings = pgTable('listings', {
   latitude: doublePrecision('latitude'),
   longitude: doublePrecision('longitude'),
   qrCodeUrl: text('qr_code_url'),
+  featuredUntil: timestamp('featured_until', { withTimezone: true }),
   source: text('source').notNull().default('native'),
   publishedAt: timestamp('published_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -106,7 +107,106 @@ export const savedSearches = pgTable('saved_searches', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+
+// ---------------- Phase 5 ----------------
+export const plans = pgTable('plans', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  key: text('key').notNull(),
+  name: text('name').notNull(),
+  stripePriceId: text('stripe_price_id'),
+  priceCents: integer('price_cents').notNull().default(0),
+  currency: text('currency').notNull().default('EUR'),
+  interval: text('interval').notNull().default('month'),
+  features: jsonb('features'),
+});
+
+export const memberships = pgTable('memberships', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id'),
+  tier: text('tier').notNull(),
+  status: text('status').notNull().default('active'),
+  planId: uuid('plan_id'),
+  stripeCustomerId: text('stripe_customer_id'),
+  stripeSubscriptionId: text('stripe_subscription_id'),
+  currentPeriodEnd: timestamp('current_period_end', { withTimezone: true }),
+  vatId: text('vat_id'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const featuredPlacements = pgTable('featured_placements', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id').notNull(),
+  kind: text('kind').notNull().default('featured'),
+  startsAt: timestamp('starts_at', { withTimezone: true }).notNull().defaultNow(),
+  endsAt: timestamp('ends_at', { withTimezone: true }).notNull(),
+  stripePaymentId: text('stripe_payment_id'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const conversations = pgTable('conversations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id'),
+  buyerId: uuid('buyer_id').notNull(),
+  agentId: uuid('agent_id'),
+  lastMessageAt: timestamp('last_message_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const messages = pgTable('messages', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  conversationId: uuid('conversation_id').notNull(),
+  senderId: uuid('sender_id').notNull(),
+  body: text('body').notNull(),
+  readAt: timestamp('read_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const notifications = pgTable('notifications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull(),
+  type: text('type').notNull(),
+  channel: text('channel').notNull().default('in_app'),
+  payload: jsonb('payload'),
+  status: text('status').notNull().default('pending'),
+  readAt: timestamp('read_at', { withTimezone: true }),
+  sentAt: timestamp('sent_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const partnerProfiles = pgTable('partner_profiles', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull(),
+  company: text('company'),
+  tier: text('tier').notNull().default('partner'),
+  regions: text('regions').array(),
+  payoutRef: text('payout_ref'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const leads = pgTable('leads', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id'),
+  buyerId: uuid('buyer_id'),
+  partnerId: uuid('partner_id'),
+  status: text('status').notNull().default('new'),
+  score: integer('score').notNull().default(0),
+  source: text('source'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const payouts = pgTable('payouts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  partnerId: uuid('partner_id').notNull(),
+  amountCents: integer('amount_cents').notNull(),
+  currency: text('currency').notNull().default('EUR'),
+  period: text('period').notNull(),
+  status: text('status').notNull().default('pending'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches,
+  plans, memberships, featuredPlacements, conversations, messages, notifications,
+  partnerProfiles, leads, payouts,
 };
 export type Schema = typeof schema;

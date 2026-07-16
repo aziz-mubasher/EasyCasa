@@ -46,8 +46,14 @@ def run_once(window_minutes: int = 60) -> int:
         q = query if isinstance(query, dict) else json.loads(query or "{}")
         count = _matches_since(q, since)
         if count > 0:
-            # TODO(Phase 5): enqueue email/push via the API notification service.
-            print(f"[alert] user={user_id} search='{name}' new_matches={count}")
+            with get_pool().connection() as conn:
+                conn.execute(
+                    """INSERT INTO notifications (user_id, type, channel, payload, status)
+                       VALUES (%s, 'saved_search', 'in_app', %s::jsonb, 'sent')""",
+                    [user_id, json.dumps({"search": name, "new_matches": count})],
+                )
+                conn.commit()
+            print(f"[alert] user={user_id} search='{name}' new_matches={count} -> notification created")
             notified += 1
     return notified
 

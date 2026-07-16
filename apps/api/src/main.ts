@@ -6,7 +6,8 @@ import { AppModule } from './app.module';
 import { apiConfig } from './config';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  // rawBody required for Stripe webhook signature verification
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }),
@@ -14,8 +15,8 @@ async function bootstrap(): Promise<void> {
 
   const swagger = new DocumentBuilder()
     .setTitle('EasyCasa API')
-    .setDescription('Core API — listings, taxonomy, users, media, admin')
-    .setVersion('0.2.0')
+    .setDescription('Core API — listings, search, billing, messaging, partners')
+    .setVersion('0.5.0')
     .addBearerAuth()
     .build();
   SwaggerModule.setup('docs', app, SwaggerModule.createDocument(app, swagger));

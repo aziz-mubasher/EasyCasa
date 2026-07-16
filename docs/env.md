@@ -52,3 +52,11 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | AI_RATE_LIMIT_PER_MIN | ai | Per-client cap on assistant calls. |
 | AI_URL | web (server) | Internal AI base (e.g. `http://ai:8000`). |
 | NEXT_PUBLIC_AI_URL | web (browser) | Public AI base (e.g. `https://easycasaita.com/ai`). |
+
+## Phase 5 — billing / notifications
+| Variable | Used by | Notes |
+|---|---|---|
+| STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET | api | Stripe server key + webhook signing secret. Empty = billing disabled safely. |
+| BILLING_SUCCESS_URL / BILLING_CANCEL_URL | api | Checkout redirect targets. |
+| CURRENCY | api | Default charge currency (e.g. `eur`). |
+| SMTP_URL / NOTIFY_FROM | api | Email transport (console fallback when unset). |

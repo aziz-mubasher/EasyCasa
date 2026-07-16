@@ -15,6 +15,17 @@ const Schema = z.object({
   OIDC_JWKS_URL: z.string().optional(),
   OIDC_ROLES_CLAIM: z.string().default('roles'),
 
+  // Billing (Stripe — hosted checkout, no card data on our servers)
+  STRIPE_SECRET_KEY: z.string().default(''),
+  STRIPE_WEBHOOK_SECRET: z.string().default(''),
+  BILLING_SUCCESS_URL: z.string().default('https://easycasaita.com/it/account?billing=success'),
+  BILLING_CANCEL_URL: z.string().default('https://easycasaita.com/it/account?billing=cancel'),
+  CURRENCY: z.string().default('eur'),
+
+  // Notifications (email transport; console fallback when unset)
+  SMTP_URL: z.string().default(''),
+  NOTIFY_FROM: z.string().default('EasyCasa <no-reply@easycasaita.com>'),
+
   // Search (Meilisearch)
   MEILI_URL: z.string().default('http://meilisearch:7700'),
   MEILI_MASTER_KEY: z.string().default('change_me_meili_key'),

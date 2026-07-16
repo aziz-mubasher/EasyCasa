@@ -49,6 +49,14 @@ python -m app.services.embed_index            # fill listings.embedding (hashing
 # AI routes: https://easycasaita.com/ai/docs  (or /ai/health)
 ```
 
+### Phase 5 — Billing, messaging & partners
+See `docs/phase-5.md` and `docs/billing.md`.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0006 plans/messaging/leads
+# Set STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in .env for live Checkout
+# Public: GET /api/billing/plans
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai
