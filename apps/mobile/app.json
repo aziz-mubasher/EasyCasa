@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "EasyCasa",
+    "slug": "easycasa",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "easycasa",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "it.easycasa.app",
+      "associatedDomains": [
+        "applinks:easycasaita.com",
+        "applinks:www.easycasaita.com",
+        "applinks:easycasa.it",
+        "applinks:www.easycasa.it"
+      ],
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "EasyCasa uses your location to show nearby listings on the map."
+      }
+    },
+    "android": {
+      "package": "it.easycasa.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#16233b"
+      },
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            { "scheme": "https", "host": "easycasaita.com", "pathPrefix": "/listing" },
+            { "scheme": "https", "host": "easycasaita.com", "pathPrefix": "/it/listings" },
+            { "scheme": "https", "host": "easycasa.it", "pathPrefix": "/listing" }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-notifications",
+        {
+          "color": "#1e5ae0"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "apiBaseUrl": "https://easycasaita.com/api",
+      "oidcIssuer": "https://auth.easycasaita.com/realms/easycasa",
+      "oidcClientId": "easycasa-app",
+      "webAppUrl": "https://app.easycasaita.com"
+    }
+  }
+}

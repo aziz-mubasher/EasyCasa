@@ -1,8 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { IsIn, IsString, MinLength } from 'class-validator';
 import { UsersService } from './users.service';
 import { Public } from '../auth/public.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
+
+class RegisterDeviceDto {
+  @IsString() @MinLength(8) token!: string;
+  @IsIn(['ios', 'android', 'web']) platform!: 'ios' | 'android' | 'web';
+  @IsString() locale: string = 'it';
+}
 
 @Controller()
 export class UsersController {
@@ -25,8 +32,15 @@ export class UsersController {
     return this.users.listFavorites(me.id);
   }
 
+  /** Idempotent add — POST (web/docs) and PUT (mobile client) both accepted. */
   @Post('me/favorites/:listingId')
-  async addFavorite(@CurrentUser() user: AuthUser, @Param('listingId') listingId: string) {
+  async addFavoritePost(@CurrentUser() user: AuthUser, @Param('listingId') listingId: string) {
+    const me = await this.users.getOrCreate(user);
+    return this.users.addFavorite(me.id, listingId);
+  }
+
+  @Put('me/favorites/:listingId')
+  async addFavoritePut(@CurrentUser() user: AuthUser, @Param('listingId') listingId: string) {
     const me = await this.users.getOrCreate(user);
     return this.users.addFavorite(me.id, listingId);
   }
@@ -50,5 +64,11 @@ export class UsersController {
   ) {
     const me = await this.users.getOrCreate(user);
     return this.users.createSavedSearch(me.id, body.name, body.query);
+  }
+
+  @Post('me/devices')
+  async registerDevice(@CurrentUser() user: AuthUser, @Body() body: RegisterDeviceDto) {
+    const me = await this.users.getOrCreate(user);
+    return this.users.registerDevice(me.id, body);
   }
 }

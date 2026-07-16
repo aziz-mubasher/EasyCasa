@@ -8,7 +8,13 @@ import { apiConfig } from './config';
 async function bootstrap(): Promise<void> {
   // rawBody required for Stripe webhook signature verification
   const app = await NestFactory.create(AppModule, { rawBody: true });
-  app.enableCors();
+  const origins = apiConfig.CORS_ORIGINS.split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+  app.enableCors({
+    origin: origins,
+    credentials: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }),
   );

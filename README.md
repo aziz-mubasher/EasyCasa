@@ -7,13 +7,16 @@ Monorepo → Docker Compose → single VPS behind Traefik (or Caddy locally).
 ```
 apps/web         Next.js (TypeScript) — map-first search, i18n IT/EN/ES
 apps/api         NestJS (TypeScript) backend — listings, search, auth
-services/ai      FastAPI (Python) — /health
+apps/mobile      Expo Router universal app (iOS / Android / web shell)
+services/ai      FastAPI (Python) — embeddings, AVM, alerts worker
 packages/shared  Shared TS types + env schema (zod)
-migration        Phase 1 schema + WP ETL / geocode / media / redirects
+packages/api-client  Typed API client + zod (web + mobile)
+packages/design-tokens  Design tokens for mobile theme bridge
+migration        Schema + WP ETL / geocode / media / redirects
 infra            docker-compose, Traefik overlay, Postgres(PostGIS+pgvector), deploy & backup
 .cursor/rules    Conventions Cursor reads automatically
-.github/workflows CI + deploy
-docs             phase-0..3, schema.md, wp-audit.md, env.md, vps-setup.md
+.github/workflows CI + deploy + mobile-ci
+docs             phase-0..7, schema.md, wp-audit.md, env.md, vps-setup.md
 ```
 
 ## Local quickstart
@@ -64,6 +67,15 @@ pnpm --filter @easycasa/migration redirects   # → migration/out/redirects.cadd
 # SEO: /sitemap.xml /robots.txt  ·  JSON-LD on listing pages
 # Edge: Traefik headers/rate-limit (VPS) or infra/caddy (local --profile caddy)
 # Load: k6 run load/k6/search.js   Drill: ./scripts/backup-restore-drill.sh
+```
+
+### Phase 7 — Universal app (Expo)
+See `docs/phase-7.md`.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0007 devices
+pnpm --filter @easycasa/mobile start          # Expo (iOS / Android / web)
+pnpm --filter @easycasa/mobile export:web
+# Well-known: /.well-known/apple-app-site-association  ·  /listing/{slug} deep link
 ```
 
 ### Python AI service (local tests)

@@ -1,0 +1,28 @@
+{
+  "tabs": { "search": "Cerca", "map": "Mappa", "favorites": "Salvati", "profile": "Profilo" },
+  "search": {
+    "placeholder": "Citt\u00e0, regione o parola chiave",
+    "empty": "Nessun annuncio corrisponde ai filtri.",
+    "resultsCount": "{{count}} annunci"
+  },
+  "listing": {
+    "perMonth": "/mese",
+    "bedrooms_one": "{{count}} camera",
+    "bedrooms_other": "{{count}} camere",
+    "bathrooms_one": "{{count}} bagno",
+    "bathrooms_other": "{{count}} bagni",
+    "area": "{{value}} m\u00b2",
+    "priceOnRequest": "Prezzo su richiesta",
+    "saveToggle": "Salva",
+    "unsave": "Salvato"
+  },
+  "auth": {
+    "signIn": "Accedi",
+    "signOut": "Esci",
+    "signedOutTitle": "Accedi a EasyCasa",
+    "signedOutBody": "Salva i preferiti, sincronizza le ricerche e ricevi avvisi su tutti i dispositivi."
+  },
+  "favorites": { "empty": "Non hai ancora salvato annunci." },
+  "profile": { "language": "Lingua", "theme": "Aspetto", "notifications": "Avvisi" },
+  "common": { "retry": "Riprova", "loading": "Caricamento\u2026", "error": "Qualcosa \u00e8 andato storto." }
+}

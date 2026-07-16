@@ -1,6 +1,6 @@
 import {
   pgTable, pgEnum, uuid, text, integer, numeric, timestamp, jsonb, boolean,
-  doublePrecision, bigint, primaryKey,
+  doublePrecision, bigint, primaryKey, uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
 export const listingStatus = pgEnum('listing_status', ['draft', 'published', 'sold', 'archived']);
@@ -173,6 +173,23 @@ export const notifications = pgTable('notifications', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** Expo / web push tokens for the universal app (Phase 7). */
+export const devices = pgTable(
+  'devices',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id').notNull(),
+    token: text('token').notNull(),
+    platform: text('platform').notNull(), // ios | android | web
+    locale: text('locale').notNull().default('it'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    userToken: uniqueIndex('devices_user_token_uidx').on(t.userId, t.token),
+  }),
+);
+
 export const partnerProfiles = pgTable('partner_profiles', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').notNull(),
@@ -207,6 +224,6 @@ export const payouts = pgTable('payouts', {
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
-  partnerProfiles, leads, payouts,
+  devices, partnerProfiles, leads, payouts,
 };
 export type Schema = typeof schema;

@@ -1,18 +1,22 @@
 """Saved-search alerts worker.
 
 Periodically finds listings published since the last run that match each saved
-search, and enqueues a notification. Email/push delivery is stubbed — wire it to
-the API's notification system (Phase 5). Run via cron or as a long-lived loop.
+search, inserts an in-app notification, and fans out Expo push to registered
+devices (Phase 7). Run via cron or as a long-lived loop.
 """
 from __future__ import annotations
 
 import json
 import sys
 import time
+import urllib.error
+import urllib.request
 from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, ".")
 from app.db import get_pool  # noqa: E402
+
+EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send"
 
 
 def _matches_since(query: dict, since: datetime) -> int:
@@ -35,6 +39,59 @@ def _matches_since(query: dict, since: datetime) -> int:
         return int(conn.execute(sql, params).fetchone()[0])
 
 
+def _device_tokens(user_id: str) -> list[str]:
+    with get_pool().connection() as conn:
+        rows = conn.execute(
+            "SELECT token FROM devices WHERE user_id = %s::uuid AND platform IN ('ios','android')",
+            [user_id],
+        ).fetchall()
+    return [r[0] for r in rows]
+
+
+def _send_expo_push(tokens: list[str], title: str, body: str, data: dict) -> None:
+    """Batch Expo push; drop DeviceNotRegistered tokens."""
+    if not tokens:
+        return
+    for i in range(0, len(tokens), 100):
+        batch = tokens[i : i + 100]
+        messages = [
+            {
+                "to": t,
+                "sound": "default",
+                "title": title,
+                "body": body,
+                "data": data,
+            }
+            for t in batch
+        ]
+        req = urllib.request.Request(
+            EXPO_PUSH_URL,
+            data=json.dumps(messages).encode("utf-8"),
+            headers={"Content-Type": "application/json", "Accept": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=20) as res:
+                payload = json.loads(res.read().decode("utf-8"))
+        except urllib.error.URLError as e:
+            print(f"[alert] expo push failed: {e}")
+            continue
+
+        # Drop dead tokens
+        tickets = payload.get("data") or []
+        dead: list[str] = []
+        for token, ticket in zip(batch, tickets):
+            if isinstance(ticket, dict) and ticket.get("status") == "error":
+                details = ticket.get("details") or {}
+                if details.get("error") == "DeviceNotRegistered":
+                    dead.append(token)
+        if dead:
+            with get_pool().connection() as conn:
+                conn.execute("DELETE FROM devices WHERE token = ANY(%s)", [dead])
+                conn.commit()
+            print(f"[alert] dropped {len(dead)} DeviceNotRegistered tokens")
+
+
 def run_once(window_minutes: int = 60) -> int:
     since = datetime.now(timezone.utc) - timedelta(minutes=window_minutes)
     notified = 0
@@ -53,7 +110,17 @@ def run_once(window_minutes: int = 60) -> int:
                     [user_id, json.dumps({"search": name, "new_matches": count})],
                 )
                 conn.commit()
-            print(f"[alert] user={user_id} search='{name}' new_matches={count} -> notification created")
+            tokens = _device_tokens(user_id)
+            _send_expo_push(
+                tokens,
+                title="EasyCasa",
+                body=f"{count} nuovi annunci per «{name}»",
+                data={"type": "saved_search", "searchId": sid, "count": count},
+            )
+            print(
+                f"[alert] user={user_id} search='{name}' new_matches={count} "
+                f"-> notification + {len(tokens)} push"
+            )
             notified += 1
     return notified
 

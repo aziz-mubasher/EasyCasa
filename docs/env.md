@@ -60,6 +60,7 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | BILLING_SUCCESS_URL / BILLING_CANCEL_URL | api | Checkout redirect targets. |
 | CURRENCY | api | Default charge currency (e.g. `eur`). |
 | SMTP_URL / NOTIFY_FROM | api | Email transport (console fallback when unset). |
+| CORS_ORIGINS | api | Comma-separated browser origins (public site + `app.` shell). |
 
 ## Phase 6 — cutover / observability
 | Variable | Used by | Notes |
@@ -67,3 +68,12 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | NEXT_PUBLIC_SITE_URL | web | Canonical site URL for sitemap/robots/JSON-LD (e.g. `https://easycasaita.com`). |
 | ACME_EMAIL | caddy (local profile) | Let's Encrypt contact for the Phase 6 Caddy build. |
 | GRAFANA_ADMIN_PASSWORD / PG_EXPORTER_DSN | observability overlay | Optional Prometheus/Grafana stack. |
+
+## Phase 7 — universal app (Expo)
+| Variable | Used by | Notes |
+|---|---|---|
+| EXPO_PUBLIC_API_BASE_URL | mobile | API base (e.g. `https://easycasaita.com/api`). |
+| EXPO_PUBLIC_OIDC_ISSUER | mobile | Keycloak issuer for PKCE (`easycasa-app` public client). |
+| EXPO_PUBLIC_OIDC_CLIENT_ID | mobile | Defaults to `easycasa-app`. |
+| EXPO_PUBLIC_WEB_APP_URL | mobile | Hosted Expo web shell (`https://app.easycasaita.com`). |
+| EXPO_TOKEN | CI / EAS | Optional — Expo access token for cloud native builds. |

@@ -1,0 +1,51 @@
+name: mobile-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/mobile/**"
+      - "packages/api-client/**"
+      - "packages/design-tokens/**"
+      - ".github/workflows/mobile-ci.yml"
+  pull_request:
+    paths:
+      - "apps/mobile/**"
+      - "packages/api-client/**"
+      - "packages/design-tokens/**"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck api-client
+        run: pnpm --filter @easycasa/api-client typecheck
+
+      - name: Typecheck mobile
+        run: pnpm --filter @easycasa/mobile typecheck
+
+      - name: Lint mobile
+        run: pnpm --filter @easycasa/mobile lint
+
+      - name: Test mobile
+        run: pnpm --filter @easycasa/mobile test
+
+      - name: Expo web export (build smoke test)
+        run: pnpm --filter @easycasa/mobile export:web
+
+  # EAS iOS/Android builds: run manually with EXPO_TOKEN + Apple/Google credentials
+  #   cd apps/mobile && eas build --platform all --profile preview

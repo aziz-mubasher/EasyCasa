@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, desc, eq, gte, lte, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, lte, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { listings } from '../db/schema';
+import { listings, media } from '../db/schema';
 import type { QueryListingDto } from './dto/query-listing.dto';
 import { offset } from '../common/pagination';
 import type { ListingSummary, Paginated } from '@easycasa/shared';
@@ -19,6 +19,21 @@ export class ListingsRepository {
   async findBySlug(slug: string) {
     const rows = await this.db.select().from(listings).where(eq(listings.slug, slug)).limit(1);
     return rows[0] ?? null;
+  }
+
+  async listMedia(listingId: string) {
+    return this.db
+      .select({
+        id: media.id,
+        url: media.url,
+        width: media.width,
+        height: media.height,
+        alt: media.alt,
+        position: media.position,
+      })
+      .from(media)
+      .where(eq(media.listingId, listingId))
+      .orderBy(asc(media.position));
   }
 
   async sitemapRefs(): Promise<Array<{ slug: string; updatedAt: string }>> {

@@ -1,0 +1,28 @@
+{
+  "tabs": { "search": "Search", "map": "Map", "favorites": "Saved", "profile": "Profile" },
+  "search": {
+    "placeholder": "City, region, or keyword",
+    "empty": "No listings match your filters yet.",
+    "resultsCount": "{{count}} listings"
+  },
+  "listing": {
+    "perMonth": "/mo",
+    "bedrooms_one": "{{count}} bed",
+    "bedrooms_other": "{{count}} beds",
+    "bathrooms_one": "{{count}} bath",
+    "bathrooms_other": "{{count}} baths",
+    "area": "{{value}} m\u00b2",
+    "priceOnRequest": "Price on request",
+    "saveToggle": "Save",
+    "unsave": "Saved"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "signedOutTitle": "Sign in to EasyCasa",
+    "signedOutBody": "Save favorites, sync searches, and get alerts across your devices."
+  },
+  "favorites": { "empty": "You haven\u2019t saved any listings yet." },
+  "profile": { "language": "Language", "theme": "Appearance", "notifications": "Alerts" },
+  "common": { "retry": "Try again", "loading": "Loading\u2026", "error": "Something went wrong." }
+}

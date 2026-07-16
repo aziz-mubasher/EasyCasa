@@ -1,0 +1,28 @@
+{
+  "tabs": { "search": "Buscar", "map": "Mapa", "favorites": "Guardados", "profile": "Perfil" },
+  "search": {
+    "placeholder": "Ciudad, regi\u00f3n o palabra clave",
+    "empty": "Ning\u00fan anuncio coincide con tus filtros.",
+    "resultsCount": "{{count}} anuncios"
+  },
+  "listing": {
+    "perMonth": "/mes",
+    "bedrooms_one": "{{count}} habitaci\u00f3n",
+    "bedrooms_other": "{{count}} habitaciones",
+    "bathrooms_one": "{{count}} ba\u00f1o",
+    "bathrooms_other": "{{count}} ba\u00f1os",
+    "area": "{{value}} m\u00b2",
+    "priceOnRequest": "Precio a consultar",
+    "saveToggle": "Guardar",
+    "unsave": "Guardado"
+  },
+  "auth": {
+    "signIn": "Iniciar sesi\u00f3n",
+    "signOut": "Cerrar sesi\u00f3n",
+    "signedOutTitle": "Inicia sesi\u00f3n en EasyCasa",
+    "signedOutBody": "Guarda favoritos, sincroniza b\u00fasquedas y recibe alertas en tus dispositivos."
+  },
+  "favorites": { "empty": "A\u00fan no has guardado anuncios." },
+  "profile": { "language": "Idioma", "theme": "Apariencia", "notifications": "Alertas" },
+  "common": { "retry": "Reintentar", "loading": "Cargando\u2026", "error": "Algo sali\u00f3 mal." }
+}

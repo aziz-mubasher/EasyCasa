@@ -26,6 +26,11 @@ const Schema = z.object({
   SMTP_URL: z.string().default(''),
   NOTIFY_FROM: z.string().default('EasyCasa <no-reply@easycasaita.com>'),
 
+  // CORS — comma-separated origins for the public site + universal app shell
+  CORS_ORIGINS: z
+    .string()
+    .default('https://easycasaita.com,https://www.easycasaita.com,https://app.easycasaita.com,http://localhost:3000,http://localhost:8081'),
+
   // Search (Meilisearch)
   MEILI_URL: z.string().default('http://meilisearch:7700'),
   MEILI_MASTER_KEY: z.string().default('change_me_meili_key'),

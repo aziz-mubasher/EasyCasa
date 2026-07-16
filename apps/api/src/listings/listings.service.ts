@@ -29,7 +29,14 @@ export class ListingsService {
   async getBySlug(slug: string) {
     const l = await this.repo.findBySlug(slug);
     if (!l) throw new NotFoundException('listing not found');
-    return l;
+    const media = await this.repo.listMedia(l.id);
+    return {
+      ...l,
+      price: l.price == null ? null : Number(l.price),
+      sizeSqm: l.sizeSqm == null ? null : Number(l.sizeSqm),
+      media,
+      coverUrl: media[0]?.url ?? null,
+    };
   }
 
   async create(dto: CreateListingDto, agentId: string) {
