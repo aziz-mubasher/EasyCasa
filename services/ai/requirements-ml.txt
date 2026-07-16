@@ -1,0 +1,2 @@
+# Install only if you run a local embedding model (EMBEDDING_PROVIDER=local).
+sentence-transformers==3.2.0

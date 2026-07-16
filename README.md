@@ -40,6 +40,15 @@ pnpm --filter @easycasa/api search:backfill   # index listings into Meilisearch
 pnpm --filter @easycasa/web dev               # http://localhost:3000/it
 ```
 
+### Phase 4 — AI layer
+See `docs/phase-4.md` and `docs/ai.md`.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0005 vector ANN index (after embed)
+# inside services/ai (or via docker):
+python -m app.services.embed_index            # fill listings.embedding (hashing offline)
+# AI routes: https://easycasaita.com/ai/docs  (or /ai/health)
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

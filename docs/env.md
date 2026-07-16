@@ -40,3 +40,15 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | API_URL | web (server) | Internal API base for server components (e.g. `http://api:4000`). |
 | NEXT_PUBLIC_API_URL | web (browser) | Public API base behind Traefik/Caddy (e.g. `https://easycasaita.com/api`). |
 | MEILI_URL / MEILI_MASTER_KEY | api | Meilisearch host + key (Phase 0 compose). |
+
+## Phase 4 — AI
+| Variable | Used by | Notes |
+|---|---|---|
+| EMBEDDING_PROVIDER | ai | `hashing` (offline default), `openai`, or `local`. |
+| EMBEDDING_MODEL / EMBEDDING_DIM | ai | Model + vector dim (1536 matches `listings.embedding`). |
+| CHAT_PROVIDER / CHAT_MODEL | ai | `none` = grounded templated fallback; `openai` calls an LLM. |
+| USE_LLM_NLQ | ai | Use LLM to parse NL queries instead of heuristics. |
+| OPENAI_BASE_URL / OPENAI_API_KEY | ai | OpenAI-compatible endpoint (OpenAI, Ollama, TEI, LiteLLM). |
+| AI_RATE_LIMIT_PER_MIN | ai | Per-client cap on assistant calls. |
+| AI_URL | web (server) | Internal AI base (e.g. `http://ai:8000`). |
+| NEXT_PUBLIC_AI_URL | web (browser) | Public AI base (e.g. `https://easycasaita.com/ai`). |
