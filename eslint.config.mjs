@@ -10,6 +10,7 @@ export default tseslint.config(
       "**/.venv/**",
       "**/._*",
       "**/*.config.*",
+      "load/k6/**",
     ],
   },
   js.configs.recommended,

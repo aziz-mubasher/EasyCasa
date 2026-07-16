@@ -1,0 +1,79 @@
+groups:
+  - name: availability
+    rules:
+      - alert: TargetDown
+        expr: up == 0
+        for: 2m
+        labels: { severity: critical }
+        annotations:
+          summary: "Target {{ $labels.job }} ({{ $labels.instance }}) is down"
+          description: "Prometheus cannot scrape the target for 2 minutes."
+
+      - alert: SiteProbeFailing
+        expr: probe_success == 0
+        for: 2m
+        labels: { severity: critical }
+        annotations:
+          summary: "Public probe failing for {{ $labels.instance }}"
+          description: "Blackbox HTTP probe has failed for 2 minutes."
+
+      - alert: TLSCertExpiringSoon
+        expr: (probe_ssl_earliest_cert_expiry - time()) / 86400 < 14
+        for: 1h
+        labels: { severity: warning }
+        annotations:
+          summary: "TLS cert for {{ $labels.instance }} expires in <14 days"
+
+  - name: latency-errors
+    rules:
+      - alert: HighApi5xxRate
+        expr: |
+          sum(rate(http_requests_total{job="api",status=~"5.."}[5m]))
+            / sum(rate(http_requests_total{job="api"}[5m])) > 0.02
+        for: 5m
+        labels: { severity: critical }
+        annotations:
+          summary: "API 5xx error rate >2% (5m)"
+
+      - alert: SearchLatencyP95High
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket{job="api",route="/search"}[5m])) by (le)
+          ) > 0.8
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: "Search p95 latency >800ms (10m)"
+
+  - name: resources
+    rules:
+      - alert: HostHighCPU
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: "CPU >90% on {{ $labels.instance }} (10m)"
+
+      - alert: HostLowDisk
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.15
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: "Disk <15% free on {{ $labels.instance }}"
+
+      - alert: PostgresConnectionsHigh
+        expr: sum(pg_stat_activity_count) > 180
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "Postgres active connections high (>180)"
+
+  - name: backups
+    rules:
+      # api pushes this gauge (unix ts) after each successful backup+restore drill.
+      - alert: BackupDrillStale
+        expr: time() - easycasa_last_backup_drill_success_timestamp_seconds > 9 * 24 * 3600
+        for: 1h
+        labels: { severity: critical }
+        annotations:
+          summary: "No successful backup-restore drill in >9 days"

@@ -1,0 +1,16 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "runner": ["axe", "htmlcs"],
+    "timeout": 30000,
+    "ignore": [
+      "WCAG2AA.Principle3.Guideline3_2.3_2_2.H32.2"
+    ]
+  },
+  "urls": [
+    "https://easycasaita.com/it",
+    "https://easycasaita.com/it/search",
+    "https://easycasaita.com/it/add",
+    "https://easycasaita.com/it/listings/appartamento-trilocale-ristrutturato-con-box-privato"
+  ]
+}

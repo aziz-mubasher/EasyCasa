@@ -57,6 +57,15 @@ pnpm --filter @easycasa/migration migrate     # applies 0006 plans/messaging/lea
 # Public: GET /api/billing/plans
 ```
 
+### Phase 6 — Hardening & SEO-safe cutover
+See `docs/phase-6.md` and `docs/cutover.md`.
+```bash
+pnpm --filter @easycasa/migration redirects   # → migration/out/redirects.caddy + .csv
+# SEO: /sitemap.xml /robots.txt  ·  JSON-LD on listing pages
+# Edge: Traefik headers/rate-limit (VPS) or infra/caddy (local --profile caddy)
+# Load: k6 run load/k6/search.js   Drill: ./scripts/backup-restore-drill.sh
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

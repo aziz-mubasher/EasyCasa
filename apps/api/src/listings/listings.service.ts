@@ -22,6 +22,10 @@ export class ListingsService {
     return this.repo.search(q);
   }
 
+  sitemapRefs() {
+    return this.repo.sitemapRefs();
+  }
+
   async getBySlug(slug: string) {
     const l = await this.repo.findBySlug(slug);
     if (!l) throw new NotFoundException('listing not found');

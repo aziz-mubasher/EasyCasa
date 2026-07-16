@@ -3,27 +3,38 @@ import { getListing } from '@/lib/api';
 import { euro, area } from '@/lib/format';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { ListingStructuredData } from '@/components/StructuredData';
 
-export default async function ListingPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function ListingPage({
+  params,
+}: {
+  params: Promise<{ slug: string; locale: string }>;
+}) {
+  const { slug, locale } = await params;
   const l = await getListing(slug);
   if (!l) notFound();
 
   const price = typeof l.price === 'string' ? Number(l.price) : (l.price as number | null);
   const rent = l.transactionType === 'rent';
+  const sizeSqm =
+    typeof l.sizeSqm === 'string' ? Number(l.sizeSqm) : (l.sizeSqm as number | null);
 
   return (
     <article className="mx-auto max-w-5xl px-5 py-10">
-      <script
-        type="application/ld+json"
-        // schema.org for rich results
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Residence',
-            name: l.title,
-            address: l.city,
-          }),
+      <ListingStructuredData
+        locale={locale}
+        listing={{
+          slug: String(l.slug ?? slug),
+          title: String(l.title),
+          description: l.description ? String(l.description) : undefined,
+          price: price ?? undefined,
+          currency: typeof l.currency === 'string' ? l.currency : 'EUR',
+          city: l.city ? String(l.city) : undefined,
+          sizeSqm: sizeSqm ?? undefined,
+          bedrooms: typeof l.bedrooms === 'number' ? l.bedrooms : undefined,
+          bathrooms: typeof l.bathrooms === 'number' ? l.bathrooms : undefined,
+          latitude: typeof l.latitude === 'number' ? l.latitude : undefined,
+          longitude: typeof l.longitude === 'number' ? l.longitude : undefined,
         }}
       />
       <p className="eyebrow mb-2">
@@ -35,20 +46,32 @@ export default async function ListingPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <div className="data text-3xl mt-4">
-        {euro(price)}{rent && <span className="text-muted text-lg">/mese</span>}
+        {euro(price)}
+        {rent && <span className="text-muted text-lg">/mese</span>}
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-4 max-w-md data text-sm">
-        <div><div className="eyebrow">camere</div>{(l.bedrooms as number) ?? '—'}</div>
-        <div><div className="eyebrow">bagni</div>{(l.bathrooms as number) ?? '—'}</div>
-        <div><div className="eyebrow">superficie</div>{area(l.sizeSqm as number)}</div>
+        <div>
+          <div className="eyebrow">camere</div>
+          {(l.bedrooms as number) ?? '—'}
+        </div>
+        <div>
+          <div className="eyebrow">bagni</div>
+          {(l.bathrooms as number) ?? '—'}
+        </div>
+        <div>
+          <div className="eyebrow">superficie</div>
+          {area(sizeSqm)}
+        </div>
       </div>
 
       {l.description ? (
         <p className="mt-8 max-w-2xl leading-relaxed whitespace-pre-line">{String(l.description)}</p>
       ) : null}
 
-      <div className="mt-8"><Button>Contatta</Button></div>
+      <div className="mt-8">
+        <Button>Contatta</Button>
+      </div>
     </article>
   );
 }

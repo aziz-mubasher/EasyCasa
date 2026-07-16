@@ -21,6 +21,25 @@ export class ListingsRepository {
     return rows[0] ?? null;
   }
 
+  async sitemapRefs(): Promise<Array<{ slug: string; updatedAt: string }>> {
+    const rows = await this.db
+      .select({
+        slug: listings.slug,
+        updatedAt: listings.updatedAt,
+        publishedAt: listings.publishedAt,
+      })
+      .from(listings)
+      .where(eq(listings.status, 'published'))
+      .orderBy(desc(listings.publishedAt))
+      .limit(5000);
+    return rows
+      .filter((r) => r.slug != null)
+      .map((r) => ({
+        slug: r.slug as string,
+        updatedAt: (r.updatedAt ?? r.publishedAt ?? new Date()).toISOString(),
+      }));
+  }
+
   async insert(values: typeof listings.$inferInsert) {
     const rows = await this.db.insert(listings).values(values).returning();
     return rows[0];

@@ -24,6 +24,13 @@ export class ListingsController {
     return this.listings.search(q);
   }
 
+  /** Lightweight feed for Next.js sitemap generation (must stay above :slug). */
+  @Public()
+  @Get('sitemap')
+  sitemap() {
+    return this.listings.sitemapRefs();
+  }
+
   @Public()
   @Get(':slug')
   getBySlug(@Param('slug') slug: string) {

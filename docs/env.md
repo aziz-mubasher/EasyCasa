@@ -60,3 +60,10 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | BILLING_SUCCESS_URL / BILLING_CANCEL_URL | api | Checkout redirect targets. |
 | CURRENCY | api | Default charge currency (e.g. `eur`). |
 | SMTP_URL / NOTIFY_FROM | api | Email transport (console fallback when unset). |
+
+## Phase 6 — cutover / observability
+| Variable | Used by | Notes |
+|---|---|---|
+| NEXT_PUBLIC_SITE_URL | web | Canonical site URL for sitemap/robots/JSON-LD (e.g. `https://easycasaita.com`). |
+| ACME_EMAIL | caddy (local profile) | Let's Encrypt contact for the Phase 6 Caddy build. |
+| GRAFANA_ADMIN_PASSWORD / PG_EXPORTER_DSN | observability overlay | Optional Prometheus/Grafana stack. |

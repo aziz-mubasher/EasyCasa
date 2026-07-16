@@ -4,8 +4,10 @@ RUN corepack enable
 WORKDIR /repo
 ENV CI=true
 ARG NEXT_PUBLIC_API_URL=https://easycasaita.com/api
+ARG NEXT_PUBLIC_SITE_URL=https://easycasaita.com
 ARG API_URL=http://api:4000
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV API_URL=$API_URL
 COPY . .
 RUN pnpm install --no-frozen-lockfile
@@ -19,5 +21,6 @@ COPY --from=build /repo /repo
 WORKDIR /repo/apps/web
 ENV API_URL=http://api:4000
 ENV NEXT_PUBLIC_API_URL=https://easycasaita.com/api
+ENV NEXT_PUBLIC_SITE_URL=https://easycasaita.com
 EXPOSE 3000
 CMD ["pnpm", "start"]

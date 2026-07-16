@@ -1,0 +1,33 @@
+name: a11y-webvitals
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *" # nightly against staging
+
+permissions:
+  contents: read
+
+jobs:
+  pa11y:
+    name: Accessibility (pa11y-ci / axe, WCAG 2.1 AA)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm i -g pa11y-ci
+      - run: pa11y-ci --config .pa11yci.json
+
+  lighthouse:
+    name: Web Vitals (Lighthouse CI)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm i -g @lhci/cli
+      - run: lhci autorun --config=lighthouserc.json

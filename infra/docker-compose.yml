@@ -70,6 +70,7 @@ services:
       dockerfile: apps/web/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://easycasaita.com/api}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://easycasaita.com}
         API_URL: ${API_URL:-http://api:4000}
     restart: unless-stopped
     env_file: ../.env
@@ -90,15 +91,20 @@ services:
 
   caddy:
     profiles: ["caddy"]
-    image: caddy:2-alpine
+    # Phase 6 hardened edge (rate_limit + security headers). For Traefik VPS, see docker-compose.traefik.yml.
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     environment:
       STAGING_DOMAIN: ${STAGING_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:-ops@easycasaita.com}
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/redirects.caddy:/etc/caddy/redirects.caddy:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:

@@ -1,0 +1,33 @@
+title = "EasyCasa gitleaks config"
+
+# Start from the maintained default rule set…
+[extend]
+useDefault = true
+
+# …and add project-specific high-signal rules.
+[[rules]]
+id = "stripe-secret-key"
+description = "Stripe secret/live key"
+regex = '''sk_(live|test)_[0-9a-zA-Z]{24,}'''
+tags = ["stripe", "key"]
+
+[[rules]]
+id = "postgres-url"
+description = "Postgres connection string with inline password"
+regex = '''postgres(ql)?:\/\/[^:\/\s]+:[^@\/\s]+@'''
+tags = ["db", "credential"]
+
+[allowlist]
+description = "Non-secret fixtures and examples"
+paths = [
+  '''\.env\.example$''',
+  '''(^|/)fixtures/''',
+  '''(^|/)__tests__/''',
+  '''(^|/)docs/''',
+]
+# Placeholder tokens used in docs/tests.
+regexes = [
+  '''sk_test_0{10,}''',
+  '''postgres:\/\/user:pass@localhost''',
+  '''EXAMPLE|PLACEHOLDER|CHANGEME|xxxx''',
+]

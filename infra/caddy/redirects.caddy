@@ -1,0 +1,11 @@
+# AUTO-GENERATED at cutover — DO NOT EDIT BY HAND.
+# Produced by:  pnpm --filter @easycasa/migration redirects
+# which writes migration/out/redirects.caddy and it is copied here on deploy.
+#
+# Each line preserves link equity with a 301. Example shape:
+#   redir /old-listing-slug/        /listings/old-listing-slug   permanent
+#   redir /chi-siamo/               /it/about                    permanent
+#   redir /blog/guida-mutuo/        /guide/guida-mutuo           permanent
+#
+# This placeholder is intentionally empty so `caddy validate` passes in CI
+# before the real map exists. The deploy step overwrites it.
