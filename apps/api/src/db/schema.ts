@@ -221,9 +221,92 @@ export const payouts = pgTable('payouts', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+// ---------------- Phase 8 — Property / fascicolo / service catalog ----------------
+export const propertyDealType = pgEnum('property_deal_type', ['sale', 'rent']);
+export const propertyStatus = pgEnum('property_status', [
+  'draft', 'fascicolo_intake', 'compliance_review', 'valuation_ready',
+  'published', 'under_negotiation', 'closing', 'sold', 'archived', 'withdrawn',
+]);
+export const servicePriceModel = pgEnum('service_price_model', ['fixed', 'provvigione', 'passthrough']);
+export const serviceOrderStatus = pgEnum('service_order_status', [
+  'quoted', 'confirmed', 'in_progress', 'completed', 'cancelled',
+]);
+
+export const properties = pgTable('properties', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  ownerId: uuid('owner_id').notNull(),
+  listingId: uuid('listing_id'),
+  dealType: propertyDealType('deal_type').notNull().default('sale'),
+  status: propertyStatus('status').notNull().default('draft'),
+  inCondominio: boolean('in_condominio').notNull().default(false),
+  title: text('title'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const documentAssets = pgTable('document_assets', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  propertyId: uuid('property_id').notNull(),
+  typeCode: text('type_code').notNull(),
+  url: text('url').notNull(),
+  issuedAt: timestamp('issued_at', { withTimezone: true }),
+  verifiedAt: timestamp('verified_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const serviceCatalogItems = pgTable('service_catalog_items', {
+  code: text('code').primaryKey(),
+  labelEn: text('label_en').notNull(),
+  labelIt: text('label_it').notNull(),
+  category: text('category').notNull(),
+  priceModel: servicePriceModel('price_model').notNull(),
+  amountCents: integer('amount_cents'),
+  ratePercent: doublePrecision('rate_percent'),
+  ivaApplicable: boolean('iva_applicable').notNull().default(true),
+  active: boolean('active').notNull().default(true),
+});
+
+export const servicePackages = pgTable('service_packages', {
+  code: text('code').primaryKey(),
+  labelEn: text('label_en').notNull(),
+  labelIt: text('label_it').notNull(),
+  bundleFixedCents: integer('bundle_fixed_cents'),
+  active: boolean('active').notNull().default(true),
+});
+
+export const packageItems = pgTable(
+  'package_items',
+  {
+    packageCode: text('package_code').notNull(),
+    itemCode: text('item_code').notNull(),
+  },
+  (t) => ({ pk: primaryKey({ columns: [t.packageCode, t.itemCode] }) }),
+);
+
+export const serviceOrders = pgTable('service_orders', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  propertyId: uuid('property_id').notNull(),
+  packageCode: text('package_code'),
+  status: serviceOrderStatus('status').notNull().default('quoted'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const serviceOrderLines = pgTable('service_order_lines', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  orderId: uuid('order_id').notNull(),
+  itemCode: text('item_code').notNull(),
+  kind: text('kind').notNull(),
+  netCents: integer('net_cents').notNull(),
+  ivaCents: integer('iva_cents').notNull(),
+  grossCents: integer('gross_cents').notNull(),
+  estimated: boolean('estimated').notNull().default(false),
+});
+
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
   devices, partnerProfiles, leads, payouts,
+  properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
+  serviceOrders, serviceOrderLines,
 };
 export type Schema = typeof schema;

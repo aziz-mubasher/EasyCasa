@@ -78,6 +78,13 @@ pnpm --filter @easycasa/mobile export:web
 # Well-known: /.well-known/apple-app-site-association  ·  /listing/{slug} deep link
 ```
 
+### Phase 8 — Service catalog + fascicolo
+See `docs/phase-8.md` and `docs/system-design.md`.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0008 properties/documents/catalog
+# Public: GET /api/service-catalog  ·  Owner: /it/owner → fascicolo wizard
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

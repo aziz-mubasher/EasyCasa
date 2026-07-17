@@ -90,6 +90,95 @@ export const SavedSearchSchema = z.object({
 });
 export type SavedSearch = z.infer<typeof SavedSearchSchema>;
 
+/* Phase 8 — catalog + fascicolo ----------------------------------------- */
+
+export const QuoteLineSchema = z.object({
+  code: z.string(),
+  labelEn: z.string(),
+  labelIt: z.string(),
+  kind: z.enum(['fixed', 'provvigione', 'passthrough', 'bundle']),
+  netCents: z.number().int(),
+  ivaCents: z.number().int(),
+  grossCents: z.number().int(),
+  estimated: z.boolean(),
+  note: z.string().optional(),
+});
+
+export const QuoteSchema = z.object({
+  lines: z.array(QuoteLineSchema),
+  fixedNetCents: z.number().int(),
+  provvigioneEstimatedNetCents: z.number().int(),
+  passthroughCents: z.number().int(),
+  ivaCents: z.number().int(),
+  dueNowGrossCents: z.number().int(),
+  estimatedTotalGrossCents: z.number().int(),
+  currency: z.literal('EUR'),
+});
+export type Quote = z.infer<typeof QuoteSchema>;
+
+export const GateResultSchema = z.object({
+  gate: z.enum(['PUBLISH', 'CLOSE', 'REGISTER_LEASE']),
+  allowed: z.boolean(),
+  blockers: z.array(
+    z.object({
+      document: z.string(),
+      code: z.enum(['MISSING', 'EXPIRED', 'UNVERIFIED']),
+      messageEn: z.string(),
+      messageIt: z.string(),
+    }),
+  ),
+  warnings: z.array(
+    z.object({
+      document: z.string(),
+      code: z.enum(['MISSING', 'EXPIRED', 'UNVERIFIED']),
+      messageEn: z.string(),
+      messageIt: z.string(),
+    }),
+  ),
+});
+
+export const FascicoloEvaluationSchema = z.object({
+  publish: GateResultSchema,
+  close: GateResultSchema,
+  registerLease: GateResultSchema,
+});
+export type FascicoloEvaluation = z.infer<typeof FascicoloEvaluationSchema>;
+
+export const FascicoloViewSchema = z.object({
+  propertyId: z.string(),
+  documents: z.array(
+    z.object({
+      code: z.string(),
+      issuedAt: z.string().optional(),
+      verifiedAt: z.string().optional(),
+    }),
+  ),
+  checklist: z.array(
+    z.object({
+      code: z.string(),
+      labelEn: z.string(),
+      labelIt: z.string(),
+      present: z.boolean(),
+      verified: z.boolean(),
+    }),
+  ),
+  gates: FascicoloEvaluationSchema,
+});
+export type FascicoloView = z.infer<typeof FascicoloViewSchema>;
+
+export const PropertySchema = z.object({
+  id: z.string(),
+  ownerId: z.string(),
+  dealType: z.enum(['sale', 'rent']),
+  status: z.string(),
+  inCondominio: z.boolean(),
+  title: z.string().nullable().optional(),
+  listingId: z.string().nullable().optional(),
+  createdAt: z.union([z.string(), z.date()]).optional(),
+  updatedAt: z.union([z.string(), z.date()]).optional(),
+});
+export type Property = z.infer<typeof PropertySchema>;
+
 /* ------------------------------------------------------------------ */
 /* Raw API → client mappers                                            */
 /* ------------------------------------------------------------------ */
@@ -339,5 +428,80 @@ export class EasyCasaClient {
       method: 'POST',
       body: JSON.stringify(input),
     }).then((j) => z.object({ ok: z.literal(true) }).parse(j));
+  }
+
+  /* Phase 8 — service catalog + fascicolo -------------------------------- */
+
+  listServiceCatalog(): Promise<unknown> {
+    return this.requestJson('/service-catalog');
+  }
+
+  listServicePackages(): Promise<unknown> {
+    return this.requestJson('/service-catalog/packages');
+  }
+
+  quoteServices(input: {
+    items?: string[];
+    packageCode?: string;
+    referenceValueCents?: number;
+  }): Promise<Quote> {
+    return this.requestJson('/service-catalog/quote', {
+      method: 'POST',
+      body: JSON.stringify(input),
+    }).then((j) => QuoteSchema.parse(j));
+  }
+
+  confirmServiceOrder(input: {
+    propertyId: string;
+    items?: string[];
+    packageCode?: string;
+    referenceValueCents?: number;
+  }): Promise<{ orderId: string; quote: Quote }> {
+    return this.requestJson('/service-catalog/orders', {
+      method: 'POST',
+      body: JSON.stringify(input),
+    }).then((j) =>
+      z.object({ orderId: z.string(), quote: QuoteSchema }).parse(j),
+    );
+  }
+
+  listMyProperties(): Promise<Property[]> {
+    return this.requestJson('/properties').then((j) => z.array(PropertySchema).parse(j));
+  }
+
+  createProperty(input: {
+    dealType: 'sale' | 'rent';
+    title?: string;
+    inCondominio?: boolean;
+  }): Promise<Property> {
+    return this.requestJson('/properties', {
+      method: 'POST',
+      body: JSON.stringify(input),
+    }).then((j) => PropertySchema.parse(j));
+  }
+
+  getFascicolo(propertyId: string): Promise<FascicoloView> {
+    return this.requestJson(`/properties/${encodeURIComponent(propertyId)}/fascicolo`).then(
+      (j) => FascicoloViewSchema.parse(j),
+    );
+  }
+
+  getFascicoloGates(propertyId: string): Promise<FascicoloEvaluation> {
+    return this.requestJson(
+      `/properties/${encodeURIComponent(propertyId)}/fascicolo/gates`,
+    ).then((j) => FascicoloEvaluationSchema.parse(j));
+  }
+
+  addFascicoloDocument(
+    propertyId: string,
+    input: { code: string; url: string; issuedAt?: string },
+  ): Promise<FascicoloEvaluation> {
+    return this.requestJson(
+      `/properties/${encodeURIComponent(propertyId)}/fascicolo/documents`,
+      {
+        method: 'POST',
+        body: JSON.stringify(input),
+      },
+    ).then((j) => FascicoloEvaluationSchema.parse(j));
   }
 }

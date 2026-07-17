@@ -13,6 +13,9 @@ import { PartnersModule } from './partners/partners.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { BillingModule } from './billing/billing.module';
 import { FeaturedModule } from './featured/featured.module';
+import { FascicoloModule } from './fascicolo/fascicolo.module';
+import { ServiceCatalogModule } from './service-catalog/service-catalog.module';
+import { PropertiesModule } from './properties/properties.module';
 
 @Module({
   imports: [
@@ -29,6 +32,9 @@ import { FeaturedModule } from './featured/featured.module';
     MessagingModule,
     BillingModule,
     FeaturedModule,
+    PropertiesModule,
+    FascicoloModule,
+    ServiceCatalogModule,
   ],
   controllers: [HealthController],
 })
