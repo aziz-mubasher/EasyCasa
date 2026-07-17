@@ -231,6 +231,12 @@ export const servicePriceModel = pgEnum('service_price_model', ['fixed', 'provvi
 export const serviceOrderStatus = pgEnum('service_order_status', [
   'quoted', 'confirmed', 'in_progress', 'completed', 'cancelled',
 ]);
+export const legalBasis = pgEnum('legal_basis', [
+  'mediazione', 'mandato_oneroso', 'review_required',
+]);
+export const mandateStatus = pgEnum('mandate_status', [
+  'draft', 'sent', 'signed', 'withdrawn', 'expired',
+]);
 
 export const properties = pgTable('properties', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -264,6 +270,7 @@ export const serviceCatalogItems = pgTable('service_catalog_items', {
   ratePercent: doublePrecision('rate_percent'),
   ivaApplicable: boolean('iva_applicable').notNull().default(true),
   active: boolean('active').notNull().default(true),
+  legalBasis: legalBasis('legal_basis').notNull().default('review_required'),
 });
 
 export const servicePackages = pgTable('service_packages', {
@@ -288,6 +295,9 @@ export const serviceOrders = pgTable('service_orders', {
   propertyId: uuid('property_id').notNull(),
   packageCode: text('package_code'),
   status: serviceOrderStatus('status').notNull().default('quoted'),
+  itemCodes: text('item_codes').array().notNull().default([]),
+  dueNowGrossCents: integer('due_now_gross_cents').notNull().default(0),
+  estimatedTotalGrossCents: integer('estimated_total_gross_cents').notNull().default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -302,11 +312,26 @@ export const serviceOrderLines = pgTable('service_order_lines', {
   estimated: boolean('estimated').notNull().default(false),
 });
 
+export const mandates = pgTable('mandates', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  orderId: uuid('order_id').notNull().unique(),
+  propertyId: uuid('property_id').notNull(),
+  types: text('types').array().notNull().default([]),
+  reviewRequiredItems: text('review_required_items').array().notNull().default([]),
+  status: mandateStatus('status').notNull().default('draft'),
+  exclusive: boolean('exclusive').notNull().default(false),
+  durationMonths: integer('duration_months').notNull(),
+  signatureEnvelopeId: text('signature_envelope_id'),
+  signingUrl: text('signing_url'),
+  signedAt: timestamp('signed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
   devices, partnerProfiles, leads, payouts,
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
-  serviceOrders, serviceOrderLines,
+  serviceOrders, serviceOrderLines, mandates,
 };
 export type Schema = typeof schema;

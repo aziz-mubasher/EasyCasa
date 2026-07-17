@@ -42,6 +42,11 @@ const Schema = z.object({
   MINIO_ROOT_PASSWORD: z.string().default('change_me_minio'),
   MINIO_BUCKET: z.string().default('easycasa-media'),
   MEDIA_PUBLIC_BASE: z.string().default('http://localhost:9000/easycasa-media'),
+
+  // Phase 10 — e-signature (FEA/QES). Empty URL/KEY → stub envelopes in DEV.
+  SIGNATURE_PROVIDER_URL: z.string().default(''),
+  SIGNATURE_PROVIDER_KEY: z.string().default(''),
+  SIGNATURE_WEBHOOK_SECRET: z.string().default(''),
 });
 
 export type ApiConfig = z.infer<typeof Schema>;

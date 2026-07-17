@@ -5,7 +5,12 @@ import type { Db } from '../db/drizzle';
 import { properties, serviceOrderLines, serviceOrders } from '../db/schema';
 import { CATALOG, PACKAGES } from './domain/catalog';
 import { buildQuote, QuoteError } from './domain/pricing';
+import { resolveOrderItemCodes } from '../transactions/domain/legal-basis';
 import type { CatalogItem, Quote, QuoteRequest, ServicePackage } from './domain/types';
+
+const PACKAGE_CONTENTS: Record<string, readonly string[]> = Object.fromEntries(
+  PACKAGES.map((p) => [p.code, p.includes]),
+);
 
 @Injectable()
 export class ServiceCatalogService {
@@ -41,12 +46,16 @@ export class ServiceCatalogService {
     if (!rows[0]) throw new NotFoundException(`Property ${propertyId} not found`);
 
     const quote = this.quote(req);
+    const itemCodes = resolveOrderItemCodes(req, PACKAGE_CONTENTS);
     const inserted = await this.db
       .insert(serviceOrders)
       .values({
         propertyId,
         packageCode: req.packageCode ?? null,
         status: 'confirmed',
+        itemCodes,
+        dueNowGrossCents: quote.dueNowGrossCents,
+        estimatedTotalGrossCents: quote.estimatedTotalGrossCents,
       })
       .returning();
     const order = inserted[0]!;

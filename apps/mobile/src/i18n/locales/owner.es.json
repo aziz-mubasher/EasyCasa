@@ -29,7 +29,10 @@
       "alaCarteHeading": "Paga solo por lo que usas",
       "coveredByPackage": "Incluido en el paquete seleccionado",
       "getQuote": "Obtener presupuesto",
-      "quoteHeading": "Tu presupuesto"
+      "quoteHeading": "Tu presupuesto",
+      "acceptQuote": "Aceptar presupuesto y crear mandato",
+      "orderCreated": "Pedido {{id}}… creado",
+      "awaitingLegalReview": "En espera de revisión legal — el mandato no se puede enviar hasta clasificar cada servicio."
     },
     "svc": {
       "plusIva": "{{amount}} + IVA",

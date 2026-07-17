@@ -6,6 +6,7 @@
 import { z } from 'zod';
 
 import { createRequester, type RequesterOptions } from './http';
+import { OrderSchema, type Order } from './phase10';
 
 /* ------------------------------------------------------------------ */
 /* Service catalog                                                     */
@@ -181,14 +182,11 @@ export class EasyCasaOwnerApi {
     );
   }
 
-  /** Persist an accepted quote as a confirmed ServiceOrder (Phase 10 seam). */
-  acceptQuote(
-    propertyId: string,
-    body: QuoteRequest,
-  ): Promise<{ orderId: string; quote: Quote }> {
+  /** Persist an accepted quote as a confirmed ServiceOrder (Phase 10 Order shape). */
+  acceptQuote(propertyId: string, body: QuoteRequest): Promise<Order> {
     return this.request(
       `/properties/${encodeURIComponent(propertyId)}/orders`,
-      z.object({ orderId: z.string(), quote: QuoteSchema }),
+      OrderSchema,
       { method: 'POST', body: JSON.stringify(body) },
     );
   }

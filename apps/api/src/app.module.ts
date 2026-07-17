@@ -16,6 +16,8 @@ import { FeaturedModule } from './featured/featured.module';
 import { FascicoloModule } from './fascicolo/fascicolo.module';
 import { ServiceCatalogModule } from './service-catalog/service-catalog.module';
 import { PropertiesModule } from './properties/properties.module';
+import { OrdersModule } from './orders/orders.module';
+import { MandateModule } from './mandate/mandate.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { PropertiesModule } from './properties/properties.module';
     ServiceCatalogModule,
     PropertiesModule,
     FascicoloModule,
+    OrdersModule,
+    MandateModule,
   ],
   controllers: [HealthController],
 })

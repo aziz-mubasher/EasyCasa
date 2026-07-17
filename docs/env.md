@@ -77,3 +77,9 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | EXPO_PUBLIC_OIDC_CLIENT_ID | mobile | Defaults to `easycasa-app`. |
 | EXPO_PUBLIC_WEB_APP_URL | mobile | Hosted Expo web shell (`https://app.easycasaita.com`). |
 | EXPO_TOKEN | CI / EAS | Optional — Expo access token for cloud native builds. |
+
+## Phase 10 — orders + mandate (incarico)
+| Variable | Used by | Notes |
+|---|---|---|
+| SIGNATURE_PROVIDER_URL / SIGNATURE_PROVIDER_KEY | api | Hosted FEA/QES provider. Empty → stub signing URLs (dev only). |
+| SIGNATURE_WEBHOOK_SECRET | api | HMAC-SHA256 secret for `x-signature` on `POST /webhooks/signature`. Required when `DEV_AUTH` is false. |

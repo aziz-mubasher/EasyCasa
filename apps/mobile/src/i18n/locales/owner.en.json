@@ -29,7 +29,10 @@
       "alaCarteHeading": "Pay only for what you use",
       "coveredByPackage": "Included in the selected package",
       "getQuote": "Get quote",
-      "quoteHeading": "Your quote"
+      "quoteHeading": "Your quote",
+      "acceptQuote": "Accept quote & create mandate",
+      "orderCreated": "Order {{id}}… created",
+      "awaitingLegalReview": "Awaiting legal review — mandate cannot be sent until every service is classified."
     },
     "svc": {
       "plusIva": "{{amount}} + VAT",

@@ -132,6 +132,25 @@ export {
   type PriceModel,
 } from './phase8';
 
+export {
+  OrderLineSchema,
+  OrderStatusSchema,
+  OrderSchema,
+  MandateStatusSchema,
+  MandateTypeSchema,
+  MandateSchema,
+  SigningUrlSchema,
+  EasyCasaTransactionsApi,
+  type OrderLine,
+  type OrderStatus,
+  type Order,
+  type CreateOrderRequest,
+  type MandateStatus,
+  type MandateType,
+  type Mandate,
+  type SigningUrl,
+} from './phase10';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,

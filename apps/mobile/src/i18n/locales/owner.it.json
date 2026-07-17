@@ -29,7 +29,10 @@
       "alaCarteHeading": "Paghi solo ci\u00f2 che usi",
       "coveredByPackage": "Incluso nel pacchetto selezionato",
       "getQuote": "Ottieni preventivo",
-      "quoteHeading": "Il tuo preventivo"
+      "quoteHeading": "Il tuo preventivo",
+      "acceptQuote": "Accetta preventivo e crea incarico",
+      "orderCreated": "Ordine {{id}}… creato",
+      "awaitingLegalReview": "In attesa di revisione legale — l'incarico non può essere inviato finché ogni servizio non è classificato."
     },
     "svc": {
       "plusIva": "{{amount}} + IVA",
