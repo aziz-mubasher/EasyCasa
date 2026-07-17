@@ -1,0 +1,47 @@
+{
+  "owner": {
+    "title": "My properties",
+    "untitled": "Untitled property",
+    "empty": "You haven't added a property yet.",
+    "dealType": { "sale": "For sale", "rent": "For rent" },
+    "gate": {
+      "PUBLISH": "Publish listing",
+      "CLOSE": "Complete sale (rogito)",
+      "REGISTER_LEASE": "Register lease",
+      "ready": "Ready",
+      "blocked": "Blocked"
+    },
+    "doc": {
+      "missing": "Missing",
+      "pending": "Awaiting verification",
+      "verified": "Verified",
+      "upload": "Upload",
+      "replace": "Replace"
+    },
+    "fascicolo": {
+      "title": "Document file",
+      "gatesHeading": "What each step needs",
+      "docsHeading": "Documents"
+    },
+    "services": {
+      "title": "Services",
+      "packagesHeading": "Packages",
+      "alaCarteHeading": "Pay only for what you use",
+      "coveredByPackage": "Included in the selected package",
+      "getQuote": "Get quote",
+      "quoteHeading": "Your quote"
+    },
+    "svc": {
+      "plusIva": "{{amount}} + VAT",
+      "passthrough": "{{amount}} at cost",
+      "provvigione": "{{rate}}% commission on sale"
+    },
+    "pkg": { "includes_one": "{{count}} service included", "includes_other": "{{count}} services included" },
+    "quote": {
+      "estimated": "estimated",
+      "dueNow": "Due now",
+      "estimatedTotal": "Estimated total",
+      "provvigioneNote": "Commission matures only when the deal closes."
+    }
+  }
+}

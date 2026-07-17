@@ -85,6 +85,13 @@ pnpm --filter @easycasa/migration migrate     # applies 0008 properties/document
 # Public: GET /api/service-catalog  ·  Owner: /it/owner → fascicolo wizard
 ```
 
+### Phase 9 — Owner portal (Expo)
+See `docs/phase-9.md`.
+```bash
+pnpm --filter @easycasa/mobile start
+# Profile → owner section  ·  GET /api/me/properties  ·  POST /api/uploads/presign
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

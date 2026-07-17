@@ -13,7 +13,7 @@ export class PropertiesService {
       .select()
       .from(properties)
       .where(eq(properties.ownerId, ownerId))
-      .orderBy(desc(properties.createdAt));
+      .orderBy(desc(properties.updatedAt));
   }
 
   async get(id: string) {

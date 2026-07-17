@@ -1,0 +1,47 @@
+{
+  "owner": {
+    "title": "Mis inmuebles",
+    "untitled": "Inmueble sin t\u00edtulo",
+    "empty": "A\u00fan no has a\u00f1adido un inmueble.",
+    "dealType": { "sale": "En venta", "rent": "En alquiler" },
+    "gate": {
+      "PUBLISH": "Publicar anuncio",
+      "CLOSE": "Completar venta (rogito)",
+      "REGISTER_LEASE": "Registrar contrato",
+      "ready": "Listo",
+      "blocked": "Bloqueado"
+    },
+    "doc": {
+      "missing": "Falta",
+      "pending": "Pendiente de verificaci\u00f3n",
+      "verified": "Verificado",
+      "upload": "Subir",
+      "replace": "Reemplazar"
+    },
+    "fascicolo": {
+      "title": "Expediente",
+      "gatesHeading": "Qu\u00e9 necesita cada paso",
+      "docsHeading": "Documentos"
+    },
+    "services": {
+      "title": "Servicios",
+      "packagesHeading": "Paquetes",
+      "alaCarteHeading": "Paga solo por lo que usas",
+      "coveredByPackage": "Incluido en el paquete seleccionado",
+      "getQuote": "Obtener presupuesto",
+      "quoteHeading": "Tu presupuesto"
+    },
+    "svc": {
+      "plusIva": "{{amount}} + IVA",
+      "passthrough": "{{amount}} a coste",
+      "provvigione": "{{rate}}% de comisi\u00f3n sobre la venta"
+    },
+    "pkg": { "includes_one": "{{count}} servicio incluido", "includes_other": "{{count}} servicios incluidos" },
+    "quote": {
+      "estimated": "estimado",
+      "dueNow": "A pagar ahora",
+      "estimatedTotal": "Total estimado",
+      "provvigioneNote": "La comisi\u00f3n se devenga solo al cerrar la operaci\u00f3n."
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "owner": {
+    "title": "I miei immobili",
+    "untitled": "Immobile senza titolo",
+    "empty": "Non hai ancora aggiunto un immobile.",
+    "dealType": { "sale": "In vendita", "rent": "In affitto" },
+    "gate": {
+      "PUBLISH": "Pubblica annuncio",
+      "CLOSE": "Concludi vendita (rogito)",
+      "REGISTER_LEASE": "Registra contratto",
+      "ready": "Pronto",
+      "blocked": "Bloccato"
+    },
+    "doc": {
+      "missing": "Mancante",
+      "pending": "In attesa di verifica",
+      "verified": "Verificato",
+      "upload": "Carica",
+      "replace": "Sostituisci"
+    },
+    "fascicolo": {
+      "title": "Fascicolo",
+      "gatesHeading": "Cosa serve per ogni fase",
+      "docsHeading": "Documenti"
+    },
+    "services": {
+      "title": "Servizi",
+      "packagesHeading": "Pacchetti",
+      "alaCarteHeading": "Paghi solo ci\u00f2 che usi",
+      "coveredByPackage": "Incluso nel pacchetto selezionato",
+      "getQuote": "Ottieni preventivo",
+      "quoteHeading": "Il tuo preventivo"
+    },
+    "svc": {
+      "plusIva": "{{amount}} + IVA",
+      "passthrough": "{{amount}} a costo",
+      "provvigione": "{{rate}}% provvigione sulla vendita"
+    },
+    "pkg": { "includes_one": "{{count}} servizio incluso", "includes_other": "{{count}} servizi inclusi" },
+    "quote": {
+      "estimated": "stimato",
+      "dueNow": "Da pagare ora",
+      "estimatedTotal": "Totale stimato",
+      "provvigioneNote": "La provvigione matura solo alla conclusione dell'affare."
+    }
+  }
+}

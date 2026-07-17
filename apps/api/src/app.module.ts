@@ -32,9 +32,9 @@ import { PropertiesModule } from './properties/properties.module';
     MessagingModule,
     BillingModule,
     FeaturedModule,
+    ServiceCatalogModule,
     PropertiesModule,
     FascicoloModule,
-    ServiceCatalogModule,
   ],
   controllers: [HealthController],
 })

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +13,7 @@ import { useTheme } from '../../src/theme/useTheme';
 export default function ProfileScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { t, i18n } = useTranslation();
   const { isAuthenticated, signIn, signOut } = useAuth();
   const api = useApi();
@@ -46,6 +48,13 @@ export default function ProfileScreen() {
           );
         })}
       </View>
+
+      <Pressable
+        onPress={() => router.push('/(owner)')}
+        style={[styles.action, { backgroundColor: theme.colors.surface, borderRadius: theme.radius.md }]}
+      >
+        <Text style={{ color: theme.colors.text, fontWeight: '600' }}>{t('owner.title')}</Text>
+      </Pressable>
 
       {isAuthenticated ? (
         <>

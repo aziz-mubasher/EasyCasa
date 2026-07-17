@@ -47,4 +47,21 @@ export class MediaService {
       .returning();
     return rows[0];
   }
+
+  /** Owner fascicolo / general document upload — key scoped to the user. */
+  async presignForUser(userId: string, filename: string, contentType: string) {
+    const safe = filename.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 80);
+    const key = `users/${userId}/docs/${Date.now()}-${safe}`;
+    const cmd = new PutObjectCommand({
+      Bucket: apiConfig.MINIO_BUCKET,
+      Key: key,
+      ContentType: contentType,
+    });
+    const uploadUrl = await getSignedUrl(this.s3, cmd, { expiresIn: 900 });
+    return {
+      uploadUrl,
+      fileUrl: `${apiConfig.MEDIA_PUBLIC_BASE}/${key}`,
+      key,
+    };
+  }
 }

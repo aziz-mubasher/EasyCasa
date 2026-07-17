@@ -90,89 +90,62 @@ export const SavedSearchSchema = z.object({
 });
 export type SavedSearch = z.infer<typeof SavedSearchSchema>;
 
-/* Phase 8 — catalog + fascicolo ----------------------------------------- */
+/* Phase 8/9 — re-export catalog, fascicolo, money, http --------------------- */
+export {
+  ApiError as OwnerApiError,
+  createRequester,
+  type Requester,
+  type RequesterOptions,
+} from './http';
+export {
+  formatEuroCents,
+  summarizeQuote,
+  type QuoteDisplay,
+  type QuoteDisplayLine,
+} from './money';
+export {
+  EasyCasaOwnerApi,
+  CatalogItemSchema,
+  ServicePackageSchema,
+  QuoteLineSchema,
+  QuoteSchema,
+  BlockerSchema,
+  GateResultSchema,
+  FascicoloEvaluationSchema,
+  ChecklistEntrySchema,
+  DocumentInstanceSchema,
+  FascicoloViewSchema,
+  OwnerPropertySchema,
+  PriceModelSchema,
+  type CatalogItem,
+  type ServicePackage,
+  type Quote,
+  type QuoteLine,
+  type QuoteRequest,
+  type Blocker,
+  type GateResult,
+  type FascicoloEvaluation,
+  type ChecklistEntry,
+  type DocumentInstance,
+  type FascicoloView,
+  type OwnerProperty,
+  type PriceModel,
+} from './phase8';
 
-export const QuoteLineSchema = z.object({
-  code: z.string(),
-  labelEn: z.string(),
-  labelIt: z.string(),
-  kind: z.enum(['fixed', 'provvigione', 'passthrough', 'bundle']),
-  netCents: z.number().int(),
-  ivaCents: z.number().int(),
-  grossCents: z.number().int(),
-  estimated: z.boolean(),
-  note: z.string().optional(),
-});
+import {
+  QuoteSchema,
+  FascicoloViewSchema,
+  FascicoloEvaluationSchema,
+  OwnerPropertySchema,
+  type Quote,
+  type FascicoloView,
+  type FascicoloEvaluation,
+  type OwnerProperty,
+} from './phase8';
 
-export const QuoteSchema = z.object({
-  lines: z.array(QuoteLineSchema),
-  fixedNetCents: z.number().int(),
-  provvigioneEstimatedNetCents: z.number().int(),
-  passthroughCents: z.number().int(),
-  ivaCents: z.number().int(),
-  dueNowGrossCents: z.number().int(),
-  estimatedTotalGrossCents: z.number().int(),
-  currency: z.literal('EUR'),
-});
-export type Quote = z.infer<typeof QuoteSchema>;
-
-export const GateResultSchema = z.object({
-  gate: z.enum(['PUBLISH', 'CLOSE', 'REGISTER_LEASE']),
-  allowed: z.boolean(),
-  blockers: z.array(
-    z.object({
-      document: z.string(),
-      code: z.enum(['MISSING', 'EXPIRED', 'UNVERIFIED']),
-      messageEn: z.string(),
-      messageIt: z.string(),
-    }),
-  ),
-  warnings: z.array(
-    z.object({
-      document: z.string(),
-      code: z.enum(['MISSING', 'EXPIRED', 'UNVERIFIED']),
-      messageEn: z.string(),
-      messageIt: z.string(),
-    }),
-  ),
-});
-
-export const FascicoloEvaluationSchema = z.object({
-  publish: GateResultSchema,
-  close: GateResultSchema,
-  registerLease: GateResultSchema,
-});
-export type FascicoloEvaluation = z.infer<typeof FascicoloEvaluationSchema>;
-
-export const FascicoloViewSchema = z.object({
-  propertyId: z.string(),
-  documents: z.array(
-    z.object({
-      code: z.string(),
-      issuedAt: z.string().optional(),
-      verifiedAt: z.string().optional(),
-    }),
-  ),
-  checklist: z.array(
-    z.object({
-      code: z.string(),
-      labelEn: z.string(),
-      labelIt: z.string(),
-      present: z.boolean(),
-      verified: z.boolean(),
-    }),
-  ),
-  gates: FascicoloEvaluationSchema,
-});
-export type FascicoloView = z.infer<typeof FascicoloViewSchema>;
-
-export const PropertySchema = z.object({
-  id: z.string(),
+/** Full property row from POST /properties (includes ownerId). */
+export const PropertySchema = OwnerPropertySchema.extend({
   ownerId: z.string(),
-  dealType: z.enum(['sale', 'rent']),
-  status: z.string(),
-  inCondominio: z.boolean(),
-  title: z.string().nullable().optional(),
   listingId: z.string().nullable().optional(),
   createdAt: z.union([z.string(), z.date()]).optional(),
   updatedAt: z.union([z.string(), z.date()]).optional(),
@@ -465,8 +438,10 @@ export class EasyCasaClient {
     );
   }
 
-  listMyProperties(): Promise<Property[]> {
-    return this.requestJson('/properties').then((j) => z.array(PropertySchema).parse(j));
+  listMyProperties(): Promise<OwnerProperty[]> {
+    return this.requestJson('/me/properties').then((j) =>
+      z.array(OwnerPropertySchema).parse(j),
+    );
   }
 
   createProperty(input: {
