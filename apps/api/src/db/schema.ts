@@ -246,6 +246,7 @@ export const properties = pgTable('properties', {
   status: propertyStatus('status').notNull().default('draft'),
   inCondominio: boolean('in_condominio').notNull().default(false),
   title: text('title'),
+  province: text('province'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
@@ -327,11 +328,64 @@ export const mandates = pgTable('mandates', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+// ---------------- Phase 11 — professionals / assignments ----------------
+export const verificationStatus = pgEnum('verification_status', [
+  'pending', 'verified', 'rejected',
+]);
+export const assignmentStatus = pgEnum('assignment_status', [
+  'requested', 'assigned', 'in_progress', 'delivered', 'approved',
+]);
+
+export const professionals = pgTable('professionals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  displayName: text('display_name').notNull(),
+  coverageProvinces: text('coverage_provinces').array().notNull().default([]),
+  activeAssignments: integer('active_assignments').notNull().default(0),
+  maxConcurrent: integer('max_concurrent').notNull().default(5),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const credentials = pgTable('credentials', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  professionalId: uuid('professional_id').notNull(),
+  type: text('type').notNull(),
+  status: verificationStatus('status').notNull().default('pending'),
+  reference: text('reference'),
+  expiresAt: timestamp('expires_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const serviceTasks = pgTable('service_tasks', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  orderId: uuid('order_id').notNull(),
+  propertyId: uuid('property_id').notNull(),
+  itemCode: text('item_code').notNull(),
+  requiredCredential: text('required_credential').notNull(),
+  province: text('province').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const assignments = pgTable('assignments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  taskId: uuid('task_id').notNull(),
+  professionalId: uuid('professional_id'),
+  status: assignmentStatus('status').notNull().default('requested'),
+  deliverableUrl: text('deliverable_url'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const credentialPolicies = pgTable('credential_policies', {
+  itemCode: text('item_code').primaryKey(),
+  requiredCredential: text('required_credential').notNull().default('NONE'),
+});
+
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
   devices, partnerProfiles, leads, payouts,
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
+  professionals, credentials, serviceTasks, assignments, credentialPolicies,
 };
 export type Schema = typeof schema;

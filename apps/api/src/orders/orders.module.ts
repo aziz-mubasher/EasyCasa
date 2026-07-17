@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 
+import { AssignmentsModule } from '../assignments/assignments.module';
 import { UsersModule } from '../users/users.module';
 import { PropertiesModule } from '../properties/properties.module';
 import { OrdersController } from './orders.controller';
@@ -8,7 +9,7 @@ import { DrizzleOrderRepository } from './drizzle-order.repository';
 import { Phase8PricingAdapter } from './phase8-pricing.adapter';
 
 @Module({
-  imports: [UsersModule, PropertiesModule],
+  imports: [UsersModule, PropertiesModule, forwardRef(() => AssignmentsModule)],
   controllers: [OrdersController],
   providers: [
     OrdersService,

@@ -151,6 +151,24 @@ export {
   type SigningUrl,
 } from './phase10';
 
+export {
+  CredentialTypeSchema,
+  VerificationStatusSchema,
+  CredentialSchema,
+  ProfessionalSchema,
+  AssignmentStatusSchema,
+  AssignmentSchema,
+  CandidateSchema,
+  EasyCasaOrchestrationApi,
+  type CredentialType,
+  type VerificationStatus,
+  type Credential,
+  type Professional,
+  type AssignmentStatus,
+  type Assignment,
+  type Candidate,
+} from './phase11';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,

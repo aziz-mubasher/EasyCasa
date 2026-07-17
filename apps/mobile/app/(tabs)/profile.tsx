@@ -56,6 +56,15 @@ export default function ProfileScreen() {
         <Text style={{ color: theme.colors.text, fontWeight: '600' }}>{t('owner.title')}</Text>
       </Pressable>
 
+      <Pressable
+        onPress={() => router.push('/(pro)')}
+        style={[styles.action, { backgroundColor: theme.colors.surface, borderRadius: theme.radius.md }]}
+      >
+        <Text style={{ color: theme.colors.text, fontWeight: '600' }}>
+          {t('pro.title', { defaultValue: 'Professional inbox' })}
+        </Text>
+      </Pressable>
+
       {isAuthenticated ? (
         <>
           <Pressable

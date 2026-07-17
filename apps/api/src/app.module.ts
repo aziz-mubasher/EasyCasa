@@ -18,6 +18,8 @@ import { ServiceCatalogModule } from './service-catalog/service-catalog.module';
 import { PropertiesModule } from './properties/properties.module';
 import { OrdersModule } from './orders/orders.module';
 import { MandateModule } from './mandate/mandate.module';
+import { ProfessionalsModule } from './professionals/professionals.module';
+import { AssignmentsModule } from './assignments/assignments.module';
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { MandateModule } from './mandate/mandate.module';
     FascicoloModule,
     OrdersModule,
     MandateModule,
+    ProfessionalsModule,
+    AssignmentsModule,
   ],
   controllers: [HealthController],
 })

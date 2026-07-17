@@ -16,7 +16,7 @@ migration        Schema + WP ETL / geocode / media / redirects
 infra            docker-compose, Traefik overlay, Postgres(PostGIS+pgvector), deploy & backup
 .cursor/rules    Conventions Cursor reads automatically
 .github/workflows CI + deploy + mobile-ci
-docs             phase-0..10, schema.md, wp-audit.md, env.md, vps-setup.md
+docs             phase-0..11, schema.md, wp-audit.md, env.md, vps-setup.md
 ```
 
 ## Local quickstart
@@ -98,6 +98,14 @@ See `docs/phase-10.md`.
 pnpm --filter @easycasa/migration migrate     # applies 0009 legal_basis + mandates
 # POST /api/properties/:id/orders  ·  POST /api/mandates  ·  POST /api/mandates/:id/signature-request
 # Admin: /it/admin/legal-basis  ·  GET /api/admin/catalog/legal-basis
+```
+
+### Phase 11 — Professionals + assignments
+See `docs/phase-11.md`.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0010 professionals/assignments
+# Admin: /it/admin/assignments  ·  /it/admin/professionals  ·  /it/admin/credential-policy
+# Mobile: Profile → Professional inbox (EXPO_PUBLIC_PROFESSIONAL_ID)
 ```
 
 ### Python AI service (local tests)
