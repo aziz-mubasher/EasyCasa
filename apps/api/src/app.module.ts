@@ -20,6 +20,8 @@ import { OrdersModule } from './orders/orders.module';
 import { MandateModule } from './mandate/mandate.module';
 import { ProfessionalsModule } from './professionals/professionals.module';
 import { AssignmentsModule } from './assignments/assignments.module';
+import { RentalsModule } from './rentals/rentals.module';
+import { AmlModule } from './aml/aml.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { AssignmentsModule } from './assignments/assignments.module';
     MandateModule,
     ProfessionalsModule,
     AssignmentsModule,
+    RentalsModule,
+    AmlModule,
   ],
   controllers: [HealthController],
 })

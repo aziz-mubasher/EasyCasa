@@ -108,6 +108,15 @@ pnpm --filter @easycasa/migration migrate     # applies 0010 professionals/assig
 # Mobile: Profile → Professional inbox (EXPO_PUBLIC_PROFESSIONAL_ID)
 ```
 
+### Phase 12 — Rentals compliance (RLI + cedolare + AML)
+See `docs/phase-12.md`.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0011 leases + kyc_cases
+# POST /api/leases/preview  ·  POST /api/properties/:id/leases  ·  POST /api/leases/:id/register
+# POST /api/aml/cases  ·  GET /api/admin/leases/deadlines
+# Mobile: Profile → My properties → Lease / RLI
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

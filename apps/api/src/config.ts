@@ -47,6 +47,12 @@ const Schema = z.object({
   SIGNATURE_PROVIDER_URL: z.string().default(''),
   SIGNATURE_PROVIDER_KEY: z.string().default(''),
   SIGNATURE_WEBHOOK_SECRET: z.string().default(''),
+
+  // Phase 12 — RLI + AML screening
+  RLI_CHANNEL_URL: z.string().default(''),
+  RLI_CHANNEL_CREDENTIAL: z.string().default(''),
+  AML_SCREENING_URL: z.string().default(''),
+  AML_SCREENING_KEY: z.string().default(''),
 });
 
 export type ApiConfig = z.infer<typeof Schema>;

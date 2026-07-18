@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 
+import { AmlModule } from '../aml/aml.module';
 import { OrdersModule } from '../orders/orders.module';
 import { MandateController } from './mandate.controller';
 import {
@@ -11,7 +12,7 @@ import { DrizzleMandateRepository } from './drizzle-mandate.repository';
 import { HttpSignatureProvider } from './signature.provider';
 
 @Module({
-  imports: [OrdersModule],
+  imports: [OrdersModule, forwardRef(() => AmlModule)],
   controllers: [MandateController],
   providers: [
     MandateService,

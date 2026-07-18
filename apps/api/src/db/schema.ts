@@ -1,6 +1,6 @@
 import {
   pgTable, pgEnum, uuid, text, integer, numeric, timestamp, jsonb, boolean,
-  doublePrecision, bigint, primaryKey, uniqueIndex,
+  doublePrecision, bigint, primaryKey, uniqueIndex, date,
 } from 'drizzle-orm/pg-core';
 
 export const listingStatus = pgEnum('listing_status', ['draft', 'published', 'sold', 'archived']);
@@ -380,6 +380,41 @@ export const credentialPolicies = pgTable('credential_policies', {
   requiredCredential: text('required_credential').notNull().default('NONE'),
 });
 
+// ---------------- Phase 12 — rentals / AML ----------------
+export const leaseType = pgEnum('lease_type', [
+  'libero_4_4', 'concordato_3_2', 'transitorio', 'studenti',
+]);
+export const kycStatus = pgEnum('kyc_status', ['open', 'verified', 'escalated', 'cleared']);
+
+export const leases = pgTable('leases', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  propertyId: uuid('property_id').notNull(),
+  type: leaseType('type').notNull(),
+  startAt: date('start_at', { mode: 'string' }).notNull(),
+  durationMonths: integer('duration_months').notNull(),
+  annualRentCents: integer('annual_rent_cents').notNull(),
+  cedolareSecca: boolean('cedolare_secca').notNull().default(false),
+  highTension: boolean('high_tension').notNull().default(false),
+  apeAttached: boolean('ape_attached').notNull().default(false),
+  signedAt: date('signed_at', { mode: 'string' }),
+  registrationProtocollo: text('registration_protocollo'),
+  registeredAt: timestamp('registered_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const kycCases = pgTable('kyc_cases', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  subjectRef: text('subject_ref').notNull(),
+  factors: jsonb('factors').notNull(),
+  riskLevel: text('risk_level').notNull(),
+  measure: text('measure').notNull(),
+  mustEscalate: boolean('must_escalate').notNull().default(false),
+  score: integer('score').notNull().default(0),
+  status: kycStatus('status').notNull().default('open'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
@@ -387,5 +422,6 @@ export const schema = {
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies,
+  leases, kycCases,
 };
 export type Schema = typeof schema;

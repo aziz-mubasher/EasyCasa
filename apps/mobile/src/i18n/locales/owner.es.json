@@ -45,6 +45,37 @@
       "dueNow": "A pagar ahora",
       "estimatedTotal": "Total estimado",
       "provvigioneNote": "La comisi\u00f3n se devenga solo al cerrar la operaci\u00f3n."
+    },
+    "lease": {
+      "title": "Contrato / RLI",
+      "formHeading": "Borrador de contrato",
+      "type": "Tipo de contrato",
+      "types": {
+        "LIBERO_4_4": "Libre 4+4",
+        "CONCORDATO_3_2": "Concordato 3+2",
+        "TRANSITORIO": "Transitorio",
+        "STUDENTI": "Estudiantes"
+      },
+      "startAt": "Fecha de inicio (AAAA-MM-DD)",
+      "durationMonths": "Duraci\u00f3n (meses)",
+      "annualRent": "Renta anual (€)",
+      "cedolare": "Cedolare secca",
+      "highTension": "Municipio de alta tensi\u00f3n",
+      "apeAttached": "APE adjunto",
+      "previewHeading": "Validaci\u00f3n en vivo",
+      "previewHint": "Completa el formulario para la vista previa.",
+      "cedolareRate": "Tipo cedolare",
+      "cedolareNone": "n/d (IRPEF ordinaria)",
+      "valid": "V\u00e1lido — listo para crear",
+      "invalid": "Bloqueado — corrige los problemas",
+      "create": "Crear contrato",
+      "deadline": "Plazo de registro RLI (30 d\u00edas)",
+      "taxesRegistro": "Impuesto de registro",
+      "taxesBollo": "Impuesto de sello",
+      "taxesTotal": "Impuestos al registrar",
+      "register": "Registrar con RLI",
+      "registered": "Registrado",
+      "protocollo": "Protocolo"
     }
   }
 }

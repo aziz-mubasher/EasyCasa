@@ -169,6 +169,25 @@ export {
   type Candidate,
 } from './phase11';
 
+export {
+  LeaseTypeSchema,
+  LeaseIssueSchema,
+  LeaseValidationSchema,
+  LeaseSchema,
+  RegistrationTaxesSchema,
+  RliPayloadSchema,
+  KycStatusSchema,
+  KycCaseSchema,
+  EasyCasaRentalsApi,
+  type LeaseType,
+  type LeaseInput,
+  type LeaseValidation,
+  type Lease,
+  type RliPayload,
+  type KycStatus,
+  type KycCase,
+} from './phase12';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,

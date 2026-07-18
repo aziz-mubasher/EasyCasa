@@ -45,6 +45,37 @@
       "dueNow": "Due now",
       "estimatedTotal": "Estimated total",
       "provvigioneNote": "Commission matures only when the deal closes."
+    },
+    "lease": {
+      "title": "Lease / RLI",
+      "formHeading": "Draft lease",
+      "type": "Lease type",
+      "types": {
+        "LIBERO_4_4": "Libero 4+4",
+        "CONCORDATO_3_2": "Concordato 3+2",
+        "TRANSITORIO": "Transitorio",
+        "STUDENTI": "Studenti"
+      },
+      "startAt": "Start date (YYYY-MM-DD)",
+      "durationMonths": "Duration (months)",
+      "annualRent": "Annual rent (€)",
+      "cedolare": "Cedolare secca",
+      "highTension": "High-tension municipality",
+      "apeAttached": "APE attached",
+      "previewHeading": "Live validation",
+      "previewHint": "Enter a valid form to preview.",
+      "cedolareRate": "Cedolare rate",
+      "cedolareNone": "n/a (ordinary IRPEF)",
+      "valid": "Valid — ready to create",
+      "invalid": "Blocked — fix issues below",
+      "create": "Create lease",
+      "deadline": "RLI registration deadline (30 days)",
+      "taxesRegistro": "Imposta di registro",
+      "taxesBollo": "Imposta di bollo",
+      "taxesTotal": "Taxes due at registration",
+      "register": "Register with RLI",
+      "registered": "Registered",
+      "protocollo": "Protocollo"
     }
   }
 }

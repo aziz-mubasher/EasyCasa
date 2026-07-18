@@ -38,6 +38,14 @@ export default function OwnerHome() {
             {t('owner.services.title')}
           </Text>
         </Pressable>
+        <Pressable
+          onPress={() => router.push(`/(owner)/${item.id}/lease`)}
+          style={[styles.action, { borderColor: theme.colors.border, borderRadius: theme.radius.sm }]}
+        >
+          <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>
+            {t('owner.lease.title')}
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -71,7 +79,7 @@ const styles = StyleSheet.create({
   card: { padding: 16, marginBottom: 12, gap: 6 },
   title: { fontSize: 17, fontWeight: '700' },
   status: { fontSize: 13 },
-  actions: { flexDirection: 'row', gap: 8, marginTop: 8 },
+  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 },
   action: { paddingHorizontal: 14, paddingVertical: 8, borderWidth: 1 },
   center: { textAlign: 'center', marginTop: 48 },
 });

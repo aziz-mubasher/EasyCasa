@@ -2,9 +2,13 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
+  Optional,
+  forwardRef,
 } from '@nestjs/common';
 
+import { AmlService } from '../aml/aml.service';
 import { deriveMandate } from '../transactions/domain/legal-basis';
 import { nextMandateStatus } from '../transactions/domain/state';
 import type {
@@ -22,17 +26,18 @@ export const SIGNATURE_PROVIDER = Symbol('SIGNATURE_PROVIDER');
 
 @Injectable()
 export class MandateService {
+  private readonly log = new Logger(MandateService.name);
+
   constructor(
     @Inject(MANDATE_REPOSITORY) private readonly mandates: MandateRepository,
     @Inject(ORDER_REPOSITORY) private readonly orders: OrderRepository,
     @Inject(PRICING_PORT) private readonly pricing: PricingPort,
     @Inject(SIGNATURE_PROVIDER) private readonly signatures: SignatureProvider,
+    @Optional()
+    @Inject(forwardRef(() => AmlService))
+    private readonly aml?: AmlService,
   ) {}
 
-  /**
-   * Draft a mandate for an order. Unclassified items land in
-   * `reviewRequiredItems`; the mandate stays DRAFT until review completes.
-   */
   async create(orderId: string, terms: MandateTerms): Promise<MandateRecord> {
     const order = await this.orders.get(orderId);
     if (!order) throw new NotFoundException(`Order ${orderId} not found`);
@@ -90,5 +95,20 @@ export class MandateService {
     const nextStatus = nextMandateStatus(mandate.status, 'SIGN');
     await this.mandates.markSigned(mandate.id, signedAt);
     await this.mandates.setStatus(mandate.id, nextStatus);
+
+    if (this.aml) {
+      try {
+        await this.aml.openForMandate({
+          propertyId: mandate.propertyId,
+          ownerRef: `property:${mandate.propertyId}:owner`,
+          fullName: `Owner ${mandate.propertyId.slice(0, 8)}`,
+          countryCode: 'IT',
+        });
+      } catch (err) {
+        this.log.warn(
+          `KYC open on mandate sign failed: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+    }
   }
 }

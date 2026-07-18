@@ -24,7 +24,9 @@ async function applied(): Promise<Set<string>> {
 async function run(): Promise<void> {
   await ensureMigrationsTable();
   const done = await applied();
-  const files = (await readdir(SQL_DIR)).filter((f) => f.endsWith('.sql')).sort();
+  const files = (await readdir(SQL_DIR))
+    .filter((f) => f.endsWith('.sql') && !f.startsWith('._'))
+    .sort();
 
   for (const file of files) {
     if (done.has(file)) {

@@ -83,3 +83,9 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 |---|---|---|
 | SIGNATURE_PROVIDER_URL / SIGNATURE_PROVIDER_KEY | api | Hosted FEA/QES provider. Empty → stub signing URLs (dev only). |
 | SIGNATURE_WEBHOOK_SECRET | api | HMAC-SHA256 secret for `x-signature` on `POST /webhooks/signature`. Required when `DEV_AUTH` is false. |
+
+## Phase 12 — rentals (RLI) + AML/KYC
+| Variable | Used by | Notes |
+|---|---|---|
+| RLI_CHANNEL_URL / RLI_CHANNEL_CREDENTIAL | api | Entratel/RLI-web telematic seam. Empty + `DEV_AUTH` → stub protocollo; production must configure. |
+| AML_SCREENING_URL / AML_SCREENING_KEY | api | PEP/sanctions screening. Empty + `DEV_AUTH` → clean screen; otherwise fails safe (errors). |

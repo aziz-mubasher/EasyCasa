@@ -45,6 +45,37 @@
       "dueNow": "Da pagare ora",
       "estimatedTotal": "Totale stimato",
       "provvigioneNote": "La provvigione matura solo alla conclusione dell'affare."
+    },
+    "lease": {
+      "title": "Contratto / RLI",
+      "formHeading": "Bozza contratto",
+      "type": "Tipologia",
+      "types": {
+        "LIBERO_4_4": "Libero 4+4",
+        "CONCORDATO_3_2": "Concordato 3+2",
+        "TRANSITORIO": "Transitorio",
+        "STUDENTI": "Studenti"
+      },
+      "startAt": "Data inizio (AAAA-MM-GG)",
+      "durationMonths": "Durata (mesi)",
+      "annualRent": "Canone annuo (€)",
+      "cedolare": "Cedolare secca",
+      "highTension": "Comune ad alta tensione abitativa",
+      "apeAttached": "APE allegato",
+      "previewHeading": "Validazione live",
+      "previewHint": "Compila il modulo per l'anteprima.",
+      "cedolareRate": "Aliquota cedolare",
+      "cedolareNone": "n/d (IRPEF ordinaria)",
+      "valid": "Valido — pronto per creare",
+      "invalid": "Bloccato — correggi i problemi",
+      "create": "Crea contratto",
+      "deadline": "Scadenza registrazione RLI (30 giorni)",
+      "taxesRegistro": "Imposta di registro",
+      "taxesBollo": "Imposta di bollo",
+      "taxesTotal": "Imposte alla registrazione",
+      "register": "Registra via RLI",
+      "registered": "Registrato",
+      "protocollo": "Protocollo"
     }
   }
 }
