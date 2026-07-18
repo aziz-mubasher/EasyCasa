@@ -1,11 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { randomUUID } from 'node:crypto';
 import { eq, sql } from 'drizzle-orm';
 import { apiConfig } from '../config';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { media } from '../db/schema';
+import { buildObjectKey, isAllowedContentType } from '../uploads/domain/keys';
 
 @Injectable()
 export class MediaService {
@@ -50,8 +52,12 @@ export class MediaService {
 
   /** Owner fascicolo / general document upload — key scoped to the user. */
   async presignForUser(userId: string, filename: string, contentType: string) {
-    const safe = filename.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 80);
-    const key = `users/${userId}/docs/${Date.now()}-${safe}`;
+    if (!isAllowedContentType(contentType)) {
+      throw new BadRequestException(
+        `Content type not allowed: ${contentType}. Use pdf, jpeg, png, or webp.`,
+      );
+    }
+    const key = buildObjectKey(userId, filename, randomUUID());
     const cmd = new PutObjectCommand({
       Bucket: apiConfig.MINIO_BUCKET,
       Key: key,

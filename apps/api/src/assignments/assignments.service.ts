@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+import { tasksForOrder } from '../orders/domain/order-tasks';
 import { canAssign } from '../professionals/domain/eligibility';
 import { selectCandidates } from '../professionals/domain/routing';
 import { nextAssignmentStatus } from '../professionals/domain/state';
@@ -45,23 +46,24 @@ export class AssignmentsService {
     return this.assignments.createAssignment(task.id);
   }
 
-  /** Spawn tasks for every order line that needs a credential (skips NONE). */
+  /** Spawn tasks for every order line that needs a credential (skips NONE, dedupes). */
   async spawnForOrder(input: {
     orderId: string;
     propertyId: string;
     itemCodes: string[];
     province: string;
   }): Promise<AssignmentRecord[]> {
+    const toSpawn = tasksForOrder(input.itemCodes, (code) =>
+      this.policy.requiredCredentialFor(code),
+    );
     const created: AssignmentRecord[] = [];
-    for (const itemCode of input.itemCodes) {
-      const required = this.policy.requiredCredentialFor(itemCode);
-      if (required === 'NONE') continue;
+    for (const { itemCode, requiredCredential } of toSpawn) {
       const task = await this.assignments.createTask({
         orderId: input.orderId,
         propertyId: input.propertyId,
         itemCode,
         province: input.province,
-        requiredCredential: required,
+        requiredCredential,
       });
       created.push(await this.assignments.createAssignment(task.id));
     }

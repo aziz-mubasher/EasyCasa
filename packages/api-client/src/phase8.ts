@@ -157,6 +157,17 @@ export class EasyCasaOwnerApi {
     return this.request('/me/properties', z.array(OwnerPropertySchema));
   }
 
+  presignUpload(body: { filename: string; contentType: string }): Promise<{
+    uploadUrl: string;
+    fileUrl: string;
+  }> {
+    return this.request(
+      '/uploads/presign',
+      z.object({ uploadUrl: z.string(), fileUrl: z.string() }),
+      { method: 'POST', body: JSON.stringify(body) },
+    );
+  }
+
   getFascicolo(propertyId: string): Promise<FascicoloView> {
     return this.request(
       `/properties/${encodeURIComponent(propertyId)}/fascicolo`,

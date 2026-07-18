@@ -16,7 +16,7 @@ migration        Schema + WP ETL / geocode / media / redirects
 infra            docker-compose, Traefik overlay, Postgres(PostGIS+pgvector), deploy & backup
 .cursor/rules    Conventions Cursor reads automatically
 .github/workflows CI + deploy + mobile-ci
-docs             phase-0..13, schema.md, wp-audit.md, env.md, vps-setup.md
+docs             phase-0..14, schema.md, wp-audit.md, env.md, vps-setup.md
 ```
 
 ## Local quickstart
@@ -123,6 +123,13 @@ See `docs/phase-13.md`.
 pnpm --filter @easycasa/admin dev             # Vite SPA on :5174
 # Deployed: https://admin.easycasaita.com
 # Orchestration · Credentials · Compliance · AML · RLI monitor
+```
+
+### Phase 14 — API completeness
+See `docs/phase-14.md`.
+```bash
+# Hardens uploads + order→task derivation; documents /me + admin list endpoints
+# EasyCasaMeApi: listMyProperties · presignUpload · registerDevice
 ```
 
 ### Python AI service (local tests)

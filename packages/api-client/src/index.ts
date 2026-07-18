@@ -198,6 +198,15 @@ export {
   type AdminCatalogItem,
 } from './admin';
 
+export {
+  EasyCasaMeApi,
+  MeOwnerPropertySchema,
+  PresignResultSchema,
+  OkSchema,
+  type MeOwnerProperty,
+  type PresignResult,
+} from './phase14';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,

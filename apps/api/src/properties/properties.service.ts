@@ -2,18 +2,36 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { desc, eq } from 'drizzle-orm';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { properties } from '../db/schema';
+import { listings, properties } from '../db/schema';
 
 @Injectable()
 export class PropertiesService {
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
-  listForOwner(ownerId: string) {
-    return this.db
-      .select()
+  async listForOwner(ownerId: string) {
+    const rows = await this.db
+      .select({
+        id: properties.id,
+        ownerId: properties.ownerId,
+        listingId: properties.listingId,
+        dealType: properties.dealType,
+        status: properties.status,
+        inCondominio: properties.inCondominio,
+        title: properties.title,
+        province: properties.province,
+        listingTitle: listings.title,
+        createdAt: properties.createdAt,
+        updatedAt: properties.updatedAt,
+      })
       .from(properties)
+      .leftJoin(listings, eq(properties.listingId, listings.id))
       .where(eq(properties.ownerId, ownerId))
       .orderBy(desc(properties.updatedAt));
+
+    return rows.map(({ listingTitle, ...p }) => ({
+      ...p,
+      title: p.title ?? listingTitle ?? null,
+    }));
   }
 
   async get(id: string) {
