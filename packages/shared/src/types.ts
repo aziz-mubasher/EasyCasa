@@ -4,7 +4,14 @@ export type PropertyCategory =
 
 export type ListingStatus = 'draft' | 'published' | 'sold' | 'archived';
 export type TransactionType = 'sale' | 'rent';
-export type UserRole = 'buyer' | 'seller' | 'agent' | 'partner' | 'pro_marketer' | 'admin';
+export type UserRole =
+  | 'buyer'
+  | 'seller'
+  | 'agent'
+  | 'partner'
+  | 'pro_marketer'
+  | 'admin'
+  | 'professional';
 
 export interface HealthStatus {
   status: 'ok';

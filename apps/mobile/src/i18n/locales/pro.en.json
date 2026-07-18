@@ -1,0 +1,28 @@
+{
+  "pro": {
+    "title": "Professional",
+    "inbox": { "title": "My assignments", "empty": "No assignments yet.", "load": "Load: {{active}} / {{max}}" },
+    "detail": {
+      "title": "Assignment",
+      "property": "Property",
+      "credential": "Required credential",
+      "province": "Province",
+      "start": "Start task",
+      "deliver": "Upload deliverable"
+    },
+    "creds": {
+      "title": "Credentials",
+      "yours": "Your credentials",
+      "none": "No credentials on file.",
+      "add": "Submit a credential",
+      "reference": "Reference (REA / albo / policy no.)",
+      "submit": "Submit for verification",
+      "note": "Credentials must be verified by EasyCasa before you can be assigned regulated work.",
+      "PENDING": "Pending",
+      "VERIFIED": "Verified",
+      "REJECTED": "Rejected"
+    },
+    "card": { "province": "Province {{province}}", "delivered": "Deliverable uploaded" },
+    "cred": { "expires": "Expires {{date}}", "PENDING": "Pending", "VERIFIED": "Verified", "REJECTED": "Rejected" }
+  }
+}

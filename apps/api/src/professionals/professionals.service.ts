@@ -25,6 +25,7 @@ export class ProfessionalsService {
     displayName: string;
     coverageProvinces: string[];
     maxConcurrent?: number;
+    userId?: string;
   }): Promise<Professional> {
     return this.repo.create(input);
   }

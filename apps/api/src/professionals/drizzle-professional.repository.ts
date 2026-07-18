@@ -16,6 +16,7 @@ export class DrizzleProfessionalRepository implements ProfessionalRepository {
     displayName: string;
     coverageProvinces: string[];
     maxConcurrent?: number;
+    userId?: string;
   }): Promise<Professional> {
     const rows = await this.db
       .insert(professionals)
@@ -23,6 +24,7 @@ export class DrizzleProfessionalRepository implements ProfessionalRepository {
         displayName: input.displayName,
         coverageProvinces: input.coverageProvinces,
         maxConcurrent: input.maxConcurrent ?? 5,
+        ...(input.userId ? { userId: input.userId } : {}),
       })
       .returning();
     return this.toDomain(rows[0]!, []);

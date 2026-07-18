@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 
 import { useAuth } from '../../src/auth/AuthProvider';
 import { useApi } from '../../src/api/client';
@@ -17,6 +18,16 @@ export default function ProfileScreen() {
   const { t, i18n } = useTranslation();
   const { isAuthenticated, signIn, signOut } = useAuth();
   const api = useApi();
+
+  const me = useQuery({
+    queryKey: ['me'],
+    queryFn: () => api.getMe(),
+    enabled: isAuthenticated,
+  });
+
+  const showPro =
+    isAuthenticated &&
+    (me.data?.role === 'professional' || me.data?.role === 'admin');
 
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background, paddingTop: insets.top + 16 }]}>
@@ -56,14 +67,14 @@ export default function ProfileScreen() {
         <Text style={{ color: theme.colors.text, fontWeight: '600' }}>{t('owner.title')}</Text>
       </Pressable>
 
-      <Pressable
-        onPress={() => router.push('/(pro)')}
-        style={[styles.action, { backgroundColor: theme.colors.surface, borderRadius: theme.radius.md }]}
-      >
-        <Text style={{ color: theme.colors.text, fontWeight: '600' }}>
-          {t('pro.title', { defaultValue: 'Professional inbox' })}
-        </Text>
-      </Pressable>
+      {showPro ? (
+        <Pressable
+          onPress={() => router.push('/(pro)')}
+          style={[styles.action, { backgroundColor: theme.colors.surface, borderRadius: theme.radius.md }]}
+        >
+          <Text style={{ color: theme.colors.text, fontWeight: '600' }}>{t('pro.title')}</Text>
+        </Pressable>
+      ) : null}
 
       {isAuthenticated ? (
         <>

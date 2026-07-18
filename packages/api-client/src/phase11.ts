@@ -77,6 +77,7 @@ export class EasyCasaOrchestrationApi {
     displayName: string;
     coverageProvinces: string[];
     maxConcurrent?: number;
+    userId?: string;
   }): Promise<Professional> {
     return this.request('/professionals', ProfessionalSchema, {
       method: 'POST',

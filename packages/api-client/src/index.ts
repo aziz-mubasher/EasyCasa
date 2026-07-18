@@ -207,6 +207,18 @@ export {
   type PresignResult,
 } from './phase14';
 
+export {
+  EasyCasaProfessionalApi,
+  CredentialSchema as ProCredentialSchema,
+  ProProfileSchema,
+  ProAssignmentSchema,
+  AssignmentStatusSchema as ProAssignmentStatusSchema,
+  type ProCredential,
+  type ProProfile,
+  type ProAssignment,
+  type AssignmentStatus as ProAssignmentStatus,
+} from './phase15';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,
@@ -443,6 +455,29 @@ export class EasyCasaClient {
   }
 
   /* Authenticated — favorites & saved searches ---------------------- */
+
+  async getMe(): Promise<{
+    id: string;
+    role: string;
+    email: string | null;
+    displayName: string | null;
+  }> {
+    const json = await this.requestJson('/me');
+    return z
+      .object({
+        id: z.string(),
+        role: z.string(),
+        email: z.string().nullable().optional(),
+        displayName: z.string().nullable().optional(),
+      })
+      .transform((r) => ({
+        id: r.id,
+        role: r.role,
+        email: r.email ?? null,
+        displayName: r.displayName ?? null,
+      }))
+      .parse(json);
+  }
 
   async getFavorites(): Promise<Listing[]> {
     const json = await this.requestJson('/me/favorites');

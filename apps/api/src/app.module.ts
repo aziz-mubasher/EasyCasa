@@ -20,6 +20,7 @@ import { OrdersModule } from './orders/orders.module';
 import { MandateModule } from './mandate/mandate.module';
 import { ProfessionalsModule } from './professionals/professionals.module';
 import { AssignmentsModule } from './assignments/assignments.module';
+import { ProfessionalMeModule } from './professional-me/professional-me.module';
 import { RentalsModule } from './rentals/rentals.module';
 import { AmlModule } from './aml/aml.module';
 
@@ -45,6 +46,7 @@ import { AmlModule } from './aml/aml.module';
     MandateModule,
     ProfessionalsModule,
     AssignmentsModule,
+    ProfessionalMeModule,
     RentalsModule,
     AmlModule,
   ],

@@ -1,0 +1,28 @@
+{
+  "pro": {
+    "title": "Professionista",
+    "inbox": { "title": "I miei incarichi", "empty": "Nessun incarico al momento.", "load": "Carico: {{active}} / {{max}}" },
+    "detail": {
+      "title": "Incarico",
+      "property": "Immobile",
+      "credential": "Abilitazione richiesta",
+      "province": "Provincia",
+      "start": "Avvia attivit\u00e0",
+      "deliver": "Carica documento"
+    },
+    "creds": {
+      "title": "Abilitazioni",
+      "yours": "Le tue abilitazioni",
+      "none": "Nessuna abilitazione registrata.",
+      "add": "Invia un'abilitazione",
+      "reference": "Riferimento (REA / albo / n. polizza)",
+      "submit": "Invia per verifica",
+      "note": "Le abilitazioni devono essere verificate da EasyCasa prima di poter ricevere incarichi regolamentati.",
+      "PENDING": "In attesa",
+      "VERIFIED": "Verificata",
+      "REJECTED": "Rifiutata"
+    },
+    "card": { "province": "Provincia {{province}}", "delivered": "Documento caricato" },
+    "cred": { "expires": "Scade il {{date}}", "PENDING": "In attesa", "VERIFIED": "Verificata", "REJECTED": "Rifiutata" }
+  }
+}

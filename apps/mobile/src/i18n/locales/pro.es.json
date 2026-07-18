@@ -1,0 +1,28 @@
+{
+  "pro": {
+    "title": "Profesional",
+    "inbox": { "title": "Mis encargos", "empty": "A\u00fan no hay encargos.", "load": "Carga: {{active}} / {{max}}" },
+    "detail": {
+      "title": "Encargo",
+      "property": "Inmueble",
+      "credential": "Credencial requerida",
+      "province": "Provincia",
+      "start": "Iniciar tarea",
+      "deliver": "Subir entregable"
+    },
+    "creds": {
+      "title": "Credenciales",
+      "yours": "Tus credenciales",
+      "none": "No hay credenciales registradas.",
+      "add": "Enviar una credencial",
+      "reference": "Referencia (REA / colegio / n.\u00ba p\u00f3liza)",
+      "submit": "Enviar para verificaci\u00f3n",
+      "note": "Las credenciales deben ser verificadas por EasyCasa antes de recibir trabajos regulados.",
+      "PENDING": "Pendiente",
+      "VERIFIED": "Verificada",
+      "REJECTED": "Rechazada"
+    },
+    "card": { "province": "Provincia {{province}}", "delivered": "Entregable subido" },
+    "cred": { "expires": "Vence el {{date}}", "PENDING": "Pendiente", "VERIFIED": "Verificada", "REJECTED": "Rechazada" }
+  }
+}

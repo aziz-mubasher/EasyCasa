@@ -8,6 +8,9 @@ import es from './locales/es.json';
 import ownerEn from './locales/owner.en.json';
 import ownerIt from './locales/owner.it.json';
 import ownerEs from './locales/owner.es.json';
+import proEn from './locales/pro.en.json';
+import proIt from './locales/pro.it.json';
+import proEs from './locales/pro.es.json';
 
 export const SUPPORTED_LOCALES = ['en', 'it', 'es'] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
@@ -21,9 +24,9 @@ function detectLocale(): SupportedLocale {
 
 void i18n.use(initReactI18next).init({
   resources: {
-    en: { translation: { ...en, ...ownerEn } },
-    it: { translation: { ...it, ...ownerIt } },
-    es: { translation: { ...es, ...ownerEs } },
+    en: { translation: { ...en, ...ownerEn, ...proEn } },
+    it: { translation: { ...it, ...ownerIt, ...proIt } },
+    es: { translation: { ...es, ...ownerEs, ...proEs } },
   },
   lng: detectLocale(),
   fallbackLng: 'en',

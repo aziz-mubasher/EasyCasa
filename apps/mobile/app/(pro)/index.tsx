@@ -1,88 +1,68 @@
-import React, { useCallback, useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-} from 'react-native';
-import { useFocusEffect, useRouter } from 'expo-router';
-import type { Assignment } from '@easycasa/api-client';
-import { EasyCasaOrchestrationApi } from '@easycasa/api-client';
+import React from 'react';
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
-import { config } from '../../src/config';
-import { useAuth } from '../../src/auth/AuthProvider';
+import type { ProAssignment } from '@easycasa/api-client';
+import { useMyAssignments, useMyProfile } from '../../src/api/professional-hooks';
+import { AssignmentCard } from '../../src/components/pro/AssignmentCard';
 import { useTheme } from '../../src/theme/useTheme';
 
-/** Dev: set EXPO_PUBLIC_PROFESSIONAL_ID to your professional UUID. */
-const PRO_ID = process.env.EXPO_PUBLIC_PROFESSIONAL_ID ?? '';
-
-export default function ProInboxScreen() {
+export default function ProInbox() {
   const theme = useTheme();
   const router = useRouter();
-  const { getAccessToken } = useAuth();
-  const [items, setItems] = useState<Assignment[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
+  const profile = useMyProfile();
+  const { data, isLoading, isError, refetch, isRefetching } = useMyAssignments();
 
-  const load = useCallback(async () => {
-    if (!PRO_ID) {
-      setError('Set EXPO_PUBLIC_PROFESSIONAL_ID');
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      const api = new EasyCasaOrchestrationApi({
-        baseUrl: config.apiBaseUrl,
-        getAccessToken,
-      });
-      setItems(await api.myAssignments(PRO_ID));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error');
-    } finally {
-      setLoading(false);
-    }
-  }, [getAccessToken]);
-
-  useFocusEffect(
-    useCallback(() => {
-      void load();
-    }, [load]),
-  );
-
-  if (loading && items.length === 0) {
-    return <ActivityIndicator style={styles.center} color={theme.colors.primary} />;
-  }
+  const open = (a: ProAssignment) => router.push(`/(pro)/${a.id}`);
 
   return (
-    <ScrollView
-      style={{ backgroundColor: theme.colors.background }}
-      contentContainerStyle={styles.content}
-      refreshControl={<RefreshControl refreshing={loading} onRefresh={() => void load()} />}
-    >
-      {error ? <Text style={{ color: theme.colors.danger }}>{error}</Text> : null}
-      {items.length === 0 && !error ? (
-        <Text style={{ color: theme.colors.textMuted }}>No assignments yet.</Text>
-      ) : null}
-      {items.map((a) => (
-        <Pressable
-          key={a.id}
-          onPress={() => router.push(`/(pro)/${a.id}`)}
-          style={[styles.row, { borderColor: theme.colors.border }]}
-        >
-          <Text style={{ color: theme.colors.text, fontWeight: '600' }}>{a.status}</Text>
-          <Text style={{ color: theme.colors.textMuted, fontSize: 12 }}>{a.id.slice(0, 8)}…</Text>
-        </Pressable>
-      ))}
-    </ScrollView>
+    <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+      <Pressable
+        onPress={() => router.push('/(pro)/credentials')}
+        style={[styles.header, { borderBottomColor: theme.colors.border }]}
+      >
+        <Text style={[styles.headerText, { color: theme.colors.text }]}>
+          {profile.data
+            ? t('pro.inbox.load', {
+                active: profile.data.activeAssignments,
+                max: profile.data.maxConcurrent,
+              })
+            : t('common.loading')}
+        </Text>
+        <Text style={[styles.headerLink, { color: theme.colors.primary }]}>{t('pro.creds.title')} ›</Text>
+      </Pressable>
+
+      {isLoading ? (
+        <ActivityIndicator style={styles.center} color={theme.colors.primary} />
+      ) : isError ? (
+        <Text style={[styles.center, { color: theme.colors.danger }]}>{t('common.error')}</Text>
+      ) : (
+        <FlatList
+          data={data ?? []}
+          keyExtractor={(a) => a.id}
+          renderItem={({ item }) => <AssignmentCard assignment={item} onPress={open} />}
+          contentContainerStyle={styles.list}
+          onRefresh={refetch}
+          refreshing={isRefetching}
+          ListEmptyComponent={
+            <Text style={[styles.center, { color: theme.colors.textMuted }]}>{t('pro.inbox.empty')}</Text>
+          }
+        />
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { padding: 16, gap: 12 },
-  row: { borderWidth: 1, borderRadius: 8, padding: 14, gap: 4 },
-  center: { flex: 1, marginTop: 64 },
+  root: { flex: 1 },
+  header: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1,
+  },
+  headerText: { fontSize: 13, fontWeight: '600' },
+  headerLink: { fontSize: 13, fontWeight: '600' },
+  list: { padding: 16 },
+  center: { textAlign: 'center', marginTop: 48 },
 });

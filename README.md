@@ -16,7 +16,7 @@ migration        Schema + WP ETL / geocode / media / redirects
 infra            docker-compose, Traefik overlay, Postgres(PostGIS+pgvector), deploy & backup
 .cursor/rules    Conventions Cursor reads automatically
 .github/workflows CI + deploy + mobile-ci
-docs             phase-0..14, schema.md, wp-audit.md, env.md, vps-setup.md
+docs             phase-0..15, schema.md, wp-audit.md, env.md, vps-setup.md
 ```
 
 ## Local quickstart
@@ -130,6 +130,14 @@ See `docs/phase-14.md`.
 ```bash
 # Hardens uploads + order→task derivation; documents /me + admin list endpoints
 # EasyCasaMeApi: listMyProperties · presignUpload · registerDevice
+```
+
+### Phase 15 — Professional portal
+See `docs/phase-15.md`.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0012 professionals.user_id + professional role
+# GET /api/me/professional  ·  GET /api/me/assignments  ·  POST .../start  ·  POST .../deliver
+# Mobile: Profile → Professional (role-gated) → inbox / credentials / deliverable upload
 ```
 
 ### Python AI service (local tests)

@@ -5,7 +5,9 @@ import {
 
 export const listingStatus = pgEnum('listing_status', ['draft', 'published', 'sold', 'archived']);
 export const transactionType = pgEnum('transaction_type', ['sale', 'rent']);
-export const userRole = pgEnum('user_role', ['buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin']);
+export const userRole = pgEnum('user_role', [
+  'buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin', 'professional',
+]);
 export const mediaType = pgEnum('media_type', ['image', 'floorplan', 'video']);
 
 export const users = pgTable('users', {
@@ -338,6 +340,7 @@ export const assignmentStatus = pgEnum('assignment_status', [
 
 export const professionals = pgTable('professionals', {
   id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id'),
   displayName: text('display_name').notNull(),
   coverageProvinces: text('coverage_provinces').array().notNull().default([]),
   activeAssignments: integer('active_assignments').notNull().default(0),

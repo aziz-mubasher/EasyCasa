@@ -18,7 +18,13 @@ export class UsersService {
       const existing = await this.db.select().from(users).where(eq(users.email, user.email)).limit(1);
       if (existing[0]) return existing[0];
     }
-    const role = user.roles.includes('agent') ? 'agent' : 'buyer';
+    const role = user.roles.includes('admin')
+      ? 'admin'
+      : user.roles.includes('professional')
+        ? 'professional'
+        : user.roles.includes('agent')
+          ? 'agent'
+          : 'buyer';
     const inserted = await this.db
       .insert(users)
       .values({ email: user.email, displayName: user.name, role })

@@ -21,6 +21,11 @@ export class CreateProfessionalDto {
   @IsInt()
   @Min(1)
   maxConcurrent?: number;
+
+  /** Link to users.id so /me/professional resolves for this auth subject. */
+  @IsOptional()
+  @IsString()
+  userId?: string;
 }
 
 export class AddCredentialDto {
