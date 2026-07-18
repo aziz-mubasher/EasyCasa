@@ -31,6 +31,13 @@ export class ListingsController {
     return this.listings.sitemapRefs();
   }
 
+  /** Similar homes strip — must stay above :slug. */
+  @Public()
+  @Get(':id/similar')
+  similar(@Param('id') id: string) {
+    return this.listings.getSimilar(id);
+  }
+
   @Public()
   @Get(':slug')
   getBySlug(@Param('slug') slug: string) {

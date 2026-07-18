@@ -158,6 +158,9 @@ See `docs/phase-19.md`. Competitive matrix vs immobiliare / idealista / Zillow; 
 
 ### Phase 20 — Map-search backend
 See `docs/phase-20.md`. `POST /search/bounds` + `/search/area` with filters, clustering, and energy class.
+
+### Phase 21 — Listing-detail surface
+See `docs/phase-21.md`. Assembled detail (APE, catastal, quality score) + similar listings.
 ```bash
 pnpm --filter @easycasa/migration migrate     # applies 0013 payment_intents + invoices
 # POST /api/payments/intents  ·  POST /api/payments/webhook  ·  POST /api/invoices/orders/:id

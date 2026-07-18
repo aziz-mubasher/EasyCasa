@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ListingsRepository } from './listings.repository';
 import { SearchService } from '../search/search.service';
 import { inferPropertyType } from '../search/meili-search.index';
@@ -6,17 +6,25 @@ import type { CreateListingDto } from './dto/create-listing.dto';
 import type { UpdateListingDto } from './dto/update-listing.dto';
 import type { QueryListingDto } from './dto/query-listing.dto';
 import type { AuthUser } from '../auth/auth.types';
+import { buildListingDetail } from './domain/detail';
+import { LISTING_READ, type ListingReadPort } from './domain/ports';
+import type { ListingDetail, SimilarPin } from './domain/types';
 
 function slugify(title: string): string {
   return title.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '')
     .trim().replace(/\s+/g, '-').slice(0, 80) || 'listing';
 }
 
+const SIMILAR_LIMIT = 6;
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 @Injectable()
 export class ListingsService {
   constructor(
     private readonly repo: ListingsRepository,
     private readonly searchIndex: SearchService,
+    @Inject(LISTING_READ) private readonly read: ListingReadPort,
   ) {}
 
   search(q: QueryListingDto) {
@@ -27,7 +35,32 @@ export class ListingsService {
     return this.repo.sitemapRefs();
   }
 
+  /** Phase 21 assembled detail (by UUID or slug). */
+  async getDetail(idOrSlug: string): Promise<ListingDetail> {
+    const raw = await this.read.getRaw(idOrSlug);
+    if (!raw) throw new NotFoundException(`Listing ${idOrSlug} not found`);
+    return buildListingDetail(raw);
+  }
+
+  /** Similar listings: same provincia + deal type; nearest by price. */
+  async getSimilar(idOrSlug: string): Promise<SimilarPin[]> {
+    const raw = await this.read.getRaw(idOrSlug);
+    if (!raw) throw new NotFoundException(`Listing ${idOrSlug} not found`);
+    return this.read.findSimilar({
+      excludeId: raw.id,
+      provincia: raw.provincia,
+      dealType: raw.dealType,
+      type: raw.type,
+      priceCents: raw.priceCents,
+      limit: SIMILAR_LIMIT,
+    });
+  }
+
   async getBySlug(slug: string) {
+    // UUID → Phase 21 detail (map clusters link by listingId).
+    if (UUID_RE.test(slug)) {
+      return this.getDetail(slug);
+    }
     const l = await this.repo.findBySlug(slug);
     if (!l) throw new NotFoundException('listing not found');
     const media = await this.repo.listMedia(l.id);
@@ -117,7 +150,7 @@ export class ListingsService {
         bathrooms: published.bathrooms,
         rooms: published.rooms ?? published.bedrooms,
         sizeSqm: published.sizeSqm == null ? null : Number(published.sizeSqm),
-        propertyType: inferPropertyType(null),
+        propertyType: published.propertyType ?? inferPropertyType(null),
         energyClass: published.energyClass ?? null,
         coverUrl: null,
         status: 'published',

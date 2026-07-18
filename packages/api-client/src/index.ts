@@ -249,6 +249,15 @@ export {
   type GeoPoint as MapGeoPoint,
 } from './phase20';
 
+export {
+  EasyCasaListingsApi,
+  ListingDetailSchema as ListingPageSchema,
+  SimilarPinSchema,
+  PhotoSchema as ListingPhotoSchema,
+  type ListingDetail as ListingPageDetail,
+  type SimilarPin,
+} from './phase21';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,
