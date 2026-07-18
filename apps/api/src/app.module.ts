@@ -23,6 +23,8 @@ import { AssignmentsModule } from './assignments/assignments.module';
 import { ProfessionalMeModule } from './professional-me/professional-me.module';
 import { RentalsModule } from './rentals/rentals.module';
 import { AmlModule } from './aml/aml.module';
+import { PaymentsModule } from './payments/payments.module';
+import { InvoicingModule } from './invoicing/invoicing.module';
 
 @Module({
   imports: [
@@ -49,6 +51,8 @@ import { AmlModule } from './aml/aml.module';
     ProfessionalMeModule,
     RentalsModule,
     AmlModule,
+    PaymentsModule,
+    InvoicingModule,
   ],
   controllers: [HealthController],
 })

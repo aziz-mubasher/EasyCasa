@@ -51,12 +51,20 @@ const Schema = z
     SIGNATURE_PROVIDER_KEY: z.string().default(''),
     SIGNATURE_WEBHOOK_SECRET: z.string().default(''),
 
-    // Phase 12 — RLI + AML screening
-    RLI_CHANNEL_URL: z.string().default(''),
-    RLI_CHANNEL_CREDENTIAL: z.string().default(''),
-    AML_SCREENING_URL: z.string().default(''),
-    AML_SCREENING_KEY: z.string().default(''),
-  })
+  // Phase 12 — RLI + AML screening
+  RLI_CHANNEL_URL: z.string().default(''),
+  RLI_CHANNEL_CREDENTIAL: z.string().default(''),
+  AML_SCREENING_URL: z.string().default(''),
+  AML_SCREENING_KEY: z.string().default(''),
+
+  // Phase 17 — PSP + SdI (fattura elettronica)
+  PSP_API_URL: z.string().default(''),
+  PSP_SECRET_KEY: z.string().default(''),
+  SDI_CHANNEL_URL: z.string().default(''),
+  SDI_CHANNEL_KEY: z.string().default(''),
+  EASYCASA_PIVA: z.string().default('IT00000000000'),
+  EASYCASA_DENOMINAZIONE: z.string().default('Easy Casa Ita Srl'),
+})
   .superRefine((cfg, ctx) => {
     // When DEV_AUTH is off, OIDC must be fully configured (Phase 16 fail-fast).
     if (cfg.DEV_AUTH) return;

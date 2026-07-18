@@ -50,6 +50,10 @@ export class OrdersService {
       })),
       dueNowGrossCents: quote.dueNowGrossCents,
       estimatedTotalGrossCents: quote.estimatedTotalGrossCents,
+      dueNowNetCents: quote.lines
+        .filter((l) => l.kind !== 'provvigione')
+        .reduce((s, l) => s + l.netCents, 0),
+      clientFiscalCode: null,
     });
 
     if (this.assignments) {

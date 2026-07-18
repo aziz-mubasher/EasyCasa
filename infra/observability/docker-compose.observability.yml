@@ -79,4 +79,4 @@ networks:
   app:
     external: true
     # Matches `docker compose -f infra/docker-compose.yml` project network.
-    name: infra_internal
+    name: easycasa-ita_internal

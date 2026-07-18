@@ -44,7 +44,8 @@
       "mandate": "Incarico",
       "noTypes": "Nessuna figura di mandato risolta",
       "awaitingReview": "In attesa di revisione legale di {{count}} servizio/i",
-      "signingOpened": "Firma aperta nel browser."
+      "signingOpened": "Firma aperta nel browser.",
+      "paymentReady": "Intent di pagamento pronto — conferma con l'SDK PSP (follow-up)."
     },
     "svc": {
       "plusIva": "{{amount}} + IVA",

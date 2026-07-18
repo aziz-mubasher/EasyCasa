@@ -301,6 +301,8 @@ export const serviceOrders = pgTable('service_orders', {
   itemCodes: text('item_codes').array().notNull().default([]),
   dueNowGrossCents: integer('due_now_gross_cents').notNull().default(0),
   estimatedTotalGrossCents: integer('estimated_total_gross_cents').notNull().default(0),
+  clientFiscalCode: text('client_fiscal_code'),
+  dueNowNetCents: integer('due_now_net_cents').notNull().default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -418,6 +420,34 @@ export const kycCases = pgTable('kyc_cases', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+// ---------------- Phase 17 — payments / fattura elettronica ----------------
+export const paymentStatus = pgEnum('payment_status', [
+  'requires_payment', 'processing', 'succeeded', 'failed', 'refunded',
+]);
+export const paymentPurpose = pgEnum('payment_purpose', ['due_now', 'provvigione']);
+
+export const paymentIntents = pgTable('payment_intents', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  orderId: uuid('order_id').notNull(),
+  purpose: paymentPurpose('purpose').notNull(),
+  amountCents: integer('amount_cents').notNull(),
+  status: paymentStatus('status').notNull().default('requires_payment'),
+  providerRef: text('provider_ref'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const invoices = pgTable('invoices', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  orderId: uuid('order_id').notNull(),
+  paymentIntentId: uuid('payment_intent_id'),
+  totaleDocumentoCents: integer('totale_documento_cents').notNull(),
+  payload: jsonb('payload').notNull(),
+  sdiProtocollo: text('sdi_protocollo'),
+  transmittedAt: timestamp('transmitted_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
@@ -426,5 +456,6 @@ export const schema = {
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies,
   leases, kycCases,
+  paymentIntents, invoices,
 };
 export type Schema = typeof schema;

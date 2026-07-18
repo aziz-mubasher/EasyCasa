@@ -1,5 +1,10 @@
 # Run from repo root:  docker compose -f infra/docker-compose.yml --env-file .env up -d
 # Build contexts are the repo root ("..") because the compose file lives in /infra.
+#
+# Project name on the VPS (and locally): Easy Casa Ita → easycasa-ita
+# (avoids the ambiguous default "infra" from this folder name).
+
+name: easycasa-ita
 
 services:
   db:
@@ -127,12 +132,19 @@ services:
 
 networks:
   internal:
+    name: easycasa-ita_internal
     driver: bridge
 
 volumes:
   db_data:
+    name: easycasa-ita_db_data
   redis_data:
+    name: easycasa-ita_redis_data
   meili_data:
+    name: easycasa-ita_meili_data
   minio_data:
+    name: easycasa-ita_minio_data
   caddy_data:
+    name: easycasa-ita_caddy_data
   caddy_config:
+    name: easycasa-ita_caddy_config

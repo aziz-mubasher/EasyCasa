@@ -89,6 +89,9 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 |---|---|---|
 | RLI_CHANNEL_URL / RLI_CHANNEL_CREDENTIAL | api | Entratel/RLI-web telematic seam. Empty + `DEV_AUTH` → stub protocollo; production must configure. |
 | AML_SCREENING_URL / AML_SCREENING_KEY | api | PEP/sanctions screening. Empty + `DEV_AUTH` → clean screen; otherwise fails safe (errors). |
+| PSP_API_URL / PSP_SECRET_KEY | api | Phase 17 order PaymentIntents seam. Empty + `DEV_AUTH` → stub client secret. |
+| SDI_CHANNEL_URL / SDI_CHANNEL_KEY | api | Phase 17 SdI fattura transmission. Empty + `DEV_AUTH` → stub protocollo. |
+| EASYCASA_PIVA / EASYCASA_DENOMINAZIONE | api | Cedente on fattura elettronica (defaults to Easy Casa Ita). |
 
 ## Phase 13 — admin console
 | Variable | Used by | Notes |

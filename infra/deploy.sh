@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy EasyCasa on the VPS. Run from the repo root or via CI over SSH.
+# Deploy Easy Casa Ita on the VPS. Run from the repo root or via CI over SSH.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -10,6 +10,7 @@ if [ ! -f .env ]; then
   exit 1
 fi
 
+# Compose project name is set in docker-compose.yml (`name: easycasa-ita`).
 COMPOSE="docker compose -f infra/docker-compose.yml --env-file .env"
 EDGE="caddy"
 if docker network inspect root_default >/dev/null 2>&1; then

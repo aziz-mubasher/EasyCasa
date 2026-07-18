@@ -1,6 +1,8 @@
 # VPS Setup & Hardening (Phase 0, Step 1)
 
-Run on your **Hostinger VPS** (not on your Mac). Cloning to `/opt/easycasa` on a local machine will fail with `Permission denied`.
+Run on your **Hostinger VPS** (not on your Mac). Cloning to `/opt/easycasa-ita` on a local machine will fail with `Permission denied`.
+
+**Project name:** Docker Compose project is **`easycasa-ita`** (Easy Casa Ita) — set via `name:` in `infra/docker-compose.yml`. Containers appear as `easycasa-ita-api-1`, etc., alongside other VPS apps.
 
 ## Find your VPS (Hostinger CLI)
 
@@ -30,8 +32,8 @@ Options:
 
 ```bash
 rsync -avz --exclude node_modules --exclude .next --exclude dist --exclude services/ai/.venv \
-  "/path/to/Easy Casa Platform/" root@<VPS_IP>:/opt/easycasa/
-ssh root@<VPS_IP> 'cd /opt/easycasa && cp .env.example .env && chmod +x infra/deploy.sh infra/backup.sh'
+  "/path/to/Easy Casa Platform/" root@<VPS_IP>:/opt/easycasa-ita/
+ssh root@<VPS_IP> 'cd /opt/easycasa-ita && cp .env.example .env && chmod +x infra/deploy.sh infra/backup.sh'
 ```
 
 Run as root on a fresh Ubuntu 22.04/24.04 VPS. Do prod and staging on separate nodes.
@@ -81,9 +83,11 @@ usermod -aG docker deploy
 
 ## 6. Clone the repo
 ```bash
-sudo mkdir -p /opt/easycasa && sudo chown deploy:deploy /opt/easycasa
+sudo mkdir -p /opt/easycasa-ita && sudo chown deploy:deploy /opt/easycasa-ita
+# Optional alias for older scripts:
+# sudo ln -sfn /opt/easycasa-ita /opt/easycasa
 su - deploy
-cd /opt/easycasa
+cd /opt/easycasa-ita
 git clone git@github.com:aziz-mubasher/EasyCasa.git .
 cp .env.example .env   # then edit .env with real secrets
 ```
@@ -101,5 +105,5 @@ Traefik issues TLS via the existing `mytlschallenge` resolver; Caddy is skipped 
 ```bash
 crontab -e
 # nightly at 02:30
-30 2 * * * /opt/easycasa/infra/backup.sh >> /opt/easycasa/backups/backup.log 2>&1
+30 2 * * * /opt/easycasa-ita/infra/backup.sh >> /opt/easycasa-ita/backups/backup.log 2>&1
 ```

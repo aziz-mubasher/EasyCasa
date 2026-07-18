@@ -16,7 +16,7 @@ migration        Schema + WP ETL / geocode / media / redirects
 infra            docker-compose, Traefik overlay, Postgres(PostGIS+pgvector), deploy & backup
 .cursor/rules    Conventions Cursor reads automatically
 .github/workflows CI + deploy + mobile-ci
-docs             phase-0..16, schema.md, wp-audit.md, env.md, vps-setup.md
+docs             phase-0..17, schema.md, wp-audit.md, env.md, vps-setup.md
 ```
 
 ## Local quickstart
@@ -147,6 +147,14 @@ See `docs/phase-16.md`.
 # API: OIDC required when DEV_AUTH=false (jose JWKS + S3/MinIO already real)
 ```
 
+### Phase 17 — Payments + fattura elettronica
+See `docs/phase-17.md`.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0013 payment_intents + invoices
+# POST /api/payments/intents  ·  POST /api/payments/webhook  ·  POST /api/invoices/orders/:id
+# EasyCasaPaymentsApi; SUCCEEDED → auto SdI fattura (DEV stub when SDI_* empty)
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai
@@ -156,7 +164,7 @@ pytest   # from repo root: pytest services/ai
 ```
 
 ## Deploy
-See `docs/vps-setup.md`. On the shared Hostinger VPS, Traefik routes `easycasaita.com` (Caddy is skipped automatically).
+See `docs/vps-setup.md`. On the shared Hostinger VPS, Traefik routes `easycasaita.com` (Caddy is skipped automatically). Docker Compose project name: **`easycasa-ita`** (Easy Casa Ita), install path `/opt/easycasa-ita`.
 
 ## Definition of Done
 Spec in `/docs` → `pnpm lint && pnpm typecheck && pnpm test` pass → verified on staging → human-reviewed → no secrets in git.

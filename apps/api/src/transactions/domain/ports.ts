@@ -40,6 +40,10 @@ export interface OrderRecord {
   lines: OrderLineRecord[];
   dueNowGrossCents: number;
   estimatedTotalGrossCents: number;
+  /** Sum of net (imponibile) for non-provvigione lines. */
+  dueNowNetCents: number;
+  /** Cliente CF / P.IVA for fattura elettronica (optional until checkout collects it). */
+  clientFiscalCode: string | null;
 }
 
 export interface OrderRepository {

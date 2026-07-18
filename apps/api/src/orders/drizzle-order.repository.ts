@@ -24,6 +24,8 @@ export class DrizzleOrderRepository implements OrderRepository {
         itemCodes: input.itemCodes,
         dueNowGrossCents: input.dueNowGrossCents,
         estimatedTotalGrossCents: input.estimatedTotalGrossCents,
+        dueNowNetCents: input.dueNowNetCents,
+        clientFiscalCode: input.clientFiscalCode,
       })
       .returning();
     const order = inserted[0]!;
@@ -48,6 +50,8 @@ export class DrizzleOrderRepository implements OrderRepository {
       itemCodes: order.itemCodes ?? [],
       dueNowGrossCents: order.dueNowGrossCents,
       estimatedTotalGrossCents: order.estimatedTotalGrossCents,
+      dueNowNetCents: order.dueNowNetCents,
+      clientFiscalCode: order.clientFiscalCode,
       lines: input.lines,
     };
   }
@@ -68,6 +72,8 @@ export class DrizzleOrderRepository implements OrderRepository {
       itemCodes: order.itemCodes ?? [],
       dueNowGrossCents: order.dueNowGrossCents,
       estimatedTotalGrossCents: order.estimatedTotalGrossCents,
+      dueNowNetCents: order.dueNowNetCents,
+      clientFiscalCode: order.clientFiscalCode,
       lines: lines.map((l) => ({
         itemCode: l.itemCode,
         kind: l.kind,

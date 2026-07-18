@@ -13,13 +13,14 @@ import {
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import { formatEuroCents, type Mandate, type Order } from '@easycasa/api-client';
+import { formatEuroCents, EasyCasaPaymentsApi, type Mandate, type Order } from '@easycasa/api-client';
 import {
   useCreateMandate,
   useCreateOrder,
   useRequestSignature,
 } from '../../../src/api/owner-tx-hooks';
 import { MandateStatusCard } from '../../../src/components/owner/MandateStatusCard';
+import { useAuth } from '../../../src/auth/AuthProvider';
 import { config } from '../../../src/config';
 import { useTheme } from '../../../src/theme/useTheme';
 
@@ -43,6 +44,7 @@ export default function CheckoutScreen() {
     }
   }, [params.selection]);
 
+  const { getAccessToken } = useAuth();
   const createOrder = useCreateOrder(pid);
   const createMandate = useCreateMandate();
   const requestSignature = useRequestSignature();
@@ -50,11 +52,26 @@ export default function CheckoutScreen() {
   const [order, setOrder] = useState<Order | null>(null);
   const [mandate, setMandate] = useState<Mandate | null>(null);
   const [exclusive, setExclusive] = useState(true);
+  const [paymentSecret, setPaymentSecret] = useState<string | null>(null);
 
   const onAccept = async () => {
     try {
       const o = await createOrder.mutateAsync(selection);
       setOrder(o);
+
+      if (o.dueNowGrossCents > 0) {
+        const payments = new EasyCasaPaymentsApi({
+          baseUrl: config.apiBaseUrl,
+          getAccessToken,
+        });
+        const intent = await payments.createIntent({
+          orderId: o.id,
+          purpose: 'DUE_NOW',
+          amountCents: o.dueNowGrossCents,
+        });
+        setPaymentSecret(intent.clientSecret);
+      }
+
       const m = await createMandate.mutateAsync({
         orderId: o.id,
         exclusive,
@@ -97,6 +114,11 @@ export default function CheckoutScreen() {
           <Text style={[styles.line, { color: theme.colors.textMuted }]}>
             {t('owner.checkout.estimatedTotal')}: {formatEuroCents(order.estimatedTotalGrossCents)}
           </Text>
+          {paymentSecret ? (
+            <Text style={[styles.line, { color: theme.colors.textMuted, fontSize: 12 }]}>
+              {t('owner.checkout.paymentReady')}
+            </Text>
+          ) : null}
         </View>
       ) : (
         <Text style={[styles.muted, { color: theme.colors.textMuted }]}>

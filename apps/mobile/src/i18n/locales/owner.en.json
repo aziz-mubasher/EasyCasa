@@ -44,7 +44,8 @@
       "mandate": "Mandate",
       "noTypes": "No mandate figure resolved",
       "awaitingReview": "Awaiting legal review of {{count}} service(s)",
-      "signingOpened": "Signing opened in your browser."
+      "signingOpened": "Signing opened in your browser.",
+      "paymentReady": "Payment intent ready — confirm with the PSP SDK (follow-up)."
     },
     "svc": {
       "plusIva": "{{amount}} + VAT",

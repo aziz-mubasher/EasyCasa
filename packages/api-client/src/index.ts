@@ -219,6 +219,19 @@ export {
   type AssignmentStatus as ProAssignmentStatus,
 } from './phase15';
 
+export {
+  EasyCasaPaymentsApi,
+  EasyCasaBillingApi,
+  PaymentStatusSchema,
+  PaymentIntentSchema,
+  CreatedIntentSchema,
+  InvoiceSchema as PaymentInvoiceSchema,
+  type PaymentStatus,
+  type PaymentIntent,
+  type CreatedIntent,
+  type Invoice as PaymentInvoice,
+} from './phase17';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,
