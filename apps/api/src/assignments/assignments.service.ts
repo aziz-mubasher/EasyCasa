@@ -127,6 +127,18 @@ export class AssignmentsService {
     return this.assignments.listAssignments(status ? { status } : undefined);
   }
 
+  /** `open` = everything except APPROVED (admin orchestration board). */
+  async listOpenOrByStatus(
+    status?: 'open' | AssignmentStatus,
+  ): Promise<AssignmentRecord[]> {
+    if (!status) return this.list();
+    if (status === 'open') {
+      const all = await this.list();
+      return all.filter((a) => a.status !== 'APPROVED');
+    }
+    return this.list(status);
+  }
+
   listForProfessional(professionalId: string): Promise<AssignmentRecord[]> {
     return this.assignments.listForProfessional(professionalId);
   }

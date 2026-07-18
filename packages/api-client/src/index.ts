@@ -188,6 +188,16 @@ export {
   type KycCase,
 } from './phase12';
 
+export {
+  EasyCasaAdminApi,
+  LegalBasisSchema,
+  RequiredCredentialSchema,
+  AdminCatalogItemSchema,
+  type LegalBasis,
+  type RequiredCredential,
+  type AdminCatalogItem,
+} from './admin';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,

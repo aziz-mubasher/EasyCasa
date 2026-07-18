@@ -12,6 +12,7 @@ export default tseslint.config(
       "**/*.config.*",
       "load/k6/**",
       "apps/mobile/**",
+      "apps/admin/dist/**",
     ],
   },
   js.configs.recommended,

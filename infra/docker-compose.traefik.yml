@@ -45,6 +45,21 @@ services:
       - traefik.http.routers.easycasa-web-http.entrypoints=web
       - traefik.http.routers.easycasa-web-http.service=easycasa-web
 
+  admin:
+    networks: [internal, traefik]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=root_default
+      - traefik.http.routers.easycasa-admin.rule=Host(`admin.${STAGING_DOMAIN}`)
+      - traefik.http.routers.easycasa-admin.entrypoints=websecure
+      - traefik.http.routers.easycasa-admin.tls=true
+      - traefik.http.routers.easycasa-admin.tls.certresolver=mytlschallenge
+      - traefik.http.routers.easycasa-admin.middlewares=easycasa-headers@docker
+      - traefik.http.services.easycasa-admin.loadbalancer.server.port=80
+      - traefik.http.routers.easycasa-admin-http.rule=Host(`admin.${STAGING_DOMAIN}`)
+      - traefik.http.routers.easycasa-admin-http.entrypoints=web
+      - traefik.http.routers.easycasa-admin-http.service=easycasa-admin
+
   ai:
     networks: [internal, traefik]
     labels:

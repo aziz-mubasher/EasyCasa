@@ -49,6 +49,10 @@ export class RentalsService {
     return lease;
   }
 
+  list(): Promise<LeaseRecord[]> {
+    return this.leases.listAll();
+  }
+
   async payload(id: string): Promise<RliPayload> {
     const lease = await this.get(id);
     return buildRliPayload(lease);

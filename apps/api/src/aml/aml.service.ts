@@ -48,6 +48,10 @@ export class AmlService {
     return kyc;
   }
 
+  list(): Promise<KycCaseRecord[]> {
+    return this.cases.listAll();
+  }
+
   async advance(id: string, event: KycEvent): Promise<KycCaseRecord> {
     const kyc = await this.get(id);
     const status = nextKycStatus(kyc.status, event, {

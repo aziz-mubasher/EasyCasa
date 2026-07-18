@@ -36,6 +36,11 @@ export class DrizzleLeaseRepository implements LeaseRepository {
     return rows[0] ? this.toRecord(rows[0]) : null;
   }
 
+  async listAll(): Promise<LeaseRecord[]> {
+    const rows = await this.db.select().from(leases);
+    return rows.map((r) => this.toRecord(r));
+  }
+
   async setRegistration(id: string, protocollo: string, registeredAt: string): Promise<void> {
     await this.db
       .update(leases)

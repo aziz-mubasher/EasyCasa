@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
+import { Roles } from '../auth/roles.decorator';
 import { AmlService } from './aml.service';
 import { KycEventDto, OpenKycDto } from './dto';
 
@@ -20,6 +21,12 @@ export class AmlController {
         identityMismatch: dto.identityMismatch,
       },
     });
+  }
+
+  @Get()
+  @Roles('admin')
+  list() {
+    return this.service.list();
   }
 
   @Get(':id')

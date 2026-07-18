@@ -89,3 +89,9 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 |---|---|---|
 | RLI_CHANNEL_URL / RLI_CHANNEL_CREDENTIAL | api | Entratel/RLI-web telematic seam. Empty + `DEV_AUTH` → stub protocollo; production must configure. |
 | AML_SCREENING_URL / AML_SCREENING_KEY | api | PEP/sanctions screening. Empty + `DEV_AUTH` → clean screen; otherwise fails safe (errors). |
+
+## Phase 13 — admin console
+| Variable | Used by | Notes |
+|---|---|---|
+| VITE_API_BASE_URL | admin (build) | API base for the SPA (e.g. `https://easycasaita.com/api`). |
+| VITE_DEV_AUTH | admin (build) | When `true`, SPA sends `x-dev-user/roles` admin headers. Disable when OIDC is wired. |

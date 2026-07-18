@@ -18,6 +18,12 @@ export class RentalsController {
     return this.service.create(propertyId, dto);
   }
 
+  @Get('leases')
+  @Roles('admin')
+  list() {
+    return this.service.list();
+  }
+
   @Get('leases/:id')
   get(@Param('id') id: string) {
     return this.service.get(id);

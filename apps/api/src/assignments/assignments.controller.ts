@@ -17,7 +17,7 @@ export class AssignmentsController {
   @Get('assignments')
   @Roles('admin')
   list(@Query() query: ListAssignmentsQueryDto) {
-    return this.service.list(query.status);
+    return this.service.listOpenOrByStatus(query.status);
   }
 
   @Post('assignments/tasks')

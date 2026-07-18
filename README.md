@@ -16,7 +16,7 @@ migration        Schema + WP ETL / geocode / media / redirects
 infra            docker-compose, Traefik overlay, Postgres(PostGIS+pgvector), deploy & backup
 .cursor/rules    Conventions Cursor reads automatically
 .github/workflows CI + deploy + mobile-ci
-docs             phase-0..11, schema.md, wp-audit.md, env.md, vps-setup.md
+docs             phase-0..13, schema.md, wp-audit.md, env.md, vps-setup.md
 ```
 
 ## Local quickstart
@@ -115,6 +115,14 @@ pnpm --filter @easycasa/migration migrate     # applies 0011 leases + kyc_cases
 # POST /api/leases/preview  ·  POST /api/properties/:id/leases  ·  POST /api/leases/:id/register
 # POST /api/aml/cases  ·  GET /api/admin/leases/deadlines
 # Mobile: Profile → My properties → Lease / RLI
+```
+
+### Phase 13 — Admin back-office console
+See `docs/phase-13.md`.
+```bash
+pnpm --filter @easycasa/admin dev             # Vite SPA on :5174
+# Deployed: https://admin.easycasaita.com
+# Orchestration · Credentials · Compliance · AML · RLI monitor
 ```
 
 ### Python AI service (local tests)

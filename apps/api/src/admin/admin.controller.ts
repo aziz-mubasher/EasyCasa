@@ -7,16 +7,19 @@ import {
   Param,
   Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { IsIn } from 'class-validator';
 import { eq, sql } from 'drizzle-orm';
 
+import { DefaultCredentialPolicy } from '../assignments/credential-policy';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { listings, serviceCatalogItems } from '../db/schema';
 import { Roles } from '../auth/roles.decorator';
 import { CATALOG } from '../service-catalog/domain/catalog';
 import { Phase8PricingAdapter } from '../orders/phase8-pricing.adapter';
+import type { RequiredCredential } from '../professionals/domain/types';
 import type { LegalBasis } from '../transactions/domain/types';
 import { toDbLegalBasis, toDomainLegalBasis } from '../transactions/status-map';
 
@@ -25,12 +28,25 @@ class SetLegalBasisDto {
   legalBasis!: LegalBasis;
 }
 
+class SetCredentialDto {
+  @IsIn([
+    'NONE',
+    'REA_MEDIATORE',
+    'ALBO_TECNICO',
+    'APE_CERTIFIER',
+    'PHOTOGRAPHER',
+    'NOTAIO',
+  ])
+  requiredCredential!: RequiredCredential;
+}
+
 @Controller('admin')
 @Roles('admin')
 export class AdminController {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly pricing: Phase8PricingAdapter,
+    private readonly credentialPolicy: DefaultCredentialPolicy,
   ) {}
 
   @Get('stats')
@@ -52,15 +68,14 @@ export class AdminController {
   }
 
   /**
-   * Catalog legal-basis review board. Items default to REVIEW_REQUIRED until
-   * counsel classifies them; `reviewRequiredCount` is what blocks mandate SEND.
+   * Full catalog for the Phase 13 compliance console (legal basis + credential).
    */
-  @Get('catalog/legal-basis')
-  async listLegalBasis() {
+  @Get('catalog')
+  async listCatalog() {
     const dbRows = await this.db.select().from(serviceCatalogItems);
     const byCode = new Map(dbRows.map((r) => [r.code, r]));
 
-    const items = CATALOG.map((c) => {
+    return CATALOG.map((c) => {
       const row = byCode.get(c.code);
       const legalBasis = row
         ? toDomainLegalBasis(row.legalBasis)
@@ -70,18 +85,48 @@ export class AdminController {
         labelEn: c.labelEn,
         labelIt: c.labelIt,
         category: c.category,
+        priceModel: c.priceModel,
         legalBasis,
+        requiredCredential: this.credentialPolicy.requiredCredentialFor(c.code),
       };
     });
+  }
 
+  /**
+   * Catalog legal-basis review board. Items default to REVIEW_REQUIRED until
+   * counsel classifies them; `reviewRequiredCount` is what blocks mandate SEND.
+   */
+  @Get('catalog/legal-basis')
+  async listLegalBasis() {
+    const items = await this.listCatalog();
     return {
-      items,
+      items: items.map(({ code, labelEn, labelIt, category, legalBasis }) => ({
+        code,
+        labelEn,
+        labelIt,
+        category,
+        legalBasis,
+      })),
       reviewRequiredCount: items.filter((i) => i.legalBasis === 'REVIEW_REQUIRED').length,
     };
   }
 
+  @Put('catalog/:code/legal-basis')
   @Patch('catalog/:code/legal-basis')
   async setLegalBasis(@Param('code') code: string, @Body() body: SetLegalBasisDto) {
+    await this.persistLegalBasis(code, body.legalBasis);
+    return this.catalogItem(code);
+  }
+
+  @Put('catalog/:code/credential')
+  async setRequiredCredential(@Param('code') code: string, @Body() body: SetCredentialDto) {
+    const seed = CATALOG.find((c) => c.code === code);
+    if (!seed) throw new NotFoundException(`Unknown catalog item ${code}`);
+    await this.credentialPolicy.set(code, body.requiredCredential);
+    return this.catalogItem(code);
+  }
+
+  private async persistLegalBasis(code: string, legalBasis: LegalBasis): Promise<void> {
     const seed = CATALOG.find((c) => c.code === code);
     if (!seed) throw new NotFoundException(`Unknown catalog item ${code}`);
 
@@ -94,7 +139,7 @@ export class AdminController {
     if (existing[0]) {
       await this.db
         .update(serviceCatalogItems)
-        .set({ legalBasis: toDbLegalBasis(body.legalBasis) })
+        .set({ legalBasis: toDbLegalBasis(legalBasis) })
         .where(eq(serviceCatalogItems.code, code));
     } else {
       await this.db.insert(serviceCatalogItems).values({
@@ -107,11 +152,17 @@ export class AdminController {
         ratePercent: seed.ratePercent ?? null,
         ivaApplicable: seed.ivaApplicable,
         active: true,
-        legalBasis: toDbLegalBasis(body.legalBasis),
+        legalBasis: toDbLegalBasis(legalBasis),
       });
     }
 
-    this.pricing.setLegalBasis(code, body.legalBasis);
-    return { code, legalBasis: body.legalBasis };
+    this.pricing.setLegalBasis(code, legalBasis);
+  }
+
+  private async catalogItem(code: string) {
+    const items = await this.listCatalog();
+    const item = items.find((i) => i.code === code);
+    if (!item) throw new NotFoundException(`Unknown catalog item ${code}`);
+    return item;
   }
 }

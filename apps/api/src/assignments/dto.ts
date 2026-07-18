@@ -39,7 +39,8 @@ export class SetCredentialPolicyDto {
 }
 
 export class ListAssignmentsQueryDto {
+  /** `open` = all statuses except APPROVED (ops board). */
   @IsOptional()
-  @IsIn(['REQUESTED', 'ASSIGNED', 'IN_PROGRESS', 'DELIVERED', 'APPROVED'])
-  status?: 'REQUESTED' | 'ASSIGNED' | 'IN_PROGRESS' | 'DELIVERED' | 'APPROVED';
+  @IsIn(['open', 'REQUESTED', 'ASSIGNED', 'IN_PROGRESS', 'DELIVERED', 'APPROVED'])
+  status?: 'open' | 'REQUESTED' | 'ASSIGNED' | 'IN_PROGRESS' | 'DELIVERED' | 'APPROVED';
 }

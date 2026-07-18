@@ -17,6 +17,7 @@ export interface LeaseRecord extends LeaseInput {
 export interface LeaseRepository {
   create(propertyId: string, input: LeaseInput): Promise<LeaseRecord>;
   get(id: string): Promise<LeaseRecord | null>;
+  listAll(): Promise<LeaseRecord[]>;
   setRegistration(id: string, protocollo: string, registeredAt: string): Promise<void>;
   listDueBy(isoDate: string): Promise<LeaseRecord[]>;
 }
@@ -54,6 +55,7 @@ export interface KycRepository {
     status: KycStatus;
   }): Promise<KycCaseRecord>;
   get(id: string): Promise<KycCaseRecord | null>;
+  listAll(): Promise<KycCaseRecord[]>;
   setStatus(id: string, status: KycStatus): Promise<void>;
   hasOpenEscalation(subjectRef: string): Promise<boolean>;
 }

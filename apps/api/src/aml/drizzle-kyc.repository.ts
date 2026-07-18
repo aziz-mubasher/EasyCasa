@@ -38,6 +38,11 @@ export class DrizzleKycRepository implements KycRepository {
     return rows[0] ? this.toRecord(rows[0]) : null;
   }
 
+  async listAll(): Promise<KycCaseRecord[]> {
+    const rows = await this.db.select().from(kycCases);
+    return rows.map((r) => this.toRecord(r));
+  }
+
   async setStatus(id: string, status: KycStatus): Promise<void> {
     await this.db
       .update(kycCases)

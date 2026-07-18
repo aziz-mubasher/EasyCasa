@@ -78,6 +78,18 @@ services:
       - api
     networks: [internal]
 
+  admin:
+    build:
+      context: ..
+      dockerfile: apps/admin/Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://easycasaita.com/api}
+        VITE_DEV_AUTH: ${VITE_DEV_AUTH:-true}
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks: [internal]
+
   ai:
     build:
       context: ..

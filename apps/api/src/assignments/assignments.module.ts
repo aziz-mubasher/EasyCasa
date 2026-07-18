@@ -14,6 +14,6 @@ import { DefaultCredentialPolicy } from './credential-policy';
     DefaultCredentialPolicy,
     { provide: ASSIGNMENT_REPOSITORY, useClass: DrizzleAssignmentRepository },
   ],
-  exports: [AssignmentsService],
+  exports: [AssignmentsService, DefaultCredentialPolicy],
 })
 export class AssignmentsModule {}
