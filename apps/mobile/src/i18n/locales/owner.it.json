@@ -30,9 +30,21 @@
       "coveredByPackage": "Incluso nel pacchetto selezionato",
       "getQuote": "Ottieni preventivo",
       "quoteHeading": "Il tuo preventivo",
-      "acceptQuote": "Accetta preventivo e crea incarico",
+      "acceptQuote": "Continua al checkout",
       "orderCreated": "Ordine {{id}}… creato",
       "awaitingLegalReview": "In attesa di revisione legale — l'incarico non può essere inviato finché ogni servizio non è classificato."
+    },
+    "checkout": {
+      "title": "Checkout",
+      "intro": "Conferma i servizi per creare ordine e incarico.",
+      "accept": "Accetta e continua",
+      "dueNow": "Da pagare ora",
+      "estimatedTotal": "Totale stimato",
+      "exclusive": "Incarico in esclusiva",
+      "mandate": "Incarico",
+      "noTypes": "Nessuna figura di mandato risolta",
+      "awaitingReview": "In attesa di revisione legale di {{count}} servizio/i",
+      "signingOpened": "Firma aperta nel browser."
     },
     "svc": {
       "plusIva": "{{amount}} + IVA",
@@ -73,6 +85,7 @@
       "taxesRegistro": "Imposta di registro",
       "taxesBollo": "Imposta di bollo",
       "taxesTotal": "Imposte alla registrazione",
+      "cedolareNote": "La cedolare secca esenta da registro e bollo.",
       "register": "Registra via RLI",
       "registered": "Registrato",
       "protocollo": "Protocollo"

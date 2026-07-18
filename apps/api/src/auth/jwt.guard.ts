@@ -41,7 +41,10 @@ export class JwtAuthGuard implements CanActivate {
 
     const header = req.headers['authorization'] as string | undefined;
     const token = header?.startsWith('Bearer ') ? header.slice(7) : null;
-    if (!token || !this.jwks) throw new UnauthorizedException('missing token');
+    if (!this.jwks) {
+      throw new UnauthorizedException('OIDC_JWKS_URL is not configured');
+    }
+    if (!token) throw new UnauthorizedException('missing token');
 
     try {
       const { payload } = await jwtVerify(token, this.jwks, {

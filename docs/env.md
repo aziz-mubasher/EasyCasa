@@ -30,8 +30,8 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 ## Phase 2 — auth
 | Variable | Used by | Notes |
 |---|---|---|
-| DEV_AUTH | api | `true` trusts `x-dev-user` / `x-dev-roles` / `x-dev-email` headers (local/dev). |
-| OIDC_ISSUER / OIDC_AUDIENCE / OIDC_JWKS_URL | api | Real Keycloak (or other OIDC) settings. |
+| DEV_AUTH | api | `true` trusts `x-dev-user` / `x-dev-roles` / `x-dev-email` headers (local/dev). When `false`, boot fails unless OIDC_* are set (Phase 16). |
+| OIDC_ISSUER / OIDC_AUDIENCE / OIDC_JWKS_URL | api | Real Keycloak (or other OIDC) settings. **Required** when `DEV_AUTH` is not `true`. |
 | OIDC_ROLES_CLAIM | api | Dot path to roles in JWT (default `realm_access.roles`). |
 
 ## Phase 3 — web / search

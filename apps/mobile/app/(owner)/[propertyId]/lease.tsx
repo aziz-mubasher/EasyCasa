@@ -12,7 +12,6 @@ import {
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
-  formatEuroCents,
   type Lease,
   type LeaseInput,
   type LeaseType,
@@ -21,6 +20,7 @@ import {
 } from '@easycasa/api-client';
 
 import { useRentalsApi } from '../../../src/api/rentals';
+import { LeaseTaxSummary } from '../../../src/components/owner/LeaseTaxSummary';
 import { useTheme } from '../../../src/theme/useTheme';
 
 const LEASE_TYPES: LeaseType[] = ['LIBERO_4_4', 'CONCORDATO_3_2', 'TRANSITORIO', 'STUDENTI'];
@@ -282,33 +282,7 @@ export default function LeaseScreen() {
         )}
       </Pressable>
 
-      {rli ? (
-        <View
-          style={[
-            styles.deadlineBanner,
-            { backgroundColor: theme.colors.surface, borderColor: theme.colors.danger, borderRadius: theme.radius.md },
-          ]}
-        >
-          <Text style={[styles.deadlineLabel, { color: theme.colors.danger }]}>
-            {t('owner.lease.deadline')}
-          </Text>
-          <Text style={[styles.deadlineValue, { color: theme.colors.text }]}>
-            {rli.registrationDeadline}
-          </Text>
-          <Text style={{ color: theme.colors.textMuted, marginTop: 8, fontSize: 13 }}>
-            {t('owner.lease.taxesRegistro')}: {formatEuroCents(rli.taxes.registroCents)}
-          </Text>
-          <Text style={{ color: theme.colors.textMuted, fontSize: 13 }}>
-            {t('owner.lease.taxesBollo')}: {formatEuroCents(rli.taxes.bolloCents)}
-          </Text>
-          <Text style={{ color: theme.colors.text, fontWeight: '600', marginTop: 4 }}>
-            {t('owner.lease.taxesTotal')}: {formatEuroCents(rli.taxes.totalCents)}
-          </Text>
-          <Text style={{ color: theme.colors.textMuted, marginTop: 6, fontSize: 12 }}>
-            {rli.taxes.note}
-          </Text>
-        </View>
-      ) : null}
+      {rli ? <LeaseTaxSummary payload={rli} /> : null}
 
       {lease && !lease.registrationProtocollo ? (
         <Pressable
@@ -424,7 +398,4 @@ const styles = StyleSheet.create({
   panelTitle: { fontSize: 15, fontWeight: '700', marginBottom: 4 },
   cta: { paddingVertical: 14, alignItems: 'center', marginTop: 4 },
   ctaText: { color: '#fff', fontWeight: '700', fontSize: 15 },
-  deadlineBanner: { padding: 16, borderWidth: 2, marginTop: 8 },
-  deadlineLabel: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase' },
-  deadlineValue: { fontSize: 22, fontWeight: '800', marginTop: 2 },
 });

@@ -30,9 +30,21 @@
       "coveredByPackage": "Incluido en el paquete seleccionado",
       "getQuote": "Obtener presupuesto",
       "quoteHeading": "Tu presupuesto",
-      "acceptQuote": "Aceptar presupuesto y crear mandato",
+      "acceptQuote": "Continuar al checkout",
       "orderCreated": "Pedido {{id}}… creado",
       "awaitingLegalReview": "En espera de revisión legal — el mandato no se puede enviar hasta clasificar cada servicio."
+    },
+    "checkout": {
+      "title": "Checkout",
+      "intro": "Confirma los servicios para crear el pedido y el mandato.",
+      "accept": "Aceptar y continuar",
+      "dueNow": "A pagar ahora",
+      "estimatedTotal": "Total estimado",
+      "exclusive": "Mandato en exclusiva",
+      "mandate": "Mandato",
+      "noTypes": "No se resolvió ninguna figura de mandato",
+      "awaitingReview": "En espera de revisión legal de {{count}} servicio(s)",
+      "signingOpened": "Firma abierta en el navegador."
     },
     "svc": {
       "plusIva": "{{amount}} + IVA",
@@ -73,6 +85,7 @@
       "taxesRegistro": "Impuesto de registro",
       "taxesBollo": "Impuesto de sello",
       "taxesTotal": "Impuestos al registrar",
+      "cedolareNote": "La cedolare secca exime de registro y sello.",
       "register": "Registrar con RLI",
       "registered": "Registrado",
       "protocollo": "Protocolo"

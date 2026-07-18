@@ -30,9 +30,21 @@
       "coveredByPackage": "Included in the selected package",
       "getQuote": "Get quote",
       "quoteHeading": "Your quote",
-      "acceptQuote": "Accept quote & create mandate",
+      "acceptQuote": "Continue to checkout",
       "orderCreated": "Order {{id}}… created",
       "awaitingLegalReview": "Awaiting legal review — mandate cannot be sent until every service is classified."
+    },
+    "checkout": {
+      "title": "Checkout",
+      "intro": "Confirm your services to create the order and mandate.",
+      "accept": "Accept & continue",
+      "dueNow": "Due now",
+      "estimatedTotal": "Estimated total",
+      "exclusive": "Exclusive mandate",
+      "mandate": "Mandate",
+      "noTypes": "No mandate figure resolved",
+      "awaitingReview": "Awaiting legal review of {{count}} service(s)",
+      "signingOpened": "Signing opened in your browser."
     },
     "svc": {
       "plusIva": "{{amount}} + VAT",
@@ -73,6 +85,7 @@
       "taxesRegistro": "Imposta di registro",
       "taxesBollo": "Imposta di bollo",
       "taxesTotal": "Taxes due at registration",
+      "cedolareNote": "Cedolare secca waives registro and bollo.",
       "register": "Register with RLI",
       "registered": "Registered",
       "protocollo": "Protocollo"

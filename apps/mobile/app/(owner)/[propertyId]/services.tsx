@@ -1,30 +1,27 @@
 import React, { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import type { Mandate, Order, QuoteRequest } from '@easycasa/api-client';
+import type { QuoteRequest } from '@easycasa/api-client';
 
 import { useCatalog, usePackages, useQuote } from '../../../src/api/owner-hooks';
-import { useTransactionsApi } from '../../../src/api/transactions';
 import { PackageCard } from '../../../src/components/owner/PackageCard';
 import { ServiceItemRow } from '../../../src/components/owner/ServiceItemRow';
 import { QuoteSummary } from '../../../src/components/owner/QuoteSummary';
 import { useTheme } from '../../../src/theme/useTheme';
-import { config } from '../../../src/config';
 
 export default function ServicesScreen() {
   const theme = useTheme();
   const { t } = useTranslation();
+  const router = useRouter();
   const { propertyId } = useLocalSearchParams<{ propertyId: string }>();
-  const tx = useTransactionsApi();
 
   const { data: catalog, isLoading: loadingCatalog } = useCatalog();
   const { data: packages, isLoading: loadingPackages } = usePackages();
@@ -32,10 +29,6 @@ export default function ServicesScreen() {
 
   const [packageCode, setPackageCode] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [acceptBusy, setAcceptBusy] = useState(false);
-  const [acceptError, setAcceptError] = useState<string | null>(null);
-  const [mandate, setMandate] = useState<Mandate | null>(null);
-  const [order, setOrder] = useState<Order | null>(null);
 
   const coveredByPackage = useMemo(() => {
     const pkg = packages?.find((p) => p.code === packageCode);
@@ -64,39 +57,18 @@ export default function ServicesScreen() {
   };
 
   const requestQuote = () => {
-    setMandate(null);
-    setOrder(null);
-    setAcceptError(null);
     quote.mutate(buildRequest());
   };
 
-  const acceptQuote = async () => {
+  const goCheckout = () => {
     if (!propertyId || !quote.data) return;
-    setAcceptBusy(true);
-    setAcceptError(null);
-    try {
-      const created = await tx.createOrder(propertyId, buildRequest());
-      setOrder(created);
-      const m = await tx.createMandate({
-        orderId: created.id,
-        exclusive: false,
-        durationMonths: 12,
-      });
-      setMandate(m);
-
-      if (m.reviewRequiredItems.length === 0 && m.types.length >= 1) {
-        const documentUrl = `${config.webAppUrl || 'https://easycasaita.com'}/mandates/${m.id}.pdf`;
-        const { signingUrl } = await tx.requestSignature(m.id, {
-          signerEmail: 'owner@easycasaita.com',
-          documentUrl,
-        });
-        await Linking.openURL(signingUrl);
-      }
-    } catch (err) {
-      setAcceptError(err instanceof Error ? err.message : t('common.error'));
-    } finally {
-      setAcceptBusy(false);
-    }
+    router.push({
+      pathname: '/(owner)/[propertyId]/checkout',
+      params: {
+        propertyId,
+        selection: JSON.stringify(buildRequest()),
+      },
+    });
   };
 
   if (loadingCatalog || loadingPackages) {
@@ -104,9 +76,6 @@ export default function ServicesScreen() {
   }
 
   const canQuote = packageCode !== null || selected.size > 0;
-  const awaitingReview =
-    mandate != null &&
-    (mandate.reviewRequiredItems.length > 0 || mandate.types.length === 0);
 
   return (
     <ScrollView
@@ -180,8 +149,7 @@ export default function ServicesScreen() {
           <QuoteSummary quote={quote.data} />
 
           <Pressable
-            onPress={() => void acceptQuote()}
-            disabled={acceptBusy}
+            onPress={goCheckout}
             style={[
               styles.cta,
               {
@@ -191,30 +159,10 @@ export default function ServicesScreen() {
               },
             ]}
           >
-            {acceptBusy ? (
-              <ActivityIndicator color={theme.colors.primaryText} />
-            ) : (
-              <Text style={{ color: theme.colors.primaryText, fontWeight: '700' }}>
-                {t('owner.services.acceptQuote')}
-              </Text>
-            )}
+            <Text style={{ color: theme.colors.primaryText, fontWeight: '700' }}>
+              {t('owner.services.acceptQuote')}
+            </Text>
           </Pressable>
-
-          {acceptError ? (
-            <Text style={[styles.err, { color: theme.colors.danger }]}>{acceptError}</Text>
-          ) : null}
-
-          {order ? (
-            <Text style={[styles.note, { color: theme.colors.textMuted }]}>
-              {t('owner.services.orderCreated', { id: order.id.slice(0, 8) })}
-            </Text>
-          ) : null}
-
-          {awaitingReview ? (
-            <Text style={[styles.review, { color: theme.colors.danger }]}>
-              {t('owner.services.awaitingLegalReview')}
-            </Text>
-          ) : null}
         </View>
       ) : null}
     </ScrollView>
@@ -234,8 +182,6 @@ const styles = StyleSheet.create({
   coveredTag: { fontSize: 11, marginTop: -4, marginBottom: 8, marginLeft: 12, fontStyle: 'italic' },
   cta: { paddingVertical: 16, alignItems: 'center', marginTop: 16 },
   err: { marginTop: 12, fontSize: 13 },
-  note: { marginTop: 8, fontSize: 12 },
-  review: { marginTop: 12, fontSize: 14, fontWeight: '600' },
   quoteBlock: { marginTop: 8 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 64 },
 });
