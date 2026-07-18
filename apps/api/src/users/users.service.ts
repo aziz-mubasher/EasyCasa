@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, desc, eq, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { users, favorites, savedSearches, devices, listings } from '../db/schema';
+import { users, favorites, devices, listings } from '../db/schema';
 import type { AuthUser } from '../auth/auth.types';
 import type { ListingSummary } from '@easycasa/shared';
 
@@ -93,21 +93,6 @@ export class UsersService {
       status: r.status,
       coverUrl: r.coverUrl ?? null,
     }));
-  }
-
-  createSavedSearch(userId: string, name: string, query: unknown) {
-    return this.db
-      .insert(savedSearches)
-      .values({ userId, name, query: query as object })
-      .returning();
-  }
-
-  listSavedSearches(userId: string) {
-    return this.db
-      .select()
-      .from(savedSearches)
-      .where(eq(savedSearches.userId, userId))
-      .orderBy(desc(savedSearches.createdAt));
   }
 
   async registerDevice(

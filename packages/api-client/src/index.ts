@@ -258,6 +258,15 @@ export {
   type SimilarPin,
 } from './phase21';
 
+export {
+  EasyCasaSavedSearchesApi,
+  AlertFrequencySchema,
+  AlertSavedSearchSchema,
+  type AlertFrequency,
+  type AlertSavedSearch,
+  type SavedSearchCriteria as AlertSavedSearchCriteria,
+} from './phase22';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,
@@ -338,16 +347,19 @@ function mapDetail(raw: Record<string, unknown>): ListingDetail {
 }
 
 function mapSavedSearch(raw: Record<string, unknown>): SavedSearch {
-  const query = (raw.query ?? raw.params ?? {}) as Record<string, unknown>;
+  const query = (raw.criteria ?? raw.query ?? raw.params ?? {}) as Record<string, unknown>;
   const created =
     raw.createdAt instanceof Date
       ? raw.createdAt.toISOString()
       : String(raw.createdAt ?? new Date().toISOString());
+  const frequency = typeof raw.frequency === 'string' ? raw.frequency : null;
+  const alertsEnabled =
+    frequency != null ? frequency !== 'off' : Boolean(raw.notify ?? raw.alertsEnabled ?? true);
   return SavedSearchSchema.parse({
     id: String(raw.id),
     name: String(raw.name),
     params: query,
-    alertsEnabled: Boolean(raw.notify ?? raw.alertsEnabled ?? true),
+    alertsEnabled,
     createdAt: created,
   });
 }

@@ -28,6 +28,11 @@ const readMock = {
   findSimilar: vi.fn(),
 };
 
+const alertsMock = {
+  onListingPublished: vi.fn().mockResolvedValue(undefined),
+  runDigests: vi.fn().mockResolvedValue(undefined),
+};
+
 describe('ListingsService', () => {
   it('creates a draft with a slug and syncs location when coords present', async () => {
     const insert = vi.fn().mockResolvedValue({ id: 'l1' });
@@ -36,6 +41,7 @@ describe('ListingsService', () => {
       makeRepo({ insert, syncLocation }),
       searchMock,
       readMock as never,
+      alertsMock as never,
     );
 
     await svc.create(
@@ -53,7 +59,12 @@ describe('ListingsService', () => {
 
   it('blocks updating a listing you do not own (non-admin)', async () => {
     const findById = vi.fn().mockResolvedValue({ id: 'l1', agentId: 'someone-else' });
-    const svc = new ListingsService(makeRepo({ findById }), searchMock, readMock as never);
+    const svc = new ListingsService(
+      makeRepo({ findById }),
+      searchMock,
+      readMock as never,
+      alertsMock as never,
+    );
     const user: AuthUser = { sub: 'u', roles: ['seller'] };
 
     await expect(svc.update('l1', { title: 'x' }, user, 'me')).rejects.toThrow('not your listing');
@@ -66,6 +77,7 @@ describe('ListingsService', () => {
       makeRepo({ findById, update }),
       searchMock,
       readMock as never,
+      alertsMock as never,
     );
     const admin: AuthUser = { sub: 'a', roles: ['admin'] };
 

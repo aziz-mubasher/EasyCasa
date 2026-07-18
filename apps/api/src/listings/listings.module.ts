@@ -7,9 +7,10 @@ import { LISTING_READ } from './domain/ports';
 import { UsersModule } from '../users/users.module';
 import { SearchModule } from '../search/search.module';
 import { DbModule } from '../db/db.module';
+import { AlertsModule } from '../alerts/alerts.module';
 
 @Module({
-  imports: [UsersModule, SearchModule, DbModule],
+  imports: [UsersModule, SearchModule, DbModule, AlertsModule],
   controllers: [ListingsController],
   providers: [
     ListingsService,

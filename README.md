@@ -161,10 +161,13 @@ See `docs/phase-20.md`. `POST /search/bounds` + `/search/area` with filters, clu
 
 ### Phase 21 — Listing-detail surface
 See `docs/phase-21.md`. Assembled detail (APE, catastal, quality score) + similar listings.
+
+### Phase 22 — Saved searches + alerts
+See `docs/phase-22.md`. Save Phase 20 criteria + frequency; instant fan-out on publish; daily digests + alert-log dedup.
 ```bash
-pnpm --filter @easycasa/migration migrate     # applies 0013 payment_intents + invoices
-# POST /api/payments/intents  ·  POST /api/payments/webhook  ·  POST /api/invoices/orders/:id
-# EasyCasaPaymentsApi; SUCCEEDED → auto SdI fattura (DEV stub when SDI_* empty)
+pnpm --filter @easycasa/migration migrate     # applies 0015_phase22
+# POST/GET /me/saved-searches  ·  PUT …/frequency  ·  DELETE …
+# EasyCasaSavedSearchesApi; AlertsService.onListingPublished on publish
 ```
 
 ### Python AI service (local tests)

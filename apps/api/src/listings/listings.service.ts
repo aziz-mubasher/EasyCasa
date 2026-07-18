@@ -1,7 +1,9 @@
-import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ListingsRepository } from './listings.repository';
 import { SearchService } from '../search/search.service';
 import { inferPropertyType } from '../search/meili-search.index';
+import { AlertsService } from '../alerts/alerts.service';
+import { listingRowToPin } from '../alerts/listing-pin';
 import type { CreateListingDto } from './dto/create-listing.dto';
 import type { UpdateListingDto } from './dto/update-listing.dto';
 import type { QueryListingDto } from './dto/query-listing.dto';
@@ -21,10 +23,13 @@ const UUID_RE =
 
 @Injectable()
 export class ListingsService {
+  private readonly logger = new Logger(ListingsService.name);
+
   constructor(
     private readonly repo: ListingsRepository,
     private readonly searchIndex: SearchService,
     @Inject(LISTING_READ) private readonly read: ListingReadPort,
+    private readonly alerts: AlertsService,
   ) {}
 
   search(q: QueryListingDto) {
@@ -160,6 +165,29 @@ export class ListingsService {
             : undefined,
         publishedAt: published.publishedAt ? published.publishedAt.getTime() : Date.now(),
       });
+
+      const pin = listingRowToPin({
+        id: published.id,
+        title: published.title,
+        latitude: published.latitude,
+        longitude: published.longitude,
+        price: published.price,
+        transactionType: published.transactionType,
+        bedrooms: published.bedrooms,
+        rooms: published.rooms,
+        sizeSqm: published.sizeSqm,
+        energyClass: published.energyClass,
+        propertyType: published.propertyType,
+      });
+      if (pin) {
+        try {
+          await this.alerts.onListingPublished(pin);
+        } catch (err) {
+          this.logger.warn(
+            `alerts on publish failed listing=${published.id}: ${err instanceof Error ? err.message : String(err)}`,
+          );
+        }
+      }
     }
     return published;
   }

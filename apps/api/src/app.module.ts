@@ -25,6 +25,8 @@ import { RentalsModule } from './rentals/rentals.module';
 import { AmlModule } from './aml/aml.module';
 import { PaymentsModule } from './payments/payments.module';
 import { InvoicingModule } from './invoicing/invoicing.module';
+import { SavedSearchesModule } from './saved-searches/saved-searches.module';
+import { AlertsModule } from './alerts/alerts.module';
 
 @Module({
   imports: [
@@ -53,6 +55,8 @@ import { InvoicingModule } from './invoicing/invoicing.module';
     AmlModule,
     PaymentsModule,
     InvoicingModule,
+    SavedSearchesModule,
+    AlertsModule,
   ],
   controllers: [HealthController],
 })

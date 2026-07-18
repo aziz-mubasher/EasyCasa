@@ -113,10 +113,27 @@ export const savedSearches = pgTable('saved_searches', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').notNull(),
   name: text('name').notNull(),
+  /** Phase 20 criteria: { filters, bbox?, polygon? } (legacy column name: query). */
   query: jsonb('query').notNull().default({}),
   notify: boolean('notify').notNull().default(true),
+  frequency: text('frequency').notNull().default('instant'),
+  lastRunAt: timestamp('last_run_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
+
+export const alertLogs = pgTable(
+  'alert_logs',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    savedSearchId: uuid('saved_search_id').notNull(),
+    listingId: uuid('listing_id').notNull(),
+    sentAt: timestamp('sent_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    uniq: uniqueIndex('alert_logs_saved_listing_uidx').on(t.savedSearchId, t.listingId),
+  }),
+);
 
 
 // ---------------- Phase 5 ----------------
@@ -458,7 +475,7 @@ export const invoices = pgTable('invoices', {
 });
 
 export const schema = {
-  users, categories, regions, listings, media, favorites, savedSearches,
+  users, categories, regions, listings, media, favorites, savedSearches, alertLogs,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
   devices, partnerProfiles, leads, payouts,
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,

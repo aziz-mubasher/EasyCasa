@@ -21,7 +21,8 @@ NestJS + Drizzle over the Phase 1 Postgres schema. OpenAPI at `/docs`
 | GET | /me | authed | Current user (auto-provisioned) |
 | GET | /agents/:slug | public | Agent profile |
 | GET/POST/DELETE | /me/favorites[...] | authed | Favorites |
-| GET/POST | /me/saved-searches | authed | Saved searches |
+| GET/POST/PUT/DELETE | /me/saved-searches | authed | Saved searches + alert frequency (Phase 22) |
+
 | POST | /media/presign | seller+ | Presigned MinIO upload URL |
 | POST | /media/confirm | seller+ | Record uploaded media |
 | GET | /admin/stats | admin | Listing counts by status |

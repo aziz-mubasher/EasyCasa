@@ -51,21 +51,6 @@ export class UsersController {
     return this.users.removeFavorite(me.id, listingId);
   }
 
-  @Get('me/saved-searches')
-  async savedSearches(@CurrentUser() user: AuthUser) {
-    const me = await this.users.getOrCreate(user);
-    return this.users.listSavedSearches(me.id);
-  }
-
-  @Post('me/saved-searches')
-  async createSavedSearch(
-    @CurrentUser() user: AuthUser,
-    @Body() body: { name: string; query: unknown },
-  ) {
-    const me = await this.users.getOrCreate(user);
-    return this.users.createSavedSearch(me.id, body.name, body.query);
-  }
-
   @Post('me/devices')
   async registerDevice(@CurrentUser() user: AuthUser, @Body() body: RegisterDeviceDto) {
     const me = await this.users.getOrCreate(user);
