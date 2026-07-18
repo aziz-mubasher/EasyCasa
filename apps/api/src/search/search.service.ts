@@ -33,7 +33,17 @@ export class SearchService implements OnModuleInit {
     await this.index.updateSettings({
       searchableAttributes: ['title', 'city', 'description'],
       filterableAttributes: [
-        'categorySlug', 'regionSlug', 'transactionType', 'price', 'bedrooms', 'status',
+        'categorySlug',
+        'regionSlug',
+        'transactionType',
+        'price',
+        'bedrooms',
+        'rooms',
+        'sizeSqm',
+        'status',
+        '_geo',
+        'propertyType',
+        'energyClass',
       ],
       sortableAttributes: ['price', 'publishedAt'],
     });

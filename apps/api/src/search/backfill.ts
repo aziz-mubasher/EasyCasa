@@ -1,6 +1,7 @@
 import { pool } from '../db/drizzle';
 import { SearchService } from './search.service';
 import type { ListingDoc } from './meili';
+import { inferPropertyType } from './meili-search.index';
 
 /** One-off/CLI: push all published listings into Meilisearch. */
 async function run(): Promise<void> {
@@ -11,13 +12,15 @@ async function run(): Promise<void> {
     id: string; slug: string | null; title: string; description: string | null;
     city: string | null; region_slug: string | null; category_slug: string | null;
     transaction_type: 'sale' | 'rent' | null; price: string | null;
-    bedrooms: number | null; bathrooms: number | null; size_sqm: string | null;
+    bedrooms: number | null; bathrooms: number | null; rooms: number | null;
+    size_sqm: string | null; energy_class: string | null;
     latitude: number | null; longitude: number | null; status: string;
     cover_url: string | null; published_at: Date | null;
   }>(`
     SELECT l.id, l.slug, l.title, l.description, l.city,
            r.slug AS region_slug, c.slug AS category_slug,
-           l.transaction_type, l.price, l.bedrooms, l.bathrooms, l.size_sqm,
+           l.transaction_type, l.price, l.bedrooms, l.bathrooms, l.rooms, l.size_sqm,
+           l.energy_class,
            l.latitude, l.longitude, l.status,
            (SELECT url FROM media m WHERE m.listing_id = l.id ORDER BY m.position LIMIT 1) AS cover_url,
            l.published_at
@@ -39,7 +42,10 @@ async function run(): Promise<void> {
     price: r.price == null ? null : Number(r.price),
     bedrooms: r.bedrooms,
     bathrooms: r.bathrooms,
+    rooms: r.rooms ?? r.bedrooms,
     sizeSqm: r.size_sqm == null ? null : Number(r.size_sqm),
+    propertyType: inferPropertyType(r.category_slug),
+    energyClass: r.energy_class,
     coverUrl: r.cover_url,
     status: r.status,
     _geo: r.latitude != null && r.longitude != null

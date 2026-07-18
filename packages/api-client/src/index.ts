@@ -234,6 +234,21 @@ export {
   type Invoice as PaymentInvoice,
 } from './phase17';
 
+export {
+  EasyCasaSearchApi,
+  DealTypeSchema,
+  PropertyTypeSchema,
+  EnergyClassSchema,
+  ClusterSchema,
+  ListingPinSchema,
+  SearchResultSchema,
+  type SearchFilters as MapSearchFilters,
+  type Cluster,
+  type ListingPin,
+  type SearchResult as MapSearchResult,
+  type GeoPoint as MapGeoPoint,
+} from './phase20';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,

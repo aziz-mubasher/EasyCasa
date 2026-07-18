@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ListingsRepository } from './listings.repository';
 import { SearchService } from '../search/search.service';
+import { inferPropertyType } from '../search/meili-search.index';
 import type { CreateListingDto } from './dto/create-listing.dto';
 import type { UpdateListingDto } from './dto/update-listing.dto';
 import type { QueryListingDto } from './dto/query-listing.dto';
@@ -114,7 +115,10 @@ export class ListingsService {
         price: published.price == null ? null : Number(published.price),
         bedrooms: published.bedrooms,
         bathrooms: published.bathrooms,
+        rooms: published.rooms ?? published.bedrooms,
         sizeSqm: published.sizeSqm == null ? null : Number(published.sizeSqm),
+        propertyType: inferPropertyType(null),
+        energyClass: published.energyClass ?? null,
         coverUrl: null,
         status: 'published',
         _geo:
