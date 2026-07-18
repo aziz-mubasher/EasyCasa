@@ -152,6 +152,12 @@ See `docs/phase-17.md`.
 
 ### Phase 18 — Owner checkout payment step
 See `docs/phase-18.md`. Checkout shows a fattura preview, collects due-now payment, then unlocks the mandate.
+
+### Phase 19 — Feature-gap matrix + messaging alignment
+See `docs/phase-19.md`. Competitive matrix vs immobiliare / idealista / Zillow; homepage copy aligned with à-la-carte + success fee (not “zero commission”).
+
+### Phase 20 — Map-search backend
+See `docs/phase-20.md`. `POST /search/bounds` + `/search/area` with filters, clustering, and energy class.
 ```bash
 pnpm --filter @easycasa/migration migrate     # applies 0013 payment_intents + invoices
 # POST /api/payments/intents  ·  POST /api/payments/webhook  ·  POST /api/invoices/orders/:id

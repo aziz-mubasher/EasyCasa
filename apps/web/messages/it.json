@@ -1,10 +1,10 @@
 {
-  "brand": { "name": "EasyCasa", "tagline": "Compra, vendi e affitta senza commissioni d'agenzia." },
+  "brand": { "name": "EasyCasa", "tagline": "Compra, vendi e affitta — paghi solo i servizi che usi." },
   "nav": { "search": "Cerca", "add": "Pubblica annuncio", "favorites": "Preferiti", "signin": "Accedi" },
   "home": {
     "eyebrow": "Mercato immobiliare · Italia",
-    "title": "La casa, senza intermediari.",
-    "subtitle": "Cerca sulla mappa tra migliaia di immobili in tutte le regioni italiane. Zero commissioni.",
+    "title": "La casa, dall'inizio alla fine.",
+    "subtitle": "Cerca sulla mappa tra migliaia di immobili in tutte le regioni italiane. Niente commissione d'agenzia tradizionale — servizi à la carte quando ti servono.",
     "cta": "Esplora la mappa"
   },
   "search": {

@@ -1,10 +1,10 @@
 {
-  "brand": { "name": "EasyCasa", "tagline": "Buy, sell, and rent with no agency commission." },
+  "brand": { "name": "EasyCasa", "tagline": "Buy, sell, and rent — pay only for the services you use." },
   "nav": { "search": "Search", "add": "List a property", "favorites": "Favorites", "signin": "Sign in" },
   "home": {
     "eyebrow": "Real estate · Italy",
-    "title": "Property, without the middleman.",
-    "subtitle": "Search the map across thousands of homes in every Italian region. Zero commission.",
+    "title": "Property, handled end to end.",
+    "subtitle": "Search the map across thousands of homes in every Italian region. No traditional agency commission — à-la-carte services when you need them.",
     "cta": "Explore the map"
   },
   "search": {

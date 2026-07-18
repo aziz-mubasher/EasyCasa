@@ -1,10 +1,10 @@
 {
-  "brand": { "name": "EasyCasa", "tagline": "Compra, vende y alquila sin comisión de agencia." },
+  "brand": { "name": "EasyCasa", "tagline": "Compra, vende y alquila — paga solo por los servicios que usas." },
   "nav": { "search": "Buscar", "add": "Publicar inmueble", "favorites": "Favoritos", "signin": "Entrar" },
   "home": {
     "eyebrow": "Inmobiliaria · Italia",
-    "title": "Vivienda, sin intermediarios.",
-    "subtitle": "Busca en el mapa entre miles de inmuebles en todas las regiones italianas. Cero comisión.",
+    "title": "Vivienda, de principio a fin.",
+    "subtitle": "Busca en el mapa entre miles de inmuebles en todas las regiones italianas. Sin comisión de agencia tradicional — servicios à la carte cuando los necesites.",
     "cta": "Explorar el mapa"
   },
   "search": {
