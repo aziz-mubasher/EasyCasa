@@ -6,6 +6,12 @@ import { InvoicingService } from './invoicing.service';
 export class InvoicingController {
   constructor(private readonly service: InvoicingService) {}
 
+  /** Checkout preview — build-only; does not issue or transmit. */
+  @Get('orders/:orderId/preview')
+  preview(@Param('orderId') orderId: string) {
+    return this.service.previewForOrder(orderId);
+  }
+
   @Post('orders/:orderId')
   issue(@Param('orderId') orderId: string) {
     return this.service.issueForOrder(orderId);

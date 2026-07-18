@@ -1,7 +1,6 @@
 /**
- * Phase 17 client surface — payments (create intent, refund) and invoicing
- * (issue + fetch the fattura). Owner checkout uses the client secret with the
- * PSP SDK; the fattura elettronica follows on webhook success.
+ * Payments + invoicing client (Phases 17–18).
+ * Phase 18 adds `previewInvoice` so checkout can show fattura totals before paying.
  */
 import { z } from 'zod';
 
@@ -39,6 +38,21 @@ const RiepilogoSchema = z.object({
   natura: z.string().optional(),
 });
 
+/** Fattura totals — also the shape of GET /invoices/orders/:id/preview. */
+export const FatturaSchema = z.object({
+  format: z.literal('FatturaPA 1.2.2'),
+  documentType: z.literal('TD01'),
+  operationDate: z.string(),
+  emissionDeadline: z.string(),
+  riepilogo: z.array(RiepilogoSchema),
+  imponibileTotalCents: z.number().int(),
+  impostaTotalCents: z.number().int(),
+  bolloCents: z.number().int(),
+  needsBollo: z.boolean(),
+  totaleDocumentoCents: z.number().int(),
+});
+export type Fattura = z.infer<typeof FatturaSchema>;
+
 export const InvoiceSchema = z.object({
   id: z.string(),
   orderId: z.string(),
@@ -46,18 +60,7 @@ export const InvoiceSchema = z.object({
   totaleDocumentoCents: z.number().int(),
   sdiProtocollo: z.string().nullable(),
   transmittedAt: z.string().nullable(),
-  invoice: z.object({
-    format: z.literal('FatturaPA 1.2.2'),
-    documentType: z.literal('TD01'),
-    operationDate: z.string(),
-    emissionDeadline: z.string(),
-    riepilogo: z.array(RiepilogoSchema),
-    imponibileTotalCents: z.number().int(),
-    impostaTotalCents: z.number().int(),
-    bolloCents: z.number().int(),
-    needsBollo: z.boolean(),
-    totaleDocumentoCents: z.number().int(),
-  }),
+  invoice: FatturaSchema,
 });
 export type Invoice = z.infer<typeof InvoiceSchema>;
 
@@ -67,6 +70,14 @@ export class EasyCasaPaymentsApi {
 
   constructor(private readonly opts: RequesterOptions) {
     this.request = createRequester(opts);
+  }
+
+  /** Preview fattura totals for an order (no persistence / no SdI). */
+  previewInvoice(orderId: string): Promise<Fattura> {
+    return this.request(
+      `/invoices/orders/${encodeURIComponent(orderId)}/preview`,
+      FatturaSchema,
+    );
   }
 
   createIntent(body: {
@@ -101,5 +112,5 @@ export class EasyCasaPaymentsApi {
   }
 }
 
-/** @deprecated Prefer EasyCasaPaymentsApi — alias kept for scaffold naming. */
+/** Alias kept for scaffold / mobile BillingProvider naming. */
 export const EasyCasaBillingApi = EasyCasaPaymentsApi;

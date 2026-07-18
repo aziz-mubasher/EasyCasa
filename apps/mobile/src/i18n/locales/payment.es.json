@@ -1,0 +1,14 @@
+{
+  "payment": {
+    "summary": "Vista previa de factura",
+    "imponibile": "Base imponible",
+    "iva": "IVA (22%)",
+    "bollo": "Timbre",
+    "total": "Total",
+    "pay": "Pagar {{amount}}",
+    "paid": "Pago recibido",
+    "processing": "Confirmando tu pago…",
+    "failed": "El pago falló",
+    "fatturaNote": "Se emitirá una factura electrónica al SdI tras el pago (antes del {{date}})."
+  }
+}

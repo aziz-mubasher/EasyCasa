@@ -8,6 +8,7 @@ import type {
 } from '../payments/domain/ports';
 import type { PaymentSucceededHandler } from '../payments/payments.service';
 import type { PaymentPurpose } from '../payments/domain/types';
+import type { Invoice } from './domain/fattura';
 import { INVOICE_SOURCE, type InvoiceSource } from './order-invoice.source';
 
 export const INVOICE_REPOSITORY = Symbol('INVOICE_REPOSITORY');
@@ -20,6 +21,17 @@ export class InvoicingService {
     @Inject(SDI_CHANNEL) private readonly sdi: SdIChannel,
     @Inject(INVOICE_SOURCE) private readonly source: InvoiceSource,
   ) {}
+
+  /**
+   * Read-only fattura totals for checkout (no persistence / no SdI).
+   * Uses the same InvoiceSource as issueForOrder so preview and issue cannot drift.
+   */
+  async previewForOrder(
+    orderId: string,
+    purpose: PaymentPurpose = 'DUE_NOW',
+  ): Promise<Invoice> {
+    return this.source.buildForOrder(orderId, purpose);
+  }
 
   async issueForOrder(
     orderId: string,

@@ -27,6 +27,7 @@ POST /payments/intents/:id/refund
 POST /payments/webhook              (PUBLIC)
 
 POST /invoices/orders/:orderId
+GET  /invoices/orders/:orderId/preview   (Phase 18 — build-only)
 GET  /invoices/:id
 ```
 

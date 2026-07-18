@@ -1,0 +1,14 @@
+{
+  "payment": {
+    "summary": "Anteprima fattura",
+    "imponibile": "Imponibile",
+    "iva": "IVA (22%)",
+    "bollo": "Imposta di bollo",
+    "total": "Totale",
+    "pay": "Paga {{amount}}",
+    "paid": "Pagamento ricevuto",
+    "processing": "Conferma del pagamento in corso…",
+    "failed": "Pagamento non riuscito",
+    "fatturaNote": "La fattura elettronica sarà trasmessa al SdI dopo il pagamento (entro il {{date}})."
+  }
+}

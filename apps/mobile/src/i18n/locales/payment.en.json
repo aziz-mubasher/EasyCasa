@@ -1,0 +1,14 @@
+{
+  "payment": {
+    "summary": "Invoice preview",
+    "imponibile": "Taxable amount",
+    "iva": "VAT (22%)",
+    "bollo": "Stamp duty",
+    "total": "Total",
+    "pay": "Pay {{amount}}",
+    "paid": "Payment received",
+    "processing": "Confirming your payment…",
+    "failed": "Payment failed",
+    "fatturaNote": "An electronic invoice will be issued to the SdI after payment (by {{date}})."
+  }
+}

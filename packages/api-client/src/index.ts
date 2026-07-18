@@ -225,10 +225,12 @@ export {
   PaymentStatusSchema,
   PaymentIntentSchema,
   CreatedIntentSchema,
+  FatturaSchema,
   InvoiceSchema as PaymentInvoiceSchema,
   type PaymentStatus,
   type PaymentIntent,
   type CreatedIntent,
+  type Fattura,
   type Invoice as PaymentInvoice,
 } from './phase17';
 
