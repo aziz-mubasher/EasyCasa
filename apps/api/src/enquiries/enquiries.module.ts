@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, Module } from '@nestjs/common';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, or } from 'drizzle-orm';
 
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
@@ -86,11 +86,11 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
     return rows.map(toDomain);
   }
 
-  async listForOwner(ownerUserId: string): Promise<Enquiry[]> {
+  async listForOwner(userId: string): Promise<Enquiry[]> {
     const rows = await this.db
       .select()
       .from(enquiries)
-      .where(eq(enquiries.ownerUserId, ownerUserId))
+      .where(or(eq(enquiries.ownerUserId, userId), eq(enquiries.mediatorUserId, userId)))
       .orderBy(desc(enquiries.createdAt));
     return rows.map(toDomain);
   }

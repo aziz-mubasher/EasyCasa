@@ -1,0 +1,28 @@
+{
+  "enquiryInbox": {
+    "title": "Solicitudes",
+    "empty": "Aún no hay solicitudes. Cuando alguien te contacte por un anuncio, aparecerá aquí.",
+    "needsAttention": "Requieren atención",
+    "done": "Convertidas y cerradas",
+    "orderCreated": "Pedido creado",
+    "converted": "Convertida en pedido",
+    "convertedBody": "El pedido {{orderId}} se creó a partir de esta solicitud.",
+    "nav": "Solicitudes",
+    "badgeNew": "{{count}} nuevas",
+    "status": {
+      "NEW": "NUEVA",
+      "CONTACTED": "CONTACTADA",
+      "QUALIFIED": "CALIFICADA",
+      "CONVERTED": "CONVERTIDA",
+      "CLOSED": "CERRADA"
+    },
+    "intents": { "info": "Pregunta", "viewing": "Solicitud de visita", "offer": "Oferta" },
+    "actions": {
+      "markContacted": "Marcar contactado",
+      "qualify": "Calificar",
+      "convert": "Convertir en pedido",
+      "close": "Cerrar",
+      "reopen": "Reabrir"
+    }
+  }
+}

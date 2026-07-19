@@ -1,0 +1,28 @@
+{
+  "enquiryInbox": {
+    "title": "Enquiries",
+    "empty": "No enquiries yet. When someone contacts you about a listing, it'll appear here.",
+    "needsAttention": "Needs attention",
+    "done": "Converted & closed",
+    "orderCreated": "Order created",
+    "converted": "Converted to order",
+    "convertedBody": "Order {{orderId}} was created from this enquiry.",
+    "nav": "Enquiries",
+    "badgeNew": "{{count}} new",
+    "status": {
+      "NEW": "NEW",
+      "CONTACTED": "CONTACTED",
+      "QUALIFIED": "QUALIFIED",
+      "CONVERTED": "CONVERTED",
+      "CLOSED": "CLOSED"
+    },
+    "intents": { "info": "Question", "viewing": "Viewing request", "offer": "Offer" },
+    "actions": {
+      "markContacted": "Mark contacted",
+      "qualify": "Qualify",
+      "convert": "Convert to order",
+      "close": "Close",
+      "reopen": "Reopen"
+    }
+  }
+}

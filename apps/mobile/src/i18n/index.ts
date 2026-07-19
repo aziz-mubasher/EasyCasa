@@ -20,6 +20,9 @@ import discoveryEs from './locales/discovery.es.json';
 import enquiryEn from './locales/enquiry.en.json';
 import enquiryIt from './locales/enquiry.it.json';
 import enquiryEs from './locales/enquiry.es.json';
+import enquiryInboxEn from './locales/enquiry-inbox.en.json';
+import enquiryInboxIt from './locales/enquiry-inbox.it.json';
+import enquiryInboxEs from './locales/enquiry-inbox.es.json';
 
 export const SUPPORTED_LOCALES = ['en', 'it', 'es'] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
@@ -34,13 +37,37 @@ function detectLocale(): SupportedLocale {
 void i18n.use(initReactI18next).init({
   resources: {
     en: {
-      translation: { ...en, ...ownerEn, ...proEn, ...paymentEn, ...discoveryEn, ...enquiryEn },
+      translation: {
+        ...en,
+        ...ownerEn,
+        ...proEn,
+        ...paymentEn,
+        ...discoveryEn,
+        ...enquiryEn,
+        ...enquiryInboxEn,
+      },
     },
     it: {
-      translation: { ...it, ...ownerIt, ...proIt, ...paymentIt, ...discoveryIt, ...enquiryIt },
+      translation: {
+        ...it,
+        ...ownerIt,
+        ...proIt,
+        ...paymentIt,
+        ...discoveryIt,
+        ...enquiryIt,
+        ...enquiryInboxIt,
+      },
     },
     es: {
-      translation: { ...es, ...ownerEs, ...proEs, ...paymentEs, ...discoveryEs, ...enquiryEs },
+      translation: {
+        ...es,
+        ...ownerEs,
+        ...proEs,
+        ...paymentEs,
+        ...discoveryEs,
+        ...enquiryEs,
+        ...enquiryInboxEs,
+      },
     },
   },
   lng: detectLocale(),

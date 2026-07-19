@@ -181,6 +181,9 @@ pnpm --filter @easycasa/migration migrate     # applies 0016_phase24
 # EasyCasaEnquiriesApi + EnquiryModal on listing detail
 ```
 
+### Phase 25 — Owner enquiries inbox
+See `docs/phase-25.md`. Owner/mediator triage UI: contact → qualify → convert to order.
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

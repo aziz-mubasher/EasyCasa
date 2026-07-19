@@ -13,7 +13,8 @@ export interface EnquiryRepository {
   }): Promise<Enquiry>;
   get(id: string): Promise<Enquiry | null>;
   listForSeeker(seekerUserId: string): Promise<Enquiry[]>;
-  listForOwner(ownerUserId: string): Promise<Enquiry[]>;
+  /** Inbound for listing owner or assigned mediator. */
+  listForOwner(userId: string): Promise<Enquiry[]>;
   setStatus(id: string, status: Enquiry['status']): Promise<void>;
   setOrder(id: string, orderId: string, status: Enquiry['status']): Promise<void>;
 }
