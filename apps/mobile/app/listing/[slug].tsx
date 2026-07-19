@@ -196,6 +196,28 @@ export default function ListingDetailScreen() {
           </Text>
         </Pressable>
 
+        <Pressable
+          onPress={() => {
+            if (!isAuthenticated) {
+              router.push('/(auth)/sign-in');
+              return;
+            }
+            if (!listingId) return;
+            router.push(`/booking/${listingId}`);
+          }}
+          style={[
+            styles.ctaSecondary,
+            {
+              borderColor: theme.colors.primary,
+              borderRadius: theme.radius.md,
+            },
+          ]}
+        >
+          <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>
+            {t('viewings.bookCta')}
+          </Text>
+        </Pressable>
+
         <EnquiryModal
           visible={enquiryOpen}
           submitting={createEnquiry.isPending}
@@ -210,9 +232,20 @@ export default function ListingDetailScreen() {
             createEnquiry.mutate(
               { listingId, ...body },
               {
-                onSuccess: () => {
+                onSuccess: (enquiry) => {
                   setEnquiryOpen(false);
-                  Alert.alert(t('enquiry.sent'));
+                  if (body.intent === 'viewing') {
+                    Alert.alert(t('enquiry.sent'), t('viewings.bookAfterEnquiry'), [
+                      { text: t('viewings.done'), style: 'cancel' },
+                      {
+                        text: t('viewings.bookCta'),
+                        onPress: () =>
+                          router.push(`/booking/${listingId}?enquiryId=${enquiry.id}`),
+                      },
+                    ]);
+                  } else {
+                    Alert.alert(t('enquiry.sent'));
+                  }
                 },
                 onError: () => Alert.alert(t('common.error')),
               },
@@ -304,6 +337,12 @@ const styles = StyleSheet.create({
   catastal: { fontSize: 12, fontStyle: 'italic', marginTop: 14 },
   miniMap: { height: 160, borderRadius: 12, marginTop: 18 },
   cta: { paddingVertical: 16, alignItems: 'center', marginTop: 18 },
+  ctaSecondary: {
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 10,
+    borderWidth: 1.5,
+  },
   simH: { fontSize: 16, fontWeight: '700', marginTop: 26 },
   simRow: { marginTop: 12 },
   simCard: { width: 150, padding: 8, marginRight: 10 },

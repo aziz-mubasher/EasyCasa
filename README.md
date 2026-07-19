@@ -197,6 +197,13 @@ pnpm --filter @easycasa/migration migrate     # applies 0017_phase27
 ### Phase 28 — Messaging reconciliation (no "zero commission")
 See `docs/phase-28.md`. Option B positioning: à-la-carte transparency + provvigione disclosure; public `/pricing` page.
 
+### Phase 29 — Viewings & scheduling
+See `docs/phase-29.md`. Slot booking + lifecycle for listing viewings.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0018_phase29
+# GET /listings/:id/slots  ·  POST /listings/:id/viewings  ·  booking/[listingId]
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

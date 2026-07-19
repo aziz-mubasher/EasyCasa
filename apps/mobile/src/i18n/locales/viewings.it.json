@@ -1,0 +1,12 @@
+{
+  "viewings": {
+    "title": "Prenota una visita",
+    "bookCta": "Prenota una visita",
+    "noSlots": "Nessuno slot disponibile al momento. Riprova pi\u00f9 tardi o invia una richiesta.",
+    "requested": "Visita richiesta",
+    "awaitingConfirm": "L'agente confermer\u00e0 lo slot a breve.",
+    "done": "Fatto",
+    "error": "Prenotazione non riuscita",
+    "bookAfterEnquiry": "Vuoi prenotare uno slot ora?"
+  }
+}

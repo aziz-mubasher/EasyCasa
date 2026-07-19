@@ -1,0 +1,12 @@
+{
+  "viewings": {
+    "title": "Book a viewing",
+    "bookCta": "Book a viewing",
+    "noSlots": "No slots available right now. Try again later or send an enquiry.",
+    "requested": "Viewing requested",
+    "awaitingConfirm": "The agent will confirm your slot shortly.",
+    "done": "Done",
+    "error": "Couldn't book",
+    "bookAfterEnquiry": "Book a slot now?"
+  }
+}

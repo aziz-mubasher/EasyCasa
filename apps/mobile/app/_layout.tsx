@@ -21,6 +21,7 @@ export default function RootLayout() {
               <Stack.Screen name="(owner)" options={{ headerShown: false }} />
               <Stack.Screen name="(pro)" options={{ headerShown: false }} />
               <Stack.Screen name="listing/[slug]" options={{ headerShown: true, title: '' }} />
+              <Stack.Screen name="booking/[listingId]" options={{ headerShown: true, title: '' }} />
               <Stack.Screen
                 name="(auth)/sign-in"
                 options={{ presentation: 'modal', headerShown: true, title: '' }}

@@ -29,6 +29,7 @@ import { SavedSearchesModule } from './saved-searches/saved-searches.module';
 import { AlertsModule } from './alerts/alerts.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
 import { AvmModule } from './avm/avm.module';
+import { ViewingsModule } from './viewings/viewings.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { AvmModule } from './avm/avm.module';
     AlertsModule,
     EnquiriesModule,
     AvmModule,
+    ViewingsModule,
   ],
   controllers: [HealthController],
 })

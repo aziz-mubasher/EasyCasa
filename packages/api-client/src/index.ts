@@ -294,6 +294,18 @@ export {
 // Re-export SubjectProperty under its common name for the valuation screen.
 export type { SubjectProperty } from './phase27';
 
+export {
+  EasyCasaViewingsApi,
+  ViewingStatusSchema,
+  SlotSchema,
+  ViewingSchema,
+  type ViewingStatus,
+  type Slot,
+  type Viewing,
+  type AvailabilityWindow,
+  type ViewingAction,
+} from './phase29';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,

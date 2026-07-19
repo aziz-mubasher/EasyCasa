@@ -518,6 +518,28 @@ export const valuationRequests = pgTable('valuation_requests', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+// ---------------- Phase 29 — Viewings & scheduling ----------------
+export const viewingAvailability = pgTable('viewing_availability', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id').notNull(),
+  weekday: integer('weekday').notNull(),
+  startMinutes: integer('start_minutes').notNull(),
+  endMinutes: integer('end_minutes').notNull(),
+});
+
+export const viewings = pgTable('viewings', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id').notNull(),
+  seekerUserId: uuid('seeker_user_id').notNull(),
+  conductorUserId: uuid('conductor_user_id').notNull(),
+  enquiryId: uuid('enquiry_id'),
+  startAt: timestamp('start_at', { withTimezone: true }).notNull(),
+  endAt: timestamp('end_at', { withTimezone: true }).notNull(),
+  status: text('status').notNull().default('REQUESTED'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches, alertLogs,
   enquiries,
@@ -529,5 +551,6 @@ export const schema = {
   leases, kycCases,
   paymentIntents, invoices,
   omiQuotes, valuationRequests,
+  viewingAvailability, viewings,
 };
 export type Schema = typeof schema;
