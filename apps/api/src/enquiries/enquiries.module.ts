@@ -3,7 +3,7 @@ import { desc, eq, or } from 'drizzle-orm';
 
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { enquiries, listings, properties } from '../db/schema';
+import { enquiries, listings } from '../db/schema';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsService } from '../notifications/notifications.service';
 import { OrdersModule } from '../orders/orders.module';
@@ -17,11 +17,20 @@ import {
   type EnquiryNotifier,
   type EnquiryRepository,
   type ListingLookupPort,
-  type OrderCreationPort,
 } from './domain/ports';
-import type { Enquiry, EnquiryIntent, ListingParties, OrderDraft } from './domain/types';
+import type { Enquiry, EnquiryIntent, ListingParties } from './domain/types';
 import { EnquiriesController } from './enquiries.controller';
 import { EnquiriesService } from './enquiries.service';
+import {
+  LISTING_ORDER_CONTEXT,
+  ORDERS_SERVICE,
+  OrdersBridge,
+} from './order-bridge/orders.bridge';
+import {
+  DrizzleListingOrderContext,
+  PHASE10_ORDERS_SERVICE,
+  Phase10OrdersAdapter,
+} from './order-bridge/phase10-orders.adapter';
 
 type Row = typeof enquiries.$inferSelect;
 
@@ -132,92 +141,6 @@ export class DrizzleListingLookup implements ListingLookupPort {
   }
 }
 
-/**
- * Bridges a qualified enquiry into the Phase 10 order pipeline: resolve (or
- * create) the subject property for the listing, then create a confirmed order
- * with the intent-derived catalog items.
- */
-@Injectable()
-export class OrdersBridge implements OrderCreationPort {
-  private readonly logger = new Logger(OrdersBridge.name);
-
-  constructor(
-    private readonly orders: OrdersService,
-    @Inject(DRIZZLE) private readonly db: Db,
-  ) {}
-
-  async createFromDraft(draft: OrderDraft): Promise<{ orderId: string }> {
-    const listingRows = await this.db
-      .select({
-        id: listings.id,
-        title: listings.title,
-        transactionType: listings.transactionType,
-        province: listings.province,
-        price: listings.price,
-        ownerUserId: listings.ownerUserId,
-        agentId: listings.agentId,
-      })
-      .from(listings)
-      .where(eq(listings.id, draft.subjectListingId))
-      .limit(1);
-    const listing = listingRows[0];
-    if (!listing) throw new Error(`Listing ${draft.subjectListingId} not found for order draft`);
-
-    const ownerId = listing.ownerUserId ?? listing.agentId;
-    if (!ownerId) throw new Error(`Listing ${listing.id} has no owner for property link`);
-
-    const propertyId = await this.findOrCreateProperty({
-      listingId: listing.id,
-      ownerId,
-      title: listing.title,
-      dealType: listing.transactionType === 'rent' ? 'rent' : 'sale',
-      province: listing.province,
-    });
-
-    const priceCents =
-      listing.price != null && Number.isFinite(Number(listing.price))
-        ? Math.round(Number(listing.price) * 100)
-        : undefined;
-
-    const order = await this.orders.create(propertyId, {
-      items: draft.suggestedItemCodes,
-      referenceValueCents: priceCents,
-    });
-    this.logger.log(
-      `enquiry draft → order ${order.id} (property=${propertyId}, items=${draft.suggestedItemCodes.join(',')})`,
-    );
-    return { orderId: order.id };
-  }
-
-  private async findOrCreateProperty(input: {
-    listingId: string;
-    ownerId: string;
-    title: string;
-    dealType: 'sale' | 'rent';
-    province: string | null;
-  }): Promise<string> {
-    const existing = await this.db
-      .select({ id: properties.id })
-      .from(properties)
-      .where(eq(properties.listingId, input.listingId))
-      .limit(1);
-    if (existing[0]) return existing[0].id;
-
-    const [created] = await this.db
-      .insert(properties)
-      .values({
-        ownerId: input.ownerId,
-        listingId: input.listingId,
-        dealType: input.dealType,
-        title: input.title,
-        province: input.province,
-        status: 'published',
-      })
-      .returning({ id: properties.id });
-    return created.id;
-  }
-}
-
 @Injectable()
 export class DefaultEnquiryNotifier implements EnquiryNotifier {
   private readonly logger = new Logger(DefaultEnquiryNotifier.name);
@@ -252,8 +175,13 @@ export class DefaultEnquiryNotifier implements EnquiryNotifier {
     EnquiriesService,
     { provide: ENQUIRY_REPOSITORY, useClass: DrizzleEnquiryRepository },
     { provide: LISTING_LOOKUP, useClass: DrizzleListingLookup },
-    { provide: ORDER_CREATION, useClass: OrdersBridge },
     { provide: ENQUIRY_NOTIFIER, useClass: DefaultEnquiryNotifier },
+
+    // Phase 26: bridge → mapping → Phase 10 adapter (OrdersModule exports OrdersService).
+    { provide: ORDER_CREATION, useClass: OrdersBridge },
+    { provide: LISTING_ORDER_CONTEXT, useClass: DrizzleListingOrderContext },
+    { provide: ORDERS_SERVICE, useClass: Phase10OrdersAdapter },
+    { provide: PHASE10_ORDERS_SERVICE, useExisting: OrdersService },
   ],
   exports: [EnquiriesService],
 })

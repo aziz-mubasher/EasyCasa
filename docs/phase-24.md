@@ -34,7 +34,7 @@ POST /enquiries/:id/convert            → { enquiryId, orderId }
 
 Listing parties: `listings.owner_user_id` (backfilled from `agent_id`) + optional `mediator_user_id`.
 
-`OrdersBridge` resolves/creates a `properties` row for the listing, then calls `OrdersService.create` with the draft items.
+`OrdersBridge` (refined in Phase 26) maps the draft via `buildCreateOrderInput`, then `Phase10OrdersAdapter` resolves/creates a `properties` row and calls `OrdersService.create`.
 
 ---
 

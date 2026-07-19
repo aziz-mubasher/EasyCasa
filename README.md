@@ -184,6 +184,9 @@ pnpm --filter @easycasa/migration migrate     # applies 0016_phase24
 ### Phase 25 — Owner enquiries inbox
 See `docs/phase-25.md`. Owner/mediator triage UI: contact → qualify → convert to order.
 
+### Phase 26 — Enquiry → Phase 10 order bridge
+See `docs/phase-26.md`. Convert maps the enquiry draft through `OrdersBridge` → `Phase10OrdersAdapter` → `OrdersService.create`.
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai
