@@ -1,0 +1,53 @@
+{
+  "discovery": {
+    "draw": "Draw area",
+    "clearArea": "Clear area",
+    "savedLabel": "Saved",
+    "results": "{{count}} results",
+    "drawHint": "Tap to add points",
+    "drawPoints": "{{count}} points",
+    "searchArea": "Search this area",
+    "filters": {
+      "title": "Filters",
+      "dealType": "Deal type",
+      "price": "Price (€)",
+      "min": "Min",
+      "max": "Max",
+      "minRooms": "Min rooms",
+      "type": "Property type",
+      "energy": "Energy class",
+      "apply": "Show results"
+    },
+    "deal": { "sale": "Buy", "rent": "Rent" },
+    "type": {
+      "apartment": "Apartment",
+      "house": "House",
+      "villa": "Villa",
+      "room": "Room",
+      "land": "Land",
+      "commercial": "Commercial"
+    },
+    "freq": { "instant": "Instant", "daily": "Daily", "off": "Off" },
+    "save": {
+      "cta": "Save search",
+      "title": "Save this search",
+      "name": "Name (e.g. Milan centre)",
+      "frequency": "Alerts",
+      "default": "My search"
+    },
+    "saved": {
+      "empty": "No saved searches yet. Save a search to get alerts on new listings.",
+      "signIn": "Sign in to manage saved searches."
+    },
+    "detail": {
+      "area": "Area",
+      "rooms": "Rooms",
+      "baths": "Baths",
+      "floor": "Floor",
+      "year": "Year",
+      "energy": "Energy",
+      "contact": "Contact agent",
+      "similar": "Similar homes"
+    }
+  }
+}

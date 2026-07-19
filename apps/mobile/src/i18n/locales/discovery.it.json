@@ -1,0 +1,53 @@
+{
+  "discovery": {
+    "draw": "Disegna area",
+    "clearArea": "Rimuovi area",
+    "savedLabel": "Salvate",
+    "results": "{{count}} risultati",
+    "drawHint": "Tocca per aggiungere punti",
+    "drawPoints": "{{count}} punti",
+    "searchArea": "Cerca in quest'area",
+    "filters": {
+      "title": "Filtri",
+      "dealType": "Tipo",
+      "price": "Prezzo (€)",
+      "min": "Min",
+      "max": "Max",
+      "minRooms": "Locali min",
+      "type": "Tipo immobile",
+      "energy": "Classe energetica",
+      "apply": "Mostra risultati"
+    },
+    "deal": { "sale": "Compra", "rent": "Affitta" },
+    "type": {
+      "apartment": "Appartamento",
+      "house": "Casa",
+      "villa": "Villa",
+      "room": "Stanza",
+      "land": "Terreno",
+      "commercial": "Commerciale"
+    },
+    "freq": { "instant": "Istantaneo", "daily": "Giornaliero", "off": "Off" },
+    "save": {
+      "cta": "Salva ricerca",
+      "title": "Salva questa ricerca",
+      "name": "Nome (es. Milano centro)",
+      "frequency": "Avvisi",
+      "default": "La mia ricerca"
+    },
+    "saved": {
+      "empty": "Nessuna ricerca salvata. Salva una ricerca per ricevere avvisi sui nuovi annunci.",
+      "signIn": "Accedi per gestire le ricerche salvate."
+    },
+    "detail": {
+      "area": "Superficie",
+      "rooms": "Locali",
+      "baths": "Bagni",
+      "floor": "Piano",
+      "year": "Anno",
+      "energy": "Energia",
+      "contact": "Contatta l'agente",
+      "similar": "Immobili simili"
+    }
+  }
+}

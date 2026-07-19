@@ -24,5 +24,13 @@
   },
   "favorites": { "empty": "Non hai ancora salvato annunci." },
   "profile": { "language": "Lingua", "theme": "Aspetto", "notifications": "Avvisi" },
-  "common": { "retry": "Riprova", "loading": "Caricamento\u2026", "error": "Qualcosa \u00e8 andato storto." }
+  "common": {
+    "retry": "Riprova",
+    "loading": "Caricamento\u2026",
+    "error": "Qualcosa \u00e8 andato storto.",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina"
+  }
 }
+

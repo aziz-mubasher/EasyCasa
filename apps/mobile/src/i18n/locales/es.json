@@ -24,5 +24,13 @@
   },
   "favorites": { "empty": "A\u00fan no has guardado anuncios." },
   "profile": { "language": "Idioma", "theme": "Apariencia", "notifications": "Alertas" },
-  "common": { "retry": "Reintentar", "loading": "Cargando\u2026", "error": "Algo sali\u00f3 mal." }
+  "common": {
+    "retry": "Reintentar",
+    "loading": "Cargando\u2026",
+    "error": "Algo sali\u00f3 mal.",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar"
+  }
 }
+

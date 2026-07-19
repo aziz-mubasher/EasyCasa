@@ -21,7 +21,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen name="index" options={{ title: t('tabs.search') }} />
-      <Tabs.Screen name="map" options={{ title: t('tabs.map') }} />
+      <Tabs.Screen name="map" options={{ href: null }} />
       <Tabs.Screen name="favorites" options={{ title: t('tabs.favorites') }} />
       <Tabs.Screen name="profile" options={{ title: t('tabs.profile') }} />
     </Tabs>

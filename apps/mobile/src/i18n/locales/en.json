@@ -24,5 +24,13 @@
   },
   "favorites": { "empty": "You haven\u2019t saved any listings yet." },
   "profile": { "language": "Language", "theme": "Appearance", "notifications": "Alerts" },
-  "common": { "retry": "Try again", "loading": "Loading\u2026", "error": "Something went wrong." }
+  "common": {
+    "retry": "Try again",
+    "loading": "Loading\u2026",
+    "error": "Something went wrong.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete"
+  }
 }
+

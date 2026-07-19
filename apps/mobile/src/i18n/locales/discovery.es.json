@@ -1,0 +1,53 @@
+{
+  "discovery": {
+    "draw": "Dibujar zona",
+    "clearArea": "Quitar zona",
+    "savedLabel": "Guardadas",
+    "results": "{{count}} resultados",
+    "drawHint": "Toca para añadir puntos",
+    "drawPoints": "{{count}} puntos",
+    "searchArea": "Buscar en esta zona",
+    "filters": {
+      "title": "Filtros",
+      "dealType": "Operación",
+      "price": "Precio (€)",
+      "min": "Mín",
+      "max": "Máx",
+      "minRooms": "Hab. mín",
+      "type": "Tipo de inmueble",
+      "energy": "Clase energética",
+      "apply": "Ver resultados"
+    },
+    "deal": { "sale": "Comprar", "rent": "Alquilar" },
+    "type": {
+      "apartment": "Piso",
+      "house": "Casa",
+      "villa": "Villa",
+      "room": "Habitación",
+      "land": "Terreno",
+      "commercial": "Comercial"
+    },
+    "freq": { "instant": "Instantáneo", "daily": "Diario", "off": "Off" },
+    "save": {
+      "cta": "Guardar búsqueda",
+      "title": "Guardar esta búsqueda",
+      "name": "Nombre (p. ej. Milán centro)",
+      "frequency": "Alertas",
+      "default": "Mi búsqueda"
+    },
+    "saved": {
+      "empty": "Aún no hay búsquedas guardadas. Guarda una para recibir alertas de nuevos anuncios.",
+      "signIn": "Inicia sesión para gestionar búsquedas guardadas."
+    },
+    "detail": {
+      "area": "Superficie",
+      "rooms": "Hab.",
+      "baths": "Baños",
+      "floor": "Planta",
+      "year": "Año",
+      "energy": "Energía",
+      "contact": "Contactar agente",
+      "similar": "Inmuebles similares"
+    }
+  }
+}

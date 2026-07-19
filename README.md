@@ -170,6 +170,9 @@ pnpm --filter @easycasa/migration migrate     # applies 0015_phase22
 # EasyCasaSavedSearchesApi; AlertsService.onListingPublished on publish
 ```
 
+### Phase 23 — Seeker discovery UI
+See `docs/phase-23.md`. Expo map search (Phase 20) + listing detail (Phase 21) + saved searches (Phase 22); default landing tab.
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

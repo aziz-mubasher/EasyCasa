@@ -242,6 +242,7 @@ export {
   ClusterSchema,
   ListingPinSchema,
   SearchResultSchema,
+  type SearchFilters,
   type SearchFilters as MapSearchFilters,
   type Cluster,
   type ListingPin,
@@ -265,6 +266,7 @@ export {
   type AlertFrequency,
   type AlertSavedSearch,
   type SavedSearchCriteria as AlertSavedSearchCriteria,
+  type SavedSearchCriteria as Phase22SavedSearchCriteria,
 } from './phase22';
 
 import {
