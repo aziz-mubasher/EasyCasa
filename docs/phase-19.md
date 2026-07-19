@@ -119,7 +119,7 @@
 
 The live site said **"zero commission / no middleman,"** but Phases 8–18 built a **licensed mediator** that charges à-la-carte fees + a provvigione on success.
 
-**Aligned messaging:** no traditional agency commission — pay only for the services you use (and a success fee when a deal closes). Homepage copy (EN/IT/ES) was updated accordingly before scaling discovery acquisition.
+**Aligned messaging (Phase 28):** Option B — pay only for the services you use, from a licensed agency; provvigione disclosed when mediation concludes. See `docs/phase-28.md`.
 
 ---
 

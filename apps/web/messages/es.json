@@ -1,19 +1,66 @@
 {
-  "brand": { "name": "EasyCasa", "tagline": "Compra, vende y alquila — paga solo por los servicios que usas." },
-  "nav": { "search": "Buscar", "add": "Publicar inmueble", "favorites": "Favoritos", "signin": "Entrar" },
+  "brand": {
+    "name": "EasyCasa",
+    "tagline": "Compra, vende y alquila — paga solo por los servicios que usas, con una agencia regulada."
+  },
+  "nav": {
+    "search": "Buscar",
+    "add": "Publicar inmueble",
+    "favorites": "Favoritos",
+    "pricing": "Precios",
+    "signin": "Entrar"
+  },
   "home": {
     "eyebrow": "Inmobiliaria · Italia",
-    "title": "Vivienda, de principio a fin.",
-    "subtitle": "Busca en el mapa entre miles de inmuebles en todas las regiones italianas. Sin comisión de agencia tradicional — servicios à la carte cuando los necesites.",
+    "title": "La vivienda, sin sobreprecio.",
+    "subtitle": "Pagas solo los servicios que usas — con una agencia regulada. Busca en el mapa entre miles de inmuebles en todas las regiones italianas.",
     "cta": "Explorar el mapa"
   },
   "search": {
     "title": "Buscar inmuebles",
     "resultsCount": "{count} inmuebles",
-    "filters": { "all": "Todos", "sale": "Venta", "rent": "Alquiler", "price": "Precio", "bedrooms": "Habitaciones", "category": "Tipo", "region": "Región", "apply": "Aplicar", "clear": "Limpiar" },
+    "filters": {
+      "all": "Todos",
+      "sale": "Venta",
+      "rent": "Alquiler",
+      "price": "Precio",
+      "bedrooms": "Habitaciones",
+      "category": "Tipo",
+      "region": "Región",
+      "apply": "Aplicar",
+      "clear": "Limpiar"
+    },
     "empty": "No se encontraron inmuebles. Amplía la búsqueda o mueve el mapa."
   },
-  "listing": { "perMonth": "/mes", "rooms": "estancias", "baths": "baños", "sqm": "m²", "contact": "Contactar", "save": "Guardar", "saved": "Guardado" },
-  "add": { "title": "Publica tu inmueble", "step": "Paso {n} de {total}", "next": "Siguiente", "back": "Atrás", "publish": "Publicar" },
-  "footer": { "rights": "Todos los derechos reservados." }
+  "listing": {
+    "perMonth": "/mes",
+    "rooms": "estancias",
+    "baths": "baños",
+    "sqm": "m²",
+    "contact": "Contactar",
+    "save": "Guardar",
+    "saved": "Guardado"
+  },
+  "add": {
+    "title": "Publica tu inmueble",
+    "step": "Paso {n} de {total}",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "publish": "Publicar"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "pricing": "Precios de servicios",
+    "disclosure": "Una comisión de mediación (provvigione) se aplica solo al cerrar la operación con nuestro trabajo, y siempre figura en el mandato."
+  },
+  "pricing": {
+    "title": "Precios à la carte",
+    "subtitle": "Pagas solo los servicios que usas. Sin porcentaje oculto en búsqueda o anuncio.",
+    "disclosure": "Si nos encargas como mediadores habilitados, puede aplicarse una provvigione al concluir la operación — siempre indicada en el mandato antes de firmar.",
+    "fixed": "Fijo",
+    "provvigione": "{rate}% al cierre",
+    "passthrough": "Repercusión",
+    "empty": "Catálogo no disponible. Inténtalo de nuevo en breve.",
+    "iva": "IVA cuando corresponda"
+  }
 }

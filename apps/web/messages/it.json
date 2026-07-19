@@ -1,19 +1,66 @@
 {
-  "brand": { "name": "EasyCasa", "tagline": "Compra, vendi e affitta — paghi solo i servizi che usi." },
-  "nav": { "search": "Cerca", "add": "Pubblica annuncio", "favorites": "Preferiti", "signin": "Accedi" },
+  "brand": {
+    "name": "EasyCasa",
+    "tagline": "Compra, vendi e affitta — paghi solo i servizi che usi, con un'agenzia regolare."
+  },
+  "nav": {
+    "search": "Cerca",
+    "add": "Pubblica annuncio",
+    "favorites": "Preferiti",
+    "pricing": "Prezzi",
+    "signin": "Accedi"
+  },
   "home": {
     "eyebrow": "Mercato immobiliare · Italia",
-    "title": "La casa, dall'inizio alla fine.",
-    "subtitle": "Cerca sulla mappa tra migliaia di immobili in tutte le regioni italiane. Niente commissione d'agenzia tradizionale — servizi à la carte quando ti servono.",
+    "title": "La casa, senza sovrapprezzo.",
+    "subtitle": "Paghi solo i servizi che usi — con un'agenzia regolare. Cerca sulla mappa tra migliaia di immobili in tutte le regioni italiane.",
     "cta": "Esplora la mappa"
   },
   "search": {
     "title": "Cerca immobili",
     "resultsCount": "{count} immobili",
-    "filters": { "all": "Tutti", "sale": "Vendita", "rent": "Affitto", "price": "Prezzo", "bedrooms": "Camere", "category": "Tipologia", "region": "Regione", "apply": "Applica", "clear": "Azzera" },
+    "filters": {
+      "all": "Tutti",
+      "sale": "Vendita",
+      "rent": "Affitto",
+      "price": "Prezzo",
+      "bedrooms": "Camere",
+      "category": "Tipologia",
+      "region": "Regione",
+      "apply": "Applica",
+      "clear": "Azzera"
+    },
     "empty": "Nessun immobile trovato. Allarga la ricerca o sposta la mappa."
   },
-  "listing": { "perMonth": "/mese", "rooms": "locali", "baths": "bagni", "sqm": "m²", "contact": "Contatta", "save": "Salva", "saved": "Salvato" },
-  "add": { "title": "Pubblica il tuo immobile", "step": "Passo {n} di {total}", "next": "Avanti", "back": "Indietro", "publish": "Pubblica" },
-  "footer": { "rights": "Tutti i diritti riservati." }
+  "listing": {
+    "perMonth": "/mese",
+    "rooms": "locali",
+    "baths": "bagni",
+    "sqm": "m²",
+    "contact": "Contatta",
+    "save": "Salva",
+    "saved": "Salvato"
+  },
+  "add": {
+    "title": "Pubblica il tuo immobile",
+    "step": "Passo {n} di {total}",
+    "next": "Avanti",
+    "back": "Indietro",
+    "publish": "Pubblica"
+  },
+  "footer": {
+    "rights": "Tutti i diritti riservati.",
+    "pricing": "Listino servizi",
+    "disclosure": "Una provvigione si applica solo a mediazione conclusa e risulta sempre nell'incarico."
+  },
+  "pricing": {
+    "title": "Prezzi à la carte",
+    "subtitle": "Paghi solo i servizi che usi. Nessuna percentuale nascosta su ricerca o annuncio.",
+    "disclosure": "Se ci incarichi come mediatori abilitati, può applicarsi una provvigione a conclusione dell'affare — sempre indicata nell'incarico prima della firma.",
+    "fixed": "Fisso",
+    "provvigione": "{rate}% a conclusione",
+    "passthrough": "Riaddebito",
+    "empty": "Catalogo non disponibile. Riprova tra poco.",
+    "iva": "IVA ove applicabile"
+  }
 }

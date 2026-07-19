@@ -50,3 +50,20 @@ export async function listCategories(): Promise<Array<{ slug: string; key: strin
   const res = await fetch(`${BASE}/categories`, { next: { revalidate: 3600 } });
   return res.ok ? (res.json() as Promise<Array<{ slug: string; key: string; name: string }>>) : [];
 }
+
+export interface CatalogItemRow {
+  code: string;
+  labelEn: string;
+  labelIt: string;
+  category: string;
+  priceModel: 'fixed' | 'provvigione' | 'passthrough';
+  amountCents?: number | null;
+  ratePercent?: number | null;
+  ivaApplicable: boolean;
+}
+
+export async function listServiceCatalog(): Promise<CatalogItemRow[]> {
+  const res = await fetch(`${BASE}/service-catalog`, { next: { revalidate: 600 } });
+  if (!res.ok) return [];
+  return res.json() as Promise<CatalogItemRow[]>;
+}

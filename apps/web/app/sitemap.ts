@@ -20,7 +20,7 @@ async function fetchListings(): Promise<ListingRef[]> {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-  const staticPaths = ['', '/search', '/add'];
+  const staticPaths = ['', '/search', '/add', '/pricing'];
 
   const staticEntries: MetadataRoute.Sitemap = LOCALES.flatMap((loc) =>
     staticPaths.map((p) => ({

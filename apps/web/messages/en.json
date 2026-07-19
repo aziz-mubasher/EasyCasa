@@ -1,19 +1,66 @@
 {
-  "brand": { "name": "EasyCasa", "tagline": "Buy, sell, and rent — pay only for the services you use." },
-  "nav": { "search": "Search", "add": "List a property", "favorites": "Favorites", "signin": "Sign in" },
+  "brand": {
+    "name": "EasyCasa",
+    "tagline": "Buy, sell, and rent — pay only for the services you use, from a licensed agency."
+  },
+  "nav": {
+    "search": "Search",
+    "add": "List a property",
+    "favorites": "Favorites",
+    "pricing": "Pricing",
+    "signin": "Sign in"
+  },
   "home": {
     "eyebrow": "Real estate · Italy",
-    "title": "Property, handled end to end.",
-    "subtitle": "Search the map across thousands of homes in every Italian region. No traditional agency commission — à-la-carte services when you need them.",
+    "title": "Property, without the markup.",
+    "subtitle": "Pay only for the services you use — from a licensed agency. Search the map across thousands of homes in every Italian region.",
     "cta": "Explore the map"
   },
   "search": {
     "title": "Search properties",
     "resultsCount": "{count} properties",
-    "filters": { "all": "All", "sale": "For sale", "rent": "For rent", "price": "Price", "bedrooms": "Beds", "category": "Type", "region": "Region", "apply": "Apply", "clear": "Clear" },
+    "filters": {
+      "all": "All",
+      "sale": "For sale",
+      "rent": "For rent",
+      "price": "Price",
+      "bedrooms": "Beds",
+      "category": "Type",
+      "region": "Region",
+      "apply": "Apply",
+      "clear": "Clear"
+    },
     "empty": "No properties found. Widen your search or move the map."
   },
-  "listing": { "perMonth": "/mo", "rooms": "rooms", "baths": "baths", "sqm": "m²", "contact": "Contact", "save": "Save", "saved": "Saved" },
-  "add": { "title": "List your property", "step": "Step {n} of {total}", "next": "Next", "back": "Back", "publish": "Publish" },
-  "footer": { "rights": "All rights reserved." }
+  "listing": {
+    "perMonth": "/mo",
+    "rooms": "rooms",
+    "baths": "baths",
+    "sqm": "m²",
+    "contact": "Contact",
+    "save": "Save",
+    "saved": "Saved"
+  },
+  "add": {
+    "title": "List your property",
+    "step": "Step {n} of {total}",
+    "next": "Next",
+    "back": "Back",
+    "publish": "Publish"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "pricing": "Service prices",
+    "disclosure": "A mediation fee (provvigione) applies only when a deal closes through our work, and is always stated in the mandate."
+  },
+  "pricing": {
+    "title": "À la carte pricing",
+    "subtitle": "Pay only for the services you use. No hidden percentage on search or listing.",
+    "disclosure": "When you instruct us as a licensed mediator, a provvigione may apply on successful conclusion — always disclosed in the incarico before you sign.",
+    "fixed": "Fixed",
+    "provvigione": "{rate}% on closing",
+    "passthrough": "Pass-through",
+    "empty": "Catalog unavailable right now. Try again shortly.",
+    "iva": "VAT where applicable"
+  }
 }

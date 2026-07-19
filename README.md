@@ -194,6 +194,9 @@ pnpm --filter @easycasa/migration migrate     # applies 0017_phase27
 # POST /avm/estimate  ·  EasyCasaValuationApi  ·  (owner)/valuation
 ```
 
+### Phase 28 — Messaging reconciliation (no "zero commission")
+See `docs/phase-28.md`. Option B positioning: à-la-carte transparency + provvigione disclosure; public `/pricing` page.
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

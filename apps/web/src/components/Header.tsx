@@ -13,6 +13,7 @@ export function Header() {
         </Link>
         <nav className="flex items-center gap-6 text-sm">
           <Link href="/search" className="hover:text-azure">{t('search')}</Link>
+          <Link href="/pricing" className="hover:text-azure">{t('pricing')}</Link>
           <Link href="/add" className="hover:text-azure">{t('add')}</Link>
           <Link href="/favorites" className="hover:text-azure">{t('favorites')}</Link>
           <LocaleSwitcher />
