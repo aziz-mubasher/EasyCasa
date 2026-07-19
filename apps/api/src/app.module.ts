@@ -27,6 +27,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { InvoicingModule } from './invoicing/invoicing.module';
 import { SavedSearchesModule } from './saved-searches/saved-searches.module';
 import { AlertsModule } from './alerts/alerts.module';
+import { EnquiriesModule } from './enquiries/enquiries.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { AlertsModule } from './alerts/alerts.module';
     InvoicingModule,
     SavedSearchesModule,
     AlertsModule,
+    EnquiriesModule,
   ],
   controllers: [HealthController],
 })

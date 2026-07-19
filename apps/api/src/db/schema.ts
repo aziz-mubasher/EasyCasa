@@ -47,6 +47,9 @@ export const listings = pgTable('listings', {
   categoryId: uuid('category_id'),
   regionId: uuid('region_id'),
   agentId: uuid('agent_id'),
+  /** Listing owner for enquiry routing (Phase 24); defaults from agentId. */
+  ownerUserId: uuid('owner_user_id'),
+  mediatorUserId: uuid('mediator_user_id'),
   status: listingStatus('status').notNull().default('draft'),
   transactionType: transactionType('transaction_type'),
   price: numeric('price'),
@@ -134,6 +137,23 @@ export const alertLogs = pgTable(
     uniq: uniqueIndex('alert_logs_saved_listing_uidx').on(t.savedSearchId, t.listingId),
   }),
 );
+
+/** Seeker interest on a listing → qualify → convert to Phase 10 order (Phase 24). */
+export const enquiries = pgTable('enquiries', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id').notNull(),
+  seekerUserId: uuid('seeker_user_id').notNull(),
+  ownerUserId: uuid('owner_user_id').notNull(),
+  mediatorUserId: uuid('mediator_user_id'),
+  intent: text('intent').notNull(),
+  status: text('status').notNull().default('NEW'),
+  message: text('message').notNull(),
+  contactEmail: text('contact_email'),
+  contactPhone: text('contact_phone'),
+  orderId: uuid('order_id'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
 
 
 // ---------------- Phase 5 ----------------
@@ -476,6 +496,7 @@ export const invoices = pgTable('invoices', {
 
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches, alertLogs,
+  enquiries,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
   devices, partnerProfiles, leads, payouts,
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,

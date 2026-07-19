@@ -1,0 +1,13 @@
+{
+  "enquiry": {
+    "title": "Contatta per questo immobile",
+    "intent": "Vorrei",
+    "intents": { "info": "Fare una domanda", "viewing": "Prenotare una visita", "offer": "Fare un'offerta" },
+    "message": "Il tuo messaggio",
+    "email": "Email",
+    "phone": "Telefono",
+    "send": "Invia richiesta",
+    "sent": "Richiesta inviata — l'agente ti contatterà.",
+    "signIn": "Accedi per contattare l'agente."
+  }
+}

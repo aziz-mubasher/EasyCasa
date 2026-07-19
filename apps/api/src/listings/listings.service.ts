@@ -96,6 +96,7 @@ export class ListingsService {
       longitude: dto.longitude,
       features: dto.features,
       agentId,
+      ownerUserId: agentId,
       status: 'draft',
       source: 'native',
     });

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -12,7 +13,11 @@ import MapView, { Marker } from 'react-native-maps';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
+import type { EnquiryIntent } from '@easycasa/api-client';
+import { useCreateEnquiry } from '../../src/api/enquiries';
 import { useDiscoveryListing, useSimilar } from '../../src/api/discovery-hooks';
+import { useAuth } from '../../src/auth/AuthProvider';
+import { EnquiryModal } from '../../src/components/discovery/EnquiryModal';
 import { useTheme } from '../../src/theme/useTheme';
 
 function euro(cents: number): string {
@@ -43,11 +48,14 @@ export default function ListingDetailScreen() {
   const theme = useTheme();
   const router = useRouter();
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuth();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const listingId = slug ?? null;
 
   const { data: l, isLoading, isError } = useDiscoveryListing(listingId);
   const { data: similar } = useSimilar(listingId);
+  const createEnquiry = useCreateEnquiry();
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -171,6 +179,13 @@ export default function ListingDetailScreen() {
         </MapView>
 
         <Pressable
+          onPress={() => {
+            if (!isAuthenticated) {
+              router.push('/(auth)/sign-in');
+              return;
+            }
+            setEnquiryOpen(true);
+          }}
           style={[
             styles.cta,
             { backgroundColor: theme.colors.primary, borderRadius: theme.radius.md },
@@ -180,6 +195,30 @@ export default function ListingDetailScreen() {
             {t('discovery.detail.contact')}
           </Text>
         </Pressable>
+
+        <EnquiryModal
+          visible={enquiryOpen}
+          submitting={createEnquiry.isPending}
+          onClose={() => setEnquiryOpen(false)}
+          onSubmit={(body: {
+            intent: EnquiryIntent;
+            message: string;
+            contactEmail?: string;
+            contactPhone?: string;
+          }) => {
+            if (!listingId) return;
+            createEnquiry.mutate(
+              { listingId, ...body },
+              {
+                onSuccess: () => {
+                  setEnquiryOpen(false);
+                  Alert.alert(t('enquiry.sent'));
+                },
+                onError: () => Alert.alert(t('common.error')),
+              },
+            );
+          }}
+        />
 
         {similar && similar.length > 0 ? (
           <>

@@ -269,6 +269,19 @@ export {
   type SavedSearchCriteria as Phase22SavedSearchCriteria,
 } from './phase22';
 
+export {
+  EasyCasaEnquiriesApi,
+  EnquiryIntentSchema,
+  EnquiryStatusSchema,
+  EnquirySchema,
+  ConvertResultSchema,
+  type EnquiryIntent,
+  type EnquiryStatus,
+  type EnquiryEvent,
+  type Enquiry,
+  type ConvertResult,
+} from './phase24';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,

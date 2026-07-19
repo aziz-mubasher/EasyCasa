@@ -22,6 +22,11 @@ NestJS + Drizzle over the Phase 1 Postgres schema. OpenAPI at `/docs`
 | GET | /agents/:slug | public | Agent profile |
 | GET/POST/DELETE | /me/favorites[...] | authed | Favorites |
 | GET/POST/PUT/DELETE | /me/saved-searches | authed | Saved searches + alert frequency (Phase 22) |
+| POST | /listings/:id/enquiries | authed | Create enquiry (Phase 24) |
+| GET | /me/enquiries | authed | Seeker's enquiries |
+| GET | /me/inbound-enquiries | authed | Owner inbound enquiries |
+| POST | /enquiries/:id/transition | authed | Advance enquiry lifecycle |
+| POST | /enquiries/:id/convert | authed | Convert qualified enquiry → order |
 
 | POST | /media/presign | seller+ | Presigned MinIO upload URL |
 | POST | /media/confirm | seller+ | Record uploaded media |

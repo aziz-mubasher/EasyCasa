@@ -1,0 +1,13 @@
+{
+  "enquiry": {
+    "title": "Contact about this home",
+    "intent": "I'd like to",
+    "intents": { "info": "Ask a question", "viewing": "Book a viewing", "offer": "Make an offer" },
+    "message": "Your message",
+    "email": "Email",
+    "phone": "Phone",
+    "send": "Send enquiry",
+    "sent": "Enquiry sent — the agent will be in touch.",
+    "signIn": "Sign in to contact the agent."
+  }
+}

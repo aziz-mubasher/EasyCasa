@@ -173,6 +173,14 @@ pnpm --filter @easycasa/migration migrate     # applies 0015_phase22
 ### Phase 23 — Seeker discovery UI
 See `docs/phase-23.md`. Expo map search (Phase 20) + listing detail (Phase 21) + saved searches (Phase 22); default landing tab.
 
+### Phase 24 — Enquiry → order funnel
+See `docs/phase-24.md`. Contact-agent CTA → enquiry lifecycle → convert to Phase 10 order.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0016_phase24
+# POST /listings/:id/enquiries  ·  GET /me/enquiries  ·  POST /enquiries/:id/convert
+# EasyCasaEnquiriesApi + EnquiryModal on listing detail
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai
