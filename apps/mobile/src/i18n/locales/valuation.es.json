@@ -1,0 +1,16 @@
+{
+  "valuation": {
+    "title": "\u00bfCu\u00e1nto vale tu casa?",
+    "subtitle": "Una estimaci\u00f3n instant\u00e1nea gratuita basada en inmuebles comparables y datos oficiales OMI.",
+    "comune": "Municipio", "provincia": "Provincia", "type": "Tipo de inmueble",
+    "area": "Superficie (m²)", "rooms": "Habitaciones", "energy": "Clase energ\u00e9tica", "condition": "Estado",
+    "types": { "apartment": "Piso", "house": "Casa", "villa": "Villa" },
+    "conditions": { "new": "Nuevo", "renovated": "Reformado", "good": "Bueno", "to_renovate": "A reformar" },
+    "estimate": "Estimar mi casa",
+    "confidence": { "high": "Alta confianza", "medium": "Confianza media", "low": "Orientativa" },
+    "basis": { "comparables": "seg\u00fan comparables", "omi": "seg\u00fan datos OMI", "blended": "comparables + OMI" },
+    "disclaimer": "Estimaci\u00f3n autom\u00e1tica, no una tasaci\u00f3n formal.",
+    "getCertified": "Solicitar una tasaci\u00f3n certificada",
+    "error": "No se pudo estimar", "needArea": "Introduce una superficie v\u00e1lida en m²."
+  }
+}

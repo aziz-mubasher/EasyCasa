@@ -23,6 +23,9 @@ import enquiryEs from './locales/enquiry.es.json';
 import enquiryInboxEn from './locales/enquiry-inbox.en.json';
 import enquiryInboxIt from './locales/enquiry-inbox.it.json';
 import enquiryInboxEs from './locales/enquiry-inbox.es.json';
+import valuationEn from './locales/valuation.en.json';
+import valuationIt from './locales/valuation.it.json';
+import valuationEs from './locales/valuation.es.json';
 
 export const SUPPORTED_LOCALES = ['en', 'it', 'es'] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
@@ -45,6 +48,7 @@ void i18n.use(initReactI18next).init({
         ...discoveryEn,
         ...enquiryEn,
         ...enquiryInboxEn,
+        ...valuationEn,
       },
     },
     it: {
@@ -56,6 +60,7 @@ void i18n.use(initReactI18next).init({
         ...discoveryIt,
         ...enquiryIt,
         ...enquiryInboxIt,
+        ...valuationIt,
       },
     },
     es: {
@@ -67,6 +72,7 @@ void i18n.use(initReactI18next).init({
         ...discoveryEs,
         ...enquiryEs,
         ...enquiryInboxEs,
+        ...valuationEs,
       },
     },
   },

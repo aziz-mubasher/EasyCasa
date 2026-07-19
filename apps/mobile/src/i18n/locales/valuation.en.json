@@ -1,0 +1,16 @@
+{
+  "valuation": {
+    "title": "What's your home worth?",
+    "subtitle": "A free instant estimate based on comparable homes and official OMI data.",
+    "comune": "Town / comune", "provincia": "Province", "type": "Property type",
+    "area": "Area (m²)", "rooms": "Rooms", "energy": "Energy class", "condition": "Condition",
+    "types": { "apartment": "Apartment", "house": "House", "villa": "Villa" },
+    "conditions": { "new": "New", "renovated": "Renovated", "good": "Good", "to_renovate": "To renovate" },
+    "estimate": "Estimate my home",
+    "confidence": { "high": "High confidence", "medium": "Medium confidence", "low": "Indicative" },
+    "basis": { "comparables": "based on comparables", "omi": "based on OMI data", "blended": "comparables + OMI" },
+    "disclaimer": "An automated estimate, not a formal valuation.",
+    "getCertified": "Get a certified valuation",
+    "error": "Couldn't estimate", "needArea": "Enter a valid area in m²."
+  }
+}

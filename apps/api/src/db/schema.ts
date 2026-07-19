@@ -494,6 +494,30 @@ export const invoices = pgTable('invoices', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+// ---------------- Phase 27 — Free AVM (OMI cache + valuation leads) ----------------
+export const omiQuotes = pgTable('omi_quotes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  comune: text('comune').notNull(),
+  provincia: text('provincia').notNull(),
+  type: text('type').notNull(),
+  minPerM2Cents: integer('min_per_m2_cents').notNull(),
+  maxPerM2Cents: integer('max_per_m2_cents').notNull(),
+  period: text('period').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const valuationRequests = pgTable('valuation_requests', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id'),
+  contactEmail: text('contact_email'),
+  comune: text('comune').notNull(),
+  provincia: text('provincia').notNull(),
+  subject: jsonb('subject').notNull(),
+  estimate: jsonb('estimate').notNull(),
+  pointCents: integer('point_cents').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches, alertLogs,
   enquiries,
@@ -504,5 +528,6 @@ export const schema = {
   professionals, credentials, serviceTasks, assignments, credentialPolicies,
   leases, kycCases,
   paymentIntents, invoices,
+  omiQuotes, valuationRequests,
 };
 export type Schema = typeof schema;

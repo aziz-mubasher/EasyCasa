@@ -74,6 +74,23 @@ export default function OwnerHome() {
         </Text>
       </Pressable>
 
+      <Pressable
+        onPress={() => router.push('/(owner)/valuation')}
+        style={[
+          styles.inboxBanner,
+          {
+            backgroundColor: theme.colors.surface,
+            borderColor: theme.colors.border,
+            borderRadius: theme.radius.md,
+          },
+        ]}
+      >
+        <Text style={[styles.inboxTitle, { color: theme.colors.text }]}>
+          {t('valuation.title')}
+        </Text>
+        <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>→</Text>
+      </Pressable>
+
       {isLoading ? (
         <ActivityIndicator style={styles.center} color={theme.colors.primary} />
       ) : isError ? (

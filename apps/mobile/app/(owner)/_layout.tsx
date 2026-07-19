@@ -17,6 +17,7 @@ export default function OwnerLayout() {
             <Stack>
               <Stack.Screen name="index" options={{ title: t('owner.title') }} />
               <Stack.Screen name="enquiries" options={{ title: t('enquiryInbox.nav') }} />
+              <Stack.Screen name="valuation" options={{ title: t('valuation.title') }} />
               <Stack.Screen name="[propertyId]/fascicolo" options={{ title: t('owner.fascicolo.title') }} />
               <Stack.Screen name="[propertyId]/services" options={{ title: t('owner.services.title') }} />
               <Stack.Screen name="[propertyId]/checkout" options={{ title: t('owner.checkout.title') }} />

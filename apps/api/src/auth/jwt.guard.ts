@@ -25,9 +25,13 @@ export class JwtAuthGuard implements CanActivate {
       ctx.getHandler(),
       ctx.getClass(),
     ]);
-    if (isPublic) return true;
-
     const req = ctx.switchToHttp().getRequest();
+
+    if (isPublic) {
+      // Soft-attach identity when present so @OptionalUser can personalise leads.
+      await this.tryAttachUser(req);
+      return true;
+    }
 
     if (apiConfig.DEV_AUTH) {
       const sub = req.headers['x-dev-user'] as string | undefined;
@@ -55,6 +59,44 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     } catch {
       throw new UnauthorizedException('invalid token');
+    }
+  }
+
+  /** Best-effort auth for @Public routes — never throws. */
+  private async tryAttachUser(req: {
+    headers: Record<string, unknown>;
+    user?: AuthUser;
+  }): Promise<void> {
+    const header = (key: string): string | undefined => {
+      const v = req.headers[key];
+      if (typeof v === 'string') return v;
+      if (Array.isArray(v) && typeof v[0] === 'string') return v[0];
+      return undefined;
+    };
+    try {
+      if (apiConfig.DEV_AUTH) {
+        const sub = header('x-dev-user');
+        if (!sub) return;
+        const roles = (header('x-dev-roles') ?? 'buyer')
+          .split(',')
+          .map((r) => r.trim()) as UserRole[];
+        req.user = {
+          sub,
+          email: header('x-dev-email'),
+          roles,
+        } satisfies AuthUser;
+        return;
+      }
+      const auth = header('authorization');
+      const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
+      if (!token || !this.jwks) return;
+      const { payload } = await jwtVerify(token, this.jwks, {
+        issuer: apiConfig.OIDC_ISSUER,
+        audience: apiConfig.OIDC_AUDIENCE,
+      });
+      req.user = this.toAuthUser(payload);
+    } catch {
+      // ignore — public route stays anonymous
     }
   }
 

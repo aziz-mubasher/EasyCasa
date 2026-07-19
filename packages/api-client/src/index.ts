@@ -282,6 +282,18 @@ export {
   type ConvertResult,
 } from './phase24';
 
+export {
+  EasyCasaValuationApi,
+  ValuationEstimateSchema,
+  EstimateResultSchema,
+  ConditionSchema as AvmConditionSchema,
+  type ValuationEstimate,
+  type EstimateResult,
+  type SubjectProperty as AvmSubjectProperty,
+} from './phase27';
+// Re-export SubjectProperty under its common name for the valuation screen.
+export type { SubjectProperty } from './phase27';
+
 import {
   QuoteSchema,
   FascicoloViewSchema,
