@@ -28,4 +28,11 @@ describe('loadApiConfig', () => {
     expect(cfg.DEV_AUTH).toBe(false);
     expect(cfg.OIDC_ISSUER).toContain('easycasa');
   });
+
+  it('defaults Phase 30 notification seams to empty', () => {
+    const cfg = loadApiConfig({ ...base, DEV_AUTH: 'true' });
+    expect(cfg.PUSH_PROVIDER_URL).toBe('');
+    expect(cfg.EMAIL_PROVIDER_URL).toBe('');
+    expect(cfg.REDIS_URL).toBe('');
+  });
 });

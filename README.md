@@ -204,6 +204,12 @@ pnpm --filter @easycasa/migration migrate     # applies 0018_phase29
 # GET /listings/:id/slots  ·  POST /listings/:id/viewings  ·  booking/[listingId]
 ```
 
+### Phase 30 — Productionization foundation
+See `docs/phase-30.md`. Ops Makefile, optional Keycloak compose, consolidated env seams + backlog.
+```bash
+make help    # up / migrate / reindex / keycloak / …
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

@@ -93,6 +93,13 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | SDI_CHANNEL_URL / SDI_CHANNEL_KEY | api | Phase 17 SdI fattura transmission. Empty + `DEV_AUTH` → stub protocollo. |
 | EASYCASA_PIVA / EASYCASA_DENOMINAZIONE | api | Cedente on fattura elettronica (defaults to Easy Casa Ita). |
 
+## Phase 22 / 30 — notification seams + ops
+| Variable | Used by | Notes |
+|---|---|---|
+| PUSH_PROVIDER_URL | api | Optional push HTTP seam (alerts, enquiries, viewings). Empty → console transport. |
+| EMAIL_PROVIDER_URL | api | Optional email HTTP seam alongside `SMTP_URL`. Empty → console / SMTP fallback. |
+| KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD | keycloak overlay | Only for `make keycloak` local OIDC — not used on Traefik VPS. |
+
 ## Phase 13 — admin console
 | Variable | Used by | Notes |
 |---|---|---|

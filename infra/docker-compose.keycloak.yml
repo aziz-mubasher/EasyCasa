@@ -1,0 +1,24 @@
+# Optional local Keycloak for OIDC (Phase 30).
+# Does NOT replace Traefik/Caddy on the VPS — use only for local auth experiments:
+#   make keycloak
+# Then set DEV_AUTH=false and OIDC_* in .env to the realm you create.
+#
+# Default Keycloak admin console: http://localhost:8080 (admin / admin)
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-easycasa}
+      KC_DB_USERNAME: ${POSTGRES_USER:-easycasa}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-change_me_strong}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [internal]

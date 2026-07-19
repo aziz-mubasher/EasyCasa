@@ -21,11 +21,45 @@ class ConsoleTransport implements Transport {
   }
 }
 
+/** HTTP POST seam — fail soft when the provider is unreachable. */
+class HttpProviderTransport implements Transport {
+  constructor(
+    private readonly baseUrl: string,
+    private readonly kind: string,
+  ) {}
+  async send(userId: string, type: string, payload: Record<string, unknown>): Promise<boolean> {
+    try {
+      const res = await fetch(`${this.baseUrl.replace(/\/$/, '')}/send`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ userId, type, channel: this.kind, payload }),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
+}
+
+function emailTransport(): Transport {
+  if (apiConfig.EMAIL_PROVIDER_URL) {
+    return new HttpProviderTransport(apiConfig.EMAIL_PROVIDER_URL, 'email');
+  }
+  return new ConsoleTransport('email');
+}
+
+function pushTransport(): Transport {
+  if (apiConfig.PUSH_PROVIDER_URL) {
+    return new HttpProviderTransport(apiConfig.PUSH_PROVIDER_URL, 'push');
+  }
+  return new ConsoleTransport('push');
+}
+
 @Injectable()
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
-  private readonly email: Transport = new ConsoleTransport('email');
-  private readonly push: Transport = new ConsoleTransport('push');
+  private readonly email: Transport = emailTransport();
+  private readonly push: Transport = pushTransport();
 
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
@@ -38,7 +72,7 @@ export class NotificationsService {
     for (const channel of channels) {
       let status: 'sent' | 'pending' | 'failed' = 'pending';
       let sentAt: Date | null = null;
-      if (channel === 'email' && apiConfig.SMTP_URL) {
+      if (channel === 'email' && (apiConfig.EMAIL_PROVIDER_URL || apiConfig.SMTP_URL)) {
         status = (await this.email.send(userId, type, payload)) ? 'sent' : 'failed';
         sentAt = new Date();
       } else if (channel === 'push') {

@@ -31,6 +31,12 @@ import { EnquiriesModule } from './enquiries/enquiries.module';
 import { AvmModule } from './avm/avm.module';
 import { ViewingsModule } from './viewings/viewings.module';
 
+/**
+ * Composition root — assembles every phase module into one bootable Nest app.
+ * Global JWT + roles guards live on AuthModule (APP_GUARD). Phase 30 productionization
+ * checklist: confirm imports resolve, OrdersModule exports OrdersService (enquiry bridge),
+ * and /health stays green after each deploy. See docs/phase-30.md.
+ */
 @Module({
   imports: [
     DbModule,
