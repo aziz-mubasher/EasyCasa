@@ -61,7 +61,7 @@ Verified against `apiConfig` / guard usage:
 
 1. ~~Nest `AppConfig` provider injection~~ — done in Phase 33 (`ConfigModule` + seam adapters).
 2. ~~Headless `NestFactory.create(AppModule).init()` in CI~~ — done in Phase 33 (`boot-check` + `api-boot` workflow; no Postgres required for DI init).
-3. OIDC cutover — still Phase 30 backlog #1 (`DEV_AUTH=true` until then).
+3. ~~OIDC cutover~~ — Phase 35: JwtVerifier + realm export; VPS still `DEV_AUTH=true` until live Keycloak.
 
 ---
 

@@ -1,0 +1,30 @@
+name: api-integration
+
+# Real end-to-end gate (Phase 34): boots the full composition root over Postgres
+# (PostGIS + pgvector) + Meilisearch containers, applies repo migrations, drives
+# real routes. GitHub-hosted runners ship a Docker daemon for testcontainers.
+
+on:
+  pull_request:
+    paths:
+      - 'apps/api/**'
+      - 'migration/**'
+      - 'infra/postgres/**'
+      - '.github/workflows/api-integration.yml'
+  push:
+    branches: [main]
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Integration tests
+        run: pnpm --filter @easycasa/api test:int

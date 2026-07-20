@@ -235,6 +235,19 @@ See `docs/phase-33.md`. `ConfigModule` / seam adapters; `/health` seams; `api-bo
 pnpm --filter @easycasa/api build && node apps/api/dist/scripts/boot-check.js
 ```
 
+### Phase 34 — Real boot + integration tests
+See `docs/phase-34.md`. testcontainers suite (Postgres+pgvector + Meili) + `api-integration` workflow.
+```bash
+pnpm --filter @easycasa/api test:int
+```
+
+### Phase 35 — OIDC cutover
+See `docs/phase-35.md`. JwtVerifier + Keycloak realm; cutover = `.env.oidc.example` merge.
+```bash
+make keycloak
+# merge .env.oidc.example → DEV_AUTH=false + OIDC_*
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

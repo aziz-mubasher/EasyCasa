@@ -8,6 +8,7 @@
     "start:dev": "ts-node-dev --respawn src/main.ts",
     "typecheck": "tsc --noEmit",
     "test": "DATABASE_URL=postgresql://easycasa:change_me@localhost:5432/easycasa DEV_AUTH=true MEILI_URL=http://127.0.0.1:7700 MEILI_MASTER_KEY=test vitest run",
+    "test:int": "DEV_AUTH=true vitest run --config vitest.integration.config.ts",
     "boot:check": "node dist/scripts/boot-check.js",
     "search:backfill": "tsx src/search/backfill.ts"
   },
@@ -31,12 +32,19 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@nestjs/testing": "^10.4.22",
+    "@swc/core": "^1.7.0",
+    "@testcontainers/postgresql": "^10.28.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.5",
     "@types/pg": "^8.11.10",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.2.2",
+    "testcontainers": "^10.28.0",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3",
+    "unplugin-swc": "^1.5.0",
     "vitest": "^2.1.3"
   }
 }

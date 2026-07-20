@@ -14,7 +14,7 @@ const Schema = z
     OIDC_ISSUER: z.string().optional(),
     OIDC_AUDIENCE: z.string().optional(),
     OIDC_JWKS_URL: z.string().optional(),
-    OIDC_ROLES_CLAIM: z.string().default('roles'),
+    OIDC_ROLES_CLAIM: z.string().default('realm_access.roles'),
 
     // Billing (Stripe — hosted checkout, no card data on our servers)
     STRIPE_SECRET_KEY: z.string().default(''),

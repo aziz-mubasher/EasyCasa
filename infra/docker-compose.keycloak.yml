@@ -1,24 +1,27 @@
-# Optional local Keycloak for OIDC (Phase 30).
-# Does NOT replace Traefik/Caddy on the VPS — use only for local auth experiments:
-#   make keycloak
-# Then set DEV_AUTH=false and OIDC_* in .env to the realm you create.
+# Local OIDC for the Phase 35 cutover. Imports the EasyCasa realm on start.
+# NOT for the VPS Traefik edge — production uses a managed/hardened Keycloak.
 #
-# Default Keycloak admin console: http://localhost:8080 (admin / admin)
+#   make keycloak
+#   # or: docker compose -f infra/docker-compose.keycloak.yml up -d
+#   # realm: http://localhost:8080/realms/easycasa  (admin/admin — change if shared)
+#
+# Then merge .env.oidc.example into .env (DEV_AUTH=false + OIDC_*).
 
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:25.0
-    command: start-dev
+    image: quay.io/keycloak/keycloak:26.0
+    command: ['start-dev', '--import-realm']
     environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-easycasa}
-      KC_DB_USERNAME: ${POSTGRES_USER:-easycasa}
-      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-change_me_strong}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_HTTP_ENABLED: 'true'
+      KC_HEALTH_ENABLED: 'true'
     ports:
-      - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
-    networks: [internal]
+      - '8080:8080'
+    volumes:
+      - ./keycloak/easycasa-realm.json:/opt/keycloak/data/import/easycasa-realm.json:ro
+    healthcheck:
+      test: ['CMD-SHELL', "exec 3<>/dev/tcp/localhost/8080 && echo done"]
+      interval: 10s
+      timeout: 5s
+      retries: 12

@@ -1,0 +1,90 @@
+{
+  "realm": "easycasa",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "accessTokenLifespan": 300,
+  "roles": {
+    "realm": [
+      { "name": "buyer", "description": "Seeker / prospective buyer" },
+      { "name": "seller", "description": "Property owner listing to sell" },
+      { "name": "agent", "description": "Licensed mediator / agency staff" },
+      { "name": "partner", "description": "External partner (e.g. lender)" },
+      { "name": "pro_marketer", "description": "Professional marketer" },
+      { "name": "professional", "description": "Verified professional (notary, surveyor, …)" },
+      { "name": "admin", "description": "Platform administrator (superuser)" }
+    ]
+  },
+  "clientScopes": [
+    {
+      "name": "easycasa-audience",
+      "protocol": "openid-connect",
+      "description": "Adds easycasa-api to the token audience so the API accepts it.",
+      "attributes": { "include.in.token.scope": "true", "display.on.consent.screen": "false" },
+      "protocolMappers": [
+        {
+          "name": "easycasa-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "easycasa-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "easycasa-api",
+      "description": "Resource server — token audience. No login flow.",
+      "enabled": true,
+      "bearerOnly": true,
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "easycasa-web",
+      "description": "Next.js web app — public client, Authorization Code + PKCE.",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "protocol": "openid-connect",
+      "attributes": { "pkce.code.challenge.method": "S256" },
+      "redirectUris": ["http://localhost:3000/*", "https://easycasaita.com/*"],
+      "webOrigins": ["http://localhost:3000", "https://easycasaita.com"],
+      "defaultClientScopes": ["profile", "email", "roles", "easycasa-audience"]
+    },
+    {
+      "clientId": "easycasa-mobile",
+      "description": "Expo mobile app — public client, PKCE, deep-link redirect.",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "protocol": "openid-connect",
+      "attributes": { "pkce.code.challenge.method": "S256" },
+      "redirectUris": ["easycasa://auth/*", "exp://*"],
+      "defaultClientScopes": ["profile", "email", "roles", "easycasa-audience"]
+    },
+    {
+      "clientId": "easycasa-app",
+      "description": "Alias for easycasa-mobile (existing EXPO_PUBLIC_OIDC_CLIENT_ID).",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "protocol": "openid-connect",
+      "attributes": { "pkce.code.challenge.method": "S256" },
+      "redirectUris": ["easycasa://auth/*", "exp://*"],
+      "defaultClientScopes": ["profile", "email", "roles", "easycasa-audience"]
+    }
+  ]
+}

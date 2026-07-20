@@ -32,5 +32,5 @@ psql: ## Open psql in the db container
 fresh: ## Wipe volumes and restart (destructive)
 	$(COMPOSE) down -v && $(COMPOSE) up -d --build
 
-keycloak: ## Optional Keycloak (OIDC) for local auth — see infra/docker-compose.keycloak.yml
-	docker compose -f infra/docker-compose.yml -f infra/docker-compose.keycloak.yml --env-file .env up -d keycloak
+keycloak: ## Local Keycloak + EasyCasa realm import (Phase 35) — see .env.oidc.example
+	docker compose -f infra/docker-compose.keycloak.yml up -d

@@ -29,6 +29,11 @@ describe('loadApiConfig', () => {
     expect(cfg.OIDC_ISSUER).toContain('easycasa');
   });
 
+  it('defaults OIDC_ROLES_CLAIM to realm_access.roles', () => {
+    const cfg = loadApiConfig({ ...base, DEV_AUTH: 'true' });
+    expect(cfg.OIDC_ROLES_CLAIM).toBe('realm_access.roles');
+  });
+
   it('defaults Phase 30 notification seams to empty', () => {
     const cfg = loadApiConfig({ ...base, DEV_AUTH: 'true' });
     expect(cfg.PUSH_PROVIDER_URL).toBe('');
