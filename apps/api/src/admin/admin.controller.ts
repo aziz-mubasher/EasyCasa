@@ -21,11 +21,14 @@ import {
   EMAIL_OUTBOX,
   OutboxEmailProvider,
 } from '../email/providers/outbox-email.provider';
+import { RetentionService } from '../privacy/retention.service';
 import { CATALOG } from '../service-catalog/domain/catalog';
 import { Phase8PricingAdapter } from '../orders/phase8-pricing.adapter';
 import type { RequiredCredential } from '../professionals/domain/types';
 import type { LegalBasis } from '../transactions/domain/types';
 import { toDbLegalBasis, toDomainLegalBasis } from '../transactions/status-map';
+import { InjectConfig } from '../config/inject-config.decorator';
+import type { ApiConfig } from '../config';
 
 class SetLegalBasisDto {
   @IsIn(['MEDIAZIONE', 'MANDATO_ONEROSO', 'REVIEW_REQUIRED'])
@@ -52,6 +55,8 @@ export class AdminController {
     private readonly pricing: Phase8PricingAdapter,
     private readonly credentialPolicy: DefaultCredentialPolicy,
     @Inject(EMAIL_OUTBOX) private readonly outbox: OutboxEmailProvider,
+    private readonly retention: RetentionService,
+    @InjectConfig() private readonly config: ApiConfig,
   ) {}
 
   @Get('stats')
@@ -74,6 +79,13 @@ export class AdminController {
       provider: e.result.provider,
       skipped: e.result.skipped ?? false,
     }));
+  }
+
+  /** Phase 38 — anonymize stale unconverted enquiry leads. */
+  @Post('privacy/retention-purge')
+  async retentionPurge() {
+    const anonymized = await this.retention.purgeStaleLeads(this.config.RETENTION_LEAD_DAYS);
+    return { anonymized, retentionDays: this.config.RETENTION_LEAD_DAYS };
   }
 
   @Post('listings/:id/archive')

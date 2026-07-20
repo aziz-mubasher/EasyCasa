@@ -8,6 +8,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsService } from '../notifications/notifications.service';
 import { OrdersModule } from '../orders/orders.module';
 import { OrdersService } from '../orders/orders.service';
+import { PrivacyModule } from '../privacy/privacy.module';
 import { UsersModule } from '../users/users.module';
 import {
   ENQUIRY_NOTIFIER,
@@ -184,7 +185,7 @@ export class DefaultEnquiryNotifier implements EnquiryNotifier {
 }
 
 @Module({
-  imports: [UsersModule, OrdersModule, NotificationsModule],
+  imports: [UsersModule, OrdersModule, NotificationsModule, PrivacyModule],
   controllers: [EnquiriesController],
   providers: [
     EnquiriesService,

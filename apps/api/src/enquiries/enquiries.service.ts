@@ -7,6 +7,8 @@ import {
 } from '@nestjs/common';
 
 import { EmailService } from '../email/email.service';
+import { assertEnquiryConsents } from '../privacy/enquiry-consent.gate';
+import { ConsentService } from '../privacy/consent.service';
 import { UsersService } from '../users/users.service';
 import {
   buildOrderDraftFromEnquiry,
@@ -35,6 +37,7 @@ export class EnquiriesService {
     @Inject(ENQUIRY_NOTIFIER) private readonly notifier: EnquiryNotifier,
     private readonly email: EmailService,
     private readonly users: UsersService,
+    private readonly consent: ConsentService,
   ) {}
 
   /** Seeker submits interest on a listing → create enquiry + route notifications. */
@@ -48,6 +51,7 @@ export class EnquiriesService {
       contactPhone?: string | null;
     },
   ): Promise<Enquiry> {
+    await assertEnquiryConsents(this.consent, seekerUserId);
     validateEnquiryInput(input);
     const parties = await this.listings.getParties(listingIdOrSlug);
     if (!parties) throw new NotFoundException(`Listing ${listingIdOrSlug} not found`);

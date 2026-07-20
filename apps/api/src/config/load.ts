@@ -80,6 +80,9 @@ const Schema = z
 
     // Cache / queues (compose Redis; optional for single-node API)
     REDIS_URL: z.string().default(''),
+
+    // Phase 38 — GDPR retention window for unconverted enquiry leads (days)
+    RETENTION_LEAD_DAYS: z.coerce.number().int().positive().default(90),
   })
   .superRefine((cfg, ctx) => {
     // When DEV_AUTH is off, OIDC must be fully configured (Phase 16 fail-fast).

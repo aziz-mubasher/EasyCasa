@@ -52,6 +52,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     PUSH_PROVIDER_URL: '',
     EMAIL_PROVIDER_URL: '',
     REDIS_URL: '',
+    RETENTION_LEAD_DAYS: 90,
     ...over,
   };
 }

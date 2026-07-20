@@ -543,6 +543,17 @@ export const viewings = pgTable('viewings', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** Append-only consent ledger — Phase 38 (GDPR Art. 7). */
+export const consentRecords = pgTable('consent_records', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  subjectUserId: uuid('subject_user_id').notNull(),
+  purpose: text('purpose').notNull(),
+  granted: boolean('granted').notNull(),
+  policyVersion: text('policy_version').notNull(),
+  ipHash: text('ip_hash'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, listings, media, favorites, savedSearches, alertLogs,
   enquiries,
@@ -555,5 +566,6 @@ export const schema = {
   paymentIntents, invoices,
   omiQuotes, valuationRequests,
   viewingAvailability, viewings,
+  consentRecords,
 };
 export type Schema = typeof schema;

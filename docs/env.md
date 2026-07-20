@@ -100,6 +100,11 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | EMAIL_PROVIDER_URL | api | Optional email HTTP seam alongside `SMTP_URL`. Empty → console / SMTP fallback. |
 | KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD | keycloak overlay | Only for `make keycloak` local OIDC — not used on Traefik VPS. |
 
+## Phase 38 — GDPR retention
+| Variable | Used by | Notes |
+|---|---|---|
+| RETENTION_LEAD_DAYS | api | Days before unconverted enquiry leads are anonymized (default `90`). |
+
 ## Phase 13 — admin console
 | Variable | Used by | Notes |
 |---|---|---|

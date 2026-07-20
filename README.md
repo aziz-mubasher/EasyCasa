@@ -263,6 +263,13 @@ pnpm --filter @easycasa/api test:int   # Docker
 # staging: POST /admin/pilot/seed (admin)
 ```
 
+### Phase 38 — GDPR + legal minimum
+See `docs/phase-38.md`. Consent ledger, DSAR/erasure, enquiry consent gate, retention, legal templates.
+```bash
+pnpm --filter @easycasa/migration migrate
+pnpm --filter @easycasa/api test
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai
