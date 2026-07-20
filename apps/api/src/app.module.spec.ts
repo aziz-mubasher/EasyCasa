@@ -8,6 +8,8 @@ import { AmlModule } from './aml/aml.module';
 import { AssignmentsModule } from './assignments/assignments.module';
 import { AvmModule } from './avm/avm.module';
 import { BillingModule } from './billing/billing.module';
+import { ConfigModule } from './config/config.module';
+import { SeamsModule } from './config/adapters/seams.module';
 import { DbModule } from './db/db.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
 import { FascicoloModule } from './fascicolo/fascicolo.module';
@@ -33,8 +35,10 @@ import { UsersModule } from './users/users.module';
 import { ViewingsModule } from './viewings/viewings.module';
 import { AdminModule } from './admin/admin.module';
 
-/** Every Nest feature module the composition root must import (Phase 32). */
+/** Every Nest feature module the composition root must import (Phase 32/33). */
 const REQUIRED = [
+  ConfigModule,
+  SeamsModule,
   DbModule,
   AuthModule,
   UsersModule,
@@ -67,7 +71,7 @@ const REQUIRED = [
   ViewingsModule,
 ] as const;
 
-describe('AppModule composition root (Phase 32)', () => {
+describe('AppModule composition root (Phase 32/33)', () => {
   it('imports every feature module (no orphaned phases)', () => {
     const imported = Reflect.getMetadata(MODULE_METADATA.IMPORTS, AppModule) as unknown[];
     expect(imported).toEqual(expect.arrayContaining([...REQUIRED]));

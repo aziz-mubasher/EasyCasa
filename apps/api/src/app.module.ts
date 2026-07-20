@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from './config/config.module';
+import { SeamsModule } from './config/adapters/seams.module';
 import { DbModule } from './db/db.module';
 import { AuthModule } from './auth/auth.module';
 import { HealthController } from './health/health.controller';
@@ -34,17 +36,14 @@ import { ViewingsModule } from './viewings/viewings.module';
 /**
  * Composition root — single manifest for every feature module.
  *
- * Phase 32: reconciled against real class names/paths in *this* monorepo
- * (not the Prisma sandbox guesses). Global JWT + Roles guards live on
- * `AuthModule` via `APP_GUARD` — do not re-register them here.
- *
- * `OrdersModule` exports `OrdersService` (+ `PRICING_PORT`) for the Phase 26
- * enquiry bridge. Config names: `OIDC_JWKS_URL`, `MEILI_URL`, `S3_*` /
- * `MINIO_*` — see `config.ts` and `docs/phase-32.md`.
+ * Phase 33: `ConfigModule` + `SeamsModule` surface validated env into DI;
+ * `/health` reports seam configuration. Guards stay on `AuthModule`.
  */
 @Module({
   imports: [
-    // platform
+    // platform + config seams (Phase 33)
+    ConfigModule,
+    SeamsModule,
     DbModule,
     AuthModule,
     UsersModule,

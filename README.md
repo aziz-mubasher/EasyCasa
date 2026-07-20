@@ -229,6 +229,12 @@ See `docs/phase-32.1.md` and `docs/cutover.md`. Traefik-first WP cutover checkli
 BASE_URL=https://easycasaita.com k6 run load/k6/search.js
 ```
 
+### Phase 33 — Injectable config + CI boot gate
+See `docs/phase-33.md`. `ConfigModule` / seam adapters; `/health` seams; `api-boot` workflow.
+```bash
+pnpm --filter @easycasa/api build && node apps/api/dist/scripts/boot-check.js
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

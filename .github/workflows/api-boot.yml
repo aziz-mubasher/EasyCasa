@@ -1,0 +1,41 @@
+name: api-boot
+
+# Composition-root regression gate (Phase 33). Builds the API and runs a headless
+# `app.init()` so a broken DI graph fails the PR instead of shipping.
+
+on:
+  pull_request:
+    paths:
+      - 'apps/api/**'
+      - 'packages/shared/**'
+      - '.github/workflows/api-boot.yml'
+      - '.env.test'
+  push:
+    branches: [main]
+
+jobs:
+  boot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build shared + API
+        run: pnpm --filter @easycasa/shared build && pnpm --filter @easycasa/api build
+
+      - name: Headless boot check
+        run: |
+          set -a
+          . ./.env.test
+          set +a
+          node apps/api/dist/scripts/boot-check.js

@@ -59,8 +59,8 @@ Verified against `apiConfig` / guard usage:
 
 ## Follow-ups (optional)
 
-1. Nest `AppConfig` provider injection instead of `apiConfig` singleton in adapters.
-2. Headless `NestFactory.create(AppModule).init()` in CI against a test Postgres (heavier than the static check).
+1. ~~Nest `AppConfig` provider injection~~ — done in Phase 33 (`ConfigModule` + seam adapters).
+2. ~~Headless `NestFactory.create(AppModule).init()` in CI~~ — done in Phase 33 (`boot-check` + `api-boot` workflow; no Postgres required for DI init).
 3. OIDC cutover — still Phase 30 backlog #1 (`DEV_AUTH=true` until then).
 
 ---

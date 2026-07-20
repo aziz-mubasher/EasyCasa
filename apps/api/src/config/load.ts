@@ -87,10 +87,32 @@ const Schema = z
   });
 
 export type ApiConfig = z.infer<typeof Schema>;
+/** Alias used by Phase 33 seam adapters / `@InjectConfig()`. */
+export type AppConfig = ApiConfig;
 
-/** Parse API env. Exported for tests — production uses `apiConfig` below. */
+let cachedProcessEnv: ApiConfig | null = null;
+
+/** Parse API env. Memoizes when reading `process.env` (Phase 33 boot gate). */
 export function loadApiConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
-  return Schema.parse(env);
+  if (env === process.env && cachedProcessEnv) return cachedProcessEnv;
+  const parsed = Schema.parse(env);
+  if (env === process.env) cachedProcessEnv = parsed;
+  return parsed;
 }
 
-export const apiConfig: ApiConfig = loadApiConfig();
+/** Drop memoized process.env parse — used by boot-check after seeding test env. */
+export function resetConfigCache(): void {
+  cachedProcessEnv = null;
+}
+
+/**
+ * Live config view. Proxied so `resetConfigCache()` + re-load picks up new env
+ * without every call site switching to `loadApiConfig()`.
+ */
+export const apiConfig: ApiConfig = new Proxy({} as ApiConfig, {
+  get(_target, prop) {
+    const cfg = loadApiConfig();
+    const value = cfg[prop as keyof ApiConfig];
+    return typeof value === 'function' ? (value as (...a: unknown[]) => unknown).bind(cfg) : value;
+  },
+});

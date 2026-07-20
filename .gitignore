@@ -10,6 +10,7 @@ __pycache__/
 .env
 .env.*
 !.env.example
+!.env.test
 backups/
 caddy_data/
 caddy_config/

@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 
 import { buildQuote } from '../service-catalog/domain/pricing';
 import { CATALOG, PACKAGES } from '../service-catalog/domain/catalog';
@@ -15,12 +15,18 @@ const PACKAGE_CONTENTS: Record<string, readonly string[]> = Object.fromEntries(
 
 @Injectable()
 export class Phase8PricingAdapter implements PricingPort, OnModuleInit {
+  private readonly logger = new Logger(Phase8PricingAdapter.name);
   private readonly legal = new Map<string, LegalBasis>();
 
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
   async onModuleInit(): Promise<void> {
-    await this.reloadLegalBasis();
+    try {
+      await this.reloadLegalBasis();
+    } catch (e) {
+      // REVIEW_REQUIRED fallback until reload; CI boot-check needs no Postgres.
+      this.logger.warn(`Pricing legal-basis DB not ready at boot: ${(e as Error).message}`);
+    }
   }
 
   async reloadLegalBasis(): Promise<void> {

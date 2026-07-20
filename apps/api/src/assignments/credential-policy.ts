@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 
 import { DRIZZLE } from '../db/db.module';
@@ -22,12 +22,18 @@ export const DEFAULT_CREDENTIAL_POLICY: Record<string, RequiredCredential> = {
 
 @Injectable()
 export class DefaultCredentialPolicy implements CredentialPolicyPort, OnModuleInit {
+  private readonly logger = new Logger(DefaultCredentialPolicy.name);
   private readonly overrides = new Map<string, RequiredCredential>();
 
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
   async onModuleInit(): Promise<void> {
-    await this.reload();
+    try {
+      await this.reload();
+    } catch (e) {
+      // Defaults remain; CI boot-check / early boot without Postgres still proves DI.
+      this.logger.warn(`Credential policy DB not ready at boot: ${(e as Error).message}`);
+    }
   }
 
   async reload(): Promise<void> {

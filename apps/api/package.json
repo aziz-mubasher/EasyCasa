@@ -8,6 +8,7 @@
     "start:dev": "ts-node-dev --respawn src/main.ts",
     "typecheck": "tsc --noEmit",
     "test": "DATABASE_URL=postgresql://easycasa:change_me@localhost:5432/easycasa DEV_AUTH=true MEILI_URL=http://127.0.0.1:7700 MEILI_MASTER_KEY=test vitest run",
+    "boot:check": "node dist/scripts/boot-check.js",
     "search:backfill": "tsx src/search/backfill.ts"
   },
   "dependencies": {
