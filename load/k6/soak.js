@@ -1,10 +1,10 @@
 // k6 soak test — steady modest load for 30 minutes to surface memory leaks,
 // connection-pool exhaustion, and slow degradation before launch.
-// Run:  BASE_URL=https://staging.easycasa.it k6 run load/k6/soak.js
+// Run:  BASE_URL=https://easycasaita.com k6 run load/k6/soak.js
 import http from "k6/http";
 import { check, sleep } from "k6";
 
-const BASE = __ENV.BASE_URL || "https://staging.easycasa.it";
+const BASE = __ENV.BASE_URL || "https://easycasaita.com";
 
 export const options = {
   scenarios: {

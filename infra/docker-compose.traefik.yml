@@ -1,7 +1,7 @@
 # VPS overlay: route via the host's existing Traefik (root_default network).
 # Caddy is not started — see profiles on the caddy service in docker-compose.yml.
 # Auto-included by infra/deploy.sh when root_default exists.
-# Phase 6: security headers + AI rate limiting via Traefik middlewares.
+# Phase 6 / 32.1: security headers, AI rate limiting, www → apex 301.
 
 services:
   api:
@@ -9,7 +9,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=root_default
-      - traefik.http.routers.easycasa-api.rule=(Host(`${STAGING_DOMAIN}`) || Host(`www.${STAGING_DOMAIN}`)) && PathPrefix(`/api`)
+      - traefik.http.routers.easycasa-api.rule=Host(`${STAGING_DOMAIN}`) && PathPrefix(`/api`)
       - traefik.http.routers.easycasa-api.entrypoints=websecure
       - traefik.http.routers.easycasa-api.tls=true
       - traefik.http.routers.easycasa-api.tls.certresolver=mytlschallenge
@@ -24,7 +24,7 @@ services:
       - traefik.http.middlewares.easycasa-headers.headers.customResponseHeaders.Permissions-Policy=geolocation=(self), camera=(), microphone=(), payment=(self)
       - traefik.http.routers.easycasa-api.middlewares=easycasa-api-strip@docker,easycasa-headers@docker
       - traefik.http.services.easycasa-api.loadbalancer.server.port=4000
-      - traefik.http.routers.easycasa-api-http.rule=(Host(`${STAGING_DOMAIN}`) || Host(`www.${STAGING_DOMAIN}`)) && PathPrefix(`/api`)
+      - traefik.http.routers.easycasa-api-http.rule=Host(`${STAGING_DOMAIN}`) && PathPrefix(`/api`)
       - traefik.http.routers.easycasa-api-http.entrypoints=web
       - traefik.http.routers.easycasa-api-http.service=easycasa-api
       - traefik.http.routers.easycasa-api-http.middlewares=easycasa-api-strip@docker
@@ -34,14 +34,31 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=root_default
-      - traefik.http.routers.easycasa-web.rule=Host(`${STAGING_DOMAIN}`) || Host(`www.${STAGING_DOMAIN}`)
+      # www → apex permanent redirect (Phase 32.1 / cutover SEO)
+      - traefik.http.middlewares.easycasa-www-redirect.redirectregex.regex=^https?://www\.(.*)
+      - traefik.http.middlewares.easycasa-www-redirect.redirectregex.replacement=https://$${1}
+      - traefik.http.middlewares.easycasa-www-redirect.redirectregex.permanent=true
+      - traefik.http.routers.easycasa-www.rule=Host(`www.${STAGING_DOMAIN}`)
+      - traefik.http.routers.easycasa-www.entrypoints=websecure
+      - traefik.http.routers.easycasa-www.tls=true
+      - traefik.http.routers.easycasa-www.tls.certresolver=mytlschallenge
+      - traefik.http.routers.easycasa-www.priority=10
+      - traefik.http.routers.easycasa-www.middlewares=easycasa-www-redirect@docker
+      - traefik.http.routers.easycasa-www.service=easycasa-web
+      - traefik.http.routers.easycasa-www-http.rule=Host(`www.${STAGING_DOMAIN}`)
+      - traefik.http.routers.easycasa-www-http.entrypoints=web
+      - traefik.http.routers.easycasa-www-http.priority=10
+      - traefik.http.routers.easycasa-www-http.middlewares=easycasa-www-redirect@docker
+      - traefik.http.routers.easycasa-www-http.service=easycasa-web
+      # apex web
+      - traefik.http.routers.easycasa-web.rule=Host(`${STAGING_DOMAIN}`)
       - traefik.http.routers.easycasa-web.entrypoints=websecure
       - traefik.http.routers.easycasa-web.tls=true
       - traefik.http.routers.easycasa-web.tls.certresolver=mytlschallenge
       - traefik.http.routers.easycasa-web.priority=1
       - traefik.http.routers.easycasa-web.middlewares=easycasa-headers@docker
       - traefik.http.services.easycasa-web.loadbalancer.server.port=3000
-      - traefik.http.routers.easycasa-web-http.rule=Host(`${STAGING_DOMAIN}`) || Host(`www.${STAGING_DOMAIN}`)
+      - traefik.http.routers.easycasa-web-http.rule=Host(`${STAGING_DOMAIN}`)
       - traefik.http.routers.easycasa-web-http.entrypoints=web
       - traefik.http.routers.easycasa-web-http.service=easycasa-web
 
@@ -65,7 +82,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=root_default
-      - traefik.http.routers.easycasa-ai.rule=(Host(`${STAGING_DOMAIN}`) || Host(`www.${STAGING_DOMAIN}`)) && PathPrefix(`/ai`)
+      - traefik.http.routers.easycasa-ai.rule=Host(`${STAGING_DOMAIN}`) && PathPrefix(`/ai`)
       - traefik.http.routers.easycasa-ai.entrypoints=websecure
       - traefik.http.routers.easycasa-ai.tls=true
       - traefik.http.routers.easycasa-ai.tls.certresolver=mytlschallenge
@@ -76,7 +93,7 @@ services:
       - traefik.http.middlewares.easycasa-ai-ratelimit.ratelimit.period=1m
       - traefik.http.routers.easycasa-ai.middlewares=easycasa-ai-strip@docker,easycasa-ai-ratelimit@docker,easycasa-headers@docker
       - traefik.http.services.easycasa-ai.loadbalancer.server.port=8000
-      - traefik.http.routers.easycasa-ai-http.rule=(Host(`${STAGING_DOMAIN}`) || Host(`www.${STAGING_DOMAIN}`)) && PathPrefix(`/ai`)
+      - traefik.http.routers.easycasa-ai-http.rule=Host(`${STAGING_DOMAIN}`) && PathPrefix(`/ai`)
       - traefik.http.routers.easycasa-ai-http.entrypoints=web
       - traefik.http.routers.easycasa-ai-http.service=easycasa-ai
       - traefik.http.routers.easycasa-ai-http.middlewares=easycasa-ai-strip@docker

@@ -61,12 +61,13 @@ pnpm --filter @easycasa/migration migrate     # applies 0006 plans/messaging/lea
 ```
 
 ### Phase 6 — Hardening & SEO-safe cutover
-See `docs/phase-6.md` and `docs/cutover.md`.
+See `docs/phase-6.md`, `docs/cutover.md`, and **`docs/phase-32.1.md`** (Traefik hostname reconciliation).
 ```bash
 pnpm --filter @easycasa/migration redirects   # → migration/out/redirects.caddy + .csv
 # SEO: /sitemap.xml /robots.txt  ·  JSON-LD on listing pages
-# Edge: Traefik headers/rate-limit (VPS) or infra/caddy (local --profile caddy)
-# Load: k6 run load/k6/search.js   Drill: ./scripts/backup-restore-drill.sh
+# Edge: Traefik headers/rate-limit/www→apex (VPS) or infra/caddy (local --profile caddy)
+# Load: BASE_URL=https://easycasaita.com k6 run load/k6/search.js
+# Drill: ./scripts/backup-restore-drill.sh
 ```
 
 ### Phase 7 — Universal app (Expo)
@@ -220,6 +221,12 @@ pnpm --filter @easycasa/migration migrate     # applies 0019_phase31
 See `docs/phase-32.md`. Inventory + regression tests for `AppModule` imports (guards stay on `AuthModule`).
 ```bash
 pnpm --filter @easycasa/api test -- src/app.module.spec.ts
+```
+
+### Phase 32.1 — Cutover readiness
+See `docs/phase-32.1.md` and `docs/cutover.md`. Traefik-first WP cutover checklist; www→apex 301.
+```bash
+BASE_URL=https://easycasaita.com k6 run load/k6/search.js
 ```
 
 ### Python AI service (local tests)

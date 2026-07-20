@@ -35,7 +35,7 @@
 		X-XSS-Protection "0"
 		# Content-Security-Policy — start in report-only, promote to enforcing
 		# after a week of clean reports. Tune script/style hosts to your CDN + Stripe + maps.
-		Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.tile.openstreetmap.org; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https://api.stripe.com https://*.easycasa.it; frame-src https://js.stripe.com https://hooks.stripe.com; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; report-uri /csp-report"
+		Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.tile.openstreetmap.org; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https://api.stripe.com https://*.easycasaita.com; frame-src https://js.stripe.com https://hooks.stripe.com; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; report-uri /csp-report"
 		# Strip server fingerprint.
 		-Server
 	}
@@ -56,9 +56,9 @@
 	}
 }
 
-# ---- API (api.easycasa.it) ---------------------------------------------------
+# ---- API (path /api on apex, or optional api.* host) -------------------------
 
-api.easycasa.it {
+api.easycasaita.com {
 	import security_headers
 	import compression
 
@@ -80,7 +80,7 @@ api.easycasa.it {
 	}
 
 	# CORS handled in the app; do not echo arbitrary Origins here.
-	reverse_proxy api:3001 {
+	reverse_proxy api:4000 {
 		health_uri /health
 		health_interval 10s
 		health_timeout 3s
@@ -95,13 +95,13 @@ api.easycasa.it {
 	}
 }
 
-# ---- Web (easycasa.it + www) -------------------------------------------------
+# ---- Web (easycasaita.com + www) ---------------------------------------------
 
-www.easycasa.it {
-	redir https://easycasa.it{uri} permanent
+www.easycasaita.com {
+	redir https://easycasaita.com{uri} permanent
 }
 
-easycasa.it {
+easycasaita.com {
 	import security_headers
 	import compression
 	import ratelimit_baseline
@@ -115,11 +115,17 @@ easycasa.it {
 	@nextStatic path /_next/static/*
 	header @nextStatic Cache-Control "public, max-age=31536000, immutable"
 
+	# Same-host /api and /ai (matches Traefik layout on the shared VPS).
+	handle_path /api/* {
+		reverse_proxy api:4000
+	}
+	handle_path /ai/* {
+		reverse_proxy ai:8000
+	}
+
 	# Sitemaps + robots are served by Next route handlers; let them through.
-	reverse_proxy web:3000 {
-		health_uri /api/health
-		health_interval 10s
-		health_timeout 3s
+	handle {
+		reverse_proxy web:3000
 	}
 
 	log {

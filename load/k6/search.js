@@ -1,10 +1,10 @@
 // k6 load test — search & listings read paths (the hot paths).
-// Run:  BASE_URL=https://staging.easycasa.it k6 run load/k6/search.js
+// Run:  BASE_URL=https://easycasaita.com k6 run load/k6/search.js
 import http from "k6/http";
 import { check, sleep, group } from "k6";
 import { Trend } from "k6/metrics";
 
-const BASE = __ENV.BASE_URL || "https://staging.easycasa.it";
+const BASE = __ENV.BASE_URL || "https://easycasaita.com";
 
 const searchLatency = new Trend("search_latency", true);
 const listingLatency = new Trend("listing_latency", true);

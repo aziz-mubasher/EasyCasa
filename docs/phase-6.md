@@ -7,6 +7,8 @@ DNS cutover that retires WordPress.
 **This VPS:** Traefik on `easycasaita.com` (see `infra/docker-compose.traefik.yml`).
 Caddy Phase 6 build is under `infra/caddy/` for local/`--profile caddy` deploys.
 
+**Phase 32.1** re-checked this toolkit after composition-root reconciliation — see `docs/phase-32.1.md`.
+
 ## Steps & acceptance criteria
 - [x] **1. Edge security.** Done when: HTTPS with valid cert; security headers on Traefik/Caddy; CSP path documented (report-only → enforce).
 - [x] **2. Rate limiting.** Done when: Traefik rate-limit on `/ai/*`; Caddy zones ready for dedicated edge.
@@ -19,7 +21,7 @@ Caddy Phase 6 build is under `infra/caddy/` for local/`--profile caddy` deploys.
 - [ ] **9. Cutover.** Done when: `docs/cutover.md` rehearsed; DNS flipped; T+60m verification; WP retired after clean window.
 
 ## Verified in this scaffold
-- Traefik security headers + AI rate-limit labels wired ✅
+- Traefik security headers + AI rate-limit + www→apex 301 wired ✅
 - `GET /listings/sitemap` + Next `sitemap.ts` / `robots.ts` + StructuredData ✅
 - Security CI, k6, pa11y, Lighthouse, backup drill, observability overlay copied ✅
 
