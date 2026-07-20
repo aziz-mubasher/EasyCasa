@@ -32,26 +32,37 @@ import { AvmModule } from './avm/avm.module';
 import { ViewingsModule } from './viewings/viewings.module';
 
 /**
- * Composition root — assembles every phase module into one bootable Nest app.
- * Global JWT + roles guards live on AuthModule (APP_GUARD). Phase 30 productionization
- * checklist: confirm imports resolve, OrdersModule exports OrdersService (enquiry bridge),
- * and /health stays green after each deploy. See docs/phase-30.md.
+ * Composition root — single manifest for every feature module.
+ *
+ * Phase 32: reconciled against real class names/paths in *this* monorepo
+ * (not the Prisma sandbox guesses). Global JWT + Roles guards live on
+ * `AuthModule` via `APP_GUARD` — do not re-register them here.
+ *
+ * `OrdersModule` exports `OrdersService` (+ `PRICING_PORT`) for the Phase 26
+ * enquiry bridge. Config names: `OIDC_JWKS_URL`, `MEILI_URL`, `S3_*` /
+ * `MINIO_*` — see `config.ts` and `docs/phase-32.md`.
  */
 @Module({
   imports: [
+    // platform
     DbModule,
     AuthModule,
     UsersModule,
+    NotificationsModule,
+    // discovery & media
     ListingsModule,
     TaxonomyModule,
     MediaModule,
-    AdminModule,
     SearchModule,
-    NotificationsModule,
+    SavedSearchesModule,
+    AlertsModule,
+    // marketplace / partners
     PartnersModule,
     MessagingModule,
     BillingModule,
     FeaturedModule,
+    AdminModule,
+    // transaction & compliance spine (P8–12)
     ServiceCatalogModule,
     PropertiesModule,
     FascicoloModule,
@@ -62,10 +73,10 @@ import { ViewingsModule } from './viewings/viewings.module';
     ProfessionalMeModule,
     RentalsModule,
     AmlModule,
+    // payments & invoicing (P17)
     PaymentsModule,
     InvoicingModule,
-    SavedSearchesModule,
-    AlertsModule,
+    // funnel / valuation / viewings (P24–29)
     EnquiriesModule,
     AvmModule,
     ViewingsModule,

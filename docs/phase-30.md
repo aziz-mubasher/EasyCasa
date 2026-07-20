@@ -46,12 +46,13 @@ VPS continues: rsync → migrate → `docker compose … up -d --build` (see pri
 Adapted from the scaffold; mapped to this codebase:
 
 1. **OIDC cutover** — leave `DEV_AUTH=true` only until Keycloak (or other) realm is live; set `OIDC_ISSUER` / `AUDIENCE` / `JWKS_URL`; script realm export/import.
-2. **Order bridge** — Phase 26 + **Phase 31**: buyer orders root on `listing_id`; party columns still optional follow-ups.
-3. **Viewings hardening** — Phase 29 has partial unique index; add IANA timezone per listing + Europe/Rome wall-clock.
-4. **External credentials** — wire fail-soft seams: PSP, SdI, AML, RLI/Entratel, e-signature, push/email (`PUSH_PROVIDER_URL` / `EMAIL_PROVIDER_URL` / `SMTP_URL`), S3 lifecycle.
-5. **Data loads** — OMI quotazioni (Phase 27), sold-price comps, geocoding.
-6. **Search ops** — Meilisearch settings + scheduled reindex; rate-limit public search + AVM.
-7. **Observability** — structured logs, error tracking, readiness probes, backups, secrets (not `.env` in prod), CORS/HTTPS headers (Traefik already partially covers edge).
+2. **Composition root** — **done (Phase 32):** full `AppModule` inventory + static regression tests; guards remain on `AuthModule`.
+3. **Order bridge** — Phase 26 + **Phase 31**: buyer orders root on `listing_id`; party columns still optional follow-ups.
+4. **Viewings hardening** — Phase 29 has partial unique index; add IANA timezone per listing + Europe/Rome wall-clock.
+5. **External credentials** — wire fail-soft seams: PSP, SdI, AML, RLI/Entratel, e-signature, push/email (`PUSH_PROVIDER_URL` / `EMAIL_PROVIDER_URL` / `SMTP_URL`), S3 lifecycle.
+6. **Data loads** — OMI quotazioni (Phase 27), sold-price comps, geocoding.
+7. **Search ops** — Meilisearch settings + scheduled reindex; rate-limit public search + AVM.
+8. **Observability** — structured logs, error tracking, readiness probes, backups, secrets (not `.env` in prod), CORS/HTTPS headers (Traefik already partially covers edge).
 
 ---
 

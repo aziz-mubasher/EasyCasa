@@ -216,6 +216,12 @@ See `docs/phase-31.md`. Drizzle already unified; `0019` makes `service_orders` l
 pnpm --filter @easycasa/migration migrate     # applies 0019_phase31
 ```
 
+### Phase 32 — Composition-root reconciliation
+See `docs/phase-32.md`. Inventory + regression tests for `AppModule` imports (guards stay on `AuthModule`).
+```bash
+pnpm --filter @easycasa/api test -- src/app.module.spec.ts
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai
