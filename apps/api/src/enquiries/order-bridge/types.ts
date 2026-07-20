@@ -10,8 +10,8 @@ export type PartyRole = 'BUYER' | 'OWNER';
  * subject listing, selected catalog items, and a reference value used to price
  * any provvigione item. Buyer-side orders carry the seeker as the party.
  *
- * Phase 10 today persists orders against a property fascicolo (not party) —
- * `Phase10OrdersAdapter` reconciles this shape onto `OrdersService.create`.
+ * Phase 31: BUYER orders root on `listingId`; OWNER orders still use a
+ * property fascicolo via `Phase10OrdersAdapter`.
  */
 export interface CreateOrderInput {
   partyUserId: string;

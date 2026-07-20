@@ -17,17 +17,22 @@ export interface Phase10OrdersService {
     propertyId: string,
     req: { items?: string[]; referenceValueCents?: number },
   ): Promise<{ id: string }>;
+  createForListing(
+    listingId: string,
+    req: { items?: string[]; referenceValueCents?: number },
+  ): Promise<{ id: string }>;
 }
 
 export const PHASE10_ORDERS_SERVICE = Symbol('PHASE10_ORDERS_SERVICE');
 
 /**
- * Reconciles the enquiry bridge's `CreateOrderInput` onto Phase 10's
- * property-scoped `OrdersService.create`. Resolves (or creates) the listing's
- * property fascicolo first — Phase 10 orders always hang off a property.
+ * Reconciles the enquiry bridge's `CreateOrderInput` onto Phase 10 orders.
  *
- * `partyUserId` / `partyRole` / `source` are accepted for the bridge contract
- * but not yet persisted on `service_orders` (owner-centric Phase 10 model).
+ * - BUYER → `createForListing` (listing-rooted; Phase 31 — no invented Property)
+ * - OWNER → resolve/create fascicolo then `create(propertyId)`
+ *
+ * `partyUserId` / `source` are accepted for the bridge contract but not yet
+ * persisted on `service_orders`.
  */
 @Injectable()
 export class Phase10OrdersAdapter implements OrdersServicePort {
@@ -39,13 +44,23 @@ export class Phase10OrdersAdapter implements OrdersServicePort {
   ) {}
 
   async createOrder(input: CreateOrderInput): Promise<{ id: string }> {
-    const propertyId = await this.findOrCreateProperty(input.listingId);
-    const order = await this.orders.create(propertyId, {
+    const req = {
       items: input.itemCodes,
       referenceValueCents: input.referenceValueCents ?? undefined,
-    });
+    };
+
+    if (input.partyRole === 'BUYER') {
+      const order = await this.orders.createForListing(input.listingId, req);
+      this.logger.log(
+        `enquiry → buyer order ${order.id} (listing=${input.listingId}, party=${input.partyUserId}, items=${input.itemCodes.join(',')})`,
+      );
+      return { id: order.id };
+    }
+
+    const propertyId = await this.findOrCreateProperty(input.listingId);
+    const order = await this.orders.create(propertyId, req);
     this.logger.log(
-      `enquiry → order ${order.id} (property=${propertyId}, role=${input.partyRole}, party=${input.partyUserId}, items=${input.itemCodes.join(',')})`,
+      `enquiry → owner order ${order.id} (property=${propertyId}, listing=${input.listingId}, party=${input.partyUserId}, items=${input.itemCodes.join(',')})`,
     );
     return { id: order.id };
   }

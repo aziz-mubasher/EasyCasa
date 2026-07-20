@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -41,6 +42,11 @@ export class MandateService {
   async create(orderId: string, terms: MandateTerms): Promise<MandateRecord> {
     const order = await this.orders.get(orderId);
     if (!order) throw new NotFoundException(`Order ${orderId} not found`);
+    if (!order.propertyId) {
+      throw new BadRequestException(
+        `Order ${orderId} is listing-rooted; mandates require an owner property fascicolo`,
+      );
+    }
 
     const legalBasis: Record<string, ReturnType<PricingPort['legalBasisOf']>> = {};
     for (const code of order.itemCodes) legalBasis[code] = this.pricing.legalBasisOf(code);

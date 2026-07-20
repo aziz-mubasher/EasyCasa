@@ -341,7 +341,10 @@ export const packageItems = pgTable(
 
 export const serviceOrders = pgTable('service_orders', {
   id: uuid('id').primaryKey().defaultRandom(),
-  propertyId: uuid('property_id').notNull(),
+  /** Owner fascicolo root — nullable for buyer-side (listing-rooted) orders. */
+  propertyId: uuid('property_id'),
+  /** Published listing root — used by enquiry → buyer orders (Phase 26/31). */
+  listingId: uuid('listing_id'),
   packageCode: text('package_code'),
   status: serviceOrderStatus('status').notNull().default('quoted'),
   itemCodes: text('item_codes').array().notNull().default([]),

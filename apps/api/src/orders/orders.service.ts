@@ -13,6 +13,7 @@ import type {
   PricingPort,
 } from '../transactions/domain/ports';
 import type { OrderEvent, QuoteRequest } from '../transactions/domain/types';
+import { assertOrderSubject, buyerSubject, ownerSubject, type OrderSubject } from './domain/order-subject';
 
 export const ORDER_REPOSITORY = Symbol('ORDER_REPOSITORY');
 export const PRICING_PORT = Symbol('PRICING_PORT');
@@ -31,12 +32,31 @@ export class OrdersService {
     private readonly assignments?: AssignmentsService,
   ) {}
 
+  /** Owner / fascicolo checkout — property-rooted. */
   async create(propertyId: string, req: QuoteRequest): Promise<OrderRecord> {
+    const property = await this.properties.get(propertyId);
+    return this.createWithSubject(ownerSubject(propertyId, property.listingId ?? null), req);
+  }
+
+  /** Buyer / enquiry conversion — listing-rooted (no invented Property). */
+  async createForListing(listingId: string, req: QuoteRequest): Promise<OrderRecord> {
+    const rows = await this.db
+      .select({ id: listings.id })
+      .from(listings)
+      .where(eq(listings.id, listingId))
+      .limit(1);
+    if (!rows[0]) throw new NotFoundException(`Listing ${listingId} not found`);
+    return this.createWithSubject(buyerSubject(listingId), req);
+  }
+
+  private async createWithSubject(subject: OrderSubject, req: QuoteRequest): Promise<OrderRecord> {
+    assertOrderSubject(subject);
     const quote = this.pricing.quote(req);
     const itemCodes = this.pricing.resolveItemCodes(req);
 
     const order = await this.orders.create({
-      propertyId,
+      propertyId: subject.propertyId,
+      listingId: subject.listingId,
       packageCode: req.packageCode ?? null,
       status: 'CONFIRMED',
       itemCodes,
@@ -56,12 +76,12 @@ export class OrdersService {
       clientFiscalCode: null,
     });
 
-    if (this.assignments) {
+    if (this.assignments && subject.propertyId) {
       try {
-        const province = await this.resolveProvince(propertyId);
+        const province = await this.resolveProvince(subject);
         await this.assignments.spawnForOrder({
           orderId: order.id,
-          propertyId,
+          propertyId: subject.propertyId,
           itemCodes: order.itemCodes,
           province,
         });
@@ -90,14 +110,24 @@ export class OrdersService {
     return { ...order, status };
   }
 
-  private async resolveProvince(propertyId: string): Promise<string> {
-    const property = await this.properties.get(propertyId);
-    if (property.province) return property.province;
-    if (property.listingId) {
+  private async resolveProvince(subject: OrderSubject): Promise<string> {
+    if (subject.propertyId) {
+      const property = await this.properties.get(subject.propertyId);
+      if (property.province) return property.province;
+      if (property.listingId) {
+        const rows = await this.db
+          .select({ province: listings.province })
+          .from(listings)
+          .where(eq(listings.id, property.listingId))
+          .limit(1);
+        if (rows[0]?.province) return rows[0].province;
+      }
+    }
+    if (subject.listingId) {
       const rows = await this.db
         .select({ province: listings.province })
         .from(listings)
-        .where(eq(listings.id, property.listingId))
+        .where(eq(listings.id, subject.listingId))
         .limit(1);
       if (rows[0]?.province) return rows[0].province;
     }

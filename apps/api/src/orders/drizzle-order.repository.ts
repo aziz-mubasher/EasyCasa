@@ -19,6 +19,7 @@ export class DrizzleOrderRepository implements OrderRepository {
       .insert(serviceOrders)
       .values({
         propertyId: input.propertyId,
+        listingId: input.listingId,
         packageCode: input.packageCode,
         status: toDbOrderStatus(input.status),
         itemCodes: input.itemCodes,
@@ -45,6 +46,7 @@ export class DrizzleOrderRepository implements OrderRepository {
     return {
       id: order.id,
       propertyId: order.propertyId,
+      listingId: order.listingId,
       packageCode: order.packageCode,
       status: toDomainOrderStatus(order.status),
       itemCodes: order.itemCodes ?? [],
@@ -67,6 +69,7 @@ export class DrizzleOrderRepository implements OrderRepository {
     return {
       id: order.id,
       propertyId: order.propertyId,
+      listingId: order.listingId,
       packageCode: order.packageCode,
       status: toDomainOrderStatus(order.status),
       itemCodes: order.itemCodes ?? [],

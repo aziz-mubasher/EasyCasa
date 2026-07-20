@@ -210,6 +210,12 @@ See `docs/phase-30.md`. Ops Makefile, optional Keycloak compose, consolidated en
 make help    # up / migrate / reindex / keycloak / …
 ```
 
+### Phase 31 — Schema unification (buyer order roots)
+See `docs/phase-31.md`. Drizzle already unified; `0019` makes `service_orders` listing-rooted for buyers.
+```bash
+pnpm --filter @easycasa/migration migrate     # applies 0019_phase31
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

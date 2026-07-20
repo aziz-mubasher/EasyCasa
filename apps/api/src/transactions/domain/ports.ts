@@ -33,7 +33,10 @@ export interface OrderLineRecord {
 
 export interface OrderRecord {
   id: string;
-  propertyId: string;
+  /** Owner fascicolo; null for buyer listing-rooted orders (Phase 31). */
+  propertyId: string | null;
+  /** Published listing; set for buyer / enquiry orders (and optionally owner). */
+  listingId: string | null;
   packageCode: string | null;
   status: OrderStatus;
   itemCodes: string[];
