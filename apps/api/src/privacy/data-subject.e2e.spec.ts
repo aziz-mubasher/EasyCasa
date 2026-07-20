@@ -64,8 +64,8 @@ describe('DataSubjectController (e2e)', () => {
       providers: [
         { provide: CONSENT_STORE, useValue: store },
         ConsentService,
-        { provide: DsarService, useValue: new DsarService([src]) },
-        { provide: ErasureService, useValue: new ErasureService([src]) },
+        { provide: DsarService, useValue: new DsarService().withSources([src]) },
+        { provide: ErasureService, useValue: new ErasureService().withSources([src]) },
         {
           provide: UsersService,
           useValue: {

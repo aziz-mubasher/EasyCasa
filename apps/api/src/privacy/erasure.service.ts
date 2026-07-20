@@ -13,20 +13,21 @@ export interface ErasureReport {
 
 /**
  * Right to erasure (GDPR Art. 17) — Phase 38.
- * Erasure is NOT absolute: data required for a legal obligation is retained
- * under legal hold and reported.
+ * Sources are bound at boot via {@link PersonalDataRegistrar}.
  */
 @Injectable()
 export class ErasureService {
   private readonly logger = new Logger(ErasureService.name);
   private sources: PersonalDataSource[] = [];
 
-  constructor(sources?: PersonalDataSource[]) {
-    if (sources) this.sources = sources;
-  }
-
   bind(registry: PersonalDataRegistry): void {
     this.sources = registry.all();
+  }
+
+  /** Unit/e2e helper — Nest must not see constructor params (emitDecoratorMetadata). */
+  withSources(sources: PersonalDataSource[]): this {
+    this.sources = sources;
+    return this;
   }
 
   async erase(subjectId: string): Promise<ErasureReport> {

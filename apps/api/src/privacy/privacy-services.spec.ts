@@ -58,14 +58,14 @@ class MemConsent implements ConsentStore {
 
 describe('DsarService (Art. 15 export)', () => {
   it('aggregates all sources for the subject', async () => {
-    const svc = new DsarService([enquiriesSource, viewingsSource]);
+    const svc = new DsarService().withSources([enquiriesSource, viewingsSource]);
     const out = await svc.export('anna');
     expect(out.subjectId).toBe('anna');
     expect(out.sections.map((s) => s.source).sort()).toEqual(['enquiries', 'viewings']);
     expect(out.sections.find((s) => s.source === 'enquiries')?.records).toHaveLength(1);
   });
   it('returns empty sections for an unknown subject', async () => {
-    const out = await new DsarService([enquiriesSource]).export('nobody');
+    const out = await new DsarService().withSources([enquiriesSource]).export('nobody');
     expect(out.sections[0]?.records).toHaveLength(0);
   });
   it('surfaces a source failure as an error section (no silent drop)', async () => {
@@ -78,14 +78,16 @@ describe('DsarService (Art. 15 export)', () => {
         return { source: 'bad', erased: 0, retainedUnderLegalHold: 0 };
       },
     };
-    const out = await new DsarService([bad]).export('anna');
+    const out = await new DsarService().withSources([bad]).export('anna');
     expect(JSON.stringify(out.sections[0]?.records)).toContain('collect failed');
   });
 });
 
 describe('ErasureService (Art. 17)', () => {
   it('erases where possible and reports legal holds; fullyErased=false when retained', async () => {
-    const report = await new ErasureService([enquiriesSource, viewingsSource]).erase('anna');
+    const report = await new ErasureService()
+      .withSources([enquiriesSource, viewingsSource])
+      .erase('anna');
     expect(report.outcomes.find((o) => o.source === 'enquiries')?.erased).toBe(1);
     expect(report.outcomes.find((o) => o.source === 'viewings')?.retainedUnderLegalHold).toBe(1);
     expect(report.fullyErased).toBe(false);

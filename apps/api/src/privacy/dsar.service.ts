@@ -11,21 +11,20 @@ export interface DataExport {
 
 /**
  * Right of access / data portability (GDPR Art. 15 & 20) — Phase 38.
- * Aggregates the subject's data from every registered source into one portable
- * JSON bundle. A source failing to collect surfaces as an error section rather
- * than silently dropping data.
+ * Sources are bound at boot via {@link PersonalDataRegistrar} (no constructor DI).
  */
 @Injectable()
 export class DsarService {
   private sources: PersonalDataSource[] = [];
 
-  /** Used by unit/e2e tests that construct the service with an explicit list. */
-  constructor(sources?: PersonalDataSource[]) {
-    if (sources) this.sources = sources;
-  }
-
   bind(registry: PersonalDataRegistry): void {
     this.sources = registry.all();
+  }
+
+  /** Unit/e2e helper — Nest must not see constructor params (emitDecoratorMetadata). */
+  withSources(sources: PersonalDataSource[]): this {
+    this.sources = sources;
+    return this;
   }
 
   async export(subjectId: string): Promise<DataExport> {
