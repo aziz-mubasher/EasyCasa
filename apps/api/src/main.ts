@@ -22,7 +22,7 @@ async function bootstrap(): Promise<void> {
   const swagger = new DocumentBuilder()
     .setTitle('EasyCasa API')
     .setDescription('Core API — listings, search, billing, messaging, partners')
-    .setVersion('0.35.0')
+    .setVersion('0.36.1')
     .addBearerAuth()
     .build();
   SwaggerModule.setup('docs', app, SwaggerModule.createDocument(app, swagger));

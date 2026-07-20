@@ -3,6 +3,7 @@ import { ConfigModule } from './config/config.module';
 import { SeamsModule } from './config/adapters/seams.module';
 import { DbModule } from './db/db.module';
 import { AuthModule } from './auth/auth.module';
+import { EmailModule } from './email/email.module';
 import { HealthController } from './health/health.controller';
 import { ListingsModule } from './listings/listings.module';
 import { TaxonomyModule } from './taxonomy/taxonomy.module';
@@ -36,16 +37,17 @@ import { ViewingsModule } from './viewings/viewings.module';
 /**
  * Composition root — single manifest for every feature module.
  *
- * Phase 33: `ConfigModule` + `SeamsModule` surface validated env into DI;
- * `/health` reports seam configuration. Guards stay on `AuthModule`.
+ * Phases 32–36.1: Config + Seams + Auth + Email infra spine; feature modules
+ * below. Guards stay on `AuthModule` only. `/health` is `@Public`.
  */
 @Module({
   imports: [
-    // platform + config seams (Phase 33)
+    // platform + config seams (Phase 33) + email (Phase 36)
     ConfigModule,
     SeamsModule,
     DbModule,
     AuthModule,
+    EmailModule,
     UsersModule,
     NotificationsModule,
     // discovery & media

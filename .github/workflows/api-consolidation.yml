@@ -1,0 +1,23 @@
+name: api-consolidation
+
+# 36.1 — proves the shared infra spine (config/seams/auth/email/health) typechecks,
+# boots as one DI graph (via unit+e2e suite), and keeps env reads in config.
+on:
+  pull_request:
+    paths: ['apps/api/**', '.github/workflows/api-consolidation.yml']
+  push:
+    branches: [main]
+jobs:
+  consolidation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: No stray process.env
+        run: bash apps/api/scripts/check-no-process-env.sh apps/api/src
+      - name: Typecheck + tests (all phases together)
+        run: pnpm --filter @easycasa/api typecheck && pnpm --filter @easycasa/api test

@@ -248,6 +248,13 @@ make keycloak
 # merge .env.oidc.example → DEV_AUTH=false + OIDC_*
 ```
 
+### Phase 36.1 — Consolidation (32–36)
+See `docs/phase-36.1.md`. Email module + spine e2e + `check-no-process-env` + `api-consolidation` workflow.
+```bash
+bash apps/api/scripts/check-no-process-env.sh apps/api/src
+pnpm --filter @easycasa/api test
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

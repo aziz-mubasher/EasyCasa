@@ -11,6 +11,7 @@ import { BillingModule } from './billing/billing.module';
 import { ConfigModule } from './config/config.module';
 import { SeamsModule } from './config/adapters/seams.module';
 import { DbModule } from './db/db.module';
+import { EmailModule } from './email/email.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
 import { FascicoloModule } from './fascicolo/fascicolo.module';
 import { FeaturedModule } from './featured/featured.module';
@@ -41,6 +42,7 @@ const REQUIRED = [
   SeamsModule,
   DbModule,
   AuthModule,
+  EmailModule,
   UsersModule,
   ListingsModule,
   TaxonomyModule,
