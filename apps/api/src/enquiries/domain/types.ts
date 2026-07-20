@@ -41,6 +41,11 @@ export interface OrderDraft {
 }
 
 export interface ListingParties {
+  /** Resolved listing UUID (input may have been a slug). */
+  listingId: string;
   ownerUserId: string;
   mediatorUserId: string | null;
+  title: string;
+  slug: string;
+  address: string | null;
 }

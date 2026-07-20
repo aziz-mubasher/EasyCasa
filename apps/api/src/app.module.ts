@@ -33,11 +33,12 @@ import { AlertsModule } from './alerts/alerts.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
 import { AvmModule } from './avm/avm.module';
 import { ViewingsModule } from './viewings/viewings.module';
+import { PilotModule } from './pilot/pilot.module';
 
 /**
  * Composition root — single manifest for every feature module.
  *
- * Phases 32–36.1: Config + Seams + Auth + Email infra spine; feature modules
+ * Phases 32–37: Config + Seams + Auth + Email + pilot seed; feature modules
  * below. Guards stay on `AuthModule` only. `/health` is `@Public`.
  */
 @Module({
@@ -77,10 +78,11 @@ import { ViewingsModule } from './viewings/viewings.module';
     // payments & invoicing (P17)
     PaymentsModule,
     InvoicingModule,
-    // funnel / valuation / viewings (P24–29)
+    // funnel / valuation / viewings (P24–29) + pilot seed (P37)
     EnquiriesModule,
     AvmModule,
     ViewingsModule,
+    PilotModule,
   ],
   controllers: [HealthController],
 })

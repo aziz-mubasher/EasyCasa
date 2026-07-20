@@ -47,19 +47,29 @@ describe('enquiry validation', () => {
 });
 
 describe('enquiry routing + conversion', () => {
+  const parties = (
+    over: Partial<{ ownerUserId: string; mediatorUserId: string | null }> = {},
+  ) => ({
+    listingId: 'L1',
+    title: 'Flat',
+    slug: 'flat',
+    address: null as string | null,
+    ownerUserId: 'own',
+    mediatorUserId: null as string | null,
+    ...over,
+  });
+
   it('notifies owner, and mediator when assigned; dedups', () => {
-    const noMed = planEnquiryRouting('viewing', { ownerUserId: 'own', mediatorUserId: null });
+    const noMed = planEnquiryRouting('viewing', parties());
     expect(noMed.notifyUserIds).toEqual(['own']);
     expect(noMed.createFollowUpTask).toBe(true);
 
-    const withMed = planEnquiryRouting('offer', { ownerUserId: 'own', mediatorUserId: 'med' });
+    const withMed = planEnquiryRouting('offer', parties({ mediatorUserId: 'med' }));
     expect([...withMed.notifyUserIds].sort()).toEqual(['med', 'own']);
   });
 
   it('info enquiries create no follow-up task', () => {
-    expect(
-      planEnquiryRouting('info', { ownerUserId: 'own', mediatorUserId: null }).createFollowUpTask,
-    ).toBe(false);
+    expect(planEnquiryRouting('info', parties()).createFollowUpTask).toBe(false);
   });
 
   function enq(over: Partial<Enquiry> = {}): Enquiry {

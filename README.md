@@ -255,6 +255,14 @@ bash apps/api/scripts/check-no-process-env.sh apps/api/src
 pnpm --filter @easycasa/api test
 ```
 
+### Phase 37 — Seeker pilot flow
+See `docs/phase-37.md`. Outbox email, Milan pilot seed, journey contract + int acceptance, Contatta CTA.
+```bash
+pnpm --filter @easycasa/api test
+pnpm --filter @easycasa/api test:int   # Docker
+# staging: POST /admin/pilot/seed (admin)
+```
+
 ### Python AI service (local tests)
 ```bash
 cd services/ai

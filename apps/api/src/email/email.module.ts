@@ -6,10 +6,15 @@ import { EMAIL_PORT, type EmailPort } from './email-port';
 import { EmailService } from './email.service';
 import { HttpEmailProvider } from './providers/http-email.provider';
 import { NoopEmailProvider } from './providers/noop-email.provider';
+import {
+  EMAIL_OUTBOX,
+  OutboxEmailProvider,
+} from './providers/outbox-email.provider';
 import { SmtpEmailProvider } from './providers/smtp-email.provider';
 
 /**
- * Email module — Phase 36 / 36.1. Selects the provider from config:
+ * Email module — Phase 36 / 37. Selects the provider from config, then wraps it
+ * with {@link OutboxEmailProvider} for the pilot audit trail:
  *   SMTP_URL set            → SmtpEmailProvider
  *   else EMAIL_PROVIDER_URL → HttpEmailProvider
  *   else                    → NoopEmailProvider (fail-soft)
@@ -28,9 +33,14 @@ export function selectEmailProvider(config: ApiConfig): EmailPort {
 @Global()
 @Module({
   providers: [
-    { provide: EMAIL_PORT, useFactory: selectEmailProvider, inject: [APP_CONFIG] },
+    {
+      provide: EMAIL_OUTBOX,
+      useFactory: (config: ApiConfig) => new OutboxEmailProvider(selectEmailProvider(config)),
+      inject: [APP_CONFIG],
+    },
+    { provide: EMAIL_PORT, useExisting: EMAIL_OUTBOX },
     EmailService,
   ],
-  exports: [EmailService],
+  exports: [EmailService, EMAIL_OUTBOX],
 })
 export class EmailModule {}

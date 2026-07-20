@@ -17,6 +17,10 @@ import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { listings, serviceCatalogItems } from '../db/schema';
 import { Roles } from '../auth/roles.decorator';
+import {
+  EMAIL_OUTBOX,
+  OutboxEmailProvider,
+} from '../email/providers/outbox-email.provider';
 import { CATALOG } from '../service-catalog/domain/catalog';
 import { Phase8PricingAdapter } from '../orders/phase8-pricing.adapter';
 import type { RequiredCredential } from '../professionals/domain/types';
@@ -47,6 +51,7 @@ export class AdminController {
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly pricing: Phase8PricingAdapter,
     private readonly credentialPolicy: DefaultCredentialPolicy,
+    @Inject(EMAIL_OUTBOX) private readonly outbox: OutboxEmailProvider,
   ) {}
 
   @Get('stats')
@@ -56,6 +61,19 @@ export class AdminController {
       .from(listings)
       .groupBy(listings.status);
     return { listingsByStatus: rows };
+  }
+
+  /** Pilot email audit trail — most recent last. */
+  @Get('email-outbox')
+  emailOutbox() {
+    return this.outbox.list().map((e) => ({
+      at: e.at.toISOString(),
+      to: e.message.to,
+      subject: e.message.subject,
+      delivered: e.result.delivered,
+      provider: e.result.provider,
+      skipped: e.result.skipped ?? false,
+    }));
   }
 
   @Post('listings/:id/archive')

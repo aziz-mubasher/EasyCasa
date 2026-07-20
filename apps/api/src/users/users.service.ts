@@ -38,6 +38,11 @@ export class UsersService {
     return rows[0];
   }
 
+  async findById(id: string) {
+    const rows = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
+    return rows[0] ?? null;
+  }
+
   async addFavorite(userId: string, listingId: string) {
     await this.db
       .insert(favorites)

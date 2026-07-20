@@ -30,18 +30,20 @@ export class ViewingsService {
   /** Owner / mediator sets the weekly availability for a listing. */
   async setAvailability(
     actorUserId: string,
-    listingId: string,
+    listingIdOrSlug: string,
     windows: AvailabilityWindow[],
   ): Promise<void> {
-    await this.assertConductor(actorUserId, listingId);
-    await this.availability.setWindows(listingId, windows);
+    const conductor = await this.assertConductor(actorUserId, listingIdOrSlug);
+    await this.availability.setWindows(conductor.listingId, windows);
   }
 
   /** Bookable slots for a listing over a window (public — for seekers). */
-  async slots(listingId: string, fromMs: number, toMs: number): Promise<Slot[]> {
+  async slots(listingIdOrSlug: string, fromMs: number, toMs: number): Promise<Slot[]> {
+    const meta = await this.listings.getConductor(listingIdOrSlug);
+    if (!meta) throw new NotFoundException(`Listing ${listingIdOrSlug} not found`);
     const [windows, existing] = await Promise.all([
-      this.availability.getWindows(listingId),
-      this.viewings.activeSlots(listingId),
+      this.availability.getWindows(meta.listingId),
+      this.viewings.activeSlots(meta.listingId),
     ]);
     return generateSlots(windows, {
       fromMs,
@@ -57,26 +59,26 @@ export class ViewingsService {
   /** Seeker books a slot; validated server-side, then created REQUESTED. */
   async book(
     seekerUserId: string,
-    listingId: string,
+    listingIdOrSlug: string,
     input: { startMs: number; enquiryId?: string | null },
   ): Promise<Viewing> {
-    const conductor = await this.listings.getConductor(listingId);
-    if (!conductor) throw new NotFoundException(`Listing ${listingId} not found`);
+    const conductor = await this.listings.getConductor(listingIdOrSlug);
+    if (!conductor) throw new NotFoundException(`Listing ${listingIdOrSlug} not found`);
 
     const request: Slot = {
       startMs: input.startMs,
       endMs: input.startMs + this.cfg.slotMinutes * 60_000,
     };
     const [windows, existing] = await Promise.all([
-      this.availability.getWindows(listingId),
-      this.viewings.activeSlots(listingId),
+      this.availability.getWindows(conductor.listingId),
+      this.viewings.activeSlots(conductor.listingId),
     ]);
 
     const decision = validateBooking(request, windows, existing, this.cfg, Date.now());
     if (!decision.ok) throw new ConflictException(decision.reason);
 
     const viewing = await this.viewings.create({
-      listingId,
+      listingId: conductor.listingId,
       seekerUserId,
       conductorUserId: conductor.conductorUserId,
       enquiryId: input.enquiryId ?? null,
@@ -124,11 +126,15 @@ export class ViewingsService {
     return updated;
   }
 
-  private async assertConductor(actorUserId: string, listingId: string): Promise<void> {
-    const c = await this.listings.getConductor(listingId);
-    if (!c) throw new NotFoundException(`Listing ${listingId} not found`);
+  private async assertConductor(
+    actorUserId: string,
+    listingIdOrSlug: string,
+  ): Promise<{ listingId: string; conductorUserId: string; ownerUserId: string }> {
+    const c = await this.listings.getConductor(listingIdOrSlug);
+    if (!c) throw new NotFoundException(`Listing ${listingIdOrSlug} not found`);
     if (c.conductorUserId !== actorUserId && c.ownerUserId !== actorUserId) {
       throw new ForbiddenException('Not your listing');
     }
+    return c;
   }
 }

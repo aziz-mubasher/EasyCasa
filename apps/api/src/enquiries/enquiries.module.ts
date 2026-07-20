@@ -123,21 +123,36 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
 export class DrizzleListingLookup implements ListingLookupPort {
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
-  async getParties(listingId: string): Promise<ListingParties | null> {
+  async getParties(listingIdOrSlug: string): Promise<ListingParties | null> {
+    const byId =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        listingIdOrSlug,
+      );
     const rows = await this.db
       .select({
+        id: listings.id,
         ownerUserId: listings.ownerUserId,
         mediatorUserId: listings.mediatorUserId,
         agentId: listings.agentId,
+        title: listings.title,
+        slug: listings.slug,
+        address: listings.address,
       })
       .from(listings)
-      .where(eq(listings.id, listingId))
+      .where(byId ? eq(listings.id, listingIdOrSlug) : eq(listings.slug, listingIdOrSlug))
       .limit(1);
     const r = rows[0];
     if (!r) return null;
     const ownerUserId = r.ownerUserId ?? r.agentId;
     if (!ownerUserId) return null;
-    return { ownerUserId, mediatorUserId: r.mediatorUserId };
+    return {
+      listingId: r.id,
+      ownerUserId,
+      mediatorUserId: r.mediatorUserId,
+      title: r.title,
+      slug: r.slug ?? r.id,
+      address: r.address,
+    };
   }
 }
 

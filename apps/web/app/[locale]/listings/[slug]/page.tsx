@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getListing } from '@/lib/api';
 import { euro, area } from '@/lib/format';
-import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ListingStructuredData } from '@/components/StructuredData';
+import { ContactEnquiryForm } from '@/components/listings/ContactEnquiryForm';
 
 export default async function ListingPage({
   params,
@@ -18,6 +18,8 @@ export default async function ListingPage({
   const rent = l.transactionType === 'rent';
   const sizeSqm =
     typeof l.sizeSqm === 'string' ? Number(l.sizeSqm) : (l.sizeSqm as number | null);
+  const listingId = String(l.id ?? slug);
+  const title = String(l.title);
 
   return (
     <article className="mx-auto max-w-5xl px-5 py-10">
@@ -25,7 +27,7 @@ export default async function ListingPage({
         locale={locale}
         listing={{
           slug: String(l.slug ?? slug),
-          title: String(l.title),
+          title,
           description: l.description ? String(l.description) : undefined,
           price: price ?? undefined,
           currency: typeof l.currency === 'string' ? l.currency : 'EUR',
@@ -41,7 +43,7 @@ export default async function ListingPage({
         {String(l.city ?? '')} {l.latitude ? `· ${Number(l.latitude).toFixed(3)}°N` : ''}
       </p>
       <div className="flex items-start justify-between gap-6 flex-wrap">
-        <h1 className="font-display text-4xl font-semibold max-w-2xl">{String(l.title)}</h1>
+        <h1 className="font-display text-4xl font-semibold max-w-2xl">{title}</h1>
         <Badge tone={rent ? 'pine' : 'ink'}>{rent ? 'affitto' : 'vendita'}</Badge>
       </div>
 
@@ -69,9 +71,7 @@ export default async function ListingPage({
         <p className="mt-8 max-w-2xl leading-relaxed whitespace-pre-line">{String(l.description)}</p>
       ) : null}
 
-      <div className="mt-8">
-        <Button>Contatta</Button>
-      </div>
+      <ContactEnquiryForm listingId={listingId} listingTitle={title} />
     </article>
   );
 }

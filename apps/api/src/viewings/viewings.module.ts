@@ -10,9 +10,11 @@ import { and, asc, eq, inArray } from 'drizzle-orm';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { listings, viewingAvailability, viewings } from '../db/schema';
+import { EmailService } from '../email/email.service';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UsersModule } from '../users/users.module';
+import { UsersService } from '../users/users.service';
 import type {
   AvailabilityRepository,
   ViewingListingLookup,
@@ -163,25 +165,39 @@ export class DrizzleViewingRepository implements ViewingRepository {
 export class DrizzleViewingListingLookup implements ViewingListingLookup {
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
-  async getConductor(
-    listingId: string,
-  ): Promise<{ conductorUserId: string; ownerUserId: string } | null> {
+  async getConductor(listingIdOrSlug: string): Promise<{
+    listingId: string;
+    conductorUserId: string;
+    ownerUserId: string;
+    title: string;
+    address: string | null;
+  } | null> {
+    const byId =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        listingIdOrSlug,
+      );
     const rows = await this.db
       .select({
+        id: listings.id,
         ownerUserId: listings.ownerUserId,
         mediatorUserId: listings.mediatorUserId,
         agentId: listings.agentId,
+        title: listings.title,
+        address: listings.address,
       })
       .from(listings)
-      .where(eq(listings.id, listingId))
+      .where(byId ? eq(listings.id, listingIdOrSlug) : eq(listings.slug, listingIdOrSlug))
       .limit(1);
     const r = rows[0];
     if (!r) return null;
     const ownerUserId = r.ownerUserId ?? r.agentId;
     if (!ownerUserId) return null;
     return {
+      listingId: r.id,
       conductorUserId: r.mediatorUserId ?? ownerUserId,
       ownerUserId,
+      title: r.title,
+      address: r.address,
     };
   }
 }
@@ -190,7 +206,12 @@ export class DrizzleViewingListingLookup implements ViewingListingLookup {
 export class DefaultViewingNotifier implements ViewingNotifier {
   private readonly logger = new Logger(DefaultViewingNotifier.name);
 
-  constructor(private readonly notifications: NotificationsService) {}
+  constructor(
+    private readonly notifications: NotificationsService,
+    private readonly email: EmailService,
+    private readonly users: UsersService,
+    @Inject(DRIZZLE) private readonly db: Db,
+  ) {}
 
   async notify(
     userId: string,
@@ -212,6 +233,46 @@ export class DefaultViewingNotifier implements ViewingNotifier {
     } catch (err) {
       this.logger.warn(
         `viewing notify failed user=${userId}: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+
+    if (kind === 'confirmed') {
+      await this.sendConfirmedEmail(userId, viewing);
+    }
+  }
+
+  private async sendConfirmedEmail(seekerUserId: string, viewing: Viewing): Promise<void> {
+    try {
+      const seeker = await this.users.findById(seekerUserId);
+      if (!seeker?.email) return;
+      const rows = await this.db
+        .select({
+          title: listings.title,
+          address: listings.address,
+        })
+        .from(listings)
+        .where(eq(listings.id, viewing.listingId))
+        .limit(1);
+      const listing = rows[0];
+      if (!listing) return;
+      const whenLocal = new Intl.DateTimeFormat('it-IT', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Europe/Rome',
+      }).format(new Date(viewing.startMs));
+      await this.email.viewingConfirmed(seeker.email, {
+        seekerName: seeker.displayName ?? seeker.email.split('@')[0] ?? 'Seeker',
+        listingTitle: listing.title,
+        address: listing.address ?? '',
+        whenLocal,
+      });
+    } catch (err) {
+      this.logger.warn(
+        `viewing email failed: ${err instanceof Error ? err.message : String(err)}`,
       );
     }
   }

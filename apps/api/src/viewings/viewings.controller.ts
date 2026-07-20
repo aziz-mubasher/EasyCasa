@@ -14,6 +14,7 @@ import {
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { Public } from '../auth/public.decorator';
+import { UsersService } from '../users/users.service';
 import { ViewingsService } from './viewings.service';
 
 export class WindowDto {
@@ -31,13 +32,18 @@ export class SetAvailabilityDto {
 }
 
 export class BookDto {
-  @IsInt() startMs!: number;
+  @Type(() => Number)
+  @IsInt()
+  startMs!: number;
   @IsOptional() @IsString() enquiryId?: string;
 }
 
 @Controller()
 export class ViewingsController {
-  constructor(private readonly service: ViewingsService) {}
+  constructor(
+    private readonly service: ViewingsService,
+    private readonly users: UsersService,
+  ) {}
 
   /** Public: bookable slots for a listing over [from, to] (epoch ms). */
   @Public()
@@ -56,49 +62,57 @@ export class ViewingsController {
     @Param('listingId') listingId: string,
     @Body() dto: SetAvailabilityDto,
   ) {
-    await this.service.setAvailability(user.sub, listingId, dto.windows);
+    const me = await this.users.getOrCreate(user);
+    await this.service.setAvailability(me.id, listingId, dto.windows);
     return { ok: true as const };
   }
 
   @Post('listings/:listingId/viewings')
-  book(
+  async book(
     @CurrentUser() user: AuthUser,
     @Param('listingId') listingId: string,
     @Body() dto: BookDto,
   ) {
-    return this.service.book(user.sub, listingId, {
+    const me = await this.users.getOrCreate(user);
+    return this.service.book(me.id, listingId, {
       startMs: dto.startMs,
       enquiryId: dto.enquiryId ?? null,
     });
   }
 
   @Get('me/viewings')
-  mine(@CurrentUser() user: AuthUser) {
-    return this.service.listMine(user.sub);
+  async mine(@CurrentUser() user: AuthUser) {
+    const me = await this.users.getOrCreate(user);
+    return this.service.listMine(me.id);
   }
 
   @Get('me/viewings/conducting')
-  conducting(@CurrentUser() user: AuthUser) {
-    return this.service.listConducting(user.sub);
+  async conducting(@CurrentUser() user: AuthUser) {
+    const me = await this.users.getOrCreate(user);
+    return this.service.listConducting(me.id);
   }
 
   @Post('viewings/:id/confirm')
-  confirm(@CurrentUser() user: AuthUser, @Param('id') id: string) {
-    return this.service.transition(user.sub, id, 'CONFIRM');
+  async confirm(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    const me = await this.users.getOrCreate(user);
+    return this.service.transition(me.id, id, 'CONFIRM');
   }
 
   @Post('viewings/:id/cancel')
-  cancel(@CurrentUser() user: AuthUser, @Param('id') id: string) {
-    return this.service.transition(user.sub, id, 'CANCEL');
+  async cancel(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    const me = await this.users.getOrCreate(user);
+    return this.service.transition(me.id, id, 'CANCEL');
   }
 
   @Post('viewings/:id/complete')
-  complete(@CurrentUser() user: AuthUser, @Param('id') id: string) {
-    return this.service.transition(user.sub, id, 'COMPLETE');
+  async complete(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    const me = await this.users.getOrCreate(user);
+    return this.service.transition(me.id, id, 'COMPLETE');
   }
 
   @Post('viewings/:id/no-show')
-  noShow(@CurrentUser() user: AuthUser, @Param('id') id: string) {
-    return this.service.transition(user.sub, id, 'NO_SHOW');
+  async noShow(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    const me = await this.users.getOrCreate(user);
+    return this.service.transition(me.id, id, 'NO_SHOW');
   }
 }

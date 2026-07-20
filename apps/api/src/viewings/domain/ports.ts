@@ -42,7 +42,15 @@ export interface ViewingRepository {
 
 /** Resolves who conducts a listing's viewings (assigned mediator, else owner). */
 export interface ViewingListingLookup {
-  getConductor(listingId: string): Promise<{ conductorUserId: string; ownerUserId: string } | null>;
+  getConductor(
+    listingIdOrSlug: string,
+  ): Promise<{
+    listingId: string;
+    conductorUserId: string;
+    ownerUserId: string;
+    title: string;
+    address: string | null;
+  } | null>;
 }
 
 export interface ViewingNotifier {

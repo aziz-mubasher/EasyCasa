@@ -35,8 +35,9 @@ import { TaxonomyModule } from './taxonomy/taxonomy.module';
 import { UsersModule } from './users/users.module';
 import { ViewingsModule } from './viewings/viewings.module';
 import { AdminModule } from './admin/admin.module';
+import { PilotModule } from './pilot/pilot.module';
 
-/** Every Nest feature module the composition root must import (Phase 32/33). */
+/** Every Nest feature module the composition root must import (Phase 32/33/37). */
 const REQUIRED = [
   ConfigModule,
   SeamsModule,
@@ -71,6 +72,7 @@ const REQUIRED = [
   EnquiriesModule,
   AvmModule,
   ViewingsModule,
+  PilotModule,
 ] as const;
 
 describe('AppModule composition root (Phase 32/33)', () => {
