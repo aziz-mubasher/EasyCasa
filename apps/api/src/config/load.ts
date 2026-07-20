@@ -11,9 +11,18 @@ const Schema = z
 
     // Auth (OIDC). In dev, DEV_AUTH=true trusts x-dev-* headers instead.
     DEV_AUTH: bool(false),
-    OIDC_ISSUER: z.string().optional(),
-    OIDC_AUDIENCE: z.string().optional(),
-    OIDC_JWKS_URL: z.string().optional(),
+    OIDC_ISSUER: z
+      .string()
+      .optional()
+      .transform((v) => (v && v.trim() ? v.trim() : undefined)),
+    OIDC_AUDIENCE: z
+      .string()
+      .optional()
+      .transform((v) => (v && v.trim() ? v.trim() : undefined)),
+    OIDC_JWKS_URL: z
+      .string()
+      .optional()
+      .transform((v) => (v && v.trim() ? v.trim() : undefined)),
     OIDC_ROLES_CLAIM: z.string().default('realm_access.roles'),
 
     // Billing (Stripe — hosted checkout, no card data on our servers)

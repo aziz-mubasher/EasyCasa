@@ -16,8 +16,9 @@ export type JwksResolver = ReturnType<typeof createRemoteJWKSet>;
 export const jwksProvider = {
   provide: JWKS_RESOLVER,
   useFactory: (config: ApiConfig): JwksResolver => {
-    // Placeholder URL when DEV_AUTH — verifier is never called until OIDC is configured.
-    const url = config.OIDC_JWKS_URL ?? 'http://127.0.0.1/.well-known/jwks-not-configured';
+    // Empty string in .env must not become `new URL("")` — crash at boot under DEV_AUTH.
+    const raw = config.OIDC_JWKS_URL?.trim();
+    const url = raw && raw.length > 0 ? raw : 'http://127.0.0.1/.well-known/jwks-not-configured';
     return createRemoteJWKSet(new URL(url));
   },
   inject: [APP_CONFIG],

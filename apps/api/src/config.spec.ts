@@ -29,6 +29,18 @@ describe('loadApiConfig', () => {
     expect(cfg.OIDC_ISSUER).toContain('easycasa');
   });
 
+  it('treats blank OIDC_* env values as unset (DEV_AUTH boot)', () => {
+    const cfg = loadApiConfig({
+      ...base,
+      DEV_AUTH: 'true',
+      OIDC_ISSUER: '',
+      OIDC_AUDIENCE: '',
+      OIDC_JWKS_URL: '',
+    });
+    expect(cfg.OIDC_ISSUER).toBeUndefined();
+    expect(cfg.OIDC_JWKS_URL).toBeUndefined();
+  });
+
   it('defaults OIDC_ROLES_CLAIM to realm_access.roles', () => {
     const cfg = loadApiConfig({ ...base, DEV_AUTH: 'true' });
     expect(cfg.OIDC_ROLES_CLAIM).toBe('realm_access.roles');
