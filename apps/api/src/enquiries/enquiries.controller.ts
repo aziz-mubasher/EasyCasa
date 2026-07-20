@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { IsEmail, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -28,6 +29,7 @@ export class EnquiriesController {
   ) {}
 
   /** Seeker submits interest on a listing. */
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post('listings/:listingId/enquiries')
   async create(
     @CurrentUser() user: AuthUser,

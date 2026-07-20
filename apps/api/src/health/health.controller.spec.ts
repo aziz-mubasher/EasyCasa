@@ -53,6 +53,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     EMAIL_PROVIDER_URL: '',
     REDIS_URL: '',
     RETENTION_LEAD_DAYS: 90,
+    SENTRY_DSN: '',
     ...over,
   };
 }

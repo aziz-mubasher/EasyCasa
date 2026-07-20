@@ -35,21 +35,23 @@ import { AvmModule } from './avm/avm.module';
 import { ViewingsModule } from './viewings/viewings.module';
 import { PilotModule } from './pilot/pilot.module';
 import { PrivacyModule } from './privacy/privacy.module';
+import { ObservabilityModule } from './observability/observability.module';
 
 /**
  * Composition root — single manifest for every feature module.
  *
- * Phases 32–38: Config + Seams + Auth + Email + pilot seed + privacy/GDPR;
- * feature modules below. Guards stay on `AuthModule` only. `/health` is `@Public`.
+ * Phases 32–39: Config + Seams + Auth + Email + pilot + privacy + observability;
+ * feature modules below. Auth guards stay on `AuthModule` only. `/health` is `@Public`.
  */
 @Module({
   imports: [
-    // platform + config seams (Phase 33) + email (Phase 36)
+    // platform + config seams (Phase 33) + email (Phase 36) + observability (Phase 39)
     ConfigModule,
     SeamsModule,
     DbModule,
     AuthModule,
     EmailModule,
+    ObservabilityModule,
     UsersModule,
     NotificationsModule,
     // discovery & media

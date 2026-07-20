@@ -1,0 +1,20 @@
+# Phase 39 — plugs into Phase 6's Prometheus alert rules. Fires when the backup
+# drill hasn't reported success recently (metric pushed by backup-restore-drill.sh).
+# Merged into prometheus/alerts.yml (backups group); kept here for reference.
+groups:
+  - name: easycasa-backups
+    rules:
+      - alert: BackupDrillStale
+        expr: time() - easycasa_last_successful_backup_timestamp_seconds > 60 * 60 * 26
+        for: 10m
+        labels: { severity: critical }
+        annotations:
+          summary: "No successful backup drill in >26h"
+          description: "backup-restore-drill.sh hasn't pushed a success timestamp; backups/restore may be broken."
+      - alert: BackupDrillFailing
+        expr: easycasa_backup_drill_success == 0
+        for: 5m
+        labels: { severity: critical }
+        annotations:
+          summary: "Backup drill reported failure"
+          description: "The last backup/restore drill failed a step (dump/restic/restore/verify)."

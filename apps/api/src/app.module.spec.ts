@@ -37,14 +37,16 @@ import { ViewingsModule } from './viewings/viewings.module';
 import { AdminModule } from './admin/admin.module';
 import { PilotModule } from './pilot/pilot.module';
 import { PrivacyModule } from './privacy/privacy.module';
+import { ObservabilityModule } from './observability/observability.module';
 
-/** Every Nest feature module the composition root must import (Phase 32–38). */
+/** Every Nest feature module the composition root must import (Phase 32–39). */
 const REQUIRED = [
   ConfigModule,
   SeamsModule,
   DbModule,
   AuthModule,
   EmailModule,
+  ObservabilityModule,
   UsersModule,
   ListingsModule,
   TaxonomyModule,
@@ -84,7 +86,7 @@ describe('AppModule composition root (Phase 32/33)', () => {
     expect(imported).toHaveLength(REQUIRED.length);
   });
 
-  it('keeps APP_GUARD registration on AuthModule only (no double guards)', () => {
+  it('keeps Jwt/Roles APP_GUARD registration on AuthModule only (no double auth guards)', () => {
     const appProviders =
       (Reflect.getMetadata(MODULE_METADATA.PROVIDERS, AppModule) as unknown[] | undefined) ?? [];
     expect(appProviders).toHaveLength(0);

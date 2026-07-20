@@ -83,6 +83,9 @@ const Schema = z
 
     // Phase 38 — GDPR retention window for unconverted enquiry leads (days)
     RETENTION_LEAD_DAYS: z.coerce.number().int().positive().default(90),
+
+    // Phase 39 — error tracking (empty → fail-soft noop reporter)
+    SENTRY_DSN: z.string().default(''),
   })
   .superRefine((cfg, ctx) => {
     // When DEV_AUTH is off, OIDC must be fully configured (Phase 16 fail-fast).

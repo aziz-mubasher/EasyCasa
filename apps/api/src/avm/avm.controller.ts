@@ -1,4 +1,5 @@
 import { Body, Controller, Post, UnprocessableEntityException } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { Type } from 'class-transformer';
 import {
   IsEmail,
@@ -53,6 +54,7 @@ export class AvmController {
 
   /** Public "what's my home worth?" estimate — the lead magnet. */
   @Public()
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post('estimate')
   async estimate(@OptionalUser() user: AuthUser | null, @Body() dto: EstimateDto) {
     const subject: SubjectProperty = {

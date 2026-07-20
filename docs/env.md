@@ -105,6 +105,13 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 |---|---|---|
 | RETENTION_LEAD_DAYS | api | Days before unconverted enquiry leads are anonymized (default `90`). |
 
+## Phase 39 — observability
+| Variable | Used by | Notes |
+|---|---|---|
+| SENTRY_DSN | api | Sentry DSN for 5xx reporting. Empty → fail-soft noop (logs only). |
+| PUSHGATEWAY_URL | backup-restore-drill.sh | Prometheus Pushgateway for backup freshness metrics. |
+| CRITICAL_TABLES | backup-restore-drill.sh | Space-separated tables to verify after restore (default includes `consent_records`). |
+
 ## Phase 13 — admin console
 | Variable | Used by | Notes |
 |---|---|---|

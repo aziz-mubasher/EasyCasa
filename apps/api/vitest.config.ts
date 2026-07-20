@@ -7,7 +7,13 @@ import { defineConfig } from 'vitest/config';
  */
 export default defineConfig({
   test: {
-    include: ['src/**/*.spec.ts', 'test/pilot/**/*.spec.ts'],
+    include: [
+      'src/**/*.spec.ts',
+      'test/pilot/**/*.spec.ts',
+      'test/metrics.spec.ts',
+      'test/readiness.spec.ts',
+      'test/exception-filter.spec.ts',
+    ],
     exclude: ['**/node_modules/**', '**/dist/**', '**/._*', '**/test/integration/**', '**/*.int.spec.ts'],
   },
   plugins: [swc.vite({ module: { type: 'es6' } })],

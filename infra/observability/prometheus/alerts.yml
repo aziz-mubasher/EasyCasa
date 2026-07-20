@@ -70,10 +70,18 @@ groups:
 
   - name: backups
     rules:
-      # api pushes this gauge (unix ts) after each successful backup+restore drill.
+      # Pushgateway metric from infra/backup-restore-drill.sh (Phase 39).
       - alert: BackupDrillStale
-        expr: time() - easycasa_last_backup_drill_success_timestamp_seconds > 9 * 24 * 3600
-        for: 1h
+        expr: time() - easycasa_last_successful_backup_timestamp_seconds > 60 * 60 * 26
+        for: 10m
         labels: { severity: critical }
         annotations:
-          summary: "No successful backup-restore drill in >9 days"
+          summary: "No successful backup drill in >26h"
+          description: "backup-restore-drill.sh hasn't pushed a success timestamp; backups/restore may be broken."
+      - alert: BackupDrillFailing
+        expr: easycasa_backup_drill_success == 0
+        for: 5m
+        labels: { severity: critical }
+        annotations:
+          summary: "Backup drill reported failure"
+          description: "The last backup/restore drill failed a step (dump/restic/restore/verify)."

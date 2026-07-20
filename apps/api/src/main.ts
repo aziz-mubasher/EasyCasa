@@ -6,6 +6,15 @@ import { AppModule } from './app.module';
 import { apiConfig } from './config';
 
 async function bootstrap(): Promise<void> {
+  // Phase 39 — init Sentry before Nest when DSN is set (ERROR_REPORTER binds the adapter).
+  if (apiConfig.SENTRY_DSN) {
+    const Sentry = await import('@sentry/node');
+    Sentry.init({
+      dsn: apiConfig.SENTRY_DSN,
+      environment: apiConfig.NODE_ENV,
+    });
+  }
+
   // rawBody required for Stripe webhook signature verification
   const app = await NestFactory.create(AppModule, { rawBody: true });
   const origins = apiConfig.CORS_ORIGINS.split(',')
@@ -22,7 +31,7 @@ async function bootstrap(): Promise<void> {
   const swagger = new DocumentBuilder()
     .setTitle('EasyCasa API')
     .setDescription('Core API — listings, search, billing, messaging, partners')
-    .setVersion('0.38.0')
+    .setVersion('0.39.0')
     .addBearerAuth()
     .build();
   SwaggerModule.setup('docs', app, SwaggerModule.createDocument(app, swagger));
