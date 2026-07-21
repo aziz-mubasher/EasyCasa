@@ -5,7 +5,7 @@ set -euo pipefail
 
 ROOT="${1:-apps/api/src}"
 ACCESS='process\.env(\.[A-Za-z_][A-Za-z_0-9]*|\[)'
-ALLOW='(config/load\.ts|scripts/boot-check\.ts):'
+ALLOW='(config/load\.ts|scripts/boot-check\.ts|pilot/smoke/run-smoke\.ts|pilot/seed/run-seed\.ts):'
 
 hits="$(grep -rnE "$ACCESS" "$ROOT" --include='*.ts' | grep -vE "$ALLOW" || true)"
 

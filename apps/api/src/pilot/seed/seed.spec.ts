@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { PILOT_LISTINGS, seedPilotListings, type ListingSink, type PilotListing } from './seed';
+import { runSeed } from './seed-cli';
 
 class MemSink implements ListingSink {
   rows = new Map<string, PilotListing>();
@@ -26,5 +27,10 @@ describe('pilot seed', () => {
     await seedPilotListings(sink);
     expect(sink.rows.size).toBe(PILOT_LISTINGS.length);
     expect(await sink.countByWpKeyPrefix('pilot-milano')).toBe(PILOT_LISTINGS.length);
+  });
+
+  it('runSeed returns the upsert count', async () => {
+    const sink = new MemSink();
+    expect(await runSeed(() => sink)).toBe(PILOT_LISTINGS.length);
   });
 });
