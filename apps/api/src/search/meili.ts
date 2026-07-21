@@ -1,12 +1,25 @@
 import { MeiliSearch } from 'meilisearch';
 import { apiConfig } from '../config';
 
-export const meili = new MeiliSearch({
-  host: apiConfig.MEILI_URL,
-  apiKey: apiConfig.MEILI_MASTER_KEY,
-});
-
 export const LISTINGS_INDEX = 'listings';
+
+let client: MeiliSearch | null = null;
+
+/** Lazy Meili client — must not touch `apiConfig` at module import time (integration harness). */
+export function getMeili(): MeiliSearch {
+  if (!client) {
+    client = new MeiliSearch({
+      host: apiConfig.MEILI_URL,
+      apiKey: apiConfig.MEILI_MASTER_KEY,
+    });
+  }
+  return client;
+}
+
+/** Drop the cached client after env resets (tests / boot-check). */
+export function resetMeiliClient(): void {
+  client = null;
+}
 
 export interface ListingDoc {
   id: string;

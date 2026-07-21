@@ -10,6 +10,23 @@ if [ ! -f .env ]; then
   exit 1
 fi
 
+# Read a single KEY=value from .env without sourcing the whole file.
+# Avoids shell breakage from unquoted values (e.g. NOTIFY_FROM=Name <email@x>).
+env_get() {
+  local key="$1"
+  local line
+  line="$(grep -E "^${key}=" .env | tail -n1 || true)"
+  [ -n "$line" ] || return 0
+  local val="${line#*=}"
+  val="${val%$'\r'}"
+  if [[ "$val" == \"*\" ]]; then
+    val="${val:1:${#val}-2}"
+  elif [[ "$val" == \'*\' ]]; then
+    val="${val:1:${#val}-2}"
+  fi
+  printf '%s' "$val"
+}
+
 # Compose project name is set in docker-compose.yml (`name: easycasa-ita`).
 COMPOSE="docker compose -f infra/docker-compose.yml --env-file .env"
 EDGE="caddy"
@@ -36,9 +53,12 @@ sleep 8
 echo "==> Health checks"
 $COMPOSE exec -T api node -e "fetch('http://localhost:4000/health').then(r=>r.json()).then(j=>{console.log('api',j.status)}).catch(e=>{console.error(e);process.exit(1)})" || echo "api check skipped"
 if [ "$EDGE" = "traefik" ]; then
-  # shellcheck disable=SC1091
-  set -a; . ./.env; set +a
-  curl -fsS "https://${STAGING_DOMAIN}/api/health" && echo "" || echo "edge check pending TLS/DNS"
+  STAGING_DOMAIN="$(env_get STAGING_DOMAIN)"
+  if [ -z "${STAGING_DOMAIN}" ]; then
+    echo "WARN: STAGING_DOMAIN unset in .env — skipping edge health check" >&2
+  else
+    curl -fsS "https://${STAGING_DOMAIN}/api/health" && echo "" || echo "edge check pending TLS/DNS"
+  fi
 else
   curl -fsS "http://localhost/api/health" && echo "" || echo "edge check pending TLS/DNS"
 fi

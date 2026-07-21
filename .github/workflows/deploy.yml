@@ -2,10 +2,11 @@ name: Deploy (staging)
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
 
 # Requires repo secrets: STAGING_HOST, STAGING_USER, STAGING_SSH_KEY.
-# Manual only — push-to-main auto-deploy stays off until staging secrets exist
-# (production deploys go to /opt/easycasa-ita via infra/deploy.sh on the VPS).
+# Production path on the VPS is /opt/easycasa-ita (not /opt/easycasa).
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,5 +21,7 @@ jobs:
           script: |
             set -e
             cd /opt/easycasa-ita
-            git pull origin main
+            git fetch origin
+            git reset --hard origin/main
+            chmod +x infra/deploy.sh infra/backup.sh
             ./infra/deploy.sh

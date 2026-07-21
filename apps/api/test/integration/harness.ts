@@ -75,6 +75,8 @@ async function bootOnce(): Promise<IntegrationContext> {
 
   const { resetConfigCache } = await import('../../src/config');
   resetConfigCache();
+  const { resetMeiliClient } = await import('../../src/search/meili');
+  resetMeiliClient();
   const { resetDbConnection } = await import('../../src/db/drizzle');
   await resetDbConnection();
 

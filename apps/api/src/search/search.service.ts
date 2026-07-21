@@ -1,5 +1,5 @@
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
-import { meili, LISTINGS_INDEX, type ListingDoc } from './meili';
+import { getMeili, LISTINGS_INDEX, type ListingDoc } from './meili';
 
 export interface SearchParams {
   q?: string;
@@ -26,7 +26,9 @@ export class SearchService implements OnModuleInit {
     }
   }
 
-  private index = meili.index<ListingDoc>(LISTINGS_INDEX);
+  private get index() {
+    return getMeili().index<ListingDoc>(LISTINGS_INDEX);
+  }
 
   /** Idempotent index settings — run on boot and in backfill. */
   async ensureSettings(): Promise<void> {
@@ -51,12 +53,12 @@ export class SearchService implements OnModuleInit {
 
   async indexListing(doc: ListingDoc): Promise<void> {
     const task = await this.index.addDocuments([doc], { primaryKey: 'id' });
-    await meili.waitForTask(task.taskUid);
+    await getMeili().waitForTask(task.taskUid);
   }
 
   async indexBatch(docs: ListingDoc[]): Promise<void> {
     const task = await this.index.addDocuments(docs, { primaryKey: 'id' });
-    await meili.waitForTask(task.taskUid);
+    await getMeili().waitForTask(task.taskUid);
   }
 
   async remove(id: string): Promise<void> {

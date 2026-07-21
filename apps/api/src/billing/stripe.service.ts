@@ -9,12 +9,16 @@ import { plans, memberships, featuredPlacements, listings } from '../db/schema';
 @Injectable()
 export class StripeService {
   private readonly logger = new Logger(StripeService.name);
-  private readonly client: Stripe | null =
-    apiConfig.STRIPE_SECRET_KEY ? new Stripe(apiConfig.STRIPE_SECRET_KEY) : null;
+  private client: Stripe | null | undefined;
 
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
   private stripe(): Stripe {
+    if (this.client === undefined) {
+      this.client = apiConfig.STRIPE_SECRET_KEY
+        ? new Stripe(apiConfig.STRIPE_SECRET_KEY)
+        : null;
+    }
     if (!this.client) throw new BadRequestException('billing not configured');
     return this.client;
   }
