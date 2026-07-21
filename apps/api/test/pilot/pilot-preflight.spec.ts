@@ -66,4 +66,23 @@ describe('pilot preflight (go/no-go)', () => {
     });
     expect(r.go).toBe(false);
   });
+
+  it('NO-GO when JWKS URL is unreachable (blocker)', async () => {
+    const r = await runPreflight({
+      env: goodEnv,
+      probe: ready,
+      fetchUrl: async () => ({ ok: false, status: 503 }),
+      listingCount: seeded,
+    });
+    expect(r.go).toBe(false);
+    expect(r.checks.find((c) => c.name === 'JWKS reachable')?.pass).toBe(false);
+  });
+
+  it('NO-GO when OIDC vars are missing (JWKS check fails too)', async () => {
+    const noOidc = { ...goodEnv };
+    delete noOidc.OIDC_JWKS_URL;
+    const r = await runPreflight({ env: noOidc, probe: ready, listingCount: seeded });
+    expect(r.go).toBe(false);
+    expect(r.checks.find((c) => c.name === 'OIDC configured')?.pass).toBe(false);
+  });
 });

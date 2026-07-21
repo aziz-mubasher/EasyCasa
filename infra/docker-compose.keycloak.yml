@@ -1,5 +1,6 @@
 # Local OIDC for the Phase 35 cutover. Imports the EasyCasa realm on start.
-# NOT for the VPS Traefik edge — production uses a managed/hardened Keycloak.
+# Production VPS: Keycloak runs in docker-compose.yml + docker-compose.traefik.yml
+# at https://auth.easycasaita.com (see .env.oidc.example).
 #
 #   make keycloak
 #   # or: docker compose -f infra/docker-compose.keycloak.yml up -d
@@ -19,7 +20,7 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - ./keycloak/easycasa-realm.json:/opt/keycloak/data/import/easycasa-realm.json:ro
+      - ./keycloak/realm-easycasa.json:/opt/keycloak/data/import/realm-easycasa.json:ro
     healthcheck:
       test: ['CMD-SHELL', "exec 3<>/dev/tcp/localhost/8080 && echo done"]
       interval: 10s

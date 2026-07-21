@@ -98,6 +98,21 @@ services:
       - traefik.http.routers.easycasa-ai-http.service=easycasa-ai
       - traefik.http.routers.easycasa-ai-http.middlewares=easycasa-ai-strip@docker
 
+  keycloak:
+    networks: [internal, traefik]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=root_default
+      - traefik.http.routers.easycasa-keycloak.rule=Host(`auth.${STAGING_DOMAIN}`)
+      - traefik.http.routers.easycasa-keycloak.entrypoints=websecure
+      - traefik.http.routers.easycasa-keycloak.tls=true
+      - traefik.http.routers.easycasa-keycloak.tls.certresolver=mytlschallenge
+      - traefik.http.routers.easycasa-keycloak.middlewares=easycasa-headers@docker
+      - traefik.http.services.easycasa-keycloak.loadbalancer.server.port=8080
+      - traefik.http.routers.easycasa-keycloak-http.rule=Host(`auth.${STAGING_DOMAIN}`)
+      - traefik.http.routers.easycasa-keycloak-http.entrypoints=web
+      - traefik.http.routers.easycasa-keycloak-http.service=easycasa-keycloak
+
 networks:
   traefik:
     external: true

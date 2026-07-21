@@ -6,8 +6,10 @@ NestJS + Drizzle over the Phase 1 Postgres schema. OpenAPI at `/docs`
 ## Auth
 - Global `JwtAuthGuard` verifies OIDC bearer tokens via JWKS; `@Public()` opts out.
 - Global `RolesGuard` enforces `@Roles(...)`; `admin` passes everything.
-- Local dev: `DEV_AUTH=true`, then send headers:
+- Production: `DEV_AUTH=false` + `OIDC_ISSUER` / `OIDC_AUDIENCE` / `OIDC_JWKS_URL`. Spoofable `x-dev-*` headers are **ignored**.
+- Local dev only: `DEV_AUTH=true`, then send headers:
   `x-dev-user: u1`, `x-dev-roles: agent`, `x-dev-email: a@b.it`.
+- Web + Expo seeker clients use Authorization Code + PKCE (`easycasa-web`, `easycasa-app`).
 
 ## Endpoints
 | Method | Path | Access | Purpose |

@@ -242,10 +242,11 @@ pnpm --filter @easycasa/api test:int
 ```
 
 ### Phase 35 — OIDC cutover
-See `docs/phase-35.md`. JwtVerifier + Keycloak realm; cutover = `.env.oidc.example` merge.
+See `docs/phase-35.md`. JwtVerifier + Keycloak realm; web/mobile PKCE; VPS flip = `.env.oidc.example` merge.
 ```bash
 make keycloak
-# merge .env.oidc.example → DEV_AUTH=false + OIDC_*
+# merge .env.oidc.example → DEV_AUTH=false + OIDC_* + NEXT_PUBLIC_OIDC_*
+# import infra/keycloak/realm-easycasa.json on VPS Keycloak
 ```
 
 ### Phase 36.1 — Consolidation (32–36)

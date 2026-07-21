@@ -57,4 +57,4 @@ pnpm --filter @easycasa/api test            # privacy-services + data-subject e2
 
 - [ ] `docs/legal/*` approved by counsel/DPO
 - [ ] Cookie / non-essential consent banner
-- [ ] Web PKCE (replace DEV_AUTH headers on privacy + Contatta)
+- [x] Web PKCE on privacy + Contatta (`apps/web/src/auth/*`)

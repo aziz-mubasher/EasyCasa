@@ -1,25 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
+import { useAuth } from '@/auth/AuthProvider';
+import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
+import { SignInPrompt } from '@/components/AuthControls';
 import { Button } from '@/components/ui/Button';
-
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost/api';
-
-function authHeaders(): HeadersInit {
-  return {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    'x-dev-user': 'seeker-privacy',
-    'x-dev-email': 'seeker-privacy@easycasaita.com',
-    'x-dev-roles': 'buyer',
-  };
-}
 
 /**
  * Seeker privacy area — Phase 38. Export (Art. 15) and erase (Art. 17).
+ * Requires OIDC PKCE sign-in (Authorization: Bearer).
  */
 export default function PrivacyPage() {
+  const { getAccessToken, isAuthenticated, ready } = useAuth();
+  const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
   const [exportJson, setExportJson] = useState<string | null>(null);
   const [eraseReport, setEraseReport] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +23,7 @@ export default function PrivacyPage() {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch(`${API}/me/privacy/export`, { headers: authHeaders() });
+      const res = await authedFetch(apiUrl('/me/privacy/export'));
       if (!res.ok) throw new Error(`Export fallito (${res.status})`);
       const data = await res.json();
       setExportJson(JSON.stringify(data, null, 2));
@@ -45,10 +39,7 @@ export default function PrivacyPage() {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch(`${API}/me/privacy/erase`, {
-        method: 'POST',
-        headers: authHeaders(),
-      });
+      const res = await authedFetch(apiUrl('/me/privacy/erase'), { method: 'POST' });
       if (!res.ok) throw new Error(`Cancellazione fallita (${res.status})`);
       const data = await res.json();
       setEraseReport(JSON.stringify(data, null, 2));
@@ -57,6 +48,18 @@ export default function PrivacyPage() {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (ready && !isAuthenticated) {
+    return (
+      <section className="mx-auto max-w-2xl px-5 py-12 space-y-8">
+        <div>
+          <p className="eyebrow mb-2">Privacy</p>
+          <h1 className="font-display text-3xl font-semibold">I tuoi dati</h1>
+          <SignInPrompt message="Accedi per scaricare o cancellare i tuoi dati." />
+        </div>
+      </section>
+    );
   }
 
   return (

@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { LocaleSwitcher } from './LocaleSwitcher';
+import { AuthControls } from './AuthControls';
 
 export function Header() {
   const t = useTranslations('nav');
@@ -16,6 +17,7 @@ export function Header() {
           <Link href="/pricing" className="hover:text-azure">{t('pricing')}</Link>
           <Link href="/add" className="hover:text-azure">{t('add')}</Link>
           <Link href="/favorites" className="hover:text-azure">{t('favorites')}</Link>
+          <AuthControls />
           <LocaleSwitcher />
         </nav>
       </div>

@@ -42,7 +42,8 @@ BASE_URL=https://easycasaita.com/api SMOKE_TARGET=live \
 ## Pilot go / no-go checklist
 
 **Automated (`runPreflight` against staging):**
-- [ ] `DEV_AUTH=false`; OIDC set
+- [ ] `DEV_AUTH=false`; OIDC set (`OIDC_ISSUER`, `OIDC_JWKS_URL`, `OIDC_AUDIENCE`)
+- [ ] JWKS URL reachable (HTTP GET succeeds)
 - [ ] Email transport + SPF/DKIM/DMARC
 - [ ] `/health/ready` green; Sentry preferred (warn if missing)
 - [ ] Pilot seed applied

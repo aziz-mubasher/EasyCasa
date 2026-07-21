@@ -108,7 +108,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = useCallback(async () => {
     await clear();
     setTokens(null);
-  }, []);
+    if (discovery?.end_session_endpoint) {
+      const params = new URLSearchParams({
+        client_id: config.oidcClientId,
+        post_logout_redirect_uri: config.webAppUrl || AuthSession.makeRedirectUri({ scheme: 'easycasa', path: 'auth' }),
+      });
+      await WebBrowser.openAuthSessionAsync(
+        `${discovery.end_session_endpoint}?${params.toString()}`,
+        config.webAppUrl || redirectUri,
+      );
+    }
+  }, [discovery]);
 
   const getAccessToken = useCallback(async (): Promise<string | null> => {
     if (!tokens) return null;
