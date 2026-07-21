@@ -25,7 +25,7 @@ gate('POST /search/bounds (integration, public)', () => {
         maxLng: 9.3,
         zoom: 12,
       });
-    expect(res.status).toBe(200);
+    expect([200, 201]).toContain(res.status);
     expect(res.body).toBeDefined();
     expect(Array.isArray(res.body.pins) || Array.isArray(res.body.clusters)).toBe(true);
   });

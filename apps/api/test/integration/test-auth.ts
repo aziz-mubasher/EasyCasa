@@ -54,7 +54,14 @@ export class TestAuthGuard implements CanActivate {
 
 /** Build the header a test uses to authenticate as a given principal. */
 export function asUser(principal: TestPrincipal): Record<string, string> {
-  return { 'x-test-user': JSON.stringify(principal) };
+  // Prefer x-test-user (TestAuthGuard). Also set x-dev-* so DEV_AUTH JwtAuthGuard
+  // still authenticates if the APP_GUARD override does not bind in this Nest/SWC build.
+  return {
+    'x-test-user': JSON.stringify(principal),
+    'x-dev-user': principal.sub,
+    'x-dev-email': principal.email ?? `${principal.sub}@example.it`,
+    'x-dev-roles': (principal.roles ?? ['buyer']).join(','),
+  };
 }
 
 function header(
