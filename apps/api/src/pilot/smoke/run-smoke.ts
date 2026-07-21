@@ -13,15 +13,16 @@ async function main(): Promise<void> {
     console.error('usage: BASE_URL=<url> run-smoke  (or pass url as arg)');
     process.exit(2);
   }
-  const authHeaders = process.env.SMOKE_BEARER
-    ? { authorization: `Bearer ${process.env.SMOKE_BEARER}` }
-    : process.env.SMOKE_DEV_USER
-      ? {
-          'x-dev-user': process.env.SMOKE_DEV_USER,
-          'x-dev-roles': process.env.SMOKE_DEV_ROLES ?? 'buyer',
-          'x-dev-email': process.env.SMOKE_DEV_EMAIL ?? 'smoke@easycasaita.com',
-        }
-      : undefined;
+  let authHeaders: Record<string, string> | undefined;
+  if (process.env.SMOKE_BEARER) {
+    authHeaders = { authorization: `Bearer ${process.env.SMOKE_BEARER}` };
+  } else if (process.env.SMOKE_DEV_USER) {
+    authHeaders = {
+      'x-dev-user': process.env.SMOKE_DEV_USER,
+      'x-dev-roles': process.env.SMOKE_DEV_ROLES ?? 'buyer',
+      'x-dev-email': process.env.SMOKE_DEV_EMAIL ?? 'smoke@easycasaita.com',
+    };
+  }
   const target = process.env.SMOKE_TARGET === 'live' ? 'live' : 'contract';
   const report = await runSeekerSmoke({ baseUrl, authHeaders, target });
   for (const s of report.steps) {
