@@ -7,6 +7,7 @@ import { PspAdapter } from '../config/adapters/psp.adapter';
 import { RliAdapter } from '../config/adapters/rli.adapter';
 import { SdiAdapter } from '../config/adapters/sdi.adapter';
 import { SignatureAdapter } from '../config/adapters/signature.adapter';
+import type { SeamStatus } from '../config/adapters/seam';
 import type { ApiConfig } from '../config';
 import { HealthController } from './health.controller';
 
@@ -71,8 +72,8 @@ describe('HealthController', () => {
       new MeiliAdapter(cfg),
     ).check();
     expect(res.status).toBe('ok');
-    expect(res.seams.find((s) => s.name === 'psp')?.configured).toBe(true);
-    expect(res.seams.find((s) => s.name === 'sdi')?.configured).toBe(false);
-    expect(res.seams.find((s) => s.name === 'meili')?.configured).toBe(true);
+    expect(res.seams.find((s: SeamStatus) => s.name === 'psp')?.configured).toBe(true);
+    expect(res.seams.find((s: SeamStatus) => s.name === 'sdi')?.configured).toBe(false);
+    expect(res.seams.find((s: SeamStatus) => s.name === 'meili')?.configured).toBe(true);
   });
 });

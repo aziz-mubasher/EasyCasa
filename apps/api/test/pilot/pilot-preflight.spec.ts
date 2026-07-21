@@ -31,7 +31,8 @@ describe('pilot preflight (go/no-go)', () => {
   });
 
   it('NO-GO when email is unset (blocker)', async () => {
-    const { SMTP_URL: _smtp, ...noEmail } = goodEnv;
+    const noEmail = { ...goodEnv };
+    delete noEmail.SMTP_URL;
     const r = await runPreflight({ env: noEmail, probe: ready, listingCount: seeded });
     expect(r.go).toBe(false);
   });
@@ -47,7 +48,8 @@ describe('pilot preflight (go/no-go)', () => {
   });
 
   it('missing SENTRY_DSN is a WARNING, not a blocker (still GO)', async () => {
-    const { SENTRY_DSN: _s, ...noSentry } = goodEnv;
+    const noSentry = { ...goodEnv };
+    delete noSentry.SENTRY_DSN;
     const r = await runPreflight({ env: noSentry, probe: ready, listingCount: seeded });
     expect(r.go).toBe(true);
     expect(r.checks.find((c) => c.name === 'Sentry configured')).toMatchObject({

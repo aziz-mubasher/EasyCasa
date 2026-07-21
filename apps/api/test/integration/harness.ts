@@ -9,9 +9,9 @@ import { GenericContainer, type StartedTestContainer, Wait } from 'testcontainer
 /**
  * Integration harness — Phase 34.
  *
- * Spins up Postgres (PostGIS image + pgvector install, matching
- * `infra/postgres/Dockerfile`) and Meilisearch, applies REAL migrations, then
- * boots the REAL `AppModule` with `JwtAuthGuard` swapped for `TestAuthGuard`.
+ * Spins up Postgres from `infra/postgres/Dockerfile` (PostGIS + pgvector from
+ * source) and Meilisearch, applies REAL migrations, then boots the REAL
+ * `AppModule` with `JwtAuthGuard` swapped for `TestAuthGuard`.
  *
  * No Nest global `/api` prefix — Traefik strips `/api` in production; tests hit
  * the same paths the app listens on (`/health`, `/search/bounds`, …).
@@ -24,7 +24,6 @@ export interface IntegrationContext {
   stop: () => Promise<void>;
 }
 
-const PG_IMAGE = 'postgis/postgis:16-3.4';
 const MEILI_IMAGE = 'getmeili/meilisearch:v1.10';
 
 /** Shared across int specs in one vitest fork (lazy pool + one AppModule boot). */
@@ -47,22 +46,16 @@ export async function startIntegration(): Promise<IntegrationContext> {
 }
 
 async function bootOnce(): Promise<IntegrationContext> {
-  const pg: StartedPostgreSqlContainer = await new PostgreSqlContainer(PG_IMAGE)
+  const postgresContext = path.resolve(process.cwd(), '../../infra/postgres');
+  const pgImage = await GenericContainer.fromDockerfile(postgresContext).build(
+    'easycasa-postgres-int',
+  );
+
+  const pg: StartedPostgreSqlContainer = await new PostgreSqlContainer(pgImage)
     .withDatabase('easycasa_test')
     .withUsername('easycasa')
     .withPassword('easycasa')
     .start();
-
-  // Match infra/postgres/Dockerfile — postgis image alone lacks pgvector.
-  const install = await pg.exec([
-    'bash',
-    '-c',
-    'apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends postgresql-16-pgvector',
-  ]);
-  if (install.exitCode !== 0) {
-    await pg.stop();
-    throw new Error(`pgvector install failed: ${install.output}`);
-  }
 
   const meili: StartedTestContainer = await new GenericContainer(MEILI_IMAGE)
     .withEnvironment({ MEILI_MASTER_KEY: 'test', MEILI_ENV: 'development' })

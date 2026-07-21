@@ -2,10 +2,10 @@ name: Deploy (staging)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
 
-# Requires repo secrets: STAGING_HOST, STAGING_USER, STAGING_SSH_KEY
+# Requires repo secrets: STAGING_HOST, STAGING_USER, STAGING_SSH_KEY.
+# Manual only — push-to-main auto-deploy stays off until staging secrets exist
+# (production deploys go to /opt/easycasa-ita via infra/deploy.sh on the VPS).
 jobs:
   deploy:
     runs-on: ubuntu-latest

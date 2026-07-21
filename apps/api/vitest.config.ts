@@ -7,6 +7,7 @@ import { defineConfig } from 'vitest/config';
  */
 export default defineConfig({
   test: {
+    hookTimeout: 60_000,
     include: [
       'src/**/*.spec.ts',
       'test/pilot/**/*.spec.ts',

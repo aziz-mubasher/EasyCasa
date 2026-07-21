@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: pnpm }
       - run: pnpm install --frozen-lockfile
+      - name: Build shared (API imports @easycasa/shared from dist/)
+        run: pnpm --filter @easycasa/shared build
       - name: No stray process.env
         run: bash apps/api/scripts/check-no-process-env.sh apps/api/src
       - name: Typecheck + tests (all phases together)
