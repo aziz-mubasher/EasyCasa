@@ -15,6 +15,7 @@
     "doctor": "expo-doctor"
   },
   "dependencies": {
+    "@babel/runtime": "^7.25.0",
     "@easycasa/api-client": "workspace:*",
     "@easycasa/design-tokens": "workspace:*",
     "@expo/metro-runtime": "~3.2.3",
