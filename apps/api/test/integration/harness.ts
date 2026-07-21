@@ -9,9 +9,9 @@ import { GenericContainer, type StartedTestContainer, Wait } from 'testcontainer
 /**
  * Integration harness — Phase 34.
  *
- * Spins up Postgres from `infra/postgres/Dockerfile` (PostGIS + pgvector from
- * source) and Meilisearch, applies REAL migrations, then boots the REAL
- * `AppModule` with `JwtAuthGuard` swapped for `TestAuthGuard`.
+ * Spins up Postgres from `infra/postgres/Dockerfile` (PostGIS + pgvector via
+ * multi-stage copy) and Meilisearch, applies REAL migrations, then boots the
+ * REAL `AppModule` with `JwtAuthGuard` swapped for `TestAuthGuard`.
  *
  * No Nest global `/api` prefix — Traefik strips `/api` in production; tests hit
  * the same paths the app listens on (`/health`, `/search/bounds`, …).
@@ -47,11 +47,12 @@ export async function startIntegration(): Promise<IntegrationContext> {
 
 async function bootOnce(): Promise<IntegrationContext> {
   const postgresContext = path.resolve(process.cwd(), '../../infra/postgres');
-  const pgImage = await GenericContainer.fromDockerfile(postgresContext).build(
-    'easycasa-postgres-int',
-  );
+  const imageTag = 'easycasa-postgres-int:ci';
+  // Build via docker CLI — testcontainers fromDockerfile().build() return type
+  // is not a plain image string in our pinned version (ImageName.split crash).
+  execFileSync('docker', ['build', '-t', imageTag, postgresContext], { stdio: 'inherit' });
 
-  const pg: StartedPostgreSqlContainer = await new PostgreSqlContainer(pgImage)
+  const pg: StartedPostgreSqlContainer = await new PostgreSqlContainer(imageTag)
     .withDatabase('easycasa_test')
     .withUsername('easycasa')
     .withPassword('easycasa')
