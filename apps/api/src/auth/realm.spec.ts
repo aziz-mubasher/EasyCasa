@@ -27,6 +27,7 @@ describe('realm-easycasa.json', () => {
     expect(names).toEqual(
       expect.arrayContaining([
         'buyer',
+        'seeker',
         'seller',
         'agent',
         'partner',

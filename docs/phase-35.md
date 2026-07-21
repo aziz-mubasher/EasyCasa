@@ -57,6 +57,32 @@ curl -i    http://localhost:4000/me/enquiries
 (import `infra/keycloak/realm-easycasa.json`), TLS via Traefik, replace bootstrap admin,
 keep `easycasa-api` as bearer-only audience. Set `DEV_AUTH=false` + `OIDC_*` on the API.
 
+### Human / ops checklist (Cursor cannot do these)
+
+- [ ] Stand up Keycloak on the VPS (`infra/docker-compose.yml` keycloak service + Traefik `auth.${STAGING_DOMAIN}`).
+- [ ] Import `infra/keycloak/realm-easycasa.json` (or rely on `--import-realm` mount).
+- [ ] Set `KEYCLOAK_ADMIN` / `KEYCLOAK_ADMIN_PASSWORD` (and DB) in the VPS `.env` — never commit secrets.
+- [ ] Point `auth.easycasaita.com` DNS at the VPS; confirm Traefik issues TLS.
+- [ ] Copy keys from `.env.oidc.example` into the VPS `.env`: `DEV_AUTH=false`, `OIDC_ISSUER`, `OIDC_AUDIENCE`, `OIDC_JWKS_URL`, plus `NEXT_PUBLIC_OIDC_*` for the web image rebuild.
+- [ ] Redeploy (`cd /opt/easycasa-ita && git pull && ./infra/deploy.sh`).
+- [ ] Verify seeker login on web + Expo; confirm Phase 40 preflight is GO (`pnpm --filter @easycasa/api pilot:smoke` / preflight CLI).
+
+**VPS `.env` keys (exact):**
+
+```
+DEV_AUTH=false
+OIDC_ISSUER=https://auth.easycasaita.com/realms/easycasa
+OIDC_JWKS_URL=https://auth.easycasaita.com/realms/easycasa/protocol/openid-connect/certs
+OIDC_AUDIENCE=easycasa-api
+OIDC_ROLES_CLAIM=realm_access.roles
+KEYCLOAK_HOSTNAME=auth.easycasaita.com
+KEYCLOAK_ADMIN=…
+KEYCLOAK_ADMIN_PASSWORD=…
+KEYCLOAK_DB=keycloak
+NEXT_PUBLIC_OIDC_ISSUER=https://auth.easycasaita.com/realms/easycasa
+NEXT_PUBLIC_OIDC_CLIENT_ID=easycasa-web
+```
+
 ---
 
 ## Validation
