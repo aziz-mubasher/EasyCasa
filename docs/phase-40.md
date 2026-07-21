@@ -33,10 +33,11 @@ Also: `POST /admin/pilot/seed` (Phase 37) remains the HTTP seed path.
 pnpm --filter @easycasa/api build
 pnpm --filter @easycasa/api pilot:seed
 
-# Smoke against staging (live controllers + DEV_AUTH seeker)
+# Smoke against staging (live controllers + OIDC bearer from a real seeker login)
 BASE_URL=https://easycasaita.com/api SMOKE_TARGET=live \
-  SMOKE_DEV_USER=smoke-seeker \
+  SMOKE_BEARER=<access_token_from_keycloak> \
   pnpm --filter @easycasa/api pilot:smoke
+# Local only (DEV_AUTH=true): SMOKE_DEV_USER=smoke-seeker instead of SMOKE_BEARER
 ```
 
 ## Pilot go / no-go checklist
