@@ -131,4 +131,13 @@ describe('Auth pipeline (e2e via supertest)', () => {
     await request(devApp.getHttpServer()).get('/me').set('x-dev-user', 'dev-1').expect(200);
     await request(devApp.getHttpServer()).get('/me').expect(401);
   });
+
+  it('rejects forged x-dev-* headers when DEV_AUTH is false', async () => {
+    await request(prodApp.getHttpServer())
+      .get('/me')
+      .set('x-dev-user', 'attacker')
+      .set('x-dev-roles', 'admin')
+      .set('x-dev-email', 'attacker@evil.com')
+      .expect(401);
+  });
 });

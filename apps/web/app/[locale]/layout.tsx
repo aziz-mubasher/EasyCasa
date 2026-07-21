@@ -6,6 +6,7 @@ import { Bricolage_Grotesque, Newsreader, IBM_Plex_Mono } from 'next/font/google
 import { routing } from '@/i18n/routing';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { Providers } from '@/components/Providers';
 import { OrganizationStructuredData } from '@/components/StructuredData';
 import '../globals.css';
 
@@ -41,9 +42,11 @@ export default async function LocaleLayout({
       <body className="min-h-screen flex flex-col">
         <OrganizationStructuredData />
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <Providers>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

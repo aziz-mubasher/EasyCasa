@@ -16,9 +16,14 @@ apps/api/src/auth/auth.module.ts      # @Global + APP_GUARD (stays on AuthModule
 apps/api/src/auth/jwt-verifier.spec.ts   # 8 real-crypto tests
 apps/api/src/auth/auth.e2e.spec.ts        # 6 HTTP-pipeline tests
 apps/api/src/auth/realm.spec.ts           # realm export structure
-infra/keycloak/easycasa-realm.json    # roles, PKCE clients, audience mapper
+infra/keycloak/realm-easycasa.json    # production realm export (web/mobile/admin PKCE)
+infra/keycloak/easycasa-realm.json    # alias kept for local imports
 infra/docker-compose.keycloak.yml     # local Keycloak + realm import
+infra/docker-compose.yml              # VPS Keycloak service (Postgres-backed)
+infra/docker-compose.traefik.yml      # auth.${STAGING_DOMAIN} → Keycloak
 .env.oidc.example                     # exact vars to flip for cutover
+apps/web/src/auth/**                  # Next.js PKCE client (seeker paths)
+apps/mobile/src/auth/AuthProvider.tsx # Expo PKCE (expo-auth-session + SecureStore)
 ```
 
 ### Adaptations vs sandbox
@@ -48,8 +53,35 @@ curl -fsS http://localhost:4000/health
 curl -i    http://localhost:4000/me/enquiries
 ```
 
-**Production:** `OIDC_ISSUER=https://<keycloak>/realms/easycasa`, TLS via Traefik,
-replace bootstrap admin, keep `easycasa-api` as bearer-only audience.
+**Production:** self-hosted Keycloak at `https://auth.easycasaita.com/realms/easycasa`
+(import `infra/keycloak/realm-easycasa.json`), TLS via Traefik, replace bootstrap admin,
+keep `easycasa-api` as bearer-only audience. Set `DEV_AUTH=false` + `OIDC_*` on the API.
+
+### Human / ops checklist (Cursor cannot do these)
+
+- [ ] Stand up Keycloak on the VPS (`infra/docker-compose.yml` keycloak service + Traefik `auth.${STAGING_DOMAIN}`).
+- [ ] Import `infra/keycloak/realm-easycasa.json` (or rely on `--import-realm` mount).
+- [ ] Set `KEYCLOAK_ADMIN` / `KEYCLOAK_ADMIN_PASSWORD` (and DB) in the VPS `.env` — never commit secrets.
+- [ ] Point `auth.easycasaita.com` DNS at the VPS; confirm Traefik issues TLS.
+- [ ] Copy keys from `.env.oidc.example` into the VPS `.env`: `DEV_AUTH=false`, `OIDC_ISSUER`, `OIDC_AUDIENCE`, `OIDC_JWKS_URL`, plus `NEXT_PUBLIC_OIDC_*` for the web image rebuild.
+- [ ] Redeploy (`cd /opt/easycasa-ita && git pull && ./infra/deploy.sh`).
+- [ ] Verify seeker login on web + Expo; confirm Phase 40 preflight is GO (`pnpm --filter @easycasa/api pilot:smoke` / preflight CLI).
+
+**VPS `.env` keys (exact):**
+
+```
+DEV_AUTH=false
+OIDC_ISSUER=https://auth.easycasaita.com/realms/easycasa
+OIDC_JWKS_URL=https://auth.easycasaita.com/realms/easycasa/protocol/openid-connect/certs
+OIDC_AUDIENCE=easycasa-api
+OIDC_ROLES_CLAIM=realm_access.roles
+KEYCLOAK_HOSTNAME=auth.easycasaita.com
+KEYCLOAK_ADMIN=…
+KEYCLOAK_ADMIN_PASSWORD=…
+KEYCLOAK_DB=keycloak
+NEXT_PUBLIC_OIDC_ISSUER=https://auth.easycasaita.com/realms/easycasa
+NEXT_PUBLIC_OIDC_CLIENT_ID=easycasa-web
+```
 
 ---
 
@@ -60,12 +92,13 @@ pnpm --filter @easycasa/api test
 # JwtVerifier (8) + auth e2e (6) + realm (3) + existing unit suite
 ```
 
-VPS stays on `DEV_AUTH=true` until the live realm is ready — flipping is env-only.
+VPS stays on `DEV_AUTH=true` until ops imports the realm and sets `.env.oidc.example` keys — then redeploy.
 
 ---
 
 ## Follow-ups
 
-1. Wire Next.js + Expo to PKCE clients; attach `Authorization: Bearer`.
+1. ~~Wire Next.js + Expo to PKCE clients; attach `Authorization: Bearer`.~~ (K EC 1.2 — seeker path)
 2. Harden realm (brute-force, password policy, email verify, token lifetimes).
-3. Make `api-integration` + auth suite required checks on `main`.
+3. Wire admin SPA OIDC (`easycasa-admin` client; retire `VITE_DEV_AUTH`).
+4. Make `api-integration` + auth suite required checks on `main`.

@@ -8,7 +8,8 @@
     "add": "Publicar inmueble",
     "favorites": "Favoritos",
     "pricing": "Precios",
-    "signin": "Entrar"
+    "signin": "Entrar",
+    "signout": "Cerrar sesión"
   },
   "home": {
     "eyebrow": "Inmobiliaria · Italia",

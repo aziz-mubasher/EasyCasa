@@ -76,6 +76,8 @@ services:
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://easycasaita.com/api}
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://easycasaita.com}
+        NEXT_PUBLIC_OIDC_ISSUER: ${NEXT_PUBLIC_OIDC_ISSUER:-}
+        NEXT_PUBLIC_OIDC_CLIENT_ID: ${NEXT_PUBLIC_OIDC_CLIENT_ID:-easycasa-web}
         API_URL: ${API_URL:-http://api:4000}
     restart: unless-stopped
     env_file: ../.env
@@ -101,6 +103,29 @@ services:
       dockerfile: services/ai/Dockerfile
     restart: unless-stopped
     env_file: ../.env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [internal]
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    restart: unless-stopped
+    command: ['start', '--import-realm']
+    environment:
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME:-auth.easycasaita.com}
+      KC_HOSTNAME_STRICT: 'true'
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: 'true'
+      KC_HEALTH_ENABLED: 'true'
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/${KEYCLOAK_DB:-keycloak}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./keycloak/realm-easycasa.json:/opt/keycloak/data/import/realm-easycasa.json:ro
     depends_on:
       db:
         condition: service_healthy

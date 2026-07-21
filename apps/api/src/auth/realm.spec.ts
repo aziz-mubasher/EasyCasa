@@ -3,15 +3,16 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-describe('easycasa-realm.json', () => {
+describe('realm-easycasa.json', () => {
   const realm = JSON.parse(
-    readFileSync(path.resolve(process.cwd(), '../../infra/keycloak/easycasa-realm.json'), 'utf8'),
+    readFileSync(path.resolve(process.cwd(), '../../infra/keycloak/realm-easycasa.json'), 'utf8'),
   ) as {
     roles: { realm: Array<{ name: string }> };
     clients: Array<{
       clientId: string;
       bearerOnly?: boolean;
       publicClient?: boolean;
+      redirectUris?: string[];
       attributes?: Record<string, string>;
       defaultClientScopes?: string[];
     }>;
@@ -26,6 +27,7 @@ describe('easycasa-realm.json', () => {
     expect(names).toEqual(
       expect.arrayContaining([
         'buyer',
+        'seeker',
         'seller',
         'agent',
         'partner',
@@ -52,5 +54,21 @@ describe('easycasa-realm.json', () => {
       (m) => m.config?.['included.client.audience'] === 'easycasa-api',
     );
     expect(mapper).toBeDefined();
+  });
+
+  it('includes production redirect URIs for web, admin, and Expo', () => {
+    const web = realm.clients.find((c) => c.clientId === 'easycasa-web');
+    expect(web?.redirectUris).toEqual(
+      expect.arrayContaining([
+        'https://easycasaita.com/auth/callback',
+        'http://localhost:3000/auth/callback',
+      ]),
+    );
+    const admin = realm.clients.find((c) => c.clientId === 'easycasa-admin');
+    expect(admin?.redirectUris).toEqual(
+      expect.arrayContaining(['https://admin.easycasaita.com/*']),
+    );
+    const mobile = realm.clients.find((c) => c.clientId === 'easycasa-app');
+    expect(mobile?.redirectUris).toEqual(expect.arrayContaining(['easycasa://auth/*']));
   });
 });

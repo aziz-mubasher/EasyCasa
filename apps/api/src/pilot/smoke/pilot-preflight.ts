@@ -19,6 +19,8 @@ export interface PreflightInput {
   env: Record<string, string | undefined>;
   /** e.g. probe('/health/ready') → { ok, status } (path is relative to API base). */
   probe: (path: string) => Promise<{ ok: boolean; status: number }>;
+  /** HEAD/GET a full URL — defaults to global fetch in the CLI. */
+  fetchUrl?: (url: string) => Promise<{ ok: boolean; status: number }>;
   /** Count of seeded listings (from the DB), to catch an empty map. */
   listingCount: () => Promise<number>;
 }
@@ -41,12 +43,35 @@ export async function runPreflight(input: PreflightInput): Promise<PreflightRepo
     'DEV_AUTH=true would trust spoofable headers',
   );
   const jwks = env.OIDC_JWKS_URL || env.OIDC_JWKS_URI;
+  const oidcConfigured = Boolean(env.OIDC_ISSUER && jwks && env.OIDC_AUDIENCE);
   add(
     'OIDC configured',
-    Boolean(env.OIDC_ISSUER && jwks && env.OIDC_AUDIENCE),
+    oidcConfigured,
     'blocker',
     'set OIDC_ISSUER, OIDC_JWKS_URL, OIDC_AUDIENCE',
   );
+
+  if (oidcConfigured && jwks) {
+    try {
+      const fetchUrl =
+        input.fetchUrl ??
+        (async (url: string) => {
+          const res = await fetch(url, { method: 'GET' });
+          return { ok: res.ok, status: res.status };
+        });
+      const jwksProbe = await fetchUrl(jwks);
+      add(
+        'JWKS reachable',
+        jwksProbe.ok,
+        'blocker',
+        jwksProbe.ok ? undefined : `GET ${jwks} → ${jwksProbe.status}`,
+      );
+    } catch (err) {
+      add('JWKS reachable', false, 'blocker', String(err));
+    }
+  } else {
+    add('JWKS reachable', false, 'blocker', 'OIDC_JWKS_URL not set');
+  }
   // Email must be able to send for the seeker journey.
   add(
     'email transport set',

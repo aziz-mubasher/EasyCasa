@@ -31,7 +31,12 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | Variable | Used by | Notes |
 |---|---|---|
 | DEV_AUTH | api | `true` trusts `x-dev-user` / `x-dev-roles` / `x-dev-email` headers (local/dev). When `false`, boot fails unless OIDC_* are set (Phase 16). |
-| OIDC_ISSUER / OIDC_AUDIENCE / OIDC_JWKS_URL | api | Real Keycloak (or other OIDC) settings. **Required** when `DEV_AUTH` is not `true`. |
+| OIDC_ISSUER / OIDC_AUDIENCE / OIDC_JWKS_URL | api | Real Keycloak settings. **Required** when `DEV_AUTH` is not `true`. JWKS must be reachable for pilot preflight. |
+| KEYCLOAK_HOSTNAME | keycloak (VPS) | Public hostname (default `auth.easycasaita.com`). |
+| KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD | keycloak (VPS) | Bootstrap admin — set on VPS only; never commit. |
+| KEYCLOAK_DB | keycloak (VPS) | Postgres database name (default `keycloak`; created by `infra/postgres/init/02-keycloak-db.sql`). |
+| NEXT_PUBLIC_OIDC_ISSUER / NEXT_PUBLIC_OIDC_CLIENT_ID | web (build) | PKCE client for seeker sign-in (`easycasa-web`). Baked at image build. |
+| EXPO_PUBLIC_OIDC_ISSUER / EXPO_PUBLIC_OIDC_CLIENT_ID | mobile | PKCE client for Expo (`easycasa-app`). |
 | OIDC_ROLES_CLAIM | api | Dot path to roles in JWT (default `realm_access.roles`). |
 
 ## Phase 3 — web / search

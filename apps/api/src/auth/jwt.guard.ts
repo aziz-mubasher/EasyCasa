@@ -25,7 +25,8 @@ interface Req {
  * `@OptionalUser`). Otherwise a Bearer token is verified via {@link JwtVerifier}.
  *
  * `DEV_AUTH=true` trusts `x-dev-user` / `x-dev-roles` / `x-dev-email` — the
- * pre-cutover path. Cutover = `DEV_AUTH=false` + live `OIDC_*` (config only).
+ * pre-cutover path only. With `DEV_AUTH=false` those headers are never read;
+ * callers must send `Authorization: Bearer`. Cutover = `DEV_AUTH=false` + live `OIDC_*`.
  */
 @Injectable()
 export class JwtAuthGuard implements CanActivate {

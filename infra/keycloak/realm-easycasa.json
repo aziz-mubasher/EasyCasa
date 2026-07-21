@@ -9,7 +9,8 @@
   "accessTokenLifespan": 300,
   "roles": {
     "realm": [
-      { "name": "buyer", "description": "Seeker / prospective buyer" },
+      { "name": "buyer", "description": "Seeker / prospective buyer (product: seeker)" },
+      { "name": "seeker", "description": "Alias of buyer for product naming; assign either" },
       { "name": "seller", "description": "Property owner listing to sell" },
       { "name": "agent", "description": "Licensed mediator / agency staff" },
       { "name": "partner", "description": "External partner (e.g. lender)" },

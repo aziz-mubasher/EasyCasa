@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 
+import { useAuth } from '@/auth/AuthProvider';
+import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
+import { RequireSignInLink } from '@/components/AuthControls';
 import { Button } from '@/components/ui/Button';
 import { Field, Input } from '@/components/ui/Field';
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost/api';
 const POLICY_VERSION = 'v1-draft';
 
 type Props = {
@@ -13,20 +15,13 @@ type Props = {
   listingTitle: string;
 };
 
-function authHeaders(email: string): HeadersInit {
-  return {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    'x-dev-user': 'seeker-web',
-    'x-dev-email': email,
-    'x-dev-roles': 'buyer',
-  };
-}
-
 /**
  * Contact-agent CTA — Phase 37/38. Records required consents then posts enquiry.
+ * Requires OIDC PKCE sign-in (Authorization: Bearer).
  */
 export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
+  const { getAccessToken, isAuthenticated, ready } = useAuth();
+  const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
   const [message, setMessage] = useState(`Sono interessato/a a: ${listingTitle}`);
   const [email, setEmail] = useState('');
   const [privacyOk, setPrivacyOk] = useState(false);
@@ -34,10 +29,10 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle');
   const [error, setError] = useState<string | null>(null);
 
-  async function recordConsent(purpose: 'privacy_policy' | 'mediation_disclosure', emailAddr: string) {
-    const res = await fetch(`${API}/me/privacy/consents`, {
+  async function recordConsent(purpose: 'privacy_policy' | 'mediation_disclosure') {
+    const res = await authedFetch(apiUrl('/me/privacy/consents'), {
       method: 'POST',
-      headers: authHeaders(emailAddr),
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ purpose, granted: true, policyVersion: POLICY_VERSION }),
     });
     if (!res.ok) throw new Error(`Consenso non registrato (${res.status})`);
@@ -45,6 +40,11 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!isAuthenticated) {
+      setError('Accedi per inviare la richiesta.');
+      setStatus('err');
+      return;
+    }
     if (!privacyOk || !mediationOk) {
       setError('Accetta informativa privacy e disclosure di mediazione per continuare.');
       setStatus('err');
@@ -53,12 +53,12 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
     setStatus('sending');
     setError(null);
     try {
-      await recordConsent('privacy_policy', email);
-      await recordConsent('mediation_disclosure', email);
+      await recordConsent('privacy_policy');
+      await recordConsent('mediation_disclosure');
 
-      const res = await fetch(`${API}/listings/${encodeURIComponent(listingId)}/enquiries`, {
+      const res = await authedFetch(apiUrl(`/listings/${encodeURIComponent(listingId)}/enquiries`), {
         method: 'POST',
-        headers: authHeaders(email),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           intent: 'info',
           message,
@@ -84,6 +84,14 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
       <p className="mt-8 text-pine font-[var(--font-display)] text-lg" role="status">
         Richiesta inviata. Ti contatteremo a breve.
       </p>
+    );
+  }
+
+  if (ready && !isAuthenticated) {
+    return (
+      <div className="mt-8 max-w-md">
+        <RequireSignInLink />
+      </div>
     );
   }
 
