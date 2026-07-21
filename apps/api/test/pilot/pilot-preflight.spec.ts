@@ -12,10 +12,11 @@ const goodEnv = {
 };
 const ready = async () => ({ ok: true, status: 200 });
 const seeded = async () => 4;
+const jwksOk = async () => ({ ok: true, status: 200 });
 
 describe('pilot preflight (go/no-go)', () => {
   it('GO when everything is set and green', async () => {
-    const r = await runPreflight({ env: goodEnv, probe: ready, listingCount: seeded });
+    const r = await runPreflight({ env: goodEnv, probe: ready, fetchUrl: jwksOk, listingCount: seeded });
     expect(r.go).toBe(true);
     expect(r.checks.every((c) => c.pass)).toBe(true);
   });
@@ -24,6 +25,7 @@ describe('pilot preflight (go/no-go)', () => {
     const r = await runPreflight({
       env: { ...goodEnv, DEV_AUTH: 'true' },
       probe: ready,
+      fetchUrl: jwksOk,
       listingCount: seeded,
     });
     expect(r.go).toBe(false);
@@ -33,7 +35,7 @@ describe('pilot preflight (go/no-go)', () => {
   it('NO-GO when email is unset (blocker)', async () => {
     const noEmail = { ...goodEnv };
     delete noEmail.SMTP_URL;
-    const r = await runPreflight({ env: noEmail, probe: ready, listingCount: seeded });
+    const r = await runPreflight({ env: noEmail, probe: ready, fetchUrl: jwksOk, listingCount: seeded });
     expect(r.go).toBe(false);
   });
 
@@ -41,6 +43,7 @@ describe('pilot preflight (go/no-go)', () => {
     const r = await runPreflight({
       env: goodEnv,
       probe: ready,
+      fetchUrl: jwksOk,
       listingCount: async () => 0,
     });
     expect(r.go).toBe(false);
@@ -50,7 +53,7 @@ describe('pilot preflight (go/no-go)', () => {
   it('missing SENTRY_DSN is a WARNING, not a blocker (still GO)', async () => {
     const noSentry = { ...goodEnv };
     delete noSentry.SENTRY_DSN;
-    const r = await runPreflight({ env: noSentry, probe: ready, listingCount: seeded });
+    const r = await runPreflight({ env: noSentry, probe: ready, fetchUrl: jwksOk, listingCount: seeded });
     expect(r.go).toBe(true);
     expect(r.checks.find((c) => c.name === 'Sentry configured')).toMatchObject({
       pass: false,
@@ -62,6 +65,7 @@ describe('pilot preflight (go/no-go)', () => {
     const r = await runPreflight({
       env: goodEnv,
       probe: async () => ({ ok: false, status: 503 }),
+      fetchUrl: jwksOk,
       listingCount: seeded,
     });
     expect(r.go).toBe(false);

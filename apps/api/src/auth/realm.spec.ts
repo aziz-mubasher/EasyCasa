@@ -12,6 +12,7 @@ describe('realm-easycasa.json', () => {
       clientId: string;
       bearerOnly?: boolean;
       publicClient?: boolean;
+      redirectUris?: string[];
       attributes?: Record<string, string>;
       defaultClientScopes?: string[];
     }>;
