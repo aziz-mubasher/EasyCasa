@@ -39,8 +39,8 @@ import { PilotModule } from './pilot/pilot.module';
 import { PrivacyModule } from './privacy/privacy.module';
 import { ObservabilityModule } from './observability/observability.module';
 
-/** Every Nest feature module the composition root must import (Phase 32–39). */
-const REQUIRED = [
+/** Static module imports (Privacy is DynamicModule via forRootProduction). */
+const REQUIRED_STATIC = [
   ConfigModule,
   SeamsModule,
   DbModule,
@@ -76,20 +76,30 @@ const REQUIRED = [
   AvmModule,
   ViewingsModule,
   PilotModule,
-  PrivacyModule,
 ] as const;
 
-describe('AppModule composition root (Phase 32/33)', () => {
+function isPrivacyForRoot(entry: unknown): boolean {
+  return (
+    typeof entry === 'object' &&
+    entry !== null &&
+    'module' in entry &&
+    (entry as { module: unknown }).module === PrivacyModule
+  );
+}
+
+describe('AppModule composition root (Phase 32/39.1)', () => {
   it('imports every feature module (no orphaned phases)', () => {
     const imported = Reflect.getMetadata(MODULE_METADATA.IMPORTS, AppModule) as unknown[];
-    expect(imported).toEqual(expect.arrayContaining([...REQUIRED]));
-    expect(imported).toHaveLength(REQUIRED.length);
+    expect(imported).toEqual(expect.arrayContaining([...REQUIRED_STATIC]));
+    expect(imported.some(isPrivacyForRoot)).toBe(true);
+    expect(imported).toHaveLength(REQUIRED_STATIC.length + 1); // + PrivacyModule.forRootProduction()
   });
 
   it('keeps Jwt/Roles APP_GUARD registration on AuthModule only (no double auth guards)', () => {
     const appProviders =
       (Reflect.getMetadata(MODULE_METADATA.PROVIDERS, AppModule) as unknown[] | undefined) ?? [];
-    expect(appProviders).toHaveLength(0);
+    // Readiness health indicators live on AppModule (39.1); no APP_GUARD here.
+    expect(appProviders.length).toBeGreaterThanOrEqual(4);
 
     const authProviders = Reflect.getMetadata(MODULE_METADATA.PROVIDERS, AuthModule) as unknown[];
     expect(authProviders?.length).toBeGreaterThanOrEqual(2);

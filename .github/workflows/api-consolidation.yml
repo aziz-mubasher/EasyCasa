@@ -1,12 +1,14 @@
 name: api-consolidation
 
-# 36.1 — proves the shared infra spine (config/seams/auth/email/health) typechecks,
-# boots as one DI graph (via unit+e2e suite), and keeps env reads in config.
+# 39.1 — proves the full infra spine (config/seams/auth/email/observability/
+# privacy/health, phases 32–39) typechecks, boots as one DI graph, and keeps env
+# reads in config. No Docker.
 on:
   pull_request:
     paths: ['apps/api/**', '.github/workflows/api-consolidation.yml']
   push:
     branches: [main]
+    paths: ['apps/api/**', '.github/workflows/api-consolidation.yml']
 jobs:
   consolidation:
     runs-on: ubuntu-latest

@@ -36,12 +36,18 @@ import { ViewingsModule } from './viewings/viewings.module';
 import { PilotModule } from './pilot/pilot.module';
 import { PrivacyModule } from './privacy/privacy.module';
 import { ObservabilityModule } from './observability/observability.module';
+import { HealthIndicatorRegistry } from './health/health-indicator.registry';
+import { MeiliHealthIndicator } from './health/meili.health';
+import { PostgresHealthIndicator } from './health/postgres.health';
+import { ReadinessController } from './health/readiness.controller';
+import { RedisHealthIndicator } from './health/redis.health';
 
 /**
  * Composition root — single manifest for every feature module.
  *
- * Phases 32–39: Config + Seams + Auth + Email + pilot + privacy + observability;
+ * Phases 32–39.1: Config + Seams + Auth + Email + observability + privacy.forRoot;
  * feature modules below. Auth guards stay on `AuthModule` only. `/health` is `@Public`.
+ * Readiness indicators register at the root (39.1 consolidation finding).
  */
 @Module({
   imports: [
@@ -52,6 +58,7 @@ import { ObservabilityModule } from './observability/observability.module';
     AuthModule,
     EmailModule,
     ObservabilityModule,
+    PrivacyModule.forRootProduction(),
     UsersModule,
     NotificationsModule,
     // discovery & media
@@ -86,8 +93,13 @@ import { ObservabilityModule } from './observability/observability.module';
     AvmModule,
     ViewingsModule,
     PilotModule,
-    PrivacyModule,
   ],
-  controllers: [HealthController],
+  controllers: [HealthController, ReadinessController],
+  providers: [
+    HealthIndicatorRegistry,
+    PostgresHealthIndicator,
+    MeiliHealthIndicator,
+    RedisHealthIndicator,
+  ],
 })
 export class AppModule {}

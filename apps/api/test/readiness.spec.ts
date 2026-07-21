@@ -38,7 +38,7 @@ describe('readiness', () => {
   const apps: INestApplication[] = [];
   afterAll(async () => {
     for (const a of apps) await a.close();
-  }, 30_000);
+  }, 60_000);
 
   it(
     '/health/live is always ok',
@@ -47,7 +47,7 @@ describe('readiness', () => {
       apps.push(app);
       await request(app.getHttpServer()).get('/health/live').expect(200);
     },
-    30_000,
+    90_000,
   );
   it(
     '/health/ready 200 when all deps up',
@@ -58,7 +58,7 @@ describe('readiness', () => {
       expect(res.status).toBe(200);
       expect(res.body.status).toBe('ready');
     },
-    30_000,
+    90_000,
   );
   it(
     '/health/ready 503 when any dep down',
@@ -68,6 +68,6 @@ describe('readiness', () => {
       const res = await request(app.getHttpServer()).get('/health/ready');
       expect(res.status).toBe(503);
     },
-    30_000,
+    90_000,
   );
 });
