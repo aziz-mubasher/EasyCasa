@@ -11,7 +11,8 @@ import { GenericContainer, type StartedTestContainer, Wait } from 'testcontainer
  *
  * Spins up Postgres from `infra/postgres/Dockerfile` (PostGIS + pgvector from
  * source) and Meilisearch, applies REAL migrations, then boots the REAL
- * `AppModule` with `JwtAuthGuard` swapped for `TestAuthGuard`.
+ * `AppModule` with `JwtAuthGuard` swapped for `TestAuthGuard` via
+ * `overrideProvider` (requires AuthModule APP_GUARD to use `useExisting`).
  *
  * No Nest global `/api` prefix — Traefik strips `/api` in production; tests hit
  * the same paths the app listens on (`/health`, `/search/bounds`, …).
@@ -90,7 +91,7 @@ async function bootOnce(): Promise<IntegrationContext> {
   const { TestAuthGuard } = await import('./test-auth');
 
   const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideGuard(JwtAuthGuard)
+    .overrideProvider(JwtAuthGuard)
     .useClass(TestAuthGuard)
     .compile();
 

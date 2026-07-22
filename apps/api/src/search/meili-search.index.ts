@@ -97,11 +97,13 @@ export class MeiliSearchIndex implements SearchIndexPort {
       status: 'published',
       _geo: { lat: pin.lat, lng: pin.lng },
     };
-    await this.index.updateDocuments([doc], { primaryKey: 'id' });
+    const task = await this.index.updateDocuments([doc], { primaryKey: 'id' });
+    await getMeili().waitForTask(task.taskUid);
   }
 
   async remove(listingId: string): Promise<void> {
-    await this.index.deleteDocument(listingId);
+    const task = await this.index.deleteDocument(listingId);
+    await getMeili().waitForTask(task.taskUid);
   }
 
   private toPin(d: ListingDoc): ListingPin | null {

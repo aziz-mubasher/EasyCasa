@@ -70,6 +70,14 @@ gate('Seeker journey (real modules, real DB)', () => {
     // Ensure owner principal maps to the seeded owner user (same email).
     await request(api()).get('/me/enquiries').set(owner);
 
+    for (const purpose of ['privacy_policy', 'mediation_disclosure'] as const) {
+      await request(api())
+        .post('/me/privacy/consents')
+        .set(seeker)
+        .send({ purpose, granted: true, policyVersion: 'v1-draft' })
+        .expect(201);
+    }
+
     const enquiry = await request(api())
       .post(`/listings/${listingId}/enquiries`)
       .set(seeker)
