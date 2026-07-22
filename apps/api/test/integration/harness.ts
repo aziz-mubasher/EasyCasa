@@ -25,6 +25,7 @@ export interface IntegrationContext {
 }
 
 const MEILI_IMAGE = 'getmeili/meilisearch:v1.10';
+const PG_IMAGE = 'easycasa-postgres-int';
 
 /** Shared across int specs in one vitest fork (lazy pool + one AppModule boot). */
 let shared: Promise<IntegrationContext> | null = null;
@@ -47,11 +48,9 @@ export async function startIntegration(): Promise<IntegrationContext> {
 
 async function bootOnce(): Promise<IntegrationContext> {
   const postgresContext = path.resolve(process.cwd(), '../../infra/postgres');
-  const pgImage = await GenericContainer.fromDockerfile(postgresContext).build(
-    'easycasa-postgres-int',
-  );
+  await GenericContainer.fromDockerfile(postgresContext).build(PG_IMAGE);
 
-  const pg: StartedPostgreSqlContainer = await new PostgreSqlContainer(pgImage)
+  const pg: StartedPostgreSqlContainer = await new PostgreSqlContainer(PG_IMAGE)
     .withDatabase('easycasa_test')
     .withUsername('easycasa')
     .withPassword('easycasa')
