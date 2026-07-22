@@ -17,8 +17,9 @@ import { RolesGuard } from './roles.guard';
     JwtVerifier,
     JwtAuthGuard,
     RolesGuard,
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    // useExisting (not useClass) so integration tests can overrideProvider(JwtAuthGuard).
+    { provide: APP_GUARD, useExisting: JwtAuthGuard },
+    { provide: APP_GUARD, useExisting: RolesGuard },
   ],
   exports: [JwtAuthGuard, RolesGuard, JwtVerifier, JWKS_RESOLVER],
 })

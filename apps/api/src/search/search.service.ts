@@ -32,7 +32,7 @@ export class SearchService implements OnModuleInit {
 
   /** Idempotent index settings — run on boot and in backfill. */
   async ensureSettings(): Promise<void> {
-    await this.index.updateSettings({
+    const task = await this.index.updateSettings({
       searchableAttributes: ['title', 'city', 'description'],
       filterableAttributes: [
         'categorySlug',
@@ -49,6 +49,7 @@ export class SearchService implements OnModuleInit {
       ],
       sortableAttributes: ['price', 'publishedAt'],
     });
+    await getMeili().waitForTask(task.taskUid);
   }
 
   async indexListing(doc: ListingDoc): Promise<void> {

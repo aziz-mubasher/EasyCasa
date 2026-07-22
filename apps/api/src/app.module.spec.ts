@@ -103,6 +103,19 @@ describe('AppModule composition root (Phase 32/39.1)', () => {
 
     const authProviders = Reflect.getMetadata(MODULE_METADATA.PROVIDERS, AuthModule) as unknown[];
     expect(authProviders?.length).toBeGreaterThanOrEqual(2);
+
+    const appGuardEntries = authProviders.filter(
+      (p) =>
+        typeof p === 'object' &&
+        p !== null &&
+        'provide' in p &&
+        (p as { provide: unknown }).provide?.toString().includes('APP_GUARD'),
+    );
+    expect(appGuardEntries).toHaveLength(2);
+    for (const entry of appGuardEntries) {
+      expect((entry as { useExisting?: unknown }).useExisting).toBeDefined();
+      expect((entry as { useClass?: unknown }).useClass).toBeUndefined();
+    }
   });
 
   it('OrdersModule exports OrdersService for the enquiry bridge', async () => {
