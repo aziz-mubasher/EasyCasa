@@ -16,7 +16,7 @@ export class RetentionScheduler implements OnModuleInit {
   private timer: ReturnType<typeof setInterval> | null = null;
 
   constructor(
-    private readonly retention: RetentionService,
+    @Inject(RetentionService) private readonly retention: RetentionService,
     @Inject(APP_CONFIG) private readonly config: ApiConfig,
   ) {}
 
