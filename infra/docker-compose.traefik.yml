@@ -2,6 +2,7 @@
 # Caddy is not started — see profiles on the caddy service in docker-compose.yml.
 # Auto-included by infra/deploy.sh when root_default exists.
 # Phase 6 / 32.1: security headers, AI rate limiting, www → apex 301.
+# K EC 1.3: strip spoofable x-dev-* headers at the public edge (DEV_AUTH still on in API).
 
 services:
   api:
@@ -15,6 +16,10 @@ services:
       - traefik.http.routers.easycasa-api.tls.certresolver=mytlschallenge
       - traefik.http.routers.easycasa-api.priority=100
       - traefik.http.middlewares.easycasa-api-strip.stripprefix.prefixes=/api
+      # Traefik v2/v3: empty customRequestHeaders value removes the header at the edge.
+      - traefik.http.middlewares.easycasa-strip-dev-auth.headers.customRequestHeaders.X-Dev-User=
+      - traefik.http.middlewares.easycasa-strip-dev-auth.headers.customRequestHeaders.X-Dev-Roles=
+      - traefik.http.middlewares.easycasa-strip-dev-auth.headers.customRequestHeaders.X-Dev-Email=
       - traefik.http.middlewares.easycasa-headers.headers.stsSeconds=63072000
       - traefik.http.middlewares.easycasa-headers.headers.stsIncludeSubdomains=true
       - traefik.http.middlewares.easycasa-headers.headers.contentTypeNosniff=true
@@ -22,12 +27,12 @@ services:
       - traefik.http.middlewares.easycasa-headers.headers.referrerPolicy=strict-origin-when-cross-origin
       - traefik.http.middlewares.easycasa-headers.headers.customResponseHeaders.X-XSS-Protection=0
       - traefik.http.middlewares.easycasa-headers.headers.customResponseHeaders.Permissions-Policy=geolocation=(self), camera=(), microphone=(), payment=(self)
-      - traefik.http.routers.easycasa-api.middlewares=easycasa-api-strip@docker,easycasa-headers@docker
+      - traefik.http.routers.easycasa-api.middlewares=easycasa-strip-dev-auth@docker,easycasa-api-strip@docker,easycasa-headers@docker
       - traefik.http.services.easycasa-api.loadbalancer.server.port=4000
       - traefik.http.routers.easycasa-api-http.rule=Host(`${STAGING_DOMAIN}`) && PathPrefix(`/api`)
       - traefik.http.routers.easycasa-api-http.entrypoints=web
       - traefik.http.routers.easycasa-api-http.service=easycasa-api
-      - traefik.http.routers.easycasa-api-http.middlewares=easycasa-api-strip@docker
+      - traefik.http.routers.easycasa-api-http.middlewares=easycasa-strip-dev-auth@docker,easycasa-api-strip@docker
 
   web:
     networks: [internal, traefik]
@@ -56,11 +61,12 @@ services:
       - traefik.http.routers.easycasa-web.tls=true
       - traefik.http.routers.easycasa-web.tls.certresolver=mytlschallenge
       - traefik.http.routers.easycasa-web.priority=1
-      - traefik.http.routers.easycasa-web.middlewares=easycasa-headers@docker
+      - traefik.http.routers.easycasa-web.middlewares=easycasa-strip-dev-auth@docker,easycasa-headers@docker
       - traefik.http.services.easycasa-web.loadbalancer.server.port=3000
       - traefik.http.routers.easycasa-web-http.rule=Host(`${STAGING_DOMAIN}`)
       - traefik.http.routers.easycasa-web-http.entrypoints=web
       - traefik.http.routers.easycasa-web-http.service=easycasa-web
+      - traefik.http.routers.easycasa-web-http.middlewares=easycasa-strip-dev-auth@docker
 
   admin:
     networks: [internal, traefik]
@@ -71,11 +77,12 @@ services:
       - traefik.http.routers.easycasa-admin.entrypoints=websecure
       - traefik.http.routers.easycasa-admin.tls=true
       - traefik.http.routers.easycasa-admin.tls.certresolver=mytlschallenge
-      - traefik.http.routers.easycasa-admin.middlewares=easycasa-headers@docker
+      - traefik.http.routers.easycasa-admin.middlewares=easycasa-strip-dev-auth@docker,easycasa-headers@docker
       - traefik.http.services.easycasa-admin.loadbalancer.server.port=80
       - traefik.http.routers.easycasa-admin-http.rule=Host(`admin.${STAGING_DOMAIN}`)
       - traefik.http.routers.easycasa-admin-http.entrypoints=web
       - traefik.http.routers.easycasa-admin-http.service=easycasa-admin
+      - traefik.http.routers.easycasa-admin-http.middlewares=easycasa-strip-dev-auth@docker
 
   ai:
     networks: [internal, traefik]
@@ -91,12 +98,12 @@ services:
       - traefik.http.middlewares.easycasa-ai-ratelimit.ratelimit.average=20
       - traefik.http.middlewares.easycasa-ai-ratelimit.ratelimit.burst=40
       - traefik.http.middlewares.easycasa-ai-ratelimit.ratelimit.period=1m
-      - traefik.http.routers.easycasa-ai.middlewares=easycasa-ai-strip@docker,easycasa-ai-ratelimit@docker,easycasa-headers@docker
+      - traefik.http.routers.easycasa-ai.middlewares=easycasa-strip-dev-auth@docker,easycasa-ai-strip@docker,easycasa-ai-ratelimit@docker,easycasa-headers@docker
       - traefik.http.services.easycasa-ai.loadbalancer.server.port=8000
       - traefik.http.routers.easycasa-ai-http.rule=Host(`${STAGING_DOMAIN}`) && PathPrefix(`/ai`)
       - traefik.http.routers.easycasa-ai-http.entrypoints=web
       - traefik.http.routers.easycasa-ai-http.service=easycasa-ai
-      - traefik.http.routers.easycasa-ai-http.middlewares=easycasa-ai-strip@docker
+      - traefik.http.routers.easycasa-ai-http.middlewares=easycasa-strip-dev-auth@docker,easycasa-ai-strip@docker
 
   keycloak:
     networks: [internal, traefik]
