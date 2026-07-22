@@ -10,6 +10,7 @@ on:
 permissions:
   contents: read
   security-events: write # required for CodeQL + SARIF upload
+  actions: read # required on private repos for CodeQL/Trivy SARIF upload telemetry
 
 concurrency:
   group: security-${{ github.ref }}
@@ -23,9 +24,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
+      - name: Install gitleaks
+        run: |
+          GITLEAKS_VERSION=8.24.2
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar xz -C /usr/local/bin gitleaks
+      - name: Scan repository for secrets (full history)
         env:
           GITLEAKS_CONFIG: .gitleaks.toml
+        run: gitleaks detect --source . --config .gitleaks.toml --verbose --redact
 
   deps-node:
     name: Node dependency audit
@@ -51,12 +58,17 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install pip-audit
-      - run: pip-audit -r services/ai/requirements.txt
+      - run: pip-audit -r services/ai/requirements.txt --desc on
 
   containers:
     name: Container image scan (Trivy)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
     strategy:
+      fail-fast: false
       matrix:
         image: [api, web, ai]
     steps:
@@ -64,7 +76,7 @@ jobs:
       - name: Build image
         run: docker build -f apps/${{ matrix.image }}/Dockerfile -t easycasa/${{ matrix.image }}:scan . || docker build -f services/${{ matrix.image }}/Dockerfile -t easycasa/${{ matrix.image }}:scan .
       - name: Trivy scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: easycasa/${{ matrix.image }}:scan
           format: sarif
@@ -80,7 +92,12 @@ jobs:
   codeql:
     name: CodeQL (JS/TS + Python)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
     strategy:
+      fail-fast: false
       matrix:
         language: [javascript-typescript, python]
     steps:
