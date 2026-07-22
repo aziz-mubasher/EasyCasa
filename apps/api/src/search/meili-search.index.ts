@@ -11,7 +11,7 @@ import type {
   PropertyType,
   SearchFilters,
 } from './domain/types';
-import { LISTINGS_INDEX, meili, type ListingDoc } from './meili';
+import { getMeili, LISTINGS_INDEX, type ListingDoc } from './meili';
 
 const ENERGY: ReadonlySet<string> = new Set([
   'A4',
@@ -42,7 +42,9 @@ const PROPERTY_TYPES: ReadonlySet<string> = new Set([
 @Injectable()
 export class MeiliSearchIndex implements SearchIndexPort {
   private readonly logger = new Logger(MeiliSearchIndex.name);
-  private readonly index: Index<ListingDoc> = meili.index<ListingDoc>(LISTINGS_INDEX);
+  private get index(): Index<ListingDoc> {
+    return getMeili().index<ListingDoc>(LISTINGS_INDEX);
+  }
 
   private geoFilter(bbox: BBox, filters: SearchFilters): string[] {
     const geo = `_geoBoundingBox([${bbox.maxLat}, ${bbox.maxLng}], [${bbox.minLat}, ${bbox.minLng}])`;
