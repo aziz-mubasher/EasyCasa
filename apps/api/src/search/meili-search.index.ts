@@ -98,7 +98,9 @@ export class MeiliSearchIndex implements SearchIndexPort {
       status: 'published',
       _geo: { lat: pin.lat, lng: pin.lng },
     };
-    await this.index.updateDocuments([doc], { primaryKey: 'id' });
+    const task = await this.index.updateDocuments([doc], { primaryKey: 'id' });
+    // Wait so integration/pilot seed searches see the document immediately.
+    await getMeili().waitForTask(task.taskUid);
   }
 
   async remove(listingId: string): Promise<void> {
