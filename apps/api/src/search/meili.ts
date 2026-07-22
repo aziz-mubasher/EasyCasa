@@ -1,10 +1,19 @@
 import { MeiliSearch } from 'meilisearch';
-import { apiConfig } from '../config';
+import { loadApiConfig } from '../config';
 
-export const meili = new MeiliSearch({
-  host: apiConfig.MEILI_URL,
-  apiKey: apiConfig.MEILI_MASTER_KEY,
-});
+let _client: MeiliSearch | null = null;
+
+/** Lazy Meilisearch client — avoids loadApiConfig() at module import (Phase 34 int harness). */
+export function getMeili(): MeiliSearch {
+  if (!_client) {
+    const cfg = loadApiConfig();
+    _client = new MeiliSearch({
+      host: cfg.MEILI_URL,
+      apiKey: cfg.MEILI_MASTER_KEY,
+    });
+  }
+  return _client;
+}
 
 export const LISTINGS_INDEX = 'listings';
 
