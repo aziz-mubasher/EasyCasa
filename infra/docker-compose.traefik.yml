@@ -3,6 +3,7 @@
 # Auto-included by infra/deploy.sh when root_default exists.
 # Phase 6 / 32.1: security headers, AI rate limiting, www → apex 301.
 # K EC 1.3: strip spoofable x-dev-* headers at the public edge (DEV_AUTH still on in API).
+# K EC 1.9 (F8): block public /api/metrics — Prometheus scrapes api:4000 on the Docker network.
 
 services:
   api:
@@ -29,10 +30,25 @@ services:
       - traefik.http.middlewares.easycasa-headers.headers.customResponseHeaders.Permissions-Policy=geolocation=(self), camera=(), microphone=(), payment=(self)
       - traefik.http.routers.easycasa-api.middlewares=easycasa-strip-dev-auth@docker,easycasa-api-strip@docker,easycasa-headers@docker
       - traefik.http.services.easycasa-api.loadbalancer.server.port=4000
+      # F8: higher-priority router for /api/metrics — ipWhiteList (Traefik v2) / ipAllowList (v3).
+      # sourcerange 127.0.0.1/32 only: public client IPs get 403; internal Prometheus does not use Traefik.
+      - traefik.http.middlewares.easycasa-metrics-block.ipwhitelist.sourcerange=127.0.0.1/32
+      - traefik.http.routers.easycasa-api-metrics.rule=Host(`${STAGING_DOMAIN}`) && Path(`/api/metrics`)
+      - traefik.http.routers.easycasa-api-metrics.entrypoints=websecure
+      - traefik.http.routers.easycasa-api-metrics.tls=true
+      - traefik.http.routers.easycasa-api-metrics.tls.certresolver=mytlschallenge
+      - traefik.http.routers.easycasa-api-metrics.priority=110
+      - traefik.http.routers.easycasa-api-metrics.middlewares=easycasa-metrics-block@docker
+      - traefik.http.routers.easycasa-api-metrics.service=easycasa-api
       - traefik.http.routers.easycasa-api-http.rule=Host(`${STAGING_DOMAIN}`) && PathPrefix(`/api`)
       - traefik.http.routers.easycasa-api-http.entrypoints=web
       - traefik.http.routers.easycasa-api-http.service=easycasa-api
       - traefik.http.routers.easycasa-api-http.middlewares=easycasa-strip-dev-auth@docker,easycasa-api-strip@docker
+      - traefik.http.routers.easycasa-api-metrics-http.rule=Host(`${STAGING_DOMAIN}`) && Path(`/api/metrics`)
+      - traefik.http.routers.easycasa-api-metrics-http.entrypoints=web
+      - traefik.http.routers.easycasa-api-metrics-http.priority=110
+      - traefik.http.routers.easycasa-api-metrics-http.middlewares=easycasa-metrics-block@docker
+      - traefik.http.routers.easycasa-api-metrics-http.service=easycasa-api
 
   web:
     networks: [internal, traefik]
