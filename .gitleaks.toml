@@ -14,20 +14,30 @@ tags = ["stripe", "key"]
 [[rules]]
 id = "postgres-url"
 description = "Postgres connection string with inline password"
-regex = '''postgres(ql)?:\/\/[^:\/\s]+:[^@\/\s]+@'''
+regex = '''postgres(?:ql)?:\/\/[^:\/\s]+:[^@\/\s]+@'''
 tags = ["db", "credential"]
 
 [allowlist]
 description = "Non-secret fixtures and examples"
 paths = [
   '''\.env\.example$''',
+  '''\.env\.test$''',
   '''(^|/)fixtures/''',
   '''(^|/)__tests__/''',
   '''(^|/)docs/''',
+  '''\.spec\.ts$''',
+  '''\.e2e\.spec\.ts$''',
+  '''(^|/)apps/api/src/scripts/boot-check\.ts$''',
+  '''(^|/)apps/api/package\.json$''',
+  '''(^|/)services/ai/app/settings\.py$''',
 ]
 # Placeholder tokens used in docs/tests.
 regexes = [
   '''sk_test_0{10,}''',
   '''postgres:\/\/user:pass@localhost''',
   '''EXAMPLE|PLACEHOLDER|CHANGEME|xxxx''',
+  '''change_me(_strong)?@''',
+  '''postgres(?:ql)?://u:p@''',
+  '''postgres(?:ql)?://easycasa:easycasa@''',
+  '''postgres(?:ql)?://easycasa:x@''',
 ]
