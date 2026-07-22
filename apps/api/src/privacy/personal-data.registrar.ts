@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { DsarService } from './dsar.service';
 import { ErasureService } from './erasure.service';
@@ -13,14 +13,14 @@ import { ViewingsDataSource } from './sources/viewings.data-source';
 @Injectable()
 export class PersonalDataRegistrar implements OnModuleInit {
   constructor(
-    private readonly registry: PersonalDataRegistry,
-    private readonly enquiries: EnquiriesDataSource,
-    private readonly viewings: ViewingsDataSource,
-    private readonly savedSearches: SavedSearchesDataSource,
-    private readonly profile: ProfileDataSource,
-    private readonly consent: ConsentLedgerDataSource,
-    private readonly dsar: DsarService,
-    private readonly erasure: ErasureService,
+    @Inject(PersonalDataRegistry) private readonly registry: PersonalDataRegistry,
+    @Inject(EnquiriesDataSource) private readonly enquiries: EnquiriesDataSource,
+    @Inject(ViewingsDataSource) private readonly viewings: ViewingsDataSource,
+    @Inject(SavedSearchesDataSource) private readonly savedSearches: SavedSearchesDataSource,
+    @Inject(ProfileDataSource) private readonly profile: ProfileDataSource,
+    @Inject(ConsentLedgerDataSource) private readonly consent: ConsentLedgerDataSource,
+    @Inject(DsarService) private readonly dsar: DsarService,
+    @Inject(ErasureService) private readonly erasure: ErasureService,
   ) {}
 
   onModuleInit(): void {
