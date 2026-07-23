@@ -5,7 +5,28 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import type { ListingSummary } from '@easycasa/shared';
 import { getMapStyleUrl, logMapStyleMisconfiguration } from '@/lib/map-config';
 
-export function MapView({ items }: { items: ListingSummary[] }) {
+export type MapViewProps = {
+  items: ListingSummary[];
+  /** Show zoom/rotate controls (search sidebar). Default true. */
+  showNavigation?: boolean;
+  /** Allow pan/zoom. Hero map sets false — navigation goes via link wrapper. Default true. */
+  interactive?: boolean;
+  /** Extra classes on the map container (e.g. hero fills an absolute inset frame). */
+  className?: string;
+  /** When false, skip the default rounded border wrapper (parent provides the frame). Default true. */
+  framed?: boolean;
+};
+
+const ITALY_CENTER: [number, number] = [12.5, 42.5];
+const ITALY_ZOOM = 5;
+
+export function MapView({
+  items,
+  showNavigation = true,
+  interactive = true,
+  className,
+  framed = true,
+}: MapViewProps) {
   const ref = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
@@ -20,10 +41,14 @@ export function MapView({ items }: { items: ListingSummary[] }) {
     const instance = new maplibregl.Map({
       container,
       style,
-      center: [12.5, 42.5], // Italy
-      zoom: 5,
+      center: ITALY_CENTER,
+      zoom: ITALY_ZOOM,
+      attributionControl: false,
+      interactive,
     });
-    instance.addControl(new maplibregl.NavigationControl(), 'top-right');
+    if (showNavigation) {
+      instance.addControl(new maplibregl.NavigationControl(), 'top-right');
+    }
     instance.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
     instance.on('error', (event) => {
@@ -44,7 +69,7 @@ export function MapView({ items }: { items: ListingSummary[] }) {
       instance.remove();
       map.current = null;
     };
-  }, []);
+  }, [interactive, showNavigation]);
 
   useEffect(() => {
     const m = map.current;
@@ -60,10 +85,14 @@ export function MapView({ items }: { items: ListingSummary[] }) {
     return () => markers.forEach((mk) => mk.remove());
   }, [items]);
 
+  const frameClass = framed
+    ? 'h-full w-full rounded-xl2 overflow-hidden border border-line'
+    : 'h-full w-full';
+
   if (mapError) {
     return (
       <div
-        className="h-full w-full rounded-xl2 overflow-hidden border border-line flex items-center justify-center bg-paper p-4 text-center text-sm text-muted"
+        className={`${frameClass} flex items-center justify-center bg-paper p-4 text-center text-sm text-muted`}
         role="alert"
       >
         {mapError}
@@ -71,5 +100,5 @@ export function MapView({ items }: { items: ListingSummary[] }) {
     );
   }
 
-  return <div ref={ref} className="h-full w-full rounded-xl2 overflow-hidden border border-line" />;
+  return <div ref={ref} className={[frameClass, className].filter(Boolean).join(' ')} />;
 }

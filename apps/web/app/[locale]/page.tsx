@@ -1,9 +1,21 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/Button';
+import { HeroMapLazy } from '@/components/home/HeroMapLazy';
+import { searchListings } from '@/lib/api';
+import type { ListingSummary } from '@easycasa/shared';
 
-export default function HomePage() {
-  const t = useTranslations('home');
+export default async function HomePage() {
+  const t = await getTranslations('home');
+
+  const data = await searchListings({ pageSize: 100 }).catch(() => ({
+    items: [] as ListingSummary[],
+    total: 0,
+    page: 1,
+    pageSize: 100,
+    facets: {},
+  }));
+
   return (
     <section className="mx-auto max-w-7xl px-5">
       <div className="grid lg:grid-cols-2 gap-10 items-center py-16 lg:py-24">
@@ -14,19 +26,12 @@ export default function HomePage() {
           </h1>
           <p className="mt-5 text-lg text-muted max-w-md">{t('subtitle')}</p>
           <div className="mt-8">
-            <Link href="/search"><Button>{t('cta')}</Button></Link>
+            <Link href="/search">
+              <Button>{t('cta')}</Button>
+            </Link>
           </div>
         </div>
-        {/* Signature: a cadastral-style panel — coordinate grid framing the map entry */}
-        <div className="relative aspect-square rounded-xl2 border border-line bg-[linear-gradient(var(--line)_1px,transparent_1px),linear-gradient(90deg,var(--line)_1px,transparent_1px)] bg-[size:32px_32px] overflow-hidden">
-          <div className="absolute inset-0 grid place-items-center">
-            <div className="data text-xs text-muted text-center">
-              <div className="text-4xl text-ink mb-2">🗺</div>
-              IT · 20 regioni
-            </div>
-          </div>
-          <span className="eyebrow absolute bottom-3 left-3">foglio · particella</span>
-        </div>
+        <HeroMapLazy items={data.items} ariaLabel={t('cta')} />
       </div>
     </section>
   );
