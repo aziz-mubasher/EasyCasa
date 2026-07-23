@@ -282,6 +282,142 @@ Also revert admin/web build args if images were rebuilt with OIDC (`VITE_DEV_AUT
 
 ---
 
+## Reconciling corrected realm JSON with LIVE production (K EC 1.14)
+
+**Do not run `--import-realm` against the live realm.** Production Keycloak is working today with hand-applied fixes and real users (`muba-user`, `muba-admin`, plus orphaned duplicate rows). A full realm overwrite would drop users and sessions.
+
+Keycloak behaviour to understand:
+
+- `start --import-realm` only imports on **first boot** when the realm does not exist. It does **not** overwrite an existing realm by default.
+- Admin Console **Import** with overwrite enabled is destructive — avoid on production.
+- The safe path is **additive, idempotent** updates via `kcadm.sh` against the running realm.
+
+### Prerequisites
+
+```bash
+# On the VPS (inside the keycloak container or with kcadm on PATH)
+export KC=/opt/keycloak/bin/kcadm.sh
+export KC_SERVER=https://auth.easycasaita.com
+export KC_REALM=easycasa
+
+$KC config credentials \
+  --server "$KC_SERVER" \
+  --realm master \
+  --user "$KEYCLOAK_ADMIN" \
+  --password "$KEYCLOAK_ADMIN_PASSWORD"
+```
+
+Copy the corrected scope definitions from `infra/keycloak/realm-easycasa.json` on the merged `main` branch. The commands below assume that file is available at `/opt/easycasa-ita/infra/keycloak/realm-easycasa.json`.
+
+### Step A — Create or update client scopes (idempotent)
+
+For each built-in scope, create only if missing, then upsert protocol mappers from the repo JSON:
+
+```bash
+REALM_JSON=/opt/easycasa-ita/infra/keycloak/realm-easycasa.json
+
+for SCOPE in basic profile email roles web-origins acr offline_access easycasa-audience; do
+  if ! $KC get client-scopes -r "$KC_REALM" -q "name=$SCOPE" 2>/dev/null | jq -e '.[0].id' >/dev/null; then
+    echo "Creating client scope: $SCOPE"
+    jq --arg n "$SCOPE" '.clientScopes[] | select(.name==$n)' "$REALM_JSON" \
+      | $KC create client-scopes -r "$KC_REALM" -f -
+  else
+    echo "Client scope exists: $SCOPE"
+  fi
+done
+```
+
+If `profile` or `email` already exist as **empty shells** (created manually during cutover), delete their broken mappers in Admin Console or replace them:
+
+```bash
+# List mappers on the email scope — expect "email" and "email verified" mappers
+EMAIL_SCOPE_ID=$($KC get client-scopes -r "$KC_REALM" -q 'name=email' | jq -r '.[0].id')
+$KC get "client-scopes/$EMAIL_SCOPE_ID/protocol-mappers/models" -r "$KC_REALM"
+```
+
+Add missing mappers from the repo file (example for `basic` → `sub`):
+
+```bash
+BASIC_ID=$($KC get client-scopes -r "$KC_REALM" -q 'name=basic' | jq -r '.[0].id')
+jq '.clientScopes[] | select(.name=="basic") | .protocolMappers[] | select(.name=="sub")' "$REALM_JSON" \
+  | $KC create "client-scopes/$BASIC_ID/protocol-mappers/models" -r "$KC_REALM" -f -
+```
+
+Repeat for `auth_time`, `realm roles`, `email`, `preferred_username` (profile scope), and `easycasa-api-audience` as needed. Mapper create is idempotent only if the mapper name does not already exist — check before creating.
+
+### Step B — Assign default/optional scopes to SPA clients
+
+```bash
+assign_defaults() {
+  local CLIENT_ID=$1
+  local CID=$($KC get clients -r "$KC_REALM" -q "clientId=$CLIENT_ID" | jq -r '.[0].id')
+  for SCOPE in basic profile email roles web-origins acr easycasa-audience; do
+    SID=$($KC get client-scopes -r "$KC_REALM" -q "name=$SCOPE" | jq -r '.[0].id')
+    $KC update "clients/$CID/default-client-scopes/$SID" -r "$KC_REALM" 2>/dev/null || true
+  done
+  OFFLINE_ID=$($KC get client-scopes -r "$KC_REALM" -q 'name=offline_access' | jq -r '.[0].id')
+  $KC update "clients/$CID/optional-client-scopes/$OFFLINE_ID" -r "$KC_REALM" 2>/dev/null || true
+}
+
+assign_defaults easycasa-web
+assign_defaults easycasa-admin
+assign_defaults easycasa-mobile
+assign_defaults easycasa-app
+```
+
+Remove any duplicate manual mappers on `easycasa-web-dedicated` that double-emit `sub` or `realm_access.roles` once `basic` and `roles` scopes are active.
+
+### Step C — Verification after reconciliation
+
+1. Browser login at `https://easycasaita.com` (PKCE, scope `openid profile email offline_access`).
+2. Copy access token from sessionStorage key `ec.access`.
+3. Decode JWT payload and assert all of the following:
+
+```bash
+TOKEN='<paste access token>'
+PAYLOAD=$(echo "$TOKEN" | cut -d. -f2 | tr '_-' '/+' | base64 -d 2>/dev/null | jq .)
+
+echo "$PAYLOAD" | jq '{
+  sub: .sub,
+  email: .email,
+  preferred_username: .preferred_username,
+  realm_roles: .realm_access.roles,
+  aud: .aud,
+  scope: .scope
+}'
+```
+
+**Pass criteria:**
+
+| Claim | Expected |
+|---|---|
+| `sub` | Non-empty UUID |
+| `email` | User's email address |
+| `preferred_username` | Keycloak username |
+| `realm_access.roles` | Includes product role (`buyer` or `admin`) |
+| `aud` | Includes `easycasa-api` |
+| `scope` | Includes `openid`, `profile`, `email`, `offline_access` |
+
+4. API check:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" https://easycasaita.com/api/me | jq .
+# expect 200 — NOT {"error":"token missing subject"}
+```
+
+5. Consent stability (duplicate-user regression):
+
+```bash
+# Two authenticated calls with the same token must resolve to the same internal user id
+curl -s -H "Authorization: Bearer $TOKEN" https://easycasaita.com/api/me | jq -r .id > /tmp/u1
+curl -s -H "Authorization: Bearer $TOKEN" https://easycasaita.com/api/me | jq -r .id > /tmp/u2
+diff /tmp/u1 /tmp/u2 && echo "same user — OK"
+```
+
+**Can this be done without user loss?** Yes — these steps add scopes/mappers and re-link clients; they do not delete the user store. Orphaned duplicate user rows from the pre-fix bug still need manual cleanup (deferred).
+
+---
+
 ## Related docs
 
 - `.env.oidc.example` — exact env contract
