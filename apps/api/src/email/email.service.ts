@@ -34,4 +34,14 @@ export class EmailService {
   savedSearchAlert(to: string, p: t.SavedSearchAlertParams, locale?: t.Locale) {
     return this.dispatch(to, t.savedSearchAlert(p, locale));
   }
+
+  /** Diagnostic CLI — exercises the same port/enquiry dispatch path as production mail. */
+  sendDiagnosticTest(to: string): Promise<EmailResult> {
+    const now = new Date().toISOString();
+    return this.dispatch(to, {
+      subject: 'EasyCasa email diagnostic test',
+      text: `EasyCasa email diagnostic test sent at ${now}. If you received this, SMTP transport is working.`,
+      html: `<p>EasyCasa email diagnostic test sent at <strong>${now}</strong>.</p><p>If you received this, SMTP transport is working.</p>`,
+    });
+  }
 }

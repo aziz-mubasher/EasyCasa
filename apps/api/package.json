@@ -12,7 +12,8 @@
     "boot:check": "node dist/scripts/boot-check.js",
     "search:backfill": "tsx src/search/backfill.ts",
     "pilot:seed": "node dist/pilot/seed/run-seed.js",
-    "pilot:smoke": "node dist/pilot/smoke/run-smoke.js"
+    "pilot:smoke": "node dist/pilot/smoke/run-smoke.js",
+    "email:diagnostic": "node dist/email/diagnostic/run-email-diagnostic.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.670.0",

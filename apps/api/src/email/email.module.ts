@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 
 import type { ApiConfig } from '../config';
 import { APP_CONFIG } from '../config/config.module';
+import { EmailStartupService } from './email-startup.service';
 import { EMAIL_PORT, type EmailPort } from './email-port';
 import { EmailService } from './email.service';
 import { HttpEmailProvider } from './providers/http-email.provider';
@@ -40,6 +41,7 @@ export function selectEmailProvider(config: ApiConfig): EmailPort {
     },
     { provide: EMAIL_PORT, useExisting: EMAIL_OUTBOX },
     EmailService,
+    EmailStartupService,
   ],
   exports: [EmailService, EMAIL_OUTBOX],
 })
