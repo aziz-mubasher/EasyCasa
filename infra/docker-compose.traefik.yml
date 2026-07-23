@@ -18,16 +18,17 @@ services:
       - traefik.http.routers.easycasa-api.priority=100
       - traefik.http.middlewares.easycasa-api-strip.stripprefix.prefixes=/api
       # Traefik v2/v3: empty customRequestHeaders value removes the header at the edge.
-      - traefik.http.middlewares.easycasa-strip-dev-auth.headers.customRequestHeaders.X-Dev-User=
-      - traefik.http.middlewares.easycasa-strip-dev-auth.headers.customRequestHeaders.X-Dev-Roles=
-      - traefik.http.middlewares.easycasa-strip-dev-auth.headers.customRequestHeaders.X-Dev-Email=
+      # Quoted so Hostinger Docker Manager's YAML editor accepts trailing "=" / special chars.
+      - "traefik.http.middlewares.easycasa-strip-dev-auth.headers.customRequestHeaders.X-Dev-User="
+      - "traefik.http.middlewares.easycasa-strip-dev-auth.headers.customRequestHeaders.X-Dev-Roles="
+      - "traefik.http.middlewares.easycasa-strip-dev-auth.headers.customRequestHeaders.X-Dev-Email="
       - traefik.http.middlewares.easycasa-headers.headers.stsSeconds=63072000
       - traefik.http.middlewares.easycasa-headers.headers.stsIncludeSubdomains=true
       - traefik.http.middlewares.easycasa-headers.headers.contentTypeNosniff=true
       - traefik.http.middlewares.easycasa-headers.headers.customFrameOptionsValue=SAMEORIGIN
       - traefik.http.middlewares.easycasa-headers.headers.referrerPolicy=strict-origin-when-cross-origin
       - traefik.http.middlewares.easycasa-headers.headers.customResponseHeaders.X-XSS-Protection=0
-      - traefik.http.middlewares.easycasa-headers.headers.customResponseHeaders.Permissions-Policy=geolocation=(self), camera=(), microphone=(), payment=(self)
+      - "traefik.http.middlewares.easycasa-headers.headers.customResponseHeaders.Permissions-Policy=geolocation=(self), camera=(), microphone=(), payment=(self)"
       - traefik.http.routers.easycasa-api.middlewares=easycasa-strip-dev-auth@docker,easycasa-api-strip@docker,easycasa-headers@docker
       - traefik.http.services.easycasa-api.loadbalancer.server.port=4000
       # F8: higher-priority router for /api/metrics — ipWhiteList (Traefik v2) / ipAllowList (v3).
@@ -56,8 +57,8 @@ services:
       - traefik.enable=true
       - traefik.docker.network=root_default
       # www → apex permanent redirect (Phase 32.1 / cutover SEO)
-      - traefik.http.middlewares.easycasa-www-redirect.redirectregex.regex=^https?://www\.(.*)
-      - traefik.http.middlewares.easycasa-www-redirect.redirectregex.replacement=https://$${1}
+      - "traefik.http.middlewares.easycasa-www-redirect.redirectregex.regex=^https?://www\\.(.*)"
+      - "traefik.http.middlewares.easycasa-www-redirect.redirectregex.replacement=https://$${1}"
       - traefik.http.middlewares.easycasa-www-redirect.redirectregex.permanent=true
       - traefik.http.routers.easycasa-www.rule=Host(`www.${STAGING_DOMAIN}`)
       - traefik.http.routers.easycasa-www.entrypoints=websecure
