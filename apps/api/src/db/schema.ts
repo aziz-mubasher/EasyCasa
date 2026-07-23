@@ -38,6 +38,14 @@ export const regions = pgTable('regions', {
   slug: text('slug').notNull(),
 });
 
+/** Official Italian province (sigla = slug, e.g. BS = Brescia). */
+export const provinces = pgTable('provinces', {
+  slug: text('slug').primaryKey(),
+  name: text('name').notNull(),
+  regionSlug: text('region_slug').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const listings = pgTable('listings', {
   id: uuid('id').primaryKey().defaultRandom(),
   wpPostId: bigint('wp_post_id', { mode: 'number' }),
@@ -555,7 +563,7 @@ export const consentRecords = pgTable('consent_records', {
 });
 
 export const schema = {
-  users, categories, regions, listings, media, favorites, savedSearches, alertLogs,
+  users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
   enquiries,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
   devices, partnerProfiles, leads, payouts,

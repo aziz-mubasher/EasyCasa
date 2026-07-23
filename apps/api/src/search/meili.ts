@@ -23,6 +23,7 @@ export interface ListingDoc {
   title: string;
   description: string | null;
   city: string | null;
+  provinceSlug: string | null;
   regionSlug: string | null;
   categorySlug: string | null;
   transactionType: 'sale' | 'rent' | null;

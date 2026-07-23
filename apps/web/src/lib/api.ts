@@ -46,9 +46,31 @@ export async function listRegions(): Promise<Array<{ slug: string; name: string 
   const res = await fetch(`${BASE}/regions`, { next: { revalidate: 3600 } });
   return res.ok ? (res.json() as Promise<Array<{ slug: string; name: string }>>) : [];
 }
+export async function listProvinces(regionSlug?: string): Promise<Array<{ slug: string; name: string; regionSlug: string }>> {
+  const qs = regionSlug ? `?regionSlug=${encodeURIComponent(regionSlug)}` : '';
+  const res = await fetch(`${BASE}/provinces${qs}`, { next: { revalidate: 3600 } });
+  return res.ok ? (res.json() as Promise<Array<{ slug: string; name: string; regionSlug: string }>>) : [];
+}
+
 export async function listCategories(): Promise<Array<{ slug: string; key: string; name: string }>> {
   const res = await fetch(`${BASE}/categories`, { next: { revalidate: 3600 } });
   return res.ok ? (res.json() as Promise<Array<{ slug: string; key: string; name: string }>>) : [];
+}
+
+export interface LocationSuggestion {
+  kind: 'comune' | 'provincia' | 'regione';
+  label: string;
+  slug: string;
+  provinceSlug?: string;
+  regionSlug?: string;
+  hierarchy: string;
+}
+
+export async function suggestLocations(q: string, signal?: AbortSignal): Promise<LocationSuggestion[]> {
+  if (q.trim().length < 2) return [];
+  const res = await fetch(`${BASE}/search/locations?q=${encodeURIComponent(q)}`, { signal, cache: 'no-store' });
+  if (!res.ok) return [];
+  return res.json() as Promise<LocationSuggestion[]>;
 }
 
 export interface CatalogItemRow {

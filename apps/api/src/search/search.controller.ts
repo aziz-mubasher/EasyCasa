@@ -5,17 +5,24 @@ import { IsIn, IsInt, IsNumber, IsOptional, IsString, Min } from 'class-validato
 import { Public } from '../auth/public.decorator';
 import { AreaSearchDto, BoundsSearchDto } from './dto';
 import type { SearchFilters } from './domain/types';
+import { LocationSuggestService } from './location-suggest.service';
 import { MapSearchService } from './map-search.service';
 import { SearchService } from './search.service';
 
 class SearchQueryDto {
   @IsOptional() @IsString() q?: string;
+  @IsOptional() @IsString() city?: string;
   @IsOptional() @IsString() categorySlug?: string;
   @IsOptional() @IsString() regionSlug?: string;
+  @IsOptional() @IsString() provinceSlug?: string;
   @IsOptional() @IsIn(['sale', 'rent']) transactionType?: 'sale' | 'rent';
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) minPrice?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) maxPrice?: number;
   @IsOptional() @Type(() => Number) @IsInt() @Min(0) minBedrooms?: number;
+  @IsOptional() @Type(() => Number) @IsInt() @Min(0) minBathrooms?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) minSizeSqm?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) maxSizeSqm?: number;
+  @IsOptional() @IsString() energyClass?: string;
   @IsOptional()
   @IsIn(['price:asc', 'price:desc', 'publishedAt:desc'])
   sort?: 'price:asc' | 'price:desc' | 'publishedAt:desc';
@@ -28,6 +35,7 @@ export class SearchController {
   constructor(
     private readonly search: SearchService,
     private readonly mapSearch: MapSearchService,
+    private readonly locationSuggest: LocationSuggestService,
   ) {}
 
   /** Text / facet search (Phase 7). */
@@ -35,6 +43,13 @@ export class SearchController {
   @Get()
   run(@Query() q: SearchQueryDto) {
     return this.search.search(q);
+  }
+
+  /** Location typeahead for comune / provincia / regione hierarchy. */
+  @Public()
+  @Get('locations')
+  suggest(@Query('q') q?: string) {
+    return this.locationSuggest.suggest(q ?? '');
   }
 
   /** Viewport (bounding-box) search — the default map query. */

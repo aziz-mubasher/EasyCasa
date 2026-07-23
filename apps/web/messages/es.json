@@ -20,18 +20,37 @@
   "search": {
     "title": "Buscar inmuebles",
     "resultsCount": "{count} inmuebles",
+    "searchPlaceholder": "Municipio, provincia o región…",
+    "searchButton": "Buscar",
+    "removeFilter": "Quitar filtro {filter}",
+    "emptyHint": "Prueba ampliar el precio o quitar un filtro.",
     "filters": {
       "all": "Todos",
       "sale": "Venta",
       "rent": "Alquiler",
       "price": "Precio",
+      "priceFrom": "Desde €",
+      "priceTo": "Hasta €",
       "bedrooms": "Habitaciones",
+      "bedroomsMin": "Mín. habitaciones",
+      "bathrooms": "Baños",
+      "bathroomsMin": "Mín. baños",
+      "size": "Superficie",
+      "sizeFrom": "Desde m²",
+      "sizeTo": "Hasta m²",
+      "energy": "Clase energética",
       "category": "Tipo",
       "region": "Región",
+      "province": "Provincia",
+      "sort": "Ordenar",
+      "sort_publishedAt:desc": "Más recientes",
+      "sort_price:asc": "Precio ↑",
+      "sort_price:desc": "Precio ↓",
       "apply": "Aplicar",
-      "clear": "Limpiar"
+      "clear": "Limpiar",
+      "clearAll": "Limpiar filtros"
     },
-    "empty": "No se encontraron inmuebles. Amplía la búsqueda o mueve el mapa."
+    "empty": "No se encontraron inmuebles. Amplía la búsqueda o quita un filtro."
   },
   "listing": {
     "perMonth": "/mes",

@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/Button';
 import { HeroMapLazy } from '@/components/home/HeroMapLazy';
+import { HeroSearchBar } from '@/components/home/HeroSearchBar';
 import { searchListings } from '@/lib/api';
 import type { ListingSummary } from '@easycasa/shared';
 
@@ -25,9 +26,10 @@ export default async function HomePage() {
             {t('title')}
           </h1>
           <p className="mt-5 text-lg text-muted max-w-md">{t('subtitle')}</p>
-          <div className="mt-8">
+          <div className="mt-8 space-y-4 max-w-lg">
+            <HeroSearchBar />
             <Link href="/search">
-              <Button>{t('cta')}</Button>
+              <Button variant="outline">{t('cta')}</Button>
             </Link>
           </div>
         </div>
