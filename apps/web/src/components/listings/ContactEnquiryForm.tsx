@@ -8,12 +8,12 @@ import { RequireSignInLink } from '@/components/AuthControls';
 import { Button } from '@/components/ui/Button';
 import { Field, Input } from '@/components/ui/Field';
 
-const POLICY_VERSION = 'v1-draft';
-
 type Props = {
   listingId: string;
   listingTitle: string;
 };
+
+type ConsentPurpose = 'privacy_policy' | 'mediation_disclosure';
 
 /**
  * Contact-agent CTA — Phase 37/38. Records required consents then posts enquiry.
@@ -26,14 +26,23 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
   const [email, setEmail] = useState('');
   const [privacyOk, setPrivacyOk] = useState(false);
   const [mediationOk, setMediationOk] = useState(false);
+  const [policyVersion, setPolicyVersion] = useState<string | null>(null);
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle');
   const [error, setError] = useState<string | null>(null);
 
-  async function recordConsent(purpose: 'privacy_policy' | 'mediation_disclosure') {
+  async function fetchPolicyVersion(): Promise<string> {
+    const res = await authedFetch(apiUrl('/me/privacy/policy-version'));
+    if (!res.ok) throw new Error(`Versione policy non disponibile (${res.status})`);
+    const body = (await res.json()) as { policyVersion?: string };
+    if (!body.policyVersion) throw new Error('Versione policy non disponibile');
+    return body.policyVersion;
+  }
+
+  async function recordConsent(purpose: ConsentPurpose, version: string) {
     const res = await authedFetch(apiUrl('/me/privacy/consents'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ purpose, granted: true, policyVersion: POLICY_VERSION }),
+      body: JSON.stringify({ purpose, granted: true, policyVersion: version }),
     });
     if (!res.ok) throw new Error(`Consenso non registrato (${res.status})`);
   }
@@ -53,8 +62,16 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
     setStatus('sending');
     setError(null);
     try {
-      await recordConsent('privacy_policy');
-      await recordConsent('mediation_disclosure');
+      const token = await getAccessToken();
+      if (!token) {
+        throw new Error('Sessione scaduta. Accedi di nuovo.');
+      }
+
+      const version = policyVersion ?? (await fetchPolicyVersion());
+      if (!policyVersion) setPolicyVersion(version);
+
+      await recordConsent('privacy_policy', version);
+      await recordConsent('mediation_disclosure', version);
 
       const res = await authedFetch(apiUrl(`/listings/${encodeURIComponent(listingId)}/enquiries`), {
         method: 'POST',
@@ -95,6 +112,8 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
     );
   }
 
+  const versionLabel = policyVersion ?? '…';
+
   return (
     <form onSubmit={onSubmit} className="mt-8 max-w-md space-y-4">
       <Field label="La tua email">
@@ -130,7 +149,7 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
           <a className="underline" href="/it/legal/privacy" target="_blank" rel="noreferrer">
             informativa privacy
           </a>{' '}
-          (versione {POLICY_VERSION}).
+          (versione {versionLabel}).
         </span>
       </label>
 

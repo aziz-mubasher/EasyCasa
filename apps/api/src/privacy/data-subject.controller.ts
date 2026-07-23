@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
-import { IsBoolean, IsIn, IsString, MinLength } from 'class-validator';
 import { createHash } from 'node:crypto';
 import type { Request } from 'express';
 
@@ -11,16 +10,9 @@ import {
   CURRENT_POLICY_VERSION,
   type ConsentPurpose,
 } from './consent.service';
+import { RecordConsentDto } from './dto/record-consent.dto';
 import { DsarService } from './dsar.service';
 import { ErasureService } from './erasure.service';
-
-const PURPOSES = ['privacy_policy', 'mediation_disclosure', 'marketing'] as const;
-
-class RecordConsentDto {
-  @IsIn(PURPOSES) purpose!: (typeof PURPOSES)[number];
-  @IsBoolean() granted!: boolean;
-  @IsString() @MinLength(1) policyVersion!: string;
-}
 
 /**
  * Data-subject rights endpoints (GDPR Art. 7, 15, 17) — Phase 38.
