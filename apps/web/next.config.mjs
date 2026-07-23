@@ -7,6 +7,9 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@easycasa/shared'],
   images: { remotePatterns: [{ protocol: 'https', hostname: '**' }, { protocol: 'http', hostname: '**' }] },
+  experimental: {
+    instrumentationHook: true,
+  },
 };
 
 export default withNextIntl(nextConfig);
