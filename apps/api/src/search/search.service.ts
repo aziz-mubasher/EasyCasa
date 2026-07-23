@@ -1,5 +1,6 @@
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { getMeili, LISTINGS_INDEX, type ListingDoc } from './meili';
+import { buildTextSearchFilters } from './meili-filter';
 
 export interface SearchParams {
   q?: string;
@@ -97,19 +98,20 @@ export class SearchService implements OnModuleInit {
       [minSizeSqm, maxSizeSqm] = [maxSizeSqm, minSizeSqm];
     }
 
-    const filters: string[] = ['status = "published"'];
-    if (p.categorySlug) filters.push(`categorySlug = "${p.categorySlug}"`);
-    if (p.city) filters.push(`city = "${p.city.replace(/"/g, '\\"')}"`);
-    if (p.regionSlug) filters.push(`regionSlug = "${p.regionSlug}"`);
-    if (p.provinceSlug) filters.push(`provinceSlug = "${p.provinceSlug.toUpperCase()}"`);
-    if (p.transactionType) filters.push(`transactionType = "${p.transactionType}"`);
-    if (minPrice != null) filters.push(`price >= ${minPrice}`);
-    if (maxPrice != null) filters.push(`price <= ${maxPrice}`);
-    if (p.minBedrooms != null) filters.push(`bedrooms >= ${p.minBedrooms}`);
-    if (p.minBathrooms != null) filters.push(`bathrooms >= ${p.minBathrooms}`);
-    if (minSizeSqm != null) filters.push(`sizeSqm >= ${minSizeSqm}`);
-    if (maxSizeSqm != null) filters.push(`sizeSqm <= ${maxSizeSqm}`);
-    if (p.energyClass) filters.push(`energyClass = "${p.energyClass.toUpperCase()}"`);
+    const filters = buildTextSearchFilters({
+      categorySlug: p.categorySlug,
+      city: p.city,
+      regionSlug: p.regionSlug,
+      provinceSlug: p.provinceSlug,
+      transactionType: p.transactionType,
+      minPrice,
+      maxPrice,
+      minBedrooms: p.minBedrooms,
+      minBathrooms: p.minBathrooms,
+      minSizeSqm,
+      maxSizeSqm,
+      energyClass: p.energyClass,
+    });
 
     const pageSize = p.pageSize ?? 24;
     const page = p.page ?? 1;
