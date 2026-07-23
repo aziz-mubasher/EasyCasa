@@ -17,7 +17,6 @@ apps/api/src/auth/jwt-verifier.spec.ts   # 8 real-crypto tests
 apps/api/src/auth/auth.e2e.spec.ts        # 6 HTTP-pipeline tests
 apps/api/src/auth/realm.spec.ts           # realm export structure
 infra/keycloak/realm-easycasa.json    # production realm export (web/mobile/admin PKCE)
-infra/keycloak/easycasa-realm.json    # alias kept for local imports
 infra/docker-compose.keycloak.yml     # local Keycloak + realm import
 infra/docker-compose.yml              # VPS Keycloak service (Postgres-backed)
 infra/docker-compose.traefik.yml      # auth.${STAGING_DOMAIN} → Keycloak

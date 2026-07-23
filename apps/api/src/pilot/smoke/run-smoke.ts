@@ -1,8 +1,19 @@
 /**
  * CLI: run the seeker smoke against a deployed instance — Phase 40.
+ *
  *   BASE_URL=https://easycasaita.com/api \
- *   [SMOKE_BEARER=<token>] [SMOKE_TARGET=live|contract] \
+ *   SMOKE_BEARER=<access_token> \
+ *   [SMOKE_TARGET=live|contract] \
  *   node dist/pilot/smoke/run-smoke.js
+ *
+ * Obtain SMOKE_BEARER after OIDC cutover (see docs/runbooks/oidc-cutover.md § Smoke token):
+ *   1. Sign in at https://easycasaita.com as a seeker test user (PKCE).
+ *   2. DevTools → Application → sessionStorage → `ec.access` (copy value).
+ *   — or decode a fresh token from the Network tab after any authenticated /api call.
+ *
+ * Local-only fallback when DEV_AUTH=true (blocked from the public internet by Traefik):
+ *   SMOKE_DEV_USER=smoke-seeker SMOKE_DEV_ROLES=buyer
+ *
  * Exits non-zero on any failed step (CI-friendly).
  */
 import { runSeekerSmoke } from './pilot-smoke';
