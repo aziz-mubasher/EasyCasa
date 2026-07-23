@@ -58,9 +58,9 @@ gate('POST /listings/:id/enquiries consent gate (integration)', () => {
       .set(seeker)
       .send(enquiryBody);
     expect(res.status).toBe(403);
-    expect(res.body.message).toMatch(/missing required consent/);
-    expect(res.body.message).toMatch(/privacy_policy/);
-    expect(res.body.message).toMatch(/mediation_disclosure/);
+    expect(res.body.error).toMatch(/missing required consent/);
+    expect(res.body.error).toMatch(/privacy_policy/);
+    expect(res.body.error).toMatch(/mediation_disclosure/);
   });
 
   it('201s after both consents are recorded for the same principal', async () => {
