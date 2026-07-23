@@ -2,10 +2,11 @@ import React, { createContext, useContext, useMemo } from 'react';
 
 import { EasyCasaAdminApi } from '@easycasa/api-client';
 
+import { useAuth } from './auth/AuthProvider';
+
 const ApiContext = createContext<EasyCasaAdminApi | null>(null);
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://easycasaita.com/api';
-const DEV_AUTH = import.meta.env.VITE_DEV_AUTH === 'true';
 
 function createDevFetch(): typeof fetch {
   return (input, init) => {
@@ -17,21 +18,15 @@ function createDevFetch(): typeof fetch {
   };
 }
 
-export function ApiProvider({
-  children,
-  getAccessToken,
-}: {
-  children: React.ReactNode;
-  getAccessToken?: () => Promise<string | null> | string | null;
-}) {
+export function ApiProvider({ children }: { children: React.ReactNode }) {
+  const { getAccessToken, usesDevAuth } = useAuth();
   const api = useMemo(() => {
     const opts: ConstructorParameters<typeof EasyCasaAdminApi>[0] = {
       baseUrl: API_BASE_URL,
-      ...(getAccessToken ? { getAccessToken } : {}),
-      ...(DEV_AUTH ? { fetchFn: createDevFetch() } : {}),
+      ...(usesDevAuth ? { fetchFn: createDevFetch() } : { getAccessToken }),
     };
     return new EasyCasaAdminApi(opts);
-  }, [getAccessToken]);
+  }, [getAccessToken, usesDevAuth]);
   return <ApiContext.Provider value={api}>{children}</ApiContext.Provider>;
 }
 
