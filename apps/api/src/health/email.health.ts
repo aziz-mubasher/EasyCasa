@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 
-import { apiConfig } from '../config';
+import type { ApiConfig } from '../config';
+import { InjectConfig } from '../config/inject-config.decorator';
 import { emailHealthDetail } from '../email/email-config';
 import type { HealthIndicator, IndicatorResult } from './health-indicator';
 import { HealthIndicatorRegistry } from './health-indicator.registry';
@@ -16,7 +17,10 @@ import { HealthIndicatorRegistry } from './health-indicator.registry';
 export class EmailHealthIndicator implements HealthIndicator, OnModuleInit {
   readonly name = 'email';
 
-  constructor(private readonly registry: HealthIndicatorRegistry) {}
+  constructor(
+    private readonly registry: HealthIndicatorRegistry,
+    @InjectConfig() private readonly config: ApiConfig,
+  ) {}
 
   onModuleInit(): void {
     this.registry.register(this);
@@ -26,7 +30,7 @@ export class EmailHealthIndicator implements HealthIndicator, OnModuleInit {
     return {
       name: this.name,
       up: true,
-      detail: emailHealthDetail(apiConfig),
+      detail: emailHealthDetail(this.config),
     };
   }
 }
