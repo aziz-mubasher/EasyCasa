@@ -37,6 +37,7 @@ import { PilotModule } from './pilot/pilot.module';
 import { PrivacyModule } from './privacy/privacy.module';
 import { ObservabilityModule } from './observability/observability.module';
 import { HealthIndicatorRegistry } from './health/health-indicator.registry';
+import { EmailHealthIndicator } from './health/email.health';
 import { MeiliHealthIndicator } from './health/meili.health';
 import { PostgresHealthIndicator } from './health/postgres.health';
 import { ReadinessController } from './health/readiness.controller';
@@ -100,6 +101,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     PostgresHealthIndicator,
     MeiliHealthIndicator,
     RedisHealthIndicator,
+    EmailHealthIndicator,
   ],
 })
 export class AppModule {}
