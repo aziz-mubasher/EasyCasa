@@ -7,6 +7,8 @@ import { getMapStyleUrl, logMapStyleMisconfiguration } from '@/lib/map-config';
 
 export type MapViewProps = {
   items: ListingSummary[];
+  highlightedId?: string | null;
+  onHighlight?: (id: string | null) => void;
   /** Show zoom/rotate controls (search sidebar). Default true. */
   showNavigation?: boolean;
   /** Allow pan/zoom. Hero map sets false — navigation goes via link wrapper. Default true. */
@@ -22,6 +24,8 @@ const ITALY_ZOOM = 5;
 
 export function MapView({
   items,
+  highlightedId,
+  onHighlight,
   showNavigation = true,
   interactive = true,
   className,
@@ -29,6 +33,7 @@ export function MapView({
 }: MapViewProps) {
   const ref = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
+  const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
   const [mapError, setMapError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -57,7 +62,6 @@ export function MapView({
       setMapError('Basemap failed to load — check NEXT_PUBLIC_MAP_STYLE and rebuild the web image.');
     });
 
-    // MapLibre skips tile requests when the container has zero size at init (common after SSR/hydration).
     const resize = () => instance.resize();
     const ro = new ResizeObserver(resize);
     ro.observe(container);
@@ -74,16 +78,26 @@ export function MapView({
   useEffect(() => {
     const m = map.current;
     if (!m) return;
-    const markers: maplibregl.Marker[] = [];
+
+    for (const mk of markersRef.current.values()) mk.remove();
+    markersRef.current.clear();
+
     for (const l of items) {
       if (l.latitude == null || l.longitude == null) continue;
       const el = document.createElement('div');
-      el.className = 'rounded-full bg-azure text-paper data text-[10px] px-2 py-1 shadow';
+      const active = highlightedId === l.id;
+      el.className = active
+        ? 'rounded-full bg-ink text-paper data text-[10px] px-2 py-1 shadow ring-2 ring-azure scale-110 transition'
+        : 'rounded-full bg-azure text-paper data text-[10px] px-2 py-1 shadow transition';
       el.textContent = l.price != null ? `€${Math.round(l.price / 1000)}k` : '·';
-      markers.push(new maplibregl.Marker({ element: el }).setLngLat([l.longitude, l.latitude]).addTo(m));
+      if (onHighlight) {
+        el.addEventListener('mouseenter', () => onHighlight(l.id));
+        el.addEventListener('mouseleave', () => onHighlight(null));
+      }
+      const marker = new maplibregl.Marker({ element: el }).setLngLat([l.longitude, l.latitude]).addTo(m);
+      markersRef.current.set(l.id, marker);
     }
-    return () => markers.forEach((mk) => mk.remove());
-  }, [items]);
+  }, [items, highlightedId, onHighlight]);
 
   const frameClass = framed
     ? 'h-full w-full rounded-xl2 overflow-hidden border border-line'

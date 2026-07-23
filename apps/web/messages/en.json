@@ -20,18 +20,37 @@
   "search": {
     "title": "Search properties",
     "resultsCount": "{count} properties",
+    "searchPlaceholder": "City, province or region…",
+    "searchButton": "Search",
+    "removeFilter": "Remove filter {filter}",
+    "emptyHint": "Try widening the price range or removing a filter.",
     "filters": {
       "all": "All",
       "sale": "For sale",
       "rent": "For rent",
       "price": "Price",
+      "priceFrom": "From €",
+      "priceTo": "To €",
       "bedrooms": "Beds",
+      "bedroomsMin": "Min. beds",
+      "bathrooms": "Baths",
+      "bathroomsMin": "Min. baths",
+      "size": "Area",
+      "sizeFrom": "From m²",
+      "sizeTo": "To m²",
+      "energy": "Energy class",
       "category": "Type",
       "region": "Region",
+      "province": "Province",
+      "sort": "Sort",
+      "sort_publishedAt:desc": "Most recent",
+      "sort_price:asc": "Price ↑",
+      "sort_price:desc": "Price ↓",
       "apply": "Apply",
-      "clear": "Clear"
+      "clear": "Clear",
+      "clearAll": "Clear all filters"
     },
-    "empty": "No properties found. Widen your search or move the map."
+    "empty": "No properties found. Widen your search or remove a filter."
   },
   "listing": {
     "perMonth": "/mo",

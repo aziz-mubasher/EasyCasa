@@ -1,18 +1,33 @@
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { getMeili, LISTINGS_INDEX, type ListingDoc } from './meili';
+import { buildTextSearchFilters } from './meili-filter';
 
 export interface SearchParams {
   q?: string;
+  city?: string;
   categorySlug?: string;
   regionSlug?: string;
+  provinceSlug?: string;
   transactionType?: 'sale' | 'rent';
   minPrice?: number;
   maxPrice?: number;
   minBedrooms?: number;
+  minBathrooms?: number;
+  minSizeSqm?: number;
+  maxSizeSqm?: number;
+  energyClass?: string;
   sort?: 'price:asc' | 'price:desc' | 'publishedAt:desc';
   page?: number;
   pageSize?: number;
 }
+
+const FACET_FIELDS = [
+  'categorySlug',
+  'regionSlug',
+  'provinceSlug',
+  'transactionType',
+  'energyClass',
+] as const;
 
 @Injectable()
 export class SearchService implements OnModuleInit {
@@ -37,9 +52,12 @@ export class SearchService implements OnModuleInit {
       filterableAttributes: [
         'categorySlug',
         'regionSlug',
+        'provinceSlug',
+        'city',
         'transactionType',
         'price',
         'bedrooms',
+        'bathrooms',
         'rooms',
         'sizeSqm',
         'status',
@@ -66,14 +84,34 @@ export class SearchService implements OnModuleInit {
     await this.index.deleteDocument(id);
   }
 
+  /** Swap min/max when user enters inverted range instead of returning zero results. */
+  normalizePriceRange(min?: number, max?: number): { min?: number; max?: number } {
+    if (min != null && max != null && min > max) return { min: max, max: min };
+    return { min, max };
+  }
+
   async search(p: SearchParams) {
-    const filters: string[] = ['status = "published"'];
-    if (p.categorySlug) filters.push(`categorySlug = "${p.categorySlug}"`);
-    if (p.regionSlug) filters.push(`regionSlug = "${p.regionSlug}"`);
-    if (p.transactionType) filters.push(`transactionType = "${p.transactionType}"`);
-    if (p.minPrice != null) filters.push(`price >= ${p.minPrice}`);
-    if (p.maxPrice != null) filters.push(`price <= ${p.maxPrice}`);
-    if (p.minBedrooms != null) filters.push(`bedrooms >= ${p.minBedrooms}`);
+    const { min: minPrice, max: maxPrice } = this.normalizePriceRange(p.minPrice, p.maxPrice);
+    let minSizeSqm = p.minSizeSqm;
+    let maxSizeSqm = p.maxSizeSqm;
+    if (minSizeSqm != null && maxSizeSqm != null && minSizeSqm > maxSizeSqm) {
+      [minSizeSqm, maxSizeSqm] = [maxSizeSqm, minSizeSqm];
+    }
+
+    const filters = buildTextSearchFilters({
+      categorySlug: p.categorySlug,
+      city: p.city,
+      regionSlug: p.regionSlug,
+      provinceSlug: p.provinceSlug,
+      transactionType: p.transactionType,
+      minPrice,
+      maxPrice,
+      minBedrooms: p.minBedrooms,
+      minBathrooms: p.minBathrooms,
+      minSizeSqm,
+      maxSizeSqm,
+      energyClass: p.energyClass,
+    });
 
     const pageSize = p.pageSize ?? 24;
     const page = p.page ?? 1;
@@ -83,7 +121,7 @@ export class SearchService implements OnModuleInit {
       sort: p.sort ? [p.sort] : ['publishedAt:desc'],
       limit: pageSize,
       offset: (page - 1) * pageSize,
-      facets: ['categorySlug', 'regionSlug', 'transactionType'],
+      facets: [...FACET_FIELDS],
     });
 
     return {

@@ -148,6 +148,7 @@ export class ListingsService {
         title: published.title,
         description: published.description,
         city: published.city,
+        provinceSlug: published.province ? published.province.toUpperCase() : null,
         regionSlug: null,
         categorySlug: null,
         transactionType: published.transactionType,

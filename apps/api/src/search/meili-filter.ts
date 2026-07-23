@@ -1,0 +1,54 @@
+/** Escape a value embedded in a Meilisearch double-quoted string literal. */
+export function escapeMeiliString(value: string): string {
+  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
+export function meiliEqFilter(field: string, value: string): string {
+  return `${field} = "${escapeMeiliString(value)}"`;
+}
+
+export function meiliNumericFilter(
+  field: string,
+  op: '>=' | '<=',
+  value: number,
+): string {
+  if (!Number.isFinite(value)) {
+    throw new Error(`Invalid numeric filter value for ${field}`);
+  }
+  return `${field} ${op} ${value}`;
+}
+
+export interface TextSearchFilterParams {
+  categorySlug?: string;
+  city?: string;
+  regionSlug?: string;
+  provinceSlug?: string;
+  transactionType?: 'sale' | 'rent';
+  minPrice?: number;
+  maxPrice?: number;
+  minBedrooms?: number;
+  minBathrooms?: number;
+  minSizeSqm?: number;
+  maxSizeSqm?: number;
+  energyClass?: string;
+}
+
+/** Build Meilisearch filter clauses for GET /search. Assumes closed-set fields are pre-validated. */
+export function buildTextSearchFilters(p: TextSearchFilterParams): string[] {
+  const filters: string[] = [meiliEqFilter('status', 'published')];
+
+  if (p.categorySlug) filters.push(meiliEqFilter('categorySlug', p.categorySlug));
+  if (p.city) filters.push(meiliEqFilter('city', p.city));
+  if (p.regionSlug) filters.push(meiliEqFilter('regionSlug', p.regionSlug));
+  if (p.provinceSlug) filters.push(meiliEqFilter('provinceSlug', p.provinceSlug.toUpperCase()));
+  if (p.transactionType) filters.push(meiliEqFilter('transactionType', p.transactionType));
+  if (p.minPrice != null) filters.push(meiliNumericFilter('price', '>=', p.minPrice));
+  if (p.maxPrice != null) filters.push(meiliNumericFilter('price', '<=', p.maxPrice));
+  if (p.minBedrooms != null) filters.push(meiliNumericFilter('bedrooms', '>=', p.minBedrooms));
+  if (p.minBathrooms != null) filters.push(meiliNumericFilter('bathrooms', '>=', p.minBathrooms));
+  if (p.minSizeSqm != null) filters.push(meiliNumericFilter('sizeSqm', '>=', p.minSizeSqm));
+  if (p.maxSizeSqm != null) filters.push(meiliNumericFilter('sizeSqm', '<=', p.maxSizeSqm));
+  if (p.energyClass) filters.push(meiliEqFilter('energyClass', p.energyClass.toUpperCase()));
+
+  return filters;
+}

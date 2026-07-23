@@ -1,8 +1,9 @@
 import { getTranslations } from 'next-intl/server';
-import { searchListings, listRegions, listCategories } from '@/lib/api';
-import { Filters } from '@/components/search/Filters';
-import { ListingCard } from '@/components/listing/ListingCard';
-import { MapView } from '@/components/search/MapView';
+import { searchListings, listRegions, listCategories, listProvinces } from '@/lib/api';
+import { SearchBar } from '@/components/search/SearchBar';
+import { SearchFilters } from '@/components/search/SearchFilters';
+import { ActiveFilterChips } from '@/components/search/ActiveFilterChips';
+import { SearchResultsPanel } from '@/components/search/SearchResultsPanel';
 import type { ListingSummary } from '@easycasa/shared';
 
 export default async function SearchPage({
@@ -13,10 +14,11 @@ export default async function SearchPage({
   const sp = await searchParams;
   const t = await getTranslations('search');
 
-  const [data, regions, categories] = await Promise.all([
+  const [data, regions, categories, provinces] = await Promise.all([
     searchListings(sp).catch(() => ({ items: [], total: 0, page: 1, pageSize: 24, facets: {} })),
     listRegions(),
     listCategories(),
+    listProvinces(),
   ]);
 
   const items = data.items as ListingSummary[];
@@ -28,21 +30,24 @@ export default async function SearchPage({
         <span className="data text-sm text-muted">{t('resultsCount', { count: data.total })}</span>
       </div>
 
-      <div className="mt-5"><Filters regions={regions} categories={categories} /></div>
+      <div className="mt-5 relative">
+        <SearchBar />
+      </div>
 
-      <div className="mt-6 grid lg:grid-cols-[1fr_420px] gap-6">
-        <div>
-          {items.length === 0 ? (
-            <p className="text-muted py-20 text-center">{t('empty')}</p>
-          ) : (
-            <div className="grid sm:grid-cols-2 gap-5">
-              {items.map((l) => <ListingCard key={l.id} l={l} />)}
-            </div>
-          )}
-        </div>
-        <div className="hidden lg:block h-[70vh] sticky top-20">
-          <MapView items={items} />
-        </div>
+      <div className="mt-4">
+        <SearchFilters regions={regions} categories={categories} provinces={provinces} facets={data.facets} />
+        <ActiveFilterChips regions={regions} categories={categories} provinces={provinces} facets={data.facets} />
+      </div>
+
+      <div className="mt-6">
+        {items.length === 0 ? (
+          <div className="text-muted py-20 text-center space-y-2">
+            <p>{t('empty')}</p>
+            <p className="text-sm">{t('emptyHint')}</p>
+          </div>
+        ) : (
+          <SearchResultsPanel items={items} />
+        )}
       </div>
     </section>
   );

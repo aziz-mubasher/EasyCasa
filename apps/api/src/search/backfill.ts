@@ -10,14 +10,14 @@ async function run(): Promise<void> {
 
   const { rows } = await pool.query<{
     id: string; slug: string | null; title: string; description: string | null;
-    city: string | null; region_slug: string | null; category_slug: string | null;
+    city: string | null; province: string | null; region_slug: string | null; category_slug: string | null;
     transaction_type: 'sale' | 'rent' | null; price: string | null;
     bedrooms: number | null; bathrooms: number | null; rooms: number | null;
     size_sqm: string | null; energy_class: string | null;
     latitude: number | null; longitude: number | null; status: string;
     cover_url: string | null; published_at: Date | null;
   }>(`
-    SELECT l.id, l.slug, l.title, l.description, l.city,
+    SELECT l.id, l.slug, l.title, l.description, l.city, l.province,
            r.slug AS region_slug, c.slug AS category_slug,
            l.transaction_type, l.price, l.bedrooms, l.bathrooms, l.rooms, l.size_sqm,
            l.energy_class,
@@ -36,6 +36,7 @@ async function run(): Promise<void> {
     title: r.title,
     description: r.description,
     city: r.city,
+    provinceSlug: r.province ? r.province.toUpperCase() : null,
     regionSlug: r.region_slug,
     categorySlug: r.category_slug,
     transactionType: r.transaction_type,

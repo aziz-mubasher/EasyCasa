@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { TaxonomyService } from './taxonomy.service';
 import { Public } from '../auth/public.decorator';
 
@@ -11,4 +11,9 @@ export class TaxonomyController {
 
   @Public() @Get('regions')
   regions() { return this.taxonomy.listRegions(); }
+
+  @Public() @Get('provinces')
+  provinces(@Query('regionSlug') regionSlug?: string) {
+    return this.taxonomy.listProvinces(regionSlug);
+  }
 }
