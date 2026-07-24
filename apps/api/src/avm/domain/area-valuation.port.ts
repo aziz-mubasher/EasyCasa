@@ -1,13 +1,17 @@
 import type { PropertyType } from './types';
 
-/** Zone €/m² band from an area data source (stub today, OMI later). Amounts in euro cents. */
+/** Zone €/m² band from an area data source (OMI or provisional comparables). Amounts in euro cents. */
 export interface AreaValuationBandData {
   minPerM2Cents: number;
   avgPerM2Cents: number;
   maxPerM2Cents: number;
-  source: string;
+  /** `omi` only when values come from omi_quotes; never for stub comparables. */
+  source: 'omi' | 'comparable_listings';
   period: string | null;
   zoneLabel: string;
+  /** Mandatory attribution when source is `omi`. */
+  attribution: string | null;
+  geoLevel: 'microzone' | 'comune';
   provisional: boolean;
   comparableCount: number;
 }
@@ -18,6 +22,7 @@ export interface AreaValuationQuery {
   propertyType: PropertyType;
   lat?: number | null;
   lng?: number | null;
+  condition?: import('./types').Condition | null;
   /** Exclude this listing from comparable-derived stats (detail page / edit). */
   excludeListingId?: string | null;
 }

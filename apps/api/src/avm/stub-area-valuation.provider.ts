@@ -72,6 +72,8 @@ export class StubAreaValuationProvider implements AreaValuationProvider {
       source: 'comparable_listings',
       period: `${now.getFullYear()}-${half}`,
       zoneLabel,
+      attribution: null,
+      geoLevel: 'comune',
       provisional: true,
       comparableCount: count,
     };

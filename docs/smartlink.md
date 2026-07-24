@@ -16,7 +16,7 @@ Shareable branded public property pages with view tracking.
 
 ## Migration
 
-- `migration/sql/0026_share_links.sql`
+- `migration/sql/0027_share_links.sql`
 
 ## Privacy
 

@@ -23,10 +23,12 @@ export interface ValuationBandOk {
   anchors: ValuationBandAnchors;
   asking: ValuationBandMarker | null;
   provenance: {
-    source: string;
+    source: 'omi' | 'comparable_listings';
     period: string | null;
     zoneLabel: string;
     provisional: boolean;
+    attribution: string | null;
+    geoLevel: 'microzone' | 'comune';
   };
   comparableCount: number;
 }
@@ -103,6 +105,8 @@ export function buildValuationBand(
       period: zone.period,
       zoneLabel: zone.zoneLabel,
       provisional: zone.provisional,
+      attribution: zone.attribution,
+      geoLevel: zone.geoLevel,
     },
     comparableCount: zone.comparableCount,
   };

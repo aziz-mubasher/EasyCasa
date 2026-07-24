@@ -14,6 +14,7 @@
     "province:repair": "tsx src/search/repair-provinces.ts",
     "pilot:seed": "node dist/pilot/seed/run-seed.js",
     "pilot:smoke": "node dist/pilot/smoke/run-smoke.js",
+    "omi:import": "node dist/omi/import/run-import.js",
     "email:diagnostic": "node dist/email/diagnostic/run-email-diagnostic.js"
   },
   "dependencies": {

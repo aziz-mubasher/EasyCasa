@@ -1,0 +1,4 @@
+Area_territoriale,Regione,Prov,Comune_ISTAT,Comune_cat,Sez,Comune_amm,Comune_descrizione,Fascia,Zona,LinkZona,Cod_Tip,Descr_Tipologia,Stato,Stato_prev,Compr_min,Compr_max,Sup_NL_compr,Loc_min,Loc_max,Sup_NL_loc
+NORD-OVEST,LOMBARDIA,MI,3015002,C1AC,,A010,ABBIATEGRASSO,B,B1,MI00004564,20,Abitazioni civili,OTTIMO,P,2000,2250*,L,7,7.8,L
+SUD,CAMPANIA,AV,15064002,Q2AC,,A228,ALTAVILLA IRPINA,B,B1,AV00000044,5,Negozi,O,P,1000*,1300,L,4.7,6.2,L
+NORD-OVEST,LOMBARDIA,BS,3017166,C3KG,,H598,ROVATO,D,D1,BS00003091,14,Posti auto coperti,NORMALE,P,410,495,L,1.3,1.6,N
