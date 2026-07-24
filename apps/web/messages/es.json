@@ -145,10 +145,56 @@
   },
   "add": {
     "title": "Publica tu inmueble",
+    "subtitle": "Completa la taxonomía EasyCasa para que los compradores puedan encontrarte.",
     "step": "Paso {n} de {total}",
     "next": "Siguiente",
     "back": "Atrás",
-    "publish": "Publicar"
+    "publish": "Publicar",
+    "publishing": "Publicando…",
+    "choose": "Elegir…",
+    "signIn": "Entrar",
+    "signInHint": "Debes iniciar sesión para publicar.",
+    "successTitle": "Anuncio enviado",
+    "successBody": "El borrador se creó y se publicó si tu cuenta lo permite.",
+    "addAnother": "Publicar otro inmueble",
+    "reviewTitle": "Resumen",
+    "mediaPlaceholder": "Arrastra fotos aquí — subida directa (presigned) próximamente.",
+    "sections": {
+      "basics": "Datos básicos y vendedor",
+      "taxonomy": "Taxonomía del inmueble",
+      "specs": "Superficie y precio",
+      "media": "Fotos y publicación"
+    },
+    "fields": {
+      "title": "Título",
+      "description": "Descripción",
+      "city": "Municipio",
+      "province": "Provincia (sigla)",
+      "address": "Dirección",
+      "price": "Precio (€)",
+      "sizeSqm": "Superficie (m²)",
+      "bedrooms": "Habitaciones",
+      "bathrooms": "Baños"
+    },
+    "hints": {
+      "province": "Código de dos letras, p. ej. BS, MI, RM",
+      "sellerType": "Particular es el posicionamiento por defecto de EasyCasa.",
+      "financing": "Opcional. Marca cada modo NIB que aceptas (sin hipoteca bancaria tradicional).",
+      "leaseType": "Obligatorio en alquiler — afecta el contrato y RLI."
+    },
+    "errors": {
+      "title": "Introduce un título (al menos 3 caracteres).",
+      "city": "Introduce el municipio.",
+      "sellerType": "Elige particular o agencia.",
+      "transactionType": "Elige el tipo de transacción.",
+      "assetClass": "Elige el destino de uso.",
+      "propertyType": "Elige la tipología.",
+      "condition": "Elige el estado del inmueble.",
+      "leaseType": "Elige el tipo de contrato de alquiler.",
+      "signInRequired": "Inicia sesión para publicar el anuncio.",
+      "publishFailed": "Guardado como borrador, pero falló la publicación. Revisa el rol de la cuenta.",
+      "generic": "Algo salió mal. Inténtalo de nuevo."
+    }
   },
   "footer": {
     "rights": "Todos los derechos reservados.",

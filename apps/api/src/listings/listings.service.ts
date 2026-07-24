@@ -79,6 +79,7 @@ export class ListingsService {
   }
 
   async create(dto: CreateListingDto, agentId: string) {
+    const financingOptions = dto.financingOptions ?? [];
     const created = await this.repo.insert({
       title: dto.title,
       slug: `${slugify(dto.title)}-${Date.now().toString(36)}`,
@@ -86,12 +87,20 @@ export class ListingsService {
       categoryId: dto.categoryId,
       regionId: dto.regionId,
       transactionType: dto.transactionType,
+      assetClass: dto.assetClass,
+      propertyType: dto.propertyType,
+      condition: dto.condition,
+      financingOptions,
+      leaseType: dto.transactionType === 'rent' ? dto.leaseType : null,
+      sellerType: dto.sellerType ?? 'private',
       price: dto.price != null ? String(dto.price) : undefined,
       bedrooms: dto.bedrooms,
       bathrooms: dto.bathrooms,
       sizeSqm: dto.sizeSqm != null ? String(dto.sizeSqm) : undefined,
       address: dto.address,
       city: dto.city,
+      province: dto.province ? normalizeProvinceSlug(dto.province) ?? dto.province : undefined,
+      energyClass: dto.energyClass,
       latitude: dto.latitude,
       longitude: dto.longitude,
       features: dto.features,
@@ -112,18 +121,35 @@ export class ListingsService {
     if (!user.roles.includes('admin') && existing.agentId !== ownerId) {
       throw new ForbiddenException('not your listing');
     }
+    const tx = dto.transactionType ?? existing.transactionType ?? undefined;
     const updated = await this.repo.update(id, {
       title: dto.title,
       description: dto.description,
       categoryId: dto.categoryId,
       regionId: dto.regionId,
       transactionType: dto.transactionType,
+      assetClass: dto.assetClass,
+      propertyType: dto.propertyType,
+      condition: dto.condition,
+      financingOptions: dto.financingOptions,
+      leaseType:
+        dto.leaseType !== undefined
+          ? tx === 'rent'
+            ? dto.leaseType
+            : null
+          : undefined,
+      sellerType: dto.sellerType,
       price: dto.price != null ? String(dto.price) : undefined,
       bedrooms: dto.bedrooms,
       bathrooms: dto.bathrooms,
       sizeSqm: dto.sizeSqm != null ? String(dto.sizeSqm) : undefined,
       address: dto.address,
       city: dto.city,
+      province:
+        dto.province != null
+          ? normalizeProvinceSlug(dto.province) ?? dto.province
+          : undefined,
+      energyClass: dto.energyClass,
       latitude: dto.latitude,
       longitude: dto.longitude,
       features: dto.features,
