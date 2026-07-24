@@ -123,7 +123,10 @@ function FieldLabel({ children }: { children: ReactNode }) {
   return <p className="text-xs font-medium text-muted mb-1.5">{children}</p>;
 }
 
-/** Primary taxonomy bar + advanced “Filters” panel (reference: source · type · deal · price · more). */
+/**
+ * Primary bar (product priority):
+ * Private|Agency · Price · Condition · Use class · NIB · Location · For sale · Filters · Reset
+ */
 export function SearchFilters({
   regions,
   provinces,
@@ -142,7 +145,8 @@ export function SearchFilters({
   const tx = get('transactionType');
   const seller = get('sellerType');
   const asset = get('assetClass');
-  const propertyType = get('propertyType');
+  const regionSlug = get('regionSlug');
+  const city = get('city');
 
   const comuneOptions = useMemo(() => {
     if (!provinceSlug) return [];
@@ -161,27 +165,26 @@ export function SearchFilters({
     ? sellerOptions.find((o) => o.slug === seller)?.name ?? seller
     : t('sellerTypeIdle');
 
-  const propertyLabel = (() => {
-    const parts: string[] = [];
-    if (asset) parts.push(assetOptions.find((o) => o.slug === asset)?.name ?? asset);
-    if (propertyType) parts.push(propertyOptions.find((o) => o.slug === propertyType)?.name ?? propertyType);
-    if (parts.length === 0) return t('propertyTypeLabel');
-    return parts.join(' · ');
+  const locationLabel = (() => {
+    if (city) return city;
+    if (provinceSlug) {
+      return provinces.find((p) => p.slug === provinceSlug)?.name ?? provinceSlug;
+    }
+    if (regionSlug) {
+      return regions.find((r) => r.slug === regionSlug)?.name ?? regionSlug;
+    }
+    return t('locationGroup');
   })();
-  const propertyActiveCount = (asset ? 1 : 0) + (propertyType ? 1 : 0);
+  const locationActive = Boolean(city || provinceSlug || regionSlug);
 
   const advancedKeys = [
-    'condition',
-    'financingOption',
+    'propertyType',
     'leaseType',
     'minBedrooms',
     'minBathrooms',
     'minSizeSqm',
     'maxSizeSqm',
     'energyClass',
-    'regionSlug',
-    'provinceSlug',
-    'city',
   ] as const;
   const advancedCount = advancedKeys.reduce((n, key) => (get(key) ? n + 1 : n), 0);
 
@@ -195,7 +198,7 @@ export function SearchFilters({
   return (
     <div className="space-y-3" role="group" aria-label={t('barLabel')}>
       <div className="flex flex-wrap gap-2 items-center">
-        {/* 1 · Listing source (seller) */}
+        {/* 1 · Private | Agency */}
         <FilterDropdown
           label={sellerLabel}
           badge={seller ? 1 : undefined}
@@ -211,40 +214,103 @@ export function SearchFilters({
           />
         </FilterDropdown>
 
-        {/* 2 · Property (asset class + physical type) */}
+        {/* 2 · Price */}
+        <PriceRangeFilter />
+
+        {/* 3 · Condition */}
+        <AxisDropdown
+          idleLabel={t('conditionLabel')}
+          value={get('condition')}
+          options={conditionOptions}
+          onChange={(v) => set('condition', v)}
+          facets={facets}
+          facetField="condition"
+          allLabel={t('all')}
+        />
+
+        {/* 4 · Use class */}
+        <AxisDropdown
+          idleLabel={t('assetClassLabel')}
+          value={asset}
+          options={assetOptions}
+          onChange={(v) => set('assetClass', v)}
+          facets={facets}
+          facetField="assetClass"
+          allLabel={t('all')}
+        />
+
+        {/* 5 · Purchase mode (NIB) */}
+        <AxisDropdown
+          idleLabel={t('financingLabel')}
+          value={get('financingOption')}
+          options={financingOptions}
+          onChange={(v) => set('financingOption', v)}
+          facets={facets}
+          facetField="financingOptions"
+          allLabel={t('all')}
+        />
+
+        {/* 6 · Location */}
         <FilterDropdown
-          label={propertyLabel}
-          badge={propertyActiveCount || undefined}
-          active={propertyActiveCount > 0}
+          label={locationLabel}
+          badge={locationActive ? 1 : undefined}
+          active={locationActive}
           panelClassName="min-w-[18rem]"
         >
-          <div className="space-y-4">
-            <div>
-              <FieldLabel>{t('assetClassLabel')}</FieldLabel>
-              <OptionList
-                options={assetOptions}
-                value={asset}
-                onChange={(v) => set('assetClass', v)}
-                facets={facets}
-                facetField="assetClass"
-                allLabel={t('all')}
-              />
-            </div>
-            <div className="border-t border-line pt-3">
-              <FieldLabel>{t('propertyTypeLabel')}</FieldLabel>
-              <OptionList
-                options={propertyOptions}
-                value={propertyType}
-                onChange={(v) => set('propertyType', v)}
-                facets={facets}
-                facetField="propertyType"
-                allLabel={t('all')}
-              />
-            </div>
+          <div className="space-y-3">
+            <FieldLabel>{t('locationGroup')}</FieldLabel>
+            <select
+              className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+              value={regionSlug}
+              onChange={(e) =>
+                setMany({
+                  regionSlug: e.target.value || null,
+                  provinceSlug: null,
+                  city: null,
+                })
+              }
+              aria-label={t('region')}
+            >
+              <option value="">{t('region')}</option>
+              {regions.map((r) => (
+                <option key={r.slug} value={r.slug}>
+                  {r.name}
+                  {facets.regionSlug?.[r.slug] != null ? ` (${facets.regionSlug[r.slug]})` : ''}
+                </option>
+              ))}
+            </select>
+            <select
+              className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+              value={provinceSlug}
+              onChange={(e) => onProvinceChange(e.target.value)}
+              aria-label={t('province')}
+            >
+              <option value="">{t('province')}</option>
+              {provinces.map((p) => (
+                <option key={p.slug} value={p.slug}>
+                  {p.name}
+                  {facets.provinceSlug?.[p.slug] != null ? ` (${facets.provinceSlug[p.slug]})` : ''}
+                </option>
+              ))}
+            </select>
+            <select
+              className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm disabled:opacity-50"
+              value={city}
+              disabled={!provinceSlug}
+              onChange={(e) => set('city', e.target.value)}
+              aria-label={t('comune')}
+            >
+              <option value="">{t('comune')}</option>
+              {comuneOptions.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
           </div>
         </FilterDropdown>
 
-        {/* 3 · Transaction */}
+        {/* 7 · For sale / transaction */}
         <AxisDropdown
           idleLabel={t('transactionLabel')}
           value={tx}
@@ -255,10 +321,7 @@ export function SearchFilters({
           allLabel={t('all')}
         />
 
-        {/* 4 · Price */}
-        <PriceRangeFilter />
-
-        {/* 5 · Advanced filters */}
+        {/* 8 · More filters (remaining) */}
         <FilterDropdown
           label={t('moreFilters')}
           badge={advancedCount || undefined}
@@ -267,25 +330,13 @@ export function SearchFilters({
         >
           <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
             <div>
-              <FieldLabel>{t('conditionLabel')}</FieldLabel>
+              <FieldLabel>{t('propertyTypeLabel')}</FieldLabel>
               <OptionList
-                options={conditionOptions}
-                value={get('condition')}
-                onChange={(v) => set('condition', v)}
+                options={propertyOptions}
+                value={get('propertyType')}
+                onChange={(v) => set('propertyType', v)}
                 facets={facets}
-                facetField="condition"
-                allLabel={t('all')}
-              />
-            </div>
-
-            <div className="border-t border-line pt-3">
-              <FieldLabel>{t('financingLabel')}</FieldLabel>
-              <OptionList
-                options={financingOptions}
-                value={get('financingOption')}
-                onChange={(v) => set('financingOption', v)}
-                facets={facets}
-                facetField="financingOptions"
+                facetField="propertyType"
                 allLabel={t('all')}
               />
             </div>
@@ -361,62 +412,9 @@ export function SearchFilters({
                 allLabel={t('all')}
               />
             </div>
-
-            <div className="border-t border-line pt-3 space-y-3">
-              <FieldLabel>{t('locationGroup')}</FieldLabel>
-              <select
-                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
-                value={get('regionSlug')}
-                onChange={(e) =>
-                  setMany({
-                    regionSlug: e.target.value || null,
-                    provinceSlug: null,
-                    city: null,
-                  })
-                }
-                aria-label={t('region')}
-              >
-                <option value="">{t('region')}</option>
-                {regions.map((r) => (
-                  <option key={r.slug} value={r.slug}>
-                    {r.name}
-                    {facets.regionSlug?.[r.slug] != null ? ` (${facets.regionSlug[r.slug]})` : ''}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
-                value={provinceSlug}
-                onChange={(e) => onProvinceChange(e.target.value)}
-                aria-label={t('province')}
-              >
-                <option value="">{t('province')}</option>
-                {provinces.map((p) => (
-                  <option key={p.slug} value={p.slug}>
-                    {p.name}
-                    {facets.provinceSlug?.[p.slug] != null ? ` (${facets.provinceSlug[p.slug]})` : ''}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm disabled:opacity-50"
-                value={get('city')}
-                disabled={!provinceSlug}
-                onChange={(e) => set('city', e.target.value)}
-                aria-label={t('comune')}
-              >
-                <option value="">{t('comune')}</option>
-                {comuneOptions.map((c) => (
-                  <option key={c.slug} value={c.slug}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
         </FilterDropdown>
 
-        {/* 6 · Reset */}
         <button
           type="button"
           onClick={clearAll}
