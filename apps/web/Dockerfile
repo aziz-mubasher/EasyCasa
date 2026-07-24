@@ -5,7 +5,8 @@ WORKDIR /repo
 ENV CI=true
 ARG NEXT_PUBLIC_API_URL=https://easycasaita.com/api
 ARG NEXT_PUBLIC_SITE_URL=https://easycasaita.com
-ARG NEXT_PUBLIC_OIDC_ISSUER=
+# Baked into the client bundle at build time — must be non-empty or Login is a no-op.
+ARG NEXT_PUBLIC_OIDC_ISSUER=https://auth.easycasaita.com/realms/easycasa
 ARG NEXT_PUBLIC_OIDC_CLIENT_ID=easycasa-web
 ARG NEXT_PUBLIC_MAP_STYLE=https://tiles.openfreemap.org/styles/liberty
 ARG API_URL=http://api:4000
@@ -28,6 +29,8 @@ WORKDIR /repo/apps/web
 ENV API_URL=http://api:4000
 ENV NEXT_PUBLIC_API_URL=https://easycasaita.com/api
 ENV NEXT_PUBLIC_SITE_URL=https://easycasaita.com
+ENV NEXT_PUBLIC_OIDC_ISSUER=https://auth.easycasaita.com/realms/easycasa
+ENV NEXT_PUBLIC_OIDC_CLIENT_ID=easycasa-web
 ENV NEXT_PUBLIC_MAP_STYLE=https://tiles.openfreemap.org/styles/liberty
 EXPOSE 3000
 CMD ["pnpm", "start"]
