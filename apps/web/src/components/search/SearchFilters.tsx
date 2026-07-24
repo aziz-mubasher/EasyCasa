@@ -194,7 +194,7 @@ export function SearchFilters({
 
   return (
     <div className="space-y-3" role="group" aria-label={t('barLabel')}>
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 items-center">
+      <div className="flex flex-wrap gap-2 items-center">
         {/* 1 · Listing source (seller) */}
         <FilterDropdown
           label={sellerLabel}

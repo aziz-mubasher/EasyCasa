@@ -1,6 +1,9 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+
+type PanelPos = { top: number; left: number; minWidth: number };
 
 export function FilterDropdown({
   label,
@@ -21,29 +24,85 @@ export function FilterDropdown({
   panelClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<PanelPos | null>(null);
+  const [mounted, setMounted] = useState(false);
   const id = useId();
-  const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const highlighted = open || active;
+
+  useEffect(() => setMounted(true), []);
+
+  const updatePos = () => {
+    const el = triggerRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const gutter = 8;
+    const minWidth = Math.max(r.width, 256);
+    let left = r.left;
+    if (left + minWidth > window.innerWidth - gutter) {
+      left = Math.max(gutter, window.innerWidth - minWidth - gutter);
+    }
+    setPos({
+      top: r.bottom + 4,
+      left,
+      minWidth,
+    });
+  };
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPos(null);
+      return;
+    }
+    updatePos();
+    const onScroll = () => updatePos();
+    window.addEventListener('scroll', onScroll, true);
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll, true);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
-    const onDoc = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    const onPointerDown = (e: PointerEvent) => {
+      const t = e.target as Node;
+      if (triggerRef.current?.contains(t)) return;
+      if (panelRef.current?.contains(t)) return;
+      setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setOpen(false);
     };
-    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('pointerdown', onPointerDown);
     document.addEventListener('keydown', onKey);
     return () => {
-      document.removeEventListener('mousedown', onDoc);
+      document.removeEventListener('pointerdown', onPointerDown);
       document.removeEventListener('keydown', onKey);
     };
   }, [open]);
 
+  const panel =
+    open && mounted && pos ? (
+      <div
+        ref={panelRef}
+        id={`${id}-panel`}
+        role="dialog"
+        aria-labelledby={`${id}-trigger`}
+        style={{ top: pos.top, left: pos.left, minWidth: pos.minWidth }}
+        className={`fixed z-[80] rounded-xl border border-line bg-paper p-4 shadow-lg ${panelClassName}`}
+      >
+        {children}
+        {footer && <div className="mt-3 flex gap-2 justify-end border-t border-line pt-3">{footer}</div>}
+      </div>
+    ) : null;
+
   return (
-    <div ref={ref} className={`relative shrink-0 ${className}`}>
+    <div className={`relative shrink-0 ${className}`}>
       <button
+        ref={triggerRef}
         type="button"
         id={`${id}-trigger`}
         aria-haspopup="dialog"
@@ -66,17 +125,7 @@ export function FilterDropdown({
           ▾
         </span>
       </button>
-      {open && (
-        <div
-          id={`${id}-panel`}
-          role="dialog"
-          aria-labelledby={`${id}-trigger`}
-          className={`absolute z-30 mt-1 min-w-[16rem] rounded-xl border border-line bg-paper p-4 shadow-lg ${panelClassName}`}
-        >
-          {children}
-          {footer && <div className="mt-3 flex gap-2 justify-end border-t border-line pt-3">{footer}</div>}
-        </div>
-      )}
+      {mounted && panel ? createPortal(panel, document.body) : null}
     </div>
   );
 }
