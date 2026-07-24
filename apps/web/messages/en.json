@@ -164,7 +164,7 @@
     "reviewTitle": "Summary",
     "previewHint": "Check everything below. Publishing will create the listing, upload photos, then make it public.",
     "removeImage": "Remove image",
-    "mediaPlaceholder": "Drag photos here — direct upload (presigned) coming next.",
+    "mediaPlaceholder": "Add up to 12 photos (JPEG, PNG or WebP).",
     "sections": {
       "basics": "Basics & seller",
       "taxonomy": "Property taxonomy",
@@ -207,6 +207,7 @@
       "videoUrl": "Enter a valid video URL (or leave empty).",
       "signInRequired": "Sign in to publish your listing.",
       "publishFailed": "Saved as draft, but publish failed. Check your account role.",
+      "network": "Could not reach the server. Check your connection and try again.",
       "generic": "Something went wrong. Try again."
     }
   },

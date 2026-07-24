@@ -78,28 +78,19 @@ async function uploadListingImage(
   listingId: string,
   file: File,
 ): Promise<void> {
-  const contentType = file.type || 'image/jpeg';
-  const presignRes = await authedFetch(apiUrl('/media/presign'), {
+  // Proxy through the API — MinIO is internal-only; browser PUT to presigned
+  // http://minio:9000 URLs fails with TypeError "Failed to fetch".
+  const form = new FormData();
+  form.append('listingId', listingId);
+  form.append('file', file);
+  const res = await authedFetch(apiUrl('/media/upload'), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ listingId, contentType, type: 'image' }),
+    body: form,
   });
-  if (!presignRes.ok) throw new Error(`presign failed: ${presignRes.status}`);
-  const { uploadUrl, key } = (await presignRes.json()) as { uploadUrl: string; key: string };
-
-  const put = await fetch(uploadUrl, {
-    method: 'PUT',
-    headers: { 'Content-Type': contentType },
-    body: file,
-  });
-  if (!put.ok) throw new Error(`upload failed: ${put.status}`);
-
-  const confirmRes = await authedFetch(apiUrl('/media/confirm'), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ listingId, key, alt: file.name }),
-  });
-  if (!confirmRes.ok) throw new Error(`confirm failed: ${confirmRes.status}`);
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `upload failed: ${res.status}`);
+  }
 }
 
 export default function AddListingPage() {
@@ -281,7 +272,11 @@ export default function AddListingPage() {
       }
       setCreatedId(created.id);
     } catch (e) {
-      setError(e instanceof Error ? e.message : t('errors.generic'));
+      if (e instanceof TypeError && /failed to fetch/i.test(e.message)) {
+        setError(t('errors.network'));
+      } else {
+        setError(e instanceof Error ? e.message : t('errors.generic'));
+      }
     } finally {
       setSubmitting(false);
     }

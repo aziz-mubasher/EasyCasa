@@ -24,7 +24,7 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WP_PERMALINK_BASE | migration | Old permalink base for redirect map. |
 | WP_UPLOADS_BASE_URL | migration | Base URL of WP media. |
 | GEOCODER / NOMINATIM_URL / GEOCODER_USER_AGENT | migration | Geocoding provider + polite UA. |
-| MEDIA_PUBLIC_BASE | migration | Public CDN base for migrated media. |
+| MEDIA_PUBLIC_BASE | api, migration | Public base URL for media objects. On the VPS MinIO is not browser-reachable and `cdn.easycasaita.com` is unused — set to `https://easycasaita.com/api/media/file` so keys resolve via the API read proxy (`GET /media/file/*`). |
 | S3_REGION | migration / api | MinIO region (any value; path-style). |
 
 ## Phase 2 — auth
