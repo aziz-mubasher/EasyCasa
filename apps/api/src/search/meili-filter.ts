@@ -37,6 +37,8 @@ export interface TextSearchFilterParams {
   minSizeSqm?: number;
   maxSizeSqm?: number;
   energyClass?: string;
+  /** Comma-separated feature slugs (AND). */
+  features?: string;
 }
 
 /** Build Meilisearch filter clauses for GET /search. Assumes closed-set fields are pre-validated. */
@@ -47,7 +49,11 @@ export function buildTextSearchFilters(p: TextSearchFilterParams): string[] {
   if (p.city) filters.push(meiliEqFilter('city', p.city));
   if (p.regionSlug) filters.push(meiliEqFilter('regionSlug', p.regionSlug));
   if (p.provinceSlug) filters.push(meiliEqFilter('provinceSlug', p.provinceSlug.toUpperCase()));
-  if (p.transactionType) filters.push(meiliEqFilter('transactionType', p.transactionType));
+  // Match multi-deal listings and legacy single transactionType docs.
+  if (p.transactionType) {
+    const v = escapeMeiliString(p.transactionType);
+    filters.push(`(transactionTypes = "${v}" OR transactionType = "${v}")`);
+  }
   if (p.assetClass) filters.push(meiliEqFilter('assetClass', p.assetClass));
   if (p.propertyType) filters.push(meiliEqFilter('propertyType', p.propertyType));
   if (p.condition) filters.push(meiliEqFilter('condition', p.condition));
@@ -61,6 +67,12 @@ export function buildTextSearchFilters(p: TextSearchFilterParams): string[] {
   if (p.minSizeSqm != null) filters.push(meiliNumericFilter('sizeSqm', '>=', p.minSizeSqm));
   if (p.maxSizeSqm != null) filters.push(meiliNumericFilter('sizeSqm', '<=', p.maxSizeSqm));
   if (p.energyClass) filters.push(meiliEqFilter('energyClass', p.energyClass.toUpperCase()));
+  if (p.features) {
+    for (const raw of p.features.split(',')) {
+      const f = raw.trim();
+      if (f) filters.push(meiliEqFilter('features', f));
+    }
+  }
 
   return filters;
 }

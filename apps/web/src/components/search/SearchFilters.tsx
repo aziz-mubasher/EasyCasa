@@ -5,12 +5,14 @@ import { useTranslations } from 'next-intl';
 import {
   ASSET_CLASS_SLUGS,
   CONDITION_SLUGS,
+  FEATURE_SLUGS,
   FINANCING_OPTION_SLUGS,
   LEASE_TYPE_SLUGS,
   PROPERTY_TYPE_SLUGS,
   SELLER_TYPE_SLUGS,
   TRANSACTION_TYPE_SLUGS,
   comuniForProvince,
+  type FeatureSlug,
 } from '@easycasa/shared';
 import { FilterDropdown } from './FilterDropdown';
 import { PriceRangeFilter } from './PriceRangeFilter';
@@ -123,6 +125,22 @@ function FieldLabel({ children }: { children: ReactNode }) {
   return <p className="text-xs font-medium text-muted mb-1.5">{children}</p>;
 }
 
+function parseFeaturesParam(raw: string): Set<FeatureSlug> {
+  const set = new Set<FeatureSlug>();
+  for (const part of raw.split(',')) {
+    const slug = part.trim();
+    if ((FEATURE_SLUGS as readonly string[]).includes(slug)) {
+      set.add(slug as FeatureSlug);
+    }
+  }
+  return set;
+}
+
+function featuresToParam(selected: Set<FeatureSlug>): string | null {
+  const csv = FEATURE_SLUGS.filter((s) => selected.has(s)).join(',');
+  return csv || null;
+}
+
 /**
  * Primary bar (product priority):
  * Private|Agency · Price · Property type · Condition · Use class · NIB · Location · For sale · Filters · Reset
@@ -184,8 +202,22 @@ export function SearchFilters({
     'minSizeSqm',
     'maxSizeSqm',
     'energyClass',
+    'features',
   ] as const;
   const advancedCount = advancedKeys.reduce((n, key) => (get(key) ? n + 1 : n), 0);
+
+  const featuresParam = get('features');
+  const selectedFeatures = useMemo(
+    () => parseFeaturesParam(featuresParam),
+    [featuresParam],
+  );
+
+  const toggleFeature = (slug: FeatureSlug) => {
+    const next = new Set(selectedFeatures);
+    if (next.has(slug)) next.delete(slug);
+    else next.add(slug);
+    setMany({ features: featuresToParam(next) });
+  };
 
   const onProvinceChange = (value: string) => {
     setMany({
@@ -409,6 +441,31 @@ export function SearchFilters({
                 facetField="energyClass"
                 allLabel={t('all')}
               />
+            </div>
+
+            <div className="border-t border-line pt-3">
+              <FieldLabel>{t('characteristicsLabel')}</FieldLabel>
+              <div className="grid grid-cols-1 gap-1.5">
+                {FEATURE_SLUGS.map((slug) => {
+                  const checked = selectedFeatures.has(slug);
+                  return (
+                    <label
+                      key={slug}
+                      className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm cursor-pointer transition ${
+                        checked ? 'border-azure bg-azure/5 text-azure' : 'border-line hover:border-ink'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="accent-[var(--azure)]"
+                        checked={checked}
+                        onChange={() => toggleFeature(slug)}
+                      />
+                      <span>{t(`feature.${slug}`)}</span>
+                    </label>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </FilterDropdown>

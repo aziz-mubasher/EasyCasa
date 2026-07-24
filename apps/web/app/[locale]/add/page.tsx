@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import {
   ASSET_CLASS_SLUGS,
   CONDITION_SLUGS,
+  FEATURE_SLUGS,
   FINANCING_OPTION_SLUGS,
   ITALIAN_PROVINCES,
   LEASE_TYPE_SLUGS,
@@ -12,6 +13,8 @@ import {
   SELLER_TYPE_SLUGS,
   TRANSACTION_TYPE_SLUGS,
   comuniForProvince,
+  primaryTransactionType,
+  type FeatureSlug,
   type FinancingOptionSlug,
   type SellerTypeSlug,
   type TransactionTypeSlug,
@@ -33,16 +36,20 @@ type FormState = {
   province: string;
   address: string;
   sellerType: SellerTypeSlug;
-  transactionType: TransactionTypeSlug | '';
+  transactionTypes: TransactionTypeSlug[];
   assetClass: string;
   propertyType: string;
   condition: string;
   financingOptions: FinancingOptionSlug[];
   leaseType: string;
+  features: FeatureSlug[];
   price: string;
+  surfaceSqm: string;
   sizeSqm: string;
   bedrooms: string;
   bathrooms: string;
+  yearBuilt: string;
+  yearRenovated: string;
   energyClass: string;
   videoUrl: string;
 };
@@ -56,16 +63,20 @@ const initialForm: FormState = {
   province: '',
   address: '',
   sellerType: 'private',
-  transactionType: 'sale',
+  transactionTypes: ['sale'],
   assetClass: '',
   propertyType: '',
   condition: '',
   financingOptions: [],
   leaseType: '',
+  features: [],
   price: '',
+  surfaceSqm: '',
   sizeSqm: '',
   bedrooms: '',
   bathrooms: '',
+  yearBuilt: '',
+  yearRenovated: '',
   energyClass: '',
   videoUrl: '',
 };
@@ -113,11 +124,16 @@ export default function AddListingPage() {
     [form.province],
   );
 
+  const includesRent = form.transactionTypes.includes('rent');
+  const primaryTx = primaryTransactionType(form.transactionTypes);
+
+  const imagesRef = useRef(images);
+  imagesRef.current = images;
+
   useEffect(() => {
     return () => {
-      for (const img of images) URL.revokeObjectURL(img.previewUrl);
+      for (const img of imagesRef.current) URL.revokeObjectURL(img.previewUrl);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- revoke on unmount only
   }, []);
 
   const set =
@@ -131,6 +147,21 @@ export default function AddListingPage() {
       setError(null);
     };
 
+  const toggleTransaction = (slug: TransactionTypeSlug) => {
+    setForm((f) => {
+      const has = f.transactionTypes.includes(slug);
+      const transactionTypes = has
+        ? f.transactionTypes.filter((x) => x !== slug)
+        : [...f.transactionTypes, slug];
+      return {
+        ...f,
+        transactionTypes,
+        leaseType: transactionTypes.includes('rent') ? f.leaseType : '',
+      };
+    });
+    setError(null);
+  };
+
   const toggleFinancing = (slug: FinancingOptionSlug) => {
     setForm((f) => {
       const has = f.financingOptions.includes(slug);
@@ -139,6 +170,16 @@ export default function AddListingPage() {
         financingOptions: has
           ? f.financingOptions.filter((x) => x !== slug)
           : [...f.financingOptions, slug],
+      };
+    });
+  };
+
+  const toggleFeature = (slug: FeatureSlug) => {
+    setForm((f) => {
+      const has = f.features.includes(slug);
+      return {
+        ...f,
+        features: has ? f.features.filter((x) => x !== slug) : [...f.features, slug],
       };
     });
   };
@@ -175,16 +216,18 @@ export default function AddListingPage() {
       if (!form.sellerType) return t('errors.sellerType');
     }
     if (n === 2) {
-      if (!form.transactionType) return t('errors.transactionType');
+      if (form.transactionTypes.length === 0) return t('errors.transactionTypes');
       if (!form.assetClass) return t('errors.assetClass');
       if (!form.propertyType) return t('errors.propertyType');
       if (!form.condition) return t('errors.condition');
-      if (form.transactionType === 'rent' && !form.leaseType) return t('errors.leaseType');
+      if (includesRent && !form.leaseType) return t('errors.leaseType');
+    }
+    if (n === 3) {
+      if (!form.yearBuilt.trim()) return t('errors.yearBuilt');
     }
     if (n === 4 && form.videoUrl.trim()) {
       try {
-        // eslint-disable-next-line no-new
-        new URL(form.videoUrl.trim());
+        void new URL(form.videoUrl.trim());
       } catch {
         return t('errors.videoUrl');
       }
@@ -212,7 +255,7 @@ export default function AddListingPage() {
   };
 
   const submit = async () => {
-    const err = validateStep(1) ?? validateStep(2) ?? validateStep(4);
+    const err = validateStep(1) ?? validateStep(2) ?? validateStep(3) ?? validateStep(4);
     if (err) {
       setError(err);
       return;
@@ -232,17 +275,21 @@ export default function AddListingPage() {
         province: form.province.trim() || undefined,
         address: form.address.trim() || undefined,
         sellerType: form.sellerType,
-        transactionType: form.transactionType || undefined,
+        transactionTypes: form.transactionTypes,
+        transactionType: primaryTx ?? undefined,
         assetClass: form.assetClass || undefined,
         propertyType: form.propertyType || undefined,
         condition: form.condition || undefined,
         financingOptions: form.financingOptions,
-        leaseType:
-          form.transactionType === 'rent' && form.leaseType ? form.leaseType : undefined,
+        leaseType: includesRent && form.leaseType ? form.leaseType : undefined,
+        features: form.features,
         price: form.price ? Number(form.price) : undefined,
+        surfaceSqm: form.surfaceSqm ? Number(form.surfaceSqm) : undefined,
         sizeSqm: form.sizeSqm ? Number(form.sizeSqm) : undefined,
         bedrooms: form.bedrooms ? Number(form.bedrooms) : undefined,
         bathrooms: form.bathrooms ? Number(form.bathrooms) : undefined,
+        yearBuilt: form.yearBuilt ? Number(form.yearBuilt) : undefined,
+        yearRenovated: form.yearRenovated ? Number(form.yearRenovated) : undefined,
         energyClass: form.energyClass || undefined,
         videoUrl: form.videoUrl.trim() || undefined,
       };
@@ -370,16 +417,32 @@ export default function AddListingPage() {
         {step === 2 && (
           <>
             <p className="text-sm font-medium text-ink">{t('sections.taxonomy')}</p>
-            <Field label={tf('transactionLabel')} required>
-              <Select value={form.transactionType} onChange={set('transactionType')}>
-                <option value="">{t('choose')}</option>
-                {TRANSACTION_TYPE_SLUGS.map((slug) => (
-                  <option key={slug} value={slug}>
-                    {tf(`transaction.${slug}`)}
-                  </option>
-                ))}
-              </Select>
-            </Field>
+            <fieldset>
+              <legend className="eyebrow mb-2">
+                {tf('transactionLabel')} <span className="text-terracotta">*</span>
+              </legend>
+              <div className="grid sm:grid-cols-2 gap-2">
+                {TRANSACTION_TYPE_SLUGS.map((slug) => {
+                  const checked = form.transactionTypes.includes(slug);
+                  return (
+                    <label
+                      key={slug}
+                      className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm cursor-pointer transition ${
+                        checked ? 'border-azure bg-azure/5 text-azure' : 'border-line hover:border-ink'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="accent-[var(--azure)]"
+                        checked={checked}
+                        onChange={() => toggleTransaction(slug)}
+                      />
+                      <span>{tf(`transaction.${slug}`)}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
             <Field label={tf('assetClassLabel')} required>
               <Select value={form.assetClass} onChange={set('assetClass')}>
                 <option value="">{t('choose')}</option>
@@ -437,7 +500,7 @@ export default function AddListingPage() {
               </div>
             </fieldset>
 
-            {form.transactionType === 'rent' && (
+            {includesRent && (
               <Field label={tf('leaseTypeLabel')} required hint={t('hints.leaseType')}>
                 <Select value={form.leaseType} onChange={set('leaseType')}>
                   <option value="">{t('choose')}</option>
@@ -459,8 +522,29 @@ export default function AddListingPage() {
               <Field label={t('fields.price')}>
                 <Input type="number" min={0} value={form.price} onChange={set('price')} />
               </Field>
-              <Field label={t('fields.sizeSqm')}>
+              <Field label={t('fields.surfaceSqm')}>
+                <Input type="number" min={0} value={form.surfaceSqm} onChange={set('surfaceSqm')} />
+              </Field>
+              <Field label={t('fields.builtAreaSqm')}>
                 <Input type="number" min={0} value={form.sizeSqm} onChange={set('sizeSqm')} />
+              </Field>
+              <Field label={t('fields.yearBuilt')} required>
+                <Input
+                  type="number"
+                  min={1800}
+                  max={2100}
+                  value={form.yearBuilt}
+                  onChange={set('yearBuilt')}
+                />
+              </Field>
+              <Field label={t('fields.yearRenovated')}>
+                <Input
+                  type="number"
+                  min={1800}
+                  max={2100}
+                  value={form.yearRenovated}
+                  onChange={set('yearRenovated')}
+                />
               </Field>
               <Field label={t('fields.bedrooms')}>
                 <Input type="number" min={0} value={form.bedrooms} onChange={set('bedrooms')} />
@@ -479,13 +563,40 @@ export default function AddListingPage() {
                 ))}
               </Select>
             </Field>
+
+            <fieldset>
+              <legend className="eyebrow mb-2">{t('fields.characteristics')}</legend>
+              <p className="text-xs text-muted mb-3">{t('hints.characteristics')}</p>
+              <div className="grid sm:grid-cols-2 gap-2">
+                {FEATURE_SLUGS.map((slug) => {
+                  const checked = form.features.includes(slug);
+                  return (
+                    <label
+                      key={slug}
+                      className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm cursor-pointer transition ${
+                        checked ? 'border-azure bg-azure/5 text-azure' : 'border-line hover:border-ink'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="accent-[var(--azure)]"
+                        checked={checked}
+                        onChange={() => toggleFeature(slug)}
+                      />
+                      <span>{tf(`feature.${slug}`)}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+
             <ValuationBandLive
               comune={form.city}
               provincia={form.province}
               propertyTypeSlug={form.propertyType}
-              sizeSqm={form.sizeSqm}
+              sizeSqm={form.sizeSqm || form.surfaceSqm}
               priceEur={form.price}
-              transactionType={form.transactionType || 'sale'}
+              transactionType={primaryTx || 'sale'}
             />
           </>
         )}
@@ -506,7 +617,6 @@ export default function AddListingPage() {
               <ul className="grid grid-cols-3 gap-2">
                 {images.map((img) => (
                   <li key={img.id} className="relative aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={img.previewUrl} alt="" className="h-full w-full object-cover" />
                     <button
                       type="button"
@@ -540,7 +650,6 @@ export default function AddListingPage() {
               <div className="grid grid-cols-3 gap-2">
                 {images.map((img) => (
                   <div key={img.id} className="aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={img.previewUrl} alt="" className="h-full w-full object-cover" />
                   </div>
                 ))}
@@ -574,8 +683,8 @@ export default function AddListingPage() {
                 <div>
                   <dt className="text-muted">{tf('transactionLabel')}</dt>
                   <dd>
-                    {form.transactionType
-                      ? tf(`transaction.${form.transactionType as TransactionTypeSlug}`)
+                    {form.transactionTypes.length > 0
+                      ? form.transactionTypes.map((s) => tf(`transaction.${s}`)).join(', ')
                       : '—'}
                   </dd>
                 </div>
@@ -599,7 +708,7 @@ export default function AddListingPage() {
                     {form.condition ? tf(`condition.${form.condition as 'good'}`) : '—'}
                   </dd>
                 </div>
-                {form.transactionType === 'rent' && form.leaseType ? (
+                {includesRent && form.leaseType ? (
                   <div>
                     <dt className="text-muted">{tf('leaseTypeLabel')}</dt>
                     <dd>{tf(`leaseType.${form.leaseType as 'free_4_4'}`)}</dd>
@@ -610,9 +719,23 @@ export default function AddListingPage() {
                   <dd>{form.price ? `€${Number(form.price).toLocaleString('it-IT')}` : '—'}</dd>
                 </div>
                 <div>
-                  <dt className="text-muted">{t('fields.sizeSqm')}</dt>
+                  <dt className="text-muted">{t('fields.surfaceSqm')}</dt>
+                  <dd>{form.surfaceSqm ? `${form.surfaceSqm} m²` : '—'}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{t('fields.builtAreaSqm')}</dt>
                   <dd>{form.sizeSqm ? `${form.sizeSqm} m²` : '—'}</dd>
                 </div>
+                <div>
+                  <dt className="text-muted">{t('fields.yearBuilt')}</dt>
+                  <dd>{form.yearBuilt || '—'}</dd>
+                </div>
+                {form.yearRenovated ? (
+                  <div>
+                    <dt className="text-muted">{t('fields.yearRenovated')}</dt>
+                    <dd>{form.yearRenovated}</dd>
+                  </div>
+                ) : null}
                 <div>
                   <dt className="text-muted">{t('fields.bedrooms')}</dt>
                   <dd>{form.bedrooms || '—'}</dd>
@@ -632,6 +755,12 @@ export default function AddListingPage() {
                 <p className="text-sm">
                   <span className="text-muted">{tf('financingLabel')}: </span>
                   {form.financingOptions.map((s) => tf(`financing.${s}`)).join(', ')}
+                </p>
+              )}
+              {form.features.length > 0 && (
+                <p className="text-sm">
+                  <span className="text-muted">{t('fields.characteristics')}: </span>
+                  {form.features.map((s) => tf(`feature.${s}`)).join(', ')}
                 </p>
               )}
               {form.videoUrl.trim() ? (

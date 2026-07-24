@@ -17,17 +17,22 @@ A listing is described by **independent** attributes, not one bucket:
 
 | # | Axis | Field | Required | Multi-select |
 |---|---|---|---|---|
-| 1 | Transaction type | `transactionType` | ✅ | No |
+| 1 | Transaction type | `transactionTypes` (+ primary `transactionType`) | ✅ | **Yes** (sale+rent allowed) |
 | 2 | Destinazione d'uso | `assetClass` | ✅ | No |
 | 3 | Tipologia immobiliare | `propertyType` | ✅ | No |
 | 4 | Stato dell'immobile | `condition` | ✅ | No |
 | 5 | **Modalità di acquisto (NIB)** | `financingOptions` | ❌ | **Yes** |
 | 6 | Tipo di contratto (rentals only) | `leaseType` | conditional | No |
 | 7 | Venditore | `sellerType` | ✅ | No |
+| 8 | Characteristics (amenities) | `features` | ❌ | **Yes** |
+
+**Areas & years (listing specs, not taxonomy axes):** `surfaceSqm` = cadastral/total surface; `sizeSqm` = built/commercial floor area. `yearBuilt` required on create; `yearRenovated` optional.
 
 ---
 
-## 1. `transactionType` — how it changes hands
+## 1. `transactionType` / `transactionTypes` — how it changes hands
+
+Listings may select **multiple** transaction types via `transactionTypes[]` (notably **sale + rent** together). The API also stores a primary `transactionType` derived by `primaryTransactionType()` (prefers `sale`, then `rent`, else first). Search filters still use the single `transactionType` query param for now.
 
 | Slug | IT | EN |
 |---|---|---|
@@ -123,7 +128,7 @@ Valid values depend on `assetClass`. Residential set:
 
 ## 6. `leaseType` — rentals only ⚠️ legally material
 
-Required when `transactionType = rent`. Different types carry different registration, duration, and tax obligations — and your RLI integration depends on this.
+Required when `transactionTypes` includes `rent` (or primary `transactionType = rent`). Different types carry different registration, duration, and tax obligations — and your RLI integration depends on this.
 
 | Slug | IT | Duration | RLI registration |
 |---|---|---|---|
@@ -146,6 +151,24 @@ Required when `transactionType = rent`. Different types carry different registra
 | `agency` | Agenzia | Agency |
 
 Central to a commission-free positioning, and a standard filter on Italian portals.
+
+---
+
+## 8. `features` — characteristics (optional)
+
+**Multi-select.** Optional amenities / characteristics axis. Search: `features=slug,slug` (comma-separated, AND).
+
+| Slug | IT | EN |
+|---|---|---|
+| `balcony` | Balcone | Balcony |
+| `elevator` | Ascensore | Elevator |
+| `garage` | Garage | Garage |
+| `garden` | Giardino | Garden |
+| `parking` | Parcheggio | Parking |
+| `storage` | Cantina/ripostiglio | Storage |
+| `swimming_pool` | Piscina | Swimming pool |
+| `terrace` | Terrazzo | Terrace |
+| `rental_licence` | Licenza turistica | Rental licence |
 
 ---
 

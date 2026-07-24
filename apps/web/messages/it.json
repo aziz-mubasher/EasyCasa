@@ -130,6 +130,18 @@
       "sellerType": {
         "private": "Privato",
         "agency": "Agenzia"
+      },
+      "characteristicsLabel": "Caratteristiche",
+      "feature": {
+        "balcony": "Balcone",
+        "elevator": "Ascensore",
+        "garage": "Garage",
+        "garden": "Giardino",
+        "parking": "Parcheggio",
+        "storage": "Cantina/ripostiglio",
+        "swimming_pool": "Piscina",
+        "terrace": "Terrazzo",
+        "rental_licence": "Licenza turistica"
       }
     },
     "empty": "Nessun immobile trovato. Allarga la ricerca o rimuovi un filtro."
@@ -179,7 +191,12 @@
       "province": "Provincia",
       "address": "Indirizzo",
       "price": "Prezzo (€)",
-      "sizeSqm": "Superficie (m²)",
+      "surfaceSqm": "Superficie (m²)",
+      "builtAreaSqm": "Superficie edificata (m²)",
+      "sizeSqm": "Superficie edificata (m²)",
+      "yearBuilt": "Anno di costruzione",
+      "yearRenovated": "Anno di ristrutturazione",
+      "characteristics": "Caratteristiche",
       "bedrooms": "Camere",
       "bathrooms": "Bagni",
       "images": "Foto",
@@ -191,6 +208,7 @@
       "sellerType": "Il privato è il posizionamento predefinito di EasyCasa.",
       "financing": "Opzionale. Seleziona ogni modalità NIB che accetti (senza mutuo bancario tradizionale).",
       "leaseType": "Obbligatorio per gli affitti — influenza contratto e RLI.",
+      "characteristics": "Opzionale. Seleziona le caratteristiche presenti nell’immobile.",
       "images": "Fino a 12 immagini (JPEG/PNG/WebP). Caricate al momento della pubblicazione.",
       "videoUrl": "Opzionale: YouTube, Vimeo o URL video diretto."
     },
@@ -200,10 +218,12 @@
       "province": "Seleziona una provincia.",
       "sellerType": "Scegli privato o agenzia.",
       "transactionType": "Scegli il tipo di transazione.",
+      "transactionTypes": "Seleziona almeno un tipo di transazione.",
       "assetClass": "Scegli la destinazione d’uso.",
       "propertyType": "Scegli la tipologia.",
       "condition": "Scegli lo stato dell’immobile.",
       "leaseType": "Scegli il tipo di contratto per l’affitto.",
+      "yearBuilt": "Inserisci l’anno di costruzione.",
       "videoUrl": "Inserisci un URL video valido (o lascia vuoto).",
       "signInRequired": "Accedi per pubblicare l’annuncio.",
       "publishFailed": "Salvato come bozza, ma la pubblicazione non è riuscita. Verifica il ruolo dell’account.",

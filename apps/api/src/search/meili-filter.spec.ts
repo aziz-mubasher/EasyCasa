@@ -75,7 +75,7 @@ describe('meili-filter', () => {
       expect(filters).toContain('categorySlug = "residential"');
       expect(filters).toContain('regionSlug = "lombardia"');
       expect(filters).toContain('provinceSlug = "MI"');
-      expect(filters).toContain('transactionType = "sale"');
+      expect(filters).toContain('(transactionTypes = "sale" OR transactionType = "sale")');
       expect(filters).toContain('energyClass = "A2"');
     });
 

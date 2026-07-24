@@ -15,6 +15,7 @@ import {
 import {
   ASSET_CLASS_SLUGS,
   CONDITION_SLUGS,
+  FEATURE_SLUGS,
   FINANCING_OPTION_SLUGS,
   LEASE_TYPE_SLUGS,
   PROPERTY_TYPE_SLUGS,
@@ -35,8 +36,16 @@ export class CreateListingDto {
   @IsOptional() @IsString()
   regionId?: string;
 
+  /** Primary transaction (derived from transactionTypes when omitted). */
   @IsOptional() @IsIn([...TRANSACTION_TYPE_SLUGS])
   transactionType?: (typeof TRANSACTION_TYPE_SLUGS)[number];
+
+  /** Multi-select — a listing may be for sale and rent. */
+  @IsOptional()
+  @IsArray()
+  @ArrayUnique()
+  @IsIn([...TRANSACTION_TYPE_SLUGS], { each: true })
+  transactionTypes?: Array<(typeof TRANSACTION_TYPE_SLUGS)[number]>;
 
   @IsOptional() @IsIn([...ASSET_CLASS_SLUGS])
   assetClass?: (typeof ASSET_CLASS_SLUGS)[number];
@@ -53,7 +62,11 @@ export class CreateListingDto {
   @IsIn([...FINANCING_OPTION_SLUGS], { each: true })
   financingOptions?: Array<(typeof FINANCING_OPTION_SLUGS)[number]>;
 
-  @ValidateIf((o: CreateListingDto) => o.transactionType === 'rent')
+  @ValidateIf(
+    (o: CreateListingDto) =>
+      o.transactionType === 'rent' ||
+      (Array.isArray(o.transactionTypes) && o.transactionTypes.includes('rent')),
+  )
   @IsOptional()
   @IsIn([...LEASE_TYPE_SLUGS])
   leaseType?: (typeof LEASE_TYPE_SLUGS)[number];
@@ -70,8 +83,19 @@ export class CreateListingDto {
   @IsOptional() @IsInt() @Min(0) @Max(100)
   bathrooms?: number;
 
+  /** Built area (m²). */
   @IsOptional() @IsNumber() @Min(0)
   sizeSqm?: number;
+
+  /** Surface / plot / commercial area (m²). */
+  @IsOptional() @IsNumber() @Min(0)
+  surfaceSqm?: number;
+
+  @IsOptional() @IsInt() @Min(1600) @Max(2100)
+  yearBuilt?: number;
+
+  @IsOptional() @IsInt() @Min(1600) @Max(2100)
+  yearRenovated?: number;
 
   @IsOptional() @IsString()
   address?: string;
@@ -95,6 +119,9 @@ export class CreateListingDto {
   @IsOptional() @IsNumber()
   longitude?: number;
 
-  @IsOptional() @IsArray() @IsString({ each: true })
-  features?: string[];
+  @IsOptional()
+  @IsArray()
+  @ArrayUnique()
+  @IsIn([...FEATURE_SLUGS], { each: true })
+  features?: Array<(typeof FEATURE_SLUGS)[number]>;
 }

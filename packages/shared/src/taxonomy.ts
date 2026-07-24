@@ -74,6 +74,34 @@ export type LeaseTypeSlug = (typeof LEASE_TYPE_SLUGS)[number];
 export const SELLER_TYPE_SLUGS = ['private', 'agency'] as const;
 export type SellerTypeSlug = (typeof SELLER_TYPE_SLUGS)[number];
 
+/** Optional listing characteristics (amenities) — multi-select. */
+export const FEATURE_SLUGS = [
+  'balcony',
+  'elevator',
+  'garage',
+  'garden',
+  'parking',
+  'storage',
+  'swimming_pool',
+  'terrace',
+  'rental_licence',
+] as const;
+export type FeatureSlug = (typeof FEATURE_SLUGS)[number];
+
+export function isFeatureSlug(value: string): value is FeatureSlug {
+  return (FEATURE_SLUGS as readonly string[]).includes(value);
+}
+
+/** Prefer sale when both sale and rent are selected (card badge / primary axis). */
+export function primaryTransactionType(
+  types: readonly TransactionTypeSlug[],
+): TransactionTypeSlug | null {
+  if (types.length === 0) return null;
+  if (types.includes('sale')) return 'sale';
+  if (types.includes('rent')) return 'rent';
+  return types[0] ?? null;
+}
+
 /** Legacy Tipologia slugs still accepted on search URLs / Meili categorySlug. */
 export const LEGACY_CATEGORY_SLUGS = [
   'residential',

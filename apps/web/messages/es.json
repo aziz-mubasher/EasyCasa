@@ -130,6 +130,18 @@
       "sellerType": {
         "private": "Particular",
         "agency": "Agencia"
+      },
+      "characteristicsLabel": "Características",
+      "feature": {
+        "balcony": "Balcón",
+        "elevator": "Ascensor",
+        "garage": "Garaje",
+        "garden": "Jardín",
+        "parking": "Aparcamiento",
+        "storage": "Trastero",
+        "swimming_pool": "Piscina",
+        "terrace": "Terraza",
+        "rental_licence": "Licencia turística"
       }
     },
     "empty": "No se encontraron inmuebles. Amplía la búsqueda o quita un filtro."
@@ -179,7 +191,12 @@
       "province": "Provincia",
       "address": "Dirección",
       "price": "Precio (€)",
-      "sizeSqm": "Superficie (m²)",
+      "surfaceSqm": "Superficie (m²)",
+      "builtAreaSqm": "Superficie construida (m²)",
+      "sizeSqm": "Superficie construida (m²)",
+      "yearBuilt": "Año de construcción",
+      "yearRenovated": "Año de reforma",
+      "characteristics": "Características",
       "bedrooms": "Habitaciones",
       "bathrooms": "Baños",
       "images": "Fotos",
@@ -191,6 +208,7 @@
       "sellerType": "Particular es el posicionamiento por defecto de EasyCasa.",
       "financing": "Opcional. Marca cada modo NIB que aceptas (sin hipoteca bancaria tradicional).",
       "leaseType": "Obligatorio en alquiler — afecta el contrato y RLI.",
+      "characteristics": "Opcional. Marca las características que aplican al inmueble.",
       "images": "Hasta 12 imágenes (JPEG/PNG/WebP). Se suben al publicar.",
       "videoUrl": "Opcional: YouTube, Vimeo o URL de vídeo directa."
     },
@@ -200,10 +218,12 @@
       "province": "Selecciona una provincia.",
       "sellerType": "Elige particular o agencia.",
       "transactionType": "Elige el tipo de transacción.",
+      "transactionTypes": "Selecciona al menos un tipo de transacción.",
       "assetClass": "Elige el destino de uso.",
       "propertyType": "Elige la tipología.",
       "condition": "Elige el estado del inmueble.",
       "leaseType": "Elige el tipo de contrato de alquiler.",
+      "yearBuilt": "Introduce el año de construcción.",
       "videoUrl": "Introduce una URL de vídeo válida (o déjalo vacío).",
       "signInRequired": "Inicia sesión para publicar el anuncio.",
       "publishFailed": "Guardado como borrador, pero falló la publicación. Revisa el rol de la cuenta.",
