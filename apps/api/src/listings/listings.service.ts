@@ -184,6 +184,10 @@ export class ListingsService {
         condition: (published.condition ?? undefined) as 'good' | undefined,
         financingOptions: financingOptions as never,
       });
+      // Photos are uploaded before publish; include first image so search cards show a cover.
+      const mediaRows = await this.repo.listMedia(published.id);
+      const coverUrl =
+        mediaRows.find((m) => m.type === 'image' || m.type === 'floorplan')?.url ?? null;
       await this.searchIndex.indexListing({
         id: published.id,
         slug: published.slug ?? published.id,
@@ -206,7 +210,7 @@ export class ListingsService {
         rooms: published.rooms ?? published.bedrooms,
         sizeSqm: published.sizeSqm == null ? null : Number(published.sizeSqm),
         energyClass: published.energyClass ?? null,
-        coverUrl: null,
+        coverUrl,
         status: 'published',
         _geo:
           published.latitude != null && published.longitude != null
@@ -227,6 +231,7 @@ export class ListingsService {
         sizeSqm: published.sizeSqm,
         energyClass: published.energyClass,
         propertyType: published.propertyType,
+        thumbnailUrl: coverUrl,
       });
       if (pin) {
         try {
