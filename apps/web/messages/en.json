@@ -19,7 +19,8 @@
     "where": "Where?",
     "wherePlaceholder": "City, province or region…",
     "searchRowLabel": "Search properties on the map",
-    "dealLabel": "Buy or rent"
+    "dealLabel": "Buy or rent",
+    "sellerLabel": "Private or agency"
   },
   "search": {
     "title": "Search properties",

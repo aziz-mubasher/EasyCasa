@@ -19,7 +19,8 @@
     "where": "¿Dónde?",
     "wherePlaceholder": "Municipio, provincia o región…",
     "searchRowLabel": "Buscar inmuebles en el mapa",
-    "dealLabel": "Venta o alquiler"
+    "dealLabel": "Venta o alquiler",
+    "sellerLabel": "Particular o agencia"
   },
   "search": {
     "title": "Buscar inmuebles",

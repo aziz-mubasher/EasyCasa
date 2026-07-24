@@ -3,6 +3,7 @@
 import { useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import type { SellerTypeSlug } from '@easycasa/shared';
 import {
   LocationTypeahead,
   emptyLocationSelection,
@@ -14,12 +15,10 @@ import { useSearchUrlState } from '@/components/search/useSearchUrlState';
 
 const SEARCH_PATH = '/search';
 
-type Deal = 'sale' | 'rent';
-
 /**
- * Minimal homepage hero search — four controls only:
- * Vendita/Affitto · Dove? · Prezzo · Cerca
- * Reuses LocationTypeahead + PriceRangeControl from /search (PR #20).
+ * Homepage hero search — four controls:
+ * Privato/Agenzia · Dove? · Prezzo · Cerca
+ * Default seller = private (EasyCasa differentiator).
  */
 export function HeroSearchRow() {
   const t = useTranslations('home');
@@ -27,9 +26,9 @@ export function HeroSearchRow() {
   const ts = useTranslations('search');
   const { setMany } = useSearchUrlState();
   const whereId = useId();
-  const dealGroupId = useId();
+  const sellerGroupId = useId();
 
-  const [deal, setDeal] = useState<Deal>('sale');
+  const [seller, setSeller] = useState<SellerTypeSlug>('private');
   const [location, setLocation] = useState<LocationSelection>(emptyLocationSelection);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -71,7 +70,7 @@ export function HeroSearchRow() {
     setMany(
       {
         ...locParams,
-        transactionType: deal,
+        sellerType: seller,
         minPrice: appliedMin || null,
         maxPrice: appliedMax || null,
         categorySlug: null,
@@ -94,20 +93,19 @@ export function HeroSearchRow() {
         aria-label={t('searchRowLabel')}
         className="rounded-xl border border-line bg-paper shadow-sm p-3 sm:p-4"
       >
-        {/* Vendita / Affitto — radiogroup, visually first */}
         <div
           role="radiogroup"
-          aria-labelledby={`${dealGroupId}-label`}
+          aria-labelledby={`${sellerGroupId}-label`}
           className="mb-3 inline-flex w-full sm:w-auto rounded-lg border border-line bg-sand/30 p-0.5"
         >
-          <span id={`${dealGroupId}-label`} className="sr-only">
-            {t('dealLabel')}
+          <span id={`${sellerGroupId}-label`} className="sr-only">
+            {t('sellerLabel')}
           </span>
           {([
-            ['sale', tf('sale')],
-            ['rent', tf('rent')],
+            ['private', tf('sellerType.private')],
+            ['agency', tf('sellerType.agency')],
           ] as const).map(([value, label]) => {
-            const selected = deal === value;
+            const selected = seller === value;
             return (
               <button
                 key={value}
@@ -115,11 +113,11 @@ export function HeroSearchRow() {
                 role="radio"
                 aria-checked={selected}
                 tabIndex={selected ? 0 : -1}
-                onClick={() => setDeal(value)}
+                onClick={() => setSeller(value)}
                 onKeyDown={(e) => {
                   if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
                     e.preventDefault();
-                    setDeal((d) => (d === 'sale' ? 'rent' : 'sale'));
+                    setSeller((s) => (s === 'private' ? 'agency' : 'private'));
                   }
                 }}
                 className={`flex-1 sm:flex-none min-h-[2.5rem] rounded-md px-4 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-azure ${
@@ -134,10 +132,6 @@ export function HeroSearchRow() {
           })}
         </div>
 
-        {/*
-          Desktop: Dove + Prezzo + Cerca in one row.
-          Mobile (375px): stack full-width — Dove, Prezzo, then Cerca.
-        */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:gap-2">
           <div className="flex flex-col gap-1 min-w-0 flex-1">
             <label
@@ -174,10 +168,6 @@ export function HeroSearchRow() {
             <span className="data text-[0.65rem] uppercase tracking-wide text-muted px-0.5">
               {tf('price')}
             </span>
-            {/*
-              Price: reuse PriceRangeControl (dropdown + da/a) — keeps the hero row
-              to one compact trigger on desktop; full da/a would crowd the typography.
-            */}
             <PriceRangeControl
               min={minPrice}
               max={maxPrice}

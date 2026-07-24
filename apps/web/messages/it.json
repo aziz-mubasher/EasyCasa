@@ -19,7 +19,8 @@
     "where": "Dove?",
     "wherePlaceholder": "Comune, provincia o regione…",
     "searchRowLabel": "Cerca immobili sulla mappa",
-    "dealLabel": "Vendita o affitto"
+    "dealLabel": "Vendita o affitto",
+    "sellerLabel": "Privato o agenzia"
   },
   "search": {
     "title": "Cerca immobili",
