@@ -28,5 +28,5 @@ export class UpdateListingDto implements Partial<CreateListingDto> {
   videoUrl?: string;
   latitude?: number;
   longitude?: number;
-  features?: string[];
+  features?: CreateListingDto['features'];
 }
