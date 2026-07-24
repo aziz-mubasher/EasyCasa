@@ -1,9 +1,7 @@
 -- Phase: multi-axis property taxonomy (docs/taxonomy.md)
--- Expand transaction_type; add asset_class, financing_options, lease_type, seller_type on listings.
+-- Add asset_class, financing_options, lease_type, seller_type on listings.
 -- Backfill from legacy categories. Keep category_id for URL/API compat.
-
-ALTER TYPE transaction_type ADD VALUE IF NOT EXISTS 'auction';
-ALTER TYPE transaction_type ADD VALUE IF NOT EXISTS 'bare_ownership';
+-- Requires 0023_taxonomy_transaction_enum.sql (auction / bare_ownership labels).
 
 ALTER TABLE listings
   ADD COLUMN IF NOT EXISTS asset_class text,
