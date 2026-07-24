@@ -145,10 +145,56 @@
   },
   "add": {
     "title": "List your property",
+    "subtitle": "Describe the listing with the full EasyCasa taxonomy so buyers can find it.",
     "step": "Step {n} of {total}",
     "next": "Next",
     "back": "Back",
-    "publish": "Publish"
+    "publish": "Publish",
+    "publishing": "Publishing…",
+    "choose": "Choose…",
+    "signIn": "Sign in",
+    "signInHint": "You need to sign in to publish.",
+    "successTitle": "Listing submitted",
+    "successBody": "Your draft was created and published when allowed by your account role.",
+    "addAnother": "List another property",
+    "reviewTitle": "Summary",
+    "mediaPlaceholder": "Drag photos here — direct upload (presigned) coming next.",
+    "sections": {
+      "basics": "Basics & seller",
+      "taxonomy": "Property taxonomy",
+      "specs": "Size & price",
+      "media": "Photos & publish"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "city": "City / municipality",
+      "province": "Province (sigla)",
+      "address": "Address",
+      "price": "Price (€)",
+      "sizeSqm": "Area (m²)",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms"
+    },
+    "hints": {
+      "province": "Two-letter code, e.g. BS, MI, RM",
+      "sellerType": "Private sellers are EasyCasa’s default positioning.",
+      "financing": "Optional. Select every NIB mode you will accept (no traditional mortgage required).",
+      "leaseType": "Required for rentals — drives contract and RLI rules."
+    },
+    "errors": {
+      "title": "Enter a title (at least 3 characters).",
+      "city": "Enter the city or municipality.",
+      "sellerType": "Choose private or agency.",
+      "transactionType": "Choose how the property changes hands.",
+      "assetClass": "Choose destinazione d’uso (use class).",
+      "propertyType": "Choose the property type.",
+      "condition": "Choose the condition.",
+      "leaseType": "Choose a lease type for rentals.",
+      "signInRequired": "Sign in to publish your listing.",
+      "publishFailed": "Saved as draft, but publish failed. Check your account role.",
+      "generic": "Something went wrong. Try again."
+    }
   },
   "footer": {
     "rights": "All rights reserved.",

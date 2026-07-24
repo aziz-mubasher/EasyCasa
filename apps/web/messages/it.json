@@ -145,10 +145,56 @@
   },
   "add": {
     "title": "Pubblica il tuo immobile",
+    "subtitle": "Compila la tassonomia EasyCasa così i compratori possono trovarti.",
     "step": "Passo {n} di {total}",
     "next": "Avanti",
     "back": "Indietro",
-    "publish": "Pubblica"
+    "publish": "Pubblica",
+    "publishing": "Pubblicazione…",
+    "choose": "Scegli…",
+    "signIn": "Accedi",
+    "signInHint": "Devi accedere per pubblicare.",
+    "successTitle": "Annuncio inviato",
+    "successBody": "La bozza è stata creata e pubblicata se il tuo account lo consente.",
+    "addAnother": "Pubblica un altro immobile",
+    "reviewTitle": "Riepilogo",
+    "mediaPlaceholder": "Trascina le foto qui — upload diretto (presigned) in arrivo.",
+    "sections": {
+      "basics": "Dati base e venditore",
+      "taxonomy": "Tassonomia immobile",
+      "specs": "Superficie e prezzo",
+      "media": "Foto e pubblicazione"
+    },
+    "fields": {
+      "title": "Titolo",
+      "description": "Descrizione",
+      "city": "Comune",
+      "province": "Provincia (sigla)",
+      "address": "Indirizzo",
+      "price": "Prezzo (€)",
+      "sizeSqm": "Superficie (m²)",
+      "bedrooms": "Camere",
+      "bathrooms": "Bagni"
+    },
+    "hints": {
+      "province": "Sigla a due lettere, es. BS, MI, RM",
+      "sellerType": "Il privato è il posizionamento predefinito di EasyCasa.",
+      "financing": "Opzionale. Seleziona ogni modalità NIB che accetti (senza mutuo bancario tradizionale).",
+      "leaseType": "Obbligatorio per gli affitti — influenza contratto e RLI."
+    },
+    "errors": {
+      "title": "Inserisci un titolo (almeno 3 caratteri).",
+      "city": "Inserisci il comune.",
+      "sellerType": "Scegli privato o agenzia.",
+      "transactionType": "Scegli il tipo di transazione.",
+      "assetClass": "Scegli la destinazione d’uso.",
+      "propertyType": "Scegli la tipologia.",
+      "condition": "Scegli lo stato dell’immobile.",
+      "leaseType": "Scegli il tipo di contratto per l’affitto.",
+      "signInRequired": "Accedi per pubblicare l’annuncio.",
+      "publishFailed": "Salvato come bozza, ma la pubblicazione non è riuscita. Verifica il ruolo dell’account.",
+      "generic": "Qualcosa è andato storto. Riprova."
+    }
   },
   "footer": {
     "rights": "Tutti i diritti riservati.",
