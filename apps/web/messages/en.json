@@ -42,6 +42,7 @@
       "category": "Type",
       "region": "Region",
       "province": "Province",
+      "comune": "Municipality",
       "sort": "Sort",
       "sort_publishedAt:desc": "Most recent",
       "sort_price:asc": "Price ↑",

@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
+import { comuniForProvince } from '@easycasa/shared';
 import { FilterDropdown } from './FilterDropdown';
 import { PriceRangeFilter } from './PriceRangeFilter';
 import { SizeRangeFilter } from './SizeRangeFilter';
@@ -20,6 +21,8 @@ function SelectFilter({
   facets,
   facetField,
   placeholder,
+  onChange,
+  disabled,
 }: {
   label: string;
   paramKey: string;
@@ -27,6 +30,8 @@ function SelectFilter({
   facets: Record<string, Record<string, number>>;
   facetField?: string;
   placeholder: string;
+  onChange?: (value: string) => void;
+  disabled?: boolean;
 }) {
   const { get, set } = useSearchUrlState();
   const val = get(paramKey);
@@ -36,9 +41,10 @@ function SelectFilter({
   return (
     <FilterDropdown label={display} badge={badge || undefined}>
       <select
-        className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+        className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm disabled:opacity-50"
         value={val}
-        onChange={(e) => set(paramKey, e.target.value)}
+        disabled={disabled}
+        onChange={(e) => (onChange ? onChange(e.target.value) : set(paramKey, e.target.value))}
         aria-label={placeholder}
       >
         <option value="">{placeholder}</option>
@@ -96,21 +102,73 @@ export function SearchFilters({
   facets: Record<string, Record<string, number>>;
 }) {
   const t = useTranslations('search.filters');
-  const { get, set } = useSearchUrlState();
+  const { get, set, setMany } = useSearchUrlState();
 
   const regionSlug = get('regionSlug');
+  const provinceSlug = get('provinceSlug');
+
   const filteredProvinces = useMemo(
     () => (regionSlug ? provinces.filter((p) => p.regionSlug === regionSlug) : provinces),
     [provinces, regionSlug],
   );
 
+  const comuneOptions = useMemo(() => {
+    if (!provinceSlug) return [];
+    return comuniForProvince(provinceSlug).map((c) => ({ slug: c.name, name: c.name }));
+  }, [provinceSlug]);
+
   const tx = get('transactionType');
   const txLabel = tx === 'sale' ? t('sale') : tx === 'rent' ? t('rent') : t('all');
 
+  const onRegionChange = (value: string) => {
+    setMany({
+      regionSlug: value || null,
+      provinceSlug: null,
+      city: null,
+    });
+  };
+
+  const onProvinceChange = (value: string) => {
+    setMany({
+      provinceSlug: value || null,
+      city: null,
+    });
+  };
+
   return (
     <div className="space-y-3">
-      {/* Mobile: horizontal scroll; desktop: wrap */}
+      {/* Location cascade: Region → Province → Comune, then listing filters */}
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 sm:flex-wrap sm:overflow-visible">
+        <SelectFilter
+          label={t('region')}
+          paramKey="regionSlug"
+          options={regions}
+          facets={facets}
+          facetField="regionSlug"
+          placeholder={t('region')}
+          onChange={onRegionChange}
+        />
+
+        <SelectFilter
+          label={t('province')}
+          paramKey="provinceSlug"
+          options={filteredProvinces}
+          facets={facets}
+          facetField="provinceSlug"
+          placeholder={t('province')}
+          onChange={onProvinceChange}
+          disabled={!regionSlug}
+        />
+
+        <SelectFilter
+          label={t('comune')}
+          paramKey="city"
+          options={comuneOptions}
+          facets={facets}
+          placeholder={t('comune')}
+          disabled={!provinceSlug}
+        />
+
         <FilterDropdown label={txLabel} badge={tx ? 1 : undefined}>
           <select
             className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
@@ -131,24 +189,6 @@ export function SearchFilters({
           facets={facets}
           facetField="categorySlug"
           placeholder={t('category')}
-        />
-
-        <SelectFilter
-          label={t('province')}
-          paramKey="provinceSlug"
-          options={filteredProvinces}
-          facets={facets}
-          facetField="provinceSlug"
-          placeholder={t('province')}
-        />
-
-        <SelectFilter
-          label={t('region')}
-          paramKey="regionSlug"
-          options={regions}
-          facets={facets}
-          facetField="regionSlug"
-          placeholder={t('region')}
         />
 
         <PriceRangeFilter />

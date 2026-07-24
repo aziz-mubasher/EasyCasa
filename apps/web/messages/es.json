@@ -42,6 +42,7 @@
       "category": "Tipo",
       "region": "Región",
       "province": "Provincia",
+      "comune": "Municipio",
       "sort": "Ordenar",
       "sort_publishedAt:desc": "Más recientes",
       "sort_price:asc": "Precio ↑",
