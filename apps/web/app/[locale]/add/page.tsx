@@ -183,7 +183,6 @@ export default function AddListingPage() {
     }
     if (n === 4 && form.videoUrl.trim()) {
       try {
-        // eslint-disable-next-line no-new
         new URL(form.videoUrl.trim());
       } catch {
         return t('errors.videoUrl');
