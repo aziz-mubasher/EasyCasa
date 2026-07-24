@@ -44,6 +44,8 @@ export interface ListingDoc {
   sizeSqm: number | null;
   energyClass?: string | null;
   coverUrl: string | null;
+  /** Image URLs for search cards (ordered; coverUrl is typically imageUrls[0]). */
+  imageUrls?: string[];
   status: string;
   _geo?: { lat: number; lng: number };
   publishedAt: number | null;

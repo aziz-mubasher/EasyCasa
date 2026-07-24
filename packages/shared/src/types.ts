@@ -36,6 +36,8 @@ export interface ListingSummary {
   longitude: number | null;
   status: ListingStatus;
   coverUrl: string | null;
+  /** Listing photos for search-card carousels (cover first). */
+  imageUrls?: string[];
 }
 
 export interface Paginated<T> {

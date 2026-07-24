@@ -27,7 +27,7 @@ async function run(): Promise<void> {
     bedrooms: number | null; bathrooms: number | null; rooms: number | null;
     size_sqm: string | null; energy_class: string | null;
     latitude: number | null; longitude: number | null; status: string;
-    cover_url: string | null; published_at: Date | null;
+    cover_url: string | null; image_urls: string[] | null; published_at: Date | null;
     asset_class: string | null; property_type: string | null; condition: string | null;
     financing_options: string[] | null; lease_type: string | null; seller_type: string | null;
   }>(`
@@ -37,7 +37,13 @@ async function run(): Promise<void> {
            l.energy_class,
            l.latitude, l.longitude, l.status,
            l.asset_class, l.property_type, l.condition, l.financing_options, l.lease_type, l.seller_type,
-           (SELECT url FROM media m WHERE m.listing_id = l.id ORDER BY m.position LIMIT 1) AS cover_url,
+           (SELECT url FROM media m WHERE m.listing_id = l.id AND m.type IN ('image','floorplan') ORDER BY m.position LIMIT 1) AS cover_url,
+           COALESCE(
+             (SELECT array_agg(m.url ORDER BY m.position)
+                FROM media m
+               WHERE m.listing_id = l.id AND m.type IN ('image','floorplan')),
+             '{}'::text[]
+           ) AS image_urls,
            l.published_at
       FROM listings l
       LEFT JOIN regions r ON r.id = l.region_id
@@ -88,6 +94,7 @@ async function run(): Promise<void> {
       sizeSqm: r.size_sqm == null ? null : Number(r.size_sqm),
       energyClass: r.energy_class,
       coverUrl: r.cover_url,
+      imageUrls: r.image_urls ?? [],
       status: r.status,
       _geo: r.latitude != null && r.longitude != null
         ? { lat: r.latitude, lng: r.longitude }

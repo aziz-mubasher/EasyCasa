@@ -31,6 +31,12 @@ export async function searchListings(params: Record<string, string | number | un
     ...item,
     latitude: item.latitude ?? item._geo?.lat ?? null,
     longitude: item.longitude ?? item._geo?.lng ?? null,
+    imageUrls:
+      item.imageUrls && item.imageUrls.length > 0
+        ? item.imageUrls
+        : item.coverUrl
+          ? [item.coverUrl]
+          : [],
   }));
   return raw;
 }
