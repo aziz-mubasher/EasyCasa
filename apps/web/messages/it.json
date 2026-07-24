@@ -164,7 +164,7 @@
     "reviewTitle": "Riepilogo",
     "previewHint": "Controlla tutto qui sotto. Pubblicando creerai l’annuncio, caricherai le foto e lo renderai pubblico.",
     "removeImage": "Rimuovi foto",
-    "mediaPlaceholder": "Trascina le foto qui — upload diretto (presigned) in arrivo.",
+    "mediaPlaceholder": "Aggiungi fino a 12 foto (JPEG, PNG o WebP).",
     "sections": {
       "basics": "Dati base e venditore",
       "taxonomy": "Tassonomia immobile",
@@ -207,6 +207,7 @@
       "videoUrl": "Inserisci un URL video valido (o lascia vuoto).",
       "signInRequired": "Accedi per pubblicare l’annuncio.",
       "publishFailed": "Salvato come bozza, ma la pubblicazione non è riuscita. Verifica il ruolo dell’account.",
+      "network": "Impossibile raggiungere il server. Controlla la connessione e riprova.",
       "generic": "Qualcosa è andato storto. Riprova."
     }
   },

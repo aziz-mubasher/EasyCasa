@@ -164,7 +164,7 @@
     "reviewTitle": "Resumen",
     "previewHint": "Revisa todo abajo. Al publicar se creará el anuncio, se subirán las fotos y quedará público.",
     "removeImage": "Quitar foto",
-    "mediaPlaceholder": "Arrastra fotos aquí — subida directa (presigned) próximamente.",
+    "mediaPlaceholder": "Añade hasta 12 fotos (JPEG, PNG o WebP).",
     "sections": {
       "basics": "Datos básicos y vendedor",
       "taxonomy": "Taxonomía del inmueble",
@@ -207,6 +207,7 @@
       "videoUrl": "Introduce una URL de vídeo válida (o déjalo vacío).",
       "signInRequired": "Inicia sesión para publicar el anuncio.",
       "publishFailed": "Guardado como borrador, pero falló la publicación. Revisa el rol de la cuenta.",
+      "network": "No se pudo contactar el servidor. Revisa tu conexión e inténtalo de nuevo.",
       "generic": "Algo salió mal. Inténtalo de nuevo."
     }
   },
