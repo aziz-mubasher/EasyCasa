@@ -225,5 +225,24 @@
     "passthrough": "Repercusión",
     "empty": "Catálogo no disponible. Inténtalo de nuevo en breve.",
     "iva": "IVA cuando corresponda"
+  },
+  "valuationBand": {
+    "title": "Valoración de mercado",
+    "subtitle": "Comparación indicativa del precio con la banda de mercado de la zona.",
+    "anchorSelling": "Precio de venta",
+    "anchorFair": "Valor de mercado",
+    "anchorOutOfMarket": "Fuera de mercado",
+    "markerOutOfMarket": "Fuera de mercado",
+    "markerInBand": "Dentro de la banda de mercado",
+    "markerLabel": "Precio solicitado {price} — {status}",
+    "sourceLabel": "Fuente",
+    "sourceProvisional": "Estimación provisional basada en anuncios comparables",
+    "sourceOmi": "Agenzia delle Entrate – OMI",
+    "disclaimer": "Estimación indicativa; no constituye tasación pericial.",
+    "provisionalNotice": "Datos provisionales: la banda se basa en pocos anuncios comparables en la zona.",
+    "unavailableArea": "Valoración no disponible para esta zona.",
+    "unavailableMissingSurface": "Introduce la superficie para ver la banda de mercado.",
+    "a11yNoAsking": "precio no indicado",
+    "a11ySummary": "Zona {zone}. Precio de venta {selling}, valor de mercado {fair}, fuera de mercado {high}. Precio solicitado: {asking}. Estado: {status}."
   }
 }

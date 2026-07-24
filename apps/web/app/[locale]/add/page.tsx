@@ -18,6 +18,7 @@ import {
 } from '@easycasa/shared';
 import { Button } from '@/components/ui/Button';
 import { Field, Input, Select, TextArea } from '@/components/ui/Field';
+import { ValuationBandLive } from '@/components/valuation/ValuationBandLive';
 import { useAuth } from '@/auth/AuthProvider';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 
@@ -478,6 +479,14 @@ export default function AddListingPage() {
                 ))}
               </Select>
             </Field>
+            <ValuationBandLive
+              comune={form.city}
+              provincia={form.province}
+              propertyTypeSlug={form.propertyType}
+              sizeSqm={form.sizeSqm}
+              priceEur={form.price}
+              transactionType={form.transactionType || 'sale'}
+            />
           </>
         )}
 

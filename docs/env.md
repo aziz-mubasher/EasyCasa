@@ -37,6 +37,8 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | KEYCLOAK_DB | keycloak (VPS) | Postgres database name (default `keycloak`; created by `infra/postgres/init/02-keycloak-db.sql`). |
 | NEXT_PUBLIC_OIDC_ISSUER / NEXT_PUBLIC_OIDC_CLIENT_ID | web (build) | PKCE client for seeker sign-in (`easycasa-web`). Baked at image build. |
 | NEXT_PUBLIC_MAP_STYLE | web (build) | MapLibre basemap style JSON URL (default: OpenFreeMap Liberty — keyless, OSM data). **Rebuild web** after changing. Startup logs ERROR if unset in production builds. |
+| NEXT_PUBLIC_VALUATION_BAND_ENABLED | web (build) | Show the provisional market valuation band on listing detail and add-listing price step. Must match API `VALUATION_BAND_ENABLED`. Rebuild web after changing. |
+| VALUATION_BAND_ENABLED | api | Serve `GET /listings/:slug/valuation-band` and `POST /avm/band` (stub comparables provider). Default `false` until enabled per environment. |
 | VITE_OIDC_ISSUER / VITE_OIDC_CLIENT_ID / VITE_DEV_AUTH | admin (build) | Admin SPA PKCE client (`easycasa-admin`). Keep `VITE_DEV_AUTH=true` until Keycloak is live; see `docs/runbooks/oidc-cutover.md`. |
 | EXPO_PUBLIC_OIDC_ISSUER / EXPO_PUBLIC_OIDC_CLIENT_ID | mobile | PKCE client for Expo (`easycasa-app`). |
 | OIDC_ROLES_CLAIM | api | Dot path to roles in JWT (default `realm_access.roles`). |

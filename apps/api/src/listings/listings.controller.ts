@@ -38,6 +38,13 @@ export class ListingsController {
     return this.listings.getSimilar(id);
   }
 
+  /** Provisional market band for a listing slug — must stay above :slug. */
+  @Public()
+  @Get(':slug/valuation-band')
+  valuationBand(@Param('slug') slug: string) {
+    return this.listings.getValuationBand(slug);
+  }
+
   @Public()
   @Get(':slug')
   getBySlug(@Param('slug') slug: string) {

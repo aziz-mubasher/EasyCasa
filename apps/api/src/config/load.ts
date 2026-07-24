@@ -86,6 +86,9 @@ const Schema = z
 
     // Phase 39 — error tracking (empty → fail-soft noop reporter)
     SENTRY_DSN: z.string().default(''),
+
+    /** K EC 1.26 — provisional valuation band (stub comparables; not OMI yet). */
+    VALUATION_BAND_ENABLED: bool(false),
   })
   .superRefine((cfg, ctx) => {
     // When DEV_AUTH is off, OIDC must be fully configured (Phase 16 fail-fast).

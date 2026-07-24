@@ -4,6 +4,7 @@ import { euro, area } from '@/lib/format';
 import { Badge } from '@/components/ui/Badge';
 import { ListingStructuredData } from '@/components/StructuredData';
 import { ContactEnquiryForm } from '@/components/listings/ContactEnquiryForm';
+import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 
 export default async function ListingPage({
   params,
@@ -70,6 +71,8 @@ export default async function ListingPage({
       {l.description ? (
         <p className="mt-8 max-w-2xl leading-relaxed whitespace-pre-line">{String(l.description)}</p>
       ) : null}
+
+      <ListingValuationBandSection slug={String(l.slug ?? slug)} />
 
       <ContactEnquiryForm listingId={listingId} listingTitle={title} />
     </article>
