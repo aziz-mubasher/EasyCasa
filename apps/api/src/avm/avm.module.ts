@@ -1,6 +1,8 @@
 import { Inject, Injectable, Module } from '@nestjs/common';
 import { and, desc, eq, gt, isNotNull, sql } from 'drizzle-orm';
 
+import { normalizeProvinceSlug } from '@easycasa/shared';
+
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { listings, omiQuotes, valuationRequests } from '../db/schema';
@@ -8,9 +10,12 @@ import { AvmController } from './avm.controller';
 import { AvmService, COMPARABLES_PORT, OMI_PORT, VALUATION_REQUEST_LOG } from './avm.service';
 import type { ComparablesPort, OmiPort, ValuationRequestLog } from './domain/ports';
 import { AREA_VALUATION_PROVIDER } from './domain/area-valuation.port';
+import { FallbackAreaValuationProvider } from './fallback-area-valuation.provider';
 import { normalizePropertyType } from './domain/normalize-property-type';
+import { OmiAreaValuationProvider } from './omi-area-valuation.provider';
 import { StubAreaValuationProvider } from './stub-area-valuation.provider';
 import { ValuationBandService } from './valuation-band.service';
+import { normalizeOmiComune } from '../omi/normalize-comune';
 import type {
   Comparable,
   Condition,
@@ -131,21 +136,29 @@ export class DrizzleOmiPort implements OmiPort {
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
   async band(comune: string, provincia: string, type: PropertyType): Promise<OmiBand | null> {
+    const prov = normalizeProvinceSlug(provincia.trim());
+    const com = normalizeOmiComune(comune);
+    if (!prov || !com) return null;
+
     const rows = await this.db
       .select({
         minPerM2Cents: omiQuotes.minPerM2Cents,
         maxPerM2Cents: omiQuotes.maxPerM2Cents,
+        period: omiQuotes.period,
       })
       .from(omiQuotes)
       .where(
-        and(eq(omiQuotes.comune, comune), eq(omiQuotes.provincia, provincia), eq(omiQuotes.type, type)),
+        and(eq(omiQuotes.comune, com), eq(omiQuotes.provincia, prov), eq(omiQuotes.type, type)),
       )
       .orderBy(desc(omiQuotes.period))
-      .limit(1);
-    const row = rows[0];
-    return row
-      ? { minPerM2Cents: row.minPerM2Cents, maxPerM2Cents: row.maxPerM2Cents }
-      : null;
+      .limit(200);
+
+    if (rows.length === 0) return null;
+    const period = rows[0]!.period;
+    const samePeriod = rows.filter((r) => r.period === period);
+    const min = Math.min(...samePeriod.map((r) => r.minPerM2Cents));
+    const max = Math.max(...samePeriod.map((r) => r.maxPerM2Cents));
+    return { minPerM2Cents: min, maxPerM2Cents: max };
   }
 }
 
@@ -180,10 +193,13 @@ export class DrizzleValuationRequestLog implements ValuationRequestLog {
   providers: [
     AvmService,
     ValuationBandService,
+    OmiAreaValuationProvider,
+    StubAreaValuationProvider,
+    FallbackAreaValuationProvider,
     { provide: COMPARABLES_PORT, useClass: DrizzleComparables },
     { provide: OMI_PORT, useClass: DrizzleOmiPort },
     { provide: VALUATION_REQUEST_LOG, useClass: DrizzleValuationRequestLog },
-    { provide: AREA_VALUATION_PROVIDER, useClass: StubAreaValuationProvider },
+    { provide: AREA_VALUATION_PROVIDER, useClass: FallbackAreaValuationProvider },
   ],
   exports: [AvmService, ValuationBandService],
 })

@@ -68,9 +68,12 @@ export function ValuationBand({ data }: { data: Extract<ValuationBandResponseDto
     status: outOfMarket ? t('markerOutOfMarket') : t('markerInBand'),
   });
 
-  const sourceLabel = provenance.provisional
-    ? t('sourceProvisional')
-    : t('sourceOmi');
+  const sourceLabel =
+    data.provenance.source === 'omi' && data.provenance.attribution
+      ? data.provenance.attribution
+      : data.provenance.provisional
+        ? t('sourceProvisional')
+        : t('sourceOmi');
 
   return (
     <section className="rounded-xl border border-line bg-paper p-5" aria-labelledby="valuation-band-title">
@@ -149,7 +152,7 @@ export function ValuationBand({ data }: { data: Extract<ValuationBandResponseDto
           {provenance.zoneLabel ? ` · ${provenance.zoneLabel}` : ''}
         </p>
         <p>{t('disclaimer')}</p>
-        {provenance.provisional ? (
+        {provenance.source === 'comparable_listings' || provenance.provisional ? (
           <p className="text-ink/80">{t('provisionalNotice')}</p>
         ) : null}
       </footer>

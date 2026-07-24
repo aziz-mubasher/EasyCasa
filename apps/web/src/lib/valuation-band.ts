@@ -33,10 +33,12 @@ export type ValuationBandResponseDto =
       anchors: ValuationBandAnchorsDto;
       asking: ValuationBandMarkerDto | null;
       provenance: {
-        source: string;
+        source: 'omi' | 'comparable_listings';
         period: string | null;
         zoneLabel: string;
         provisional: boolean;
+        attribution: string | null;
+        geoLevel: 'microzone' | 'comune';
       };
       comparableCount: number;
     }
