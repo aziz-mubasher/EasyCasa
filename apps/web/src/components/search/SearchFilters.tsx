@@ -104,14 +104,10 @@ export function SearchFilters({
   const t = useTranslations('search.filters');
   const { get, set, setMany } = useSearchUrlState();
 
-  const regionSlug = get('regionSlug');
   const provinceSlug = get('provinceSlug');
 
-  const filteredProvinces = useMemo(
-    () => (regionSlug ? provinces.filter((p) => p.regionSlug === regionSlug) : provinces),
-    [provinces, regionSlug],
-  );
-
+  // Province list is independent of region (same UX as regions).
+  // Comune list stays bound to the selected province to avoid ~8k options.
   const comuneOptions = useMemo(() => {
     if (!provinceSlug) return [];
     return comuniForProvince(provinceSlug).map((c) => ({ slug: c.name, name: c.name }));
@@ -119,14 +115,6 @@ export function SearchFilters({
 
   const tx = get('transactionType');
   const txLabel = tx === 'sale' ? t('sale') : tx === 'rent' ? t('rent') : t('all');
-
-  const onRegionChange = (value: string) => {
-    setMany({
-      regionSlug: value || null,
-      provinceSlug: null,
-      city: null,
-    });
-  };
 
   const onProvinceChange = (value: string) => {
     setMany({
@@ -137,7 +125,7 @@ export function SearchFilters({
 
   return (
     <div className="space-y-3">
-      {/* Location cascade: Region → Province → Comune, then listing filters */}
+      {/* Location: Region + Province independent; Comune depends on Province */}
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 sm:flex-wrap sm:overflow-visible">
         <SelectFilter
           label={t('region')}
@@ -146,18 +134,16 @@ export function SearchFilters({
           facets={facets}
           facetField="regionSlug"
           placeholder={t('region')}
-          onChange={onRegionChange}
         />
 
         <SelectFilter
           label={t('province')}
           paramKey="provinceSlug"
-          options={filteredProvinces}
+          options={provinces}
           facets={facets}
           facetField="provinceSlug"
           placeholder={t('province')}
           onChange={onProvinceChange}
-          disabled={!regionSlug}
         />
 
         <SelectFilter

@@ -4,7 +4,7 @@ import { SearchBar } from '@/components/search/SearchBar';
 import { SearchFilters } from '@/components/search/SearchFilters';
 import { ActiveFilterChips } from '@/components/search/ActiveFilterChips';
 import { SearchResultsPanel } from '@/components/search/SearchResultsPanel';
-import type { ListingSummary } from '@easycasa/shared';
+import { ITALIAN_PROVINCES, type ListingSummary } from '@easycasa/shared';
 
 export default async function SearchPage({
   searchParams,
@@ -14,12 +14,18 @@ export default async function SearchPage({
   const sp = await searchParams;
   const t = await getTranslations('search');
 
-  const [data, regions, categories, provinces] = await Promise.all([
+  const [data, regions, categories, provincesFromApi] = await Promise.all([
     searchListings(sp).catch(() => ({ items: [], total: 0, page: 1, pageSize: 24, facets: {} })),
     listRegions(),
     listCategories(),
     listProvinces(),
   ]);
+
+  // Prefer API/DB list; fall back to shared ISTAT provinces so the filter never renders empty.
+  const provinces =
+    provincesFromApi.length > 0
+      ? provincesFromApi
+      : ITALIAN_PROVINCES.map((p) => ({ slug: p.slug, name: p.name, regionSlug: p.regionSlug }));
 
   const items = data.items as ListingSummary[];
 
