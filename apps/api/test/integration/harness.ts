@@ -72,6 +72,7 @@ async function bootOnce(): Promise<IntegrationContext> {
   process.env.MEILI_URL = meiliUrl;
   process.env.MEILI_MASTER_KEY = 'test';
   process.env.API_PORT = '4000';
+  process.env.SHARE_VIEW_HMAC_SECRET = 'integration-smartlink-view-secret';
 
   const { resetConfigCache } = await import('../../src/config');
   resetConfigCache();

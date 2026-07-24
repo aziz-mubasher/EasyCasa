@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import type { Request } from 'express';
 import { Throttle } from '@nestjs/throttler';
 
 import { Public } from '../auth/public.decorator';
@@ -48,10 +49,9 @@ export class ShareLinksController {
   @Public()
   @Throttle({ default: { limit: 120, ttl: 60_000 } })
   @Get('public/:token')
-  async publicPage(
-    @Param('token') token: string,
-    @Headers('x-ec-sl-visitor') visitorHeader?: string,
-  ) {
+  async publicPage(@Param('token') token: string, @Req() req: Request) {
+    const raw = req.headers['x-ec-sl-visitor'];
+    const visitorHeader = typeof raw === 'string' ? raw : raw?.[0];
     return this.service.getPublicPayload(token, visitorHeader ?? null);
   }
 }

@@ -85,7 +85,13 @@ export class ShareLinksRepository {
             viewDate: input.viewDate,
             visitorHash: input.visitorHash,
           })
-          .onConflictDoNothing()
+          .onConflictDoNothing({
+            target: [
+              shareLinkViewDedup.shareLinkId,
+              shareLinkViewDedup.viewDate,
+              shareLinkViewDedup.visitorHash,
+            ],
+          })
           .returning({ shareLinkId: shareLinkViewDedup.shareLinkId });
         uniqueAdded = inserted.length > 0;
       }

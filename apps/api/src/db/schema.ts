@@ -629,7 +629,7 @@ export const shareLinkViewDedup = pgTable(
   'share_link_view_dedup',
   {
     shareLinkId: uuid('share_link_id').notNull(),
-    viewDate: date('view_date').notNull(),
+    viewDate: date('view_date', { mode: 'string' }).notNull(),
     visitorHash: text('visitor_hash').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
