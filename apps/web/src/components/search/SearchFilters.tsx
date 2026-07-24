@@ -125,7 +125,7 @@ function FieldLabel({ children }: { children: ReactNode }) {
 
 /**
  * Primary bar (product priority):
- * Private|Agency · Price · Condition · Use class · NIB · Location · For sale · Filters · Reset
+ * Private|Agency · Price · Property type · Condition · Use class · NIB · Location · For sale · Filters · Reset
  */
 export function SearchFilters({
   regions,
@@ -178,7 +178,6 @@ export function SearchFilters({
   const locationActive = Boolean(city || provinceSlug || regionSlug);
 
   const advancedKeys = [
-    'propertyType',
     'leaseType',
     'minBedrooms',
     'minBathrooms',
@@ -217,7 +216,18 @@ export function SearchFilters({
         {/* 2 · Price */}
         <PriceRangeFilter />
 
-        {/* 3 · Condition */}
+        {/* 3 · Property type */}
+        <AxisDropdown
+          idleLabel={t('propertyTypeLabel')}
+          value={get('propertyType')}
+          options={propertyOptions}
+          onChange={(v) => set('propertyType', v)}
+          facets={facets}
+          facetField="propertyType"
+          allLabel={t('all')}
+        />
+
+        {/* 4 · Condition */}
         <AxisDropdown
           idleLabel={t('conditionLabel')}
           value={get('condition')}
@@ -228,7 +238,7 @@ export function SearchFilters({
           allLabel={t('all')}
         />
 
-        {/* 4 · Use class */}
+        {/* 5 · Use class */}
         <AxisDropdown
           idleLabel={t('assetClassLabel')}
           value={asset}
@@ -239,7 +249,7 @@ export function SearchFilters({
           allLabel={t('all')}
         />
 
-        {/* 5 · Purchase mode (NIB) */}
+        {/* 6 · Purchase mode (NIB) */}
         <AxisDropdown
           idleLabel={t('financingLabel')}
           value={get('financingOption')}
@@ -250,7 +260,7 @@ export function SearchFilters({
           allLabel={t('all')}
         />
 
-        {/* 6 · Location */}
+        {/* 7 · Location */}
         <FilterDropdown
           label={locationLabel}
           badge={locationActive ? 1 : undefined}
@@ -310,7 +320,7 @@ export function SearchFilters({
           </div>
         </FilterDropdown>
 
-        {/* 7 · For sale / transaction */}
+        {/* 8 · For sale / transaction */}
         <AxisDropdown
           idleLabel={t('transactionLabel')}
           value={tx}
@@ -321,7 +331,7 @@ export function SearchFilters({
           allLabel={t('all')}
         />
 
-        {/* 8 · More filters (remaining) */}
+        {/* 9 · More filters (remaining) */}
         <FilterDropdown
           label={t('moreFilters')}
           badge={advancedCount || undefined}
@@ -329,20 +339,8 @@ export function SearchFilters({
           panelClassName="min-w-[20rem] max-w-[min(100vw-2rem,24rem)]"
         >
           <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
-            <div>
-              <FieldLabel>{t('propertyTypeLabel')}</FieldLabel>
-              <OptionList
-                options={propertyOptions}
-                value={get('propertyType')}
-                onChange={(v) => set('propertyType', v)}
-                facets={facets}
-                facetField="propertyType"
-                allLabel={t('all')}
-              />
-            </div>
-
             {tx === 'rent' && (
-              <div className="border-t border-line pt-3">
+              <div>
                 <FieldLabel>{t('leaseTypeLabel')}</FieldLabel>
                 <OptionList
                   options={leaseOptions}
@@ -355,7 +353,7 @@ export function SearchFilters({
               </div>
             )}
 
-            <div className="border-t border-line pt-3 space-y-3">
+            <div className={`${tx === 'rent' ? 'border-t border-line pt-3 ' : ''}space-y-3`}>
               <FieldLabel>{t('roomsAndSize')}</FieldLabel>
               <div className="grid grid-cols-2 gap-2">
                 <label className="text-xs text-muted space-y-1">
