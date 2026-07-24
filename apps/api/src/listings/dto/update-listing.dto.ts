@@ -7,6 +7,7 @@ export class UpdateListingDto implements Partial<CreateListingDto> {
   categoryId?: string;
   regionId?: string;
   transactionType?: CreateListingDto['transactionType'];
+  transactionTypes?: CreateListingDto['transactionTypes'];
   assetClass?: CreateListingDto['assetClass'];
   propertyType?: CreateListingDto['propertyType'];
   condition?: CreateListingDto['condition'];
@@ -17,6 +18,9 @@ export class UpdateListingDto implements Partial<CreateListingDto> {
   bedrooms?: number;
   bathrooms?: number;
   sizeSqm?: number;
+  surfaceSqm?: number;
+  yearBuilt?: number;
+  yearRenovated?: number;
   address?: string;
   city?: string;
   province?: string;

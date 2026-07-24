@@ -28,6 +28,8 @@ export interface ListingDoc {
   /** Legacy Tipologia slug kept for PR #20 URL/API compat. */
   categorySlug: string | null;
   transactionType: 'sale' | 'rent' | 'auction' | 'bare_ownership' | null;
+  /** Multi deal types — filter with array contains. */
+  transactionTypes?: string[];
   /** Alias used by some map-index paths; prefer transactionType. */
   dealType?: 'sale' | 'rent' | 'auction' | 'bare_ownership' | null;
   assetClass?: string | null;
@@ -42,7 +44,11 @@ export interface ListingDoc {
   /** Prefer bedrooms when rooms is null. */
   rooms?: number | null;
   sizeSqm: number | null;
+  surfaceSqm?: number | null;
+  yearBuilt?: number | null;
+  yearRenovated?: number | null;
   energyClass?: string | null;
+  features?: string[];
   coverUrl: string | null;
   /** Image URLs for search cards (ordered; coverUrl is typically imageUrls[0]). */
   imageUrls?: string[];

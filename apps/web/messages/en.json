@@ -130,6 +130,18 @@
       "sellerType": {
         "private": "Private",
         "agency": "Agency"
+      },
+      "characteristicsLabel": "Characteristics",
+      "feature": {
+        "balcony": "Balcony",
+        "elevator": "Elevator",
+        "garage": "Garage",
+        "garden": "Garden",
+        "parking": "Parking",
+        "storage": "Storage",
+        "swimming_pool": "Swimming pool",
+        "terrace": "Terrace",
+        "rental_licence": "Rental licence"
       }
     },
     "empty": "No properties found. Widen your search or remove a filter."
@@ -179,7 +191,12 @@
       "province": "Province",
       "address": "Address",
       "price": "Price (€)",
-      "sizeSqm": "Area (m²)",
+      "surfaceSqm": "Surface area (m²)",
+      "builtAreaSqm": "Built area (m²)",
+      "sizeSqm": "Built area (m²)",
+      "yearBuilt": "Year built",
+      "yearRenovated": "Year renovated",
+      "characteristics": "Characteristics",
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",
       "images": "Photos",
@@ -191,6 +208,7 @@
       "sellerType": "Private sellers are EasyCasa’s default positioning.",
       "financing": "Optional. Select every NIB mode you will accept (no traditional mortgage required).",
       "leaseType": "Required for rentals — drives contract and RLI rules.",
+      "characteristics": "Optional. Select amenities that apply to this property.",
       "images": "Up to 12 images (JPEG/PNG/WebP). Uploaded when you publish.",
       "videoUrl": "Optional YouTube, Vimeo, or direct video URL."
     },
@@ -200,10 +218,12 @@
       "province": "Select a province.",
       "sellerType": "Choose private or agency.",
       "transactionType": "Choose how the property changes hands.",
+      "transactionTypes": "Select at least one transaction type.",
       "assetClass": "Choose destinazione d’uso (use class).",
       "propertyType": "Choose the property type.",
       "condition": "Choose the condition.",
       "leaseType": "Choose a lease type for rentals.",
+      "yearBuilt": "Enter the year the property was built.",
       "videoUrl": "Enter a valid video URL (or leave empty).",
       "signInRequired": "Sign in to publish your listing.",
       "publishFailed": "Saved as draft, but publish failed. Check your account role.",

@@ -1,6 +1,7 @@
 import {
   ASSET_CLASS_SLUGS,
   CONDITION_SLUGS,
+  FEATURE_SLUGS,
   FINANCING_OPTION_SLUGS,
   ITALIAN_PROVINCES,
   LEASE_TYPE_SLUGS,
@@ -17,6 +18,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   Min,
 } from 'class-validator';
@@ -124,6 +126,13 @@ export class SearchQueryDto {
   @Transform(({ value }) => (typeof value === 'string' ? value.toUpperCase() : value))
   @IsIn(ENERGY_CLASSES)
   energyClass?: (typeof ENERGY_CLASSES)[number];
+
+  /** Comma-separated characteristic slugs (AND). */
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  @Matches(new RegExp(`^(${FEATURE_SLUGS.join('|')})(,(${FEATURE_SLUGS.join('|')}))*$`))
+  features?: string;
 
   @IsOptional()
   @IsIn(SORT_OPTIONS)

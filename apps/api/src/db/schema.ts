@@ -66,10 +66,13 @@ export const listings = pgTable('listings', {
   bathrooms: integer('bathrooms'),
   rooms: integer('rooms'),
   sizeSqm: numeric('size_sqm'),
+  /** Total / plot / commercial surface (m²) — distinct from built area sizeSqm. */
+  surfaceSqm: numeric('surface_sqm'),
   landSqm: numeric('land_sqm'),
   floor: text('floor'),
   totalFloors: integer('total_floors'),
   yearBuilt: integer('year_built'),
+  yearRenovated: integer('year_renovated'),
   energyClass: text('energy_class'),
   energyPerformanceKwhM2Y: numeric('energy_performance_kwh_m2_y'),
   foglio: text('foglio'),
@@ -80,9 +83,11 @@ export const listings = pgTable('listings', {
   assetClass: text('asset_class'),
   /** NIB financing modes — multi-select (docs/taxonomy.md axis 5). */
   financingOptions: text('financing_options').array().notNull().default([]),
-  /** Rental contract type when transactionType = rent. */
+  /** Rental contract type when transaction includes rent. */
   leaseType: text('lease_type'),
   sellerType: text('seller_type'),
+  /** How it can change hands — multi (e.g. sale + rent). */
+  transactionTypes: text('transaction_types').array().notNull().default([]),
   features: text('features').array(),
   attributes: jsonb('attributes'),
   condominioFeesCents: integer('condominio_fees_cents'),

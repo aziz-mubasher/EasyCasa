@@ -1,5 +1,5 @@
 import { ForbiddenException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { deriveLegacyCategorySlug, normalizeProvinceSlug } from '@easycasa/shared';
+import { deriveLegacyCategorySlug, normalizeProvinceSlug, primaryTransactionType, type TransactionTypeSlug } from '@easycasa/shared';
 import { ListingsRepository } from './listings.repository';
 import { SearchService } from '../search/search.service';
 import { AlertsService } from '../alerts/alerts.service';
@@ -18,6 +18,16 @@ import type { ValuationBandResponse } from '../avm/domain/valuation-band';
 function slugify(title: string): string {
   return title.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '')
     .trim().replace(/\s+/g, '-').slice(0, 80) || 'listing';
+}
+
+function resolveTransactionTypes(dto: {
+  transactionType?: TransactionTypeSlug;
+  transactionTypes?: TransactionTypeSlug[];
+}): TransactionTypeSlug[] {
+  if (dto.transactionTypes && dto.transactionTypes.length > 0) {
+    return [...new Set(dto.transactionTypes)];
+  }
+  return dto.transactionType ? [dto.transactionType] : [];
 }
 
 const SIMILAR_LIMIT = 6;
@@ -113,30 +123,38 @@ export class ListingsService {
 
   async create(dto: CreateListingDto, agentId: string) {
     const financingOptions = dto.financingOptions ?? [];
+    const transactionTypes = resolveTransactionTypes(dto);
+    const transactionType =
+      primaryTransactionType(transactionTypes) ?? dto.transactionType ?? undefined;
+    const includesRent = transactionTypes.includes('rent') || transactionType === 'rent';
     const created = await this.repo.insert({
       title: dto.title,
       slug: `${slugify(dto.title)}-${Date.now().toString(36)}`,
       description: dto.description,
       categoryId: dto.categoryId,
       regionId: dto.regionId,
-      transactionType: dto.transactionType,
+      transactionType,
+      transactionTypes,
       assetClass: dto.assetClass,
       propertyType: dto.propertyType,
       condition: dto.condition,
       financingOptions,
-      leaseType: dto.transactionType === 'rent' ? dto.leaseType : null,
+      leaseType: includesRent ? dto.leaseType ?? null : null,
       sellerType: dto.sellerType ?? 'private',
       price: dto.price != null ? String(dto.price) : undefined,
       bedrooms: dto.bedrooms,
       bathrooms: dto.bathrooms,
       sizeSqm: dto.sizeSqm != null ? String(dto.sizeSqm) : undefined,
+      surfaceSqm: dto.surfaceSqm != null ? String(dto.surfaceSqm) : undefined,
+      yearBuilt: dto.yearBuilt,
+      yearRenovated: dto.yearRenovated,
       address: dto.address,
       city: dto.city,
       province: dto.province ? normalizeProvinceSlug(dto.province) ?? dto.province : undefined,
       energyClass: dto.energyClass,
       latitude: dto.latitude,
       longitude: dto.longitude,
-      features: dto.features,
+      features: dto.features ?? [],
       agentId,
       ownerUserId: agentId,
       status: 'draft',
@@ -162,20 +180,40 @@ export class ListingsService {
     if (!user.roles.includes('admin') && existing.agentId !== ownerId) {
       throw new ForbiddenException('not your listing');
     }
-    const tx = dto.transactionType ?? existing.transactionType ?? undefined;
+    const transactionTypes =
+      dto.transactionTypes !== undefined || dto.transactionType !== undefined
+        ? resolveTransactionTypes({
+            transactionType: dto.transactionType,
+            transactionTypes: dto.transactionTypes,
+          })
+        : undefined;
+    const transactionType =
+      transactionTypes != null
+        ? primaryTransactionType(transactionTypes) ?? undefined
+        : dto.transactionType;
+    const tx =
+      transactionType ??
+      existing.transactionType ??
+      undefined;
+    const typesForLease =
+      transactionTypes ??
+      (existing.transactionTypes as TransactionTypeSlug[] | null) ??
+      (tx ? [tx] : []);
+    const includesRent = typesForLease.includes('rent') || tx === 'rent';
     const updated = await this.repo.update(id, {
       title: dto.title,
       description: dto.description,
       categoryId: dto.categoryId,
       regionId: dto.regionId,
-      transactionType: dto.transactionType,
+      transactionType,
+      transactionTypes,
       assetClass: dto.assetClass,
       propertyType: dto.propertyType,
       condition: dto.condition,
       financingOptions: dto.financingOptions,
       leaseType:
         dto.leaseType !== undefined
-          ? tx === 'rent'
+          ? includesRent
             ? dto.leaseType
             : null
           : undefined,
@@ -184,6 +222,9 @@ export class ListingsService {
       bedrooms: dto.bedrooms,
       bathrooms: dto.bathrooms,
       sizeSqm: dto.sizeSqm != null ? String(dto.sizeSqm) : undefined,
+      surfaceSqm: dto.surfaceSqm != null ? String(dto.surfaceSqm) : undefined,
+      yearBuilt: dto.yearBuilt,
+      yearRenovated: dto.yearRenovated,
       address: dto.address,
       city: dto.city,
       province:
@@ -233,6 +274,12 @@ export class ListingsService {
         regionSlug: null,
         categorySlug: derivedCategory,
         transactionType: published.transactionType,
+        transactionTypes:
+          (published.transactionTypes as string[] | null)?.length
+            ? (published.transactionTypes as string[])
+            : published.transactionType
+              ? [published.transactionType]
+              : [],
         assetClass: published.assetClass ?? null,
         propertyType: published.propertyType ?? null,
         condition: published.condition ?? null,
@@ -244,7 +291,11 @@ export class ListingsService {
         bathrooms: published.bathrooms,
         rooms: published.rooms ?? published.bedrooms,
         sizeSqm: published.sizeSqm == null ? null : Number(published.sizeSqm),
+        surfaceSqm: published.surfaceSqm == null ? null : Number(published.surfaceSqm),
+        yearBuilt: published.yearBuilt ?? null,
+        yearRenovated: published.yearRenovated ?? null,
         energyClass: published.energyClass ?? null,
+        features: published.features ?? [],
         coverUrl,
         imageUrls,
         status: 'published',

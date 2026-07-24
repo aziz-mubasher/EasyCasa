@@ -22,6 +22,7 @@ export interface SearchParams {
   minSizeSqm?: number;
   maxSizeSqm?: number;
   energyClass?: string;
+  features?: string;
   sort?: 'price:asc' | 'price:desc' | 'publishedAt:desc';
   page?: number;
   pageSize?: number;
@@ -32,6 +33,7 @@ const FACET_FIELDS = [
   'regionSlug',
   'provinceSlug',
   'transactionType',
+  'transactionTypes',
   'assetClass',
   'propertyType',
   'condition',
@@ -39,6 +41,7 @@ const FACET_FIELDS = [
   'leaseType',
   'sellerType',
   'energyClass',
+  'features',
 ] as const;
 
 @Injectable()
@@ -67,6 +70,7 @@ export class SearchService implements OnModuleInit {
         'provinceSlug',
         'city',
         'transactionType',
+        'transactionTypes',
         'assetClass',
         'propertyType',
         'condition',
@@ -81,6 +85,7 @@ export class SearchService implements OnModuleInit {
         'status',
         '_geo',
         'energyClass',
+        'features',
       ],
       sortableAttributes: ['price', 'publishedAt'],
     });
@@ -134,6 +139,7 @@ export class SearchService implements OnModuleInit {
       minSizeSqm,
       maxSizeSqm,
       energyClass: p.energyClass,
+      features: p.features,
     });
 
     const pageSize = p.pageSize ?? 24;
