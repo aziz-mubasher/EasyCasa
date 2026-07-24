@@ -6,10 +6,11 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Matches,
   MaxLength,
   Min,
 } from 'class-validator';
+
+import { NoControlChars } from '../common/validators/no-control-chars.validator';
 
 export const CATEGORY_SLUGS = [
   'residential',
@@ -39,7 +40,7 @@ export class SearchQueryDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  @Matches(/^[^\x00-\x1f]*$/)
+  @NoControlChars()
   city?: string;
 
   @IsOptional()

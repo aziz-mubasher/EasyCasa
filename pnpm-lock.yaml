@@ -345,6 +345,9 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.670.0
         version: 3.1087.0
+      '@easycasa/shared':
+        specifier: workspace:*
+        version: link:../packages/shared
       dotenv:
         specifier: ^16.4.5
         version: 16.6.1

@@ -121,10 +121,25 @@ export const PROVINCE_BY_SLUG = new Map(
   ITALIAN_PROVINCES.map((p) => [p.slug, p]),
 );
 
+function foldAccents(value: string): string {
+  return value.normalize('NFD').replace(/\p{M}/gu, '');
+}
+
 /** Lowercase province display name → sigla (e.g. "brescia" → "BS"). */
 const PROVINCE_BY_NAME = new Map(
-  ITALIAN_PROVINCES.map((p) => [p.name.toLowerCase(), p.slug]),
+  ITALIAN_PROVINCES.flatMap((p) => {
+    const lower = p.name.toLowerCase();
+    const folded = foldAccents(lower);
+    return folded === lower
+      ? [[lower, p.slug] as const]
+      : ([[lower, p.slug], [folded, p.slug]] as const);
+  }),
 );
+
+/** Common free-text spellings that are not exact ISTAT names. */
+const PROVINCE_ALIASES: Readonly<Record<string, string>> = {
+  'monza e della brianza': 'MB',
+};
 
 /**
  * Normalize any province raw value to the official 2-letter sigla.
@@ -141,11 +156,26 @@ export function normalizeProvinceSlug(raw: string | null | undefined): string | 
 
   const withoutPrefix = trimmed
     .replace(/^provincia\s+(autonoma\s+)?di\s+/i, '')
+    .replace(/^prov\.?\s+di\s+/i, '')
     .replace(/^citt[aà]\s+metropolitana\s+di\s+/i, '')
     .trim()
     .toLowerCase();
 
-  return PROVINCE_BY_NAME.get(withoutPrefix) ?? PROVINCE_BY_NAME.get(trimmed.toLowerCase()) ?? null;
+  const candidates = [
+    withoutPrefix,
+    trimmed.toLowerCase(),
+    foldAccents(withoutPrefix),
+    foldAccents(trimmed.toLowerCase()),
+  ];
+
+  for (const key of candidates) {
+    const alias = PROVINCE_ALIASES[key];
+    if (alias) return alias;
+    const slug = PROVINCE_BY_NAME.get(key);
+    if (slug) return slug;
+  }
+
+  return null;
 }
 
 /**

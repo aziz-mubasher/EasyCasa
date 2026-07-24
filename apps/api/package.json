@@ -11,6 +11,7 @@
     "test:int": "DEV_AUTH=true vitest run --config vitest.integration.config.ts",
     "boot:check": "node dist/scripts/boot-check.js",
     "search:backfill": "tsx src/search/backfill.ts",
+    "province:repair": "tsx src/search/repair-provinces.ts",
     "pilot:seed": "node dist/pilot/seed/run-seed.js",
     "pilot:smoke": "node dist/pilot/smoke/run-smoke.js",
     "email:diagnostic": "node dist/email/diagnostic/run-email-diagnostic.js"
