@@ -53,7 +53,73 @@
       "sort_price:desc": "Prezzo ↓",
       "apply": "Applica",
       "clear": "Azzera",
-      "clearAll": "Azzera filtri"
+      "clearAll": "Azzera filtri",
+      "transactionLabel": "Transazione",
+      "transaction": {
+        "sale": "Vendita",
+        "rent": "Affitto",
+        "auction": "Asta giudiziaria",
+        "bare_ownership": "Nuda proprietà"
+      },
+      "assetClassLabel": "Destinazione d'uso",
+      "assetClass": {
+        "residential": "Residenziale",
+        "commercial": "Commerciale (negozi)",
+        "office": "Uffici",
+        "industrial": "Industriale / capannoni",
+        "land": "Terreni",
+        "garage": "Box e posti auto",
+        "hospitality": "Alberghiero / ricettivo"
+      },
+      "propertyTypeLabel": "Tipologia",
+      "propertyType": {
+        "apartment": "Appartamento",
+        "studio": "Monolocale",
+        "penthouse": "Attico",
+        "loft": "Loft",
+        "attic": "Mansarda",
+        "villa": "Villa",
+        "townhouse": "Villetta a schiera",
+        "detached": "Casa indipendente",
+        "rustic": "Rustico / casale",
+        "farmhouse": "Cascina",
+        "building": "Palazzo / stabile intero",
+        "room": "Stanza"
+      },
+      "conditionLabel": "Stato",
+      "condition": {
+        "new_build": "Nuova costruzione",
+        "under_construction": "In costruzione",
+        "renovated": "Ristrutturato",
+        "good": "Buono stato",
+        "to_renovate": "Da ristrutturare",
+        "shell": "Al grezzo"
+      },
+      "financingLabel": "Modalità di acquisto (NIB)",
+      "financing": {
+        "rent_to_buy": "Affitto con riscatto",
+        "seller_financing": "Pagamento dilazionato",
+        "retention_of_title": "Riserva di proprietà",
+        "crowdfunding": "Crowdfunding immobiliare",
+        "leasing": "Leasing immobiliare",
+        "barter": "Permuta",
+        "life_annuity": "Vitalizio",
+        "cash_only": "Solo contanti"
+      },
+      "leaseTypeLabel": "Tipo di contratto",
+      "leaseType": {
+        "free_4_4": "Libero 4+4",
+        "agreed_3_2": "Canone concordato 3+2",
+        "transitional": "Transitorio",
+        "student": "Studenti",
+        "short_stay": "Affitto breve",
+        "commercial_6_6": "Commerciale 6+6"
+      },
+      "sellerTypeLabel": "Venditore",
+      "sellerType": {
+        "private": "Privato",
+        "agency": "Agenzia"
+      }
     },
     "empty": "Nessun immobile trovato. Allarga la ricerca o rimuovi un filtro."
   },

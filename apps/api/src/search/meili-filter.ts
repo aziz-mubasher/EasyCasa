@@ -23,7 +23,13 @@ export interface TextSearchFilterParams {
   city?: string;
   regionSlug?: string;
   provinceSlug?: string;
-  transactionType?: 'sale' | 'rent';
+  transactionType?: string;
+  assetClass?: string;
+  propertyType?: string;
+  condition?: string;
+  financingOption?: string;
+  leaseType?: string;
+  sellerType?: string;
   minPrice?: number;
   maxPrice?: number;
   minBedrooms?: number;
@@ -42,6 +48,12 @@ export function buildTextSearchFilters(p: TextSearchFilterParams): string[] {
   if (p.regionSlug) filters.push(meiliEqFilter('regionSlug', p.regionSlug));
   if (p.provinceSlug) filters.push(meiliEqFilter('provinceSlug', p.provinceSlug.toUpperCase()));
   if (p.transactionType) filters.push(meiliEqFilter('transactionType', p.transactionType));
+  if (p.assetClass) filters.push(meiliEqFilter('assetClass', p.assetClass));
+  if (p.propertyType) filters.push(meiliEqFilter('propertyType', p.propertyType));
+  if (p.condition) filters.push(meiliEqFilter('condition', p.condition));
+  if (p.financingOption) filters.push(meiliEqFilter('financingOptions', p.financingOption));
+  if (p.leaseType) filters.push(meiliEqFilter('leaseType', p.leaseType));
+  if (p.sellerType) filters.push(meiliEqFilter('sellerType', p.sellerType));
   if (p.minPrice != null) filters.push(meiliNumericFilter('price', '>=', p.minPrice));
   if (p.maxPrice != null) filters.push(meiliNumericFilter('price', '<=', p.maxPrice));
   if (p.minBedrooms != null) filters.push(meiliNumericFilter('bedrooms', '>=', p.minBedrooms));

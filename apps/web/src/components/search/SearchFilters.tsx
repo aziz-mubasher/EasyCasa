@@ -2,7 +2,16 @@
 
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { comuniForProvince } from '@easycasa/shared';
+import {
+  ASSET_CLASS_SLUGS,
+  CONDITION_SLUGS,
+  FINANCING_OPTION_SLUGS,
+  LEASE_TYPE_SLUGS,
+  PROPERTY_TYPE_SLUGS,
+  SELLER_TYPE_SLUGS,
+  TRANSACTION_TYPE_SLUGS,
+  comuniForProvince,
+} from '@easycasa/shared';
 import { FilterDropdown } from './FilterDropdown';
 import { PriceRangeFilter } from './PriceRangeFilter';
 import { SizeRangeFilter } from './SizeRangeFilter';
@@ -90,14 +99,22 @@ function NumberFilter({
   );
 }
 
+function slugOptions(
+  slugs: readonly string[],
+  t: (key: string) => string,
+  prefix: string,
+): Array<{ slug: string; name: string }> {
+  return slugs.map((slug) => ({ slug, name: t(`${prefix}.${slug}`) }));
+}
+
 export function SearchFilters({
   regions,
-  categories,
   provinces,
   facets,
 }: {
   regions: Array<{ slug: string; name: string }>;
-  categories: Array<{ slug: string; name: string }>;
+  /** @deprecated retained for call-site compat; Tipologia replaced by multi-axis filters */
+  categories?: Array<{ slug: string; name: string }>;
   provinces: Array<{ slug: string; name: string; regionSlug?: string }>;
   facets: Record<string, Record<string, number>>;
 }) {
@@ -105,16 +122,24 @@ export function SearchFilters({
   const { get, set, setMany } = useSearchUrlState();
 
   const provinceSlug = get('provinceSlug');
+  const tx = get('transactionType');
 
-  // Province list is independent of region (same UX as regions).
-  // Comune list stays bound to the selected province to avoid ~8k options.
   const comuneOptions = useMemo(() => {
     if (!provinceSlug) return [];
     return comuniForProvince(provinceSlug).map((c) => ({ slug: c.name, name: c.name }));
   }, [provinceSlug]);
 
-  const tx = get('transactionType');
-  const txLabel = tx === 'sale' ? t('sale') : tx === 'rent' ? t('rent') : t('all');
+  const txOptions = useMemo(() => slugOptions(TRANSACTION_TYPE_SLUGS, t, 'transaction'), [t]);
+  const assetOptions = useMemo(() => slugOptions(ASSET_CLASS_SLUGS, t, 'assetClass'), [t]);
+  const propertyOptions = useMemo(() => slugOptions(PROPERTY_TYPE_SLUGS, t, 'propertyType'), [t]);
+  const conditionOptions = useMemo(() => slugOptions(CONDITION_SLUGS, t, 'condition'), [t]);
+  const financingOptions = useMemo(() => slugOptions(FINANCING_OPTION_SLUGS, t, 'financing'), [t]);
+  const leaseOptions = useMemo(() => slugOptions(LEASE_TYPE_SLUGS, t, 'leaseType'), [t]);
+  const sellerOptions = useMemo(() => slugOptions(SELLER_TYPE_SLUGS, t, 'sellerType'), [t]);
+
+  const txLabel = tx
+    ? txOptions.find((o) => o.slug === tx)?.name ?? tx
+    : t('all');
 
   const onProvinceChange = (value: string) => {
     setMany({
@@ -125,7 +150,6 @@ export function SearchFilters({
 
   return (
     <div className="space-y-3">
-      {/* Location: Region + Province independent; Comune depends on Province */}
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 sm:flex-wrap sm:overflow-visible">
         <SelectFilter
           label={t('region')}
@@ -155,26 +179,69 @@ export function SearchFilters({
           disabled={!provinceSlug}
         />
 
-        <FilterDropdown label={txLabel} badge={tx ? 1 : undefined}>
-          <select
-            className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
-            value={tx}
-            onChange={(e) => set('transactionType', e.target.value)}
-            aria-label={t('all')}
-          >
-            <option value="">{t('all')}{facets.transactionType ? ` (${Object.values(facets.transactionType).reduce((a, b) => a + b, 0)})` : ''}</option>
-            <option value="sale">{t('sale')}{facets.transactionType?.sale != null ? ` (${facets.transactionType.sale})` : ''}</option>
-            <option value="rent">{t('rent')}{facets.transactionType?.rent != null ? ` (${facets.transactionType.rent})` : ''}</option>
-          </select>
-        </FilterDropdown>
+        <SelectFilter
+          label={t('transactionLabel')}
+          paramKey="transactionType"
+          options={txOptions}
+          facets={facets}
+          facetField="transactionType"
+          placeholder={txLabel}
+        />
 
         <SelectFilter
-          label={t('category')}
-          paramKey="categorySlug"
-          options={categories}
+          label={t('assetClassLabel')}
+          paramKey="assetClass"
+          options={assetOptions}
           facets={facets}
-          facetField="categorySlug"
-          placeholder={t('category')}
+          facetField="assetClass"
+          placeholder={t('assetClassLabel')}
+        />
+
+        <SelectFilter
+          label={t('propertyTypeLabel')}
+          paramKey="propertyType"
+          options={propertyOptions}
+          facets={facets}
+          facetField="propertyType"
+          placeholder={t('propertyTypeLabel')}
+        />
+
+        <SelectFilter
+          label={t('conditionLabel')}
+          paramKey="condition"
+          options={conditionOptions}
+          facets={facets}
+          facetField="condition"
+          placeholder={t('conditionLabel')}
+        />
+
+        <SelectFilter
+          label={t('financingLabel')}
+          paramKey="financingOption"
+          options={financingOptions}
+          facets={facets}
+          facetField="financingOptions"
+          placeholder={t('financingLabel')}
+        />
+
+        {tx === 'rent' && (
+          <SelectFilter
+            label={t('leaseTypeLabel')}
+            paramKey="leaseType"
+            options={leaseOptions}
+            facets={facets}
+            facetField="leaseType"
+            placeholder={t('leaseTypeLabel')}
+          />
+        )}
+
+        <SelectFilter
+          label={t('sellerTypeLabel')}
+          paramKey="sellerType"
+          options={sellerOptions}
+          facets={facets}
+          facetField="sellerType"
+          placeholder={t('sellerTypeLabel')}
         />
 
         <PriceRangeFilter />

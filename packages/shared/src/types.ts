@@ -1,9 +1,11 @@
 /** Shared domain enums + DTO shapes used across web + api. */
+/** @deprecated Prefer AssetClassSlug / multi-axis taxonomy in taxonomy.ts */
 export type PropertyCategory =
   | 'residential' | 'renovatable' | 'nib' | 'commercial' | 'auction' | 'rooms';
 
 export type ListingStatus = 'draft' | 'published' | 'sold' | 'archived';
-export type TransactionType = 'sale' | 'rent';
+/** @deprecated Prefer TransactionTypeSlug from taxonomy.ts (includes auction / bare_ownership) */
+export type TransactionType = 'sale' | 'rent' | 'auction' | 'bare_ownership';
 export type UserRole =
   | 'buyer'
   | 'seller'

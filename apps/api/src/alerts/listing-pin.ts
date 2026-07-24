@@ -17,7 +17,7 @@ export function listingRowToPin(r: {
   latitude: number | null;
   longitude: number | null;
   price: string | null;
-  transactionType: 'sale' | 'rent' | null;
+  transactionType: 'sale' | 'rent' | 'auction' | 'bare_ownership' | null;
   bedrooms: number | null;
   rooms: number | null;
   sizeSqm: string | null;

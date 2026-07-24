@@ -1,8 +1,7 @@
 import { ForbiddenException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { normalizeProvinceSlug } from '@easycasa/shared';
+import { deriveLegacyCategorySlug, normalizeProvinceSlug } from '@easycasa/shared';
 import { ListingsRepository } from './listings.repository';
 import { SearchService } from '../search/search.service';
-import { inferPropertyType } from '../search/meili-search.index';
 import { AlertsService } from '../alerts/alerts.service';
 import { listingRowToPin } from '../alerts/listing-pin';
 import type { CreateListingDto } from './dto/create-listing.dto';
@@ -143,6 +142,14 @@ export class ListingsService {
     }
     const published = await this.repo.update(id, { status: 'published', publishedAt: new Date() });
     if (published) {
+      const financingOptions = published.financingOptions ?? [];
+      const derivedCategory = deriveLegacyCategorySlug({
+        transactionType: published.transactionType ?? undefined,
+        assetClass: (published.assetClass ?? undefined) as 'residential' | undefined,
+        propertyType: (published.propertyType ?? undefined) as 'apartment' | undefined,
+        condition: (published.condition ?? undefined) as 'good' | undefined,
+        financingOptions: financingOptions as never,
+      });
       await this.searchIndex.indexListing({
         id: published.id,
         slug: published.slug ?? published.id,
@@ -151,14 +158,19 @@ export class ListingsService {
         city: published.city,
         provinceSlug: normalizeProvinceSlug(published.province),
         regionSlug: null,
-        categorySlug: null,
+        categorySlug: derivedCategory,
         transactionType: published.transactionType,
+        assetClass: published.assetClass ?? null,
+        propertyType: published.propertyType ?? null,
+        condition: published.condition ?? null,
+        financingOptions,
+        leaseType: published.leaseType ?? null,
+        sellerType: published.sellerType ?? null,
         price: published.price == null ? null : Number(published.price),
         bedrooms: published.bedrooms,
         bathrooms: published.bathrooms,
         rooms: published.rooms ?? published.bedrooms,
         sizeSqm: published.sizeSqm == null ? null : Number(published.sizeSqm),
-        propertyType: published.propertyType ?? inferPropertyType(null),
         energyClass: published.energyClass ?? null,
         coverUrl: null,
         status: 'published',

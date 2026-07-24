@@ -73,6 +73,27 @@ describe('SearchQueryDto', () => {
     await expect(validate({ regionSlug: 'not-a-region' })).rejects.toThrow();
   });
 
+  it('accepts multi-axis taxonomy filters', async () => {
+    const dto = await validate({
+      assetClass: 'residential',
+      propertyType: 'apartment',
+      condition: 'to_renovate',
+      financingOption: 'rent_to_buy',
+      sellerType: 'private',
+      transactionType: 'auction',
+      leaseType: 'student',
+    });
+    expect(dto).toMatchObject({
+      assetClass: 'residential',
+      propertyType: 'apartment',
+      condition: 'to_renovate',
+      financingOption: 'rent_to_buy',
+      sellerType: 'private',
+      transactionType: 'auction',
+      leaseType: 'student',
+    });
+  });
+
   it('rejects extra query fields', async () => {
     await expect(validate({ q: 'test', evil: 'payload' })).rejects.toThrow();
   });

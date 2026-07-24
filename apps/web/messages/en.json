@@ -53,7 +53,73 @@
       "sort_price:desc": "Price ↓",
       "apply": "Apply",
       "clear": "Clear",
-      "clearAll": "Clear all filters"
+      "clearAll": "Clear all filters",
+      "transactionLabel": "Transaction",
+      "transaction": {
+        "sale": "For sale",
+        "rent": "For rent",
+        "auction": "Judicial auction",
+        "bare_ownership": "Bare ownership"
+      },
+      "assetClassLabel": "Use class",
+      "assetClass": {
+        "residential": "Residential",
+        "commercial": "Retail / commercial",
+        "office": "Office",
+        "industrial": "Industrial / warehouse",
+        "land": "Land",
+        "garage": "Garage / parking",
+        "hospitality": "Hospitality"
+      },
+      "propertyTypeLabel": "Property type",
+      "propertyType": {
+        "apartment": "Apartment",
+        "studio": "Studio",
+        "penthouse": "Penthouse",
+        "loft": "Loft",
+        "attic": "Attic",
+        "villa": "Villa",
+        "townhouse": "Townhouse",
+        "detached": "Detached house",
+        "rustic": "Rustic / farmhouse",
+        "farmhouse": "Farmstead",
+        "building": "Whole building",
+        "room": "Room"
+      },
+      "conditionLabel": "Condition",
+      "condition": {
+        "new_build": "New build",
+        "under_construction": "Under construction",
+        "renovated": "Renovated",
+        "good": "Good condition",
+        "to_renovate": "Needs renovation",
+        "shell": "Shell / unfinished"
+      },
+      "financingLabel": "Purchase mode (NIB)",
+      "financing": {
+        "rent_to_buy": "Rent to buy",
+        "seller_financing": "Seller financing",
+        "retention_of_title": "Retention of title",
+        "crowdfunding": "Crowdfunding",
+        "leasing": "Property leasing",
+        "barter": "Property exchange",
+        "life_annuity": "Life annuity",
+        "cash_only": "Cash only"
+      },
+      "leaseTypeLabel": "Lease type",
+      "leaseType": {
+        "free_4_4": "Free 4+4",
+        "agreed_3_2": "Agreed rent 3+2",
+        "transitional": "Transitional",
+        "student": "Student",
+        "short_stay": "Short stay",
+        "commercial_6_6": "Commercial 6+6"
+      },
+      "sellerTypeLabel": "Seller",
+      "sellerType": {
+        "private": "Private",
+        "agency": "Agency"
+      }
     },
     "empty": "No properties found. Widen your search or remove a filter."
   },

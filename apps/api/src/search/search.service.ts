@@ -8,7 +8,13 @@ export interface SearchParams {
   categorySlug?: string;
   regionSlug?: string;
   provinceSlug?: string;
-  transactionType?: 'sale' | 'rent';
+  transactionType?: string;
+  assetClass?: string;
+  propertyType?: string;
+  condition?: string;
+  financingOption?: string;
+  leaseType?: string;
+  sellerType?: string;
   minPrice?: number;
   maxPrice?: number;
   minBedrooms?: number;
@@ -26,6 +32,12 @@ const FACET_FIELDS = [
   'regionSlug',
   'provinceSlug',
   'transactionType',
+  'assetClass',
+  'propertyType',
+  'condition',
+  'financingOptions',
+  'leaseType',
+  'sellerType',
   'energyClass',
 ] as const;
 
@@ -55,6 +67,12 @@ export class SearchService implements OnModuleInit {
         'provinceSlug',
         'city',
         'transactionType',
+        'assetClass',
+        'propertyType',
+        'condition',
+        'financingOptions',
+        'leaseType',
+        'sellerType',
         'price',
         'bedrooms',
         'bathrooms',
@@ -62,7 +80,6 @@ export class SearchService implements OnModuleInit {
         'sizeSqm',
         'status',
         '_geo',
-        'propertyType',
         'energyClass',
       ],
       sortableAttributes: ['price', 'publishedAt'],
@@ -104,6 +121,12 @@ export class SearchService implements OnModuleInit {
       regionSlug: p.regionSlug,
       provinceSlug: p.provinceSlug,
       transactionType: p.transactionType,
+      assetClass: p.assetClass,
+      propertyType: p.propertyType,
+      condition: p.condition,
+      financingOption: p.financingOption,
+      leaseType: p.leaseType,
+      sellerType: p.sellerType,
       minPrice,
       maxPrice,
       minBedrooms: p.minBedrooms,

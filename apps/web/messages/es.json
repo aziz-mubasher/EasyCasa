@@ -53,7 +53,73 @@
       "sort_price:desc": "Precio ↓",
       "apply": "Aplicar",
       "clear": "Limpiar",
-      "clearAll": "Limpiar filtros"
+      "clearAll": "Limpiar filtros",
+      "transactionLabel": "Transacción",
+      "transaction": {
+        "sale": "Venta",
+        "rent": "Alquiler",
+        "auction": "Subasta judicial",
+        "bare_ownership": "Nuda propiedad"
+      },
+      "assetClassLabel": "Destino de uso",
+      "assetClass": {
+        "residential": "Residencial",
+        "commercial": "Comercial (tiendas)",
+        "office": "Oficinas",
+        "industrial": "Industrial / naves",
+        "land": "Terrenos",
+        "garage": "Garaje / parking",
+        "hospitality": "Hotelero"
+      },
+      "propertyTypeLabel": "Tipología",
+      "propertyType": {
+        "apartment": "Apartamento",
+        "studio": "Estudio",
+        "penthouse": "Ático",
+        "loft": "Loft",
+        "attic": "Buhardilla",
+        "villa": "Villa",
+        "townhouse": "Adosado",
+        "detached": "Casa independiente",
+        "rustic": "Rústico / caserío",
+        "farmhouse": "Cascina",
+        "building": "Edificio completo",
+        "room": "Habitación"
+      },
+      "conditionLabel": "Estado",
+      "condition": {
+        "new_build": "Obra nueva",
+        "under_construction": "En construcción",
+        "renovated": "Reformado",
+        "good": "Buen estado",
+        "to_renovate": "A reformar",
+        "shell": "En bruto"
+      },
+      "financingLabel": "Modo de compra (NIB)",
+      "financing": {
+        "rent_to_buy": "Alquiler con opción",
+        "seller_financing": "Financiación del vendedor",
+        "retention_of_title": "Reserva de dominio",
+        "crowdfunding": "Crowdfunding",
+        "leasing": "Leasing inmobiliario",
+        "barter": "Permuta",
+        "life_annuity": "Vitalicio",
+        "cash_only": "Solo contado"
+      },
+      "leaseTypeLabel": "Tipo de contrato",
+      "leaseType": {
+        "free_4_4": "Libre 4+4",
+        "agreed_3_2": "Renta concertada 3+2",
+        "transitional": "Transitorio",
+        "student": "Estudiantes",
+        "short_stay": "Estancia corta",
+        "commercial_6_6": "Comercial 6+6"
+      },
+      "sellerTypeLabel": "Vendedor",
+      "sellerType": {
+        "private": "Particular",
+        "agency": "Agencia"
+      }
     },
     "empty": "No se encontraron inmuebles. Amplía la búsqueda o quita un filtro."
   },

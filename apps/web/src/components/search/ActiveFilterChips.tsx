@@ -23,7 +23,19 @@ export function ActiveFilterChips({
 
   const chips: ChipDef[] = [];
   const tx = get('transactionType');
-  if (tx) chips.push({ key: 'transactionType', label: tf(tx as 'sale' | 'rent') });
+  if (tx) chips.push({ key: 'transactionType', label: tf(`transaction.${tx}` as 'transaction.sale') });
+  const asset = get('assetClass');
+  if (asset) chips.push({ key: 'assetClass', label: tf(`assetClass.${asset}` as 'assetClass.residential') });
+  const pType = get('propertyType');
+  if (pType) chips.push({ key: 'propertyType', label: tf(`propertyType.${pType}` as 'propertyType.apartment') });
+  const cond = get('condition');
+  if (cond) chips.push({ key: 'condition', label: tf(`condition.${cond}` as 'condition.good') });
+  const fin = get('financingOption');
+  if (fin) chips.push({ key: 'financingOption', label: tf(`financing.${fin}` as 'financing.rent_to_buy') });
+  const lease = get('leaseType');
+  if (lease) chips.push({ key: 'leaseType', label: tf(`leaseType.${lease}` as 'leaseType.free_4_4') });
+  const seller = get('sellerType');
+  if (seller) chips.push({ key: 'sellerType', label: tf(`sellerType.${seller}` as 'sellerType.private') });
   const cat = get('categorySlug');
   if (cat) chips.push({ key: 'categorySlug', label: categories.find((c) => c.slug === cat)?.name ?? cat });
   const reg = get('regionSlug');

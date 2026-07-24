@@ -25,18 +25,23 @@ export interface ListingDoc {
   city: string | null;
   provinceSlug: string | null;
   regionSlug: string | null;
+  /** Legacy Tipologia slug kept for PR #20 URL/API compat. */
   categorySlug: string | null;
-  transactionType: 'sale' | 'rent' | null;
+  transactionType: 'sale' | 'rent' | 'auction' | 'bare_ownership' | null;
   /** Alias used by some map-index paths; prefer transactionType. */
-  dealType?: 'sale' | 'rent' | null;
+  dealType?: 'sale' | 'rent' | 'auction' | 'bare_ownership' | null;
+  assetClass?: string | null;
+  propertyType?: string | null;
+  condition?: string | null;
+  financingOptions?: string[];
+  leaseType?: string | null;
+  sellerType?: string | null;
   price: number | null;
   bedrooms: number | null;
   bathrooms: number | null;
   /** Prefer bedrooms when rooms is null. */
   rooms?: number | null;
   sizeSqm: number | null;
-  /** Map filter: apartment | house | villa | room | land | commercial */
-  propertyType?: string | null;
   energyClass?: string | null;
   coverUrl: string | null;
   status: string;

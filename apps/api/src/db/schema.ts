@@ -4,7 +4,7 @@ import {
 } from 'drizzle-orm/pg-core';
 
 export const listingStatus = pgEnum('listing_status', ['draft', 'published', 'sold', 'archived']);
-export const transactionType = pgEnum('transaction_type', ['sale', 'rent']);
+export const transactionType = pgEnum('transaction_type', ['sale', 'rent', 'auction', 'bare_ownership']);
 export const userRole = pgEnum('user_role', [
   'buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin', 'professional',
 ]);
@@ -76,6 +76,13 @@ export const listings = pgTable('listings', {
   particella: text('particella'),
   subalterno: text('subalterno'),
   condition: text('condition'),
+  /** Destinazione d'uso — docs/taxonomy.md axis 2. */
+  assetClass: text('asset_class'),
+  /** NIB financing modes — multi-select (docs/taxonomy.md axis 5). */
+  financingOptions: text('financing_options').array().notNull().default([]),
+  /** Rental contract type when transactionType = rent. */
+  leaseType: text('lease_type'),
+  sellerType: text('seller_type'),
   features: text('features').array(),
   attributes: jsonb('attributes'),
   condominioFeesCents: integer('condominio_fees_cents'),
