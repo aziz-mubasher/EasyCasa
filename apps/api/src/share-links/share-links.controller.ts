@@ -1,65 +1,57 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
+
 import { Public } from '../auth/public.decorator';
 import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
-import { CreateShareLinkDto, RecordShareViewDto } from './dto/share-link.dto';
+import { CreateShareLinkDto } from './dto/create-share-link.dto';
 import { ShareLinksService } from './share-links.service';
 
-@Controller()
+@Controller('share-links')
 export class ShareLinksController {
   constructor(
-    private readonly shareLinks: ShareLinksService,
+    private readonly service: ShareLinksService,
     private readonly users: UsersService,
   ) {}
 
   @Roles('seller', 'agent', 'partner', 'pro_marketer')
-  @Post('listings/:listingId/share-links')
-  async create(
-    @Param('listingId') listingId: string,
-    @Body() dto: CreateShareLinkDto,
-    @CurrentUser() user: AuthUser,
-  ) {
+  @Post()
+  async create(@Body() dto: CreateShareLinkDto, @CurrentUser() user: AuthUser) {
     const me = await this.users.getOrCreate(user);
-    return this.shareLinks.create(listingId, me.id, user, dto);
+    return this.service.create(dto, me.id, user);
   }
 
   @Roles('seller', 'agent', 'partner', 'pro_marketer')
-  @Get('me/share-links')
-  async listMine(
-    @CurrentUser() user: AuthUser,
-    @Query('listingId') listingId?: string,
-  ) {
+  @Get('mine')
+  async mine(@CurrentUser() user: AuthUser) {
     const me = await this.users.getOrCreate(user);
-    return this.shareLinks.listMine(me.id, listingId?.trim() || undefined);
+    return this.service.listMine(me.id);
   }
 
   @Roles('seller', 'agent', 'partner', 'pro_marketer')
-  @Post('share-links/:id/revoke')
+  @Post(':id/revoke')
   async revoke(@Param('id') id: string, @CurrentUser() user: AuthUser) {
     const me = await this.users.getOrCreate(user);
-    return this.shareLinks.revoke(id, me.id, user);
+    return this.service.revoke(id, me.id);
   }
 
-  /** Public SmartLink payload — no auth; does not increment views (SSR + OG). */
-  @Public()
-  @Get('share/:token')
-  getPublic(@Param('token') token: string) {
-    return this.shareLinks.getPublicPayload(token);
+  @Roles('seller', 'agent', 'partner', 'pro_marketer')
+  @Get(':id/stats')
+  async stats(@Param('id') id: string, @CurrentUser() user: AuthUser) {
+    const me = await this.users.getOrCreate(user);
+    return this.service.stats(id, me.id, user);
   }
 
-  /** Records a page view from the anonymous visitor cookie (client or edge). */
+  /** Public SmartLink payload + view recording (must stay above :id catch-alls). */
   @Public()
-  @Post('share/:token/view')
-  recordView(@Param('token') token: string, @Body() dto: RecordShareViewDto) {
-    return this.shareLinks.recordView(token, dto.visitorToken);
+  @Throttle({ default: { limit: 120, ttl: 60_000 } })
+  @Get('public/:token')
+  async publicPage(
+    @Param('token') token: string,
+    @Headers('x-ec-sl-visitor') visitorHeader?: string,
+  ) {
+    return this.service.getPublicPayload(token, visitorHeader ?? null);
   }
 }

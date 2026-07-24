@@ -1,25 +1,16 @@
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { PilotSeedService } from '../../src/pilot/pilot.module';
 import { dockerAvailable, startIntegration, type IntegrationContext } from './harness';
 import { asUser } from './test-auth';
 
 const gate = dockerAvailable() ? describe : describe.skip;
 
-gate('SmartLink share links (real DB)', () => {
+gate('SmartLink share links (integration)', () => {
   let ctx: IntegrationContext;
-  let listingId: string;
 
   beforeAll(async () => {
     ctx = await startIntegration();
-    const seed = ctx.app.get(PilotSeedService);
-    await seed.run();
-
-    const search = await request(ctx.app.getHttpServer())
-      .post('/search/bounds')
-      .send({ minLat: 45.4, minLng: 9.1, maxLat: 45.5, maxLng: 9.3, zoom: 12 });
-    listingId = search.body.pins?.[0]?.listingId as string;
   }, 300_000);
 
   afterAll(async () => {
@@ -28,50 +19,86 @@ gate('SmartLink share links (real DB)', () => {
 
   const api = () => ctx.app.getHttpServer();
 
-  const owner = () =>
-    asUser({
-      sub: 'pilot-owner',
-      email: 'agente@easycasaita.com',
-      name: 'Agenzia EasyCasa',
+  it('creates, tracks views, hides private fields, and revokes', async () => {
+    const agent = asUser({
+      sub: 'smartlink-agent',
+      email: 'smartlink-agent@example.it',
+      name: 'Agente SmartLink',
       roles: ['agent'],
     });
+    const stranger = asUser({
+      sub: 'smartlink-stranger',
+      email: 'stranger@example.it',
+      roles: ['seller'],
+    });
 
-  it('creates, serves public payload, tracks views, and revokes', async () => {
+    const createListing = await request(api())
+      .post('/listings')
+      .set(agent)
+      .send({
+        title: 'SmartLink Test Casa',
+        city: 'Brescia',
+        province: 'BS',
+        transactionType: 'sale',
+        transactionTypes: ['sale'],
+        assetClass: 'residential',
+        propertyType: 'apartment',
+        condition: 'good',
+        sellerType: 'agency',
+        yearBuilt: 1990,
+        sizeSqm: 100,
+        price: 250000,
+      });
+    expect(createListing.status).toBe(201);
+    const listingId = createListing.body.id as string;
+
+    await request(api()).post(`/listings/${listingId}/publish`).set(agent).expect(201);
+
+    const forbidden = await request(api())
+      .post('/share-links')
+      .set(stranger)
+      .send({ listingId, includeValuationBand: true });
+    expect(forbidden.status).toBe(403);
+
     const created = await request(api())
-      .post(`/listings/${listingId}/share-links`)
-      .set(owner())
-      .send({ includeValuationBand: true })
-      .expect(201);
-
-    expect(created.body.token).toBeTruthy();
-    expect(created.body.publicPath).toMatch(/^\/s\//);
+      .post('/share-links')
+      .set(agent)
+      .send({ listingId, includeValuationBand: true });
+    expect(created.status).toBe(201);
     const token = created.body.token as string;
+    expect(token.length).toBeGreaterThan(20);
 
-    const pub = await request(api()).get(`/share/${token}`).expect(200);
-    expect(pub.body.listing.title).toBeTruthy();
-    expect(pub.body.listing.address).toBeUndefined();
-    expect(pub.body.agent.displayName).toBeTruthy();
+    const visitor = 'test-visitor-opaque-id-12345678';
+    const first = await request(api())
+      .get(`/share-links/public/${token}`)
+      .set('X-EC-SL-Viewer', visitor);
+    expect(first.status).toBe(200);
+    expect(first.body.listing.title).toBe('SmartLink Test Casa');
+    expect(first.body.listing.address).toBeUndefined();
+    expect(first.body.listing.ownerUserId).toBeUndefined();
+    expect(first.body.stats.viewCount).toBe(1);
+    expect(first.body.stats.uniqueViewCount).toBe(1);
 
-    await request(api())
-      .post(`/share/${token}/view`)
-      .send({ visitorToken: 'visitor-abc-12345678' })
-      .expect((res) => expect([200, 201]).toContain(res.status));
-    await request(api())
-      .post(`/share/${token}/view`)
-      .send({ visitorToken: 'visitor-abc-12345678' })
-      .expect((res) => expect([200, 201]).toContain(res.status));
+    const second = await request(api())
+      .get(`/share-links/public/${token}`)
+      .set('X-EC-SL-Viewer', visitor);
+    expect(second.body.stats.viewCount).toBe(2);
+    expect(second.body.stats.uniqueViewCount).toBe(1);
 
-    const after = await request(api()).get(`/share/${token}`).expect(200);
-    expect(after.body.viewCount).toBeGreaterThanOrEqual(2);
-    expect(after.body.uniqueViewCount).toBe(1);
+    const otherVisitor = 'other-visitor-opaque-id-87654321';
+    const third = await request(api())
+      .get(`/share-links/public/${token}`)
+      .set('X-EC-SL-Viewer', otherVisitor);
+    expect(third.body.stats.viewCount).toBe(3);
+    expect(third.body.stats.uniqueViewCount).toBe(2);
 
-    const stranger = asUser({ sub: 'other', roles: ['agent'] });
-    await request(api()).post(`/listings/${listingId}/share-links`).set(stranger).expect(403);
+    const linkId = created.body.id as string;
+    await request(api()).post(`/share-links/${linkId}/revoke`).set(agent).expect(201);
 
-    await request(api())
-      .post(`/share-links/${created.body.id}/revoke`)
-      .set(owner())
-      .expect((res) => expect([200, 201]).toContain(res.status));
-    await request(api()).get(`/share/${token}`).expect(410);
+    const gone = await request(api()).get(`/share-links/public/${token}`);
+    expect(gone.status).toBe(410);
+
+    const missing = await request(api()).get('/share-links/public/does-not-exist-token');
+    expect(missing.status).toBe(404);
   });
 });

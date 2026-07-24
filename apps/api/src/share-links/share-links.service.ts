@@ -4,182 +4,222 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+
+import { apiConfig } from '../config';
 import { ListingsRepository } from '../listings/listings.repository';
-import { loadApiConfig } from '../config/load';
+import { ListingsService } from '../listings/listings.service';
 import type { AuthUser } from '../auth/auth.types';
-import type { AgentSnapshot } from './domain/public-payload';
-import { buildPublicShareListing } from './domain/public-payload';
-import { hashShareVisitor, newShareToken } from './domain/visitor-hash';
+import { generateShareToken, normalizeOpaqueVisitorId, utcViewDate, visitorHashForView } from './domain/tokens';
+import type {
+  PublicListingPayload,
+  ShareLinkOwnerRow,
+  ShareLinkPublicPayload,
+} from './domain/types';
+import type { CreateShareLinkDto } from './dto/create-share-link.dto';
 import { ShareLinksRepository } from './share-links.repository';
 
-const AGENCY = {
-  name: 'Easy Casa Italy',
-  email: 'info@easycasaita.com',
-  phone: null as string | null,
-};
+const PRIVATE_LISTING_KEYS = [
+  'ownerUserId',
+  'agentId',
+  'mediatorUserId',
+  'address',
+  'postalCode',
+  'foglio',
+  'particella',
+  'subalterno',
+  'wpPostId',
+  'qrCodeUrl',
+] as const;
 
-function canManageListing(
-  listing: { agentId: string | null; ownerUserId: string | null },
-  userId: string,
-  user: AuthUser,
-): boolean {
-  if (user.roles.includes('admin')) return true;
-  return listing.agentId === userId || listing.ownerUserId === userId;
-}
-
-function readAgentSnapshot(raw: unknown): AgentSnapshot {
-  if (!raw || typeof raw !== 'object') {
-    return { displayName: 'Easy Casa Italy' };
-  }
-  const o = raw as Record<string, unknown>;
-  return {
-    displayName: typeof o.displayName === 'string' ? o.displayName : 'Easy Casa Italy',
-    phone: typeof o.phone === 'string' ? o.phone : null,
-    slug: typeof o.slug === 'string' ? o.slug : null,
-    bio: typeof o.bio === 'string' ? o.bio : null,
-    avatarUrl: typeof o.avatarUrl === 'string' ? o.avatarUrl : null,
-  };
-}
+export { PRIVATE_LISTING_KEYS };
 
 @Injectable()
 export class ShareLinksService {
-  private viewPepper(): string {
-    const cfg = loadApiConfig();
-    return cfg.SHARE_VIEW_PEPPER.trim() || 'dev-share-view-pepper-change-me';
-  }
-
   constructor(
     private readonly repo: ShareLinksRepository,
-    private readonly listings: ListingsRepository,
+    private readonly listingsRepo: ListingsRepository,
+    private readonly listings: ListingsService,
   ) {}
 
-  async create(
-    listingId: string,
-    userId: string,
-    user: AuthUser,
-    opts: { includeValuationBand?: boolean; includeSourcesTable?: boolean },
-  ) {
-    const listing = await this.repo.listingForShare(listingId);
+  async create(dto: CreateShareLinkDto, userId: string, user: AuthUser) {
+    await this.assertListingAccess(dto.listingId, userId, user);
+    const listing = await this.listingsRepo.findById(dto.listingId);
     if (!listing) throw new NotFoundException('listing not found');
-    if (!canManageListing(listing, userId, user)) {
-      throw new ForbiddenException('not your listing');
-    }
     if (listing.status !== 'published') {
       throw new ForbiddenException('listing must be published');
     }
 
-    const agentUserId = listing.agentId ?? listing.ownerUserId ?? userId;
-    const agentSnapshot = await this.repo.agentSnapshot(agentUserId);
-
-    let token = newShareToken();
+    const agentSnapshot = await this.repo.agentSnapshotForUser(userId);
+    let token = generateShareToken();
     for (let attempt = 0; attempt < 3; attempt += 1) {
       try {
         const row = await this.repo.insertLink({
           token,
-          listingId,
+          listingId: dto.listingId,
           createdBy: userId,
-          agentUserId,
           agentSnapshot,
-          includeValuationBand: opts.includeValuationBand ?? true,
-          includeSourcesTable: opts.includeSourcesTable ?? false,
+          includeValuationBand: dto.includeValuationBand ?? true,
         });
-        return {
-          id: row.id,
-          token: row.token,
-          listingId: row.listingId,
-          includeValuationBand: row.includeValuationBand,
-          includeSourcesTable: row.includeSourcesTable,
-          viewCount: row.viewCount,
-          uniqueViewCount: row.uniqueViewCount,
-          lastViewedAt: row.lastViewedAt?.toISOString() ?? null,
-          createdAt: row.createdAt.toISOString(),
-          revokedAt: null,
-          publicPath: `/s/${row.token}`,
-        };
-      } catch {
-        if (attempt === 2) throw new Error('failed to allocate share token');
-        token = newShareToken();
+        return this.toOwnerRow(row, listing.title, listing.slug);
+      } catch (e) {
+        if (attempt === 2) throw e;
+        token = generateShareToken();
       }
     }
     throw new Error('unreachable');
   }
 
-  async listMine(userId: string, listingId?: string) {
-    const rows = await this.repo.listForUser(userId, listingId);
-    return rows.map((row) => ({
-      id: row.id,
-      token: row.token,
-      listingId: row.listingId,
-      includeValuationBand: row.includeValuationBand,
-      includeSourcesTable: row.includeSourcesTable,
-      viewCount: row.viewCount,
-      uniqueViewCount: row.uniqueViewCount,
-      lastViewedAt: row.lastViewedAt?.toISOString() ?? null,
-      createdAt: row.createdAt.toISOString(),
-      publicPath: `/s/${row.token}`,
+  async listMine(userId: string): Promise<ShareLinkOwnerRow[]> {
+    const rows = await this.repo.listForUser(userId);
+    return rows.map((r) => ({
+      id: r.id,
+      token: r.token,
+      listingId: r.listingId,
+      listingTitle: r.listingTitle,
+      listingSlug: r.listingSlug,
+      includeValuationBand: r.includeValuationBand,
+      viewCount: r.viewCount,
+      uniqueViewCount: r.uniqueViewCount,
+      lastViewedAt: r.lastViewedAt?.toISOString() ?? null,
+      createdAt: r.createdAt.toISOString(),
+      revokedAt: r.revokedAt?.toISOString() ?? null,
+      publicPath: `/s/${r.token}`,
     }));
   }
 
-  async revoke(linkId: string, userId: string, user: AuthUser) {
-    const link = await this.repo.findById(linkId);
-    if (!link) throw new NotFoundException('share link not found');
-    if (link.createdBy !== userId && !user.roles.includes('admin')) {
-      throw new ForbiddenException('not your share link');
-    }
-    const revoked = await this.repo.revoke(linkId, link.createdBy);
-    if (!revoked) throw new NotFoundException('share link not found or already revoked');
-    return { ok: true as const };
+  async revoke(linkId: string, userId: string) {
+    const row = await this.repo.revoke(linkId, userId);
+    if (!row) throw new NotFoundException('share link not found');
+    return { id: row.id, revokedAt: row.revokedAt?.toISOString() ?? null };
   }
 
-  async getPublicPayload(token: string) {
+  async stats(linkId: string, userId: string, user: AuthUser) {
+    const link = await this.repo.findById(linkId);
+    if (!link || link.createdBy !== userId) throw new NotFoundException('share link not found');
+    await this.assertListingAccess(link.listingId, userId, user);
+    return {
+      id: link.id,
+      viewCount: link.viewCount,
+      uniqueViewCount: link.uniqueViewCount,
+      lastViewedAt: link.lastViewedAt?.toISOString() ?? null,
+    };
+  }
+
+  async getPublicPayload(token: string, opaqueVisitorId: string | null): Promise<ShareLinkPublicPayload> {
     const link = await this.repo.findByToken(token);
     if (!link) throw new NotFoundException('share link not found');
     if (link.revokedAt) throw new GoneException('share link revoked');
 
-    const listing = await this.repo.listingForShare(link.listingId);
+    const listing = await this.listingsRepo.findById(link.listingId);
     if (!listing || listing.status !== 'published') {
       throw new NotFoundException('listing not available');
     }
 
-    const media = await this.listings.listMedia(listing.id);
-    const agent = readAgentSnapshot(link.agentSnapshot);
-    if (!agent.displayName) {
-      Object.assign(
-        agent,
-        await this.repo.agentSnapshot(link.agentUserId ?? link.createdBy),
-      );
+    const viewDate = utcViewDate();
+    const normalizedVisitor = normalizeOpaqueVisitorId(opaqueVisitorId);
+    const visitorHash =
+      normalizedVisitor != null
+        ? visitorHashForView(
+            apiConfig.SHARE_VIEW_HMAC_SECRET,
+            link.id,
+            viewDate,
+            normalizedVisitor,
+          )
+        : null;
+
+    const counts = await this.repo.recordView({
+      shareLinkId: link.id,
+      viewDate,
+      visitorHash,
+    });
+
+    const media = await this.listingsRepo.listMedia(listing.id);
+    const publicListing = this.toPublicListing(listing, media);
+
+    let valuationBand: ShareLinkPublicPayload['valuationBand'];
+    if (link.includeValuationBand && listing.slug) {
+      valuationBand = await this.listings.getValuationBand(listing.slug);
     }
+
+    const snapshot = link.agentSnapshot as ShareLinkPublicPayload['agent'];
 
     return {
       token: link.token,
       includeValuationBand: link.includeValuationBand,
-      viewCount: link.viewCount,
-      uniqueViewCount: link.uniqueViewCount,
-      agent,
-      agency: AGENCY,
-      listing: buildPublicShareListing(listing, media),
+      stats: {
+        viewCount: counts.viewCount,
+        uniqueViewCount: counts.uniqueViewCount,
+      },
+      agent: snapshot,
+      agency: {
+        name: apiConfig.AGENCY_PUBLIC_NAME,
+        email: apiConfig.AGENCY_PUBLIC_EMAIL,
+        phone: apiConfig.AGENCY_PUBLIC_PHONE || null,
+      },
+      listing: publicListing,
+      valuationBand,
     };
   }
 
-  async recordView(token: string, visitorToken: string) {
-    if (!visitorToken || visitorToken.length < 8) {
-      throw new ForbiddenException('invalid visitor token');
-    }
-    const link = await this.repo.findByToken(token);
-    if (!link) throw new NotFoundException('share link not found');
-    if (link.revokedAt) throw new GoneException('share link revoked');
-
-    const visitorHash = hashShareVisitor({
-      pepper: this.viewPepper(),
-      shareLinkId: link.id,
-      visitorToken,
-    });
-    await this.repo.recordView(link.id, visitorHash);
-
-    const refreshed = await this.repo.findById(link.id);
+  /** Documented allow-list for tests — full listing row is never returned on SmartLink. */
+  toPublicListing(
+    listing: NonNullable<Awaited<ReturnType<ListingsRepository['findById']>>>,
+    media: Awaited<ReturnType<ListingsRepository['listMedia']>>,
+  ): PublicListingPayload {
     return {
-      viewCount: refreshed?.viewCount ?? link.viewCount + 1,
-      uniqueViewCount: refreshed?.uniqueViewCount ?? link.uniqueViewCount,
+      title: listing.title,
+      city: listing.city ?? null,
+      province: listing.province ?? null,
+      transactionType: listing.transactionType ?? null,
+      transactionTypes: listing.transactionTypes ?? [],
+      price: listing.price != null ? Number(listing.price) : null,
+      currency: listing.currency,
+      bedrooms: listing.bedrooms ?? null,
+      bathrooms: listing.bathrooms ?? null,
+      rooms: listing.rooms ?? null,
+      sizeSqm: listing.sizeSqm != null ? Number(listing.sizeSqm) : null,
+      surfaceSqm: listing.surfaceSqm != null ? Number(listing.surfaceSqm) : null,
+      yearBuilt: listing.yearBuilt ?? null,
+      energyClass: listing.energyClass ?? null,
+      features: listing.features ?? [],
+      status: listing.status,
+      media: media.map((m) => ({
+        url: m.url,
+        alt: m.alt,
+        width: m.width,
+        height: m.height,
+        position: m.position,
+      })),
+      coverUrl: media[0]?.url ?? null,
+    };
+  }
+
+  private async assertListingAccess(listingId: string, userId: string, user: AuthUser) {
+    const listing = await this.listingsRepo.findById(listingId);
+    if (!listing) throw new NotFoundException('listing not found');
+    const isAdmin = user.roles.includes('admin');
+    const isOwner = listing.agentId === userId || listing.ownerUserId === userId;
+    if (!isAdmin && !isOwner) throw new ForbiddenException('not your listing');
+  }
+
+  private toOwnerRow(
+    row: NonNullable<Awaited<ReturnType<ShareLinksRepository['insertLink']>>>,
+    listingTitle: string,
+    listingSlug: string | null,
+  ): ShareLinkOwnerRow {
+    return {
+      id: row.id,
+      token: row.token,
+      listingId: row.listingId,
+      listingTitle,
+      listingSlug,
+      includeValuationBand: row.includeValuationBand,
+      viewCount: row.viewCount,
+      uniqueViewCount: row.uniqueViewCount,
+      lastViewedAt: row.lastViewedAt?.toISOString() ?? null,
+      createdAt: row.createdAt.toISOString(),
+      revokedAt: row.revokedAt?.toISOString() ?? null,
+      publicPath: `/s/${row.token}`,
     };
   }
 }

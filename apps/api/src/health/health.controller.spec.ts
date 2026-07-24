@@ -56,7 +56,10 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     RETENTION_LEAD_DAYS: 90,
     SENTRY_DSN: '',
     VALUATION_BAND_ENABLED: false,
-    SHARE_VIEW_PEPPER: '',
+    SHARE_VIEW_HMAC_SECRET: 'test-smartlink-view-secret',
+    AGENCY_PUBLIC_NAME: 'Easy Casa Italy',
+    AGENCY_PUBLIC_EMAIL: 'info@easycasaita.com',
+    AGENCY_PUBLIC_PHONE: '',
     ...over,
   };
 }

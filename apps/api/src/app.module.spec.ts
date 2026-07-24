@@ -39,6 +39,7 @@ import { AdminModule } from './admin/admin.module';
 import { PilotModule } from './pilot/pilot.module';
 import { PrivacyModule } from './privacy/privacy.module';
 import { ObservabilityModule } from './observability/observability.module';
+import { ShareLinksModule } from './share-links/share-links.module';
 
 /** Static module imports (Privacy is DynamicModule via forRootProduction). */
 const REQUIRED_STATIC = [

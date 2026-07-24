@@ -1,42 +1,67 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { and, desc, eq, isNull, sql } from 'drizzle-orm';
+
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { listings, shareLinkVisitorHashes, shareLinks, users } from '../db/schema';
-import type { AgentSnapshot } from './domain/public-payload';
-
-export type ShareLinkRow = typeof shareLinks.$inferSelect;
+import { listings, shareLinkViewDedup, shareLinks, users } from '../db/schema';
+import type { AgentSnapshot } from './domain/types';
 
 @Injectable()
 export class ShareLinksRepository {
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
-  async findByToken(token: string): Promise<ShareLinkRow | null> {
+  async insertLink(input: {
+    token: string;
+    listingId: string;
+    createdBy: string;
+    agentSnapshot: AgentSnapshot;
+    includeValuationBand: boolean;
+  }) {
+    const rows = await this.db
+      .insert(shareLinks)
+      .values({
+        token: input.token,
+        listingId: input.listingId,
+        createdBy: input.createdBy,
+        agentSnapshot: input.agentSnapshot,
+        includeValuationBand: input.includeValuationBand,
+      })
+      .returning();
+    return rows[0];
+  }
+
+  async findByToken(token: string) {
     const rows = await this.db.select().from(shareLinks).where(eq(shareLinks.token, token)).limit(1);
     return rows[0] ?? null;
   }
 
-  async findById(id: string): Promise<ShareLinkRow | null> {
+  async findById(id: string) {
     const rows = await this.db.select().from(shareLinks).where(eq(shareLinks.id, id)).limit(1);
     return rows[0] ?? null;
   }
 
-  async insertLink(values: typeof shareLinks.$inferInsert): Promise<ShareLinkRow> {
-    const rows = await this.db.insert(shareLinks).values(values).returning();
-    return rows[0];
-  }
-
-  async listForUser(userId: string, listingId?: string): Promise<ShareLinkRow[]> {
-    const conds = [eq(shareLinks.createdBy, userId), isNull(shareLinks.revokedAt)];
-    if (listingId) conds.push(eq(shareLinks.listingId, listingId));
+  async listForUser(userId: string) {
     return this.db
-      .select()
+      .select({
+        id: shareLinks.id,
+        token: shareLinks.token,
+        listingId: shareLinks.listingId,
+        listingTitle: listings.title,
+        listingSlug: listings.slug,
+        includeValuationBand: shareLinks.includeValuationBand,
+        viewCount: shareLinks.viewCount,
+        uniqueViewCount: shareLinks.uniqueViewCount,
+        lastViewedAt: shareLinks.lastViewedAt,
+        createdAt: shareLinks.createdAt,
+        revokedAt: shareLinks.revokedAt,
+      })
       .from(shareLinks)
-      .where(and(...conds))
+      .innerJoin(listings, eq(listings.id, shareLinks.listingId))
+      .where(eq(shareLinks.createdBy, userId))
       .orderBy(desc(shareLinks.createdAt));
   }
 
-  async revoke(id: string, userId: string): Promise<ShareLinkRow | null> {
+  async revoke(id: string, userId: string) {
     const rows = await this.db
       .update(shareLinks)
       .set({ revokedAt: new Date() })
@@ -45,55 +70,63 @@ export class ShareLinksRepository {
     return rows[0] ?? null;
   }
 
-  async listingForShare(listingId: string) {
-    const rows = await this.db.select().from(listings).where(eq(listings.id, listingId)).limit(1);
-    return rows[0] ?? null;
+  async recordView(input: {
+    shareLinkId: string;
+    viewDate: string;
+    visitorHash: string | null;
+  }): Promise<{ viewCount: number; uniqueViewCount: number; uniqueAdded: boolean }> {
+    return this.db.transaction(async (tx) => {
+      let uniqueAdded = false;
+      if (input.visitorHash) {
+        const inserted = await tx
+          .insert(shareLinkViewDedup)
+          .values({
+            shareLinkId: input.shareLinkId,
+            viewDate: input.viewDate,
+            visitorHash: input.visitorHash,
+          })
+          .onConflictDoNothing()
+          .returning({ shareLinkId: shareLinkViewDedup.shareLinkId });
+        uniqueAdded = inserted.length > 0;
+      }
+
+      const bump = uniqueAdded ? 1 : 0;
+      const rows = await tx
+        .update(shareLinks)
+        .set({
+          viewCount: sql`${shareLinks.viewCount} + 1`,
+          uniqueViewCount: sql`${shareLinks.uniqueViewCount} + ${bump}`,
+          lastViewedAt: new Date(),
+        })
+        .where(eq(shareLinks.id, input.shareLinkId))
+        .returning({
+          viewCount: shareLinks.viewCount,
+          uniqueViewCount: shareLinks.uniqueViewCount,
+        });
+
+      const row = rows[0];
+      if (!row) throw new Error('share link missing during view record');
+      return { ...row, uniqueAdded };
+    });
   }
 
-  async agentSnapshot(agentUserId: string): Promise<AgentSnapshot> {
+  async agentSnapshotForUser(userId: string): Promise<AgentSnapshot> {
     const rows = await this.db
       .select({
         displayName: users.displayName,
         phone: users.phone,
-        slug: users.slug,
         bio: users.bio,
-        avatarUrl: users.avatarUrl,
+        slug: users.slug,
       })
       .from(users)
-      .where(eq(users.id, agentUserId))
+      .where(eq(users.id, userId))
       .limit(1);
-    const u = rows[0];
+    const row = rows[0];
     return {
-      displayName: u?.displayName ?? 'Easy Casa Italy',
-      phone: u?.phone ?? null,
-      slug: u?.slug ?? null,
-      bio: u?.bio ?? null,
-      avatarUrl: u?.avatarUrl ?? null,
+      displayName: row?.displayName ?? null,
+      phone: row?.phone ?? null,
+      bio: row?.bio ?? null,
+      slug: row?.slug ?? null,
     };
-  }
-
-  async recordView(shareLinkId: string, visitorHash: string): Promise<{ uniqueAdded: boolean }> {
-    return this.db.transaction(async (tx) => {
-      const inserted = await tx
-        .insert(shareLinkVisitorHashes)
-        .values({ shareLinkId, visitorHash })
-        .onConflictDoNothing()
-        .returning({ visitorHash: shareLinkVisitorHashes.visitorHash });
-
-      const uniqueAdded = inserted.length > 0;
-
-      await tx
-        .update(shareLinks)
-        .set({
-          viewCount: sql`${shareLinks.viewCount} + 1`,
-          uniqueViewCount: uniqueAdded
-            ? sql`${shareLinks.uniqueViewCount} + 1`
-            : shareLinks.uniqueViewCount,
-          lastViewedAt: new Date(),
-        })
-        .where(eq(shareLinks.id, shareLinkId));
-
-      return { uniqueAdded };
-    });
   }
 }
