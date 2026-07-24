@@ -518,14 +518,50 @@ export const invoices = pgTable('invoices', {
 });
 
 // ---------------- Phase 27 — Free AVM (OMI cache + valuation leads) ----------------
-export const omiQuotes = pgTable('omi_quotes', {
+export const omiQuotes = pgTable(
+  'omi_quotes',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    comune: text('comune').notNull(),
+    provincia: text('provincia').notNull(),
+    type: text('type').notNull(),
+    minPerM2Cents: integer('min_per_m2_cents').notNull(),
+    maxPerM2Cents: integer('max_per_m2_cents').notNull(),
+    period: text('period').notNull(),
+    omiZone: text('omi_zone').notNull().default(''),
+    linkZona: text('link_zona'),
+    codTip: integer('cod_tip').notNull().default(0),
+    descrTipologia: text('descr_tipologia'),
+    stato: text('stato').notNull().default(''),
+    rectified: boolean('rectified').notNull().default(false),
+    geoLevel: text('geo_level').notNull().default('microzone'),
+    licenceUrl: text('licence_url'),
+    attribution: text('attribution').notNull().default('Fonte: Agenzia delle Entrate – OMI'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    naturalKey: uniqueIndex('idx_omi_quotes_natural_key').on(
+      table.period,
+      table.provincia,
+      table.comune,
+      table.omiZone,
+      table.type,
+      table.stato,
+      table.codTip,
+    ),
+  }),
+);
+
+export const omiZonePolygons = pgTable('omi_zone_polygons', {
   id: uuid('id').primaryKey().defaultRandom(),
+  linkZona: text('link_zona').notNull(),
+  period: text('period').notNull(),
   comune: text('comune').notNull(),
   provincia: text('provincia').notNull(),
-  type: text('type').notNull(),
-  minPerM2Cents: integer('min_per_m2_cents').notNull(),
-  maxPerM2Cents: integer('max_per_m2_cents').notNull(),
-  period: text('period').notNull(),
+  /** PostGIS geometry stored via raw SQL on import; not mapped in Drizzle queries beyond existence checks. */
+  licenceUrl: text('licence_url'),
+  attribution: text('attribution').notNull().default('Fonte: Agenzia delle Entrate – OMI'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 

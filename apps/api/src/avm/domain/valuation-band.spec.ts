@@ -11,6 +11,8 @@ function zone(over: Partial<AreaValuationBandData> = {}): AreaValuationBandData 
     source: 'comparable_listings',
     period: '2026-H1',
     zoneLabel: 'Brescia, BS',
+    attribution: null,
+    geoLevel: 'comune',
     provisional: true,
     comparableCount: 5,
     ...over,
