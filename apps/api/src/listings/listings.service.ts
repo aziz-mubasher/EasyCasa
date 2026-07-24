@@ -112,6 +112,14 @@ export class ListingsService {
     if (dto.latitude != null && dto.longitude != null) {
       await this.repo.syncLocation(created.id, dto.latitude, dto.longitude);
     }
+    if (dto.videoUrl?.trim()) {
+      await this.repo.insertMedia({
+        listingId: created.id,
+        url: dto.videoUrl.trim(),
+        type: 'video',
+        position: 0,
+      });
+    }
     return created;
   }
 

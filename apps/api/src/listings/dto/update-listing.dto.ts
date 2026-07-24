@@ -21,6 +21,7 @@ export class UpdateListingDto implements Partial<CreateListingDto> {
   city?: string;
   province?: string;
   energyClass?: string;
+  videoUrl?: string;
   latitude?: number;
   longitude?: number;
   features?: string[];
