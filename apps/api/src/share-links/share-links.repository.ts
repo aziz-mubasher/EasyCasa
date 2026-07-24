@@ -3,7 +3,7 @@ import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { listings, shareLinkViewDedup, shareLinks, users } from '../db/schema';
+import { listings, shareLinks, users } from '../db/schema';
 import type { AgentSnapshot } from './domain/types';
 
 @Injectable()
@@ -78,22 +78,13 @@ export class ShareLinksRepository {
     return this.db.transaction(async (tx) => {
       let uniqueAdded = false;
       if (input.visitorHash) {
-        const inserted = await tx
-          .insert(shareLinkViewDedup)
-          .values({
-            shareLinkId: input.shareLinkId,
-            viewDate: input.viewDate,
-            visitorHash: input.visitorHash,
-          })
-          .onConflictDoNothing({
-            target: [
-              shareLinkViewDedup.shareLinkId,
-              shareLinkViewDedup.viewDate,
-              shareLinkViewDedup.visitorHash,
-            ],
-          })
-          .returning({ shareLinkId: shareLinkViewDedup.shareLinkId });
-        uniqueAdded = inserted.length > 0;
+        const inserted = await tx.execute<{ share_link_id: string }>(sql`
+          INSERT INTO share_link_view_dedup (share_link_id, view_date, visitor_hash)
+          VALUES (${input.shareLinkId}::uuid, ${input.viewDate}::date, ${input.visitorHash})
+          ON CONFLICT (share_link_id, view_date, visitor_hash) DO NOTHING
+          RETURNING share_link_id
+        `);
+        uniqueAdded = (inserted.rows?.length ?? 0) > 0;
       }
 
       const bump = uniqueAdded ? 1 : 0;
