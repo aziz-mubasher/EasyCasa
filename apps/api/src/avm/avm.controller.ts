@@ -19,6 +19,7 @@ import type { AuthUser } from '../auth/auth.types';
 import { AvmService } from './avm.service';
 import { InsufficientDataError } from './domain/estimate';
 import type { SubjectProperty } from './domain/types';
+import { ValuationBandService } from './valuation-band.service';
 
 const TYPES = ['apartment', 'house', 'villa', 'room', 'land', 'commercial'] as const;
 const ENERGY = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
@@ -48,9 +49,23 @@ export class EstimateDto {
   contactEmail?: string;
 }
 
+export class ValuationBandDto {
+  @IsString() comune!: string;
+  @IsString() provincia!: string;
+  @IsIn(TYPES) propertyType!: (typeof TYPES)[number];
+  @IsNumber() @Min(1) sizeSqm!: number;
+  @IsOptional() @IsNumber() @Min(0) askingPriceEur?: number;
+  @IsOptional() @IsNumber() lat?: number;
+  @IsOptional() @IsNumber() lng?: number;
+  @IsOptional() @IsString() excludeListingId?: string;
+}
+
 @Controller('avm')
 export class AvmController {
-  constructor(private readonly service: AvmService) {}
+  constructor(
+    private readonly service: AvmService,
+    private readonly valuationBand: ValuationBandService,
+  ) {}
 
   /** Public "what's my home worth?" estimate — the lead magnet. */
   @Public()
@@ -81,5 +96,22 @@ export class AvmController {
       }
       throw err;
     }
+  }
+
+  /** Market band for a property (stub comparables today; OMI-ready provider seam). */
+  @Public()
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
+  @Post('band')
+  band(@Body() dto: ValuationBandDto) {
+    return this.valuationBand.forInput({
+      comune: dto.comune,
+      provincia: dto.provincia,
+      propertyType: dto.propertyType,
+      sizeSqm: dto.sizeSqm,
+      askingPriceEur: dto.askingPriceEur,
+      lat: dto.lat,
+      lng: dto.lng,
+      excludeListingId: dto.excludeListingId,
+    });
   }
 }

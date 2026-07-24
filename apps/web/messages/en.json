@@ -225,5 +225,24 @@
     "passthrough": "Pass-through",
     "empty": "Catalog unavailable right now. Try again shortly.",
     "iva": "VAT where applicable"
+  },
+  "valuationBand": {
+    "title": "Market valuation",
+    "subtitle": "Indicative comparison of the asking price against the area market band.",
+    "anchorSelling": "Selling price",
+    "anchorFair": "Fair market value",
+    "anchorOutOfMarket": "Out of market",
+    "markerOutOfMarket": "Out of market",
+    "markerInBand": "Within market band",
+    "markerLabel": "Asking price {price} — {status}",
+    "sourceLabel": "Source",
+    "sourceProvisional": "Provisional estimate based on comparable listings",
+    "sourceOmi": "Agenzia delle Entrate – OMI",
+    "disclaimer": "Indicative estimate only; not a formal appraisal.",
+    "provisionalNotice": "Provisional data: the band is based on few comparable listings in the area.",
+    "unavailableArea": "Valuation not available for this area.",
+    "unavailableMissingSurface": "Enter the floor area to see the market band.",
+    "a11yNoAsking": "no price entered",
+    "a11ySummary": "Area {zone}. Selling price {selling}, fair market {fair}, out of market {high}. Asking price: {asking}. Status: {status}."
   }
 }

@@ -11,6 +11,9 @@ import type { AuthUser } from '../auth/auth.types';
 import { buildListingDetail } from './domain/detail';
 import { LISTING_READ, type ListingReadPort } from './domain/ports';
 import type { ListingDetail, SimilarPin } from './domain/types';
+import { ValuationBandService } from '../avm/valuation-band.service';
+import { normalizePropertyType } from '../avm/domain/normalize-property-type';
+import type { ValuationBandResponse } from '../avm/domain/valuation-band';
 
 function slugify(title: string): string {
   return title.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '')
@@ -30,6 +33,7 @@ export class ListingsService {
     private readonly searchIndex: SearchService,
     @Inject(LISTING_READ) private readonly read: ListingReadPort,
     private readonly alerts: AlertsService,
+    private readonly valuationBand: ValuationBandService,
   ) {}
 
   search(q: QueryListingDto) {
@@ -76,6 +80,35 @@ export class ListingsService {
       media,
       coverUrl: media[0]?.url ?? null,
     };
+  }
+
+  /** Provisional market band for sale listings (K EC 1.26). */
+  async getValuationBand(slug: string): Promise<ValuationBandResponse> {
+    const l = await this.repo.findBySlug(slug);
+    if (!l) throw new NotFoundException('listing not found');
+
+    if (l.transactionType === 'rent') {
+      return { status: 'unavailable', reason: 'unsupported_listing' };
+    }
+
+    const propertyType = normalizePropertyType(l.propertyType);
+    if (!propertyType) {
+      return { status: 'unavailable', reason: 'unsupported_listing' };
+    }
+
+    const sizeSqm = l.sizeSqm != null ? Number(l.sizeSqm) : 0;
+    const price = l.price != null ? Number(l.price) : null;
+
+    return this.valuationBand.forInput({
+      comune: l.city ?? '',
+      provincia: l.province ?? '',
+      propertyType,
+      sizeSqm,
+      askingPriceEur: price,
+      lat: l.latitude,
+      lng: l.longitude,
+      excludeListingId: l.id,
+    });
   }
 
   async create(dto: CreateListingDto, agentId: string) {

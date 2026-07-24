@@ -7,6 +7,10 @@ import { listings, omiQuotes, valuationRequests } from '../db/schema';
 import { AvmController } from './avm.controller';
 import { AvmService, COMPARABLES_PORT, OMI_PORT, VALUATION_REQUEST_LOG } from './avm.service';
 import type { ComparablesPort, OmiPort, ValuationRequestLog } from './domain/ports';
+import { AREA_VALUATION_PROVIDER } from './domain/area-valuation.port';
+import { normalizePropertyType } from './domain/normalize-property-type';
+import { StubAreaValuationProvider } from './stub-area-valuation.provider';
+import { ValuationBandService } from './valuation-band.service';
 import type {
   Comparable,
   Condition,
@@ -30,27 +34,6 @@ const ENERGY: ReadonlySet<string> = new Set([
   'G',
 ]);
 const CONDITIONS: ReadonlySet<string> = new Set(['new', 'renovated', 'good', 'to_renovate']);
-const TYPES: ReadonlySet<string> = new Set([
-  'apartment',
-  'house',
-  'villa',
-  'room',
-  'land',
-  'commercial',
-]);
-
-function normalizeType(raw: string | null): PropertyType | null {
-  if (!raw) return null;
-  const t = raw.trim().toLowerCase().replace(/\s+/g, '_');
-  if (TYPES.has(t)) return t as PropertyType;
-  if (t.includes('appart') || t === 'flat') return 'apartment';
-  if (t.includes('villa')) return 'villa';
-  if (t.includes('house') || t.includes('casa') || t.includes('villetta')) return 'house';
-  if (t.includes('room') || t.includes('camera')) return 'room';
-  if (t.includes('land') || t.includes('terreno')) return 'land';
-  if (t.includes('commerc') || t.includes('ufficio') || t.includes('negozio')) return 'commercial';
-  return null;
-}
 
 function parseFloor(raw: string | null): number | null {
   if (raw == null || raw.trim() === '') return null;
@@ -116,7 +99,7 @@ export class DrizzleComparables implements ComparablesPort {
     const now = Date.now();
     const out: Comparable[] = [];
     for (const r of rows) {
-      const resolvedType = normalizeType(r.propertyType);
+      const resolvedType = normalizePropertyType(r.propertyType);
       if (!resolvedType || resolvedType !== subject.type) continue;
       if (r.latitude == null || r.longitude == null) continue;
       const areaM2 = Number(r.sizeSqm);
@@ -196,10 +179,12 @@ export class DrizzleValuationRequestLog implements ValuationRequestLog {
   controllers: [AvmController],
   providers: [
     AvmService,
+    ValuationBandService,
     { provide: COMPARABLES_PORT, useClass: DrizzleComparables },
     { provide: OMI_PORT, useClass: DrizzleOmiPort },
     { provide: VALUATION_REQUEST_LOG, useClass: DrizzleValuationRequestLog },
+    { provide: AREA_VALUATION_PROVIDER, useClass: StubAreaValuationProvider },
   ],
-  exports: [AvmService],
+  exports: [AvmService, ValuationBandService],
 })
 export class AvmModule {}

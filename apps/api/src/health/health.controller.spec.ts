@@ -55,6 +55,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     REDIS_URL: '',
     RETENTION_LEAD_DAYS: 90,
     SENTRY_DSN: '',
+    VALUATION_BAND_ENABLED: false,
     ...over,
   };
 }

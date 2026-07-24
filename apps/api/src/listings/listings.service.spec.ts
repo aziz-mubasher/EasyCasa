@@ -33,6 +33,11 @@ const alertsMock = {
   runDigests: vi.fn().mockResolvedValue(undefined),
 };
 
+const valuationBandMock = {
+  enabled: vi.fn().mockReturnValue(true),
+  forInput: vi.fn(),
+};
+
 describe('ListingsService', () => {
   it('creates a draft with a slug and syncs location when coords present', async () => {
     const insert = vi.fn().mockResolvedValue({ id: 'l1' });
@@ -42,6 +47,7 @@ describe('ListingsService', () => {
       searchMock,
       readMock as never,
       alertsMock as never,
+      valuationBandMock as never,
     );
 
     await svc.create(
@@ -64,6 +70,7 @@ describe('ListingsService', () => {
       searchMock,
       readMock as never,
       alertsMock as never,
+      valuationBandMock as never,
     );
     const user: AuthUser = { sub: 'u', roles: ['seller'] };
 
@@ -78,6 +85,7 @@ describe('ListingsService', () => {
       searchMock,
       readMock as never,
       alertsMock as never,
+      valuationBandMock as never,
     );
     const admin: AuthUser = { sub: 'a', roles: ['admin'] };
 
@@ -121,6 +129,7 @@ describe('ListingsService', () => {
       searchMock,
       readMock as never,
       alertsMock as never,
+      valuationBandMock as never,
     );
     const user: AuthUser = { sub: 'u', roles: ['seller'] };
 

@@ -225,5 +225,24 @@
     "passthrough": "Riaddebito",
     "empty": "Catalogo non disponibile. Riprova tra poco.",
     "iva": "IVA ove applicabile"
+  },
+  "valuationBand": {
+    "title": "Valutazione di mercato",
+    "subtitle": "Confronto indicativo del prezzo con la fascia di mercato dell'area.",
+    "anchorSelling": "Prezzo di vendita",
+    "anchorFair": "Valore di mercato",
+    "anchorOutOfMarket": "Fuori mercato",
+    "markerOutOfMarket": "Fuori mercato",
+    "markerInBand": "Nella fascia di mercato",
+    "markerLabel": "Prezzo richiesto {price} — {status}",
+    "sourceLabel": "Fonte",
+    "sourceProvisional": "Stima provvisoria basata su annunci comparabili",
+    "sourceOmi": "Agenzia delle Entrate – OMI",
+    "disclaimer": "Stima indicativa, non costituisce perizia.",
+    "provisionalNotice": "Dati provvisori: la fascia si basa su pochi annunci comparabili in zona.",
+    "unavailableArea": "Valutazione non disponibile per questa zona.",
+    "unavailableMissingSurface": "Inserisci la superficie per vedere la fascia di mercato.",
+    "a11yNoAsking": "prezzo non indicato",
+    "a11ySummary": "Zona {zone}. Prezzo di vendita {selling}, valore di mercato {fair}, fuori mercato {high}. Prezzo richiesto: {asking}. Stato: {status}."
   }
 }
