@@ -16,6 +16,12 @@ describe('normalizeProvinceSlug', () => {
   it('strips "provincia di" prefix', () => {
     expect(normalizeProvinceSlug('provincia di Brescia')).toBe('BS');
     expect(normalizeProvinceSlug('PROVINCIA DI BRESCIA')).toBe('BS');
+    expect(normalizeProvinceSlug('Prov. di Brescia')).toBe('BS');
+  });
+
+  it('maps accented province names and aliases', () => {
+    expect(normalizeProvinceSlug('Forli-Cesena')).toBe('FC');
+    expect(normalizeProvinceSlug('Monza e della Brianza')).toBe('MB');
   });
 
   it('returns null for unknown values', () => {

@@ -64,6 +64,10 @@ describe('SearchQueryDto', () => {
     await expect(validate(query)).rejects.toThrow();
   });
 
+  it('rejects control characters in city (filter injection guard)', async () => {
+    await expect(validate({ city: 'Milano\x1f' })).rejects.toThrow();
+  });
+
   it('rejects unknown province and region slugs', async () => {
     await expect(validate({ provinceSlug: 'XX' })).rejects.toThrow();
     await expect(validate({ regionSlug: 'not-a-region' })).rejects.toThrow();

@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.670.0",
+    "@easycasa/shared": "workspace:*",
     "dotenv": "^16.4.5",
     "mysql2": "^3.11.3",
     "p-limit": "^6.1.0",

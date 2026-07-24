@@ -1,4 +1,5 @@
 import { META, normalizeTransaction } from './meta-map.js';
+import { normalizeProvinceSlug, provinceFromComune } from '@easycasa/shared';
 import type { MetaBag, RawPost, RawUser } from './extract.js';
 
 export interface ListingRow {
@@ -41,6 +42,13 @@ const int = (v?: string): number | null => {
 };
 const str = (v?: string): string | null => (v && v.trim() ? v.trim() : null);
 
+/** map-city holds comune or province free text; normalize to sigla when mappable. */
+function resolveProvinceFromMeta(meta: MetaBag): string | null {
+  const raw = str(meta[META.province]);
+  if (!raw) return null;
+  return normalizeProvinceSlug(raw) ?? provinceFromComune(raw);
+}
+
 /** Pull image URLs out of PremiumPress PHP-serialized `image_array` blobs. */
 export function extractGalleryUrls(serialized?: string): { url: string; ord: number }[] {
   if (!serialized) return [];
@@ -82,7 +90,7 @@ export function transformListing(post: RawPost, meta: MetaBag): ListingRow {
     condition: str(meta[META.condition]),
     address: str(meta[META.address]),
     city: str(meta[META.city]),
-    province: str(meta[META.province]),
+    province: resolveProvinceFromMeta(meta),
     postal_code: str(meta[META.postalCode]),
     latitude: num(meta[META.latitude]),
     longitude: num(meta[META.longitude]),
