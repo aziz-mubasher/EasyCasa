@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
   Max,
   Min,
   MinLength,
@@ -83,6 +84,10 @@ export class CreateListingDto {
 
   @IsOptional() @IsString()
   energyClass?: string;
+
+  /** External video URL (YouTube, Vimeo, direct mp4, etc.). Stored as media type=video. */
+  @IsOptional() @IsUrl({ require_tld: false })
+  videoUrl?: string;
 
   @IsOptional() @IsNumber()
   latitude?: number;

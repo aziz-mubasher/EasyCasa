@@ -1,15 +1,17 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import {
   ASSET_CLASS_SLUGS,
   CONDITION_SLUGS,
   FINANCING_OPTION_SLUGS,
+  ITALIAN_PROVINCES,
   LEASE_TYPE_SLUGS,
   PROPERTY_TYPE_SLUGS,
   SELLER_TYPE_SLUGS,
   TRANSACTION_TYPE_SLUGS,
+  comuniForProvince,
   type FinancingOptionSlug,
   type SellerTypeSlug,
   type TransactionTypeSlug,
@@ -19,8 +21,9 @@ import { Field, Input, Select, TextArea } from '@/components/ui/Field';
 import { useAuth } from '@/auth/AuthProvider';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 
-const TOTAL = 4;
+const TOTAL = 5;
 const ENERGY_CLASSES = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
+const MAX_IMAGES = 12;
 
 type FormState = {
   title: string;
@@ -40,7 +43,10 @@ type FormState = {
   bedrooms: string;
   bathrooms: string;
   energyClass: string;
+  videoUrl: string;
 };
+
+type LocalImage = { id: string; file: File; previewUrl: string };
 
 const initialForm: FormState = {
   title: '',
@@ -60,24 +66,76 @@ const initialForm: FormState = {
   bedrooms: '',
   bathrooms: '',
   energyClass: '',
+  videoUrl: '',
 };
+
+const provincesSorted = [...ITALIAN_PROVINCES].sort((a, b) =>
+  a.name.localeCompare(b.name, 'it'),
+);
+
+async function uploadListingImage(
+  authedFetch: typeof fetch,
+  listingId: string,
+  file: File,
+): Promise<void> {
+  const contentType = file.type || 'image/jpeg';
+  const presignRes = await authedFetch(apiUrl('/media/presign'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ listingId, contentType, type: 'image' }),
+  });
+  if (!presignRes.ok) throw new Error(`presign failed: ${presignRes.status}`);
+  const { uploadUrl, key } = (await presignRes.json()) as { uploadUrl: string; key: string };
+
+  const put = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: { 'Content-Type': contentType },
+    body: file,
+  });
+  if (!put.ok) throw new Error(`upload failed: ${put.status}`);
+
+  const confirmRes = await authedFetch(apiUrl('/media/confirm'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ listingId, key, alt: file.name }),
+  });
+  if (!confirmRes.ok) throw new Error(`confirm failed: ${confirmRes.status}`);
+}
 
 export default function AddListingPage() {
   const t = useTranslations('add');
   const tf = useTranslations('search.filters');
+  const locale = useLocale();
   const { getAccessToken, isAuthenticated, ready, signIn } = useAuth();
   const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
 
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(initialForm);
+  const [images, setImages] = useState<LocalImage[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [createdId, setCreatedId] = useState<string | null>(null);
 
+  const comuni = useMemo(
+    () => (form.province ? comuniForProvince(form.province) : []),
+    [form.province],
+  );
+
+  useEffect(() => {
+    return () => {
+      for (const img of images) URL.revokeObjectURL(img.previewUrl);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- revoke on unmount only
+  }, []);
+
   const set =
     (key: keyof FormState) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-      setForm((f) => ({ ...f, [key]: e.target.value }));
+      const value = e.target.value;
+      setForm((f) => {
+        if (key === 'province') return { ...f, province: value, city: '' };
+        return { ...f, [key]: value };
+      });
       setError(null);
     };
 
@@ -93,9 +151,34 @@ export default function AddListingPage() {
     });
   };
 
+  const onPickImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []).filter((f) => f.type.startsWith('image/'));
+    e.target.value = '';
+    if (files.length === 0) return;
+    setImages((prev) => {
+      const room = Math.max(0, MAX_IMAGES - prev.length);
+      const next = files.slice(0, room).map((file) => ({
+        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
+        file,
+        previewUrl: URL.createObjectURL(file),
+      }));
+      return [...prev, ...next];
+    });
+    setError(null);
+  };
+
+  const removeImage = (id: string) => {
+    setImages((prev) => {
+      const target = prev.find((i) => i.id === id);
+      if (target) URL.revokeObjectURL(target.previewUrl);
+      return prev.filter((i) => i.id !== id);
+    });
+  };
+
   const validateStep = (n: number): string | null => {
     if (n === 1) {
       if (form.title.trim().length < 3) return t('errors.title');
+      if (!form.province) return t('errors.province');
       if (!form.city.trim()) return t('errors.city');
       if (!form.sellerType) return t('errors.sellerType');
     }
@@ -105,6 +188,14 @@ export default function AddListingPage() {
       if (!form.propertyType) return t('errors.propertyType');
       if (!form.condition) return t('errors.condition');
       if (form.transactionType === 'rent' && !form.leaseType) return t('errors.leaseType');
+    }
+    if (n === 4 && form.videoUrl.trim()) {
+      try {
+        // eslint-disable-next-line no-new
+        new URL(form.videoUrl.trim());
+      } catch {
+        return t('errors.videoUrl');
+      }
     }
     return null;
   };
@@ -119,13 +210,21 @@ export default function AddListingPage() {
     setStep((s) => Math.min(TOTAL, s + 1));
   };
 
+  const resetAll = () => {
+    for (const img of images) URL.revokeObjectURL(img.previewUrl);
+    setImages([]);
+    setForm(initialForm);
+    setStep(1);
+    setCreatedId(null);
+    setError(null);
+  };
+
   const submit = async () => {
-    const err = validateStep(1) ?? validateStep(2);
+    const err = validateStep(1) ?? validateStep(2) ?? validateStep(4);
     if (err) {
       setError(err);
       return;
     }
-    if (!ready) return;
     if (!isAuthenticated) {
       setError(t('errors.signInRequired'));
       return;
@@ -153,6 +252,7 @@ export default function AddListingPage() {
         bedrooms: form.bedrooms ? Number(form.bedrooms) : undefined,
         bathrooms: form.bathrooms ? Number(form.bathrooms) : undefined,
         energyClass: form.energyClass || undefined,
+        videoUrl: form.videoUrl.trim() || undefined,
       };
 
       const res = await authedFetch(apiUrl('/listings'), {
@@ -165,20 +265,21 @@ export default function AddListingPage() {
         throw new Error(text || `HTTP ${res.status}`);
       }
       const created = (await res.json()) as { id?: string };
-      if (created.id) {
-        const pub = await authedFetch(apiUrl(`/listings/${created.id}/publish`), {
-          method: 'POST',
-        });
-        if (!pub.ok) {
-          // Draft saved even if publish fails (role / validation).
-          setCreatedId(created.id);
-          setError(t('errors.publishFailed'));
-          return;
-        }
-        setCreatedId(created.id);
-      } else {
-        setCreatedId('ok');
+      if (!created.id) throw new Error(t('errors.generic'));
+
+      for (const img of images) {
+        await uploadListingImage(authedFetch, created.id, img.file);
       }
+
+      const pub = await authedFetch(apiUrl(`/listings/${created.id}/publish`), {
+        method: 'POST',
+      });
+      if (!pub.ok) {
+        setCreatedId(created.id);
+        setError(t('errors.publishFailed'));
+        return;
+      }
+      setCreatedId(created.id);
     } catch (e) {
       setError(e instanceof Error ? e.message : t('errors.generic'));
     } finally {
@@ -186,17 +287,36 @@ export default function AddListingPage() {
     }
   };
 
+  if (!ready) {
+    return (
+      <section className="mx-auto max-w-2xl px-5 py-12">
+        <p className="text-muted">{t('loading')}</p>
+      </section>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <section className="mx-auto max-w-2xl px-5 py-12">
+        <h1 className="font-display text-3xl font-semibold mb-3">{t('title')}</h1>
+        <p className="text-muted mb-6">{t('signInRequiredBody')}</p>
+        <Button onClick={() => void signIn(`/${locale}/add`)}>{t('signInToContinue')}</Button>
+      </section>
+    );
+  }
+
   if (createdId && !error) {
     return (
       <section className="mx-auto max-w-2xl px-5 py-12">
         <h1 className="font-display text-3xl font-semibold mb-4">{t('successTitle')}</h1>
         <p className="text-muted mb-6">{t('successBody')}</p>
-        <Button onClick={() => { setCreatedId(null); setForm(initialForm); setStep(1); }}>
-          {t('addAnother')}
-        </Button>
+        <Button onClick={resetAll}>{t('addAnother')}</Button>
       </section>
     );
   }
+
+  const provinceName =
+    provincesSorted.find((p) => p.slug === form.province)?.name ?? form.province;
 
   return (
     <section className="mx-auto max-w-2xl px-5 py-12">
@@ -215,11 +335,25 @@ export default function AddListingPage() {
               <TextArea value={form.description} onChange={set('description')} />
             </Field>
             <div className="grid sm:grid-cols-2 gap-4">
-              <Field label={t('fields.city')} required>
-                <Input value={form.city} onChange={set('city')} />
+              <Field label={t('fields.province')} required hint={t('hints.province')}>
+                <Select value={form.province} onChange={set('province')}>
+                  <option value="">{t('choose')}</option>
+                  {provincesSorted.map((p) => (
+                    <option key={p.slug} value={p.slug}>
+                      {p.name} ({p.slug})
+                    </option>
+                  ))}
+                </Select>
               </Field>
-              <Field label={t('fields.province')} hint={t('hints.province')}>
-                <Input value={form.province} onChange={set('province')} placeholder="BS" />
+              <Field label={t('fields.city')} required hint={t('hints.city')}>
+                <Select value={form.city} onChange={set('city')} disabled={!form.province}>
+                  <option value="">{t('choose')}</option>
+                  {comuni.map((c) => (
+                    <option key={c.istat} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </Select>
               </Field>
             </div>
             <Field label={t('fields.address')}>
@@ -355,38 +489,156 @@ export default function AddListingPage() {
         {step === 4 && (
           <div className="space-y-4">
             <p className="text-sm font-medium text-ink">{t('sections.media')}</p>
-            <div className="rounded-lg border border-dashed border-line p-10 text-center text-sm text-muted">
-              {t('mediaPlaceholder')}
-            </div>
-            <div className="rounded-lg bg-sand/40 border border-line p-4 text-sm space-y-1">
-              <p className="font-medium">{t('reviewTitle')}</p>
-              <p>{form.title}</p>
-              <p className="text-muted">
-                {[
-                  form.sellerType ? tf(`sellerType.${form.sellerType}`) : null,
-                  form.transactionType ? tf(`transaction.${form.transactionType as TransactionTypeSlug}`) : null,
-                  form.assetClass ? tf(`assetClass.${form.assetClass as 'residential'}`) : null,
-                  form.propertyType ? tf(`propertyType.${form.propertyType as 'apartment'}`) : null,
-                  form.condition ? tf(`condition.${form.condition as 'good'}`) : null,
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
-              </p>
+            <Field label={t('fields.images')} hint={t('hints.images')}>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={onPickImages}
+                className="block w-full text-sm text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-azure file:px-3 file:py-2 file:text-sm file:font-medium file:text-paper hover:file:brightness-110"
+              />
+            </Field>
+            {images.length > 0 && (
+              <ul className="grid grid-cols-3 gap-2">
+                {images.map((img) => (
+                  <li key={img.id} className="relative aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img.previewUrl} alt="" className="h-full w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(img.id)}
+                      className="absolute top-1 right-1 rounded-full bg-ink/80 text-paper text-xs px-2 py-0.5"
+                      aria-label={t('removeImage')}
+                    >
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Field label={t('fields.videoUrl')} hint={t('hints.videoUrl')}>
+              <Input
+                type="url"
+                value={form.videoUrl}
+                onChange={set('videoUrl')}
+                placeholder="https://"
+              />
+            </Field>
+          </div>
+        )}
+
+        {step === 5 && (
+          <div className="space-y-5">
+            <p className="text-sm font-medium text-ink">{t('sections.preview')}</p>
+            <p className="text-xs text-muted">{t('previewHint')}</p>
+
+            {images.length > 0 && (
+              <div className="grid grid-cols-3 gap-2">
+                {images.map((img) => (
+                  <div key={img.id} className="aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img.previewUrl} alt="" className="h-full w-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="rounded-lg border border-line bg-paper p-4 space-y-3">
+              <h2 className="font-display text-xl font-semibold">{form.title}</h2>
+              {form.description ? (
+                <p className="text-sm text-muted whitespace-pre-wrap">{form.description}</p>
+              ) : null}
+              <dl className="grid sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                <div>
+                  <dt className="text-muted">{t('fields.province')}</dt>
+                  <dd>{provinceName} ({form.province})</dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{t('fields.city')}</dt>
+                  <dd>{form.city}</dd>
+                </div>
+                {form.address ? (
+                  <div className="sm:col-span-2">
+                    <dt className="text-muted">{t('fields.address')}</dt>
+                    <dd>{form.address}</dd>
+                  </div>
+                ) : null}
+                <div>
+                  <dt className="text-muted">{tf('sellerTypeLabel')}</dt>
+                  <dd>{tf(`sellerType.${form.sellerType}`)}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{tf('transactionLabel')}</dt>
+                  <dd>
+                    {form.transactionType
+                      ? tf(`transaction.${form.transactionType as TransactionTypeSlug}`)
+                      : '—'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{tf('assetClassLabel')}</dt>
+                  <dd>
+                    {form.assetClass ? tf(`assetClass.${form.assetClass as 'residential'}`) : '—'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{tf('propertyTypeLabel')}</dt>
+                  <dd>
+                    {form.propertyType
+                      ? tf(`propertyType.${form.propertyType as 'apartment'}`)
+                      : '—'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{tf('conditionLabel')}</dt>
+                  <dd>
+                    {form.condition ? tf(`condition.${form.condition as 'good'}`) : '—'}
+                  </dd>
+                </div>
+                {form.transactionType === 'rent' && form.leaseType ? (
+                  <div>
+                    <dt className="text-muted">{tf('leaseTypeLabel')}</dt>
+                    <dd>{tf(`leaseType.${form.leaseType as 'free_4_4'}`)}</dd>
+                  </div>
+                ) : null}
+                <div>
+                  <dt className="text-muted">{t('fields.price')}</dt>
+                  <dd>{form.price ? `€${Number(form.price).toLocaleString('it-IT')}` : '—'}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{t('fields.sizeSqm')}</dt>
+                  <dd>{form.sizeSqm ? `${form.sizeSqm} m²` : '—'}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{t('fields.bedrooms')}</dt>
+                  <dd>{form.bedrooms || '—'}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{t('fields.bathrooms')}</dt>
+                  <dd>{form.bathrooms || '—'}</dd>
+                </div>
+                {form.energyClass ? (
+                  <div>
+                    <dt className="text-muted">{tf('energy')}</dt>
+                    <dd>{form.energyClass}</dd>
+                  </div>
+                ) : null}
+              </dl>
               {form.financingOptions.length > 0 && (
-                <p className="text-muted">
-                  {tf('financingLabel')}:{' '}
+                <p className="text-sm">
+                  <span className="text-muted">{tf('financingLabel')}: </span>
                   {form.financingOptions.map((s) => tf(`financing.${s}`)).join(', ')}
                 </p>
               )}
+              {form.videoUrl.trim() ? (
+                <p className="text-sm break-all">
+                  <span className="text-muted">{t('fields.videoUrl')}: </span>
+                  <a href={form.videoUrl.trim()} className="text-azure underline" target="_blank" rel="noreferrer">
+                    {form.videoUrl.trim()}
+                  </a>
+                </p>
+              ) : null}
             </div>
-            {!isAuthenticated && ready && (
-              <p className="text-sm text-muted">
-                {t('signInHint')}{' '}
-                <button type="button" className="text-azure underline" onClick={() => void signIn()}>
-                  {t('signIn')}
-                </button>
-              </p>
-            )}
           </div>
         )}
 
@@ -402,7 +654,7 @@ export default function AddListingPage() {
           {t('back')}
         </Button>
         {step < TOTAL ? (
-          <Button onClick={goNext}>{t('next')}</Button>
+          <Button onClick={goNext}>{step === 4 ? t('toPreview') : t('next')}</Button>
         ) : (
           <Button disabled={submitting} onClick={() => void submit()}>
             {submitting ? t('publishing') : t('publish')}

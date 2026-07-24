@@ -26,6 +26,7 @@ export class ListingsRepository {
       .select({
         id: media.id,
         url: media.url,
+        type: media.type,
         width: media.width,
         height: media.height,
         alt: media.alt,
@@ -34,6 +35,11 @@ export class ListingsRepository {
       .from(media)
       .where(eq(media.listingId, listingId))
       .orderBy(asc(media.position));
+  }
+
+  async insertMedia(values: typeof media.$inferInsert) {
+    const rows = await this.db.insert(media).values(values).returning();
+    return rows[0];
   }
 
   async sitemapRefs(): Promise<Array<{ slug: string; updatedAt: string }>> {
