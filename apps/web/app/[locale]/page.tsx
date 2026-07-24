@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { HeroMapLazy } from '@/components/home/HeroMapLazy';
 import { HeroSearchRow } from '@/components/home/HeroSearchRow';
@@ -26,7 +27,9 @@ export default async function HomePage() {
           </h1>
           <p className="mt-5 text-lg text-muted max-w-md">{t('subtitle')}</p>
           <div className="mt-8 space-y-4 max-w-xl">
-            <HeroSearchRow />
+            <Suspense fallback={<div className="h-28 rounded-xl border border-line bg-paper animate-pulse" aria-hidden />}>
+              <HeroSearchRow />
+            </Suspense>
             <HeroCommissionCallout />
           </div>
         </div>
