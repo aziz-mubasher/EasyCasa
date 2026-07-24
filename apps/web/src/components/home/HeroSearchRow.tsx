@@ -37,7 +37,13 @@ export function HeroSearchRow() {
   const [appliedMax, setAppliedMax] = useState('');
 
   const priceBadge = (appliedMin ? 1 : 0) + (appliedMax ? 1 : 0);
-  const priceLabel = formatPriceRangeLabel(appliedMin, appliedMax, tf('price'));
+  const priceLabel = formatPriceRangeLabel(
+    appliedMin,
+    appliedMax,
+    tf('price'),
+    tf('priceFromWord'),
+    tf('priceToWord'),
+  );
 
   const applyPrice = () => {
     setAppliedMin(minPrice);

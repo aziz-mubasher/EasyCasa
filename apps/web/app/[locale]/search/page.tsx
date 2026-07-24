@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { searchListings, listRegions, listCategories, listProvinces } from '@/lib/api';
 import { SearchBar } from '@/components/search/SearchBar';
-import { SearchFilters } from '@/components/search/SearchFilters';
+import { SearchFilters, SearchSortControl } from '@/components/search/SearchFilters';
 import { ActiveFilterChips } from '@/components/search/ActiveFilterChips';
 import { SearchResultsPanel } from '@/components/search/SearchResultsPanel';
 import { ITALIAN_PROVINCES, type ListingSummary } from '@easycasa/shared';
@@ -31,10 +31,7 @@ export default async function SearchPage({
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-8">
-      <div className="flex items-baseline justify-between gap-4 flex-wrap">
-        <h1 className="font-display text-3xl font-semibold">{t('title')}</h1>
-        <span className="data text-sm text-muted">{t('resultsCount', { count: data.total })}</span>
-      </div>
+      <h1 className="font-display text-3xl font-semibold">{t('title')}</h1>
 
       <div className="mt-5 relative">
         <SearchBar />
@@ -45,7 +42,14 @@ export default async function SearchPage({
         <ActiveFilterChips regions={regions} categories={categories} provinces={provinces} facets={data.facets} />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 flex items-baseline justify-between gap-4 flex-wrap">
+        <p className="font-display text-xl font-semibold tracking-tight">
+          {t('resultsCount', { count: data.total })}
+        </p>
+        <SearchSortControl />
+      </div>
+
+      <div className="mt-4">
         {items.length === 0 ? (
           <div className="text-muted py-20 text-center space-y-2">
             <p>{t('empty')}</p>

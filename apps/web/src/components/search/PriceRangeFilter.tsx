@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { PriceRangeControl, formatPriceRangeLabel } from './PriceRangeControl';
 import { useSearchUrlState } from './useSearchUrlState';
@@ -13,8 +13,19 @@ export function PriceRangeFilter() {
   const [min, setMin] = useState(curMin);
   const [max, setMax] = useState(curMax);
 
+  useEffect(() => {
+    setMin(curMin);
+    setMax(curMax);
+  }, [curMin, curMax]);
+
   const badge = (curMin ? 1 : 0) + (curMax ? 1 : 0);
-  const label = formatPriceRangeLabel(curMin, curMax, t('price'));
+  const label = formatPriceRangeLabel(
+    curMin,
+    curMax,
+    t('price'),
+    t('priceFromWord'),
+    t('priceToWord'),
+  );
 
   const apply = () => setMany({ minPrice: min || null, maxPrice: max || null });
   const clear = () => {
@@ -33,6 +44,7 @@ export function PriceRangeFilter() {
       onClear={clear}
       triggerLabel={label}
       badge={badge || undefined}
+      active={Boolean(curMin || curMax)}
     />
   );
 }

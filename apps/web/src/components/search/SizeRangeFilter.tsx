@@ -29,6 +29,7 @@ export function SizeRangeFilter() {
     <FilterDropdown
       label={label}
       badge={badge || undefined}
+      active={Boolean(curMin || curMax)}
       footer={
         <>
           <button type="button" onClick={clear} className="text-sm text-muted hover:text-ink px-2 py-1">
@@ -37,9 +38,9 @@ export function SizeRangeFilter() {
           <button
             type="button"
             onClick={apply}
-            className="text-sm bg-azure text-paper rounded-full px-4 py-1.5 hover:brightness-110"
+            className="text-sm bg-azure text-paper rounded-lg px-4 py-1.5 hover:brightness-110"
           >
-            {t('apply')}
+            {t('save')}
           </button>
         </>
       }
