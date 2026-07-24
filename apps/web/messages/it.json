@@ -229,6 +229,22 @@
       "publishFailed": "Salvato come bozza, ma la pubblicazione non è riuscita. Verifica il ruolo dell’account.",
       "network": "Impossibile raggiungere il server. Controlla la connessione e riprova.",
       "generic": "Qualcosa è andato storto. Riprova."
+    },
+    "smartlink": {
+      "title": "SmartLink — pagina condivisibile",
+      "body": "Genera un link pubblico brandizzato per inviare l'immobile a un cliente. Le visualizzazioni sono conteggiate in modo aggregato (senza IP).",
+      "includeBand": "Includi la valutazione di mercato nello SmartLink",
+      "create": "Crea SmartLink",
+      "creating": "Creazione…",
+      "refresh": "Aggiorna statistiche",
+      "linkLabel": "Link pubblico",
+      "copy": "Copia link",
+      "copied": "Copiato",
+      "revoke": "Revoca link",
+      "shareMessage": "Guarda questo immobile su Easy Casa Italy",
+      "stats": "{views} visualizzazioni · {unique} uniche",
+      "useLink": "Usa questo link",
+      "errorGeneric": "Impossibile gestire lo SmartLink. Riprova."
     }
   },
   "footer": {
@@ -264,5 +280,29 @@
     "unavailableMissingSurface": "Inserisci la superficie per vedere la fascia di mercato.",
     "a11yNoAsking": "prezzo non indicato",
     "a11ySummary": "Zona {zone}. Prezzo di vendita {selling}, valore di mercato {fair}, fuori mercato {high}. Prezzo richiesto: {asking}. Stato: {status}."
+  },
+  "smartlink": {
+    "positioning": "Vendi, compra o affitta case e stanze senza commissioni di agenzia",
+    "defaultAgentName": "Consulente Easy Casa",
+    "call": "Chiama",
+    "forSale": "In vendita",
+    "forRent": "In affitto",
+    "onRequest": "su richiesta",
+    "onRequestPerMonth": "su richiesta/mese",
+    "rooms": "Locali",
+    "bathrooms": "Bagni",
+    "builtSurface": "Superficie edificata",
+    "yearBuilt": "Anno di costruzione",
+    "energyRating": "Classe energetica",
+    "characteristics": "Caratteristiche",
+    "viewStatsTitle": "Statistiche visualizzazioni",
+    "viewStatsHint": "Conteggio pubblico aggregato (totale / visitatori unici giornalieri).",
+    "revokedTitle": "Link non più disponibile",
+    "revokedBody": "Questo SmartLink è stato revocato dal proprietario.",
+    "noPhotos": "Nessuna foto disponibile",
+    "photoAlt": "{title} — foto {n}",
+    "prevPhoto": "Foto precedente",
+    "nextPhoto": "Foto successiva",
+    "photoCounter": "{current} di {total}"
   }
 }

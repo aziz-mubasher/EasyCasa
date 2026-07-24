@@ -22,6 +22,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Field, Input, Select, TextArea } from '@/components/ui/Field';
 import { ValuationBandLive } from '@/components/valuation/ValuationBandLive';
+import { SmartLinkManager } from '@/components/smartlink/SmartLinkManager';
 import { useAuth } from '@/auth/AuthProvider';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 
@@ -353,7 +354,10 @@ export default function AddListingPage() {
       <section className="mx-auto max-w-2xl px-5 py-12">
         <h1 className="font-display text-3xl font-semibold mb-4">{t('successTitle')}</h1>
         <p className="text-muted mb-6">{t('successBody')}</p>
-        <Button onClick={resetAll}>{t('addAnother')}</Button>
+        <SmartLinkManager listingId={createdId} />
+        <div className="mt-8">
+          <Button onClick={resetAll}>{t('addAnother')}</Button>
+        </div>
       </section>
     );
   }

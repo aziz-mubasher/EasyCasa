@@ -34,6 +34,7 @@ import { ServiceCatalogModule } from './service-catalog/service-catalog.module';
 import { TaxonomyModule } from './taxonomy/taxonomy.module';
 import { UsersModule } from './users/users.module';
 import { ViewingsModule } from './viewings/viewings.module';
+import { ShareLinksModule } from './share-links/share-links.module';
 import { AdminModule } from './admin/admin.module';
 import { PilotModule } from './pilot/pilot.module';
 import { PrivacyModule } from './privacy/privacy.module';
@@ -75,6 +76,7 @@ const REQUIRED_STATIC = [
   EnquiriesModule,
   AvmModule,
   ViewingsModule,
+  ShareLinksModule,
   PilotModule,
 ] as const;
 

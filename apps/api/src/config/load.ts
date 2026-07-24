@@ -89,6 +89,13 @@ const Schema = z
 
     /** K EC 1.26 — provisional valuation band (stub comparables; not OMI yet). */
     VALUATION_BAND_ENABLED: bool(false),
+
+    /** K EC 1.29 — HMAC pepper for SmartLink daily unique-view hashes (no raw IP stored). */
+    SHARE_VIEW_HMAC_SECRET: z.string().min(16).default('dev-smartlink-view-secret-change-me'),
+
+    AGENCY_PUBLIC_NAME: z.string().default('Easy Casa Italy'),
+    AGENCY_PUBLIC_EMAIL: z.string().default('info@easycasaita.com'),
+    AGENCY_PUBLIC_PHONE: z.string().default(''),
   })
   .superRefine((cfg, ctx) => {
     // When DEV_AUTH is off, OIDC must be fully configured (Phase 16 fail-fast).

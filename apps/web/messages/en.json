@@ -229,6 +229,22 @@
       "publishFailed": "Saved as draft, but publish failed. Check your account role.",
       "network": "Could not reach the server. Check your connection and try again.",
       "generic": "Something went wrong. Try again."
+    },
+    "smartlink": {
+      "title": "SmartLink — shareable page",
+      "body": "Create a branded public link to send this listing to a client. Views are counted in aggregate (no IP stored).",
+      "includeBand": "Include the market valuation band on the SmartLink",
+      "create": "Create SmartLink",
+      "creating": "Creating…",
+      "refresh": "Refresh stats",
+      "linkLabel": "Public link",
+      "copy": "Copy link",
+      "copied": "Copied",
+      "revoke": "Revoke link",
+      "shareMessage": "View this property on Easy Casa Italy",
+      "stats": "{views} views · {unique} unique",
+      "useLink": "Use this link",
+      "errorGeneric": "Could not manage SmartLink. Try again."
     }
   },
   "footer": {
@@ -264,5 +280,29 @@
     "unavailableMissingSurface": "Enter the floor area to see the market band.",
     "a11yNoAsking": "no price entered",
     "a11ySummary": "Area {zone}. Selling price {selling}, fair market {fair}, out of market {high}. Asking price: {asking}. Status: {status}."
+  },
+  "smartlink": {
+    "positioning": "Buy, sell or rent homes and rooms with no agency commission",
+    "defaultAgentName": "Easy Casa advisor",
+    "call": "Call",
+    "forSale": "For sale",
+    "forRent": "For rent",
+    "onRequest": "on request",
+    "onRequestPerMonth": "on request/month",
+    "rooms": "Rooms",
+    "bathrooms": "Bathrooms",
+    "builtSurface": "Built surface",
+    "yearBuilt": "Year built",
+    "energyRating": "Energy rating",
+    "characteristics": "Features",
+    "viewStatsTitle": "View statistics",
+    "viewStatsHint": "Public aggregate count (total / daily unique visitors).",
+    "revokedTitle": "Link no longer available",
+    "revokedBody": "This SmartLink was revoked by the owner.",
+    "noPhotos": "No photos available",
+    "photoAlt": "{title} — photo {n}",
+    "prevPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "photoCounter": "{current} of {total}"
   }
 }

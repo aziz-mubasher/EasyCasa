@@ -610,6 +610,34 @@ export const consentRecords = pgTable('consent_records', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** K EC 1.29 — branded public SmartLink pages. */
+export const shareLinks = pgTable('share_links', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  token: text('token').notNull(),
+  listingId: uuid('listing_id').notNull(),
+  createdBy: uuid('created_by').notNull(),
+  agentSnapshot: jsonb('agent_snapshot').notNull().default({}),
+  includeValuationBand: boolean('include_valuation_band').notNull().default(true),
+  viewCount: integer('view_count').notNull().default(0),
+  uniqueViewCount: integer('unique_view_count').notNull().default(0),
+  lastViewedAt: timestamp('last_viewed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  revokedAt: timestamp('revoked_at', { withTimezone: true }),
+});
+
+export const shareLinkViewDedup = pgTable(
+  'share_link_view_dedup',
+  {
+    shareLinkId: uuid('share_link_id').notNull(),
+    viewDate: date('view_date').notNull(),
+    visitorHash: text('visitor_hash').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.shareLinkId, t.viewDate, t.visitorHash] }),
+  }),
+);
+
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
   enquiries,
@@ -623,5 +651,6 @@ export const schema = {
   omiQuotes, valuationRequests,
   viewingAvailability, viewings,
   consentRecords,
+  shareLinks, shareLinkViewDedup,
 };
 export type Schema = typeof schema;
