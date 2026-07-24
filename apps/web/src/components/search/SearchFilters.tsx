@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   ASSET_CLASS_SLUGS,
@@ -14,115 +14,135 @@ import {
 } from '@easycasa/shared';
 import { FilterDropdown } from './FilterDropdown';
 import { PriceRangeFilter } from './PriceRangeFilter';
-import { SizeRangeFilter } from './SizeRangeFilter';
 import { useSearchUrlState } from './useSearchUrlState';
 
 const ENERGY_CLASSES = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
 
-function facetCount(facets: Record<string, Record<string, number>>, field: string, slug: string): number | undefined {
+type Option = { slug: string; name: string };
+
+function facetCount(
+  facets: Record<string, Record<string, number>>,
+  field: string,
+  slug: string,
+): number | undefined {
   return facets[field]?.[slug];
-}
-
-function SelectFilter({
-  label,
-  paramKey,
-  options,
-  facets,
-  facetField,
-  placeholder,
-  onChange,
-  disabled,
-}: {
-  label: string;
-  paramKey: string;
-  options: Array<{ slug: string; name: string }>;
-  facets: Record<string, Record<string, number>>;
-  facetField?: string;
-  placeholder: string;
-  onChange?: (value: string) => void;
-  disabled?: boolean;
-}) {
-  const { get, set } = useSearchUrlState();
-  const val = get(paramKey);
-  const badge = val ? 1 : 0;
-  const display = val ? options.find((o) => o.slug === val)?.name ?? val : label;
-
-  return (
-    <FilterDropdown label={display} badge={badge || undefined}>
-      <select
-        className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm disabled:opacity-50"
-        value={val}
-        disabled={disabled}
-        onChange={(e) => (onChange ? onChange(e.target.value) : set(paramKey, e.target.value))}
-        aria-label={placeholder}
-      >
-        <option value="">{placeholder}</option>
-        {options.map((o) => {
-          const count = facetField ? facetCount(facets, facetField, o.slug) : undefined;
-          return (
-            <option key={o.slug} value={o.slug}>
-              {o.name}{count != null ? ` (${count})` : ''}
-            </option>
-          );
-        })}
-      </select>
-    </FilterDropdown>
-  );
-}
-
-function NumberFilter({
-  label,
-  paramKey,
-  placeholder,
-}: {
-  label: string;
-  paramKey: string;
-  placeholder: string;
-}) {
-  const { get, set } = useSearchUrlState();
-  const val = get(paramKey);
-  const display = val ? `${label} ≥ ${val}` : label;
-
-  return (
-    <FilterDropdown label={display} badge={val ? 1 : undefined}>
-      <input
-        type="number"
-        min={0}
-        placeholder={placeholder}
-        defaultValue={val}
-        onBlur={(e) => set(paramKey, e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && set(paramKey, (e.target as HTMLInputElement).value)}
-        className="data w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
-        aria-label={placeholder}
-      />
-    </FilterDropdown>
-  );
 }
 
 function slugOptions(
   slugs: readonly string[],
   t: (key: string) => string,
   prefix: string,
-): Array<{ slug: string; name: string }> {
+): Option[] {
   return slugs.map((slug) => ({ slug, name: t(`${prefix}.${slug}`) }));
 }
 
+function OptionList({
+  options,
+  value,
+  onChange,
+  facets,
+  facetField,
+  allLabel,
+}: {
+  options: Option[];
+  value: string;
+  onChange: (slug: string) => void;
+  facets?: Record<string, Record<string, number>>;
+  facetField?: string;
+  allLabel: string;
+}) {
+  return (
+    <ul className="max-h-64 overflow-y-auto -mx-1" role="listbox">
+      <li role="option" aria-selected={!value}>
+        <button
+          type="button"
+          onClick={() => onChange('')}
+          className={`w-full text-left rounded-lg px-3 py-2 text-sm transition ${
+            !value ? 'bg-azure/10 text-azure font-medium' : 'hover:bg-sand/50 text-ink'
+          }`}
+        >
+          {allLabel}
+        </button>
+      </li>
+      {options.map((o) => {
+        const count = facets && facetField ? facetCount(facets, facetField, o.slug) : undefined;
+        const selected = value === o.slug;
+        return (
+          <li key={o.slug} role="option" aria-selected={selected}>
+            <button
+              type="button"
+              onClick={() => onChange(o.slug)}
+              className={`w-full text-left rounded-lg px-3 py-2 text-sm transition flex justify-between gap-3 ${
+                selected ? 'bg-azure/10 text-azure font-medium' : 'hover:bg-sand/50 text-ink'
+              }`}
+            >
+              <span>{o.name}</span>
+              {count != null && <span className="data text-muted shrink-0">{count}</span>}
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function AxisDropdown({
+  idleLabel,
+  value,
+  options,
+  onChange,
+  facets,
+  facetField,
+  allLabel,
+}: {
+  idleLabel: string;
+  value: string;
+  options: Option[];
+  onChange: (slug: string) => void;
+  facets: Record<string, Record<string, number>>;
+  facetField: string;
+  allLabel: string;
+}) {
+  const selected = options.find((o) => o.slug === value);
+  const label = selected?.name ?? idleLabel;
+  return (
+    <FilterDropdown label={label} badge={value ? 1 : undefined} active={Boolean(value)}>
+      <OptionList
+        options={options}
+        value={value}
+        onChange={onChange}
+        facets={facets}
+        facetField={facetField}
+        allLabel={allLabel}
+      />
+    </FilterDropdown>
+  );
+}
+
+function FieldLabel({ children }: { children: ReactNode }) {
+  return <p className="text-xs font-medium text-muted mb-1.5">{children}</p>;
+}
+
+/** Primary taxonomy bar + advanced “Filters” panel (reference: source · type · deal · price · more). */
 export function SearchFilters({
   regions,
   provinces,
   facets,
 }: {
   regions: Array<{ slug: string; name: string }>;
-  /** @deprecated retained for call-site compat; Tipologia replaced by multi-axis filters */
+  /** @deprecated retained for call-site compat */
   categories?: Array<{ slug: string; name: string }>;
   provinces: Array<{ slug: string; name: string; regionSlug?: string }>;
   facets: Record<string, Record<string, number>>;
 }) {
   const t = useTranslations('search.filters');
-  const { get, set, setMany } = useSearchUrlState();
+  const { get, set, setMany, clearAll } = useSearchUrlState();
 
   const provinceSlug = get('provinceSlug');
   const tx = get('transactionType');
+  const seller = get('sellerType');
+  const asset = get('assetClass');
+  const propertyType = get('propertyType');
 
   const comuneOptions = useMemo(() => {
     if (!provinceSlug) return [];
@@ -137,9 +157,33 @@ export function SearchFilters({
   const leaseOptions = useMemo(() => slugOptions(LEASE_TYPE_SLUGS, t, 'leaseType'), [t]);
   const sellerOptions = useMemo(() => slugOptions(SELLER_TYPE_SLUGS, t, 'sellerType'), [t]);
 
-  const txLabel = tx
-    ? txOptions.find((o) => o.slug === tx)?.name ?? tx
-    : t('all');
+  const sellerLabel = seller
+    ? sellerOptions.find((o) => o.slug === seller)?.name ?? seller
+    : t('sellerTypeIdle');
+
+  const propertyLabel = (() => {
+    const parts: string[] = [];
+    if (asset) parts.push(assetOptions.find((o) => o.slug === asset)?.name ?? asset);
+    if (propertyType) parts.push(propertyOptions.find((o) => o.slug === propertyType)?.name ?? propertyType);
+    if (parts.length === 0) return t('propertyTypeLabel');
+    return parts.join(' · ');
+  })();
+  const propertyActiveCount = (asset ? 1 : 0) + (propertyType ? 1 : 0);
+
+  const advancedKeys = [
+    'condition',
+    'financingOption',
+    'leaseType',
+    'minBedrooms',
+    'minBathrooms',
+    'minSizeSqm',
+    'maxSizeSqm',
+    'energyClass',
+    'regionSlug',
+    'provinceSlug',
+    'city',
+  ] as const;
+  const advancedCount = advancedKeys.reduce((n, key) => (get(key) ? n + 1 : n), 0);
 
   const onProvinceChange = (value: string) => {
     setMany({
@@ -149,133 +193,262 @@ export function SearchFilters({
   };
 
   return (
-    <div className="space-y-3">
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 sm:flex-wrap sm:overflow-visible">
-        <SelectFilter
-          label={t('region')}
-          paramKey="regionSlug"
-          options={regions}
-          facets={facets}
-          facetField="regionSlug"
-          placeholder={t('region')}
-        />
-
-        <SelectFilter
-          label={t('province')}
-          paramKey="provinceSlug"
-          options={provinces}
-          facets={facets}
-          facetField="provinceSlug"
-          placeholder={t('province')}
-          onChange={onProvinceChange}
-        />
-
-        <SelectFilter
-          label={t('comune')}
-          paramKey="city"
-          options={comuneOptions}
-          facets={facets}
-          placeholder={t('comune')}
-          disabled={!provinceSlug}
-        />
-
-        <SelectFilter
-          label={t('transactionLabel')}
-          paramKey="transactionType"
-          options={txOptions}
-          facets={facets}
-          facetField="transactionType"
-          placeholder={txLabel}
-        />
-
-        <SelectFilter
-          label={t('assetClassLabel')}
-          paramKey="assetClass"
-          options={assetOptions}
-          facets={facets}
-          facetField="assetClass"
-          placeholder={t('assetClassLabel')}
-        />
-
-        <SelectFilter
-          label={t('propertyTypeLabel')}
-          paramKey="propertyType"
-          options={propertyOptions}
-          facets={facets}
-          facetField="propertyType"
-          placeholder={t('propertyTypeLabel')}
-        />
-
-        <SelectFilter
-          label={t('conditionLabel')}
-          paramKey="condition"
-          options={conditionOptions}
-          facets={facets}
-          facetField="condition"
-          placeholder={t('conditionLabel')}
-        />
-
-        <SelectFilter
-          label={t('financingLabel')}
-          paramKey="financingOption"
-          options={financingOptions}
-          facets={facets}
-          facetField="financingOptions"
-          placeholder={t('financingLabel')}
-        />
-
-        {tx === 'rent' && (
-          <SelectFilter
-            label={t('leaseTypeLabel')}
-            paramKey="leaseType"
-            options={leaseOptions}
+    <div className="space-y-3" role="group" aria-label={t('barLabel')}>
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 items-center">
+        {/* 1 · Listing source (seller) */}
+        <FilterDropdown
+          label={sellerLabel}
+          badge={seller ? 1 : undefined}
+          active={Boolean(seller)}
+        >
+          <OptionList
+            options={sellerOptions}
+            value={seller}
+            onChange={(v) => set('sellerType', v)}
             facets={facets}
-            facetField="leaseType"
-            placeholder={t('leaseTypeLabel')}
+            facetField="sellerType"
+            allLabel={t('all')}
           />
-        )}
-
-        <SelectFilter
-          label={t('sellerTypeLabel')}
-          paramKey="sellerType"
-          options={sellerOptions}
-          facets={facets}
-          facetField="sellerType"
-          placeholder={t('sellerTypeLabel')}
-        />
-
-        <PriceRangeFilter />
-        <NumberFilter label={t('bedrooms')} paramKey="minBedrooms" placeholder={t('bedroomsMin')} />
-        <NumberFilter label={t('bathrooms')} paramKey="minBathrooms" placeholder={t('bathroomsMin')} />
-        <SizeRangeFilter />
-
-        <FilterDropdown label={get('energyClass') ? `${t('energy')}: ${get('energyClass')}` : t('energy')} badge={get('energyClass') ? 1 : undefined}>
-          <select
-            className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
-            value={get('energyClass')}
-            onChange={(e) => set('energyClass', e.target.value)}
-            aria-label={t('energy')}
-          >
-            <option value="">{t('energy')}</option>
-            {ENERGY_CLASSES.map((ec) => (
-              <option key={ec} value={ec}>
-                {ec}{facets.energyClass?.[ec] != null ? ` (${facets.energyClass[ec]})` : ''}
-              </option>
-            ))}
-          </select>
         </FilterDropdown>
 
-        <select
-          className="rounded-lg border border-line bg-paper px-3 py-2 text-sm shrink-0"
-          value={get('sort') || 'publishedAt:desc'}
-          onChange={(e) => set('sort', e.target.value === 'publishedAt:desc' ? '' : e.target.value)}
-          aria-label={t('sort')}
+        {/* 2 · Property (asset class + physical type) */}
+        <FilterDropdown
+          label={propertyLabel}
+          badge={propertyActiveCount || undefined}
+          active={propertyActiveCount > 0}
+          panelClassName="min-w-[18rem]"
         >
-          <option value="publishedAt:desc">{t('sort_publishedAt:desc')}</option>
-          <option value="price:asc">{t('sort_price:asc')}</option>
-          <option value="price:desc">{t('sort_price:desc')}</option>
-        </select>
+          <div className="space-y-4">
+            <div>
+              <FieldLabel>{t('assetClassLabel')}</FieldLabel>
+              <OptionList
+                options={assetOptions}
+                value={asset}
+                onChange={(v) => set('assetClass', v)}
+                facets={facets}
+                facetField="assetClass"
+                allLabel={t('all')}
+              />
+            </div>
+            <div className="border-t border-line pt-3">
+              <FieldLabel>{t('propertyTypeLabel')}</FieldLabel>
+              <OptionList
+                options={propertyOptions}
+                value={propertyType}
+                onChange={(v) => set('propertyType', v)}
+                facets={facets}
+                facetField="propertyType"
+                allLabel={t('all')}
+              />
+            </div>
+          </div>
+        </FilterDropdown>
+
+        {/* 3 · Transaction */}
+        <AxisDropdown
+          idleLabel={t('transactionLabel')}
+          value={tx}
+          options={txOptions}
+          onChange={(v) => set('transactionType', v)}
+          facets={facets}
+          facetField="transactionType"
+          allLabel={t('all')}
+        />
+
+        {/* 4 · Price */}
+        <PriceRangeFilter />
+
+        {/* 5 · Advanced filters */}
+        <FilterDropdown
+          label={t('moreFilters')}
+          badge={advancedCount || undefined}
+          active={advancedCount > 0}
+          panelClassName="min-w-[20rem] max-w-[min(100vw-2rem,24rem)]"
+        >
+          <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+            <div>
+              <FieldLabel>{t('conditionLabel')}</FieldLabel>
+              <OptionList
+                options={conditionOptions}
+                value={get('condition')}
+                onChange={(v) => set('condition', v)}
+                facets={facets}
+                facetField="condition"
+                allLabel={t('all')}
+              />
+            </div>
+
+            <div className="border-t border-line pt-3">
+              <FieldLabel>{t('financingLabel')}</FieldLabel>
+              <OptionList
+                options={financingOptions}
+                value={get('financingOption')}
+                onChange={(v) => set('financingOption', v)}
+                facets={facets}
+                facetField="financingOptions"
+                allLabel={t('all')}
+              />
+            </div>
+
+            {tx === 'rent' && (
+              <div className="border-t border-line pt-3">
+                <FieldLabel>{t('leaseTypeLabel')}</FieldLabel>
+                <OptionList
+                  options={leaseOptions}
+                  value={get('leaseType')}
+                  onChange={(v) => set('leaseType', v)}
+                  facets={facets}
+                  facetField="leaseType"
+                  allLabel={t('all')}
+                />
+              </div>
+            )}
+
+            <div className="border-t border-line pt-3 space-y-3">
+              <FieldLabel>{t('roomsAndSize')}</FieldLabel>
+              <div className="grid grid-cols-2 gap-2">
+                <label className="text-xs text-muted space-y-1">
+                  <span>{t('bedroomsMin')}</span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={get('minBedrooms')}
+                    onChange={(e) => set('minBedrooms', e.target.value)}
+                    className="data w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+                  />
+                </label>
+                <label className="text-xs text-muted space-y-1">
+                  <span>{t('bathroomsMin')}</span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={get('minBathrooms')}
+                    onChange={(e) => set('minBathrooms', e.target.value)}
+                    className="data w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+                  />
+                </label>
+                <label className="text-xs text-muted space-y-1">
+                  <span>{t('sizeFrom')}</span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={get('minSizeSqm')}
+                    onChange={(e) => set('minSizeSqm', e.target.value)}
+                    className="data w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+                  />
+                </label>
+                <label className="text-xs text-muted space-y-1">
+                  <span>{t('sizeTo')}</span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={get('maxSizeSqm')}
+                    onChange={(e) => set('maxSizeSqm', e.target.value)}
+                    className="data w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="border-t border-line pt-3">
+              <FieldLabel>{t('energy')}</FieldLabel>
+              <OptionList
+                options={ENERGY_CLASSES.map((ec) => ({ slug: ec, name: ec }))}
+                value={get('energyClass')}
+                onChange={(v) => set('energyClass', v)}
+                facets={facets}
+                facetField="energyClass"
+                allLabel={t('all')}
+              />
+            </div>
+
+            <div className="border-t border-line pt-3 space-y-3">
+              <FieldLabel>{t('locationGroup')}</FieldLabel>
+              <select
+                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+                value={get('regionSlug')}
+                onChange={(e) =>
+                  setMany({
+                    regionSlug: e.target.value || null,
+                    provinceSlug: null,
+                    city: null,
+                  })
+                }
+                aria-label={t('region')}
+              >
+                <option value="">{t('region')}</option>
+                {regions.map((r) => (
+                  <option key={r.slug} value={r.slug}>
+                    {r.name}
+                    {facets.regionSlug?.[r.slug] != null ? ` (${facets.regionSlug[r.slug]})` : ''}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm"
+                value={provinceSlug}
+                onChange={(e) => onProvinceChange(e.target.value)}
+                aria-label={t('province')}
+              >
+                <option value="">{t('province')}</option>
+                {provinces.map((p) => (
+                  <option key={p.slug} value={p.slug}>
+                    {p.name}
+                    {facets.provinceSlug?.[p.slug] != null ? ` (${facets.provinceSlug[p.slug]})` : ''}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm disabled:opacity-50"
+                value={get('city')}
+                disabled={!provinceSlug}
+                onChange={(e) => set('city', e.target.value)}
+                aria-label={t('comune')}
+              >
+                <option value="">{t('comune')}</option>
+                {comuneOptions.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </FilterDropdown>
+
+        {/* 6 · Reset */}
+        <button
+          type="button"
+          onClick={clearAll}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-transparent px-3 py-2 text-sm text-muted hover:text-ink hover:border-line transition shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-azure"
+          aria-label={t('resetAll')}
+        >
+          <span aria-hidden="true" className="text-base leading-none">
+            ↻
+          </span>
+          <span className="whitespace-nowrap">{t('resetAll')}</span>
+        </button>
       </div>
     </div>
+  );
+}
+
+export function SearchSortControl() {
+  const t = useTranslations('search.filters');
+  const { get, set } = useSearchUrlState();
+  return (
+    <label className="inline-flex items-center gap-2 text-sm text-muted">
+      <span className="sr-only">{t('sort')}</span>
+      <select
+        className="rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink"
+        value={get('sort') || 'publishedAt:desc'}
+        onChange={(e) => set('sort', e.target.value === 'publishedAt:desc' ? '' : e.target.value)}
+        aria-label={t('sort')}
+      >
+        <option value="publishedAt:desc">{t('sort_publishedAt:desc')}</option>
+        <option value="price:asc">{t('sort_price:asc')}</option>
+        <option value="price:desc">{t('sort_price:desc')}</option>
+      </select>
+    </label>
   );
 }
