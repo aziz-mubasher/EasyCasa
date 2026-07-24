@@ -1,3 +1,4 @@
+import { normalizeProvinceSlug } from '@easycasa/shared';
 import { pool } from '../db/drizzle';
 import { SearchService } from './search.service';
 import type { ListingDoc } from './meili';
@@ -36,7 +37,7 @@ async function run(): Promise<void> {
     title: r.title,
     description: r.description,
     city: r.city,
-    provinceSlug: r.province ? r.province.toUpperCase() : null,
+    provinceSlug: normalizeProvinceSlug(r.province),
     regionSlug: r.region_slug,
     categorySlug: r.category_slug,
     transactionType: r.transaction_type,

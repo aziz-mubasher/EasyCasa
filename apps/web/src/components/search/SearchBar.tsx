@@ -5,6 +5,8 @@ import { useTranslations } from 'next-intl';
 import { suggestLocations, type LocationSuggestion } from '@/lib/api';
 import { useSearchUrlState } from './useSearchUrlState';
 
+const SEARCH_PATH = '/search';
+
 export function SearchBar({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('search');
   const { get, setMany } = useSearchUrlState();
@@ -56,7 +58,8 @@ export function SearchBar({ compact = false }: { compact?: boolean }) {
         updates.regionSlug = s.slug;
         setQuery(s.label);
       }
-      setMany(updates);
+      // Always land on the search results page (homepage hero used to stay on "/").
+      setMany(updates, true, SEARCH_PATH);
       setOpen(false);
     },
     [setMany],
@@ -68,7 +71,7 @@ export function SearchBar({ compact = false }: { compact?: boolean }) {
       applySuggestion(suggestions[active]);
       return;
     }
-    setMany({ q: query.trim() || null, city: null });
+    setMany({ q: query.trim() || null, city: null }, true, SEARCH_PATH);
     setOpen(false);
   };
 

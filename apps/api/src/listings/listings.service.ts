@@ -1,4 +1,5 @@
 import { ForbiddenException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { normalizeProvinceSlug } from '@easycasa/shared';
 import { ListingsRepository } from './listings.repository';
 import { SearchService } from '../search/search.service';
 import { inferPropertyType } from '../search/meili-search.index';
@@ -148,7 +149,7 @@ export class ListingsService {
         title: published.title,
         description: published.description,
         city: published.city,
-        provinceSlug: published.province ? published.province.toUpperCase() : null,
+        provinceSlug: normalizeProvinceSlug(published.province),
         regionSlug: null,
         categorySlug: null,
         transactionType: published.transactionType,

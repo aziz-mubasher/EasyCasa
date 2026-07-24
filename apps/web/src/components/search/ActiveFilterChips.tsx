@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { normalizeProvinceSlug } from '@easycasa/shared';
 import { useSearchUrlState } from './useSearchUrlState';
 
 type ChipDef = { key: string; label: string };
@@ -85,7 +86,14 @@ export function ActiveFilterChips({
       {/* facet counts hint — show province counts when filtered */}
       {facets.provinceSlug && Object.keys(facets.provinceSlug).length > 0 && !params.get('provinceSlug') && (
         <span className="text-xs text-muted ml-auto hidden sm:inline">
-          {Object.entries(facets.provinceSlug)
+          {Object.entries(
+            Object.entries(facets.provinceSlug).reduce<Record<string, number>>((acc, [slug, count]) => {
+              const key = normalizeProvinceSlug(slug) ?? slug;
+              acc[key] = (acc[key] ?? 0) + count;
+              return acc;
+            }, {}),
+          )
+            .sort((a, b) => b[1] - a[1])
             .slice(0, 3)
             .map(([slug, count]) => {
               const name = provinces.find((p) => p.slug === slug)?.name ?? slug;

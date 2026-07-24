@@ -13,7 +13,12 @@ export function useSearchUrlState() {
   const get = useCallback((key: string) => params.get(key) ?? '', [params]);
 
   const setMany = useCallback(
-    (updates: Record<string, string | null | undefined>, resetPage = true) => {
+    (
+      updates: Record<string, string | null | undefined>,
+      resetPage = true,
+      /** Override path (e.g. homepage search → `/search`). */
+      targetPath?: string,
+    ) => {
       const next = new URLSearchParams(params.toString());
       for (const [key, value] of Object.entries(updates)) {
         if (value != null && value !== '') next.set(key, value);
@@ -21,7 +26,8 @@ export function useSearchUrlState() {
       }
       if (resetPage) next.delete('page');
       const qs = next.toString();
-      router.push(qs ? `${pathname}?${qs}` : pathname);
+      const path = targetPath ?? pathname;
+      router.push(qs ? `${path}?${qs}` : path);
     },
     [params, pathname, router],
   );

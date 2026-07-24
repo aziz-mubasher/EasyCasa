@@ -121,6 +121,33 @@ export const PROVINCE_BY_SLUG = new Map(
   ITALIAN_PROVINCES.map((p) => [p.slug, p]),
 );
 
+/** Lowercase province display name → sigla (e.g. "brescia" → "BS"). */
+const PROVINCE_BY_NAME = new Map(
+  ITALIAN_PROVINCES.map((p) => [p.name.toLowerCase(), p.slug]),
+);
+
+/**
+ * Normalize any province raw value to the official 2-letter sigla.
+ * Accepts sigla ("BS"), name ("Brescia"), or "provincia di Brescia".
+ * Returns null when the value cannot be mapped.
+ */
+export function normalizeProvinceSlug(raw: string | null | undefined): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+
+  const asSigla = trimmed.toUpperCase();
+  if (PROVINCE_BY_SLUG.has(asSigla)) return asSigla;
+
+  const withoutPrefix = trimmed
+    .replace(/^provincia\s+(autonoma\s+)?di\s+/i, '')
+    .replace(/^citt[aà]\s+metropolitana\s+di\s+/i, '')
+    .trim()
+    .toLowerCase();
+
+  return PROVINCE_BY_NAME.get(withoutPrefix) ?? PROVINCE_BY_NAME.get(trimmed.toLowerCase()) ?? null;
+}
+
 /**
  * Comune (lowercase) → province sigla for backfill and typeahead.
  * Only includes comuni we can map deterministically — no guessing.
