@@ -563,6 +563,35 @@ export const viewings = pgTable('viewings', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+// ---------------- SmartLink (K EC 1.29) ----------------
+export const shareLinks = pgTable('share_links', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  token: text('token').notNull().unique(),
+  listingId: uuid('listing_id').notNull(),
+  createdBy: uuid('created_by').notNull(),
+  agentUserId: uuid('agent_user_id'),
+  agentSnapshot: jsonb('agent_snapshot').notNull().default({}),
+  includeValuationBand: boolean('include_valuation_band').notNull().default(true),
+  includeSourcesTable: boolean('include_sources_table').notNull().default(false),
+  viewCount: integer('view_count').notNull().default(0),
+  uniqueViewCount: integer('unique_view_count').notNull().default(0),
+  lastViewedAt: timestamp('last_viewed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  revokedAt: timestamp('revoked_at', { withTimezone: true }),
+});
+
+export const shareLinkVisitorHashes = pgTable(
+  'share_link_visitor_hashes',
+  {
+    shareLinkId: uuid('share_link_id').notNull(),
+    visitorHash: text('visitor_hash').notNull(),
+    firstSeenAt: timestamp('first_seen_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.shareLinkId, t.visitorHash] }),
+  }),
+);
+
 /** Append-only consent ledger — Phase 38 (GDPR Art. 7). */
 export const consentRecords = pgTable('consent_records', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -586,6 +615,7 @@ export const schema = {
   paymentIntents, invoices,
   omiQuotes, valuationRequests,
   viewingAvailability, viewings,
+  shareLinks, shareLinkVisitorHashes,
   consentRecords,
 };
 export type Schema = typeof schema;

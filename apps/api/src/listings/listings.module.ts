@@ -19,6 +19,6 @@ import { AvmModule } from '../avm/avm.module';
     DrizzleListingReadRepository,
     { provide: LISTING_READ, useExisting: DrizzleListingReadRepository },
   ],
-  exports: [ListingsService],
+  exports: [ListingsService, ListingsRepository],
 })
 export class ListingsModule {}

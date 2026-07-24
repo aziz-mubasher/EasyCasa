@@ -56,6 +56,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     RETENTION_LEAD_DAYS: 90,
     SENTRY_DSN: '',
     VALUATION_BAND_ENABLED: false,
+    SHARE_VIEW_PEPPER: '',
     ...over,
   };
 }

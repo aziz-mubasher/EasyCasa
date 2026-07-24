@@ -4,6 +4,7 @@ import { euro, area } from '@/lib/format';
 import { Badge } from '@/components/ui/Badge';
 import { ListingStructuredData } from '@/components/StructuredData';
 import { ContactEnquiryForm } from '@/components/listings/ContactEnquiryForm';
+import { SmartLinkManagePanel } from '@/components/smartlink/SmartLinkManagePanel';
 import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 
 export default async function ListingPage({
@@ -73,6 +74,8 @@ export default async function ListingPage({
       ) : null}
 
       <ListingValuationBandSection slug={String(l.slug ?? slug)} />
+
+      <SmartLinkManagePanel listingId={listingId} />
 
       <ContactEnquiryForm listingId={listingId} listingTitle={title} />
     </article>

@@ -89,6 +89,9 @@ const Schema = z
 
     /** K EC 1.26 — provisional valuation band (stub comparables; not OMI yet). */
     VALUATION_BAND_ENABLED: bool(false),
+
+    /** K EC 1.29 — HMAC pepper for SmartLink view visitor hashes (never store raw IP). */
+    SHARE_VIEW_PEPPER: z.string().default(''),
   })
   .superRefine((cfg, ctx) => {
     // When DEV_AUTH is off, OIDC must be fully configured (Phase 16 fail-fast).
