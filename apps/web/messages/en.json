@@ -15,7 +15,11 @@
     "eyebrow": "Real estate · Italy",
     "title": "Property, without the markup.",
     "subtitle": "Pay only for the services you use — from a licensed agency. Search the map across thousands of homes in every Italian region.",
-    "cta": "Explore the map"
+    "cta": "Explore the map",
+    "where": "Where?",
+    "wherePlaceholder": "City, province or region…",
+    "searchRowLabel": "Search properties on the map",
+    "categoryChipsLabel": "Featured property types"
   },
   "search": {
     "title": "Search properties",

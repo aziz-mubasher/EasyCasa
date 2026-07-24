@@ -1,21 +1,24 @@
 import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/routing';
-import { Button } from '@/components/ui/Button';
 import { HeroMapLazy } from '@/components/home/HeroMapLazy';
-import { HeroSearchBar } from '@/components/home/HeroSearchBar';
-import { searchListings } from '@/lib/api';
+import { HeroSearchRow } from '@/components/home/HeroSearchRow';
+import { HeroCategoryChips } from '@/components/home/HeroCategoryChips';
+import { HeroCommissionCallout } from '@/components/home/HeroCommissionCallout';
+import { searchListings, listCategories } from '@/lib/api';
 import type { ListingSummary } from '@easycasa/shared';
 
 export default async function HomePage() {
   const t = await getTranslations('home');
 
-  const data = await searchListings({ pageSize: 100 }).catch(() => ({
-    items: [] as ListingSummary[],
-    total: 0,
-    page: 1,
-    pageSize: 100,
-    facets: {},
-  }));
+  const [data, categories] = await Promise.all([
+    searchListings({ pageSize: 100 }).catch(() => ({
+      items: [] as ListingSummary[],
+      total: 0,
+      page: 1,
+      pageSize: 100,
+      facets: {},
+    })),
+    listCategories(),
+  ]);
 
   return (
     <section className="mx-auto max-w-7xl px-5">
@@ -26,11 +29,10 @@ export default async function HomePage() {
             {t('title')}
           </h1>
           <p className="mt-5 text-lg text-muted max-w-md">{t('subtitle')}</p>
-          <div className="mt-8 space-y-4 max-w-lg">
-            <HeroSearchBar />
-            <Link href="/search">
-              <Button variant="outline">{t('cta')}</Button>
-            </Link>
+          <div className="mt-8 space-y-4 max-w-xl">
+            <HeroSearchRow categories={categories} />
+            <HeroCategoryChips categories={categories} />
+            <HeroCommissionCallout />
           </div>
         </div>
         <HeroMapLazy items={data.items} ariaLabel={t('cta')} />

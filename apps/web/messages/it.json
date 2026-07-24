@@ -15,7 +15,11 @@
     "eyebrow": "Mercato immobiliare · Italia",
     "title": "La casa, senza sovrapprezzo.",
     "subtitle": "Paghi solo i servizi che usi — con un'agenzia regolare. Cerca sulla mappa tra migliaia di immobili in tutte le regioni italiane.",
-    "cta": "Esplora la mappa"
+    "cta": "Esplora la mappa",
+    "where": "Dove?",
+    "wherePlaceholder": "Comune, provincia o regione…",
+    "searchRowLabel": "Cerca immobili sulla mappa",
+    "categoryChipsLabel": "Tipologie in evidenza"
   },
   "search": {
     "title": "Cerca immobili",
