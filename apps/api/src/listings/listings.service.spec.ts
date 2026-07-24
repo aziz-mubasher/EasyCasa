@@ -127,7 +127,10 @@ describe('ListingsService', () => {
     await svc.publish('l1', user, 'me');
 
     expect(searchMock.indexListing).toHaveBeenCalledWith(
-      expect.objectContaining({ coverUrl: 'https://example.com/cover.jpg' }),
+      expect.objectContaining({
+        coverUrl: 'https://example.com/cover.jpg',
+        imageUrls: ['https://example.com/cover.jpg'],
+      }),
     );
   });
 });

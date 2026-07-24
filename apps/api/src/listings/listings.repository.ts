@@ -117,7 +117,13 @@ export class ListingsRepository {
         bedrooms: listings.bedrooms, bathrooms: listings.bathrooms, sizeSqm: listings.sizeSqm,
         city: listings.city, latitude: listings.latitude, longitude: listings.longitude,
         status: listings.status,
-        coverUrl: sql<string | null>`(SELECT url FROM media m WHERE m.listing_id = listings.id ORDER BY m.position LIMIT 1)`,
+        coverUrl: sql<string | null>`(SELECT url FROM media m WHERE m.listing_id = listings.id AND m.type IN ('image','floorplan') ORDER BY m.position LIMIT 1)`,
+        imageUrls: sql<string[]>`COALESCE(
+          (SELECT array_agg(m.url ORDER BY m.position)
+           FROM media m
+           WHERE m.listing_id = listings.id AND m.type IN ('image','floorplan')),
+          '{}'::text[]
+        )`,
       })
       .from(listings)
       .where(where)
@@ -133,6 +139,7 @@ export class ListingsRepository {
       sizeSqm: r.sizeSqm == null ? null : Number(r.sizeSqm),
       city: r.city, latitude: r.latitude, longitude: r.longitude,
       status: r.status, coverUrl: r.coverUrl ?? null,
+      imageUrls: r.imageUrls ?? [],
     }));
 
     return { items, total, page: q.page, pageSize: q.pageSize };
