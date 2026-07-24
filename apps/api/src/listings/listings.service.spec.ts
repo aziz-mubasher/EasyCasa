@@ -84,4 +84,50 @@ describe('ListingsService', () => {
     const res = await svc.update('l1', { title: 'x' }, admin, 'me');
     expect(res).toEqual({ id: 'l1' });
   });
+
+  it('indexes coverUrl from first image media on publish', async () => {
+    vi.mocked(searchMock.indexListing).mockClear();
+    const findById = vi.fn().mockResolvedValue({ id: 'l1', agentId: 'me' });
+    const listMedia = vi.fn().mockResolvedValue([
+      { type: 'video', url: 'https://example.com/v.mp4' },
+      { type: 'image', url: 'https://example.com/cover.jpg' },
+    ]);
+    const update = vi.fn().mockResolvedValue({
+      id: 'l1',
+      slug: 'l1',
+      title: 'Flat',
+      description: null,
+      city: 'Milano',
+      province: 'MI',
+      transactionType: 'sale',
+      assetClass: 'residential',
+      propertyType: 'apartment',
+      condition: 'good',
+      financingOptions: [],
+      leaseType: null,
+      sellerType: 'private',
+      price: '100',
+      bedrooms: 1,
+      bathrooms: 1,
+      rooms: 1,
+      sizeSqm: '50',
+      energyClass: null,
+      latitude: null,
+      longitude: null,
+      publishedAt: new Date('2026-01-01T00:00:00Z'),
+    });
+    const svc = new ListingsService(
+      makeRepo({ findById, update, listMedia }),
+      searchMock,
+      readMock as never,
+      alertsMock as never,
+    );
+    const user: AuthUser = { sub: 'u', roles: ['seller'] };
+
+    await svc.publish('l1', user, 'me');
+
+    expect(searchMock.indexListing).toHaveBeenCalledWith(
+      expect.objectContaining({ coverUrl: 'https://example.com/cover.jpg' }),
+    );
+  });
 });
