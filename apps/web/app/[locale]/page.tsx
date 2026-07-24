@@ -1,24 +1,20 @@
 import { getTranslations } from 'next-intl/server';
 import { HeroMapLazy } from '@/components/home/HeroMapLazy';
 import { HeroSearchRow } from '@/components/home/HeroSearchRow';
-import { HeroCategoryChips } from '@/components/home/HeroCategoryChips';
 import { HeroCommissionCallout } from '@/components/home/HeroCommissionCallout';
-import { searchListings, listCategories } from '@/lib/api';
+import { searchListings } from '@/lib/api';
 import type { ListingSummary } from '@easycasa/shared';
 
 export default async function HomePage() {
   const t = await getTranslations('home');
 
-  const [data, categories] = await Promise.all([
-    searchListings({ pageSize: 100 }).catch(() => ({
-      items: [] as ListingSummary[],
-      total: 0,
-      page: 1,
-      pageSize: 100,
-      facets: {},
-    })),
-    listCategories(),
-  ]);
+  const data = await searchListings({ pageSize: 100 }).catch(() => ({
+    items: [] as ListingSummary[],
+    total: 0,
+    page: 1,
+    pageSize: 100,
+    facets: {},
+  }));
 
   return (
     <section className="mx-auto max-w-7xl px-5">
@@ -30,8 +26,7 @@ export default async function HomePage() {
           </h1>
           <p className="mt-5 text-lg text-muted max-w-md">{t('subtitle')}</p>
           <div className="mt-8 space-y-4 max-w-xl">
-            <HeroSearchRow categories={categories} />
-            <HeroCategoryChips categories={categories} />
+            <HeroSearchRow />
             <HeroCommissionCallout />
           </div>
         </div>
