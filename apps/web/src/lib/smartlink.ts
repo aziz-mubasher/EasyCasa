@@ -75,7 +75,7 @@ export async function fetchSmartLinkPublic(
   visitorId?: string | null,
 ): Promise<{ data: SmartLinkPublicPayload | null; status: number }> {
   const headers: HeadersInit = { Accept: 'application/json' };
-  if (visitorId) headers['X-EC-SL-Viewer'] = visitorId;
+  if (visitorId) headers['X-EC-SL-Visitor'] = visitorId;
 
   const res = await fetch(`${BASE}/share-links/public/${encodeURIComponent(token)}`, {
     cache: 'no-store',

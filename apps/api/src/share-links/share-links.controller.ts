@@ -51,7 +51,10 @@ export class ShareLinksController {
   async publicPage(
     @Param('token') token: string,
     @Headers('x-ec-sl-visitor') visitorHeader?: string,
+    /** @deprecated typo alias — web v1 sent Viewer; prefer x-ec-sl-visitor (docs). */
+    @Headers('x-ec-sl-viewer') viewerHeader?: string,
   ) {
-    return this.service.getPublicPayload(token, visitorHeader ?? null);
+    const opaqueVisitorId = visitorHeader ?? viewerHeader ?? null;
+    return this.service.getPublicPayload(token, opaqueVisitorId);
   }
 }

@@ -71,7 +71,7 @@ gate('SmartLink share links (integration)', () => {
     const visitor = 'test-visitor-opaque-id-12345678';
     const first = await request(api())
       .get(`/share-links/public/${token}`)
-      .set('X-EC-SL-Viewer', visitor);
+      .set('X-EC-SL-Visitor', visitor);
     expect(first.status).toBe(200);
     expect(first.body.listing.title).toBe('SmartLink Test Casa');
     expect(first.body.listing.address).toBeUndefined();
@@ -81,14 +81,14 @@ gate('SmartLink share links (integration)', () => {
 
     const second = await request(api())
       .get(`/share-links/public/${token}`)
-      .set('X-EC-SL-Viewer', visitor);
+      .set('X-EC-SL-Visitor', visitor);
     expect(second.body.stats.viewCount).toBe(2);
     expect(second.body.stats.uniqueViewCount).toBe(1);
 
     const otherVisitor = 'other-visitor-opaque-id-87654321';
     const third = await request(api())
       .get(`/share-links/public/${token}`)
-      .set('X-EC-SL-Viewer', otherVisitor);
+      .set('X-EC-SL-Visitor', otherVisitor);
     expect(third.body.stats.viewCount).toBe(3);
     expect(third.body.stats.uniqueViewCount).toBe(2);
 
