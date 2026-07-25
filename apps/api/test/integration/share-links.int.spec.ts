@@ -59,6 +59,19 @@ gate('SmartLink share links (integration)', () => {
       .set(stranger)
       .send({ listingId, includeValuationBand: true });
     expect(forbidden.status).toBe(403);
+    expect(forbidden.body.message).toBe('not authorized for this listing');
+
+    const buyer = asUser({
+      sub: 'smartlink-buyer',
+      email: 'buyer@example.it',
+      roles: ['buyer'],
+    });
+    const buyerForbidden = await request(api())
+      .post('/share-links')
+      .set(buyer)
+      .send({ listingId, includeValuationBand: true });
+    expect(buyerForbidden.status).toBe(403);
+    expect(buyerForbidden.body.message).toBe('insufficient role');
 
     const created = await request(api())
       .post('/share-links')
@@ -93,6 +106,8 @@ gate('SmartLink share links (integration)', () => {
     expect(third.body.stats.uniqueViewCount).toBe(2);
 
     const linkId = created.body.id as string;
+    await request(api()).get(`/share-links/${linkId}/stats`).set(stranger).expect(404);
+
     await request(api()).post(`/share-links/${linkId}/revoke`).set(agent).expect(201);
 
     const gone = await request(api()).get(`/share-links/public/${token}`);
