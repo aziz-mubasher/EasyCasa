@@ -10,7 +10,7 @@ import {
   type AreaValuationQuery,
   MIN_AREA_COMPARABLES,
 } from './domain/area-valuation.port';
-import { normalizePropertyType } from './domain/normalize-property-type';
+import { resolveListingPropertyType } from './domain/normalize-property-type';
 import type { PropertyType } from './domain/types';
 
 function median(values: number[]): number {
@@ -88,6 +88,8 @@ export class StubAreaValuationProvider implements AreaValuationProvider {
     const rows = await this.db
       .select({
         propertyType: listings.propertyType,
+        assetClass: listings.assetClass,
+        title: listings.title,
         sizeSqm: listings.sizeSqm,
         price: listings.price,
       })
@@ -113,7 +115,11 @@ export class StubAreaValuationProvider implements AreaValuationProvider {
 
     const ppm2: number[] = [];
     for (const r of rows) {
-      const resolved = normalizePropertyType(r.propertyType);
+      const resolved = resolveListingPropertyType({
+        propertyType: r.propertyType,
+        title: r.title,
+        assetClass: r.assetClass,
+      });
       if (resolved !== type) continue;
       const areaM2 = Number(r.sizeSqm);
       const priceEur = Number(r.price);

@@ -12,7 +12,7 @@ import { buildListingDetail } from './domain/detail';
 import { LISTING_READ, type ListingReadPort } from './domain/ports';
 import type { ListingDetail, SimilarPin } from './domain/types';
 import { ValuationBandService } from '../avm/valuation-band.service';
-import { normalizePropertyType } from '../avm/domain/normalize-property-type';
+import { resolveListingPropertyType } from '../avm/domain/normalize-property-type';
 import type { ValuationBandResponse } from '../avm/domain/valuation-band';
 
 function slugify(title: string): string {
@@ -108,17 +108,11 @@ export class ListingsService {
     }
 
     // Many migrated listings lack propertyType — infer from title / asset class.
-    const propertyType =
-      normalizePropertyType(l.propertyType) ??
-      normalizePropertyType(l.title) ??
-      (l.assetClass === 'residential' || l.assetClass === 'hospitality'
-        ? 'apartment'
-        : null) ??
-      (l.assetClass === 'commercial' || l.assetClass === 'office' || l.assetClass === 'industrial'
-        ? 'commercial'
-        : null) ??
-      (l.assetClass === 'land' ? 'land' : null) ??
-      (l.assetClass === 'garage' ? 'commercial' : null);
+    const propertyType = resolveListingPropertyType({
+      propertyType: l.propertyType,
+      title: l.title,
+      assetClass: l.assetClass,
+    });
 
     if (!propertyType) {
       return { status: 'unavailable', reason: 'unsupported_listing' };

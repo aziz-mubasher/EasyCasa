@@ -36,3 +36,25 @@ export function normalizePropertyType(raw: string | null | undefined): PropertyT
   }
   return null;
 }
+
+/** Resolve AVM type for migrated listings that often lack `propertyType`. */
+export function resolveListingPropertyType(input: {
+  propertyType?: string | null;
+  title?: string | null;
+  assetClass?: string | null;
+}): PropertyType | null {
+  return (
+    normalizePropertyType(input.propertyType) ??
+    normalizePropertyType(input.title) ??
+    (input.assetClass === 'residential' || input.assetClass === 'hospitality'
+      ? 'apartment'
+      : null) ??
+    (input.assetClass === 'commercial' ||
+    input.assetClass === 'office' ||
+    input.assetClass === 'industrial'
+      ? 'commercial'
+      : null) ??
+    (input.assetClass === 'land' ? 'land' : null) ??
+    (input.assetClass === 'garage' ? 'commercial' : null)
+  );
+}
