@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/auth/AuthProvider';
 import { createAuthedFetch } from '@/auth/authedFetch';
+import { usePathname } from '@/i18n/routing';
 import {
   createShareLink,
   listMyShareLinks,
@@ -22,8 +23,8 @@ type Props = {
 
 /**
  * Listing header actions:
- * - Share → social / email / copy the listing URL
- * - Smart Link → menu with market-evaluation toggle + open/create
+ * - Share → social / email / copy the listing URL (anyone)
+ * - Smart Link → registered (signed-in) users; guests are prompted to sign in
  */
 export function ListingShareActions({
   pageUrl,
@@ -33,8 +34,10 @@ export function ListingShareActions({
 }: Props) {
   const t = useTranslations('listingDetail.share');
   const locale = useLocale();
-  const { getAccessToken } = useAuth();
+  const pathname = usePathname();
+  const { getAccessToken, ready: authReady, isAuthenticated, signIn } = useAuth();
   const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
+  const canUseSmartLink = authReady && isAuthenticated;
 
   const [shareOpen, setShareOpen] = useState(false);
   const [smartOpen, setSmartOpen] = useState(false);
@@ -185,44 +188,54 @@ export function ListingShareActions({
           ) : null}
         </div>
 
-        <div className="relative" ref={smartRef}>
+        {canUseSmartLink ? (
+          <div className="relative" ref={smartRef}>
+            <Button
+              type="button"
+              className={btnClass}
+              aria-expanded={smartOpen}
+              aria-haspopup="menu"
+              onClick={() => {
+                setSmartOpen((o) => !o);
+                setShareOpen(false);
+              }}
+            >
+              {t('smartLink')}
+            </Button>
+            {smartOpen ? (
+              <div
+                role="menu"
+                className="absolute right-0 z-40 mt-2 w-[min(18rem,calc(100vw-2rem))] rounded-xl border border-line bg-paper p-3 shadow-lg space-y-3"
+              >
+                <label className="flex items-start gap-2 text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5 accent-[var(--azure)]"
+                    checked={includeBand}
+                    onChange={(e) => setIncludeBand(e.target.checked)}
+                  />
+                  <span>{t('includeBand')}</span>
+                </label>
+                <Button
+                  type="button"
+                  className="w-full"
+                  disabled={smartBusy}
+                  onClick={() => void openSmartLinkLanding()}
+                >
+                  {smartBusy ? t('smartLinkOpening') : t('smartLinkOpen')}
+                </Button>
+              </div>
+            ) : null}
+          </div>
+        ) : authReady ? (
           <Button
             type="button"
             className={btnClass}
-            aria-expanded={smartOpen}
-            aria-haspopup="menu"
-            onClick={() => {
-              setSmartOpen((o) => !o);
-              setShareOpen(false);
-            }}
+            onClick={() => void signIn(pathname || '/')}
           >
             {t('smartLink')}
           </Button>
-          {smartOpen ? (
-            <div
-              role="menu"
-              className="absolute right-0 z-40 mt-2 w-[min(18rem,calc(100vw-2rem))] rounded-xl border border-line bg-paper p-3 shadow-lg space-y-3"
-            >
-              <label className="flex items-start gap-2 text-sm cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="mt-0.5 accent-[var(--azure)]"
-                  checked={includeBand}
-                  onChange={(e) => setIncludeBand(e.target.checked)}
-                />
-                <span>{t('includeBand')}</span>
-              </label>
-              <Button
-                type="button"
-                className="w-full"
-                disabled={smartBusy}
-                onClick={() => void openSmartLinkLanding()}
-              >
-                {smartBusy ? t('smartLinkOpening') : t('smartLinkOpen')}
-              </Button>
-            </div>
-          ) : null}
-        </div>
+        ) : null}
       </div>
       {smartError ? (
         <p className="text-[10px] sm:text-xs text-clay max-w-[16rem] text-right leading-snug">

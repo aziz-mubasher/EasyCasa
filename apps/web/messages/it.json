@@ -195,6 +195,7 @@
       "smartLinkOpen": "Apri Smart Link",
       "includeBand": "Includi la valutazione di mercato nello Smart Link",
       "smartLinkSignIn": "Accedi per aprire o creare uno Smart Link per questo annuncio.",
+      "smartLinkNeedRole": "Il tuo account necessita di un ruolo EasyCasa per creare Smart Link. Contatta il supporto se ti sei registrato di recente.",
       "smartLinkError": "Impossibile aprire lo Smart Link. Riprova.",
       "landingBody": "Crea uno Smart Link tracciabile per questo annuncio. Puoi includere la fascia di valutazione — ideale da inviare agli acquirenti."
     },

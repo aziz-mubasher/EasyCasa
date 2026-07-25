@@ -195,6 +195,7 @@
       "smartLinkOpen": "Open Smart Link",
       "includeBand": "Include market evaluation on the Smart Link",
       "smartLinkSignIn": "Sign in to open or create a Smart Link for this listing.",
+      "smartLinkNeedRole": "Your account needs an EasyCasa role to create Smart Links. Contact support if you recently registered.",
       "smartLinkError": "Could not open Smart Link. Try again.",
       "landingBody": "Create a trackable Smart Link for this listing. Optionally include the valuation band — ideal for sharing with buyers."
     },

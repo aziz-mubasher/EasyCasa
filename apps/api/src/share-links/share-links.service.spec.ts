@@ -50,13 +50,37 @@ describe('ShareLinksService', () => {
     expect(payload.coverUrl).toContain('media/file');
   });
 
-  it('blocks create when caller does not own listing', async () => {
+  it('allows create for published listing by any product-role user', async () => {
     const listingsRepo = {
       findById: vi.fn().mockResolvedValue({ ...listingRow, agentId: 'other', ownerUserId: 'other' }),
     } as unknown as ListingsRepository;
+    const repo = {
+      agentSnapshotForUser: vi.fn().mockResolvedValue({ displayName: 'Me', phone: null, bio: null, slug: null }),
+      insertLink: vi.fn().mockResolvedValue({
+        id: 'sl1',
+        token: 'tok',
+        listingId: 'l1',
+        includeValuationBand: true,
+        viewCount: 0,
+        uniqueViewCount: 0,
+        lastViewedAt: null,
+        createdAt: new Date('2026-01-01T00:00:00Z'),
+        revokedAt: null,
+      }),
+    } as unknown as ShareLinksRepository;
+    const svc = new ShareLinksService(repo, listingsRepo, {} as ListingsService);
+    const row = await svc.create({ listingId: 'l1' }, 'me', { sub: 'me', roles: ['buyer'] });
+    expect(row.token).toBe('tok');
+    expect(row.listingId).toBe('l1');
+  });
+
+  it('blocks create when listing is not published', async () => {
+    const listingsRepo = {
+      findById: vi.fn().mockResolvedValue({ ...listingRow, status: 'draft' }),
+    } as unknown as ListingsRepository;
     const svc = new ShareLinksService({} as ShareLinksRepository, listingsRepo, {} as ListingsService);
     await expect(
-      svc.create({ listingId: 'l1' }, 'me', { sub: 'me', roles: ['seller'] }),
-    ).rejects.toThrow('not your listing');
+      svc.create({ listingId: 'l1' }, 'me', { sub: 'me', roles: ['buyer'] }),
+    ).rejects.toThrow('listing must be published');
   });
 });

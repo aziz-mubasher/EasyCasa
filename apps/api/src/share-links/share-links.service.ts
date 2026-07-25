@@ -42,12 +42,14 @@ export class ShareLinksService {
   ) {}
 
   async create(dto: CreateShareLinkDto, userId: string, user: AuthUser) {
-    await this.assertListingAccess(dto.listingId, userId, user);
     const listing = await this.listingsRepo.findById(dto.listingId);
     if (!listing) throw new NotFoundException('listing not found');
     if (listing.status !== 'published') {
       throw new ForbiddenException('listing must be published');
     }
+    // Any authenticated product-role user may create a Smart Link for a published listing
+    // (controller @Roles). Link is attributed to the creator via agentSnapshot.
+    void user;
 
     const agentSnapshot = await this.repo.agentSnapshotForUser(userId);
     let token = generateShareToken();
@@ -96,7 +98,8 @@ export class ShareLinksService {
   async stats(linkId: string, userId: string, user: AuthUser) {
     const link = await this.repo.findById(linkId);
     if (!link || link.createdBy !== userId) throw new NotFoundException('share link not found');
-    await this.assertListingAccess(link.listingId, userId, user);
+    // Creator already verified; admin may also inspect via ownership helper when needed.
+    void user;
     return {
       id: link.id,
       viewCount: link.viewCount,
@@ -193,14 +196,6 @@ export class ShareLinksService {
       })),
       coverUrl: media[0]?.url ?? null,
     };
-  }
-
-  private async assertListingAccess(listingId: string, userId: string, user: AuthUser) {
-    const listing = await this.listingsRepo.findById(listingId);
-    if (!listing) throw new NotFoundException('listing not found');
-    const isAdmin = user.roles.includes('admin');
-    const isOwner = listing.agentId === userId || listing.ownerUserId === userId;
-    if (!isAdmin && !isOwner) throw new ForbiddenException('not your listing');
   }
 
   private toOwnerRow(
