@@ -1,9 +1,11 @@
 import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
 import { searchListings, listRegions, listCategories, listProvinces } from '@/lib/api';
 import { SearchBar } from '@/components/search/SearchBar';
 import { SearchFilters, SearchSortControl } from '@/components/search/SearchFilters';
 import { ActiveFilterChips } from '@/components/search/ActiveFilterChips';
 import { SearchResultsPanel } from '@/components/search/SearchResultsPanel';
+import { SaveSearchButton } from '@/components/search/SaveSearchButton';
 import { ITALIAN_PROVINCES, type ListingSummary } from '@easycasa/shared';
 
 export default async function SearchPage({
@@ -46,7 +48,12 @@ export default async function SearchPage({
         <p className="font-display text-xl font-semibold tracking-tight">
           {t('resultsCount', { count: data.total })}
         </p>
-        <SearchSortControl />
+        <div className="flex items-center gap-4 flex-wrap">
+          <Suspense fallback={null}>
+            <SaveSearchButton />
+          </Suspense>
+          <SearchSortControl />
+        </div>
       </div>
 
       <div className="mt-4">

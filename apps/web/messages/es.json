@@ -427,5 +427,48 @@
       "instagram": "Instagram",
       "website": "Sitio web"
     }
+  },
+  "favorites": {
+    "title": "Favoritos",
+    "subtitle": "Inmuebles guardados y búsquedas que sigues.",
+    "saveFavorite": "Guardar inmueble",
+    "removeFavorite": "Quitar de favoritos",
+    "loading": "Cargando…",
+    "signInPrompt": "Inicia sesión para ver inmuebles y búsquedas guardadas.",
+    "signInCta": "Entrar",
+    "tabsLabel": "Secciones de favoritos",
+    "tabListings": "Inmuebles",
+    "tabSearches": "Búsquedas guardadas",
+    "emptyListings": "Aún no has guardado inmuebles.",
+    "emptyListingsCta": "Empezar a buscar",
+    "emptySearches": "Aún no has guardado búsquedas.",
+    "emptySearchesCta": "Ir a la búsqueda",
+    "saveSearch": {
+      "cta": "Guardar esta búsqueda",
+      "saving": "Guardando…",
+      "success": "Búsqueda guardada — la encuentras en",
+      "successLink": "Favoritos",
+      "summary": {
+        "allListings": "Todos los inmuebles",
+        "sale": "Venta",
+        "rent": "Alquiler",
+        "upToPrice": "hasta €{max}",
+        "fromPrice": "desde €{min}",
+        "priceRange": "€{min}–€{max}",
+        "inLocation": "en {place}",
+        "bedrooms": "{count} dormitorios"
+      }
+    },
+    "savedSearches": {
+      "rerun": "Repetir búsqueda",
+      "delete": "Eliminar",
+      "frequencyLabel": "Alertas por email",
+      "emailNotActive": "Preferencia guardada — las alertas por email aún no están activas.",
+      "freq": {
+        "off": "Nunca",
+        "daily": "Diaria",
+        "instant": "Inmediata"
+      }
+    }
   }
 }

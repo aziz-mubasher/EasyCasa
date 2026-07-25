@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { ListingCard } from '@/components/listing/ListingCard';
+import { FavoriteToggle } from '@/favorites/FavoriteToggle';
 import { MapView } from '@/components/search/MapView';
 import type { ListingSummary } from '@easycasa/shared';
+import { useState } from 'react';
 
 export function SearchResultsPanel({ items }: { items: ListingSummary[] }) {
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
@@ -18,7 +19,12 @@ export function SearchResultsPanel({ items }: { items: ListingSummary[] }) {
             onMouseLeave={() => setHighlightedId(null)}
             className={highlightedId === l.id ? 'ring-2 ring-azure rounded-xl2' : ''}
           >
-            <ListingCard l={l} />
+            <div className="relative">
+              <div className="absolute top-3 right-3 z-10">
+                <FavoriteToggle listingId={l.id} />
+              </div>
+              <ListingCard l={l} />
+            </div>
           </div>
         ))}
       </div>
