@@ -11,6 +11,7 @@ import { Field, Input } from '@/components/ui/Field';
 type Props = {
   listingId: string;
   listingTitle: string;
+  className?: string;
 };
 
 type ConsentPurpose = 'privacy_policy' | 'mediation_disclosure';
@@ -19,7 +20,7 @@ type ConsentPurpose = 'privacy_policy' | 'mediation_disclosure';
  * Contact-agent CTA — Phase 37/38. Records required consents then posts enquiry.
  * Requires OIDC PKCE sign-in (Authorization: Bearer).
  */
-export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
+export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: Props) {
   const { getAccessToken, isAuthenticated, ready } = useAuth();
   const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
   const [message, setMessage] = useState(`Sono interessato/a a: ${listingTitle}`);
@@ -98,7 +99,7 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
 
   if (status === 'ok') {
     return (
-      <p className="mt-8 text-pine font-[var(--font-display)] text-lg" role="status">
+      <p className={`text-pine font-[var(--font-display)] text-lg ${className}`} role="status">
         Richiesta inviata. Ti contatteremo a breve.
       </p>
     );
@@ -106,7 +107,7 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
 
   if (ready && !isAuthenticated) {
     return (
-      <div className="mt-8 max-w-md">
+      <div className={className || 'mt-8 max-w-md'}>
         <RequireSignInLink />
       </div>
     );
@@ -115,7 +116,7 @@ export function ContactEnquiryForm({ listingId, listingTitle }: Props) {
   const versionLabel = policyVersion ?? '…';
 
   return (
-    <form onSubmit={onSubmit} className="mt-8 max-w-md space-y-4">
+    <form onSubmit={onSubmit} className={`mt-8 max-w-md space-y-4 ${className}`.trim()}>
       <Field label="La tua email">
         <Input
           type="email"

@@ -155,6 +155,68 @@
     "save": "Guardar",
     "saved": "Guardado"
   },
+  "listingDetail": {
+    "forSale": "En venta",
+    "forRent": "En alquiler",
+    "onRequest": "a consultar",
+    "onRequestPerMonth": "a consultar/mes",
+    "perMonth": "/mes",
+    "factsHeading": "Datos principales",
+    "energyHeading": "Clase energética (CEE)",
+    "characteristics": "Características",
+    "catastoHeading": "Datos catastrales",
+    "shareHeading": "Compartir",
+    "locationUnavailable": "Ubicación no disponible para este anuncio.",
+    "catasto": {
+      "foglio": "Hoja",
+      "particella": "Parcela",
+      "subalterno": "Subalterno"
+    },
+    "facts": {
+      "rooms": "Estancias",
+      "bedrooms": "Dormitorios",
+      "bathrooms": "Baños",
+      "builtSurface": "Superficie construida",
+      "commercialSurface": "Superficie comercial",
+      "landSurface": "Superficie terreno",
+      "floor": "Planta",
+      "totalFloors": "Plantas totales",
+      "yearBuilt": "Año de construcción",
+      "yearRenovated": "Año de reforma",
+      "energyClass": "Clase energética",
+      "energyPerformance": "Rendimiento energético",
+      "energyPerformanceValue": "{value} kWh/m²/año",
+      "pricePerSqm": "Precio por m²",
+      "condition": "Estado",
+      "status": "Estado del anuncio"
+    },
+    "status": {
+      "draft": "Borrador",
+      "published": "Activo",
+      "sold": "Vendido",
+      "archived": "Archivado"
+    },
+    "tabs": {
+      "tablist": "Secciones del anuncio",
+      "details": "Detalles",
+      "description": "Descripción",
+      "location": "Ubicación",
+      "valuation": "Valoración"
+    },
+    "gallery": {
+      "noPhotos": "No hay fotos disponibles",
+      "photoAlt": "{title} — foto {n}",
+      "prevPhoto": "Foto anterior",
+      "nextPhoto": "Foto siguiente",
+      "photoCounter": "{current} de {total}",
+      "regionLabel": "Galería de fotos",
+      "openLightbox": "Abrir foto a pantalla completa",
+      "closeLightbox": "Cerrar",
+      "lightboxTitle": "Galería: {title}",
+      "thumbnails": "Miniaturas",
+      "selectPhoto": "Mostrar foto {n}"
+    }
+  },
   "add": {
     "title": "Publica tu inmueble",
     "subtitle": "Completa la taxonomía EasyCasa para que los compradores puedan encontrarte.",
