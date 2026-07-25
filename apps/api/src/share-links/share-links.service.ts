@@ -167,6 +167,7 @@ export class ShareLinksService {
     media: Awaited<ReturnType<ListingsRepository['listMedia']>>,
   ): PublicListingPayload {
     return {
+      slug: listing.slug ?? null,
       title: listing.title,
       city: listing.city ?? null,
       province: listing.province ?? null,

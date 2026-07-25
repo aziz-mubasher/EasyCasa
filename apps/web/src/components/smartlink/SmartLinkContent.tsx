@@ -1,28 +1,23 @@
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { Link } from '@/i18n/routing';
 
+import { ListingPhotoGallery } from '@/components/listings/ListingPhotoGallery';
+import { ListingFactsTable, ListingPriceLines } from '@/components/listings/ListingFactsTable';
 import { ValuationBandPanel } from '@/components/valuation/ValuationBandPanel';
-import { PropertyPhotoGallery } from '@/components/smartlink/PropertyPhotoGallery';
+import { SmartLinkAgentCard } from '@/components/smartlink/SmartLinkAgentCard';
+import { SmartLinkStatsStrip } from '@/components/smartlink/SmartLinkStatsStrip';
+import { SmartLinkToolbar } from '@/components/smartlink/SmartLinkToolbar';
 import { SmartLinkViewRecorder } from '@/components/smartlink/SmartLinkViewRecorder';
-import { fetchSmartLinkPublic, SMARTLINK_VISITOR_COOKIE } from '@/lib/smartlink';
-import { area, euro } from '@/lib/format';
-import { Badge } from '@/components/ui/Badge';
-
-function whatsAppHref(phone: string | null): string | null {
-  if (!phone) return null;
-  const digits = phone.replace(/\D/g, '');
-  return digits ? `https://wa.me/${digits}` : null;
-}
-
-function telHref(phone: string | null): string | null {
-  if (!phone) return null;
-  return `tel:${phone.replace(/\s/g, '')}`;
-}
+import { fetchSmartLinkPublic, SMARTLINK_VISITOR_COOKIE, smartLinkPublicUrl } from '@/lib/smartlink';
+import { smartLinkListingToDetail, smartLinkPhotoUrls } from '@/lib/smartlink-listing';
+import { valuationBandEnabled } from '@/lib/valuation-band';
 
 export async function SmartLinkContent({ token, locale }: { token: string; locale: string }) {
   const t = await getTranslations('smartlink');
   const tf = await getTranslations('search.filters');
+  const tDetail = await getTranslations('listingDetail');
   const jar = await cookies();
   const visitor = jar.get(SMARTLINK_VISITOR_COOKIE)?.value ?? null;
   const { data, status } = await fetchSmartLinkPublic(token, visitor);
@@ -39,143 +34,83 @@ export async function SmartLinkContent({ token, locale }: { token: string; local
   if (!data) notFound();
 
   const listing = data.listing;
-  const urls = listing.media.map((m) => m.url);
-  const sale = listing.transactionTypes.includes('sale') || listing.transactionType === 'sale';
-  const rent = listing.transactionTypes.includes('rent') || listing.transactionType === 'rent';
-  const agentName = data.agent.displayName ?? t('defaultAgentName');
-  const waAgent = whatsAppHref(data.agent.phone);
-  const waAgency = whatsAppHref(data.agency.phone);
+  const parsed = smartLinkListingToDetail(listing, token);
+  const photoUrls = smartLinkPhotoUrls(listing);
+  const publicUrl = smartLinkPublicUrl(token, locale);
+  const listingSlug = listing.slug;
+  const locationLine = [listing.city, listing.province].filter(Boolean).join(' · ');
+
+  const showValuation =
+    valuationBandEnabled() && data.includeValuationBand && data.valuationBand != null;
 
   return (
     <>
       <SmartLinkViewRecorder token={token} hadVisitorCookie={Boolean(visitor)} />
-      <div className="border-b border-line bg-paper">
-        <div className="mx-auto max-w-5xl px-5 py-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="eyebrow text-azure">{t('positioning')}</p>
-            <h1 className="font-display text-2xl font-semibold text-ink">{agentName}</h1>
-            {data.agent.bio ? <p className="mt-1 text-sm text-muted max-w-xl">{data.agent.bio}</p> : null}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {telHref(data.agent.phone) ? (
-              <a className="btn-secondary text-sm" href={telHref(data.agent.phone)!}>
-                {t('call')}
-              </a>
-            ) : null}
-            {waAgent ? (
-              <a className="btn-primary text-sm" href={waAgent} rel="noopener noreferrer" target="_blank">
-                WhatsApp
-              </a>
-            ) : null}
-          </div>
+      <SmartLinkToolbar publicUrl={publicUrl} token={token} listingSlug={listingSlug} />
+      <SmartLinkAgentCard locale={locale} token={token} data={{ agent: data.agent, agency: data.agency }} />
+      <SmartLinkStatsStrip
+        token={token}
+        listingSlug={listingSlug}
+        viewCount={data.stats.viewCount}
+        uniqueViewCount={data.stats.uniqueViewCount}
+      />
+
+      <div className="mx-auto max-w-6xl px-5 pb-12 grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] lg:items-start">
+        <div className="min-w-0">
+          <ListingPhotoGallery title={listing.title} urls={photoUrls} />
         </div>
-      </div>
 
-      <div className="mx-auto max-w-5xl px-5 py-6 grid gap-8 lg:grid-cols-[1fr_320px]">
-        <main className="space-y-8 min-w-0">
-          <PropertyPhotoGallery title={listing.title} urls={urls.length ? urls : listing.coverUrl ? [listing.coverUrl] : []} />
-
+        <aside className="space-y-5 rounded-xl2 border border-line bg-paper p-5 shadow-sm lg:sticky lg:top-20">
           <header>
-            <p className="eyebrow mb-2">
-              {[listing.city, listing.province].filter(Boolean).join(' · ')}
-            </p>
-            <h2 className="font-display text-3xl font-semibold text-ink">{listing.title}</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {sale ? (
-                <Badge tone="ink">
-                  {t('forSale')}: {listing.price != null ? euro(listing.price, locale) : t('onRequest')}
-                </Badge>
-              ) : null}
-              {rent ? (
-                <Badge tone="pine">
-                  {t('forRent')}: {listing.price != null ? `${euro(listing.price, locale)}/m` : t('onRequestPerMonth')}
-                </Badge>
-              ) : null}
-            </div>
+            <p className="eyebrow mb-1">{locationLine || '—'}</p>
+            {listingSlug ? (
+              <h2 className="font-display text-xl font-semibold leading-snug">
+                <Link href={`/listings/${listingSlug}`} className="text-azure hover:underline">
+                  {listing.title}
+                </Link>
+              </h2>
+            ) : (
+              <h2 className="font-display text-xl font-semibold text-ink leading-snug">{listing.title}</h2>
+            )}
           </header>
 
-          <dl className="grid grid-cols-2 sm:grid-cols-3 gap-4 data text-sm">
-            <div>
-              <dt className="eyebrow">{t('rooms')}</dt>
-              <dd>{listing.rooms ?? listing.bedrooms ?? '—'}</dd>
-            </div>
-            <div>
-              <dt className="eyebrow">{t('bathrooms')}</dt>
-              <dd>{listing.bathrooms ?? '—'}</dd>
-            </div>
-            <div>
-              <dt className="eyebrow">{t('builtSurface')}</dt>
-              <dd>{area(listing.sizeSqm)}</dd>
-            </div>
-            <div>
-              <dt className="eyebrow">{t('yearBuilt')}</dt>
-              <dd>{listing.yearBuilt ?? '—'}</dd>
-            </div>
-            <div>
-              <dt className="eyebrow">{t('energyRating')}</dt>
-              <dd>{listing.energyClass ?? '—'}</dd>
-            </div>
-          </dl>
+          <ListingPriceLines listing={parsed} locale={locale} />
+
+          <section aria-labelledby="smartlink-facts-heading">
+            <h3 id="smartlink-facts-heading" className="sr-only">
+              {tDetail('factsHeading')}
+            </h3>
+            <ListingFactsTable listing={parsed} locale={locale} />
+          </section>
 
           {listing.features.length > 0 ? (
             <section aria-labelledby="smartlink-features">
-              <h3 id="smartlink-features" className="eyebrow mb-3">
+              <h3 id="smartlink-features" className="font-display text-base font-semibold text-ink mb-3">
                 {t('characteristics')}
               </h3>
               <ul className="flex flex-wrap gap-2">
-                {listing.features.map((slug) => (
-                  <li key={slug}>
-                    <span className="inline-flex rounded-full border border-line bg-sand px-3 py-1 text-xs text-ink">
-                      {tf(`feature.${slug as 'garden'}`)}
-                    </span>
-                  </li>
-                ))}
+                {listing.features.map((slug) => {
+                  const key = slug as 'garden';
+                  const label = tf.has(`feature.${key}`) ? tf(`feature.${key}`) : slug;
+                  return (
+                    <li key={slug}>
+                      <span className="inline-flex rounded-md border border-line bg-sand/60 px-3 py-1.5 text-sm text-ink">
+                        {label}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </section>
           ) : null}
-
-          {data.includeValuationBand && data.valuationBand ? (
-            <ValuationBandPanel data={data.valuationBand} />
-          ) : null}
-        </main>
-
-        <aside className="space-y-6">
-          <section className="rounded-xl border border-line bg-paper p-5" aria-labelledby="agency-block">
-            <h2 id="agency-block" className="font-display text-lg font-semibold text-ink">
-              {data.agency.name}
-            </h2>
-            <ul className="mt-3 space-y-2 text-sm">
-              {data.agency.phone ? (
-                <li>
-                  <a className="text-azure hover:underline" href={telHref(data.agency.phone)!}>
-                    {data.agency.phone}
-                  </a>
-                </li>
-              ) : null}
-              <li>
-                <a className="text-azure hover:underline" href={`mailto:${data.agency.email}`}>
-                  {data.agency.email}
-                </a>
-              </li>
-            </ul>
-            {waAgency ? (
-              <a className="btn-secondary mt-4 inline-flex text-sm w-full justify-center" href={waAgency} target="_blank" rel="noopener noreferrer">
-                WhatsApp
-              </a>
-            ) : null}
-          </section>
-
-          <section className="rounded-xl border border-line bg-sand/40 p-5" aria-labelledby="view-stats">
-            <h2 id="view-stats" className="font-display text-lg font-semibold text-ink">
-              {t('viewStatsTitle')}
-            </h2>
-            <p className="mt-2 data text-2xl text-ink">
-              {data.stats.viewCount} / {data.stats.uniqueViewCount}
-            </p>
-            <p className="mt-1 text-xs text-muted">{t('viewStatsHint')}</p>
-          </section>
         </aside>
       </div>
+
+      {showValuation ? (
+        <div className="mx-auto max-w-6xl px-5 pb-12">
+          <ValuationBandPanel data={data.valuationBand!} />
+        </div>
+      ) : null}
     </>
   );
 }

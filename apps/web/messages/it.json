@@ -355,6 +355,7 @@
   },
   "smartlink": {
     "positioning": "Vendi, compra o affitta case e stanze senza commissioni di agenzia",
+    "taglineSecondary": "Buy, Sell, Rent is Simple",
     "defaultAgentName": "Consulente Easy Casa",
     "call": "Chiama",
     "forSale": "In vendita",
@@ -371,10 +372,31 @@
     "viewStatsHint": "Conteggio pubblico aggregato (totale / visitatori unici giornalieri).",
     "revokedTitle": "Link non più disponibile",
     "revokedBody": "Questo SmartLink è stato revocato dal proprietario.",
-    "noPhotos": "Nessuna foto disponibile",
-    "photoAlt": "{title} — foto {n}",
-    "prevPhoto": "Foto precedente",
-    "nextPhoto": "Foto successiva",
-    "photoCounter": "{current} di {total}"
+    "toolbar": {
+      "tracking": "SmartLink Tracking",
+      "share": "Condividi SmartLink",
+      "copied": "Link copiato"
+    },
+    "agentCard": {
+      "brandSubtitle": "Acquisto e vendita tra privati",
+      "defaultName": "Consulente Easy Casa",
+      "phoneLabel": "Telefono",
+      "emailLabel": "Email",
+      "agencyLabel": "Agenzia",
+      "photoAlt": "Foto di {name}",
+      "qrLabel": "Codice QR per {url}"
+    },
+    "stats": {
+      "viewsA11y": "{count} visualizzazioni",
+      "uniqueA11y": "{count} visitatori unici",
+      "seeFull": "Vedi statistiche complete"
+    },
+    "social": {
+      "whatsApp": "WhatsApp",
+      "facebook": "Facebook",
+      "telegram": "Telegram",
+      "instagram": "Instagram",
+      "website": "Sito web"
+    }
   }
 }

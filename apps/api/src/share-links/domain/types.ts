@@ -23,6 +23,7 @@ export interface PublicListingMedia {
 
 /** Fields intentionally exposed on SmartLink — no owner ids, cadastral, or street address. */
 export interface PublicListingPayload {
+  slug: string | null;
   title: string;
   city: string | null;
   province: string | null;
