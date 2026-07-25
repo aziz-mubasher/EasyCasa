@@ -3,18 +3,16 @@ import { getTranslations } from 'next-intl/server';
 import { getListing } from '@/lib/api';
 import { parseListingDetail } from '@/lib/listing-detail';
 import { ListingStructuredData } from '@/components/StructuredData';
-import { ContactEnquiryForm } from '@/components/listings/ContactEnquiryForm';
 import { SmartLinkManager } from '@/components/smartlink/SmartLinkManager';
 import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 import { ListingPhotoGallery } from '@/components/listings/ListingPhotoGallery';
-import { ListingDetailTabs } from '@/components/listings/ListingDetailTabs';
+import { ListingLandingNav } from '@/components/listings/ListingLandingNav';
+import { ListingSummaryCard } from '@/components/listings/ListingSummaryCard';
 import { EnergyClassBadge } from '@/components/listings/EnergyClassBadge';
-import { ListingFactsTable, ListingPriceLines } from '@/components/listings/ListingFactsTable';
+import { ListingFactsTable } from '@/components/listings/ListingFactsTable';
 import { ListingShareActions } from '@/components/listings/ListingShareActions';
 import { MapView } from '@/components/search/MapView';
 import type { ListingSummary } from '@easycasa/shared';
-import { Badge } from '@/components/ui/Badge';
-import { area } from '@/lib/format';
 
 export default async function ListingPage({
   params,
@@ -27,11 +25,11 @@ export default async function ListingPage({
 
   const listing = parseListingDetail(raw, slug);
   const t = await getTranslations('listingDetail');
-  const tf = await getTranslations('search.filters');
 
   const locationLine = [listing.city, listing.province].filter(Boolean).join(' · ');
   const hasCatasto = Boolean(listing.foglio && listing.particella);
   const hasLocation = listing.latitude != null && listing.longitude != null;
+  const hasDescription = Boolean(listing.description);
   const pagePath = `/${locale}/listings/${listing.slug}`;
   const mapItem: ListingSummary | null = hasLocation
     ? {
@@ -52,17 +50,20 @@ export default async function ListingPage({
       }
     : null;
 
-  const rentPrimary = listing.transactionType === 'rent';
-  const showSale = listing.transactionTypes.includes('sale') || listing.transactionType === 'sale';
-  const showRent = listing.transactionTypes.includes('rent') || listing.transactionType === 'rent';
-
   const energyPerformanceLabel =
     listing.energyPerformanceKwhM2Y != null
       ? t('facts.energyPerformanceValue', { value: listing.energyPerformanceKwhM2Y })
       : '';
 
+  const sections = [
+    { id: 'details', label: t('tabs.details') },
+    ...(hasDescription ? [{ id: 'description', label: t('tabs.description') }] : []),
+    { id: 'valuation', label: t('tabs.valuation') },
+    ...(hasLocation ? [{ id: 'location', label: t('tabs.location') }] : []),
+  ];
+
   return (
-    <article className="mx-auto max-w-6xl px-5 py-8 lg:py-10">
+    <div className="bg-sand/30 min-h-full">
       <ListingStructuredData
         locale={locale}
         listing={{
@@ -80,116 +81,41 @@ export default async function ListingPage({
         }}
       />
 
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0">
-          <p className="eyebrow mb-1">{locationLine || '—'}</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold text-ink leading-tight max-w-3xl">
-            {listing.title}
-          </h1>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {showSale ? <Badge tone="ink">{tf('transaction.sale')}</Badge> : null}
-            {showRent ? <Badge tone="pine">{tf('transaction.rent')}</Badge> : null}
-            {!showSale && !showRent && rentPrimary ? (
-              <Badge tone="pine">{tf('transaction.rent')}</Badge>
-            ) : null}
-            {!showSale && !showRent && !rentPrimary ? (
-              <Badge tone="ink">{tf('transaction.sale')}</Badge>
-            ) : null}
-          </div>
+      <div className="border-b border-line bg-paper">
+        <div className="mx-auto max-w-6xl px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+          <p className="eyebrow text-muted min-w-0 truncate">
+            {locationLine || listing.address || '—'}
+          </p>
+          <ListingShareActions
+            pageUrl={pagePath}
+            listingId={listing.id}
+            listingTitle={listing.title}
+          />
         </div>
-        <ListingShareActions
-          pageUrl={pagePath}
-          listingId={listing.id}
-          listingTitle={listing.title}
-        />
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] lg:items-start">
-        <div className="min-w-0">
-          <ListingPhotoGallery title={listing.title} urls={listing.photoUrls} />
-        </div>
+      <ListingLandingNav tablistLabel={t('tabs.tablist')} sections={sections} />
 
-        <aside className="lg:sticky lg:top-20 space-y-5 rounded-xl2 border border-line bg-paper p-5 shadow-sm">
-          <div>
-            <ListingPriceLines listing={listing} locale={locale} />
+      <article className="mx-auto max-w-6xl px-5 py-8 space-y-14 pb-20">
+        <section id="details" className="scroll-mt-28 space-y-10">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)] lg:items-start">
+            <div className="min-w-0">
+              <ListingPhotoGallery title={listing.title} urls={listing.photoUrls} />
+            </div>
+            <ListingSummaryCard listing={listing} locale={locale} />
           </div>
 
-          <dl className="grid grid-cols-2 gap-3 data text-sm border-y border-line py-4">
-            {listing.bedrooms != null ? (
-              <div>
-                <dt className="eyebrow">{t('facts.bedrooms')}</dt>
-                <dd className="text-ink mt-0.5">{listing.bedrooms}</dd>
+          <div className="grid gap-8 lg:grid-cols-2 max-w-5xl">
+            <div>
+              <h2 className="font-display text-lg font-semibold text-ink mb-3">{t('factsHeading')}</h2>
+              <div className="rounded-xl2 border border-line bg-paper p-4">
+                <ListingFactsTable listing={listing} locale={locale} />
               </div>
-            ) : null}
-            {listing.bathrooms != null ? (
-              <div>
-                <dt className="eyebrow">{t('facts.bathrooms')}</dt>
-                <dd className="text-ink mt-0.5">{listing.bathrooms}</dd>
-              </div>
-            ) : null}
-            {listing.sizeSqm != null ? (
-              <div>
-                <dt className="eyebrow">{t('facts.builtSurface')}</dt>
-                <dd className="text-ink mt-0.5">{area(listing.sizeSqm)}</dd>
-              </div>
-            ) : null}
-            {listing.yearBuilt != null ? (
-              <div>
-                <dt className="eyebrow">{t('facts.yearBuilt')}</dt>
-                <dd className="text-ink mt-0.5">{listing.yearBuilt}</dd>
-              </div>
-            ) : null}
-          </dl>
-
-          <ContactEnquiryForm listingId={listing.id} listingTitle={listing.title} className="!mt-0 max-w-none" />
-        </aside>
-      </div>
-
-      <ListingDetailTabs
-        tablistLabel={t('tabs.tablist')}
-        labels={{
-          details: t('tabs.details'),
-          description: t('tabs.description'),
-          location: t('tabs.location'),
-          valuation: t('tabs.valuation'),
-        }}
-        hasDescription={Boolean(listing.description)}
-        hasLocation={hasLocation}
-        details={
-          <div className="space-y-10 max-w-3xl">
-            {listing.features.length > 0 ? (
-              <section aria-labelledby="listing-features">
-                <h2 id="listing-features" className="font-display text-xl font-semibold text-ink mb-4">
-                  {t('characteristics')}
-                </h2>
-                <ul className="flex flex-wrap gap-2">
-                  {listing.features.map((featureSlug) => {
-                    const key = featureSlug as 'garden';
-                    const label = tf.has(`feature.${key}`) ? tf(`feature.${key}`) : featureSlug;
-                    return (
-                      <li key={featureSlug}>
-                        <span className="inline-flex rounded-md border border-line bg-sand/60 px-3 py-1.5 text-sm text-ink">
-                          {label}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            ) : null}
-
-            <section aria-labelledby="listing-facts-full">
-              <h2 id="listing-facts-full" className="font-display text-xl font-semibold text-ink mb-4">
-                {t('factsHeading')}
-              </h2>
-              <ListingFactsTable listing={listing} locale={locale} />
-            </section>
+            </div>
 
             {listing.energyClass ? (
-              <section aria-labelledby="listing-ape-heading" id="listing-ape" className="scroll-mt-28">
-                <h2 id="listing-ape-heading" className="font-display text-xl font-semibold text-ink mb-4">
-                  {t('energyHeading')}
-                </h2>
+              <div id="listing-ape" className="scroll-mt-28">
+                <h2 className="font-display text-lg font-semibold text-ink mb-3">{t('energyHeading')}</h2>
                 <EnergyClassBadge
                   variant="panel"
                   energyClass={listing.energyClass}
@@ -198,83 +124,78 @@ export default async function ListingPage({
                   performanceLabel={energyPerformanceLabel}
                   note={t('energy.apeNote')}
                 />
-              </section>
-            ) : null}
-
-            {hasCatasto ? (
-              <section aria-labelledby="listing-catasto">
-                <h2 id="listing-catasto" className="font-display text-xl font-semibold text-ink mb-4">
-                  {t('catastoHeading')}
-                </h2>
-                <dl className="grid grid-cols-2 sm:grid-cols-3 gap-4 data text-sm">
-                  <div>
-                    <dt className="eyebrow">{t('catasto.foglio')}</dt>
-                    <dd>{listing.foglio}</dd>
-                  </div>
-                  <div>
-                    <dt className="eyebrow">{t('catasto.particella')}</dt>
-                    <dd>{listing.particella}</dd>
-                  </div>
-                  {listing.subalterno ? (
-                    <div>
-                      <dt className="eyebrow">{t('catasto.subalterno')}</dt>
-                      <dd>{listing.subalterno}</dd>
-                    </div>
-                  ) : null}
-                </dl>
-              </section>
+              </div>
             ) : null}
           </div>
-        }
-        description={
-          listing.description ? (
-            <div className="max-w-3xl">
-              <h2 className="font-display text-xl font-semibold text-ink mb-4">{t('tabs.description')}</h2>
+
+          {hasCatasto ? (
+            <div>
+              <h2 className="font-display text-lg font-semibold text-ink mb-3">{t('catastoHeading')}</h2>
+              <dl className="grid grid-cols-2 sm:grid-cols-3 gap-4 data text-sm rounded-xl2 border border-line bg-paper p-4 max-w-xl">
+                <div>
+                  <dt className="eyebrow">{t('catasto.foglio')}</dt>
+                  <dd>{listing.foglio}</dd>
+                </div>
+                <div>
+                  <dt className="eyebrow">{t('catasto.particella')}</dt>
+                  <dd>{listing.particella}</dd>
+                </div>
+                {listing.subalterno ? (
+                  <div>
+                    <dt className="eyebrow">{t('catasto.subalterno')}</dt>
+                    <dd>{listing.subalterno}</dd>
+                  </div>
+                ) : null}
+              </dl>
+            </div>
+          ) : null}
+        </section>
+
+        {hasDescription ? (
+          <section id="description" className="scroll-mt-28 max-w-3xl">
+            <h2 className="font-display text-2xl font-semibold text-ink mb-2">{t('tabs.description')}</h2>
+            <p className="text-sm text-muted mb-5">{t('descriptionIntro')}</p>
+            <div className="rounded-xl2 border border-line bg-paper p-5 sm:p-6">
               <p className="leading-relaxed whitespace-pre-line text-ink text-base">
                 {listing.description}
               </p>
             </div>
-          ) : null
-        }
-        location={
-          hasLocation && mapItem ? (
-            <div className="space-y-4">
-              <h2 className="font-display text-xl font-semibold text-ink">{t('tabs.location')}</h2>
-              {listing.address ? (
-                <p className="text-sm text-muted">
-                  {listing.address}
-                  {locationLine ? ` · ${locationLine}` : ''}
-                </p>
-              ) : null}
-              <div className="h-[400px] rounded-xl2 overflow-hidden border border-line">
-                <MapView items={[mapItem]} showNavigation />
-              </div>
-            </div>
-          ) : (
-            <p className="text-sm text-muted">{t('locationUnavailable')}</p>
-          )
-        }
-        valuation={
-          <div className="space-y-8 max-w-3xl">
-            <div>
-              <h2 className="font-display text-xl font-semibold text-ink mb-2">{t('tabs.valuation')}</h2>
-              <p className="text-sm text-muted mb-6">{t('valuationIntro')}</p>
-              <ListingValuationBandSection slug={listing.slug} />
-            </div>
-            <section
-              id="listing-smartlink"
-              className="scroll-mt-28 border-t border-line pt-8"
-              aria-labelledby="listing-smartlink-heading"
-            >
-              <h2 id="listing-smartlink-heading" className="font-display text-xl font-semibold text-ink mb-2">
-                {t('shareHeading')}
-              </h2>
-              <p className="text-sm text-muted mb-4">{t('share.landingBody')}</p>
-              <SmartLinkManager listingId={listing.id} hideIntro />
-            </section>
+          </section>
+        ) : null}
+
+        <section id="valuation" className="scroll-mt-28 space-y-8 max-w-3xl">
+          <div>
+            <h2 className="font-display text-2xl font-semibold text-ink mb-2">{t('tabs.valuation')}</h2>
+            <p className="text-sm text-muted mb-6">{t('valuationIntro')}</p>
+            <ListingValuationBandSection slug={listing.slug} />
           </div>
-        }
-      />
-    </article>
+          <section
+            id="listing-smartlink"
+            className="scroll-mt-28 border-t border-line pt-8"
+            aria-labelledby="listing-smartlink-heading"
+          >
+            <h2 id="listing-smartlink-heading" className="font-display text-xl font-semibold text-ink mb-2">
+              {t('shareHeading')}
+            </h2>
+            <p className="text-sm text-muted mb-4">{t('share.landingBody')}</p>
+            <SmartLinkManager listingId={listing.id} hideIntro />
+          </section>
+        </section>
+
+        {hasLocation && mapItem ? (
+          <section id="location" className="scroll-mt-28 space-y-4">
+            <h2 className="font-display text-2xl font-semibold text-ink">{t('tabs.location')}</h2>
+            {listing.address || locationLine ? (
+              <p className="text-sm text-muted">
+                {[listing.address, locationLine].filter(Boolean).join(' · ')}
+              </p>
+            ) : null}
+            <div className="h-[420px] rounded-xl2 overflow-hidden border border-line bg-paper">
+              <MapView items={[mapItem]} showNavigation />
+            </div>
+          </section>
+        ) : null}
+      </article>
+    </div>
   );
 }

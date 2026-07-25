@@ -1,9 +1,15 @@
+'use client';
+
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
+import { Link, usePathname } from '@/i18n/routing';
+import { isListingLandingPath } from '@/lib/listing-landing';
 
 export function Footer() {
   const t = useTranslations('footer');
   const tb = useTranslations('brand');
+  const pathname = usePathname();
+  if (isListingLandingPath(pathname)) return null;
+
   return (
     <footer className="border-t border-line mt-16">
       <div className="mx-auto max-w-7xl px-5 py-10 flex flex-col md:flex-row justify-between gap-6">

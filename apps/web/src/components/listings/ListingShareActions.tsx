@@ -139,7 +139,7 @@ export function ListingShareActions({ pageUrl, listingId, listingTitle }: Props)
   };
 
   return (
-    <div className="flex flex-col items-end gap-2">
+    <div className="relative flex flex-col items-stretch sm:items-end gap-1.5">
       <div className="flex flex-wrap items-center justify-end gap-2">
         <div className="relative" ref={menuRef}>
           <Button
