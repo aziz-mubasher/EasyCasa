@@ -165,7 +165,17 @@
     "energyHeading": "Energy class (EPC)",
     "characteristics": "Features",
     "catastoHeading": "Cadastral data",
-    "shareHeading": "Share",
+    "shareHeading": "Share Smart Link",
+    "valuationIntro": "Indicative market band for this property. Share it with clients via a Smart Link.",
+    "energy": {
+      "apeNote": "Attestato di Prestazione Energetica (APE) — Italian energy performance certificate class."
+    },
+    "share": {
+      "share": "Share page",
+      "copied": "Link copied",
+      "smartLink": "Smart Link",
+      "landingBody": "Create a trackable Smart Link for this listing. Optionally include the valuation band — ideal for sharing with buyers."
+    },
     "locationUnavailable": "Location is not available for this listing.",
     "catasto": {
       "foglio": "Sheet",
@@ -177,7 +187,7 @@
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",
       "builtSurface": "Built area",
-      "commercialSurface": "Commercial floor area",
+      "commercialSurface": "Surface area",
       "landSurface": "Land area",
       "floor": "Floor",
       "totalFloors": "Total floors",
@@ -201,7 +211,7 @@
       "details": "Details",
       "description": "Description",
       "location": "Location",
-      "valuation": "Valuation"
+      "valuation": "Property evaluation"
     },
     "gallery": {
       "noPhotos": "No photos available",

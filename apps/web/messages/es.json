@@ -165,7 +165,17 @@
     "energyHeading": "Clase energética (CEE)",
     "characteristics": "Características",
     "catastoHeading": "Datos catastrales",
-    "shareHeading": "Compartir",
+    "shareHeading": "Compartir Smart Link",
+    "valuationIntro": "Franja de mercado indicativa para este inmueble. Compártela con clientes mediante un Smart Link.",
+    "energy": {
+      "apeNote": "Certificado de eficiencia energética (APE) — clase energética del inmueble."
+    },
+    "share": {
+      "share": "Compartir página",
+      "copied": "Enlace copiado",
+      "smartLink": "Smart Link",
+      "landingBody": "Crea un Smart Link con seguimiento para este anuncio. Puedes incluir la franja de valoración — ideal para enviarlo a compradores."
+    },
     "locationUnavailable": "Ubicación no disponible para este anuncio.",
     "catasto": {
       "foglio": "Hoja",
@@ -177,7 +187,7 @@
       "bedrooms": "Dormitorios",
       "bathrooms": "Baños",
       "builtSurface": "Superficie construida",
-      "commercialSurface": "Superficie comercial",
+      "commercialSurface": "Superficie",
       "landSurface": "Superficie terreno",
       "floor": "Planta",
       "totalFloors": "Plantas totales",
@@ -201,7 +211,7 @@
       "details": "Detalles",
       "description": "Descripción",
       "location": "Ubicación",
-      "valuation": "Valoración"
+      "valuation": "Evaluación del inmueble"
     },
     "gallery": {
       "noPhotos": "No hay fotos disponibles",

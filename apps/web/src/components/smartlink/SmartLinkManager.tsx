@@ -14,7 +14,14 @@ import {
   type ShareLinkOwnerDto,
 } from '@/lib/smartlink';
 
-export function SmartLinkManager({ listingId }: { listingId: string }) {
+export function SmartLinkManager({
+  listingId,
+  hideIntro = false,
+}: {
+  listingId: string;
+  /** When parent already shows heading/copy (listing landing). */
+  hideIntro?: boolean;
+}) {
   const t = useTranslations('add.smartlink');
   const locale = useLocale();
   const { getAccessToken } = useAuth();
@@ -76,11 +83,13 @@ export function SmartLinkManager({ listingId }: { listingId: string }) {
   };
 
   return (
-    <div className="mt-8 rounded-xl border border-azure/30 bg-azure/5 p-5 space-y-4">
-      <div>
-        <h2 className="font-display text-xl font-semibold text-ink">{t('title')}</h2>
-        <p className="mt-1 text-sm text-muted">{t('body')}</p>
-      </div>
+    <div className="rounded-xl border border-azure/30 bg-azure/5 p-5 space-y-4">
+      {!hideIntro ? (
+        <div>
+          <h3 className="font-display text-lg font-semibold text-ink">{t('title')}</h3>
+          <p className="mt-1 text-sm text-muted">{t('body')}</p>
+        </div>
+      ) : null}
 
       <label className="flex items-center gap-2 text-sm cursor-pointer">
         <input

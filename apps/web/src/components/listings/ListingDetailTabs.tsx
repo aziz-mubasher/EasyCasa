@@ -1,8 +1,16 @@
 'use client';
 
-import { useId, useState, type ReactNode } from 'react';
+import { useId, useEffect, useState, type ReactNode } from 'react';
 
-type TabId = 'details' | 'description' | 'location' | 'valuation';
+type TabId = 'details' | 'description' | 'valuation' | 'location';
+
+const HASH_TO_TAB: Record<string, TabId> = {
+  details: 'details',
+  description: 'description',
+  valuation: 'valuation',
+  evaluation: 'valuation',
+  location: 'location',
+};
 
 export function ListingDetailTabs({
   tablistLabel,
@@ -27,15 +35,39 @@ export function ListingDetailTabs({
   const tabs: { id: TabId; label: string; panel: ReactNode; hidden?: boolean }[] = [
     { id: 'details', label: labels.details, panel: details },
     { id: 'description', label: labels.description, panel: description, hidden: !hasDescription },
-    { id: 'location', label: labels.location, panel: location, hidden: !hasLocation },
     { id: 'valuation', label: labels.valuation, panel: valuation },
+    { id: 'location', label: labels.location, panel: location, hidden: !hasLocation },
   ];
   const visible = tabs.filter((t) => !t.hidden);
+  const visibleKey = visible.map((t) => t.id).join(',');
   const [active, setActive] = useState<TabId>(visible[0]?.id ?? 'details');
 
+  useEffect(() => {
+    const applyHash = () => {
+      const raw = window.location.hash.replace(/^#/, '').toLowerCase();
+      const id = HASH_TO_TAB[raw];
+      if (id && visibleKey.split(',').includes(id)) setActive(id);
+    };
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, [visibleKey]);
+
+  const select = (id: TabId) => {
+    setActive(id);
+    const next = `#${id}`;
+    if (window.location.hash !== next) {
+      window.history.replaceState(null, '', next);
+    }
+  };
+
   return (
-    <div className="mt-10">
-      <div role="tablist" aria-label={tablistLabel} className="flex flex-wrap gap-1 border-b border-line">
+    <div className="mt-10 scroll-mt-24" id="listing-sections">
+      <div
+        role="tablist"
+        aria-label={tablistLabel}
+        className="flex flex-wrap gap-1 border-b border-line sticky top-14 z-20 bg-paper/95 backdrop-blur-sm pt-1"
+      >
         {visible.map((tab) => {
           const selected = active === tab.id;
           return (
@@ -47,7 +79,7 @@ export function ListingDetailTabs({
               aria-selected={selected}
               aria-controls={`${baseId}-panel-${tab.id}`}
               tabIndex={selected ? 0 : -1}
-              onClick={() => setActive(tab.id)}
+              onClick={() => select(tab.id)}
               className={`px-4 py-2.5 text-sm font-[var(--font-display)] transition border-b-2 -mb-px ${
                 selected ? 'border-azure text-ink' : 'border-transparent text-muted hover:text-ink'
               }`}
