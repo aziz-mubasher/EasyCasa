@@ -13,7 +13,7 @@ import {
 import { isOidcConfigured } from './config';
 import { buildAuthorizeUrl, buildLogoutUrl, exchangeCode, refreshTokens } from './oidc';
 import { pkceChallengeFromVerifier, randomString } from './pkce';
-import { tokenStore, type StoredTokens } from './tokenStore';
+import { TOKEN_STORAGE_KEYS, tokenStore, type StoredTokens } from './tokenStore';
 
 interface AuthState {
   ready: boolean;
@@ -34,6 +34,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setTokens(tokenStore.getTokens());
     setReady(true);
+
+    // Keep React state in sync when another tab signs in / out / refreshes.
+    const onStorage = (e: StorageEvent) => {
+      if (e.storageArea !== window.localStorage) return;
+      if (e.key !== null && !TOKEN_STORAGE_KEYS.includes(e.key as (typeof TOKEN_STORAGE_KEYS)[number])) {
+        return;
+      }
+      setTokens(tokenStore.getTokens());
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
   }, []);
 
   const persist = useCallback((next: StoredTokens) => {
@@ -62,14 +73,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [isConfigured]);
 
   const getAccessToken = useCallback(async (): Promise<string | null> => {
-    if (!tokens) return null;
-    if (tokens.expiresAt - Date.now() > 30_000) return tokens.accessToken;
-    if (!tokens.refreshToken || !isConfigured) {
+    // Prefer live React state; fall back to localStorage (e.g. just hydrated / other tab).
+    const current = tokens ?? tokenStore.getTokens();
+    if (!current) return null;
+    if (current.expiresAt - Date.now() > 30_000) {
+      if (!tokens) setTokens(current);
+      return current.accessToken;
+    }
+    if (!current.refreshToken || !isConfigured) {
       await signOut();
       return null;
     }
     try {
-      const refreshed = await refreshTokens(tokens.refreshToken);
+      const refreshed = await refreshTokens(current.refreshToken);
       const next: StoredTokens = {
         accessToken: refreshed.accessToken,
         refreshToken: refreshed.refreshToken,

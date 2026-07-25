@@ -67,8 +67,13 @@ const BASE =
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://easycasaita.com';
 
+/** Prefer the browser origin so Smart Links stay on the host the user is already on. */
 export function smartLinkPublicUrl(token: string, locale = 'it'): string {
-  return `${SITE}/${locale}/s/${token}`;
+  const base =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : SITE.replace(/\/$/, '');
+  return `${base}/${locale}/s/${token}`;
 }
 
 export async function fetchSmartLinkPublic(
@@ -101,13 +106,19 @@ export async function createShareLink(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ listingId, includeValuationBand }),
   });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`${res.status} ${body || res.statusText}`);
+  }
   return res.json() as Promise<ShareLinkOwnerDto>;
 }
 
 export async function listMyShareLinks(authedFetch: typeof fetch): Promise<ShareLinkOwnerDto[]> {
   const res = await authedFetch(apiUrl('/share-links/mine'));
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`${res.status} ${body || res.statusText}`);
+  }
   return res.json() as Promise<ShareLinkOwnerDto[]>;
 }
 

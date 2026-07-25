@@ -124,7 +124,18 @@ export function ListingShareActions({
   const openSmartLinkLanding = async () => {
     setSmartBusy(true);
     setSmartError(null);
+    // Open synchronously in the click handler so browsers do not block the tab.
     const popup = window.open('about:blank', '_blank');
+    if (popup) {
+      try {
+        popup.document.write(
+          `<!doctype html><title>${t('smartLinkOpening')}</title><body style="font-family:system-ui;padding:2rem;color:#222">${t('smartLinkOpening')}</body>`,
+        );
+        popup.document.close();
+      } catch {
+        // Cross-origin / restricted document — still try to navigate later.
+      }
+    }
     try {
       const token = await getAccessToken();
       if (!token) {
@@ -142,14 +153,21 @@ export function ListingShareActions({
       }
       const publicUrl = smartLinkPublicUrl(link.token, locale);
       setSmartOpen(false);
-      if (popup) {
-        popup.location.href = publicUrl;
+      if (popup && !popup.closed) {
+        popup.location.replace(publicUrl);
       } else {
         window.location.assign(publicUrl);
       }
-    } catch {
+    } catch (err) {
       popup?.close();
-      setSmartError(t('smartLinkError'));
+      const msg = err instanceof Error ? err.message : '';
+      if (/401|unauthorized/i.test(msg)) {
+        setSmartError(t('smartLinkSignIn'));
+      } else if (/403|forbidden|must be published|insufficient role/i.test(msg)) {
+        setSmartError(t('smartLinkNeedRole'));
+      } else {
+        setSmartError(t('smartLinkError'));
+      }
     } finally {
       setSmartBusy(false);
     }
