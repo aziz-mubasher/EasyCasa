@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/Button';
@@ -36,8 +36,20 @@ export function SmartLinkManager({
 
   const refresh = async () => {
     const rows = await listMyShareLinks(authedFetch);
-    setLinks(rows.filter((r) => r.listingId === listingId && !r.revokedAt));
+    const forListing = rows.filter((r) => r.listingId === listingId && !r.revokedAt);
+    setLinks(forListing);
+    setActive((prev) => {
+      if (prev && forListing.some((r) => r.id === prev.id)) return prev;
+      return forListing[0] ?? null;
+    });
   };
+
+  useEffect(() => {
+    void refresh().catch(() => {
+      /* not signed in — manager stays idle until create */
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once per listing
+  }, [listingId]);
 
   const onCreate = async () => {
     setLoading(true);
@@ -51,6 +63,11 @@ export function SmartLinkManager({
     } finally {
       setLoading(false);
     }
+  };
+
+  const openLanding = () => {
+    if (!active) return;
+    window.open(smartLinkPublicUrl(active.token, locale), '_blank', 'noopener,noreferrer');
   };
 
   const onRevoke = async (id: string) => {
@@ -124,6 +141,7 @@ export function SmartLinkManager({
             {t('stats', { views: active.viewCount, unique: active.uniqueViewCount })}
           </p>
           <div className="flex flex-wrap gap-2">
+            <Button onClick={openLanding}>{t('openLanding')}</Button>
             <Button variant="outline" onClick={() => void copyLink()}>
               {copied ? t('copied') : t('copy')}
             </Button>

@@ -171,9 +171,17 @@
       "apeNote": "Attestato di Prestazione Energetica (APE) — Italian energy performance certificate class."
     },
     "share": {
-      "share": "Share page",
+      "share": "Share",
       "copied": "Link copied",
+      "copy": "Copy link",
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "facebook": "Facebook",
+      "telegram": "Telegram",
       "smartLink": "Smart Link",
+      "smartLinkOpening": "Opening…",
+      "smartLinkSignIn": "Sign in to open or create a Smart Link for this listing.",
+      "smartLinkError": "Could not open Smart Link. Try again from Property evaluation.",
       "landingBody": "Create a trackable Smart Link for this listing. Optionally include the valuation band — ideal for sharing with buyers."
     },
     "locationUnavailable": "Location is not available for this listing.",
@@ -312,6 +320,7 @@
       "linkLabel": "Public link",
       "copy": "Copy link",
       "copied": "Copied",
+      "openLanding": "Open Smart Link page",
       "revoke": "Revoke link",
       "shareMessage": "View this property on Easy Casa Italy",
       "stats": "{views} views · {unique} unique",

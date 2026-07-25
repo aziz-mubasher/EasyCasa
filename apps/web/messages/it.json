@@ -171,9 +171,17 @@
       "apeNote": "Attestato di Prestazione Energetica (APE) — classe energetica dell’immobile."
     },
     "share": {
-      "share": "Condividi pagina",
+      "share": "Condividi",
       "copied": "Link copiato",
+      "copy": "Copia link",
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "facebook": "Facebook",
+      "telegram": "Telegram",
       "smartLink": "Smart Link",
+      "smartLinkOpening": "Apertura…",
+      "smartLinkSignIn": "Accedi per aprire o creare uno Smart Link per questo annuncio.",
+      "smartLinkError": "Impossibile aprire lo Smart Link. Riprova da Valutazione immobile.",
       "landingBody": "Crea uno Smart Link tracciabile per questo annuncio. Puoi includere la fascia di valutazione — ideale da inviare agli acquirenti."
     },
     "locationUnavailable": "Posizione non disponibile per questo annuncio.",
@@ -312,6 +320,7 @@
       "linkLabel": "Link pubblico",
       "copy": "Copia link",
       "copied": "Copiato",
+      "openLanding": "Apri pagina Smart Link",
       "revoke": "Revoca link",
       "shareMessage": "Guarda questo immobile su Easy Casa Italy",
       "stats": "{views} visualizzazioni · {unique} uniche",
