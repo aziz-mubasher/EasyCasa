@@ -107,7 +107,19 @@ export class ListingsService {
       return { status: 'unavailable', reason: 'unsupported_listing' };
     }
 
-    const propertyType = normalizePropertyType(l.propertyType);
+    // Many migrated listings lack propertyType — infer from title / asset class.
+    const propertyType =
+      normalizePropertyType(l.propertyType) ??
+      normalizePropertyType(l.title) ??
+      (l.assetClass === 'residential' || l.assetClass === 'hospitality'
+        ? 'apartment'
+        : null) ??
+      (l.assetClass === 'commercial' || l.assetClass === 'office' || l.assetClass === 'industrial'
+        ? 'commercial'
+        : null) ??
+      (l.assetClass === 'land' ? 'land' : null) ??
+      (l.assetClass === 'garage' ? 'commercial' : null);
+
     if (!propertyType) {
       return { status: 'unavailable', reason: 'unsupported_listing' };
     }

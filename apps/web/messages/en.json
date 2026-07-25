@@ -207,7 +207,9 @@
       "energyPerformanceValue": "{value} kWh/m²/year",
       "pricePerSqm": "Price per m²",
       "condition": "Condition",
-      "status": "Listing status"
+      "status": "Listing status",
+      "province": "Province",
+      "city": "Municipality"
     },
     "status": {
       "draft": "Draft",
@@ -360,6 +362,7 @@
     "provisionalNotice": "Provisional data: the band is based on few comparable listings in the area.",
     "unavailableArea": "Valuation not available for this area.",
     "unavailableMissingSurface": "Enter the floor area to see the market band.",
+    "unavailableUnsupported": "Market band needs a sale listing with a known property type.",
     "a11yNoAsking": "no price entered",
     "a11ySummary": "Area {zone}. Selling price {selling}, fair market {fair}, out of market {high}. Asking price: {asking}. Status: {status}."
   },

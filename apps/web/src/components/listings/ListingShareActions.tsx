@@ -16,6 +16,8 @@ type Props = {
   pageUrl: string;
   listingId: string;
   listingTitle: string;
+  /** Tighter buttons for the listing landing header. */
+  compact?: boolean;
 };
 
 /**
@@ -23,7 +25,12 @@ type Props = {
  * - Share → social / email / copy the listing URL
  * - Smart Link → open (or create then open) the public Smart Link landing page
  */
-export function ListingShareActions({ pageUrl, listingId, listingTitle }: Props) {
+export function ListingShareActions({
+  pageUrl,
+  listingId,
+  listingTitle,
+  compact = false,
+}: Props) {
   const t = useTranslations('listingDetail.share');
   const locale = useLocale();
   const { getAccessToken } = useAuth();
@@ -109,7 +116,7 @@ export function ListingShareActions({ pageUrl, listingId, listingTitle }: Props)
       if (!token) {
         popup?.close();
         setSmartError(t('smartLinkSignIn'));
-        window.location.hash = 'valuation';
+        window.location.hash = 'listing-smartlink';
         window.setTimeout(() => {
           document.getElementById('listing-smartlink')?.scrollIntoView({
             behavior: 'smooth',
@@ -138,13 +145,16 @@ export function ListingShareActions({ pageUrl, listingId, listingTitle }: Props)
     }
   };
 
+  const btnClass = compact ? '!px-3 !py-1.5 !text-xs' : '';
+
   return (
-    <div className="relative flex flex-col items-stretch sm:items-end gap-1.5">
+    <div className="relative flex flex-col items-stretch sm:items-end gap-1">
       <div className="flex flex-wrap items-center justify-end gap-2">
         <div className="relative" ref={menuRef}>
           <Button
             type="button"
             variant="outline"
+            className={btnClass}
             aria-expanded={menuOpen}
             aria-haspopup="menu"
             onClick={() => setMenuOpen((o) => !o)}
@@ -154,7 +164,7 @@ export function ListingShareActions({ pageUrl, listingId, listingTitle }: Props)
           {menuOpen ? (
             <div
               role="menu"
-              className="absolute right-0 z-30 mt-2 min-w-[12rem] rounded-xl border border-line bg-paper py-1 shadow-lg"
+              className="absolute right-0 z-40 mt-2 min-w-[12rem] rounded-xl border border-line bg-paper py-1 shadow-lg"
             >
               <ShareMenuItem label={t('copy')} onClick={() => void copyLink()} />
               <ShareMenuItem label={t('email')} onClick={shareEmail} />
@@ -167,13 +177,18 @@ export function ListingShareActions({ pageUrl, listingId, listingTitle }: Props)
 
         <Button
           type="button"
+          className={btnClass}
           disabled={smartBusy}
           onClick={() => void openSmartLinkLanding()}
         >
           {smartBusy ? t('smartLinkOpening') : t('smartLink')}
         </Button>
       </div>
-      {smartError ? <p className="text-xs text-clay max-w-xs text-right">{smartError}</p> : null}
+      {smartError ? (
+        <p className="text-[10px] sm:text-xs text-clay max-w-[14rem] text-right leading-snug">
+          {smartError}
+        </p>
+      ) : null}
     </div>
   );
 }

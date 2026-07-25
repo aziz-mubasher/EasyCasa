@@ -207,7 +207,9 @@
       "energyPerformanceValue": "{value} kWh/m²/año",
       "pricePerSqm": "Precio por m²",
       "condition": "Estado",
-      "status": "Estado del anuncio"
+      "status": "Estado del anuncio",
+      "province": "Provincia",
+      "city": "Municipio"
     },
     "status": {
       "draft": "Borrador",
@@ -360,6 +362,7 @@
     "provisionalNotice": "Datos provisionales: la banda se basa en pocos anuncios comparables en la zona.",
     "unavailableArea": "Valoración no disponible para esta zona.",
     "unavailableMissingSurface": "Introduce la superficie para ver la banda de mercado.",
+    "unavailableUnsupported": "La franja de mercado requiere un anuncio de venta con tipología conocida.",
     "a11yNoAsking": "precio no indicado",
     "a11ySummary": "Zona {zone}. Precio de venta {selling}, valor de mercado {fair}, fuera de mercado {high}. Precio solicitado: {asking}. Estado: {status}."
   },

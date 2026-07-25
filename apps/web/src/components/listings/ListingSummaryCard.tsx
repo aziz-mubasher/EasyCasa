@@ -15,6 +15,8 @@ async function summaryFactRows(listing: ParsedListingDetail, locale: string): Pr
   const ts = await getTranslations('search.filters');
   const rows: FactRow[] = [];
 
+  if (listing.province) rows.push({ label: t('facts.province'), value: listing.province });
+  if (listing.city) rows.push({ label: t('facts.city'), value: listing.city });
   if (listing.bedrooms != null) rows.push({ label: t('facts.bedrooms'), value: String(listing.bedrooms) });
   if (listing.bathrooms != null) rows.push({ label: t('facts.bathrooms'), value: String(listing.bathrooms) });
   const rooms = listing.rooms ?? listing.bedrooms;
