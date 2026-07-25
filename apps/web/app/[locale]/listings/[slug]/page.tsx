@@ -8,6 +8,7 @@ import { ListingLandingShell } from '@/components/listings/ListingLandingShell';
 import { ListingSummaryCard } from '@/components/listings/ListingSummaryCard';
 import { ListingContactSection } from '@/components/listings/ListingContactSection';
 import { ListingValuationGate } from '@/components/listings/ListingValuationGate';
+import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 import { MapView } from '@/components/search/MapView';
 import type { ListingSummary } from '@easycasa/shared';
 
@@ -104,7 +105,9 @@ export default async function ListingPage({
             </section>
           ) : null}
 
-          <ListingValuationGate slug={listing.slug} />
+          <ListingValuationGate>
+            <ListingValuationBandSection slug={listing.slug} />
+          </ListingValuationGate>
 
           {hasLocation && mapItem ? (
             <section id="location" className="scroll-mt-28 space-y-4">

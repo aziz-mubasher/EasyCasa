@@ -1,12 +1,16 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { SignInPrompt } from '@/components/AuthControls';
 import { RegisteredOnly } from '@/components/auth/RegisteredOnly';
-import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 
-/** Property evaluation for signed-in users; login CTA for guests. */
-export function ListingValuationGate({ slug }: { slug: string }) {
+/**
+ * Property evaluation chrome + auth gate.
+ * Pass the Server Component band as `children` from a Server parent —
+ * do not import async server components into this client module.
+ */
+export function ListingValuationGate({ children }: { children: ReactNode }) {
   const t = useTranslations('listingDetail');
 
   return (
@@ -20,7 +24,7 @@ export function ListingValuationGate({ slug }: { slug: string }) {
           </div>
         }
       >
-        <ListingValuationBandSection slug={slug} />
+        {children}
       </RegisteredOnly>
     </section>
   );
