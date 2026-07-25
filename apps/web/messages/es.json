@@ -171,9 +171,17 @@
       "apeNote": "Certificado de eficiencia energética (APE) — clase energética del inmueble."
     },
     "share": {
-      "share": "Compartir página",
+      "share": "Compartir",
       "copied": "Enlace copiado",
+      "copy": "Copiar enlace",
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "facebook": "Facebook",
+      "telegram": "Telegram",
       "smartLink": "Smart Link",
+      "smartLinkOpening": "Abriendo…",
+      "smartLinkSignIn": "Inicia sesión para abrir o crear un Smart Link de este anuncio.",
+      "smartLinkError": "No se pudo abrir el Smart Link. Inténtalo desde Evaluación del inmueble.",
       "landingBody": "Crea un Smart Link con seguimiento para este anuncio. Puedes incluir la franja de valoración — ideal para enviarlo a compradores."
     },
     "locationUnavailable": "Ubicación no disponible para este anuncio.",
@@ -312,6 +320,7 @@
       "linkLabel": "Enlace público",
       "copy": "Copiar enlace",
       "copied": "Copiado",
+      "openLanding": "Abrir página Smart Link",
       "revoke": "Revocar enlace",
       "shareMessage": "Mira este inmueble en Easy Casa Italy",
       "stats": "{views} visualizaciones · {unique} únicas",

@@ -97,7 +97,11 @@ export default async function ListingPage({
             ) : null}
           </div>
         </div>
-        <ListingShareActions pageUrl={pagePath} />
+        <ListingShareActions
+          pageUrl={pagePath}
+          listingId={listing.id}
+          listingTitle={listing.title}
+        />
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] lg:items-start">
