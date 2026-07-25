@@ -167,6 +167,7 @@
     "catastoHeading": "Datos catastrales",
     "shareHeading": "Compartir Smart Link",
     "valuationIntro": "Franja de mercado indicativa para este inmueble. Compártela con clientes mediante un Smart Link.",
+    "descriptionIntro": "Descripción del inmueble y de la zona.",
     "energy": {
       "apeNote": "Certificado de eficiencia energética (APE) — clase energética del inmueble."
     },

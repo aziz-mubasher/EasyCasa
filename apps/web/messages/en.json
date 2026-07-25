@@ -167,6 +167,7 @@
     "catastoHeading": "Cadastral data",
     "shareHeading": "Share Smart Link",
     "valuationIntro": "Indicative market band for this property. Share it with clients via a Smart Link.",
+    "descriptionIntro": "Property and location description for this listing.",
     "energy": {
       "apeNote": "Attestato di Prestazione Energetica (APE) — Italian energy performance certificate class."
     },
