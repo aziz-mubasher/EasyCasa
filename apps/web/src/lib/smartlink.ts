@@ -17,6 +17,7 @@ export interface SmartLinkPublicPayload {
     phone: string | null;
   };
   listing: {
+    slug: string | null;
     title: string;
     city: string | null;
     province: string | null;

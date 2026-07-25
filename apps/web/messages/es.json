@@ -355,6 +355,7 @@
   },
   "smartlink": {
     "positioning": "Vende, compra o alquila casas y habitaciones sin comisiones de agencia",
+    "taglineSecondary": "Buy, Sell, Rent is Simple",
     "defaultAgentName": "Asesor Easy Casa",
     "call": "Llamar",
     "forSale": "En venta",
@@ -371,10 +372,31 @@
     "viewStatsHint": "Recuento público agregado (total / visitantes únicos diarios).",
     "revokedTitle": "Enlace no disponible",
     "revokedBody": "Este SmartLink fue revocado por el propietario.",
-    "noPhotos": "No hay fotos disponibles",
-    "photoAlt": "{title} — foto {n}",
-    "prevPhoto": "Foto anterior",
-    "nextPhoto": "Foto siguiente",
-    "photoCounter": "{current} de {total}"
+    "toolbar": {
+      "tracking": "SmartLink Tracking",
+      "share": "Compartir SmartLink",
+      "copied": "Enlace copiado"
+    },
+    "agentCard": {
+      "brandSubtitle": "Compra y venta entre particulares",
+      "defaultName": "Asesor Easy Casa",
+      "phoneLabel": "Teléfono",
+      "emailLabel": "Correo electrónico",
+      "agencyLabel": "Agencia",
+      "photoAlt": "Foto de {name}",
+      "qrLabel": "Código QR para {url}"
+    },
+    "stats": {
+      "viewsA11y": "{count} visitas",
+      "uniqueA11y": "{count} visitantes únicos",
+      "seeFull": "Ver estadísticas completas"
+    },
+    "social": {
+      "whatsApp": "WhatsApp",
+      "facebook": "Facebook",
+      "telegram": "Telegram",
+      "instagram": "Instagram",
+      "website": "Sitio web"
+    }
   }
 }

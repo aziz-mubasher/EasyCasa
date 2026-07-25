@@ -355,6 +355,7 @@
   },
   "smartlink": {
     "positioning": "Buy, sell or rent homes and rooms with no agency commission",
+    "taglineSecondary": "Buy, Sell, Rent is Simple",
     "defaultAgentName": "Easy Casa advisor",
     "call": "Call",
     "forSale": "For sale",
@@ -371,10 +372,31 @@
     "viewStatsHint": "Public aggregate count (total / daily unique visitors).",
     "revokedTitle": "Link no longer available",
     "revokedBody": "This SmartLink was revoked by the owner.",
-    "noPhotos": "No photos available",
-    "photoAlt": "{title} — photo {n}",
-    "prevPhoto": "Previous photo",
-    "nextPhoto": "Next photo",
-    "photoCounter": "{current} of {total}"
+    "toolbar": {
+      "tracking": "SmartLink Tracking",
+      "share": "Share SmartLink",
+      "copied": "Link copied"
+    },
+    "agentCard": {
+      "brandSubtitle": "Private buying and selling",
+      "defaultName": "Easy Casa advisor",
+      "phoneLabel": "Phone number",
+      "emailLabel": "Email address",
+      "agencyLabel": "Agency",
+      "photoAlt": "Photo of {name}",
+      "qrLabel": "QR code for {url}"
+    },
+    "stats": {
+      "viewsA11y": "{count} views",
+      "uniqueA11y": "{count} unique visitors",
+      "seeFull": "See full statistics"
+    },
+    "social": {
+      "whatsApp": "WhatsApp",
+      "facebook": "Facebook",
+      "telegram": "Telegram",
+      "instagram": "Instagram",
+      "website": "Website"
+    }
   }
 }
