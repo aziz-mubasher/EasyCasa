@@ -10,7 +10,7 @@ import {
   JOURNEY_ITEM_CODES,
   type PricingJourney,
 } from '@/lib/pricing-config';
-import { catalogLabel, formatEuroCents, grossCentsForCatalogItem } from '@/lib/pricing-display';
+import { catalogLabel, formatEuroCents, grossCentsForCatalogItem, packageLabel } from '@/lib/pricing-display';
 import { Button } from '@/components/ui/Button';
 
 type Props = {
@@ -139,7 +139,7 @@ function PackageCard({
   onSelect: () => void;
 }) {
   const t = useTranslations('pricing.packages');
-  const label = locale === 'it' ? pkg.labelIt : pkg.labelEn;
+  const label = packageLabel(pkg, locale);
   const saving =
     partsGrossCents != null && bundleGrossCents != null
       ? Math.max(0, partsGrossCents - bundleGrossCents)

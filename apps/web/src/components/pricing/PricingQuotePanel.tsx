@@ -8,7 +8,7 @@ import { useAuth } from '@/auth/AuthProvider';
 import { createAuthedFetch } from '@/auth/authedFetch';
 import { RequireSignInLink } from '@/components/AuthControls';
 import type { ServiceQuoteRow, QuoteRequestBody, CatalogItemRow } from '@/lib/api';
-import { formatEuroCents, catalogLabel } from '@/lib/pricing-display';
+import { formatEuroCents, quoteLineLabel } from '@/lib/pricing-display';
 import { paymentsEnabled } from '@/lib/payments-config';
 import { cardPayableFromQuoteLines, createCatalogCheckoutOrder } from '@/lib/payments-api';
 
@@ -89,12 +89,7 @@ export function PricingQuotePanel({
 
         <ul className="mt-6 space-y-3 border-t border-line pt-4">
           {quote.lines.map((line) => {
-            const label =
-              locale === 'it'
-                ? line.labelIt
-                : catalogByCode[line.code]
-                  ? catalogLabel(catalogByCode[line.code], locale)
-                  : line.labelEn;
+            const label = quoteLineLabel(line, locale, catalogByCode);
             return (
               <li key={`${line.code}-${line.kind}`} className="flex justify-between gap-3 text-sm">
                 <span>
@@ -184,12 +179,7 @@ function buildQuoteEmailBody(
 ): string {
   const lines = quote.lines
     .map((line) => {
-      const label =
-        locale === 'it'
-          ? line.labelIt
-          : catalogByCode[line.code]
-            ? catalogLabel(catalogByCode[line.code], locale)
-            : line.labelEn;
+      const label = quoteLineLabel(line, locale, catalogByCode);
       return `- ${label}: ${formatEuroCents(line.grossCents, locale)}`;
     })
     .join('\n');

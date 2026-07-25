@@ -10,7 +10,7 @@ import {
   DEFAULT_PROPERTY_VALUE_EUR,
   TRADITIONAL_AGENCY_RATE,
 } from '@/lib/pricing-config';
-import { formatEuroCents, grossCentsForCatalogItem } from '@/lib/pricing-display';
+import { catalogLabel, formatEuroCents, grossCentsForCatalogItem } from '@/lib/pricing-display';
 
 const MIN_VALUE_EUR = 50_000;
 const MAX_VALUE_EUR = 2_000_000;
@@ -147,7 +147,7 @@ export function SavingsComparison({ locale, catalogByCode }: Props) {
           <h3 className="font-display text-lg font-semibold text-ink">{t('easycasaTitle')}</h3>
           <ul className="mt-3 space-y-1.5 text-sm text-ink">
             {comparisonLines.map((item) => {
-              const label = locale === 'it' ? item.labelIt : item.labelEn;
+              const label = catalogLabel(item, locale);
               let detail = '';
               if (item.priceModel === 'fixed' && item.amountCents != null) {
                 const gross = grossCentsForCatalogItem(item);

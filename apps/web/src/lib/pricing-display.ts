@@ -18,7 +18,29 @@ export function formatEuroCents(cents: number, locale: string, opts?: { maximumF
   }).format(cents / 100);
 }
 
-export function catalogLabel(item: CatalogItemRow, locale: string): string {
+export function catalogLabel(item: { labelEn: string; labelIt: string; labelEs?: string }, locale: string): string {
   if (locale === 'it') return item.labelIt;
+  if (locale === 'es') return item.labelEs ?? item.labelEn;
   return item.labelEn;
+}
+
+export function packageLabel(pkg: { labelEn: string; labelIt: string; labelEs?: string }, locale: string): string {
+  if (locale === 'it') return pkg.labelIt;
+  if (locale === 'es') return pkg.labelEs ?? pkg.labelEn;
+  return pkg.labelEn;
+}
+
+export function quoteLineLabel(
+  line: { code: string; labelEn: string; labelIt: string; labelEs?: string },
+  locale: string,
+  catalogByCode?: Record<string, { labelEn: string; labelIt: string; labelEs?: string }>,
+): string {
+  if (locale === 'it') return line.labelIt;
+  if (locale === 'es') {
+    if (line.labelEs) return line.labelEs;
+    const fromCatalog = catalogByCode?.[line.code];
+    if (fromCatalog) return catalogLabel(fromCatalog, locale);
+  }
+  if (catalogByCode?.[line.code]) return catalogLabel(catalogByCode[line.code], locale);
+  return line.labelEn;
 }

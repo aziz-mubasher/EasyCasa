@@ -83,6 +83,7 @@ export interface CatalogItemRow {
   code: string;
   labelEn: string;
   labelIt: string;
+  labelEs?: string;
   category: string;
   priceModel: 'fixed' | 'provvigione' | 'passthrough';
   amountCents?: number | null;
@@ -100,6 +101,7 @@ export interface ServicePackageRow {
   code: string;
   labelEn: string;
   labelIt: string;
+  labelEs?: string;
   includes: string[];
   bundleFixedCents?: number | null;
 }
@@ -108,6 +110,7 @@ export interface QuoteLineRow {
   code: string;
   labelEn: string;
   labelIt: string;
+  labelEs?: string;
   kind: 'fixed' | 'provvigione' | 'passthrough' | 'bundle';
   netCents: number;
   ivaCents: number;
