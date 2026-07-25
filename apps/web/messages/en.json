@@ -167,7 +167,18 @@
     "catastoHeading": "Cadastral data",
     "shareHeading": "Share Smart Link",
     "valuationIntro": "Indicative market band for this property. Share it with clients via a Smart Link.",
+    "valuationSignIn": "Sign in to view the property evaluation for this listing.",
     "descriptionIntro": "Property and location description for this listing.",
+    "contact": {
+      "heading": "Contact",
+      "intro": "Reach the seller or agency who published this listing.",
+      "publisher": "Published by",
+      "call": "Call {phone}",
+      "whatsapp": "WhatsApp",
+      "cta": "Contact",
+      "formTitle": "Send an enquiry",
+      "close": "Close"
+    },
     "energy": {
       "apeNote": "Attestato di Prestazione Energetica (APE) — Italian energy performance certificate class."
     },
@@ -181,8 +192,10 @@
       "telegram": "Telegram",
       "smartLink": "Smart Link",
       "smartLinkOpening": "Opening…",
+      "smartLinkOpen": "Open Smart Link",
+      "includeBand": "Include market evaluation on the Smart Link",
       "smartLinkSignIn": "Sign in to open or create a Smart Link for this listing.",
-      "smartLinkError": "Could not open Smart Link. Try again from Property evaluation.",
+      "smartLinkError": "Could not open Smart Link. Try again.",
       "landingBody": "Create a trackable Smart Link for this listing. Optionally include the valuation band — ideal for sharing with buyers."
     },
     "locationUnavailable": "Location is not available for this listing.",
@@ -209,7 +222,8 @@
       "condition": "Condition",
       "status": "Listing status",
       "province": "Province",
-      "city": "Municipality"
+      "city": "Municipality",
+      "address": "Address"
     },
     "status": {
       "draft": "Draft",
@@ -222,7 +236,8 @@
       "details": "Details",
       "description": "Description",
       "location": "Location",
-      "valuation": "Property evaluation"
+      "valuation": "Property evaluation",
+      "contact": "Contact"
     },
     "gallery": {
       "noPhotos": "No photos available",

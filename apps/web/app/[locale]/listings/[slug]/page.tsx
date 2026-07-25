@@ -3,13 +3,11 @@ import { getTranslations } from 'next-intl/server';
 import { getListing } from '@/lib/api';
 import { parseListingDetail } from '@/lib/listing-detail';
 import { ListingStructuredData } from '@/components/StructuredData';
-import { SmartLinkManager } from '@/components/smartlink/SmartLinkManager';
-import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 import { ListingPhotoGallery } from '@/components/listings/ListingPhotoGallery';
 import { ListingLandingShell } from '@/components/listings/ListingLandingShell';
 import { ListingSummaryCard } from '@/components/listings/ListingSummaryCard';
-import { ListingFactsTable } from '@/components/listings/ListingFactsTable';
-import { AdminOnly } from '@/components/auth/AdminOnly';
+import { ListingContactSection } from '@/components/listings/ListingContactSection';
+import { ListingValuationGate } from '@/components/listings/ListingValuationGate';
 import { MapView } from '@/components/search/MapView';
 import type { ListingSummary } from '@easycasa/shared';
 
@@ -26,7 +24,6 @@ export default async function ListingPage({
   const t = await getTranslations('listingDetail');
 
   const locationLine = [listing.city, listing.province].filter(Boolean).join(' · ');
-  const hasCatasto = Boolean(listing.foglio && listing.particella);
   const hasLocation = listing.latitude != null && listing.longitude != null;
   const hasDescription = Boolean(listing.description);
   const pagePath = `/${locale}/listings/${listing.slug}`;
@@ -54,6 +51,7 @@ export default async function ListingPage({
     ...(hasDescription ? [{ id: 'description', label: t('tabs.description') }] : []),
     { id: 'valuation', label: t('tabs.valuation') },
     ...(hasLocation ? [{ id: 'location', label: t('tabs.location') }] : []),
+    { id: 'contact', label: t('tabs.contact') },
   ];
 
   return (
@@ -85,42 +83,13 @@ export default async function ListingPage({
         sections={sections}
       >
         <article className="mx-auto max-w-6xl px-5 py-8 space-y-14 pb-16">
-          <section id="details" className="scroll-mt-28 space-y-10">
+          <section id="details" className="scroll-mt-28">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)] lg:items-start">
               <div className="min-w-0">
                 <ListingPhotoGallery title={listing.title} urls={listing.photoUrls} />
               </div>
               <ListingSummaryCard listing={listing} locale={locale} />
             </div>
-
-            <div className="max-w-3xl">
-              <h2 className="font-display text-lg font-semibold text-ink mb-3">{t('factsHeading')}</h2>
-              <div className="rounded-xl2 border border-line bg-paper p-4">
-                <ListingFactsTable listing={listing} locale={locale} />
-              </div>
-            </div>
-
-            {hasCatasto ? (
-              <div>
-                <h2 className="font-display text-lg font-semibold text-ink mb-3">{t('catastoHeading')}</h2>
-                <dl className="grid grid-cols-2 sm:grid-cols-3 gap-4 data text-sm rounded-xl2 border border-line bg-paper p-4 max-w-xl">
-                  <div>
-                    <dt className="eyebrow">{t('catasto.foglio')}</dt>
-                    <dd>{listing.foglio}</dd>
-                  </div>
-                  <div>
-                    <dt className="eyebrow">{t('catasto.particella')}</dt>
-                    <dd>{listing.particella}</dd>
-                  </div>
-                  {listing.subalterno ? (
-                    <div>
-                      <dt className="eyebrow">{t('catasto.subalterno')}</dt>
-                      <dd>{listing.subalterno}</dd>
-                    </div>
-                  ) : null}
-                </dl>
-              </div>
-            ) : null}
           </section>
 
           {hasDescription ? (
@@ -135,25 +104,7 @@ export default async function ListingPage({
             </section>
           ) : null}
 
-          <AdminOnly>
-            <section id="valuation" className="scroll-mt-28 space-y-4 max-w-3xl">
-              <h2 className="font-display text-2xl font-semibold text-ink">{t('tabs.valuation')}</h2>
-              <p className="text-sm text-muted">{t('valuationIntro')}</p>
-              <ListingValuationBandSection slug={listing.slug} />
-            </section>
-          </AdminOnly>
-
-          <section
-            id="listing-smartlink"
-            className="scroll-mt-28 max-w-3xl border-t border-line pt-10"
-            aria-labelledby="listing-smartlink-heading"
-          >
-            <h2 id="listing-smartlink-heading" className="font-display text-xl font-semibold text-ink mb-2">
-              {t('shareHeading')}
-            </h2>
-            <p className="text-sm text-muted mb-4">{t('share.landingBody')}</p>
-            <SmartLinkManager listingId={listing.id} hideIntro />
-          </section>
+          <ListingValuationGate slug={listing.slug} />
 
           {hasLocation && mapItem ? (
             <section id="location" className="scroll-mt-28 space-y-4">
@@ -168,6 +119,13 @@ export default async function ListingPage({
               </div>
             </section>
           ) : null}
+
+          <ListingContactSection
+            listingId={listing.id}
+            listingTitle={listing.title}
+            agentName={listing.agent?.displayName ?? null}
+            agentPhone={listing.agent?.phone ?? null}
+          />
         </article>
       </ListingLandingShell>
     </div>

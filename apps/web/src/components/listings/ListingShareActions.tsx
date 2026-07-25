@@ -23,7 +23,7 @@ type Props = {
 /**
  * Listing header actions:
  * - Share → social / email / copy the listing URL
- * - Smart Link → open (or create then open) the public Smart Link landing page
+ * - Smart Link → menu with market-evaluation toggle + open/create
  */
 export function ListingShareActions({
   pageUrl,
@@ -36,11 +36,14 @@ export function ListingShareActions({
   const { getAccessToken } = useAuth();
   const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [smartOpen, setSmartOpen] = useState(false);
+  const [includeBand, setIncludeBand] = useState(true);
   const [copied, setCopied] = useState(false);
   const [smartBusy, setSmartBusy] = useState(false);
   const [smartError, setSmartError] = useState<string | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const shareRef = useRef<HTMLDivElement>(null);
+  const smartRef = useRef<HTMLDivElement>(null);
 
   const resolvePageUrl = useCallback(() => {
     if (typeof window === 'undefined') return pageUrl;
@@ -48,12 +51,21 @@ export function ListingShareActions({
   }, [pageUrl]);
 
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!shareOpen && !smartOpen) return;
     const onDoc = (e: MouseEvent) => {
-      if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false);
+      const target = e.target as Node;
+      if (shareOpen && shareRef.current && !shareRef.current.contains(target)) {
+        setShareOpen(false);
+      }
+      if (smartOpen && smartRef.current && !smartRef.current.contains(target)) {
+        setSmartOpen(false);
+      }
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMenuOpen(false);
+      if (e.key === 'Escape') {
+        setShareOpen(false);
+        setSmartOpen(false);
+      }
     };
     document.addEventListener('mousedown', onDoc);
     document.addEventListener('keydown', onKey);
@@ -61,13 +73,13 @@ export function ListingShareActions({
       document.removeEventListener('mousedown', onDoc);
       document.removeEventListener('keydown', onKey);
     };
-  }, [menuOpen]);
+  }, [shareOpen, smartOpen]);
 
   const copyLink = useCallback(async () => {
     await navigator.clipboard.writeText(resolvePageUrl());
     setCopied(true);
     window.setTimeout(() => setCopied(false), 2000);
-    setMenuOpen(false);
+    setShareOpen(false);
   }, [resolvePageUrl]);
 
   const shareEmail = () => {
@@ -75,14 +87,14 @@ export function ListingShareActions({
     const subject = encodeURIComponent(listingTitle);
     const body = encodeURIComponent(`${listingTitle}\n\n${url}`);
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
-    setMenuOpen(false);
+    setShareOpen(false);
   };
 
   const shareWhatsApp = () => {
     const url = resolvePageUrl();
     const text = encodeURIComponent(`${listingTitle}\n${url}`);
     window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener,noreferrer');
-    setMenuOpen(false);
+    setShareOpen(false);
   };
 
   const shareFacebook = () => {
@@ -92,7 +104,7 @@ export function ListingShareActions({
       '_blank',
       'noopener,noreferrer',
     );
-    setMenuOpen(false);
+    setShareOpen(false);
   };
 
   const shareTelegram = () => {
@@ -103,35 +115,30 @@ export function ListingShareActions({
       '_blank',
       'noopener,noreferrer',
     );
-    setMenuOpen(false);
+    setShareOpen(false);
   };
 
   const openSmartLinkLanding = async () => {
     setSmartBusy(true);
     setSmartError(null);
-    // Open synchronously so popup blockers allow the landing page after await.
     const popup = window.open('about:blank', '_blank');
     try {
       const token = await getAccessToken();
       if (!token) {
         popup?.close();
         setSmartError(t('smartLinkSignIn'));
-        window.location.hash = 'listing-smartlink';
-        window.setTimeout(() => {
-          document.getElementById('listing-smartlink')?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          });
-        }, 100);
         return;
       }
 
       const mine = await listMyShareLinks(authedFetch);
-      let link = mine.find((r) => r.listingId === listingId && !r.revokedAt) ?? null;
-      if (!link) {
-        link = await createShareLink(authedFetch, listingId, true);
+      const matching = mine.filter((r) => r.listingId === listingId && !r.revokedAt);
+      let link =
+        matching.find((r) => r.includeValuationBand === includeBand) ?? matching[0] ?? null;
+      if (!link || link.includeValuationBand !== includeBand) {
+        link = await createShareLink(authedFetch, listingId, includeBand);
       }
       const publicUrl = smartLinkPublicUrl(link.token, locale);
+      setSmartOpen(false);
       if (popup) {
         popup.location.href = publicUrl;
       } else {
@@ -150,18 +157,21 @@ export function ListingShareActions({
   return (
     <div className="relative flex flex-col items-stretch sm:items-end gap-1">
       <div className="flex flex-wrap items-center justify-end gap-2">
-        <div className="relative" ref={menuRef}>
+        <div className="relative" ref={shareRef}>
           <Button
             type="button"
             variant="outline"
             className={btnClass}
-            aria-expanded={menuOpen}
+            aria-expanded={shareOpen}
             aria-haspopup="menu"
-            onClick={() => setMenuOpen((o) => !o)}
+            onClick={() => {
+              setShareOpen((o) => !o);
+              setSmartOpen(false);
+            }}
           >
             {copied ? t('copied') : t('share')}
           </Button>
-          {menuOpen ? (
+          {shareOpen ? (
             <div
               role="menu"
               className="absolute right-0 z-40 mt-2 min-w-[12rem] rounded-xl border border-line bg-paper py-1 shadow-lg"
@@ -175,17 +185,47 @@ export function ListingShareActions({
           ) : null}
         </div>
 
-        <Button
-          type="button"
-          className={btnClass}
-          disabled={smartBusy}
-          onClick={() => void openSmartLinkLanding()}
-        >
-          {smartBusy ? t('smartLinkOpening') : t('smartLink')}
-        </Button>
+        <div className="relative" ref={smartRef}>
+          <Button
+            type="button"
+            className={btnClass}
+            aria-expanded={smartOpen}
+            aria-haspopup="menu"
+            onClick={() => {
+              setSmartOpen((o) => !o);
+              setShareOpen(false);
+            }}
+          >
+            {t('smartLink')}
+          </Button>
+          {smartOpen ? (
+            <div
+              role="menu"
+              className="absolute right-0 z-40 mt-2 w-[min(18rem,calc(100vw-2rem))] rounded-xl border border-line bg-paper p-3 shadow-lg space-y-3"
+            >
+              <label className="flex items-start gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="mt-0.5 accent-[var(--azure)]"
+                  checked={includeBand}
+                  onChange={(e) => setIncludeBand(e.target.checked)}
+                />
+                <span>{t('includeBand')}</span>
+              </label>
+              <Button
+                type="button"
+                className="w-full"
+                disabled={smartBusy}
+                onClick={() => void openSmartLinkLanding()}
+              >
+                {smartBusy ? t('smartLinkOpening') : t('smartLinkOpen')}
+              </Button>
+            </div>
+          ) : null}
+        </div>
       </div>
       {smartError ? (
-        <p className="text-[10px] sm:text-xs text-clay max-w-[14rem] text-right leading-snug">
+        <p className="text-[10px] sm:text-xs text-clay max-w-[16rem] text-right leading-snug">
           {smartError}
         </p>
       ) : null}

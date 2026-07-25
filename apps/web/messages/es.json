@@ -167,7 +167,18 @@
     "catastoHeading": "Datos catastrales",
     "shareHeading": "Compartir Smart Link",
     "valuationIntro": "Franja de mercado indicativa para este inmueble. Compártela con clientes mediante un Smart Link.",
+    "valuationSignIn": "Inicia sesión para ver la evaluación del inmueble de este anuncio.",
     "descriptionIntro": "Descripción del inmueble y de la zona.",
+    "contact": {
+      "heading": "Contactar",
+      "intro": "Contacta al vendedor o la agencia que publicó este anuncio.",
+      "publisher": "Publicado por",
+      "call": "Llamar {phone}",
+      "whatsapp": "WhatsApp",
+      "cta": "Contactar",
+      "formTitle": "Enviar una consulta",
+      "close": "Cerrar"
+    },
     "energy": {
       "apeNote": "Certificado de eficiencia energética (APE) — clase energética del inmueble."
     },
@@ -181,8 +192,10 @@
       "telegram": "Telegram",
       "smartLink": "Smart Link",
       "smartLinkOpening": "Abriendo…",
+      "smartLinkOpen": "Abrir Smart Link",
+      "includeBand": "Incluir la valoración de mercado en el Smart Link",
       "smartLinkSignIn": "Inicia sesión para abrir o crear un Smart Link de este anuncio.",
-      "smartLinkError": "No se pudo abrir el Smart Link. Inténtalo desde Evaluación del inmueble.",
+      "smartLinkError": "No se pudo abrir el Smart Link. Inténtalo de nuevo.",
       "landingBody": "Crea un Smart Link con seguimiento para este anuncio. Puedes incluir la franja de valoración — ideal para enviarlo a compradores."
     },
     "locationUnavailable": "Ubicación no disponible para este anuncio.",
@@ -209,7 +222,8 @@
       "condition": "Estado",
       "status": "Estado del anuncio",
       "province": "Provincia",
-      "city": "Municipio"
+      "city": "Municipio",
+      "address": "Dirección"
     },
     "status": {
       "draft": "Borrador",
@@ -222,7 +236,8 @@
       "details": "Detalles",
       "description": "Descripción",
       "location": "Ubicación",
-      "valuation": "Evaluación del inmueble"
+      "valuation": "Evaluación del inmueble",
+      "contact": "Contactar"
     },
     "gallery": {
       "noPhotos": "No hay fotos disponibles",

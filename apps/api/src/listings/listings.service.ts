@@ -14,6 +14,7 @@ import type { ListingDetail, SimilarPin } from './domain/types';
 import { ValuationBandService } from '../avm/valuation-band.service';
 import { resolveListingPropertyType } from '../avm/domain/normalize-property-type';
 import type { ValuationBandResponse } from '../avm/domain/valuation-band';
+import { UsersService } from '../users/users.service';
 
 function slugify(title: string): string {
   return title.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '')
@@ -44,7 +45,23 @@ export class ListingsService {
     @Inject(LISTING_READ) private readonly read: ListingReadPort,
     private readonly alerts: AlertsService,
     private readonly valuationBand: ValuationBandService,
+    private readonly users: UsersService,
   ) {}
+
+  /** Public-safe publisher contact for listing pages (no email / OIDC slug). */
+  private async publicAgentFor(
+    agentId: string | null | undefined,
+  ): Promise<{ displayName: string | null; phone: string | null; slug: string | null } | null> {
+    if (!agentId) return null;
+    const u = await this.users.findById(agentId);
+    if (!u) return null;
+    const slug = u.slug && !u.slug.startsWith('oidc:') ? u.slug : null;
+    return {
+      displayName: u.displayName ?? null,
+      phone: u.phone ?? null,
+      slug,
+    };
+  }
 
   search(q: QueryListingDto) {
     return this.repo.search(q);
@@ -86,6 +103,7 @@ export class ListingsService {
     const imageUrls = media
       .filter((m) => m.type === 'image' || m.type === 'floorplan')
       .map((m) => m.url);
+    const agent = await this.publicAgentFor(l.agentId);
     return {
       ...l,
       price: l.price == null ? null : Number(l.price),
@@ -95,6 +113,7 @@ export class ListingsService {
       media,
       imageUrls,
       coverUrl: imageUrls[0] ?? null,
+      agent,
     };
   }
 

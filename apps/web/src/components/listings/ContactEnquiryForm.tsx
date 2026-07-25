@@ -108,6 +108,9 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
   if (ready && !isAuthenticated) {
     return (
       <div className={className || 'mt-8 max-w-md'}>
+        <p className="text-sm text-muted mb-3">
+          Accedi per inviare la richiesta con consenso privacy e disclosure di mediazione.
+        </p>
         <RequireSignInLink />
       </div>
     );

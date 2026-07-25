@@ -41,6 +41,11 @@ export interface ParsedListingDetail {
   latitude: number | null;
   longitude: number | null;
   photoUrls: string[];
+  agent: {
+    displayName: string | null;
+    phone: string | null;
+    slug: string | null;
+  } | null;
 }
 
 function num(v: unknown): number | null {
@@ -124,6 +129,17 @@ export function parseListingDetail(raw: Record<string, unknown>, slugFallback: s
     latitude: num(raw.latitude),
     longitude: num(raw.longitude),
     photoUrls: photoUrlsFromListing(raw),
+    agent: parseAgent(raw.agent),
+  };
+}
+
+function parseAgent(raw: unknown): ParsedListingDetail['agent'] {
+  if (!raw || typeof raw !== 'object') return null;
+  const a = raw as Record<string, unknown>;
+  return {
+    displayName: str(a.displayName),
+    phone: str(a.phone),
+    slug: str(a.slug),
   };
 }
 

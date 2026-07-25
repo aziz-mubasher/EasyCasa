@@ -38,17 +38,26 @@ const valuationBandMock = {
   forInput: vi.fn(),
 };
 
+const usersMock = {
+  findById: vi.fn().mockResolvedValue(null),
+};
+
+function makeService(repo: ListingsRepository) {
+  return new ListingsService(
+    repo,
+    searchMock,
+    readMock as never,
+    alertsMock as never,
+    valuationBandMock as never,
+    usersMock as never,
+  );
+}
+
 describe('ListingsService', () => {
   it('creates a draft with a slug and syncs location when coords present', async () => {
     const insert = vi.fn().mockResolvedValue({ id: 'l1' });
     const syncLocation = vi.fn().mockResolvedValue(undefined);
-    const svc = new ListingsService(
-      makeRepo({ insert, syncLocation }),
-      searchMock,
-      readMock as never,
-      alertsMock as never,
-      valuationBandMock as never,
-    );
+    const svc = makeService(makeRepo({ insert, syncLocation }));
 
     await svc.create(
       { title: 'Nice Flat', latitude: 45.5, longitude: 9.2 } as never,
@@ -65,13 +74,7 @@ describe('ListingsService', () => {
 
   it('blocks updating a listing you do not own (non-admin)', async () => {
     const findById = vi.fn().mockResolvedValue({ id: 'l1', agentId: 'someone-else' });
-    const svc = new ListingsService(
-      makeRepo({ findById }),
-      searchMock,
-      readMock as never,
-      alertsMock as never,
-      valuationBandMock as never,
-    );
+    const svc = makeService(makeRepo({ findById }));
     const user: AuthUser = { sub: 'u', roles: ['seller'] };
 
     await expect(svc.update('l1', { title: 'x' }, user, 'me')).rejects.toThrow('not your listing');
@@ -80,13 +83,7 @@ describe('ListingsService', () => {
   it('allows admin to update any listing', async () => {
     const findById = vi.fn().mockResolvedValue({ id: 'l1', agentId: 'someone-else' });
     const update = vi.fn().mockResolvedValue({ id: 'l1' });
-    const svc = new ListingsService(
-      makeRepo({ findById, update }),
-      searchMock,
-      readMock as never,
-      alertsMock as never,
-      valuationBandMock as never,
-    );
+    const svc = makeService(makeRepo({ findById, update }));
     const admin: AuthUser = { sub: 'a', roles: ['admin'] };
 
     const res = await svc.update('l1', { title: 'x' }, admin, 'me');
@@ -124,13 +121,7 @@ describe('ListingsService', () => {
       longitude: null,
       publishedAt: new Date('2026-01-01T00:00:00Z'),
     });
-    const svc = new ListingsService(
-      makeRepo({ findById, update, listMedia }),
-      searchMock,
-      readMock as never,
-      alertsMock as never,
-      valuationBandMock as never,
-    );
+    const svc = makeService(makeRepo({ findById, update, listMedia }));
     const user: AuthUser = { sub: 'u', roles: ['seller'] };
 
     await svc.publish('l1', user, 'me');

@@ -167,7 +167,18 @@
     "catastoHeading": "Dati catastali",
     "shareHeading": "Condividi Smart Link",
     "valuationIntro": "Fascia di mercato indicativa per questo immobile. Condividila con i clienti tramite Smart Link.",
+    "valuationSignIn": "Accedi per vedere la valutazione immobile di questo annuncio.",
     "descriptionIntro": "Descrizione dell’immobile e della zona.",
+    "contact": {
+      "heading": "Contatta",
+      "intro": "Contatta il venditore o l’agenzia che ha pubblicato questo annuncio.",
+      "publisher": "Pubblicato da",
+      "call": "Chiama {phone}",
+      "whatsapp": "WhatsApp",
+      "cta": "Contatta",
+      "formTitle": "Invia una richiesta",
+      "close": "Chiudi"
+    },
     "energy": {
       "apeNote": "Attestato di Prestazione Energetica (APE) — classe energetica dell’immobile."
     },
@@ -181,8 +192,10 @@
       "telegram": "Telegram",
       "smartLink": "Smart Link",
       "smartLinkOpening": "Apertura…",
+      "smartLinkOpen": "Apri Smart Link",
+      "includeBand": "Includi la valutazione di mercato nello Smart Link",
       "smartLinkSignIn": "Accedi per aprire o creare uno Smart Link per questo annuncio.",
-      "smartLinkError": "Impossibile aprire lo Smart Link. Riprova da Valutazione immobile.",
+      "smartLinkError": "Impossibile aprire lo Smart Link. Riprova.",
       "landingBody": "Crea uno Smart Link tracciabile per questo annuncio. Puoi includere la fascia di valutazione — ideale da inviare agli acquirenti."
     },
     "locationUnavailable": "Posizione non disponibile per questo annuncio.",
@@ -209,7 +222,8 @@
       "condition": "Stato",
       "status": "Stato annuncio",
       "province": "Provincia",
-      "city": "Comune"
+      "city": "Comune",
+      "address": "Indirizzo"
     },
     "status": {
       "draft": "Bozza",
@@ -222,7 +236,8 @@
       "details": "Dettagli",
       "description": "Descrizione",
       "location": "Posizione",
-      "valuation": "Valutazione immobile"
+      "valuation": "Valutazione immobile",
+      "contact": "Contatta"
     },
     "gallery": {
       "noPhotos": "Nessuna foto disponibile",
