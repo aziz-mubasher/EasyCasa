@@ -17,6 +17,7 @@
 | `easycasa-admin` public + PKCE | ✅ | Redirect `https://admin.easycasaita.com/*` |
 | `easycasa-app` / `easycasa-mobile` Expo scheme | ✅ | `easycasa://auth/*` |
 | `buyer`, `seeker`, `admin` roles | ✅ | `seeker` is alias of `buyer` |
+| `seller`, `agent`, `partner`, `pro_marketer` on **live** VPS | ⚠️ | In repo JSON; add via additive `kcadm` — see `docs/runbooks/roles.md` |
 | No secrets in realm JSON | ✅ | All clients public or bearer-only; no client secrets committed |
 | Keycloak Traefik router | ✅ | `auth.${STAGING_DOMAIN}` with TLS; middleware `easycasa-headers` only — **not** `easycasa-strip-dev-auth` |
 | Keycloak production mode | ✅ | `docker-compose.yml`: `command: ['start', '--import-realm']` with `KC_HOSTNAME`, `KC_HOSTNAME_STRICT=true`, `KC_PROXY_HEADERS=xforwarded` |

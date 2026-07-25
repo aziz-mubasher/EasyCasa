@@ -61,11 +61,11 @@ export class ShareLinksRepository {
       .orderBy(desc(shareLinks.createdAt));
   }
 
-  async revoke(id: string, userId: string) {
+  async revokeById(id: string) {
     const rows = await this.db
       .update(shareLinks)
       .set({ revokedAt: new Date() })
-      .where(and(eq(shareLinks.id, id), eq(shareLinks.createdBy, userId), isNull(shareLinks.revokedAt)))
+      .where(and(eq(shareLinks.id, id), isNull(shareLinks.revokedAt)))
       .returning();
     return rows[0] ?? null;
   }

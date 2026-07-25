@@ -8,6 +8,10 @@ import { UsersService } from '../users/users.service';
 import { CreateShareLinkDto } from './dto/create-share-link.dto';
 import { ShareLinksService } from './share-links.service';
 
+/**
+ * SmartLink write authorization: role + listing relationship enforced in
+ * {@link ShareLinksService} (owners may create without `seller` realm role).
+ */
 @Controller('share-links')
 export class ShareLinksController {
   constructor(
@@ -30,7 +34,7 @@ export class ShareLinksController {
   @Post(':id/revoke')
   async revoke(@Param('id') id: string, @CurrentUser() user: AuthUser) {
     const me = await this.users.getOrCreate(user);
-    return this.service.revoke(id, me.id);
+    return this.service.revoke(id, me.id, user);
   }
 
   @Get(':id/stats')

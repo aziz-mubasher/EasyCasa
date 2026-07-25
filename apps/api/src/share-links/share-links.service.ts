@@ -9,6 +9,11 @@ import { apiConfig } from '../config';
 import { ListingsRepository } from '../listings/listings.repository';
 import { ListingsService } from '../listings/listings.service';
 import type { AuthUser } from '../auth/auth.types';
+import {
+  assertCanCreateShareLink,
+  canManageShareLink,
+  ShareLinkAuthError,
+} from './domain/authorization';
 import { generateShareToken, normalizeOpaqueVisitorId, utcViewDate, visitorHashForView } from './domain/tokens';
 import type {
   PublicListingPayload,
@@ -47,9 +52,18 @@ export class ShareLinksService {
     if (listing.status !== 'published') {
       throw new ForbiddenException('listing must be published');
     }
-    // Any authenticated product-role user may create a Smart Link for a published listing
-    // (controller @Roles). Link is attributed to the creator via agentSnapshot.
-    void user;
+    try {
+      assertCanCreateShareLink(user, userId, {
+        ownerUserId: listing.ownerUserId,
+        agentId: listing.agentId,
+        mediatorUserId: listing.mediatorUserId,
+      });
+    } catch (e) {
+      if (e instanceof ShareLinkAuthError) {
+        throw new ForbiddenException(e.code);
+      }
+      throw e;
+    }
 
     const agentSnapshot = await this.repo.agentSnapshotForUser(userId);
     let token = generateShareToken();
@@ -89,17 +103,18 @@ export class ShareLinksService {
     }));
   }
 
-  async revoke(linkId: string, userId: string) {
-    const row = await this.repo.revoke(linkId, userId);
-    if (!row) throw new NotFoundException('share link not found');
+  async revoke(linkId: string, userId: string, user: AuthUser) {
+    const row = await this.revokeIfAllowed(linkId, userId, user);
     return { id: row.id, revokedAt: row.revokedAt?.toISOString() ?? null };
   }
 
   async stats(linkId: string, userId: string, user: AuthUser) {
     const link = await this.repo.findById(linkId);
-    if (!link || link.createdBy !== userId) throw new NotFoundException('share link not found');
-    // Creator already verified; admin may also inspect via ownership helper when needed.
-    void user;
+    if (!link) throw new NotFoundException('share link not found');
+    const listing = await this.listingsRepo.findById(link.listingId);
+    if (!listing || !canManageShareLink(user, userId, link, listing)) {
+      throw new NotFoundException('share link not found');
+    }
     return {
       id: link.id,
       viewCount: link.viewCount,
@@ -162,6 +177,18 @@ export class ShareLinksService {
       listing: publicListing,
       valuationBand,
     };
+  }
+
+  private async revokeIfAllowed(linkId: string, userId: string, user: AuthUser) {
+    const link = await this.repo.findById(linkId);
+    if (!link || link.revokedAt) throw new NotFoundException('share link not found');
+    const listing = await this.listingsRepo.findById(link.listingId);
+    if (!listing || !canManageShareLink(user, userId, link, listing)) {
+      throw new NotFoundException('share link not found');
+    }
+    const row = await this.repo.revokeById(linkId);
+    if (!row) throw new NotFoundException('share link not found');
+    return row;
   }
 
   /** Documented allow-list for tests — full listing row is never returned on SmartLink. */

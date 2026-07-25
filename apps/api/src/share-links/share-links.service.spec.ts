@@ -50,9 +50,9 @@ describe('ShareLinksService', () => {
     expect(payload.coverUrl).toContain('media/file');
   });
 
-  it('allows create for published listing by any product-role user', async () => {
+  it('allows create when user owns the listing (buyer role)', async () => {
     const listingsRepo = {
-      findById: vi.fn().mockResolvedValue({ ...listingRow, agentId: 'other', ownerUserId: 'other' }),
+      findById: vi.fn().mockResolvedValue({ ...listingRow, agentId: 'me', ownerUserId: 'me' }),
     } as unknown as ListingsRepository;
     const repo = {
       agentSnapshotForUser: vi.fn().mockResolvedValue({ displayName: 'Me', phone: null, bio: null, slug: null }),
@@ -71,7 +71,26 @@ describe('ShareLinksService', () => {
     const svc = new ShareLinksService(repo, listingsRepo, {} as ListingsService);
     const row = await svc.create({ listingId: 'l1' }, 'me', { sub: 'me', roles: ['buyer'] });
     expect(row.token).toBe('tok');
-    expect(row.listingId).toBe('l1');
+  });
+
+  it('rejects create for another users listing even with seller role', async () => {
+    const listingsRepo = {
+      findById: vi.fn().mockResolvedValue({ ...listingRow, agentId: 'other', ownerUserId: 'other' }),
+    } as unknown as ListingsRepository;
+    const svc = new ShareLinksService({} as ShareLinksRepository, listingsRepo, {} as ListingsService);
+    await expect(
+      svc.create({ listingId: 'l1' }, 'me', { sub: 'me', roles: ['seller'] }),
+    ).rejects.toThrow('not authorized for this listing');
+  });
+
+  it('rejects create for buyer without ownership', async () => {
+    const listingsRepo = {
+      findById: vi.fn().mockResolvedValue({ ...listingRow, agentId: 'other', ownerUserId: 'other' }),
+    } as unknown as ListingsRepository;
+    const svc = new ShareLinksService({} as ShareLinksRepository, listingsRepo, {} as ListingsService);
+    await expect(
+      svc.create({ listingId: 'l1' }, 'me', { sub: 'me', roles: ['buyer'] }),
+    ).rejects.toThrow('insufficient role');
   });
 
   it('blocks create when listing is not published', async () => {
