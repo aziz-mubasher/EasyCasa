@@ -10,7 +10,9 @@ export function ValuationBandUnavailable({ reason }: { reason: string }) {
   const message =
     reason === 'missing_surface'
       ? t('unavailableMissingSurface')
-      : t('unavailableArea');
+      : reason === 'unsupported_listing'
+        ? t('unavailableUnsupported')
+        : t('unavailableArea');
   return (
     <section
       className="rounded-xl border border-line bg-sand/40 p-5"

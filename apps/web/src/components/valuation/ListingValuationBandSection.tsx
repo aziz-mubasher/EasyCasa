@@ -7,7 +7,7 @@ export async function ListingValuationBandSection({ slug }: { slug: string }) {
     const data = await fetchListingValuationBand(slug);
     if (data.status === 'unavailable' && data.reason === 'feature_disabled') return null;
     return (
-      <div className="mt-8">
+      <div className="mt-2">
         <ValuationBandPanel data={data} />
       </div>
     );
