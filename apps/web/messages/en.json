@@ -427,5 +427,48 @@
       "instagram": "Instagram",
       "website": "Website"
     }
+  },
+  "favorites": {
+    "title": "Favorites",
+    "subtitle": "Saved listings and searches you follow.",
+    "saveFavorite": "Save listing",
+    "removeFavorite": "Remove from favorites",
+    "loading": "Loading…",
+    "signInPrompt": "Sign in to see saved listings and searches.",
+    "signInCta": "Sign in",
+    "tabsLabel": "Favorites sections",
+    "tabListings": "Listings",
+    "tabSearches": "Saved searches",
+    "emptyListings": "You have not saved any listings yet.",
+    "emptyListingsCta": "Start searching",
+    "emptySearches": "You have not saved any searches yet.",
+    "emptySearchesCta": "Go to search",
+    "saveSearch": {
+      "cta": "Save this search",
+      "saving": "Saving…",
+      "success": "Search saved — find it in",
+      "successLink": "Favorites",
+      "summary": {
+        "allListings": "All listings",
+        "sale": "For sale",
+        "rent": "For rent",
+        "upToPrice": "up to €{max}",
+        "fromPrice": "from €{min}",
+        "priceRange": "€{min}–€{max}",
+        "inLocation": "in {place}",
+        "bedrooms": "{count} bedrooms"
+      }
+    },
+    "savedSearches": {
+      "rerun": "Run search again",
+      "delete": "Delete",
+      "frequencyLabel": "Email alerts",
+      "emailNotActive": "Preference saved — email alerts are not active yet.",
+      "freq": {
+        "off": "Never",
+        "daily": "Daily",
+        "instant": "Instant"
+      }
+    }
   }
 }

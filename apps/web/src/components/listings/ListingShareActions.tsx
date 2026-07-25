@@ -11,6 +11,7 @@ import {
   listMyShareLinks,
   smartLinkPublicUrl,
 } from '@/lib/smartlink';
+import { FavoriteToggle } from '@/favorites/FavoriteToggle';
 
 type Props = {
   /** Locale path of this listing page, e.g. /it/listings/slug */
@@ -178,6 +179,7 @@ export function ListingShareActions({
   return (
     <div className="relative flex flex-col items-stretch sm:items-end gap-1">
       <div className="flex flex-wrap items-center justify-end gap-2">
+        <FavoriteToggle listingId={listingId} size="md" />
         <div className="relative" ref={shareRef}>
           <Button
             type="button"
