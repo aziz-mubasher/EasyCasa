@@ -49,6 +49,8 @@ export function ListingCard({ l }: { l: ListingSummary }) {
   return (
     <Link
       href={`/listings/${l.slug}`}
+      target="_blank"
+      rel="noopener noreferrer"
       className="group block rounded-xl2 overflow-hidden border border-line bg-paper hover:border-ink transition"
     >
       <div className="group/media aspect-[4/3] bg-sand relative overflow-hidden">

@@ -155,6 +155,68 @@
     "save": "Save",
     "saved": "Saved"
   },
+  "listingDetail": {
+    "forSale": "For sale",
+    "forRent": "For rent",
+    "onRequest": "on request",
+    "onRequestPerMonth": "on request/month",
+    "perMonth": "/mo",
+    "factsHeading": "Key facts",
+    "energyHeading": "Energy class (EPC)",
+    "characteristics": "Features",
+    "catastoHeading": "Cadastral data",
+    "shareHeading": "Share",
+    "locationUnavailable": "Location is not available for this listing.",
+    "catasto": {
+      "foglio": "Sheet",
+      "particella": "Parcel",
+      "subalterno": "Sub-unit"
+    },
+    "facts": {
+      "rooms": "Rooms",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "builtSurface": "Built area",
+      "commercialSurface": "Commercial floor area",
+      "landSurface": "Land area",
+      "floor": "Floor",
+      "totalFloors": "Total floors",
+      "yearBuilt": "Year built",
+      "yearRenovated": "Year renovated",
+      "energyClass": "Energy class",
+      "energyPerformance": "Energy performance",
+      "energyPerformanceValue": "{value} kWh/m²/year",
+      "pricePerSqm": "Price per m²",
+      "condition": "Condition",
+      "status": "Listing status"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Active",
+      "sold": "Sold",
+      "archived": "Archived"
+    },
+    "tabs": {
+      "tablist": "Listing sections",
+      "details": "Details",
+      "description": "Description",
+      "location": "Location",
+      "valuation": "Valuation"
+    },
+    "gallery": {
+      "noPhotos": "No photos available",
+      "photoAlt": "{title} — photo {n}",
+      "prevPhoto": "Previous photo",
+      "nextPhoto": "Next photo",
+      "photoCounter": "{current} of {total}",
+      "regionLabel": "Photo gallery",
+      "openLightbox": "Open full-screen photo",
+      "closeLightbox": "Close",
+      "lightboxTitle": "Gallery: {title}",
+      "thumbnails": "Photo thumbnails",
+      "selectPhoto": "Show photo {n}"
+    }
+  },
   "add": {
     "title": "List your property",
     "subtitle": "Describe the listing with the full EasyCasa taxonomy so buyers can find it.",

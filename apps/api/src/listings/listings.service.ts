@@ -83,12 +83,18 @@ export class ListingsService {
     const l = await this.repo.findBySlug(slug);
     if (!l) throw new NotFoundException('listing not found');
     const media = await this.repo.listMedia(l.id);
+    const imageUrls = media
+      .filter((m) => m.type === 'image' || m.type === 'floorplan')
+      .map((m) => m.url);
     return {
       ...l,
       price: l.price == null ? null : Number(l.price),
       sizeSqm: l.sizeSqm == null ? null : Number(l.sizeSqm),
+      surfaceSqm: l.surfaceSqm == null ? null : Number(l.surfaceSqm),
+      landSqm: l.landSqm == null ? null : Number(l.landSqm),
       media,
-      coverUrl: media[0]?.url ?? null,
+      imageUrls,
+      coverUrl: imageUrls[0] ?? null,
     };
   }
 
