@@ -1,4 +1,6 @@
 import type { TransactionTypeSlug } from '@easycasa/shared';
+import he from 'he';
+import sanitizeHtml from 'sanitize-html';
 
 export interface ListingMediaRow {
   url: string;
@@ -53,9 +55,16 @@ function str(v: unknown): string | null {
   return s === '' ? null : s;
 }
 
-/** Strip HTML tags; descriptions may contain legacy WordPress markup. */
+const PLAIN_DESCRIPTION_SANITIZE: sanitizeHtml.IOptions = {
+  allowedTags: [],
+  allowedAttributes: {},
+  disallowedTagsMode: 'discard',
+};
+
+/** Strip all HTML safely; descriptions may contain legacy WordPress markup. */
 export function plainDescription(text: string): string {
-  return text.replace(/<[^>]*>/g, '').trim();
+  const stripped = sanitizeHtml(text, PLAIN_DESCRIPTION_SANITIZE);
+  return he.decode(stripped).trim();
 }
 
 export function photoUrlsFromListing(raw: Record<string, unknown>): string[] {
