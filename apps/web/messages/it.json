@@ -360,7 +360,74 @@
     "provvigione": "{rate}% a conclusione",
     "passthrough": "Riaddebito",
     "empty": "Catalogo non disponibile. Riprova tra poco.",
-    "iva": "IVA ove applicabile"
+    "iva": "Importi fissi indicati al netto; l'IVA (22%) si applica dove indicato nel preventivo.",
+    "ivaExcluded": "+ IVA ove applicabile",
+    "mediationLinkBefore": "Dettagli su mediazione e provvigione:",
+    "mediationLink": "informativa mediazione",
+    "comparison": {
+      "title": "Quanto risparmi rispetto a un'agenzia tradizionale?",
+      "intro": "Confronto indicativo per un venditore tipico: servizi à la carte + mediazione solo a conclusione dell'affare. Regola il valore dell'immobile per vedere la stima.",
+      "propertyValueLabel": "Valore immobile (stima)",
+      "propertyValueHint": "Tra {min} e {max}.",
+      "traditionalTitle": "Agenzia tradizionale (riferimento di mercato)",
+      "traditionalNote": "Esempio illustrativo al {rate}% sul prezzo — spesso addebitato comunque, a volte su entrambe le parti.",
+      "traditionalFootnote": "Riferimento di mercato generico, non il prezzo di un concorrente specifico.",
+      "easycasaTitle": "EasyCasa (à la carte + mediazione a conclusione)",
+      "mediationLine": "{rate} a conclusione",
+      "easycasaDueNow": "Da pagare subito (servizi fissi, IVA inclusa)",
+      "easycasaWithMediation": "Stima totale se l'affare si conclude (include mediazione stimata)",
+      "mediationHonesty": "La mediazione matura solo a conclusione dell'affare ed è sempre indicata nell'incarico.",
+      "savingsLabel": "Risparmio stimato rispetto al riferimento tradizionale:",
+      "savingsDisclaimer": "Stima indicativa: il tuo caso dipende dai servizi scelti e dall'esito della trattativa.",
+      "calculating": "Calcolo in corso…",
+      "error": "Impossibile calcolare il confronto. Riprova."
+    },
+    "journeys": {
+      "sell": {
+        "title": "Se vuoi vendere",
+        "subtitle": "Pubblicazione, fascicolo, media e mediazione solo se chiudi l'affare."
+      },
+      "buy": {
+        "title": "Se vuoi comprare",
+        "subtitle": "Visite, proposta e mediazione lato acquirente quando serve."
+      },
+      "rent": {
+        "title": "Se vuoi affittare",
+        "subtitle": "Contratto, registrazione e screening inquilino."
+      }
+    },
+    "packages": {
+      "heading": "Pacchetti",
+      "intro": "Bundle sui servizi a prezzo fisso; provvigioni e riaddebiti restano come in catalogo.",
+      "partsTotal": "Somma singoli servizi fissi (IVA incl.): {amount}",
+      "saving": "Risparmio sul bundle: {amount}",
+      "provvigioneNote": "Eventuali provvigioni a conclusione non sono incluse nel prezzo bundle.",
+      "select": "Aggiungi al preventivo",
+      "selected": "Nel preventivo",
+      "empty": "Nessun pacchetto in catalogo al momento."
+    },
+    "allServices": {
+      "show": "Mostra tutti i servizi à la carte",
+      "hide": "Nascondi elenco completo"
+    },
+    "quote": {
+      "add": "Aggiungi",
+      "inSelection": "Selezionato",
+      "barHint": "Seleziona servizi o un pacchetto, poi richiedi un preventivo trasparente (nessun pagamento online).",
+      "request": "Richiedi preventivo",
+      "busy": "Calcolo…",
+      "resultTitle": "Il tuo preventivo",
+      "close": "Chiudi",
+      "notPayment": "Questo è un preventivo informativo — non avvia pagamenti o ordini.",
+      "estimatedLine": "Importo stimato",
+      "dueNow": "Da pagare ora (stima)",
+      "estimatedTotal": "Totale stimato (con mediazione)",
+      "ivaNote": "IVA calcolata come da catalogo (22% sui servizi EasyCasa; esclusa sui riaddebiti).",
+      "sendEmail": "Invia richiesta via email",
+      "emailHint": "Si apre il tuo client di posta con il riepilogo — nessun addebito.",
+      "emailSubject": "Richiesta preventivo EasyCasa",
+      "emailIntro": "Buongiorno, vorrei un preventivo per i seguenti servizi EasyCasa:"
+    }
   },
   "valuationBand": {
     "title": "Valutazione di mercato",

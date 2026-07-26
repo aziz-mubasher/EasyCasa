@@ -360,7 +360,74 @@
     "provvigione": "{rate}% on closing",
     "passthrough": "Pass-through",
     "empty": "Catalog unavailable right now. Try again shortly.",
-    "iva": "VAT where applicable"
+    "iva": "Fixed fees shown net; VAT (22%) applies where noted in your quote.",
+    "ivaExcluded": "+ VAT where applicable",
+    "mediationLinkBefore": "Mediation and provvigione details:",
+    "mediationLink": "mediation disclosure",
+    "comparison": {
+      "title": "How much could you save vs a traditional agency?",
+      "intro": "Indicative comparison for a typical seller: à la carte services plus mediation only if the deal closes. Adjust the property value to update the estimate.",
+      "propertyValueLabel": "Property value (estimate)",
+      "propertyValueHint": "Between {min} and {max}.",
+      "traditionalTitle": "Traditional agency (market reference)",
+      "traditionalNote": "Illustrative example at {rate}% of the price — often charged regardless, sometimes on both sides.",
+      "traditionalFootnote": "Generic market reference, not a specific competitor's price.",
+      "easycasaTitle": "EasyCasa (à la carte + mediation on closing)",
+      "mediationLine": "{rate} on closing",
+      "easycasaDueNow": "Due now (fixed services, VAT included)",
+      "easycasaWithMediation": "Estimated total if the deal closes (includes estimated mediation)",
+      "mediationHonesty": "Mediation applies only when the deal closes and is always stated in the mandate.",
+      "savingsLabel": "Estimated saving vs the traditional reference:",
+      "savingsDisclaimer": "Indicative only — your case depends on services chosen and negotiation outcome.",
+      "calculating": "Calculating…",
+      "error": "Could not compute the comparison. Please try again."
+    },
+    "journeys": {
+      "sell": {
+        "title": "If you want to sell",
+        "subtitle": "Listing, dossier, media, and mediation only if you close."
+      },
+      "buy": {
+        "title": "If you want to buy",
+        "subtitle": "Viewings, offers, and buyer-side mediation when you need them."
+      },
+      "rent": {
+        "title": "If you want to rent out",
+        "subtitle": "Lease, registration, and tenant screening."
+      }
+    },
+    "packages": {
+      "heading": "Bundles",
+      "intro": "Fixed-price service bundles; provvigione and pass-through items follow the catalog.",
+      "partsTotal": "Sum of individual fixed services (incl. VAT): {amount}",
+      "saving": "Bundle saving: {amount}",
+      "provvigioneNote": "Any closing mediation fee is not included in the bundle price.",
+      "select": "Add to quote",
+      "selected": "In quote",
+      "empty": "No packages in the catalog right now."
+    },
+    "allServices": {
+      "show": "Show full à la carte list",
+      "hide": "Hide full list"
+    },
+    "quote": {
+      "add": "Add",
+      "inSelection": "Selected",
+      "barHint": "Select services or a bundle, then request a transparent quote (no online payment).",
+      "request": "Request quote",
+      "busy": "Working…",
+      "resultTitle": "Your quote",
+      "close": "Close",
+      "notPayment": "This is an informational quote — it does not start payment or orders.",
+      "estimatedLine": "Estimated amount",
+      "dueNow": "Due now (estimate)",
+      "estimatedTotal": "Estimated total (incl. mediation)",
+      "ivaNote": "VAT as per catalog (22% on EasyCasa services; excluded on pass-through).",
+      "sendEmail": "Send request by email",
+      "emailHint": "Opens your mail app with the summary — no charge.",
+      "emailSubject": "EasyCasa quote request",
+      "emailIntro": "Hello, I would like a quote for the following EasyCasa services:"
+    }
   },
   "valuationBand": {
     "title": "Market valuation",

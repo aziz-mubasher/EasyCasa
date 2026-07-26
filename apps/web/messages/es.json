@@ -360,7 +360,74 @@
     "provvigione": "{rate}% al cierre",
     "passthrough": "Repercusión",
     "empty": "Catálogo no disponible. Inténtalo de nuevo en breve.",
-    "iva": "IVA cuando corresponda"
+    "iva": "Tarifas fijas netas; el IVA (22%) se aplica donde indique el presupuesto.",
+    "ivaExcluded": "+ IVA cuando corresponda",
+    "mediationLinkBefore": "Detalles de mediación y provvigione:",
+    "mediationLink": "información de mediación",
+    "comparison": {
+      "title": "¿Cuánto ahorras frente a una agencia tradicional?",
+      "intro": "Comparación orientativa para un vendedor tipo: servicios à la carte más mediación solo si cierra la operación. Ajusta el valor del inmueble.",
+      "propertyValueLabel": "Valor del inmueble (estimación)",
+      "propertyValueHint": "Entre {min} y {max}.",
+      "traditionalTitle": "Agencia tradicional (referencia de mercado)",
+      "traditionalNote": "Ejemplo ilustrativo al {rate}% del precio — a menudo se cobra igualmente, a veces a ambas partes.",
+      "traditionalFootnote": "Referencia genérica de mercado, no el precio de un competidor concreto.",
+      "easycasaTitle": "EasyCasa (à la carte + mediación al cierre)",
+      "mediationLine": "{rate} al cierre",
+      "easycasaDueNow": "A pagar ahora (servicios fijos, IVA incl.)",
+      "easycasaWithMediation": "Total estimado si cierra la operación (incl. mediación estimada)",
+      "mediationHonesty": "La mediación solo aplica al cierre y figura siempre en el mandato.",
+      "savingsLabel": "Ahorro estimado frente a la referencia tradicional:",
+      "savingsDisclaimer": "Solo orientativo: depende de los servicios elegidos y del resultado de la negociación.",
+      "calculating": "Calculando…",
+      "error": "No se pudo calcular la comparación. Inténtalo de nuevo."
+    },
+    "journeys": {
+      "sell": {
+        "title": "Si quieres vender",
+        "subtitle": "Publicación, expediente, media y mediación solo si cierras."
+      },
+      "buy": {
+        "title": "Si quieres comprar",
+        "subtitle": "Visitas, oferta y mediación comprador cuando lo necesites."
+      },
+      "rent": {
+        "title": "Si quieres alquilar",
+        "subtitle": "Contrato, registro y screening del inquilino."
+      }
+    },
+    "packages": {
+      "heading": "Paquetes",
+      "intro": "Bundles de servicios a precio fijo; provvigione y repercusión siguen el catálogo.",
+      "partsTotal": "Suma de servicios fijos (IVA incl.): {amount}",
+      "saving": "Ahorro del paquete: {amount}",
+      "provvigioneNote": "La provvigione al cierre no está incluida en el precio del paquete.",
+      "select": "Añadir al presupuesto",
+      "selected": "En el presupuesto",
+      "empty": "No hay paquetes en el catálogo por ahora."
+    },
+    "allServices": {
+      "show": "Ver todos los servicios à la carte",
+      "hide": "Ocultar listado completo"
+    },
+    "quote": {
+      "add": "Añadir",
+      "inSelection": "Seleccionado",
+      "barHint": "Elige servicios o un paquete y solicita un presupuesto transparente (sin pago online).",
+      "request": "Solicitar presupuesto",
+      "busy": "Calculando…",
+      "resultTitle": "Tu presupuesto",
+      "close": "Cerrar",
+      "notPayment": "Presupuesto informativo — no inicia pagos ni pedidos.",
+      "estimatedLine": "Importe estimado",
+      "dueNow": "A pagar ahora (estimación)",
+      "estimatedTotal": "Total estimado (con mediación)",
+      "ivaNote": "IVA según catálogo (22% en servicios EasyCasa; excluido en repercusión).",
+      "sendEmail": "Enviar solicitud por email",
+      "emailHint": "Abre tu correo con el resumen — sin cargo.",
+      "emailSubject": "Solicitud de presupuesto EasyCasa",
+      "emailIntro": "Buenos días, me gustaría un presupuesto para los siguientes servicios EasyCasa:"
+    }
   },
   "valuationBand": {
     "title": "Valoración de mercado",

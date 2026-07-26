@@ -95,3 +95,60 @@ export async function listServiceCatalog(): Promise<CatalogItemRow[]> {
   if (!res.ok) return [];
   return res.json() as Promise<CatalogItemRow[]>;
 }
+
+export interface ServicePackageRow {
+  code: string;
+  labelEn: string;
+  labelIt: string;
+  includes: string[];
+  bundleFixedCents?: number | null;
+}
+
+export interface QuoteLineRow {
+  code: string;
+  labelEn: string;
+  labelIt: string;
+  kind: 'fixed' | 'provvigione' | 'passthrough' | 'bundle';
+  netCents: number;
+  ivaCents: number;
+  grossCents: number;
+  estimated: boolean;
+  note?: string;
+}
+
+export interface ServiceQuoteRow {
+  lines: QuoteLineRow[];
+  fixedNetCents: number;
+  provvigioneEstimatedNetCents: number;
+  passthroughCents: number;
+  ivaCents: number;
+  dueNowGrossCents: number;
+  estimatedTotalGrossCents: number;
+  currency: 'EUR';
+}
+
+export interface QuoteRequestBody {
+  items?: string[];
+  packageCode?: string;
+  referenceValueCents?: number;
+}
+
+export async function listServicePackages(): Promise<ServicePackageRow[]> {
+  const res = await fetch(`${BASE}/service-catalog/packages`, { next: { revalidate: 600 } });
+  if (!res.ok) return [];
+  return res.json() as Promise<ServicePackageRow[]>;
+}
+
+export async function requestServiceQuote(body: QuoteRequestBody): Promise<ServiceQuoteRow> {
+  const res = await fetch(`${BASE}/service-catalog/quote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+  });
+  if (!res.ok) {
+    const err = (await res.json().catch(() => null)) as { message?: string } | null;
+    throw new Error(err?.message ?? `quote failed: ${res.status}`);
+  }
+  return res.json() as Promise<ServiceQuoteRow>;
+}
