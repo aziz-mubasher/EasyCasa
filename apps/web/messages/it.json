@@ -347,6 +347,16 @@
       "errorGeneric": "Impossibile gestire lo SmartLink. Riprova."
     }
   },
+  "banks4AllReferral": {
+    "cardTitle": "Puoi permetterti questa casa?",
+    "cardBody": "Prima delle visite, scopri quanto puoi finanziare davvero con un Piano di Investimento Immobiliare redatto da un consulente — basato sui documenti, nella tua lingua. Sono disponibili anche percorsi senza interessi (NIB).",
+    "cardNewcomerNote": "Banks4All assiste residenti UE e non UE, con permessi di soggiorno e redditi esteri — senza commissioni da agenzie o venditori.",
+    "cardCta": "Scopri quanto puoi finanziare con Banks4All",
+    "inlineBeforeLink": "Vuoi sapere se qualifichi per il mutuo?",
+    "inlineLink": "Verifica con Banks4All",
+    "footerLink": "Finanziamento e qualificazione mutuo",
+    "externalHint": "Si apre su {host} in una nuova scheda"
+  },
   "footer": {
     "rights": "Tutti i diritti riservati.",
     "pricing": "Listino servizi",
