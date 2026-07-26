@@ -1,6 +1,7 @@
 /**
- * Order subject root: owner fascicolo (property) and/or published listing (buyer).
- * At least one must be set — mirrors `service_orders_subject_chk`.
+ * Order subject root: owner fascicolo (property), published listing (buyer),
+ * or signed-in catalog checkout user (`user_id` — see `service_orders_subject_chk`).
+ * At least one of propertyId / listingId must be set for owner/buyer flows.
  */
 export type OrderSubject = {
   propertyId: string | null;
