@@ -110,10 +110,11 @@ export class AdminController {
       const legalBasis = row
         ? toDomainLegalBasis(row.legalBasis)
         : this.pricing.legalBasisOf(c.code);
-      return {
+        return {
         code: c.code,
         labelEn: c.labelEn,
         labelIt: c.labelIt,
+        labelEs: c.labelEs,
         category: c.category,
         priceModel: c.priceModel,
         legalBasis,

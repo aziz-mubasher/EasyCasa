@@ -37,10 +37,10 @@ export interface QuoteDisplay {
  * "what shows now vs what's estimated" logic in one tested place.
  */
 export function summarizeQuote(quote: Quote, locale: string): QuoteDisplay {
-  const it = locale.startsWith('it');
+  const lang = locale.slice(0, 2).toLowerCase();
   const lines: QuoteDisplayLine[] = quote.lines.map((l) => ({
     code: l.code,
-    label: it ? l.labelIt : l.labelEn,
+    label: lang === 'it' ? l.labelIt : lang === 'es' ? l.labelEs : l.labelEn,
     amount: formatEuroCents(l.grossCents),
     estimated: l.estimated,
     ...(l.note ? { note: l.note } : {}),

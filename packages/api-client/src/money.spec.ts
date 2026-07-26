@@ -22,6 +22,7 @@ const quote: Quote = {
       code: 'DOC_CHECKUP',
       labelEn: 'Document check-up',
       labelIt: 'Check-up documentale',
+      labelEs: 'Revisión documental',
       kind: 'fixed',
       netCents: 14900,
       ivaCents: 3278,
@@ -32,6 +33,7 @@ const quote: Quote = {
       code: 'FULL_MEDIATION',
       labelEn: 'Full mediation',
       labelIt: 'Mediazione completa',
+      labelEs: 'Mediación completa',
       kind: 'provvigione',
       netCents: 747000,
       ivaCents: 164340,
@@ -64,5 +66,11 @@ describe('summarizeQuote', () => {
   it('picks English labels for non-it locales', () => {
     const d = summarizeQuote(quote, 'en-GB');
     expect(d.lines[0]?.label).toBe('Document check-up');
+  });
+
+  it('picks Spanish labels for es locales', () => {
+    const d = summarizeQuote(quote, 'es-ES');
+    expect(d.lines[0]?.label).toBe('Revisión documental');
+    expect(d.lines[1]?.label).toBe('Mediación completa');
   });
 });

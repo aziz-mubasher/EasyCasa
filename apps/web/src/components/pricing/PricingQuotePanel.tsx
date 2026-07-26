@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import type { ServiceQuoteRow } from '@/lib/api';
-import { formatEuroCents, catalogLabel } from '@/lib/pricing-display';
+import { formatEuroCents, quoteLineLabel } from '@/lib/pricing-display';
 import type { CatalogItemRow } from '@/lib/api';
 
 type Props = {
@@ -49,12 +49,7 @@ export function PricingQuotePanel({ locale, quote, open, onClose, catalogByCode 
 
         <ul className="mt-6 space-y-3 border-t border-line pt-4">
           {quote.lines.map((line) => {
-            const label =
-              locale === 'it'
-                ? line.labelIt
-                : catalogByCode[line.code]
-                  ? catalogLabel(catalogByCode[line.code], locale)
-                  : line.labelEn;
+            const label = quoteLineLabel(line, locale, catalogByCode);
             return (
               <li key={`${line.code}-${line.kind}`} className="flex justify-between gap-3 text-sm">
                 <span>
@@ -106,12 +101,7 @@ function buildQuoteEmailBody(
 ): string {
   const lines = quote.lines
     .map((line) => {
-      const label =
-        locale === 'it'
-          ? line.labelIt
-          : catalogByCode[line.code]
-            ? catalogLabel(catalogByCode[line.code], locale)
-            : line.labelEn;
+      const label = quoteLineLabel(line, locale, catalogByCode);
       return `- ${label}: ${formatEuroCents(line.grossCents, locale)}`;
     })
     .join('\n');

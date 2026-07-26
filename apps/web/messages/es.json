@@ -398,7 +398,7 @@
     },
     "packages": {
       "heading": "Paquetes",
-      "intro": "Bundles de servicios a precio fijo; provvigione y repercusión siguen el catálogo.",
+      "intro": "Paquetes de servicios a precio fijo; la provvigione y los costes repercutidos siguen el catálogo.",
       "partsTotal": "Suma de servicios fijos (IVA incl.): {amount}",
       "saving": "Ahorro del paquete: {amount}",
       "provvigioneNote": "La provvigione al cierre no está incluida en el precio del paquete.",

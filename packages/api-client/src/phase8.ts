@@ -19,6 +19,7 @@ export const CatalogItemSchema = z.object({
   code: z.string(),
   labelEn: z.string(),
   labelIt: z.string(),
+  labelEs: z.string(),
   category: z.string(),
   priceModel: PriceModelSchema,
   amountCents: z.number().int().nullable().optional(),
@@ -31,6 +32,7 @@ export const ServicePackageSchema = z.object({
   code: z.string(),
   labelEn: z.string(),
   labelIt: z.string(),
+  labelEs: z.string(),
   includes: z.array(z.string()),
   bundleFixedCents: z.number().int().nullable().optional(),
 });
@@ -40,6 +42,7 @@ export const QuoteLineSchema = z.object({
   code: z.string(),
   labelEn: z.string(),
   labelIt: z.string(),
+  labelEs: z.string(),
   kind: z.enum(['fixed', 'provvigione', 'passthrough', 'bundle']),
   netCents: z.number().int(),
   ivaCents: z.number().int(),

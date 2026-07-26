@@ -28,6 +28,7 @@ export interface CatalogItem {
   code: string;
   labelEn: string;
   labelIt: string;
+  labelEs: string;
   category: ServiceCategory;
   priceModel: PriceModel;
   /** For 'fixed' and 'passthrough': amount in cents. */
@@ -42,6 +43,7 @@ export interface ServicePackage {
   code: string;
   labelEn: string;
   labelIt: string;
+  labelEs: string;
   /** Catalog item codes included in the bundle. */
   includes: string[];
   /**
@@ -69,6 +71,7 @@ export interface QuoteLine {
   code: string;
   labelEn: string;
   labelIt: string;
+  labelEs: string;
   kind: QuoteLineKind;
   netCents: number;
   ivaCents: number;

@@ -22,6 +22,7 @@ function lineForItem(item: CatalogItem, referenceValueCents?: number): QuoteLine
       code: item.code,
       labelEn: item.labelEn,
       labelIt: item.labelIt,
+      labelEs: item.labelEs,
       kind: 'provvigione',
       netCents: estNet,
       ivaCents: estIva,
@@ -37,6 +38,7 @@ function lineForItem(item: CatalogItem, referenceValueCents?: number): QuoteLine
     code: item.code,
     labelEn: item.labelEn,
     labelIt: item.labelIt,
+    labelEs: item.labelEs,
     kind: item.priceModel, // 'fixed' | 'passthrough'
     netCents: net,
     ivaCents: ivaC,
@@ -74,6 +76,7 @@ export function buildQuote(req: QuoteRequest): Quote {
         code: pkg.code,
         labelEn: `${pkg.labelEn} (package)`,
         labelIt: `${pkg.labelIt} (pacchetto)`,
+        labelEs: `${pkg.labelEs} (paquete)`,
         kind: 'bundle',
         netCents: net,
         ivaCents: ivaC,
