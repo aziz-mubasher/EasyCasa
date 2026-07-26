@@ -7,11 +7,13 @@ import type { PaymentsService } from './payments.service';
 
 describe('StripePaymentsWebhookHandler', () => {
   beforeEach(() => {
-    process.env.DEV_AUTH = 'true';
-    process.env.DATABASE_URL = 'postgresql://u:p@127.0.0.1:5432/db';
-    process.env.PAYMENTS_ENABLED = 'true';
-    process.env.STRIPE_SECRET_KEY = 'sk_test_x';
-    process.env.STRIPE_WEBHOOK_SECRET = 'whsec_test';
+    Object.assign(process.env, {
+      DEV_AUTH: 'true',
+      DATABASE_URL: 'postgresql://u:p@127.0.0.1:5432/db',
+      PAYMENTS_ENABLED: 'true',
+      STRIPE_SECRET_KEY: 'sk_test_x',
+      STRIPE_WEBHOOK_SECRET: 'whsec_test',
+    });
     resetConfigCache();
   });
 
