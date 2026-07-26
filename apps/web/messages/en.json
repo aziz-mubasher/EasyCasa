@@ -347,6 +347,16 @@
       "errorGeneric": "Could not manage SmartLink. Try again."
     }
   },
+  "banks4AllReferral": {
+    "cardTitle": "Can you afford this home?",
+    "cardBody": "Before viewings, find out what you can genuinely finance with a consultant-prepared Property Investment Plan — evidence-based, in your language. Interest-free (NIB) paths are available too.",
+    "cardNewcomerNote": "Banks4All supports EU and non-EU residents, residence permits, and foreign income — with no fees from agencies or sellers.",
+    "cardCta": "See what you could finance with Banks4All",
+    "inlineBeforeLink": "Want to know if you qualify for a mortgage?",
+    "inlineLink": "Check with Banks4All",
+    "footerLink": "Mortgage & financing qualification",
+    "externalHint": "Opens on {host} in a new tab"
+  },
   "footer": {
     "rights": "All rights reserved.",
     "pricing": "Service prices",

@@ -347,6 +347,16 @@
       "errorGeneric": "No se pudo gestionar el SmartLink. Inténtalo de nuevo."
     }
   },
+  "banks4AllReferral": {
+    "cardTitle": "¿Puedes permitirte esta casa?",
+    "cardBody": "Antes de las visitas, conoce cuánto puedes financiar de verdad con un Plan de Inversión Inmobiliaria elaborado por un consultor — con evidencias, en tu idioma. También hay opciones sin intereses (NIB).",
+    "cardNewcomerNote": "Banks4All ayuda a residentes de la UE y fuera de la UE, con permisos de residencia e ingresos en el extranjero — sin comisiones de agencias ni vendedores.",
+    "cardCta": "Descubre cuánto puedes financiar con Banks4All",
+    "inlineBeforeLink": "¿Quieres saber si calificas para la hipoteca?",
+    "inlineLink": "Verifica con Banks4All",
+    "footerLink": "Financiación y calificación hipotecaria",
+    "externalHint": "Se abre en {host} en una pestaña nueva"
+  },
   "footer": {
     "rights": "Todos los derechos reservados.",
     "pricing": "Precios de servicios",

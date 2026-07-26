@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
+import { Banks4AllFinancingReferral } from '@/components/financing/Banks4AllFinancingReferral';
 import { isListingLandingPath } from '@/lib/listing-landing';
 
 export function Footer() {
@@ -17,9 +18,12 @@ export function Footer() {
           <div className="font-display text-lg font-semibold">{tb('name')}</div>
           <p className="text-muted text-sm">{tb('tagline')}</p>
           <p className="text-muted text-xs leading-relaxed">{t('disclosure')}</p>
-          <Link href="/pricing" className="text-sm text-azure hover:underline">
-            {t('pricing')}
-          </Link>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            <Link href="/pricing" className="text-sm text-azure hover:underline">
+              {t('pricing')}
+            </Link>
+            <Banks4AllFinancingReferral variant="footerLink" />
+          </div>
         </div>
         <p className="data text-xs text-muted self-end">
           © {new Date().getFullYear()} MUNDIDA · {t('rights')}

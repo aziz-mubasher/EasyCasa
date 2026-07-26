@@ -10,6 +10,7 @@ import { ListingContactSection } from '@/components/listings/ListingContactSecti
 import { ListingValuationGate } from '@/components/listings/ListingValuationGate';
 import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 import { MapView } from '@/components/search/MapView';
+import { listingShowsSale } from '@/lib/listing-detail';
 import type { ListingSummary } from '@easycasa/shared';
 
 export default async function ListingPage({
@@ -28,6 +29,10 @@ export default async function ListingPage({
   const hasLocation = listing.latitude != null && listing.longitude != null;
   const hasDescription = Boolean(listing.description);
   const pagePath = `/${locale}/listings/${listing.slug}`;
+  const showFinancingReferral = listingShowsSale(
+    listing.transactionTypes,
+    listing.transactionType,
+  );
   const mapItem: ListingSummary | null = hasLocation
     ? {
         id: listing.id,
@@ -128,6 +133,7 @@ export default async function ListingPage({
             listingTitle={listing.title}
             agentName={listing.agent?.displayName ?? null}
             agentPhone={listing.agent?.phone ?? null}
+            showFinancingReferral={showFinancingReferral}
           />
         </article>
       </ListingLandingShell>

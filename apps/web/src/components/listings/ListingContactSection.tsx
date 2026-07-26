@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { ContactEnquiryForm } from '@/components/listings/ContactEnquiryForm';
+import { Banks4AllFinancingReferral } from '@/components/financing/Banks4AllFinancingReferral';
 import { telHref, whatsAppHref } from '@/lib/agent-public';
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
   listingTitle: string;
   agentName: string | null;
   agentPhone: string | null;
+  showFinancingReferral?: boolean;
 };
 
 /** Bottom-of-page Contatta: phone / WhatsApp + enquiry form with consent gate. */
@@ -19,6 +21,7 @@ export function ListingContactSection({
   listingTitle,
   agentName,
   agentPhone,
+  showFinancingReferral = false,
 }: Props) {
   const t = useTranslations('listingDetail.contact');
   const [open, setOpen] = useState(false);
@@ -43,6 +46,8 @@ export function ListingContactSection({
           </p>
         ) : null}
       </div>
+
+      {showFinancingReferral ? <Banks4AllFinancingReferral variant="inline" /> : null}
 
       {(tel || wa) && (
         <div className="flex flex-wrap gap-2">
