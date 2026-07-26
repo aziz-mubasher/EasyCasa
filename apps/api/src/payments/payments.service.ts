@@ -1,5 +1,16 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
+import { apiConfig } from '../config';
+import { ORDER_REPOSITORY } from '../orders/orders.service';
+import type { OrderRepository } from '../transactions/domain/ports';
+import { cardPayableGrossCents } from './card-payable';
 import { nextPaymentStatus } from './domain/charges';
 import type {
   PaymentIntentRecord,
@@ -22,6 +33,7 @@ export class PaymentsService {
     @Inject(PAYMENT_REPOSITORY) private readonly repo: PaymentRepository,
     @Inject(PAYMENT_PROVIDER) private readonly provider: PaymentProvider,
     @Inject(PAYMENT_SUCCEEDED_HANDLER) private readonly onSucceeded: PaymentSucceededHandler,
+    @Inject(ORDER_REPOSITORY) private readonly orders: OrderRepository,
   ) {}
 
   async createIntent(input: {
@@ -29,7 +41,27 @@ export class PaymentsService {
     purpose: PaymentPurpose;
     amountCents: number;
   }): Promise<{ intentId: string; clientSecret: string }> {
+    if (!apiConfig.PAYMENTS_ENABLED && !apiConfig.DEV_AUTH) {
+      throw new ForbiddenException('Payments are disabled');
+    }
+    if (input.purpose === 'PROVVIGIONE') {
+      throw new BadRequestException('Provvigione cannot be charged by card');
+    }
     if (input.amountCents <= 0) throw new ConflictException('Nothing to charge');
+
+    const order = await this.orders.get(input.orderId);
+    if (!order) throw new NotFoundException(`Order ${input.orderId} not found`);
+
+    const expected = cardPayableGrossCents(order.lines);
+    if (expected <= 0) {
+      throw new BadRequestException('This order has no fixed-fee amount payable by card');
+    }
+    if (input.amountCents !== expected) {
+      throw new BadRequestException(
+        `Amount must match card-payable total (${expected} cents); provvigione and passthrough are excluded`,
+      );
+    }
+
     const record = await this.repo.create(input);
     const { providerRef, clientSecret } = await this.provider.createIntent({
       amountCents: input.amountCents,
@@ -58,13 +90,20 @@ export class PaymentsService {
       return;
     }
     if (event.type === 'succeeded') {
+      if (rec.status === 'SUCCEEDED' || rec.status === 'REFUNDED') return;
       const processing =
         rec.status === 'REQUIRES_PAYMENT' ? await this.advance(rec, 'CONFIRM') : rec;
-      const succeeded = await this.advance(processing, 'SUCCEED');
+      const succeeded =
+        processing.status === 'SUCCEEDED'
+          ? processing
+          : await this.advance(processing, 'SUCCEED');
       await this.onSucceeded.onPaymentSucceeded(succeeded);
       return;
     }
     if (event.type === 'failed') {
+      if (rec.status === 'FAILED' || rec.status === 'SUCCEEDED' || rec.status === 'REFUNDED') {
+        return;
+      }
       const processing =
         rec.status === 'REQUIRES_PAYMENT' ? await this.advance(rec, 'CONFIRM') : rec;
       await this.advance(processing, 'FAIL');

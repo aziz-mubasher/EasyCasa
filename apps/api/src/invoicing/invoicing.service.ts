@@ -10,6 +10,7 @@ import type { PaymentSucceededHandler } from '../payments/payments.service';
 import type { PaymentPurpose } from '../payments/domain/types';
 import type { Invoice } from './domain/fattura';
 import { INVOICE_SOURCE, type InvoiceSource } from './order-invoice.source';
+import { OrdersService } from '../orders/orders.service';
 
 export const INVOICE_REPOSITORY = Symbol('INVOICE_REPOSITORY');
 export const SDI_CHANNEL = Symbol('SDI_CHANNEL');
@@ -59,9 +60,21 @@ export class InvoicingService {
 /** Auto-issue fattura when a payment intent succeeds. */
 @Injectable()
 export class InvoiceOnPaymentSucceeded implements PaymentSucceededHandler {
-  constructor(private readonly invoicing: InvoicingService) {}
+  constructor(
+    private readonly invoicing: InvoicingService,
+    private readonly orders: OrdersService,
+    @Inject(INVOICE_REPOSITORY) private readonly invoices: InvoiceRepository,
+  ) {}
 
   async onPaymentSucceeded(intent: PaymentIntentRecord): Promise<void> {
-    await this.invoicing.issueForOrder(intent.orderId, intent.purpose, intent.id);
+    const existing = await this.invoices.findByOrderAndPaymentIntent(intent.orderId, intent.id);
+    if (!existing) {
+      await this.invoicing.issueForOrder(intent.orderId, intent.purpose, intent.id);
+    }
+    try {
+      await this.orders.advance(intent.orderId, 'START');
+    } catch {
+      // Order may already be IN_PROGRESS — idempotent webhook retries.
+    }
   }
 }

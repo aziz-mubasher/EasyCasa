@@ -95,7 +95,7 @@ async function bootOnce(): Promise<IntegrationContext> {
     .useClass(TestAuthGuard)
     .compile();
 
-  const app = moduleRef.createNestApplication();
+  const app = moduleRef.createNestApplication({ rawBody: true });
   app.useGlobalPipes(
     new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }),
   );

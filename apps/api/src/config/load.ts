@@ -28,6 +28,16 @@ const Schema = z
     // Billing (Stripe — hosted checkout, no card data on our servers)
     STRIPE_SECRET_KEY: z.string().default(''),
     STRIPE_WEBHOOK_SECRET: z.string().default(''),
+    /** K EC 1.38 — order payments (fixed-fee catalog). Default off until counsel + SdI go-live. */
+    PAYMENTS_ENABLED: bool(false),
+    /** Must be true to boot with sk_live_* — explicit human ack before real charges. */
+    GO_LIVE_PAYMENTS_ACK: bool(false),
+    PAYMENTS_SUCCESS_URL: z
+      .string()
+      .default('https://easycasaita.com/it/pagamento/successo'),
+    PAYMENTS_CANCEL_URL: z
+      .string()
+      .default('https://easycasaita.com/it/pagamento/annullato'),
     BILLING_SUCCESS_URL: z.string().default('https://easycasaita.com/it/account?billing=success'),
     BILLING_CANCEL_URL: z.string().default('https://easycasaita.com/it/account?billing=cancel'),
     CURRENCY: z.string().default('eur'),
@@ -98,6 +108,32 @@ const Schema = z
     AGENCY_PUBLIC_PHONE: z.string().default(''),
   })
   .superRefine((cfg, ctx) => {
+    const stripeKey = cfg.STRIPE_SECRET_KEY.trim();
+    if (stripeKey.startsWith('sk_live_') && !cfg.GO_LIVE_PAYMENTS_ACK) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['STRIPE_SECRET_KEY'],
+        message:
+          'Live Stripe key (sk_live_*) refused: set GO_LIVE_PAYMENTS_ACK=true only after counsel sign-off',
+      });
+    }
+    if (cfg.PAYMENTS_ENABLED) {
+      if (!stripeKey) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['PAYMENTS_ENABLED'],
+          message: 'PAYMENTS_ENABLED requires STRIPE_SECRET_KEY (use sk_test_* in test mode)',
+        });
+      }
+      if (!cfg.STRIPE_WEBHOOK_SECRET.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['STRIPE_WEBHOOK_SECRET'],
+          message: 'PAYMENTS_ENABLED requires STRIPE_WEBHOOK_SECRET for signed webhooks',
+        });
+      }
+    }
+
     // When DEV_AUTH is off, OIDC must be fully configured (Phase 16 fail-fast).
     if (cfg.DEV_AUTH) return;
     for (const key of ['OIDC_ISSUER', 'OIDC_AUDIENCE', 'OIDC_JWKS_URL'] as const) {

@@ -426,7 +426,35 @@
       "sendEmail": "Invia richiesta via email",
       "emailHint": "Si apre il tuo client di posta con il riepilogo — nessun addebito.",
       "emailSubject": "Richiesta preventivo EasyCasa",
-      "emailIntro": "Buongiorno, vorrei un preventivo per i seguenti servizi EasyCasa:"
+      "emailIntro": "Buongiorno, vorrei un preventivo per i seguenti servizi EasyCasa:",
+      "cardPayable": "Pagamento carta (solo tariffe fisse)",
+      "proceedPay": "Procedi al pagamento",
+      "payBusy": "Preparazione checkout…",
+      "payFailed": "Impossibile avviare il pagamento",
+      "payHint": "Provvigione e riaddebiti non sono addebitati online.",
+      "payModeNote": "In modalità test puoi pagare online i servizi a tariffa fissa; la mediazione resta su preventivo."
+    },
+    "checkout": {
+      "title": "Completa il pagamento",
+      "subtitle": "Pagamento con carta via Stripe (modalità test). IVA 22% sui servizi EasyCasa.",
+      "total": "Importo da pagare",
+      "pay": "Paga ora",
+      "busy": "Caricamento…",
+      "failed": "Pagamento non riuscito",
+      "signInRequired": "Accedi per pagare i servizi.",
+      "stripeMissing": "Chiave pubblica Stripe non configurata.",
+      "invalidSession": "Sessione checkout mancante — torna ai prezzi e riprova."
+    },
+    "paymentResult": {
+      "successTitle": "Pagamento ricevuto",
+      "successBody": "Grazie. A conferma del pagamento l'ordine prosegue e la preview fattura è disponibile.",
+      "orderStatus": "Stato ordine",
+      "orderTotal": "Totale dovuto ora",
+      "invoicePreview": "Apri anteprima fattura (JSON)",
+      "backPricing": "Torna ai prezzi",
+      "cancelTitle": "Pagamento annullato",
+      "cancelBody": "Nessun addebito. Puoi tornare ai prezzi o richiedere un preventivo via email.",
+      "loadFailed": "Impossibile caricare lo stato ordine"
     }
   },
   "valuationBand": {

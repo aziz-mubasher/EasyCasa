@@ -1,12 +1,21 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Req } from '@nestjs/common';
+import type { RawBodyRequest } from '@nestjs/common';
+import type { Request } from 'express';
+import { plainToInstance } from 'class-transformer';
+import { validateOrReject } from 'class-validator';
 
 import { Public } from '../auth/public.decorator';
+import { apiConfig } from '../config';
 import { CreateIntentDto, WebhookDto } from './dto';
 import { PaymentsService } from './payments.service';
+import { StripePaymentsWebhookHandler } from './stripe-webhook.handler';
 
 @Controller('payments')
 export class PaymentsController {
-  constructor(private readonly service: PaymentsService) {}
+  constructor(
+    private readonly service: PaymentsService,
+    private readonly stripeWebhook: StripePaymentsWebhookHandler,
+  ) {}
 
   @Post('intents')
   createIntent(@Body() dto: CreateIntentDto) {
@@ -23,10 +32,19 @@ export class PaymentsController {
     return this.service.refund(id);
   }
 
-  /** Public — provider signature must be verified in the PSP adapter. */
+  /** Public — Stripe signature verified when PAYMENTS_ENABLED; DEV JSON webhook otherwise. */
   @Public()
   @Post('webhook')
-  webhook(@Body() dto: WebhookDto) {
-    return this.service.handleWebhook(dto);
+  async webhook(
+    @Req() req: RawBodyRequest<Request>,
+    @Headers('stripe-signature') sig: string | undefined,
+  ) {
+    if (apiConfig.PAYMENTS_ENABLED) {
+      return this.stripeWebhook.handle(req.rawBody as Buffer, sig ?? '');
+    }
+    const dto = plainToInstance(WebhookDto, req.body);
+    await validateOrReject(dto);
+    await this.service.handleWebhook(dto);
+    return { received: true };
   }
 }

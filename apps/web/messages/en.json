@@ -426,7 +426,35 @@
       "sendEmail": "Send request by email",
       "emailHint": "Opens your mail app with the summary — no charge.",
       "emailSubject": "EasyCasa quote request",
-      "emailIntro": "Hello, I would like a quote for the following EasyCasa services:"
+      "emailIntro": "Hello, I would like a quote for the following EasyCasa services:",
+      "cardPayable": "Pay now by card (fixed fees only)",
+      "proceedPay": "Proceed to payment",
+      "payBusy": "Preparing checkout…",
+      "payFailed": "Could not start checkout",
+      "payHint": "Provvigione and pass-through items are not charged online.",
+      "payModeNote": "Fixed-fee services can be paid online in test mode; mediation fees stay quote-only."
+    },
+    "checkout": {
+      "title": "Complete payment",
+      "subtitle": "Secure card payment via Stripe (test mode). IVA 22% on EasyCasa services.",
+      "total": "Amount to pay",
+      "pay": "Pay now",
+      "busy": "Loading…",
+      "failed": "Payment failed",
+      "signInRequired": "Sign in to pay for services.",
+      "stripeMissing": "Stripe publishable key is not configured.",
+      "invalidSession": "Missing checkout session — return to pricing and try again."
+    },
+    "paymentResult": {
+      "successTitle": "Payment received",
+      "successBody": "Thank you. When the payment is confirmed, your order moves forward and an invoice preview is available.",
+      "orderStatus": "Order status",
+      "orderTotal": "Quote due now",
+      "invoicePreview": "Open invoice preview (JSON)",
+      "backPricing": "Back to pricing",
+      "cancelTitle": "Payment cancelled",
+      "cancelBody": "No charge was made. You can return to pricing or request a quote by email.",
+      "loadFailed": "Could not load order status"
     }
   },
   "valuationBand": {

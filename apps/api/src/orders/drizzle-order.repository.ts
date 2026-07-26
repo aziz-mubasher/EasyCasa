@@ -27,6 +27,7 @@ export class DrizzleOrderRepository implements OrderRepository {
         estimatedTotalGrossCents: input.estimatedTotalGrossCents,
         dueNowNetCents: input.dueNowNetCents,
         clientFiscalCode: input.clientFiscalCode,
+        userId: input.userId,
       })
       .returning();
     const order = inserted[0]!;
@@ -47,6 +48,7 @@ export class DrizzleOrderRepository implements OrderRepository {
       id: order.id,
       propertyId: order.propertyId,
       listingId: order.listingId,
+      userId: order.userId,
       packageCode: order.packageCode,
       status: toDomainOrderStatus(order.status),
       itemCodes: order.itemCodes ?? [],
@@ -70,6 +72,7 @@ export class DrizzleOrderRepository implements OrderRepository {
       id: order.id,
       propertyId: order.propertyId,
       listingId: order.listingId,
+      userId: order.userId,
       packageCode: order.packageCode,
       status: toDomainOrderStatus(order.status),
       itemCodes: order.itemCodes ?? [],

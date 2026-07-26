@@ -1,26 +1,66 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import type { ServiceQuoteRow } from '@/lib/api';
+import { useAuth } from '@/auth/AuthProvider';
+import { createAuthedFetch } from '@/auth/authedFetch';
+import { RequireSignInLink } from '@/components/AuthControls';
+import type { ServiceQuoteRow, QuoteRequestBody, CatalogItemRow } from '@/lib/api';
 import { formatEuroCents, quoteLineLabel } from '@/lib/pricing-display';
-import type { CatalogItemRow } from '@/lib/api';
+import { paymentsEnabled } from '@/lib/payments-config';
+import { cardPayableFromQuoteLines, createCatalogCheckoutOrder } from '@/lib/payments-api';
 
 type Props = {
   locale: string;
   quote: ServiceQuoteRow | null;
+  quoteRequest: QuoteRequestBody | null;
   open: boolean;
   onClose: () => void;
   catalogByCode: Record<string, CatalogItemRow>;
 };
 
-export function PricingQuotePanel({ locale, quote, open, onClose, catalogByCode }: Props) {
+export function PricingQuotePanel({
+  locale,
+  quote,
+  quoteRequest,
+  open,
+  onClose,
+  catalogByCode,
+}: Props) {
   const t = useTranslations('pricing.quote');
+  const router = useRouter();
+  const payFlag = paymentsEnabled();
+  const { ready, isAuthenticated, getAccessToken } = useAuth();
+  const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
+  const [payBusy, setPayBusy] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
 
   if (!open || !quote) return null;
 
+  const cardPayableCents = cardPayableFromQuoteLines(quote.lines);
+  const canPay = payFlag && cardPayableCents > 0;
+
   const mailSubject = encodeURIComponent(t('emailSubject'));
   const mailBody = encodeURIComponent(buildQuoteEmailBody(quote, locale, catalogByCode, t));
+
+  const onProceedToPayment = async () => {
+    if (!quoteRequest || !canPay) return;
+    setPayBusy(true);
+    setPayError(null);
+    try {
+      const order = await createCatalogCheckoutOrder(authedFetch, quoteRequest);
+      router.push(
+        `/${locale}/pagamento/checkout?orderId=${encodeURIComponent(order.id)}&amountCents=${cardPayableCents}`,
+      );
+      onClose();
+    } catch (err) {
+      setPayError(err instanceof Error ? err.message : t('payFailed'));
+    } finally {
+      setPayBusy(false);
+    }
+  };
 
   return (
     <div
@@ -45,7 +85,7 @@ export function PricingQuotePanel({ locale, quote, open, onClose, catalogByCode 
             {t('close')}
           </button>
         </div>
-        <p className="mt-2 text-sm text-muted">{t('notPayment')}</p>
+        <p className="mt-2 text-sm text-muted">{payFlag ? t('payModeNote') : t('notPayment')}</p>
 
         <ul className="mt-6 space-y-3 border-t border-line pt-4">
           {quote.lines.map((line) => {
@@ -65,6 +105,12 @@ export function PricingQuotePanel({ locale, quote, open, onClose, catalogByCode 
         </ul>
 
         <dl className="mt-6 space-y-2 border-t border-line pt-4 text-sm">
+          {canPay ? (
+            <div className="flex justify-between">
+              <dt className="text-muted">{t('cardPayable')}</dt>
+              <dd className="data font-semibold">{formatEuroCents(cardPayableCents, locale)}</dd>
+            </div>
+          ) : null}
           <div className="flex justify-between">
             <dt className="text-muted">{t('dueNow')}</dt>
             <dd className="data font-semibold">{formatEuroCents(quote.dueNowGrossCents, locale)}</dd>
@@ -80,13 +126,45 @@ export function PricingQuotePanel({ locale, quote, open, onClose, catalogByCode 
         <p className="mt-4 text-xs text-muted leading-relaxed">{t('ivaNote')}</p>
 
         <div className="mt-6 flex flex-col gap-3">
-          <a
-            href={`mailto:info@easycasaita.com?subject=${mailSubject}&body=${mailBody}`}
-            className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium font-[var(--font-display)] transition bg-azure text-paper hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-azure w-full text-center"
-          >
-            {t('sendEmail')}
-          </a>
-          <p className="text-xs text-muted text-center">{t('emailHint')}</p>
+          {canPay ? (
+            <>
+              {ready && !isAuthenticated ? <RequireSignInLink /> : null}
+              {ready && isAuthenticated ? (
+                <button
+                  type="button"
+                  disabled={payBusy}
+                  onClick={() => void onProceedToPayment()}
+                  className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium font-[var(--font-display)] transition bg-azure text-paper hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-azure w-full text-center disabled:opacity-60"
+                >
+                  {payBusy ? t('payBusy') : t('proceedPay')}
+                </button>
+              ) : null}
+              {payError ? (
+                <p className="text-xs text-clay text-center" role="alert">
+                  {payError}
+                </p>
+              ) : null}
+              <p className="text-xs text-muted text-center">{t('payHint')}</p>
+            </>
+          ) : null}
+          {!payFlag ? (
+            <>
+              <a
+                href={`mailto:info@easycasaita.com?subject=${mailSubject}&body=${mailBody}`}
+                className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium font-[var(--font-display)] transition bg-azure text-paper hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-azure w-full text-center"
+              >
+                {t('sendEmail')}
+              </a>
+              <p className="text-xs text-muted text-center">{t('emailHint')}</p>
+            </>
+          ) : (
+            <a
+              href={`mailto:info@easycasaita.com?subject=${mailSubject}&body=${mailBody}`}
+              className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium border border-line text-ink hover:bg-paper/80 w-full text-center"
+            >
+              {t('sendEmail')}
+            </a>
+          )}
         </div>
       </div>
     </div>

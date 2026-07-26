@@ -48,6 +48,10 @@ export interface InvoiceRepository {
     paymentIntentId?: string | null,
   ): Promise<InvoiceRecord>;
   get(id: string): Promise<InvoiceRecord | null>;
+  findByOrderAndPaymentIntent(
+    orderId: string,
+    paymentIntentId: string,
+  ): Promise<InvoiceRecord | null>;
   setTransmission(id: string, protocollo: string, transmittedAt: string): Promise<void>;
 }
 

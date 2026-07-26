@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, NotFoundException, Optional, forwardRef } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException, Optional, forwardRef } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 
 import { AssignmentsService } from '../assignments/assignments.service';
@@ -14,6 +14,7 @@ import type {
 } from '../transactions/domain/ports';
 import type { OrderEvent, QuoteRequest } from '../transactions/domain/types';
 import { assertOrderSubject, buyerSubject, ownerSubject, type OrderSubject } from './domain/order-subject';
+import { cardPayableGrossCents } from '../payments/card-payable';
 
 export const ORDER_REPOSITORY = Symbol('ORDER_REPOSITORY');
 export const PRICING_PORT = Symbol('PRICING_PORT');
@@ -31,6 +32,40 @@ export class OrdersService {
     @Inject(forwardRef(() => AssignmentsService))
     private readonly assignments?: AssignmentsService,
   ) {}
+
+  /** Public pricing page — catalog order linked to signed-in user (no property yet). */
+  async createCatalogOrder(userId: string, req: QuoteRequest): Promise<OrderRecord> {
+    const quote = this.pricing.quote(req);
+    const payable = cardPayableGrossCents(quote.lines);
+    if (payable <= 0) {
+      throw new BadRequestException(
+        'Nothing payable by card — provvigione and passthrough stay quote-only',
+      );
+    }
+    const itemCodes = this.pricing.resolveItemCodes(req);
+    return this.orders.create({
+      propertyId: null,
+      listingId: null,
+      userId,
+      packageCode: req.packageCode ?? null,
+      status: 'CONFIRMED',
+      itemCodes,
+      lines: quote.lines.map((l) => ({
+        itemCode: l.code,
+        kind: l.kind,
+        netCents: l.netCents,
+        ivaCents: l.ivaCents,
+        grossCents: l.grossCents,
+        estimated: l.estimated,
+      })),
+      dueNowGrossCents: quote.dueNowGrossCents,
+      estimatedTotalGrossCents: quote.estimatedTotalGrossCents,
+      dueNowNetCents: quote.lines
+        .filter((l) => l.kind !== 'provvigione')
+        .reduce((s, l) => s + l.netCents, 0),
+      clientFiscalCode: null,
+    });
+  }
 
   /** Owner / fascicolo checkout — property-rooted. */
   async create(propertyId: string, req: QuoteRequest): Promise<OrderRecord> {
@@ -74,6 +109,7 @@ export class OrdersService {
         .filter((l) => l.kind !== 'provvigione')
         .reduce((s, l) => s + l.netCents, 0),
       clientFiscalCode: null,
+      userId: null,
     });
 
     if (this.assignments && subject.propertyId) {

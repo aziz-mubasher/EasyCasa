@@ -1,7 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, Post } from '@nestjs/common';
 import { IsArray, IsInt, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { ServiceCatalogService } from './service-catalog.service';
 import { Public } from '../auth/public.decorator';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { AuthUser } from '../auth/auth.types';
+import { apiConfig } from '../config';
+import { OrdersService } from '../orders/orders.service';
+import { UsersService } from '../users/users.service';
 
 class QuoteRequestDto {
   @IsOptional()
@@ -26,7 +31,11 @@ class ConfirmQuoteDto extends QuoteRequestDto {
 
 @Controller('service-catalog')
 export class ServiceCatalogController {
-  constructor(private readonly service: ServiceCatalogService) {}
+  constructor(
+    private readonly service: ServiceCatalogService,
+    private readonly orders: OrdersService,
+    private readonly users: UsersService,
+  ) {}
 
   @Public()
   @Get()
@@ -51,5 +60,18 @@ export class ServiceCatalogController {
   @Post('orders')
   confirm(@Body() dto: ConfirmQuoteDto) {
     return this.service.confirmQuote(dto.propertyId, dto);
+  }
+
+  /**
+   * Public pricing checkout — fixed-fee catalog order for the signed-in user.
+   * Requires PAYMENTS_ENABLED (test mode); provvigione/passthrough stay quote-only.
+   */
+  @Post('checkout-orders')
+  async checkoutOrder(@CurrentUser() user: AuthUser, @Body() dto: QuoteRequestDto) {
+    if (!apiConfig.PAYMENTS_ENABLED) {
+      throw new ForbiddenException('Payments are disabled');
+    }
+    const me = await this.users.getOrCreate(user);
+    return this.orders.createCatalogOrder(me.id, dto);
   }
 }

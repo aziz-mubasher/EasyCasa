@@ -59,7 +59,7 @@ gate('SmartLink share links (integration)', () => {
       .set(stranger)
       .send({ listingId, includeValuationBand: true });
     expect(forbidden.status).toBe(403);
-    expect(forbidden.body.message).toBe('not authorized for this listing');
+    expect(forbidden.body.error).toBe('not authorized for this listing');
 
     const buyer = asUser({
       sub: 'smartlink-buyer',
@@ -71,7 +71,7 @@ gate('SmartLink share links (integration)', () => {
       .set(buyer)
       .send({ listingId, includeValuationBand: true });
     expect(buyerForbidden.status).toBe(403);
-    expect(buyerForbidden.body.message).toBe('insufficient role');
+    expect(buyerForbidden.body.error).toBe('insufficient role');
 
     const created = await request(api())
       .post('/share-links')

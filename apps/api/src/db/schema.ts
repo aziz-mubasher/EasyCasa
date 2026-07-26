@@ -372,6 +372,8 @@ export const serviceOrders = pgTable('service_orders', {
   estimatedTotalGrossCents: integer('estimated_total_gross_cents').notNull().default(0),
   clientFiscalCode: text('client_fiscal_code'),
   dueNowNetCents: integer('due_now_net_cents').notNull().default(0),
+  /** Logged-in buyer on public catalog checkout (K EC 1.38). */
+  userId: uuid('user_id'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -494,6 +496,11 @@ export const paymentStatus = pgEnum('payment_status', [
   'requires_payment', 'processing', 'succeeded', 'failed', 'refunded',
 ]);
 export const paymentPurpose = pgEnum('payment_purpose', ['due_now', 'provvigione']);
+
+export const stripeWebhookEvents = pgTable('stripe_webhook_events', {
+  id: text('id').primaryKey(),
+  processedAt: timestamp('processed_at', { withTimezone: true }).notNull().defaultNow(),
+});
 
 export const paymentIntents = pgTable('payment_intents', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -647,7 +654,7 @@ export const schema = {
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies,
   leases, kycCases,
-  paymentIntents, invoices,
+  paymentIntents, invoices, stripeWebhookEvents,
   omiQuotes, valuationRequests,
   viewingAvailability, viewings,
   consentRecords,
