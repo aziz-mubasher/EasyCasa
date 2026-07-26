@@ -37,6 +37,8 @@ export interface OrderRecord {
   propertyId: string | null;
   /** Published listing; set for buyer / enquiry orders (and optionally owner). */
   listingId: string | null;
+  /** Authenticated user for public catalog checkout (K EC 1.38). */
+  userId: string | null;
   packageCode: string | null;
   status: OrderStatus;
   itemCodes: string[];

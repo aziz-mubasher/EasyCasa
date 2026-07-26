@@ -67,7 +67,12 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 ## Phase 5 — billing / notifications
 | Variable | Used by | Notes |
 |---|---|---|
-| STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET | api | Stripe server key + webhook signing secret. Empty = billing disabled safely. |
+| STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET | api | Stripe server key + webhook signing secret. Empty = billing disabled safely. **Live keys (`sk_live_*`) refuse boot unless `GO_LIVE_PAYMENTS_ACK=true`.** |
+| PAYMENTS_ENABLED | api | `true` enables fixed-fee catalog checkout + Stripe PaymentIntents (test mode first). Requires `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET`. Default `false`. |
+| GO_LIVE_PAYMENTS_ACK | api | Explicit human ack before accepting `sk_live_*`. Default `false`. |
+| PAYMENTS_SUCCESS_URL / PAYMENTS_CANCEL_URL | api | Redirect targets for embedded checkout return (web success/cancel pages). |
+| NEXT_PUBLIC_PAYMENTS_ENABLED | web (build) | Shows pay path on `/pricing`. Must match API `PAYMENTS_ENABLED`. Rebuild web after changing. |
+| NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY | web (build) | Stripe `pk_test_*` / `pk_live_*` for Payment Element. Never commit real keys. |
 | BILLING_SUCCESS_URL / BILLING_CANCEL_URL | api | Checkout redirect targets. |
 | CURRENCY | api | Default charge currency (e.g. `eur`). |
 | SMTP_URL / NOTIFY_FROM | api | Email transport (console fallback when unset). |

@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import type { CatalogItemRow, ServicePackageRow } from '@/lib/api';
-import { requestServiceQuote } from '@/lib/api';
+import { requestServiceQuote, type QuoteRequestBody } from '@/lib/api';
 import { DEFAULT_PROPERTY_VALUE_EUR } from '@/lib/pricing-config';
 
 import { SavingsComparison } from './SavingsComparison';
@@ -25,6 +25,7 @@ export function PricingPageView({ locale, items, packages }: Props) {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [quote, setQuote] = useState<Awaited<ReturnType<typeof requestServiceQuote>> | null>(null);
+  const [quoteRequest, setQuoteRequest] = useState<QuoteRequestBody | null>(null);
   const [quoteBusy, setQuoteBusy] = useState(false);
   const [quoteError, setQuoteError] = useState<string | null>(null);
 
@@ -73,11 +74,13 @@ export function PricingPageView({ locale, items, packages }: Props) {
     setQuoteBusy(true);
     setQuoteError(null);
     try {
-      const result = await requestServiceQuote({
+      const body: QuoteRequestBody = {
         items: itemList.length > 0 ? itemList : undefined,
         packageCode: selectedPackage ?? undefined,
         referenceValueCents: DEFAULT_PROPERTY_VALUE_EUR * 100,
-      });
+      };
+      const result = await requestServiceQuote(body);
+      setQuoteRequest(body);
       setQuote(result);
       setQuoteOpen(true);
     } catch (err) {
@@ -111,6 +114,7 @@ export function PricingPageView({ locale, items, packages }: Props) {
       <PricingQuotePanel
         locale={locale}
         quote={quote}
+        quoteRequest={quoteRequest}
         open={quoteOpen}
         onClose={() => setQuoteOpen(false)}
         catalogByCode={catalogByCode}

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
@@ -39,6 +39,28 @@ export class DrizzleInvoiceRepository implements InvoiceRepository {
 
   async get(id: string): Promise<InvoiceRecord | null> {
     const rows = await this.db.select().from(invoices).where(eq(invoices.id, id)).limit(1);
+    const row = rows[0];
+    if (!row) return null;
+    return {
+      id: row.id,
+      orderId: row.orderId,
+      paymentIntentId: row.paymentIntentId,
+      totaleDocumentoCents: row.totaleDocumentoCents,
+      sdiProtocollo: row.sdiProtocollo,
+      transmittedAt: row.transmittedAt ? row.transmittedAt.toISOString() : null,
+      invoice: row.payload as unknown as Invoice,
+    };
+  }
+
+  async findByOrderAndPaymentIntent(
+    orderId: string,
+    paymentIntentId: string,
+  ): Promise<InvoiceRecord | null> {
+    const rows = await this.db
+      .select()
+      .from(invoices)
+      .where(and(eq(invoices.orderId, orderId), eq(invoices.paymentIntentId, paymentIntentId)))
+      .limit(1);
     const row = rows[0];
     if (!row) return null;
     return {

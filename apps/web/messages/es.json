@@ -426,7 +426,35 @@
       "sendEmail": "Enviar solicitud por email",
       "emailHint": "Abre tu correo con el resumen — sin cargo.",
       "emailSubject": "Solicitud de presupuesto EasyCasa",
-      "emailIntro": "Buenos días, me gustaría un presupuesto para los siguientes servicios EasyCasa:"
+      "emailIntro": "Buenos días, me gustaría un presupuesto para los siguientes servicios EasyCasa:",
+      "cardPayable": "Pago con tarjeta (solo tarifas fijas)",
+      "proceedPay": "Proceder al pago",
+      "payBusy": "Preparando checkout…",
+      "payFailed": "No se pudo iniciar el pago",
+      "payHint": "Comisión y repercusión no se cobran online.",
+      "payModeNote": "En modo test puedes pagar online servicios de tarifa fija; la mediación sigue en presupuesto."
+    },
+    "checkout": {
+      "title": "Completar pago",
+      "subtitle": "Pago seguro con Stripe (modo test). IVA 22% en servicios EasyCasa.",
+      "total": "Importe a pagar",
+      "pay": "Pagar ahora",
+      "busy": "Cargando…",
+      "failed": "Pago fallido",
+      "signInRequired": "Inicia sesión para pagar servicios.",
+      "stripeMissing": "Clave publicable de Stripe no configurada.",
+      "invalidSession": "Sesión de checkout ausente — vuelve a precios e inténtalo de nuevo."
+    },
+    "paymentResult": {
+      "successTitle": "Pago recibido",
+      "successBody": "Gracias. Al confirmarse el pago, el pedido avanza y hay vista previa de factura.",
+      "orderStatus": "Estado del pedido",
+      "orderTotal": "Total debido ahora",
+      "invoicePreview": "Abrir vista previa factura (JSON)",
+      "backPricing": "Volver a precios",
+      "cancelTitle": "Pago cancelado",
+      "cancelBody": "No se ha cobrado nada. Puedes volver a precios o pedir presupuesto por email.",
+      "loadFailed": "No se pudo cargar el estado del pedido"
     }
   },
   "valuationBand": {
