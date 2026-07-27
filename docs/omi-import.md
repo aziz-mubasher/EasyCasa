@@ -19,7 +19,24 @@ On the VPS (or any Postgres with PostGIS):
 
 ```bash
 psql "$DATABASE_URL" -f migration/sql/0026_omi_quotes_extended.sql
+psql "$DATABASE_URL" -f migration/sql/0031_omi_zone_quotes.sql
 ```
+
+## Phase 27.1 national seed (zone + comune median)
+
+Preferred path for nationwide coverage: load the pre-built seed under
+[`migration/omi/`](../migration/omi/README.md) (2025/2 derived from Entratel
+VALORI+ZONE). That creates `omi_zone_quotes` and upserts derived comune medians
+into `omi_quotes` with `basis=zone_median`.
+
+```bash
+cd migration/omi
+gunzip -k -f omi_quotes.csv.gz omi_zone_quotes.csv.gz
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f load.sql
+```
+
+Use `omi:import` below when you have a single open-licence CSV (or counsel-approved
+VALORI) and want row-level microzone upserts instead of the median rollup.
 
 ## Download data (human)
 

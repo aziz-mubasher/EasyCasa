@@ -543,6 +543,9 @@ export const omiQuotes = pgTable(
     stato: text('stato').notNull().default(''),
     rectified: boolean('rectified').notNull().default(false),
     geoLevel: text('geo_level').notNull().default('microzone'),
+    /** source_row = imported CSV; zone_median = derived comune rollup (Phase 27.1). */
+    basis: text('basis').notNull().default('source_row'),
+    zonesUsed: integer('zones_used').notNull().default(1),
     licenceUrl: text('licence_url'),
     attribution: text('attribution').notNull().default('Fonte: Agenzia delle Entrate – OMI'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -557,6 +560,44 @@ export const omiQuotes = pgTable(
       table.type,
       table.stato,
       table.codTip,
+    ),
+  }),
+);
+
+/** Verbatim zone-level OMI bands (Phase 27.1). geom filled later from open-licence perimeters. */
+export const omiZoneQuotes = pgTable(
+  'omi_zone_quotes',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    period: text('period').notNull(),
+    linkZona: text('link_zona').notNull(),
+    regione: text('regione').notNull(),
+    provincia: text('provincia').notNull(),
+    comuneIstat: text('comune_istat'),
+    comuneCat: text('comune_cat').notNull(),
+    comune: text('comune').notNull(),
+    zona: text('zona').notNull(),
+    zonaDescr: text('zona_descr'),
+    fascia: text('fascia').notNull(),
+    microzona: text('microzona'),
+    codTip: text('cod_tip').notNull(),
+    descrTipologia: text('descr_tipologia').notNull(),
+    stato: text('stato').notNull(),
+    prevalent: boolean('prevalent').notNull(),
+    saleMinPerM2Cents: integer('sale_min_per_m2_cents').notNull(),
+    saleMaxPerM2Cents: integer('sale_max_per_m2_cents').notNull(),
+    saleSurfaceBasis: text('sale_surface_basis'),
+    rentMinPerM2Cents: integer('rent_min_per_m2_cents'),
+    rentMaxPerM2Cents: integer('rent_max_per_m2_cents'),
+    rentSurfaceBasis: text('rent_surface_basis'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    naturalKey: uniqueIndex('omi_zone_quotes_natural_uidx').on(
+      table.period,
+      table.linkZona,
+      table.codTip,
+      table.stato,
     ),
   }),
 );
