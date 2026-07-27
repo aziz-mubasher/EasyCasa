@@ -348,13 +348,15 @@
     }
   },
   "banks4AllReferral": {
-    "cardTitle": "Can you afford this home?",
-    "cardBody": "Before viewings, find out what you can genuinely finance with a consultant-prepared Property Investment Plan — evidence-based, in your language. Interest-free (NIB) paths are available too.",
-    "cardNewcomerNote": "Banks4All supports EU and non-EU residents, residence permits, and foreign income — with no fees from agencies or sellers.",
-    "cardCta": "See what you could finance with Banks4All",
-    "inlineBeforeLink": "Want to know if you qualify for a mortgage?",
-    "inlineLink": "Check with Banks4All",
-    "footerLink": "Mortgage & financing qualification",
+    "heroTitle": "Can you afford this home?",
+    "heroFreeBadge": "Free — no cost",
+    "heroBody": "Get a consultant-issued Property Investment Plan based on your documents — know exactly what you can afford before viewings. Interest-free (NIB) options are available. Free service with free signup on the Banks4All portal.",
+    "heroNewcomerNote": "Specialists for newcomers, expats, and non-EU residents — EU and non-EU income, residence permits, and cross-border cases. No agency or seller fees on this service.",
+    "heroPrimaryCta": "Get your free plan",
+    "heroSecondaryCta": "Learn more",
+    "inlineBeforeLink": "Not sure what you can afford yet?",
+    "inlineLink": "Request your free plan on Banks4All",
+    "footerLink": "Free financing qualification (Banks4All)",
     "externalHint": "Opens on {host} in a new tab"
   },
   "footer": {

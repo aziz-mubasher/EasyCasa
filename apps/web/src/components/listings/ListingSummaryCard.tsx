@@ -6,7 +6,6 @@ import {
   type ParsedListingDetail,
 } from '@/lib/listing-detail';
 import { ListingPriceLines } from '@/components/listings/ListingFactsTable';
-import { Banks4AllFinancingReferral } from '@/components/financing/Banks4AllFinancingReferral';
 
 type FactRow = { label: string; value: string };
 
@@ -90,8 +89,6 @@ export async function ListingSummaryCard({
   const t = await getTranslations('listingDetail');
   const tf = await getTranslations('search.filters');
   const rows = await summaryFactRows(listing, locale);
-  const showFinancingReferral = listingShowsSale(listing.transactionTypes, listing.transactionType);
-
   return (
     <div className="rounded-xl2 border border-line bg-paper p-5 sm:p-6 shadow-sm space-y-5 h-full lg:sticky lg:top-28">
       <div>
@@ -101,11 +98,6 @@ export async function ListingSummaryCard({
         <div className="mt-3">
           <ListingPriceLines listing={listing} locale={locale} />
         </div>
-        {showFinancingReferral ? (
-          <div className="mt-4">
-            <Banks4AllFinancingReferral variant="card" />
-          </div>
-        ) : null}
       </div>
 
       {rows.length > 0 ? (
