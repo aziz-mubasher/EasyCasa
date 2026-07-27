@@ -87,6 +87,8 @@ export function AffordThisHomeReferralBlock({ className = '' }: Props) {
             {t('heroTitle')}
           </h2>
           <p className="text-sm text-muted leading-relaxed">{t('heroBody')}</p>
+          <p className="text-xs text-muted leading-relaxed">{t('heroTrustLine')}</p>
+          <p className="text-xs text-muted leading-relaxed">{t('heroAvailabilityLine')}</p>
           <p className="text-xs text-muted leading-relaxed">{t('heroNewcomerNote')}</p>
           <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap sm:items-center">
             <a

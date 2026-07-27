@@ -30,6 +30,20 @@ describe('email templates', () => {
     expect(r.text).toContain('E disponibile?');
   });
 
+  it('enquiry->owner includes phone and WhatsApp preference', () => {
+    const r = t.enquiryReceivedOwner({
+      ownerName: 'Luca',
+      seekerName: 'Anna',
+      seekerEmail: 'anna@e.it',
+      seekerPhone: '+39 333 123 4567',
+      contactWhatsappAvailable: true,
+      listingTitle: 'Trilocale',
+      message: 'When can we visit?',
+    });
+    expect(r.text).toContain('+39 333 123 4567');
+    expect(r.text).toContain('WhatsApp');
+  });
+
   it('viewing confirmed shows address + local time', () => {
     const r = t.viewingConfirmed({
       seekerName: 'Anna',

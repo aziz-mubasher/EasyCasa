@@ -84,6 +84,7 @@ describe('enquiry routing + conversion', () => {
       message: 'x',
       contactEmail: 'a@b.it',
       contactPhone: null,
+      contactWhatsappAvailable: false,
       orderId: null,
       ...over,
     };

@@ -49,6 +49,7 @@ export class EnquiriesService {
       message: string;
       contactEmail?: string | null;
       contactPhone?: string | null;
+      contactWhatsappAvailable?: boolean;
     },
   ): Promise<Enquiry> {
     await assertEnquiryConsents(this.consent, seekerUserId);
@@ -59,6 +60,10 @@ export class EnquiriesService {
       throw new ConflictException('Listing has no owner to route the enquiry to');
     }
 
+    const contactPhone = input.contactPhone?.trim() || null;
+    const contactWhatsappAvailable =
+      Boolean(input.contactWhatsappAvailable) && contactPhone != null;
+
     const enquiry = await this.repo.create({
       listingId: parties.listingId,
       seekerUserId,
@@ -67,7 +72,8 @@ export class EnquiriesService {
       intent: input.intent,
       message: input.message,
       contactEmail: input.contactEmail ?? null,
-      contactPhone: input.contactPhone ?? null,
+      contactPhone,
+      contactWhatsappAvailable,
     });
 
     const routing = planEnquiryRouting(input.intent, parties);
@@ -145,6 +151,8 @@ export class EnquiriesService {
         ownerName: owner.displayName ?? 'Agente',
         seekerName,
         seekerEmail: seekerEmail ?? '—',
+        seekerPhone: enquiry.contactPhone,
+        contactWhatsappAvailable: enquiry.contactWhatsappAvailable,
         listingTitle: parties.title,
         message: enquiry.message,
       });

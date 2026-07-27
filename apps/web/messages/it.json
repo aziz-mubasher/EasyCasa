@@ -177,7 +177,33 @@
       "whatsapp": "WhatsApp",
       "cta": "Contatta",
       "formTitle": "Invia una richiesta",
-      "close": "Chiudi"
+      "close": "Chiudi",
+      "enquiry": {
+        "defaultMessage": "Sono interessato/a a: {title}",
+        "emailLabel": "La tua email",
+        "phoneLabel": "Numero di telefono",
+        "phonePlaceholder": "+39 333 123 4567",
+        "phoneHint": "Facoltativo. Includi il prefisso internazionale se non è un numero italiano.",
+        "whatsappLabel": "WhatsApp disponibile su questo numero",
+        "messageLabel": "Messaggio",
+        "privacyConsentBefore": "Ho letto l'",
+        "privacyLink": "informativa privacy",
+        "privacyConsentAfter": " (versione {version}). Acconsento che EasyCasa usi email, telefono e preferenza WhatsApp per gestire questa richiesta.",
+        "mediationConsentBefore": "Prendo visione della ",
+        "mediationLink": "disclosure di mediazione e provvigione",
+        "mediationConsentAfter": ".",
+        "submit": "Contatta",
+        "submitting": "Invio…",
+        "success": "Richiesta inviata. Ti contatteremo a breve.",
+        "signInPrompt": "Accedi per inviare la richiesta con consenso privacy e disclosure di mediazione.",
+        "errorSignIn": "Accedi per inviare la richiesta.",
+        "errorConsent": "Accetta informativa privacy e disclosure di mediazione per continuare.",
+        "errorSession": "Sessione scaduta. Accedi di nuovo.",
+        "errorPolicyVersion": "Versione policy non disponibile",
+        "errorConsentRecord": "Consenso non registrato",
+        "errorPhoneInvalid": "Inserisci un numero di telefono valido (cifre, spazi, +, -, parentesi).",
+        "errorGeneric": "Invio non riuscito"
+      }
     },
     "energy": {
       "apeNote": "Attestato di Prestazione Energetica (APE) — classe energetica dell’immobile."
@@ -350,8 +376,10 @@
   "banks4AllReferral": {
     "heroTitle": "Puoi permetterti questa casa?",
     "heroFreeBadge": "Servizio gratuito",
-    "heroBody": "Ottieni un Piano di Investimento Immobiliare redatto da un consulente, basato sui tuoi documenti — scopri con precisione cosa puoi permetterti prima delle visite. Disponibili anche opzioni senza interessi (NIB). Servizio gratuito con registrazione gratuita sul portale Banks4All.",
-    "heroNewcomerNote": "Specialisti per nuovi arrivati, expat e residenti non UE — redditi UE ed extra-UE, permessi di soggiorno e casi transfrontalieri. Nessuna commissione da agenzie o venditori su questo servizio.",
+    "heroBody": "Prima di fissare le visite, scopri cosa puoi permetterti davvero — risparmi tempo e ti concentri solo sulle case alla tua portata. Anche per chi vende è un vantaggio: gli acquirenti con un piano Banks4All sono già valutati, con meno visite inutili e trattative più rapide e trasparenti per tutti.",
+    "heroTrustLine": "Banks4All è una valutazione indipendente di accessibilità immobiliare svolta da consulenti finanziari certificati OAM. È distinta da EasyCasa e non percepisce commissioni da agenzie o venditori.",
+    "heroAvailabilityLine": "Gratuito, disponibile entro le prossime 12 ore.",
+    "heroNewcomerNote": "Pensato anche per nuovi arrivati ed expat — redditi UE ed extra-UE, permessi di soggiorno e situazioni transfrontaliere.",
     "heroPrimaryCta": "Richiedi il tuo piano gratuito",
     "heroSecondaryCta": "Scopri di più",
     "inlineBeforeLink": "Non sai ancora quanto puoi permetterti?",

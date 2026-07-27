@@ -177,7 +177,33 @@
       "whatsapp": "WhatsApp",
       "cta": "Contact",
       "formTitle": "Send an enquiry",
-      "close": "Close"
+      "close": "Close",
+      "enquiry": {
+        "defaultMessage": "I'm interested in: {title}",
+        "emailLabel": "Your email",
+        "phoneLabel": "Phone number",
+        "phonePlaceholder": "+39 333 123 4567",
+        "phoneHint": "Optional. Include country code for international numbers.",
+        "whatsappLabel": "WhatsApp available on this number",
+        "messageLabel": "Message",
+        "privacyConsentBefore": "I have read the ",
+        "privacyLink": "privacy policy",
+        "privacyConsentAfter": " (version {version}). I agree that EasyCasa may use my email, phone number, and WhatsApp preference to handle this enquiry.",
+        "mediationConsentBefore": "I have read the ",
+        "mediationLink": "mediation and commission disclosure",
+        "mediationConsentAfter": ".",
+        "submit": "Contact",
+        "submitting": "Sending…",
+        "success": "Enquiry sent. We'll be in touch shortly.",
+        "signInPrompt": "Sign in to send an enquiry with privacy and mediation consent.",
+        "errorSignIn": "Sign in to send your enquiry.",
+        "errorConsent": "Accept the privacy policy and mediation disclosure to continue.",
+        "errorSession": "Session expired. Please sign in again.",
+        "errorPolicyVersion": "Policy version unavailable",
+        "errorConsentRecord": "Consent could not be recorded",
+        "errorPhoneInvalid": "Enter a valid phone number (digits, spaces, +, -, parentheses).",
+        "errorGeneric": "Could not send enquiry"
+      }
     },
     "energy": {
       "apeNote": "Attestato di Prestazione Energetica (APE) — Italian energy performance certificate class."
@@ -350,8 +376,10 @@
   "banks4AllReferral": {
     "heroTitle": "Can you afford this home?",
     "heroFreeBadge": "Free — no cost",
-    "heroBody": "Get a consultant-issued Property Investment Plan based on your documents — know exactly what you can afford before viewings. Interest-free (NIB) options are available. Free service with free signup on the Banks4All portal.",
-    "heroNewcomerNote": "Specialists for newcomers, expats, and non-EU residents — EU and non-EU income, residence permits, and cross-border cases. No agency or seller fees on this service.",
+    "heroBody": "Before you book viewings, find out what you can really afford — so you save time and only focus on homes within reach. Sellers benefit too: buyers who arrive with a Banks4All plan have already been assessed, which means fewer wasted visits and smoother, more trustworthy conversations for everyone.",
+    "heroTrustLine": "Banks4All is an independent property-affordability evaluation carried out by OAM-certified financial consultants. It is separate from EasyCasa and takes no fee from agencies or sellers.",
+    "heroAvailabilityLine": "Free, and available within the next 12 hours.",
+    "heroNewcomerNote": "Welcoming to newcomers and expats — EU and non-EU income, residence permits, and cross-border cases are all in scope.",
     "heroPrimaryCta": "Get your free plan",
     "heroSecondaryCta": "Learn more",
     "inlineBeforeLink": "Not sure what you can afford yet?",

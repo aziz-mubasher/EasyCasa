@@ -31,6 +31,7 @@ export const EnquirySchema = z.object({
   message: z.string(),
   contactEmail: z.string().nullable(),
   contactPhone: z.string().nullable(),
+  contactWhatsappAvailable: z.boolean(),
   orderId: z.string().nullable(),
 });
 export type Enquiry = z.infer<typeof EnquirySchema>;
@@ -55,6 +56,7 @@ export class EasyCasaEnquiriesApi {
       message: string;
       contactEmail?: string;
       contactPhone?: string;
+      contactWhatsappAvailable?: boolean;
     },
   ): Promise<Enquiry> {
     return this.request(`/listings/${encodeURIComponent(listingId)}/enquiries`, EnquirySchema, {
