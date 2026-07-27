@@ -6,6 +6,7 @@ import {
   pricePerSqm,
   type ParsedListingDetail,
 } from '@/lib/listing-detail';
+import { formatProvinceName } from '@/lib/province-display';
 
 type FactRow = { label: string; value: string };
 
@@ -15,7 +16,8 @@ export async function ListingFactsTable({ listing, locale }: { listing: ParsedLi
 
   const rows: FactRow[] = [];
 
-  if (listing.province) rows.push({ label: t('facts.province'), value: listing.province });
+  const provinceName = formatProvinceName(listing.province);
+  if (provinceName) rows.push({ label: t('facts.province'), value: provinceName });
   if (listing.city) rows.push({ label: t('facts.city'), value: listing.city });
   const rooms = listing.rooms ?? listing.bedrooms;
   if (rooms != null) rows.push({ label: t('facts.rooms'), value: String(rooms) });

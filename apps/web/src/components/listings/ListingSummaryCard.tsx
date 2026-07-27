@@ -6,6 +6,7 @@ import {
   type ParsedListingDetail,
 } from '@/lib/listing-detail';
 import { ListingPriceLines } from '@/components/listings/ListingFactsTable';
+import { formatProvinceName } from '@/lib/province-display';
 
 type FactRow = { label: string; value: string };
 
@@ -15,7 +16,8 @@ async function summaryFactRows(listing: ParsedListingDetail, locale: string): Pr
   const ts = await getTranslations('search.filters');
   const rows: FactRow[] = [];
 
-  if (listing.province) rows.push({ label: t('facts.province'), value: listing.province });
+  const provinceName = formatProvinceName(listing.province);
+  if (provinceName) rows.push({ label: t('facts.province'), value: provinceName });
   if (listing.city) rows.push({ label: t('facts.city'), value: listing.city });
   if (listing.address) rows.push({ label: t('facts.address'), value: listing.address });
 

@@ -8,6 +8,7 @@
     "add": "Pubblica annuncio",
     "favorites": "Preferiti",
     "pricing": "Prezzi",
+    "b4aPlan": "B4A Plan",
     "signin": "Accedi",
     "signout": "Esci"
   },
@@ -186,9 +187,8 @@
         "phonePlaceholderLocal": "333 123 4567",
         "phoneNationalLabel": "Cellulare o fisso",
         "countryCodeLabel": "Prefisso internazionale",
-        "phoneHint": "Predefinito Italia (+39). Scegli un altro prefisso se serve — necessario per WhatsApp.",
+        "phoneHint": "Predefinito Italia (+39). Scegli un altro prefisso se serve.",
         "whatsappLabel": "WhatsApp disponibile su questo numero",
-        "whatsappNeedPhone": "Inserisci il numero di telefono per usare WhatsApp.",
         "messageLabel": "Messaggio",
         "privacyConsentBefore": "Ho letto l'",
         "privacyLink": "informativa privacy",
@@ -206,7 +206,6 @@
         "errorPolicyVersion": "Versione policy non disponibile",
         "errorConsentRecord": "Consenso non registrato",
         "errorPhoneInvalid": "Inserisci un numero di telefono valido (cifre, spazi, +, -, parentesi).",
-        "errorWhatsappNeedPhone": "Inserisci il numero di telefono prima di indicare WhatsApp.",
         "errorGeneric": "Invio non riuscito"
       }
     },

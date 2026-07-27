@@ -12,6 +12,7 @@ import { ListingValuationGate } from '@/components/listings/ListingValuationGate
 import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 import { MapView } from '@/components/search/MapView';
 import { listingShowsSale } from '@/lib/listing-detail';
+import { formatProvinceName } from '@/lib/province-display';
 import type { ListingSummary } from '@easycasa/shared';
 
 export default async function ListingPage({
@@ -26,7 +27,8 @@ export default async function ListingPage({
   const listing = parseListingDetail(raw, slug);
   const t = await getTranslations('listingDetail');
 
-  const locationLine = [listing.city, listing.province].filter(Boolean).join(' · ');
+  const provinceName = formatProvinceName(listing.province);
+  const locationLine = [listing.city, provinceName].filter(Boolean).join(' · ');
   const hasLocation = listing.latitude != null && listing.longitude != null;
   const hasDescription = Boolean(listing.description);
   const pagePath = `/${locale}/listings/${listing.slug}`;

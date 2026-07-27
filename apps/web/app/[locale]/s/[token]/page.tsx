@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 
 import { SmartLinkContent } from '@/components/smartlink/SmartLinkContent';
 import { fetchSmartLinkPublic, SMARTLINK_VISITOR_COOKIE } from '@/lib/smartlink';
+import { formatProvinceName } from '@/lib/province-display';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://easycasaita.com';
 
@@ -23,7 +24,7 @@ export async function generateMetadata({
     l.price != null
       ? new Intl.NumberFormat(locale, { style: 'currency', currency: l.currency || 'EUR', maximumFractionDigits: 0 }).format(l.price)
       : '';
-  const location = [l.city, l.province].filter(Boolean).join(', ');
+  const location = [l.city, formatProvinceName(l.province)].filter(Boolean).join(', ');
   const description = [pricePart, location].filter(Boolean).join(' · ');
   const image = l.coverUrl ?? l.media[0]?.url ?? undefined;
 

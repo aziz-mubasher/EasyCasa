@@ -13,6 +13,7 @@ import { SmartLinkViewRecorder } from '@/components/smartlink/SmartLinkViewRecor
 import { fetchSmartLinkPublic, SMARTLINK_VISITOR_COOKIE, smartLinkPublicUrl } from '@/lib/smartlink';
 import { smartLinkListingToDetail, smartLinkPhotoUrls } from '@/lib/smartlink-listing';
 import { valuationBandEnabled } from '@/lib/valuation-band';
+import { formatProvinceName } from '@/lib/province-display';
 
 export async function SmartLinkContent({ token, locale }: { token: string; locale: string }) {
   const t = await getTranslations('smartlink');
@@ -38,7 +39,7 @@ export async function SmartLinkContent({ token, locale }: { token: string; local
   const photoUrls = smartLinkPhotoUrls(listing);
   const publicUrl = smartLinkPublicUrl(token, locale);
   const listingSlug = listing.slug;
-  const locationLine = [listing.city, listing.province].filter(Boolean).join(' · ');
+  const locationLine = [listing.city, formatProvinceName(listing.province)].filter(Boolean).join(' · ');
 
   const showValuation =
     valuationBandEnabled() && data.includeValuationBand && data.valuationBand != null;

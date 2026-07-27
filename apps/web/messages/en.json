@@ -8,6 +8,7 @@
     "add": "List a property",
     "favorites": "Favorites",
     "pricing": "Pricing",
+    "b4aPlan": "B4A Plan",
     "signin": "Sign in",
     "signout": "Sign out"
   },
@@ -186,9 +187,8 @@
         "phonePlaceholderLocal": "333 123 4567",
         "phoneNationalLabel": "Mobile or landline number",
         "countryCodeLabel": "Country code",
-        "phoneHint": "Default is Italy (+39). Pick another country code if needed — required for WhatsApp.",
+        "phoneHint": "Default Italy (+39). Choose another code if needed.",
         "whatsappLabel": "WhatsApp available on this number",
-        "whatsappNeedPhone": "Enter the phone number to use WhatsApp.",
         "messageLabel": "Message",
         "privacyConsentBefore": "I have read the ",
         "privacyLink": "privacy policy",
@@ -206,7 +206,6 @@
         "errorPolicyVersion": "Policy version unavailable",
         "errorConsentRecord": "Consent could not be recorded",
         "errorPhoneInvalid": "Enter a valid phone number (digits, spaces, +, -, parentheses).",
-        "errorWhatsappNeedPhone": "Enter your phone number before marking WhatsApp as available.",
         "errorGeneric": "Could not send enquiry"
       }
     },

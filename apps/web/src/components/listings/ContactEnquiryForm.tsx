@@ -12,7 +12,6 @@ import { DEFAULT_DIAL_CODE, ENQUIRY_DIAL_CODES } from '@/lib/enquiry-dial-codes'
 import {
   composeEnquiryPhone,
   enquiryPhoneForSubmit,
-  hasUsableNationalNumber,
   isPlausibleEnquiryPhone,
 } from '@/lib/enquiry-phone';
 
@@ -38,7 +37,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
   const [email, setEmail] = useState('');
   const [dialCode, setDialCode] = useState(DEFAULT_DIAL_CODE);
   const [nationalNumber, setNationalNumber] = useState('');
-  const [whatsappOnPhone, setWhatsappOnPhone] = useState(false);
+  const [whatsappOnPhone, setWhatsappOnPhone] = useState(true);
   const [privacyOk, setPrivacyOk] = useState(false);
   const [mediationOk, setMediationOk] = useState(false);
   const [policyVersion, setPolicyVersion] = useState<string | null>(null);
@@ -49,7 +48,6 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
     () => composeEnquiryPhone(dialCode, nationalNumber),
     [dialCode, nationalNumber],
   );
-  const phoneReady = hasUsableNationalNumber(nationalNumber);
 
   useEffect(() => {
     setMessage(t('defaultMessage', { title: listingTitle }));
@@ -81,11 +79,6 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
     }
     if (!privacyOk || !mediationOk) {
       setError(t('errorConsent'));
-      setStatus('err');
-      return;
-    }
-    if (whatsappOnPhone && !phoneReady) {
-      setError(t('errorWhatsappNeedPhone'));
       setStatus('err');
       return;
     }
@@ -188,12 +181,12 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
             id={dialSelectId}
             value={dialCode}
             onChange={(e) => setDialCode(e.target.value)}
-            className="max-w-[7.5rem] shrink-0 border-r border-line bg-sand/40 py-2 pl-2 pr-1 text-sm font-medium text-ink focus:outline-none"
+            className="max-w-[5.5rem] shrink-0 border-r border-line bg-azure/10 py-2 pl-2.5 pr-1 text-sm font-medium font-[var(--font-display)] text-azure focus:outline-none"
             aria-label={t('countryCodeLabel')}
           >
             {ENQUIRY_DIAL_CODES.map((opt) => (
               <option key={`${opt.code}-${opt.iso || opt.label}`} value={opt.code}>
-                {opt.code} {opt.iso ? `(${opt.iso})` : ''}
+                {opt.code}
               </option>
             ))}
           </select>
@@ -207,7 +200,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
             placeholder={t('phonePlaceholderLocal')}
             maxLength={36}
             aria-label={t('phoneNationalLabel')}
-            aria-invalid={error === t('errorPhoneInvalid') || error === t('errorWhatsappNeedPhone') ? true : undefined}
+            aria-invalid={error === t('errorPhoneInvalid') ? true : undefined}
           />
         </div>
         <span className="mt-1 block text-xs text-muted">{t('phoneHint')}</span>
@@ -223,9 +216,6 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
         />
         <label htmlFor={`${dialSelectId}-whatsapp`} className="cursor-pointer select-none">
           {t('whatsappLabel')}
-          {!phoneReady && whatsappOnPhone ? (
-            <span className="mt-0.5 block text-xs text-muted">{t('whatsappNeedPhone')}</span>
-          ) : null}
         </label>
       </div>
 
