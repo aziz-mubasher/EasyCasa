@@ -46,6 +46,7 @@ function toDomain(r: Row): Enquiry {
     message: r.message,
     contactEmail: r.contactEmail,
     contactPhone: r.contactPhone,
+    contactWhatsappAvailable: r.contactWhatsappAvailable,
     orderId: r.orderId,
   };
 }
@@ -63,6 +64,7 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
     message: string;
     contactEmail: string | null;
     contactPhone: string | null;
+    contactWhatsappAvailable: boolean;
   }): Promise<Enquiry> {
     const [r] = await this.db
       .insert(enquiries)
@@ -76,6 +78,7 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
         message: input.message,
         contactEmail: input.contactEmail,
         contactPhone: input.contactPhone,
+        contactWhatsappAvailable: input.contactWhatsappAvailable,
       })
       .returning();
     return toDomain(r);

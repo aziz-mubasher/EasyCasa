@@ -23,6 +23,7 @@ export interface Enquiry {
   message: string;
   contactEmail: string | null;
   contactPhone: string | null;
+  contactWhatsappAvailable: boolean;
   orderId: string | null;
 }
 

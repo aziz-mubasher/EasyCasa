@@ -21,6 +21,7 @@ export class DrizzleRetentionSink implements RetentionSink {
         message: '[anonymized]',
         contactEmail: null,
         contactPhone: null,
+        contactWhatsappAvailable: false,
         updatedAt: new Date(),
       })
       .where(

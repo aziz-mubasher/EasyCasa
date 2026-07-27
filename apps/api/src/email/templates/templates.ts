@@ -46,24 +46,41 @@ export interface EnquiryOwnerParams {
   ownerName: string;
   seekerName: string;
   seekerEmail: string;
+  seekerPhone?: string | null;
+  contactWhatsappAvailable?: boolean;
   listingTitle: string;
   message: string;
 }
+
+function formatSeekerContact(p: EnquiryOwnerParams): string {
+  const parts = [p.seekerEmail];
+  if (p.seekerPhone) {
+    parts.push(p.seekerPhone);
+    if (p.contactWhatsappAvailable) parts.push('WhatsApp on this number');
+  }
+  return parts.filter(Boolean).join(', ');
+}
+
 export function enquiryReceivedOwner(p: EnquiryOwnerParams, locale: Locale = 'it'): Rendered {
+  const contactLine = formatSeekerContact(p);
   if (locale === 'en') {
     return {
       subject: `New enquiry — ${p.listingTitle}`,
-      text: `Hi ${p.ownerName},\n\n${p.seekerName} (${p.seekerEmail}) enquired about "${p.listingTitle}":\n\n"${p.message}"\n\nReply directly to get in touch.\n\n— EasyCasa`,
+      text: `Hi ${p.ownerName},\n\n${p.seekerName} (${contactLine}) enquired about "${p.listingTitle}":\n\n"${p.message}"\n\nReply directly to get in touch.\n\n— EasyCasa`,
       html: wrap(
-        `<p>Hi ${esc(p.ownerName)},</p><p><strong>${esc(p.seekerName)}</strong> (${esc(p.seekerEmail)}) enquired about <strong>${esc(p.listingTitle)}</strong>:</p><blockquote>${esc(p.message)}</blockquote>`,
+        `<p>Hi ${esc(p.ownerName)},</p><p><strong>${esc(p.seekerName)}</strong> (${esc(contactLine)}) enquired about <strong>${esc(p.listingTitle)}</strong>:</p><blockquote>${esc(p.message)}</blockquote>`,
       ),
     };
   }
+  const whatsappNote = p.contactWhatsappAvailable ? ' — WhatsApp su questo numero' : '';
+  const contactIt = p.seekerPhone
+    ? `${p.seekerEmail}, ${p.seekerPhone}${whatsappNote}`
+    : p.seekerEmail;
   return {
     subject: `Nuova richiesta — ${p.listingTitle}`,
-    text: `Ciao ${p.ownerName},\n\n${p.seekerName} (${p.seekerEmail}) ha inviato una richiesta per "${p.listingTitle}":\n\n"${p.message}"\n\nRispondi per metterti in contatto.\n\n— EasyCasa`,
+    text: `Ciao ${p.ownerName},\n\n${p.seekerName} (${contactIt}) ha inviato una richiesta per "${p.listingTitle}":\n\n"${p.message}"\n\nRispondi per metterti in contatto.\n\n— EasyCasa`,
     html: wrap(
-      `<p>Ciao ${esc(p.ownerName)},</p><p><strong>${esc(p.seekerName)}</strong> (${esc(p.seekerEmail)}) ha inviato una richiesta per <strong>${esc(p.listingTitle)}</strong>:</p><blockquote>${esc(p.message)}</blockquote>`,
+      `<p>Ciao ${esc(p.ownerName)},</p><p><strong>${esc(p.seekerName)}</strong> (${esc(contactIt)}) ha inviato una richiesta per <strong>${esc(p.listingTitle)}</strong>:</p><blockquote>${esc(p.message)}</blockquote>`,
     ),
   };
 }

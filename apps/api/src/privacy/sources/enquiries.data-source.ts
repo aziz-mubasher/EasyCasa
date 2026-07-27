@@ -66,6 +66,7 @@ export class EnquiriesDataSource implements PersonalDataSource {
           message: '[anonymized]',
           contactEmail: null,
           contactPhone: null,
+          contactWhatsappAvailable: false,
           updatedAt: new Date(),
         })
         .where(inArray(enquiries.id, erasable))

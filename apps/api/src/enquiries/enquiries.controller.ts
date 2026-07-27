@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { IsEmail, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsBoolean, IsEmail, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
@@ -15,6 +15,7 @@ export class CreateEnquiryDto {
   @IsString() @MinLength(1) @MaxLength(2000) message!: string;
   @IsOptional() @IsEmail() contactEmail?: string;
   @IsOptional() @IsString() @MaxLength(40) contactPhone?: string;
+  @IsOptional() @IsBoolean() contactWhatsappAvailable?: boolean;
 }
 
 export class TransitionDto {

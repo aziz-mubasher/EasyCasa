@@ -170,6 +170,7 @@ export const enquiries = pgTable('enquiries', {
   message: text('message').notNull(),
   contactEmail: text('contact_email'),
   contactPhone: text('contact_phone'),
+  contactWhatsappAvailable: boolean('contact_whatsapp_available').notNull().default(false),
   orderId: uuid('order_id'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),

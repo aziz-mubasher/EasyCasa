@@ -10,6 +10,7 @@ export interface EnquiryRepository {
     message: string;
     contactEmail: string | null;
     contactPhone: string | null;
+    contactWhatsappAvailable: boolean;
   }): Promise<Enquiry>;
   get(id: string): Promise<Enquiry | null>;
   listForSeeker(seekerUserId: string): Promise<Enquiry[]>;
