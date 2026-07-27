@@ -44,11 +44,14 @@ export function DiscoveryMap({
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const [vertices, setVertices] = useState<GeoPoint[]>([]);
   const drawModeRef = useRef(drawMode);
-  drawModeRef.current = drawMode;
   const onSelectRef = useRef(onSelectListing);
-  onSelectRef.current = onSelectListing;
   const onRegionRef = useRef(onRegionChange);
-  onRegionRef.current = onRegionChange;
+
+  useEffect(() => {
+    drawModeRef.current = drawMode;
+    onSelectRef.current = onSelectListing;
+    onRegionRef.current = onRegionChange;
+  }, [drawMode, onSelectListing, onRegionChange]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -121,12 +124,10 @@ export function DiscoveryMap({
     }
   }, [clusters, drawMode, theme.colors.primary, theme.colors.primaryText]);
 
-  useEffect(() => {
-    if (!drawMode) setVertices([]);
-  }, [drawMode]);
+  const visibleVertices = drawMode ? vertices : [];
 
   const finishPolygon = () => {
-    if (vertices.length >= 3) onPolygonComplete(vertices);
+    if (visibleVertices.length >= 3) onPolygonComplete(visibleVertices);
     setVertices([]);
   };
 
@@ -136,18 +137,18 @@ export function DiscoveryMap({
       {drawMode && (
         <View style={styles.drawBar}>
           <Text style={[styles.drawHint, { color: '#fff' }]}>
-            {vertices.length < 3
+            {visibleVertices.length < 3
               ? t('discovery.drawHint')
-              : t('discovery.drawPoints', { count: vertices.length })}
+              : t('discovery.drawPoints', { count: visibleVertices.length })}
           </Text>
           <Pressable
             onPress={finishPolygon}
-            disabled={vertices.length < 3}
+            disabled={visibleVertices.length < 3}
             style={[
               styles.drawBtn,
               {
                 backgroundColor: theme.colors.primary,
-                opacity: vertices.length < 3 ? 0.5 : 1,
+                opacity: visibleVertices.length < 3 ? 0.5 : 1,
               },
             ]}
           >

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 import {
   type Lease,
   type LeaseInput,
@@ -56,8 +57,6 @@ export default function LeaseScreen() {
   const [highTension, setHighTension] = useState(false);
   const [apeAttached, setApeAttached] = useState(false);
 
-  const [preview, setPreview] = useState<LeaseValidation | null>(null);
-  const [previewBusy, setPreviewBusy] = useState(false);
   const [lease, setLease] = useState<Lease | null>(null);
   const [rli, setRli] = useState<RliPayload | null>(null);
   const [busy, setBusy] = useState(false);
@@ -81,28 +80,13 @@ export default function LeaseScreen() {
     };
   }, [type, startAt, durationMonths, annualRentEuro, cedolareSecca, highTension, apeAttached]);
 
-  useEffect(() => {
-    if (!input) {
-      setPreview(null);
-      return;
-    }
-    let cancelled = false;
-    setPreviewBusy(true);
-    void api
-      .previewLease(input)
-      .then((v) => {
-        if (!cancelled) setPreview(v);
-      })
-      .catch(() => {
-        if (!cancelled) setPreview(null);
-      })
-      .finally(() => {
-        if (!cancelled) setPreviewBusy(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [api, input]);
+  const previewQuery = useQuery({
+    queryKey: ['lease-preview', propertyId, input],
+    queryFn: () => api.previewLease(input!),
+    enabled: input != null,
+  });
+  const shownPreview: LeaseValidation | null = input ? (previewQuery.data ?? null) : null;
+  const previewBusy = previewQuery.isFetching;
 
   const selectType = (next: LeaseType) => {
     setType(next);
@@ -112,7 +96,7 @@ export default function LeaseScreen() {
   };
 
   const createAndLoadRli = async () => {
-    if (!propertyId || !input || !preview?.valid) return;
+    if (!propertyId || !input || !shownPreview?.valid) return;
     setBusy(true);
     setError(null);
     try {
@@ -144,11 +128,11 @@ export default function LeaseScreen() {
   };
 
   const cedolareLabel =
-    preview == null
+    shownPreview == null
       ? '—'
-      : preview.cedolareRate === 0
+      : shownPreview.cedolareRate === 0
         ? t('owner.lease.cedolareNone')
-        : `${(preview.cedolareRate * 100).toFixed(0)}%`;
+        : `${(shownPreview.cedolareRate * 100).toFixed(0)}%`;
 
   return (
     <ScrollView
@@ -233,26 +217,26 @@ export default function LeaseScreen() {
           {t('owner.lease.previewHeading')}
           {previewBusy ? '…' : ''}
         </Text>
-        {preview ? (
+        {shownPreview ? (
           <>
             <Text style={{ color: theme.colors.text }}>
               {t('owner.lease.cedolareRate')}: {cedolareLabel}
             </Text>
             <Text
               style={{
-                color: preview.valid ? theme.colors.primary : theme.colors.danger,
+                color: shownPreview.valid ? theme.colors.primary : theme.colors.danger,
                 fontWeight: '600',
                 marginTop: 4,
               }}
             >
-              {preview.valid ? t('owner.lease.valid') : t('owner.lease.invalid')}
+              {shownPreview.valid ? t('owner.lease.valid') : t('owner.lease.invalid')}
             </Text>
-            {preview.blockers.map((b) => (
+            {shownPreview.blockers.map((b) => (
               <Text key={b.code} style={{ color: theme.colors.danger, marginTop: 4, fontSize: 13 }}>
                 • {b.messageIt || b.messageEn}
               </Text>
             ))}
-            {preview.warnings.map((w) => (
+            {shownPreview.warnings.map((w) => (
               <Text key={w.code} style={{ color: theme.colors.textMuted, marginTop: 4, fontSize: 13 }}>
                 • {w.messageIt || w.messageEn}
               </Text>
@@ -264,14 +248,14 @@ export default function LeaseScreen() {
       </View>
 
       <Pressable
-        disabled={!preview?.valid || busy || !input}
+        disabled={!shownPreview?.valid || busy || !input}
         onPress={() => void createAndLoadRli()}
         style={[
           styles.cta,
           {
             backgroundColor: theme.colors.primary,
             borderRadius: theme.radius.md,
-            opacity: !preview?.valid || busy ? 0.5 : 1,
+            opacity: !shownPreview?.valid || busy ? 0.5 : 1,
           },
         ]}
       >
