@@ -88,8 +88,12 @@ export function AffordThisHomeReferralBlock({ className = '' }: Props) {
           </h2>
           <p className="text-sm text-muted leading-relaxed">{t('heroBody')}</p>
           <p className="text-xs text-muted leading-relaxed">{t('heroTrustLine')}</p>
-          <p className="text-xs text-muted leading-relaxed">{t('heroAvailabilityLine')}</p>
-          <p className="text-xs text-muted leading-relaxed">{t('heroNewcomerNote')}</p>
+          {t('heroAvailabilityLine') ? (
+            <p className="text-xs text-muted leading-relaxed">{t('heroAvailabilityLine')}</p>
+          ) : null}
+          {t('heroNewcomerNote') ? (
+            <p className="text-xs text-muted leading-relaxed">{t('heroNewcomerNote')}</p>
+          ) : null}
           <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap sm:items-center">
             <a
               href={portalHref}

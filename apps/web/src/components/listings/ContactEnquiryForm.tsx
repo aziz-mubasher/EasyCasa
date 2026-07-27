@@ -8,6 +8,12 @@ import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 import { RequireSignInLink } from '@/components/AuthControls';
 import { Button } from '@/components/ui/Button';
 import { Field, Input } from '@/components/ui/Field';
+import {
+  DEFAULT_ENQUIRY_PHONE,
+  enquiryPhoneForSubmit,
+  hasUsableEnquiryPhone,
+  isPlausibleEnquiryPhone,
+} from '@/lib/enquiry-phone';
 
 type Props = {
   listingId: string;
@@ -17,14 +23,16 @@ type Props = {
 
 type ConsentPurpose = 'privacy_policy' | 'mediation_disclosure';
 
-const PHONE_PATTERN = /^[\d\s+().-]{6,40}$/;
+function italianLocalPart(phone: string): string {
+  const trimmed = phone.trim();
+  if (trimmed.startsWith('+39')) return trimmed.slice(3).replace(/^\s+/, '');
+  return phone;
+}
 
-function isPlausiblePhone(value: string): boolean {
-  const trimmed = value.trim();
-  if (!trimmed) return true;
-  if (!PHONE_PATTERN.test(trimmed)) return false;
-  const digits = trimmed.replace(/\D/g, '');
-  return digits.length >= 6;
+function withItalianPrefix(local: string): string {
+  const cleaned = local.replace(/^\+39\s?/, '');
+  if (!cleaned.trim()) return DEFAULT_ENQUIRY_PHONE;
+  return `+39 ${cleaned}`;
 }
 
 /**
@@ -38,7 +46,8 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
   const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  /** Full E.164-ish value; Italian numbers always keep a visible +39 prefix. */
+  const [phone, setPhone] = useState(DEFAULT_ENQUIRY_PHONE);
   const [whatsappOnPhone, setWhatsappOnPhone] = useState(false);
   const [privacyOk, setPrivacyOk] = useState(false);
   const [mediationOk, setMediationOk] = useState(false);
@@ -46,13 +55,16 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle');
   const [error, setError] = useState<string | null>(null);
 
+  const useItalianChrome = phone.trim().startsWith('+39') || phone === DEFAULT_ENQUIRY_PHONE;
+  const phoneReady = hasUsableEnquiryPhone(phone);
+
   useEffect(() => {
     setMessage(t('defaultMessage', { title: listingTitle }));
   }, [listingTitle, t]);
 
   useEffect(() => {
-    if (!phone.trim()) setWhatsappOnPhone(false);
-  }, [phone]);
+    if (!phoneReady && whatsappOnPhone) setWhatsappOnPhone(false);
+  }, [phoneReady, whatsappOnPhone]);
 
   async function fetchPolicyVersion(): Promise<string> {
     const res = await authedFetch(apiUrl('/me/privacy/policy-version'));
@@ -83,7 +95,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       setStatus('err');
       return;
     }
-    if (!isPlausiblePhone(phone)) {
+    if (!isPlausibleEnquiryPhone(phone)) {
       setError(t('errorPhoneInvalid'));
       setStatus('err');
       return;
@@ -102,7 +114,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       await recordConsent('privacy_policy', version);
       await recordConsent('mediation_disclosure', version);
 
-      const trimmedPhone = phone.trim();
+      const trimmedPhone = enquiryPhoneForSubmit(phone);
       const body: {
         intent: 'info';
         message: string;
@@ -172,26 +184,62 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
         />
       </Field>
       <Field label={t('phoneLabel')} hint={t('phoneHint')}>
-        <Input
-          type="tel"
-          inputMode="tel"
-          autoComplete="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder={t('phonePlaceholder')}
-          maxLength={40}
-          aria-invalid={error === t('errorPhoneInvalid') ? true : undefined}
-        />
+        {useItalianChrome ? (
+          <div className="flex items-stretch overflow-hidden rounded-lg border border-line bg-paper focus-within:border-azure">
+            <span
+              className="inline-flex shrink-0 items-center border-r border-line bg-sand/40 px-3 text-sm font-medium text-ink select-none"
+              aria-hidden="true"
+            >
+              +39
+            </span>
+            <input
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel-national"
+              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm focus:outline-none"
+              value={italianLocalPart(phone)}
+              onChange={(e) => {
+                const raw = e.target.value;
+                // Pasting another country code switches out of the Italian chrome.
+                if (raw.trimStart().startsWith('+') && !raw.trimStart().startsWith('+39')) {
+                  setPhone(raw);
+                  return;
+                }
+                setPhone(withItalianPrefix(raw));
+              }}
+              placeholder={t('phonePlaceholderLocal')}
+              maxLength={36}
+              aria-label={t('phoneLabel')}
+              aria-invalid={error === t('errorPhoneInvalid') ? true : undefined}
+            />
+          </div>
+        ) : (
+          <Input
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value || DEFAULT_ENQUIRY_PHONE)}
+            placeholder={t('phonePlaceholder')}
+            maxLength={40}
+            aria-invalid={error === t('errorPhoneInvalid') ? true : undefined}
+          />
+        )}
       </Field>
-      <label className={`flex gap-3 items-start text-sm leading-snug ${phone.trim() ? '' : 'opacity-60'}`}>
+      <label className={`flex gap-3 items-start text-sm leading-snug ${phoneReady ? '' : 'opacity-60'}`}>
         <input
           type="checkbox"
-          className="mt-1"
+          className="mt-1 h-4 w-4 accent-azure"
           checked={whatsappOnPhone}
-          disabled={!phone.trim()}
+          disabled={!phoneReady}
           onChange={(e) => setWhatsappOnPhone(e.target.checked)}
         />
-        <span>{t('whatsappLabel')}</span>
+        <span>
+          {t('whatsappLabel')}
+          {!phoneReady ? (
+            <span className="mt-0.5 block text-xs text-muted">{t('whatsappNeedPhone')}</span>
+          ) : null}
+        </span>
       </label>
       <Field label={t('messageLabel')}>
         <textarea
@@ -207,7 +255,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       <label className="flex gap-3 items-start text-sm leading-snug">
         <input
           type="checkbox"
-          className="mt-1"
+          className="mt-1 h-4 w-4 accent-azure"
           checked={privacyOk}
           onChange={(e) => setPrivacyOk(e.target.checked)}
           required
@@ -224,7 +272,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       <label className="flex gap-3 items-start text-sm leading-snug">
         <input
           type="checkbox"
-          className="mt-1"
+          className="mt-1 h-4 w-4 accent-azure"
           checked={mediationOk}
           onChange={(e) => setMediationOk(e.target.checked)}
           required
