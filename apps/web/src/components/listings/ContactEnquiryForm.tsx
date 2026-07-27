@@ -1,17 +1,18 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useId, useMemo, useState, type FormEvent } from 'react';
 
 import { useAuth } from '@/auth/AuthProvider';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 import { RequireSignInLink } from '@/components/AuthControls';
 import { Button } from '@/components/ui/Button';
 import { Field, Input } from '@/components/ui/Field';
+import { DEFAULT_DIAL_CODE, ENQUIRY_DIAL_CODES } from '@/lib/enquiry-dial-codes';
 import {
-  DEFAULT_ENQUIRY_PHONE,
+  composeEnquiryPhone,
   enquiryPhoneForSubmit,
-  hasUsableEnquiryPhone,
+  hasUsableNationalNumber,
   isPlausibleEnquiryPhone,
 } from '@/lib/enquiry-phone';
 
@@ -23,18 +24,6 @@ type Props = {
 
 type ConsentPurpose = 'privacy_policy' | 'mediation_disclosure';
 
-function italianLocalPart(phone: string): string {
-  const trimmed = phone.trim();
-  if (trimmed.startsWith('+39')) return trimmed.slice(3).replace(/^\s+/, '');
-  return phone;
-}
-
-function withItalianPrefix(local: string): string {
-  const cleaned = local.replace(/^\+39\s?/, '');
-  if (!cleaned.trim()) return DEFAULT_ENQUIRY_PHONE;
-  return `+39 ${cleaned}`;
-}
-
 /**
  * Contact-agent CTA — Phase 37/38. Records required consents then posts enquiry.
  * Requires OIDC PKCE sign-in (Authorization: Bearer).
@@ -42,12 +31,13 @@ function withItalianPrefix(local: string): string {
 export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: Props) {
   const locale = useLocale();
   const t = useTranslations('listingDetail.contact.enquiry');
+  const dialSelectId = useId();
   const { getAccessToken, isAuthenticated, ready } = useAuth();
   const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
-  /** Full E.164-ish value; Italian numbers always keep a visible +39 prefix. */
-  const [phone, setPhone] = useState(DEFAULT_ENQUIRY_PHONE);
+  const [dialCode, setDialCode] = useState(DEFAULT_DIAL_CODE);
+  const [nationalNumber, setNationalNumber] = useState('');
   const [whatsappOnPhone, setWhatsappOnPhone] = useState(false);
   const [privacyOk, setPrivacyOk] = useState(false);
   const [mediationOk, setMediationOk] = useState(false);
@@ -55,16 +45,15 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle');
   const [error, setError] = useState<string | null>(null);
 
-  const useItalianChrome = phone.trim().startsWith('+39') || phone === DEFAULT_ENQUIRY_PHONE;
-  const phoneReady = hasUsableEnquiryPhone(phone);
+  const phone = useMemo(
+    () => composeEnquiryPhone(dialCode, nationalNumber),
+    [dialCode, nationalNumber],
+  );
+  const phoneReady = hasUsableNationalNumber(nationalNumber);
 
   useEffect(() => {
     setMessage(t('defaultMessage', { title: listingTitle }));
   }, [listingTitle, t]);
-
-  useEffect(() => {
-    if (!phoneReady && whatsappOnPhone) setWhatsappOnPhone(false);
-  }, [phoneReady, whatsappOnPhone]);
 
   async function fetchPolicyVersion(): Promise<string> {
     const res = await authedFetch(apiUrl('/me/privacy/policy-version'));
@@ -92,6 +81,11 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
     }
     if (!privacyOk || !mediationOk) {
       setError(t('errorConsent'));
+      setStatus('err');
+      return;
+    }
+    if (whatsappOnPhone && !phoneReady) {
+      setError(t('errorWhatsappNeedPhone'));
       setStatus('err');
       return;
     }
@@ -128,7 +122,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       };
       if (trimmedPhone) {
         body.contactPhone = trimmedPhone;
-        if (whatsappOnPhone) body.contactWhatsappAvailable = true;
+        body.contactWhatsappAvailable = whatsappOnPhone;
       }
 
       const res = await authedFetch(apiUrl(`/listings/${encodeURIComponent(listingId)}/enquiries`), {
@@ -183,64 +177,58 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
           autoComplete="email"
         />
       </Field>
-      <Field label={t('phoneLabel')} hint={t('phoneHint')}>
-        {useItalianChrome ? (
-          <div className="flex items-stretch overflow-hidden rounded-lg border border-line bg-paper focus-within:border-azure">
-            <span
-              className="inline-flex shrink-0 items-center border-r border-line bg-sand/40 px-3 text-sm font-medium text-ink select-none"
-              aria-hidden="true"
-            >
-              +39
-            </span>
-            <input
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel-national"
-              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm focus:outline-none"
-              value={italianLocalPart(phone)}
-              onChange={(e) => {
-                const raw = e.target.value;
-                // Pasting another country code switches out of the Italian chrome.
-                if (raw.trimStart().startsWith('+') && !raw.trimStart().startsWith('+39')) {
-                  setPhone(raw);
-                  return;
-                }
-                setPhone(withItalianPrefix(raw));
-              }}
-              placeholder={t('phonePlaceholderLocal')}
-              maxLength={36}
-              aria-label={t('phoneLabel')}
-              aria-invalid={error === t('errorPhoneInvalid') ? true : undefined}
-            />
-          </div>
-        ) : (
-          <Input
+
+      <div className="block">
+        <span className="eyebrow mb-1 block">{t('phoneLabel')}</span>
+        <div className="flex items-stretch overflow-hidden rounded-lg border border-line bg-paper focus-within:border-azure">
+          <label htmlFor={dialSelectId} className="sr-only">
+            {t('countryCodeLabel')}
+          </label>
+          <select
+            id={dialSelectId}
+            value={dialCode}
+            onChange={(e) => setDialCode(e.target.value)}
+            className="max-w-[7.5rem] shrink-0 border-r border-line bg-sand/40 py-2 pl-2 pr-1 text-sm font-medium text-ink focus:outline-none"
+            aria-label={t('countryCodeLabel')}
+          >
+            {ENQUIRY_DIAL_CODES.map((opt) => (
+              <option key={`${opt.code}-${opt.iso || opt.label}`} value={opt.code}>
+                {opt.code} {opt.iso ? `(${opt.iso})` : ''}
+              </option>
+            ))}
+          </select>
+          <input
             type="tel"
             inputMode="tel"
-            autoComplete="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value || DEFAULT_ENQUIRY_PHONE)}
-            placeholder={t('phonePlaceholder')}
-            maxLength={40}
-            aria-invalid={error === t('errorPhoneInvalid') ? true : undefined}
+            autoComplete="tel-national"
+            className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm focus:outline-none"
+            value={nationalNumber}
+            onChange={(e) => setNationalNumber(e.target.value)}
+            placeholder={t('phonePlaceholderLocal')}
+            maxLength={36}
+            aria-label={t('phoneNationalLabel')}
+            aria-invalid={error === t('errorPhoneInvalid') || error === t('errorWhatsappNeedPhone') ? true : undefined}
           />
-        )}
-      </Field>
-      <label className={`flex gap-3 items-start text-sm leading-snug ${phoneReady ? '' : 'opacity-60'}`}>
+        </div>
+        <span className="mt-1 block text-xs text-muted">{t('phoneHint')}</span>
+      </div>
+
+      <div className="flex gap-3 items-start text-sm leading-snug">
         <input
+          id={`${dialSelectId}-whatsapp`}
           type="checkbox"
-          className="mt-1 h-4 w-4 accent-azure"
+          className="mt-1 h-4 w-4 shrink-0 accent-azure"
           checked={whatsappOnPhone}
-          disabled={!phoneReady}
           onChange={(e) => setWhatsappOnPhone(e.target.checked)}
         />
-        <span>
+        <label htmlFor={`${dialSelectId}-whatsapp`} className="cursor-pointer select-none">
           {t('whatsappLabel')}
-          {!phoneReady ? (
+          {!phoneReady && whatsappOnPhone ? (
             <span className="mt-0.5 block text-xs text-muted">{t('whatsappNeedPhone')}</span>
           ) : null}
-        </span>
-      </label>
+        </label>
+      </div>
+
       <Field label={t('messageLabel')}>
         <textarea
           className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm min-h-[100px]"
@@ -252,39 +240,41 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
         />
       </Field>
 
-      <label className="flex gap-3 items-start text-sm leading-snug">
+      <div className="flex gap-3 items-start text-sm leading-snug">
         <input
+          id={`${dialSelectId}-privacy`}
           type="checkbox"
-          className="mt-1 h-4 w-4 accent-azure"
+          className="mt-1 h-4 w-4 shrink-0 accent-azure"
           checked={privacyOk}
           onChange={(e) => setPrivacyOk(e.target.checked)}
           required
         />
-        <span>
+        <label htmlFor={`${dialSelectId}-privacy`} className="cursor-pointer">
           {t('privacyConsentBefore')}
           <a className="underline" href={privacyHref} target="_blank" rel="noreferrer">
             {t('privacyLink')}
           </a>
           {t('privacyConsentAfter', { version: versionLabel })}
-        </span>
-      </label>
+        </label>
+      </div>
 
-      <label className="flex gap-3 items-start text-sm leading-snug">
+      <div className="flex gap-3 items-start text-sm leading-snug">
         <input
+          id={`${dialSelectId}-mediation`}
           type="checkbox"
-          className="mt-1 h-4 w-4 accent-azure"
+          className="mt-1 h-4 w-4 shrink-0 accent-azure"
           checked={mediationOk}
           onChange={(e) => setMediationOk(e.target.checked)}
           required
         />
-        <span>
+        <label htmlFor={`${dialSelectId}-mediation`} className="cursor-pointer">
           {t('mediationConsentBefore')}
           <a className="underline" href={mediationHref} target="_blank" rel="noreferrer">
             {t('mediationLink')}
           </a>
           {t('mediationConsentAfter')}
-        </span>
-      </label>
+        </label>
+      </div>
 
       {error ? (
         <p className="text-sm text-muted" role="alert">

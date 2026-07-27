@@ -184,9 +184,11 @@
         "phoneLabel": "Numero di telefono",
         "phonePlaceholder": "+39 333 123 4567",
         "phonePlaceholderLocal": "333 123 4567",
-        "phoneHint": "Il prefisso +39 resta visibile (serve per WhatsApp). Facoltativo.",
+        "phoneNationalLabel": "Cellulare o fisso",
+        "countryCodeLabel": "Prefisso internazionale",
+        "phoneHint": "Predefinito Italia (+39). Scegli un altro prefisso se serve — necessario per WhatsApp.",
         "whatsappLabel": "WhatsApp disponibile su questo numero",
-        "whatsappNeedPhone": "Inserisci prima il numero (con +39).",
+        "whatsappNeedPhone": "Inserisci il numero di telefono per usare WhatsApp.",
         "messageLabel": "Messaggio",
         "privacyConsentBefore": "Ho letto l'",
         "privacyLink": "informativa privacy",
@@ -204,6 +206,7 @@
         "errorPolicyVersion": "Versione policy non disponibile",
         "errorConsentRecord": "Consenso non registrato",
         "errorPhoneInvalid": "Inserisci un numero di telefono valido (cifre, spazi, +, -, parentesi).",
+        "errorWhatsappNeedPhone": "Inserisci il numero di telefono prima di indicare WhatsApp.",
         "errorGeneric": "Invio non riuscito"
       }
     },

@@ -1,20 +1,49 @@
 /**
- * Enquiry phone helpers — keep Italian WhatsApp numbers unambiguous with +39.
+ * Enquiry phone helpers — dial-code + national number for WhatsApp-safe E.164-ish values.
  */
 
-const IT_COUNTRY_PREFIX = '+39';
+import {
+  DEFAULT_DIAL_CODE,
+  ENQUIRY_DIAL_CODES,
+  isKnownDialCode,
+} from './enquiry-dial-codes';
 
-/** Default enquiry phone field value (visible country code for WhatsApp). */
-export const DEFAULT_ENQUIRY_PHONE = `${IT_COUNTRY_PREFIX} `;
+export { DEFAULT_DIAL_CODE };
+
+/** @deprecated Prefer composeEnquiryPhone(DEFAULT_DIAL_CODE, '') */
+export const DEFAULT_ENQUIRY_PHONE = `${DEFAULT_DIAL_CODE} `;
+
+const DIAL_CODES_LONGEST_FIRST = [...ENQUIRY_DIAL_CODES.map((d) => d.code)].sort(
+  (a, b) => b.length - a.length,
+);
 
 export function phoneDigits(value: string): string {
   return value.replace(/\D/g, '');
 }
 
-/** True when the field only has a short country code (e.g. "+39 ") and no local number. */
+export function composeEnquiryPhone(dialCode: string, national: string): string {
+  const code = dialCode.trim() || DEFAULT_DIAL_CODE;
+  const local = national.replace(/[^\d\s().-]/g, '').trim();
+  if (!local) return `${code} `;
+  return `${code} ${local}`;
+}
+
+export function nationalDigitsOnly(national: string): string {
+  return phoneDigits(national);
+}
+
+/** True when only a country calling code is present (no national number). */
 export function isCountryCodeOnly(value: string): boolean {
-  const digits = phoneDigits(value);
+  const trimmed = value.trim();
+  if (!trimmed.startsWith('+')) return false;
+  const digits = phoneDigits(trimmed);
+  // Calling codes are 1–3 digits; treat as "code only" when nothing beyond that.
   return digits.length > 0 && digits.length <= 3;
+}
+
+/** National number long enough to be a real mobile/landline fragment. */
+export function hasUsableNationalNumber(national: string): boolean {
+  return nationalDigitsOnly(national).length >= 6;
 }
 
 export function hasUsableEnquiryPhone(value: string): boolean {
@@ -24,32 +53,9 @@ export function hasUsableEnquiryPhone(value: string): boolean {
 export function isPlausibleEnquiryPhone(value: string): boolean {
   const trimmed = value.trim();
   if (!trimmed) return true;
-  // Incomplete country-code entry while typing (e.g. "+39 ").
   if (trimmed.startsWith('+') && isCountryCodeOnly(trimmed)) return true;
   if (!/^[\d\s+().-]{6,40}$/.test(trimmed)) return false;
   return hasUsableEnquiryPhone(trimmed);
-}
-
-/**
- * Keep "+39 " visible while editing Italian numbers.
- * Allows other country codes if the user replaces the prefix (starts with + and not +39…).
- */
-export function normalizeEnquiryPhoneInput(next: string, prev: string): string {
-  if (!next.trim()) return DEFAULT_ENQUIRY_PHONE;
-
-  // User clearing back into the Italian prefix — restore spaced +39.
-  if (next === '+' || next === '+3' || next === '+39') {
-    return DEFAULT_ENQUIRY_PHONE;
-  }
-
-  // If previous was Italian default and next lost the +39 prefix without choosing another +, put it back.
-  const prevItalian = phoneDigits(prev).startsWith('39') || prev.trimStart().startsWith(IT_COUNTRY_PREFIX);
-  const nextHasPlus = next.trimStart().startsWith('+');
-  if (prevItalian && !nextHasPlus && /^\d/.test(next.trimStart())) {
-    return `${IT_COUNTRY_PREFIX} ${next.trimStart()}`;
-  }
-
-  return next;
 }
 
 /** Value to submit — empty when only a country code remains. */
@@ -57,4 +63,33 @@ export function enquiryPhoneForSubmit(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed || isCountryCodeOnly(trimmed)) return undefined;
   return trimmed;
+}
+
+/**
+ * Split a stored/full phone into dial code + national part.
+ * Falls back to Italy (+39) when the prefix is unknown.
+ */
+export function splitEnquiryPhone(value: string): { dialCode: string; national: string } {
+  const trimmed = value.trim();
+  if (!trimmed) return { dialCode: DEFAULT_DIAL_CODE, national: '' };
+
+  for (const code of DIAL_CODES_LONGEST_FIRST) {
+    if (trimmed === code || trimmed.startsWith(`${code} `) || trimmed.startsWith(code)) {
+      const rest = trimmed.slice(code.length).replace(/^\s+/, '');
+      return { dialCode: code, national: rest };
+    }
+  }
+
+  if (trimmed.startsWith('+')) {
+    const m = trimmed.match(/^(\+\d{1,3})\s*(.*)$/);
+    if (m) {
+      const code = m[1] ?? DEFAULT_DIAL_CODE;
+      return {
+        dialCode: isKnownDialCode(code) ? code : DEFAULT_DIAL_CODE,
+        national: (m[2] ?? '').trim(),
+      };
+    }
+  }
+
+  return { dialCode: DEFAULT_DIAL_CODE, national: trimmed };
 }

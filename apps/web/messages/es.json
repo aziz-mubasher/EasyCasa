@@ -184,9 +184,11 @@
         "phoneLabel": "Número de teléfono",
         "phonePlaceholder": "+39 333 123 4567",
         "phonePlaceholderLocal": "333 123 4567",
-        "phoneHint": "Los números italianos mantienen +39 (necesario para WhatsApp). Opcional.",
+        "phoneNationalLabel": "Móvil o fijo",
+        "countryCodeLabel": "Código de país",
+        "phoneHint": "Por defecto Italia (+39). Elige otro prefijo si hace falta — necesario para WhatsApp.",
         "whatsappLabel": "WhatsApp disponible en este número",
-        "whatsappNeedPhone": "Introduce primero el número (con +39).",
+        "whatsappNeedPhone": "Introduce el teléfono para usar WhatsApp.",
         "messageLabel": "Mensaje",
         "privacyConsentBefore": "He leído la ",
         "privacyLink": "política de privacidad",
@@ -204,6 +206,7 @@
         "errorPolicyVersion": "Versión de la política no disponible",
         "errorConsentRecord": "No se pudo registrar el consentimiento",
         "errorPhoneInvalid": "Introduce un número válido (dígitos, espacios, +, -, paréntesis).",
+        "errorWhatsappNeedPhone": "Introduce el teléfono antes de marcar WhatsApp como disponible.",
         "errorGeneric": "No se pudo enviar la consulta"
       }
     },

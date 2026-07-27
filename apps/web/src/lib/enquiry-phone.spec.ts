@@ -1,16 +1,30 @@
 import { describe, expect, it } from 'vitest';
 
+import { DEFAULT_DIAL_CODE, ENQUIRY_DIAL_CODES } from './enquiry-dial-codes';
 import {
-  DEFAULT_ENQUIRY_PHONE,
+  composeEnquiryPhone,
   enquiryPhoneForSubmit,
   hasUsableEnquiryPhone,
+  hasUsableNationalNumber,
   isCountryCodeOnly,
   isPlausibleEnquiryPhone,
-  normalizeEnquiryPhoneInput,
+  splitEnquiryPhone,
 } from './enquiry-phone';
 
+describe('enquiry dial codes', () => {
+  it('lists Italy (+39) first', () => {
+    expect(ENQUIRY_DIAL_CODES[0]?.code).toBe('+39');
+    expect(DEFAULT_DIAL_CODE).toBe('+39');
+  });
+});
+
 describe('enquiry-phone', () => {
-  it('treats +39 alone as country-code only', () => {
+  it('composes dial code + national number', () => {
+    expect(composeEnquiryPhone('+39', '333 1234567')).toBe('+39 333 1234567');
+    expect(composeEnquiryPhone('+34', '')).toBe('+34 ');
+  });
+
+  it('treats code-only as empty for submit', () => {
     expect(isCountryCodeOnly('+39')).toBe(true);
     expect(isCountryCodeOnly('+39 ')).toBe(true);
     expect(isCountryCodeOnly('+39 333 1234567')).toBe(false);
@@ -18,17 +32,20 @@ describe('enquiry-phone', () => {
     expect(enquiryPhoneForSubmit('+39 333 1234567')).toBe('+39 333 1234567');
   });
 
-  it('keeps +39 while typing a local Italian mobile', () => {
-    expect(normalizeEnquiryPhoneInput('3331234567', DEFAULT_ENQUIRY_PHONE)).toBe('+39 3331234567');
-    expect(normalizeEnquiryPhoneInput('+39 333', DEFAULT_ENQUIRY_PHONE)).toBe('+39 333');
-    expect(normalizeEnquiryPhoneInput('', DEFAULT_ENQUIRY_PHONE)).toBe(DEFAULT_ENQUIRY_PHONE);
+  it('splits known prefixes with longest match', () => {
+    expect(splitEnquiryPhone('+351 912345678')).toEqual({
+      dialCode: '+351',
+      national: '912345678',
+    });
+    expect(splitEnquiryPhone('+39 3331234567')).toEqual({
+      dialCode: '+39',
+      national: '3331234567',
+    });
   });
 
-  it('allows replacing with another country code', () => {
-    expect(normalizeEnquiryPhoneInput('+34 612345678', DEFAULT_ENQUIRY_PHONE)).toBe('+34 612345678');
-  });
-
-  it('validates usable length for WhatsApp preference', () => {
+  it('validates usable national numbers for WhatsApp', () => {
+    expect(hasUsableNationalNumber('333123')).toBe(true);
+    expect(hasUsableNationalNumber('333')).toBe(false);
     expect(hasUsableEnquiryPhone('+39 3331234567')).toBe(true);
     expect(hasUsableEnquiryPhone('+39 ')).toBe(false);
     expect(isPlausibleEnquiryPhone('+39 ')).toBe(true);
