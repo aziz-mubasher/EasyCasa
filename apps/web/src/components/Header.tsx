@@ -71,14 +71,6 @@ export function Header() {
           <Link href="/favorites" className="hover:text-azure">
             {t('favorites')}
           </Link>
-          <a
-            href={b4aPlanHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-azure hover:underline underline-offset-2"
-          >
-            {t('b4aPlan')}
-          </a>
           <AuthControls />
           <LocaleSwitcher />
         </nav>
