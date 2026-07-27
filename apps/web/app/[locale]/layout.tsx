@@ -9,6 +9,7 @@ import { Footer } from '@/components/Footer';
 import { Providers } from '@/components/Providers';
 import { OrganizationStructuredData } from '@/components/StructuredData';
 import '../globals.css';
+import '@/styles/easycasa-brand.css';
 
 const display = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
 const bodyFont = Newsreader({
@@ -18,7 +19,12 @@ const bodyFont = Newsreader({
   // Newsreader has no size-adjust metrics in next/font; without this, Docker builds hang.
   adjustFontFallback: false,
 });
-const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono', display: 'swap' });
+const mono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

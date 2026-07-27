@@ -5,6 +5,7 @@ import { Link, usePathname } from '@/i18n/routing';
 import { LocaleSwitcher } from './LocaleSwitcher';
 import { AuthControls } from './AuthControls';
 import { isListingLandingPath } from '@/lib/listing-landing';
+import { isMarketingServicePath } from '@/lib/marketing-service';
 import { useListingLanding } from '@/components/listings/ListingLandingContext';
 import { ListingShareActions } from '@/components/listings/ListingShareActions';
 import { getBanks4AllReferralUrl } from '@/lib/banks4all-referral';
@@ -15,8 +16,22 @@ export function Header() {
   const locale = useLocale();
   const pathname = usePathname();
   const landing = isListingLandingPath(pathname);
+  const marketing = isMarketingServicePath(pathname);
   const listing = useListingLanding();
   const b4aPlanHref = getBanks4AllReferralUrl(locale, 'propertyInvestmentPlan');
+
+  if (marketing) {
+    return (
+      <header className="border-b border-line-strong bg-paper sticky top-0 z-30">
+        <div className="mx-auto max-w-measure px-5 sm:px-[clamp(1.25rem,5vw,4.5rem)] h-14 flex items-baseline justify-between gap-3">
+          <Link href="/" className="font-display text-[1.05rem] font-bold tracking-tight shrink-0">
+            Easy<span className="text-azure">Casa</span>
+          </Link>
+          <LocaleSwitcher />
+        </div>
+      </header>
+    );
+  }
 
   if (landing) {
     return (
@@ -64,6 +79,9 @@ export function Header() {
           </Link>
           <Link href="/pricing" className="hover:text-azure">
             {t('pricing')}
+          </Link>
+          <Link href="/acquisto-assistito" className="hover:text-azure">
+            {t('acquistoAssistito')}
           </Link>
           <Link href="/add" className="hover:text-azure">
             {t('add')}

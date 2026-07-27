@@ -10,7 +10,8 @@
     "pricing": "Precios",
     "b4aPlan": "B4A Plan",
     "signin": "Entrar",
-    "signout": "Cerrar sesión"
+    "signout": "Cerrar sesión",
+    "acquistoAssistito": "Compra asistida"
   },
   "home": {
     "eyebrow": "Inmobiliaria · Italia",
@@ -394,7 +395,8 @@
   "footer": {
     "rights": "Todos los derechos reservados.",
     "pricing": "Precios de servicios",
-    "disclosure": "Una comisión de mediación (provvigione) se aplica solo al cerrar la operación con nuestro trabajo, y siempre figura en el mandato."
+    "disclosure": "Una comisión de mediación (provvigione) se aplica solo al cerrar la operación con nuestro trabajo, y siempre figura en el mandato.",
+    "acquistoAssistito": "Compra asistida"
   },
   "pricing": {
     "title": "Precios à la carte",
@@ -608,6 +610,260 @@
         "daily": "Diaria",
         "instant": "Inmediata"
       }
+    }
+  },
+  "acquistoAssistito": {
+    "meta": {
+      "title": "Comprar vivienda en Italia desde el extranjero — EasyCasa",
+      "description": "Apoyo a tarifa fija para compradores extranjeros en Italia. Visuras, contratos, notario y escritura — en inglés, italiano o español. Sin comisión sobre el precio."
+    },
+    "hero": {
+      "eyebrow": "Para compradores fuera de Italia",
+      "title": "Compra en Italia",
+      "titleEm": "sin adivinar.",
+      "standfirst": "La vivienda es la parte fácil. Lo que frena al comprador extranjero es un rastro de papeles en un idioma que no lee, firmados ante personas cuyo rol malentiende. Esa parte la llevamos nosotros, del inicio a las llaves.",
+      "cta": "Ver qué incluye",
+      "ctaNote": "Sin comisión sobre el precio de compra. Tarifa fija, acordada por adelantado."
+    },
+    "scheda": {
+      "title": "Acquisto Assistito",
+      "rows": [
+        {
+          "dt": "Nuestra tarifa",
+          "dd": "€1.490 + IVA",
+          "hi": true
+        },
+        {
+          "dt": "Pagado por el vendedor",
+          "dd": "€0",
+          "hi": true
+        },
+        {
+          "dt": "Cambia con el precio",
+          "dd": "No"
+        },
+        {
+          "dt": "Costes de terceros",
+          "dd": "A coste, con recibo"
+        },
+        {
+          "dt": "Duración típica",
+          "dd": "8–16 semanas"
+        },
+        {
+          "dt": "Debes estar en Italia",
+          "dd": "No"
+        },
+        {
+          "dt": "Idiomas de trabajo",
+          "dd": "IT · EN · ES"
+        }
+      ],
+      "seal": "Tarifa acordada por escrito antes de empezar, como exige el mandato de mediación (art. 6, L. 39/1989)."
+    },
+    "trapsSection": {
+      "kicker": "Dónde falla",
+      "title": "Cuatro cosas que nadie cuenta hasta que es tarde",
+      "lede": "No son rarezas. Son las formas habituales en que una compra desde el extranjero se convierte en pérdida — y cada una se evita la semana antes de firmar."
+    },
+    "traps": [
+      {
+        "term": "Proposta irrevocabile",
+        "title": "Tu oferta es un contrato",
+        "body": "Si el vendedor acepta, quedas vinculado. No hay periodo de reflexión. Muchos firman creyendo que es solo una expresión de interés."
+      },
+      {
+        "term": "Il notaio",
+        "title": "El notario no es tu abogado",
+        "body": "El notaio es un oficial público neutral que autentica la escritura. No negocia por ti ni está obligado a decirte si el precio es malo."
+      },
+      {
+        "term": "Conformità catastale",
+        "title": "El plano debe coincidir con el edificio",
+        "body": "Si el plano registrado no coincide con lo construido, la escritura puede impugnarse y el hipoteca rechazarse. Las verandas sin permiso están por todas partes."
+      },
+      {
+        "term": "Caparra confirmatoria",
+        "title": "No todos los depósitos son iguales",
+        "body": "Una caparra y un acconto parecen iguales en la transferencia y se comportan de forma opuesta si el trato se cae. Solo una te devuelve el doble."
+      }
+    ],
+    "path": {
+      "kicker": "Il percorso",
+      "title": "Cada paso, quién lo hace, cuánto tarda",
+      "lede": "Esta es la secuencia real de una compra en Italia. Los pasos en oro son donde más a menudo se pierde dinero."
+    },
+    "steps": [
+      {
+        "no": "01",
+        "it": "Codice fiscale",
+        "en": "Código fiscal",
+        "what": "Tu identidad fiscal italiana. Nada — ni oferta, ni cuenta, ni suministros — sin ella. La obtenemos vía consulado o Agenzia delle Entrate.",
+        "when": "1–3 días"
+      },
+      {
+        "no": "02",
+        "it": "Visura ipocatastale",
+        "en": "Título y gravámenes",
+        "what": "Reconstruimos la cadena de propiedad, hipotecas, embargos y el plano catastral. Antes de ofertar, no después.",
+        "when": "3–5 días",
+        "flag": true
+      },
+      {
+        "no": "03",
+        "it": "Proposta d'acquisto",
+        "en": "Oferta escrita",
+        "what": "Redactada con las cláusulas que te protegen — hipoteca, conformidad, plazos. Vinculante al aceptarse: el texto lo es todo.",
+        "when": "Misma semana",
+        "flag": true
+      },
+      {
+        "no": "04",
+        "it": "Compromesso",
+        "en": "Contrato preliminar",
+        "what": "El contrato de verdad. Lo registramos en la Agenzia delle Entrate y, si el depósito lo justifica, lo transcribimos en Conservatoria para que nadie pueda vender dos veces.",
+        "when": "2–6 semanas"
+      },
+      {
+        "no": "05",
+        "it": "Conto corrente",
+        "en": "Cuenta italiana",
+        "what": "Necesaria para los assegni circolari en la firma. Abrirla como no residente es más lento de lo que esperas; la iniciamos en paralelo al paso 01.",
+        "when": "2–5 semanas"
+      },
+      {
+        "no": "06",
+        "it": "Rogito notarile",
+        "en": "Escritura de compraventa",
+        "what": "Firmada ante el notaio. Si no puedes asistir, preparamos una procura speciale — legalizada y apostillada en tu país.",
+        "when": "30–90 días",
+        "flag": true
+      },
+      {
+        "no": "07",
+        "it": "Volture e utenze",
+        "en": "Traslados y suministros",
+        "what": "Traslado catastral, luz, gas, agua, tasa de residuos y registro del condominio a tu nombre. La parte poco glamurosa donde el comprador extranjero se atasca meses.",
+        "when": "2–4 semanas"
+      }
+    ],
+    "tiersSection": {
+      "kicker": "Cuánto cuesta",
+      "title": "Tarifas fijas. Acordadas antes de empezar.",
+      "lede": "Los costes de terceros — notario, impuestos, catastro, traducciones — se repercuten a coste con el recibo. No los marcamos."
+    },
+    "tiers": [
+      {
+        "name": "Verifica",
+        "for": "Antes de comprometerte",
+        "price": "€290",
+        "vat": "+ IVA 22% · por inmueble",
+        "cta": "Pedir una verificación",
+        "items": [
+          "Búsqueda de título, hipoteca y gravámenes",
+          "Plano catastral vs. realidad",
+          "Morosidad y actas de condominio",
+          "Informe escrito en tu idioma"
+        ]
+      },
+      {
+        "name": "Acquisto Assistito",
+        "for": "De la oferta a la escritura",
+        "price": "€1.490",
+        "vat": "+ IVA 22% · por compra",
+        "cta": "Reservar una llamada",
+        "pick": true,
+        "pill": "El más elegido",
+        "items": [
+          "Todo de Verifica",
+          "Codice fiscale e introducción bancaria",
+          "Oferta y compromesso redactados contigo",
+          "Revisión legal independiente incluida",
+          "Selección y coordinación del notario",
+          "Contacto nominal hasta la firma"
+        ]
+      },
+      {
+        "name": "Trasferimento",
+        "for": "Si te mudas, no solo visitas",
+        "price": "€2.900",
+        "vat": "+ IVA 22% · por hogar",
+        "cta": "Reservar una llamada",
+        "items": [
+          "Todo de Acquisto Assistito",
+          "Residencia y apoyo al permesso",
+          "Activación de suministros y tasa de residuos",
+          "Orientación sanitaria y escolar",
+          "Revisión de ayudas primera vivienda"
+        ]
+      }
+    ],
+    "commission": {
+      "kicker": "Sobre la comisión",
+      "title": "Lo que realmente cuesta una compra de €300.000",
+      "lede": "Las agencias italianas suelen cobrar un porcentaje a ambas partes. Nosotros cobramos al comprador una tarifa fija y nada al vendedor: nadie de nuestro lado gana más si tú pagas más.",
+      "srcLead": "De dónde sale el 3%.",
+      "srcBody": "Ninguna ley italiana fija un mínimo de comisión — la Autoridad de Competencia confirmó en 2004 que las tarifas no aplican al sector, y el art. 6 de la L. 39/1989 deja la medida al acuerdo de las partes. El 3% es el uso de las Cámaras de Comercio, que aplica solo si las partes no acordaron nada por escrito. Esa es la trampa: un mandato en blanco puede rellenarse con el uso local. El nuestro indica la tarifa antes de empezar."
+    },
+    "compare": [
+      {
+        "lbl": "Uso de agencia · lado comprador",
+        "amt": "€10.980",
+        "sub": "3% + IVA. Al vendedor se le suele cobrar lo mismo en la misma operación."
+      },
+      {
+        "lbl": "EasyCasa · Acquisto Assistito",
+        "amt": "€1.818",
+        "sub": "Tarifa fija IVA incluida. Igual en un piso de €300.000 o una villa de €900.000.",
+        "zero": true
+      },
+      {
+        "lbl": "Pagado por el vendedor",
+        "amt": "€0",
+        "sub": "Siempre. Por eso podemos decirte que abandones un inmueble.",
+        "zero": true
+      }
+    ],
+    "faqSection": {
+      "kicker": "Preguntas",
+      "title": "Antes de reservar"
+    },
+    "faq": [
+      {
+        "q": "¿Puedo comprar en Italia si no soy ciudadano de la UE?",
+        "a": "Suele ser sí, pero depende de tu nacionalidad. Italia aplica reciprocidad — puedes comprar si un italiano podría comprar en tu país, o si hay tratado. Reino Unido, EE. UU., Canadá, Australia, Suiza y gran parte de Latinoamérica están cubiertos. Confirmamos tu posición por escrito antes de que pagues nada."
+      },
+      {
+        "q": "¿Debo estar en Italia para firmar?",
+        "a": "No. Puedes otorgar una procura speciale para que alguien firme por ti. Debe hacerse ante notario en tu país y luego legalizarse o apostillarse: dos o tres semanas. Lo iniciamos pronto para que no retrase la firma."
+      },
+      {
+        "q": "¿Sois la agencia inmobiliaria?",
+        "a": "No. Cobramos tarifa fija de ti y nada del vendedor: no tenemos interés en que se venda un inmueble concreto. Si la verificación sale mal, te aconsejamos marcharte — y no nos cuesta nada decirlo."
+      },
+      {
+        "q": "¿Qué no está incluido?",
+        "a": "Honorarios notariales, impuestos de registro y catastro, traducciones y apostilla, y el informe técnico del geometra. Se repercuten a coste con factura. En una segunda vivienda de €300.000, calcula unos €9.000–13.000 entre impuestos y notario, según la región y si compras a particular o a empresa."
+      },
+      {
+        "q": "Un agente dice que el 3% es de ley. ¿Es cierto?",
+        "a": "No. En Italia no hay mínimo legal de comisión. Las tarifas son negociables desde la liberalización del sector. El 3% que oyes es el uso de las Cámaras de Comercio y solo aplica si las partes no acordaron nada por escrito — por eso nunca firmes un mandato que deje la tarifa en blanco."
+      },
+      {
+        "q": "¿En qué idiomas trabajáis?",
+        "a": "Italiano, inglés y español, con traducción clara de cada documento que firmes. No te pondremos un contrato que solo puedas leer en italiano."
+      }
+    ],
+    "close": {
+      "kicker": "Empieza aquí",
+      "title": "Envíanos el anuncio. Te diremos qué falla.",
+      "lede": "Una llamada de 30 minutos, sin coste. Trae un inmueble que estés mirando y repasamos título, plano e impuestos reales.",
+      "cta": "Reservar una llamada",
+      "ctaNote": "O escribe a acquisti@easycasaita.com"
+    },
+    "footer": {
+      "left": "EasyCasa · operado por MUNDIDA · easycasaita.com",
+      "right": "Datos inmobiliarios: Agenzia Entrate — OMI"
     }
   }
 }

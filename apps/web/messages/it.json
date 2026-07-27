@@ -10,7 +10,8 @@
     "pricing": "Prezzi",
     "b4aPlan": "B4A Plan",
     "signin": "Accedi",
-    "signout": "Esci"
+    "signout": "Esci",
+    "acquistoAssistito": "Acquisto assistito"
   },
   "home": {
     "eyebrow": "Mercato immobiliare · Italia",
@@ -394,7 +395,8 @@
   "footer": {
     "rights": "Tutti i diritti riservati.",
     "pricing": "Listino servizi",
-    "disclosure": "Una provvigione si applica solo a mediazione conclusa e risulta sempre nell'incarico."
+    "disclosure": "Una provvigione si applica solo a mediazione conclusa e risulta sempre nell'incarico.",
+    "acquistoAssistito": "Acquisto assistito"
   },
   "pricing": {
     "title": "Prezzi à la carte",
@@ -608,6 +610,260 @@
         "daily": "Giornaliera",
         "instant": "Immediata"
       }
+    }
+  },
+  "acquistoAssistito": {
+    "meta": {
+      "title": "Comprare casa in Italia dall'estero — EasyCasa",
+      "description": "Supporto a tariffa fissa per acquirenti esteri che comprano in Italia. Visure, contratti, notaio e rogito — in italiano, inglese o spagnolo. Nessuna provvigione sul prezzo."
+    },
+    "hero": {
+      "eyebrow": "Per chi compra dall'estero",
+      "title": "Compra in Italia",
+      "titleEm": "senza indovinare.",
+      "standfirst": "L'immobile è la parte facile. Quello che blocca chi compra dall'estero è una carta in una lingua che non legge, firmata davanti a chi ha un ruolo diverso da quello che immagina. Quella parte la gestiamo noi, dall'inizio alle chiavi.",
+      "cta": "Cosa è incluso",
+      "ctaNote": "Nessuna provvigione sul prezzo di acquisto. Tariffa fissa, concordata in anticipo."
+    },
+    "scheda": {
+      "title": "Acquisto Assistito",
+      "rows": [
+        {
+          "dt": "Il nostro compenso",
+          "dd": "€1.490 + IVA",
+          "hi": true
+        },
+        {
+          "dt": "Pagato dal venditore",
+          "dd": "€0",
+          "hi": true
+        },
+        {
+          "dt": "Varia col prezzo",
+          "dd": "No"
+        },
+        {
+          "dt": "Costi di terzi",
+          "dd": "Al costo, con ricevuta"
+        },
+        {
+          "dt": "Durata tipica",
+          "dd": "8–16 settimane"
+        },
+        {
+          "dt": "Devi essere in Italia",
+          "dd": "No"
+        },
+        {
+          "dt": "Lingue di lavoro",
+          "dd": "IT · EN · ES"
+        }
+      ],
+      "seal": "Compenso concordato per iscritto prima di iniziare, come richiesto per l'incarico di mediazione (art. 6, L. 39/1989)."
+    },
+    "trapsSection": {
+      "kicker": "Dove si sbaglia",
+      "title": "Quattro cose che nessuno dice finché non è tardi",
+      "lede": "Non sono casi rari. Sono i modi standard in cui un acquisto dall'estero diventa una perdita — e ciascuno si evita nella settimana prima di firmare."
+    },
+    "traps": [
+      {
+        "term": "Proposta irrevocabile",
+        "title": "La tua offerta è un contratto",
+        "body": "Se il venditore accetta, sei vincolato. Non c'è diritto di ripensamento. Molti firmano pensando sia solo una manifestazione di interesse."
+      },
+      {
+        "term": "Il notaio",
+        "title": "Il notaio non è il tuo avvocato",
+        "body": "Il notaio è un pubblico ufficiale neutrale che autentica l'atto. Non negozia per te e non è obbligato a dirti se il prezzo è sbagliato."
+      },
+      {
+        "term": "Conformità catastale",
+        "title": "La planimetria deve coincidere con l'edificio",
+        "body": "Se la planimetria depositata non corrisponde a ciò che è costruito, l'atto può essere contestato e il mutuo rifiutato. Le verande abusive sono ovunque."
+      },
+      {
+        "term": "Caparra confirmatoria",
+        "title": "Non tutti i depositi sono uguali",
+        "body": "Caparra e acconto sembrano uguali sul bonifico e si comportano in modo opposto se l'affare fallisce. Solo una ti fa riavere il doppio."
+      }
+    ],
+    "path": {
+      "kicker": "Il percorso",
+      "title": "Ogni passo, chi lo fa, quanto dura",
+      "lede": "Questa è la sequenza reale di un acquisto in Italia. I passi in oro sono dove si perde più spesso denaro."
+    },
+    "steps": [
+      {
+        "no": "01",
+        "it": "Codice fiscale",
+        "en": "Codice fiscale",
+        "what": "La tua identità fiscale italiana. Niente — né offerta, né conto, né utenze — senza di esso. Lo otteniamo via consolato o Agenzia delle Entrate.",
+        "when": "1–3 giorni"
+      },
+      {
+        "no": "02",
+        "it": "Visura ipocatastale",
+        "en": "Titolo e gravami",
+        "what": "Ricostruiamo la catena di proprietà, mutui, ipoteche e sequestri, più la planimetria catastale. Prima dell'offerta, non dopo.",
+        "when": "3–5 giorni",
+        "flag": true
+      },
+      {
+        "no": "03",
+        "it": "Proposta d'acquisto",
+        "en": "Offerta scritta",
+        "what": "Redatta con le clausole che ti proteggono — mutuo, conformità, termini. Vincolante all'accettazione: il testo è tutto.",
+        "when": "Stessa settimana",
+        "flag": true
+      },
+      {
+        "no": "04",
+        "it": "Compromesso",
+        "en": "Contratto preliminare",
+        "what": "Il vero contratto. Lo registriamo all'Agenzia delle Entrate e, se il deposito lo giustifica, lo trascriviamo in Conservatoria perché nessuno possa rivendere due volte.",
+        "when": "2–6 settimane"
+      },
+      {
+        "no": "05",
+        "it": "Conto corrente",
+        "en": "Conto italiano",
+        "what": "Serve per gli assegni circolari al rogito. Aprirlo da non residente è più lento del previsto; lo avviamo in parallelo al passo 01.",
+        "when": "2–5 settimane"
+      },
+      {
+        "no": "06",
+        "it": "Rogito notarile",
+        "en": "Atto di compravendita",
+        "what": "Firmato davanti al notaio. Se non puoi essere presente, prepariamo una procura speciale — legalizzata e apostillata nel tuo Paese.",
+        "when": "30–90 giorni",
+        "flag": true
+      },
+      {
+        "no": "07",
+        "it": "Volture e utenze",
+        "en": "Volture e utenze",
+        "what": "Volatura catastale, luce, gas, acqua, Tari e anagrafe condominiale a tuo nome. La parte poco spettacolare dove chi compra dall'estero resta bloccato mesi.",
+        "when": "2–4 settimane"
+      }
+    ],
+    "tiersSection": {
+      "kicker": "Quanto costa",
+      "title": "Tariffe fisse. Concordate prima di iniziare.",
+      "lede": "I costi di terzi — notaio, imposte, catasto, traduzioni — sono ribaltati al costo con ricevuta allegata. Non li maggioriamo."
+    },
+    "tiers": [
+      {
+        "name": "Verifica",
+        "for": "Prima di impegnarti",
+        "price": "€290",
+        "vat": "+ IVA 22% · per immobile",
+        "cta": "Ordina una verifica",
+        "items": [
+          "Visura titoli, mutui e gravami",
+          "Controllo planimetria vs. realtà",
+          "Morosità e verbali di condominio",
+          "Report scritto nella tua lingua"
+        ]
+      },
+      {
+        "name": "Acquisto Assistito",
+        "for": "Dall'offerta al rogito",
+        "price": "€1.490",
+        "vat": "+ IVA 22% · per acquisto",
+        "cta": "Prenota una call",
+        "pick": true,
+        "pill": "Il più scelto",
+        "items": [
+          "Tutto di Verifica",
+          "Codice fiscale e introduzione bancaria",
+          "Offerta e compromesso redatti con te",
+          "Revisione legale indipendente inclusa",
+          "Scelta e coordinamento del notaio",
+          "Referente nominato fino al rogito"
+        ]
+      },
+      {
+        "name": "Trasferimento",
+        "for": "Se ti trasferisci, non solo visiti",
+        "price": "€2.900",
+        "vat": "+ IVA 22% · per nucleo",
+        "cta": "Prenota una call",
+        "items": [
+          "Tutto di Acquisto Assistito",
+          "Residenza e supporto al permesso",
+          "Attivazione utenze e Tari",
+          "Orientamento sanitario e scolastico",
+          "Verifica agevolazioni prima casa"
+        ]
+      }
+    ],
+    "commission": {
+      "kicker": "Sulla provvigione",
+      "title": "Cosa costa davvero un acquisto da €300.000",
+      "lede": "Le agenzie italiane di solito chiedono una percentuale a entrambe le parti. Noi chiediamo all'acquirente una tariffa fissa e zero al venditore: nessuno dalla nostra parte guadagna di più se tu paghi di più.",
+      "srcLead": "Da dove arriva il 3%.",
+      "srcBody": "Nessuna legge italiana fissa un minimo di provvigione — l'Antitrust nel 2004 ha confermato che le tariffe non si applicano al settore, e l'art. 6 della L. 39/1989 lascia la misura all'accordo delle parti. Il 3% è l'uso delle Camere di commercio, che vale solo se le parti non hanno pattuito nulla per iscritto. È la trappola: un mandato muto può essere riempito con l'uso locale. Il nostro indica il compenso prima di iniziare."
+    },
+    "compare": [
+      {
+        "lbl": "Uso di agenzia · lato acquirente",
+        "amt": "€10.980",
+        "sub": "3% + IVA. Al venditore di solito si chiede lo stesso sull'operazione."
+      },
+      {
+        "lbl": "EasyCasa · Acquisto Assistito",
+        "amt": "€1.818",
+        "sub": "Tariffa fissa IVA inclusa. Uguale su un bilocale da €300.000 o una villa da €900.000.",
+        "zero": true
+      },
+      {
+        "lbl": "Pagato dal venditore",
+        "amt": "€0",
+        "sub": "Sempre. Per questo possiamo dirti di lasciare un immobile.",
+        "zero": true
+      }
+    ],
+    "faqSection": {
+      "kicker": "Domande",
+      "title": "Prima di prenotare"
+    },
+    "faq": [
+      {
+        "q": "Posso comprare in Italia se non sono cittadino UE?",
+        "a": "Di solito sì, ma dipende dalla nazionalità. L'Italia applica la reciprocità — puoi comprare se un italiano potrebbe comprare nel tuo Paese, o se c'è un trattato. Regno Unito, USA, Canada, Australia, Svizzera e gran parte dell'America Latina sono coperti. Confermiamo la tua posizione per iscritto prima di qualsiasi pagamento."
+      },
+      {
+        "q": "Devo essere in Italia per il rogito?",
+        "a": "No. Puoi conferire una procura speciale a chi firma al posto tuo. Va fatta davanti a un notaio nel tuo Paese e poi legalizzata o apostillata: servono due-tre settimane. La avviamo per tempo così non diventa il motivo di uno slittamento."
+      },
+      {
+        "q": "Siete l'agenzia immobiliare?",
+        "a": "No. Siamo pagati a tariffa fissa da te e zero dal venditore: non abbiamo interesse a che un particolare immobile si venda. Se la verifica va male, ti consigliamo di lasciare stare — e non ci costa nulla dirlo."
+      },
+      {
+        "q": "Cosa non è incluso?",
+        "a": "Onorari notarili, imposte di registro e catastali, traduzioni e apostille, e l'eventuale perizia del geometra. Ribaltati al costo con fattura. Su una seconda casa da €300.000, metti in conto circa €9.000–13.000 tra imposte e notaio, a seconda della regione e se compri da privato o da società."
+      },
+      {
+        "q": "Un agente dice che il 3% è di legge. È vero?",
+        "a": "No. In Italia non esiste un minimo legale di provvigione. Le misure sono liberamente negoziabili. Il 3% che senti citare è l'uso delle Camere di commercio e vale come residuale solo se le parti non hanno pattuito nulla — ecco perché non firmare mai un mandato che lascia il compenso in bianco."
+      },
+      {
+        "q": "In quali lingue lavorate?",
+        "a": "Italiano, inglese e spagnolo, con traduzione chiara di ogni documento che firmi. Non ti mettiamo davanti un contratto leggibile solo in italiano."
+      }
+    ],
+    "close": {
+      "kicker": "Inizia da qui",
+      "title": "Mandaci l'annuncio. Ti diciamo cosa non va.",
+      "lede": "Una call di 30 minuti, senza costo. Porta un immobile che stai valutando: vediamo titolo, planimetria e le imposte che pagheresti davvero.",
+      "cta": "Prenota una call",
+      "ctaNote": "Oppure scrivi a acquisti@easycasaita.com"
+    },
+    "footer": {
+      "left": "EasyCasa · gestito da MUNDIDA · easycasaita.com",
+      "right": "Dati immobiliari: Agenzia Entrate — OMI"
     }
   }
 }

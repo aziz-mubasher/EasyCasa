@@ -2,29 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+/* EasyCasa brand tokens — cartographic / civic (Italian land register).
+   Source of truth: easycasa-brand.css. Measurements (price, duration, codes) → mono. */
 :root {
-  --ink: #16233b;      /* deep navy ink — brand + text */
-  --paper: #f5f4ef;    /* warm paper */
-  --azure: #1e5ae0;    /* majolica azure — actions, links */
-  --pine: #1f6f5c;     /* pine — rentals / success */
-  --sand: #e7dfcf;     /* muted panels */
-  --clay: #c4553b;     /* alerts only */
-  --line: #d9d5cc;     /* hairlines */
-  --muted: #6b6659;    /* secondary text */
+  --ink: #14212e; /* surveyor's ink */
+  --ink-soft: #4c5d6e; /* secondary text */
+  --paper: #f3ede1; /* parchment */
+  --paper-deep: #e8dfcc; /* body on ink bands */
+  --azure: #2c6e9b; /* maiolica glaze */
+  --azure-pale: #a9c8dc; /* accents on ink */
+  --ochre: #c08a1e; /* warnings & money at risk only */
+  --pine: #1f6f5c; /* rentals / success */
+  --sand: #e8dfcc; /* muted panels (= paper-deep) */
+  --clay: #c08a1e; /* alerts → ochre (no terracotta) */
+  --line: rgba(20, 33, 46, 0.16);
+  --line-strong: rgba(20, 33, 46, 0.34);
+  --muted: #4c5d6e;
+  --radius-doc: 2px; /* documents have corners, not pills */
 }
 
-html, body { background: var(--paper); color: var(--ink); }
-body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
 
 /* Cadastral coordinate eyebrow: small mono label */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--azure);
 }
 /* measurements always in mono — reads like survey data */
-.data { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.data {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

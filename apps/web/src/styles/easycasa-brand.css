@@ -1,0 +1,102 @@
+/* ==========================================================================
+   EasyCasa — brand tokens (reference copy)
+   Cartographic / civic. The reference frame is the Italian land register:
+   parchment, surveyor's ink, maiolica glaze. Everything that is a measurement
+   — a price, a duration, a protocol number, a cadastral code — is set in mono.
+   Runtime tokens live in app/globals.css; keep these in sync.
+   ========================================================================== */
+
+:root {
+  --ec-ink: #14212e;
+  --ec-ink-soft: #4c5d6e;
+  --ec-paper: #f3ede1;
+  --ec-paper-deep: #e8dfcc;
+  --ec-azure: #2c6e9b;
+  --ec-azure-pale: #a9c8dc;
+  --ec-ochre: #c08a1e;
+
+  --ec-rule: rgba(20, 33, 46, 0.16);
+  --ec-rule-strong: rgba(20, 33, 46, 0.34);
+
+  --ec-display: var(--font-display), system-ui, sans-serif;
+  --ec-body: var(--font-body), Georgia, serif;
+  --ec-mono: var(--font-mono), ui-monospace, monospace;
+
+  --ec-display-wdth: 90;
+
+  --ec-step--1: 0.82rem;
+  --ec-step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --ec-step-1: clamp(1.12rem, 1.02rem + 0.45vw, 1.35rem);
+  --ec-step-2: clamp(1.85rem, 3.6vw, 2.85rem);
+  --ec-step-3: clamp(2.7rem, 7.2vw, 5rem);
+
+  --ec-leading-tight: 1.04;
+  --ec-leading-body: 1.62;
+
+  --ec-radius: 2px;
+  --ec-gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --ec-measure: 64rem;
+  --ec-band: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.ec-display {
+  font-family: var(--ec-display);
+  font-variation-settings: 'wdth' var(--ec-display-wdth);
+  font-weight: 720;
+  letter-spacing: -0.025em;
+  line-height: var(--ec-leading-tight);
+  text-wrap: balance;
+}
+
+.ec-label {
+  font-family: var(--ec-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ec-azure);
+}
+
+.ec-datum {
+  font-family: var(--ec-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.ec-band {
+  padding-block: var(--ec-band);
+  border-top: 1px solid var(--ec-rule-strong);
+}
+.ec-band--ink {
+  background: var(--ec-ink);
+  color: var(--ec-paper-deep);
+  border-top-color: var(--ec-ink);
+}
+
+.ec-register {
+  display: grid;
+  gap: 1px;
+  background: var(--ec-rule-strong);
+  border: 1px solid var(--ec-rule-strong);
+}
+.ec-register > * {
+  background: var(--ec-paper);
+}
+
+.ec-cta {
+  display: inline-block;
+  font-family: var(--ec-display);
+  font-weight: 650;
+  background: var(--ec-ink);
+  color: var(--ec-paper);
+  padding: 0.95rem 1.9rem;
+  border-radius: var(--ec-radius);
+  text-decoration: none;
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+.ec-cta:hover {
+  background: var(--ec-azure);
+  transform: translateY(-1px);
+}

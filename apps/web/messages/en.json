@@ -10,7 +10,8 @@
     "pricing": "Pricing",
     "b4aPlan": "B4A Plan",
     "signin": "Sign in",
-    "signout": "Sign out"
+    "signout": "Sign out",
+    "acquistoAssistito": "Assisted purchase"
   },
   "home": {
     "eyebrow": "Real estate · Italy",
@@ -394,7 +395,8 @@
   "footer": {
     "rights": "All rights reserved.",
     "pricing": "Service prices",
-    "disclosure": "A mediation fee (provvigione) applies only when a deal closes through our work, and is always stated in the mandate."
+    "disclosure": "A mediation fee (provvigione) applies only when a deal closes through our work, and is always stated in the mandate.",
+    "acquistoAssistito": "Assisted purchase"
   },
   "pricing": {
     "title": "À la carte pricing",
@@ -608,6 +610,260 @@
         "daily": "Daily",
         "instant": "Instant"
       }
+    }
+  },
+  "acquistoAssistito": {
+    "meta": {
+      "title": "Buying property in Italy from abroad — EasyCasa",
+      "description": "Fixed-fee support for foreign buyers purchasing Italian property. Title checks, contracts, notary coordination and completion — in English, Italian or Spanish. No commission on the purchase price."
+    },
+    "hero": {
+      "eyebrow": "For buyers outside Italy",
+      "title": "Buy in Italy",
+      "titleEm": "without guessing.",
+      "standfirst": "The property is the easy part. What stops foreign buyers is a paper trail in a language they don't read, signed in front of people whose job they misunderstand. We run that part for you, start to keys.",
+      "cta": "See what's included",
+      "ctaNote": "No commission on the purchase price. Fixed fee, agreed up front."
+    },
+    "scheda": {
+      "title": "Acquisto Assistito",
+      "rows": [
+        {
+          "dt": "Our fee",
+          "dd": "€1,490 + IVA",
+          "hi": true
+        },
+        {
+          "dt": "Paid to us by the seller",
+          "dd": "€0",
+          "hi": true
+        },
+        {
+          "dt": "Changes with the price",
+          "dd": "No"
+        },
+        {
+          "dt": "Third-party costs",
+          "dd": "At cost, receipted"
+        },
+        {
+          "dt": "Typical duration",
+          "dd": "8–16 weeks"
+        },
+        {
+          "dt": "You need to be in Italy",
+          "dd": "No"
+        },
+        {
+          "dt": "Working languages",
+          "dd": "IT · EN · ES"
+        }
+      ],
+      "seal": "Rate agreed in writing before any work begins, as required for a mediation mandate under art. 6, L. 39/1989."
+    },
+    "trapsSection": {
+      "kicker": "Where it goes wrong",
+      "title": "Four things nobody tells you until it's too late",
+      "lede": "These aren't edge cases. They're the standard ways a purchase from abroad turns into a loss, and each one is preventable in the week before you sign."
+    },
+    "traps": [
+      {
+        "term": "Proposta irrevocabile",
+        "title": "Your offer is a contract",
+        "body": "Once the seller accepts, you are bound. There is no cooling-off period. Buyers routinely sign this believing it's an expression of interest."
+      },
+      {
+        "term": "Il notaio",
+        "title": "The notary isn't your lawyer",
+        "body": "A notaio is a neutral public official who certifies the deed. They do not negotiate for you, and they are not obliged to tell you a price is bad."
+      },
+      {
+        "term": "Conformità catastale",
+        "title": "The floor plan must match the building",
+        "body": "If the registered plan doesn't match what's actually built, the deed can be challenged and mortgage lending refused. Unpermitted verandas are everywhere."
+      },
+      {
+        "term": "Caparra confirmatoria",
+        "title": "Deposits are not all the same",
+        "body": "A caparra and an acconto look identical on a bank transfer and behave completely differently if the deal collapses. Only one gets you double back."
+      }
+    ],
+    "path": {
+      "kicker": "Il percorso",
+      "title": "Every step, who does it, how long it takes",
+      "lede": "This is the actual sequence of an Italian purchase. Steps marked in gold are where money is most often lost."
+    },
+    "steps": [
+      {
+        "no": "01",
+        "it": "Codice fiscale",
+        "en": "Tax code",
+        "what": "Your Italian tax identity. Nothing — no offer, no bank account, no utility contract — happens without it. We obtain it through the consulate or Agenzia delle Entrate.",
+        "when": "1–3 days"
+      },
+      {
+        "no": "02",
+        "it": "Visura ipocatastale",
+        "en": "Title & charges search",
+        "what": "We pull the ownership chain, mortgages, liens and seizures registered against the property, plus the cadastral plan. Done before you offer, not after.",
+        "when": "3–5 days",
+        "flag": true
+      },
+      {
+        "no": "03",
+        "it": "Proposta d'acquisto",
+        "en": "Written offer",
+        "what": "Drafted with the conditions that protect you — mortgage clause, conformity clause, deadline. Binding on acceptance, so the wording is the whole game.",
+        "when": "Same week",
+        "flag": true
+      },
+      {
+        "no": "04",
+        "it": "Compromesso",
+        "en": "Preliminary contract",
+        "what": "The real contract. We register it at the Agenzia delle Entrate and, where your deposit warrants it, transcribe it at the Conservatoria so no one can sell the property twice.",
+        "when": "2–6 weeks"
+      },
+      {
+        "no": "05",
+        "it": "Conto corrente",
+        "en": "Italian bank account",
+        "what": "Required to issue the assegni circolari used at completion. Opening one as a non-resident is slower than you expect; we start it in parallel at step 01.",
+        "when": "2–5 weeks"
+      },
+      {
+        "no": "06",
+        "it": "Rogito notarile",
+        "en": "Completion deed",
+        "what": "Signed before the notaio. If you can't attend, we arrange a procura speciale so someone signs on your behalf — legalised and apostilled in your country first.",
+        "when": "30–90 days",
+        "flag": true
+      },
+      {
+        "no": "07",
+        "it": "Volture e utenze",
+        "en": "Transfers & utilities",
+        "what": "Cadastral transfer, electricity, gas, water, waste tax and the condominium register moved into your name. The unglamorous part where foreign owners get stuck for months.",
+        "when": "2–4 weeks"
+      }
+    ],
+    "tiersSection": {
+      "kicker": "What it costs",
+      "title": "Fixed fees. Agreed before we start.",
+      "lede": "Third-party costs — notary, taxes, cadastral fees, translations — are passed through at cost with the receipt attached. We don't mark them up."
+    },
+    "tiers": [
+      {
+        "name": "Verifica",
+        "for": "Before you commit",
+        "price": "€290",
+        "vat": "+ IVA 22% · per property",
+        "cta": "Order a check",
+        "items": [
+          "Title, mortgage and lien search",
+          "Cadastral plan vs. reality check",
+          "Condominium arrears and minutes",
+          "Written report in your language"
+        ]
+      },
+      {
+        "name": "Acquisto Assistito",
+        "for": "Offer through to deed",
+        "price": "€1,490",
+        "vat": "+ IVA 22% · per purchase",
+        "cta": "Book a call",
+        "pick": true,
+        "pill": "Most chosen",
+        "items": [
+          "Everything in Verifica",
+          "Codice fiscale and bank introduction",
+          "Offer and compromesso drafted with you",
+          "Independent lawyer review included",
+          "Notary selection and coordination",
+          "Named contact through completion"
+        ]
+      },
+      {
+        "name": "Trasferimento",
+        "for": "If you're moving, not visiting",
+        "price": "€2,900",
+        "vat": "+ IVA 22% · per household",
+        "cta": "Book a call",
+        "items": [
+          "Everything in Acquisto Assistito",
+          "Residency registration and permesso support",
+          "All utilities and waste tax activated",
+          "Healthcare enrolment and school guidance",
+          "First-home tax relief eligibility review"
+        ]
+      }
+    ],
+    "commission": {
+      "kicker": "On commission",
+      "title": "What a €300,000 purchase actually costs you",
+      "lede": "Italian agencies conventionally charge a percentage to both sides of the same transaction. We charge the buyer a fixed fee and take nothing from the seller, so nobody on our side is paid more when you pay more.",
+      "srcLead": "Where 3% comes from.",
+      "srcBody": "No Italian law sets a minimum commission — the Antitrust authority confirmed in 2004 that tariffs do not apply to this sector, and art. 6 of L. 39/1989 leaves the rate to agreement between the parties. The 3% figure is the customary rate recorded in Chamber of Commerce usage tables, which apply only where the parties agreed nothing in writing. That is the trap: an unsigned or silent mandate can be back-filled at the local customary rate. Ours states the fee before work starts."
+    },
+    "compare": [
+      {
+        "lbl": "Customary agency rate · buyer's side",
+        "amt": "€10,980",
+        "sub": "3% + IVA. The seller is customarily charged the same again on the same sale."
+      },
+      {
+        "lbl": "EasyCasa · Acquisto Assistito",
+        "amt": "€1,818",
+        "sub": "Fixed fee incl. IVA. Identical on a €300,000 flat or a €900,000 villa.",
+        "zero": true
+      },
+      {
+        "lbl": "Paid to us by the seller",
+        "amt": "€0",
+        "sub": "Always. It's the reason we can tell you to walk away from a property.",
+        "zero": true
+      }
+    ],
+    "faqSection": {
+      "kicker": "Questions",
+      "title": "Before you book"
+    },
+    "faq": [
+      {
+        "q": "Can I buy in Italy if I'm not an EU citizen?",
+        "a": "Usually yes, but it depends on your nationality. Italy applies a reciprocity condition — you can buy if an Italian could buy in your country, or if a treaty covers it. Buyers from the UK, US, Canada, Australia, Switzerland and most of Latin America are covered. We confirm your position in writing before you pay anything."
+      },
+      {
+        "q": "Do I have to be in Italy to complete?",
+        "a": "No. You can grant a procura speciale — a specific power of attorney — allowing someone to sign the deed for you. It has to be executed in front of a notary in your country and then legalised or apostilled, which takes two to three weeks. We start that early so it never becomes the reason completion slips."
+      },
+      {
+        "q": "Are you the estate agent?",
+        "a": "No. We're paid a fixed fee by you and nothing by the seller, which means we have no stake in whether a particular property sells. If the survey comes back badly, our advice is to walk, and it costs us nothing to say so."
+      },
+      {
+        "q": "What isn't included?",
+        "a": "Notary fees, registration and cadastral taxes, translation and apostille costs, and any technical survey by a geometra. These are passed through at cost with the invoice attached. On a €300,000 second home, budget roughly €9,000–13,000 in taxes and notary fees depending on the region and whether you buy from a private seller or a company."
+      },
+      {
+        "q": "An agent told me 3% is fixed by law. Is it?",
+        "a": "No. There is no legal minimum commission in Italy. Rates are freely negotiable and have been since the sector was liberalised. The 3% you'll hear quoted is the customary figure recorded by local Chambers of Commerce, and it applies as a fallback only when the parties never agreed anything in writing — which is exactly why you should never sign a mandate that leaves the rate blank."
+      },
+      {
+        "q": "Which languages do you work in?",
+        "a": "Italian, English and Spanish, with every document you sign accompanied by a plain translation. We won't put a contract in front of you that you can only read in Italian."
+      }
+    ],
+    "close": {
+      "kicker": "Start here",
+      "title": "Send us the listing. We'll tell you what's wrong with it.",
+      "lede": "A 30-minute call, no charge. Bring a property you're considering and we'll go through the title, the plan and the taxes you'd actually pay.",
+      "cta": "Book a call",
+      "ctaNote": "Or write to acquisti@easycasaita.com"
+    },
+    "footer": {
+      "left": "EasyCasa · operated by MUNDIDA · easycasaita.com",
+      "right": "Property data: Agenzia Entrate — OMI"
     }
   }
 }

@@ -4,12 +4,13 @@ import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { Banks4AllFinancingReferral } from '@/components/financing/Banks4AllFinancingReferral';
 import { isListingLandingPath } from '@/lib/listing-landing';
+import { isMarketingServicePath } from '@/lib/marketing-service';
 
 export function Footer() {
   const t = useTranslations('footer');
   const tb = useTranslations('brand');
   const pathname = usePathname();
-  if (isListingLandingPath(pathname)) return null;
+  if (isListingLandingPath(pathname) || isMarketingServicePath(pathname)) return null;
 
   return (
     <footer className="border-t border-line mt-16">
@@ -21,6 +22,9 @@ export function Footer() {
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             <Link href="/pricing" className="text-sm text-azure hover:underline">
               {t('pricing')}
+            </Link>
+            <Link href="/acquisto-assistito" className="text-sm text-azure hover:underline">
+              {t('acquistoAssistito')}
             </Link>
             <Banks4AllFinancingReferral variant="footerLink" />
           </div>
