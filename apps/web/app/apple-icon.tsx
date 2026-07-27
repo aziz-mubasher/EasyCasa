@@ -1,9 +1,11 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
+export const size = { width: 180, height: 180 };
+export const contentType = 'image/png';
 
-/** Serves `/icon.png` for the web manifest (512×512 PWA icon). */
-export async function GET() {
+/** Apple touch icon — EasyCasa “E.” mark. */
+export default function AppleIcon() {
   return new ImageResponse(
     (
       <div
@@ -14,7 +16,7 @@ export async function GET() {
           alignItems: 'center',
           justifyContent: 'center',
           background: '#14212E',
-          fontSize: 280,
+          fontSize: 110,
           fontWeight: 700,
           fontFamily: 'system-ui, sans-serif',
           letterSpacing: '-0.04em',
@@ -25,6 +27,6 @@ export async function GET() {
         <span style={{ color: '#2C6E9B' }}>.</span>
       </div>
     ),
-    { width: 512, height: 512 },
+    { ...size },
   );
 }

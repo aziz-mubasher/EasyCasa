@@ -1,9 +1,11 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
+export const size = { width: 32, height: 32 };
+export const contentType = 'image/png';
 
-/** Serves `/icon.png` for the web manifest (512×512 PWA icon). */
-export async function GET() {
+/** Browser tab favicon — EasyCasa “E.” mark on surveyor's ink. */
+export default function Icon() {
   return new ImageResponse(
     (
       <div
@@ -14,10 +16,10 @@ export async function GET() {
           alignItems: 'center',
           justifyContent: 'center',
           background: '#14212E',
-          fontSize: 280,
+          fontSize: 22,
           fontWeight: 700,
           fontFamily: 'system-ui, sans-serif',
-          letterSpacing: '-0.04em',
+          letterSpacing: '-0.06em',
           lineHeight: 1,
         }}
       >
@@ -25,6 +27,6 @@ export async function GET() {
         <span style={{ color: '#2C6E9B' }}>.</span>
       </div>
     ),
-    { width: 512, height: 512 },
+    { ...size },
   );
 }

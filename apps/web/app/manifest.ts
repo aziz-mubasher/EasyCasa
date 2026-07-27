@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Commission-free real estate in Italy.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#f5f4ef',
-    theme_color: '#16233b',
+    background_color: '#F3EDE1',
+    theme_color: '#14212E',
     icons: [{ src: '/icon.png', sizes: '512x512', type: 'image/png' }],
   };
 }
