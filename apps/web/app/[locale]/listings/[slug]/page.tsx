@@ -4,6 +4,7 @@ import { getListing } from '@/lib/api';
 import { parseListingDetail } from '@/lib/listing-detail';
 import { ListingStructuredData } from '@/components/StructuredData';
 import { ListingPhotoGallery } from '@/components/listings/ListingPhotoGallery';
+import { AffordThisHomeReferralBlock } from '@/components/financing/AffordThisHomeReferralBlock';
 import { ListingLandingShell } from '@/components/listings/ListingLandingShell';
 import { ListingSummaryCard } from '@/components/listings/ListingSummaryCard';
 import { ListingContactSection } from '@/components/listings/ListingContactSection';
@@ -91,8 +92,9 @@ export default async function ListingPage({
         <article className="mx-auto max-w-6xl px-5 py-8 space-y-14 pb-16">
           <section id="details" className="scroll-mt-28">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)] lg:items-start">
-              <div className="min-w-0">
+              <div className="min-w-0 space-y-5">
                 <ListingPhotoGallery title={listing.title} urls={listing.photoUrls} />
+                {showFinancingReferral ? <AffordThisHomeReferralBlock /> : null}
               </div>
               <ListingSummaryCard listing={listing} locale={locale} />
             </div>

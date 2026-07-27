@@ -348,13 +348,15 @@
     }
   },
   "banks4AllReferral": {
-    "cardTitle": "Puoi permetterti questa casa?",
-    "cardBody": "Prima delle visite, scopri quanto puoi finanziare davvero con un Piano di Investimento Immobiliare redatto da un consulente — basato sui documenti, nella tua lingua. Sono disponibili anche percorsi senza interessi (NIB).",
-    "cardNewcomerNote": "Banks4All assiste residenti UE e non UE, con permessi di soggiorno e redditi esteri — senza commissioni da agenzie o venditori.",
-    "cardCta": "Scopri quanto puoi finanziare con Banks4All",
-    "inlineBeforeLink": "Vuoi sapere se qualifichi per il mutuo?",
-    "inlineLink": "Verifica con Banks4All",
-    "footerLink": "Finanziamento e qualificazione mutuo",
+    "heroTitle": "Puoi permetterti questa casa?",
+    "heroFreeBadge": "Servizio gratuito",
+    "heroBody": "Ottieni un Piano di Investimento Immobiliare redatto da un consulente, basato sui tuoi documenti — scopri con precisione cosa puoi permetterti prima delle visite. Disponibili anche opzioni senza interessi (NIB). Servizio gratuito con registrazione gratuita sul portale Banks4All.",
+    "heroNewcomerNote": "Specialisti per nuovi arrivati, expat e residenti non UE — redditi UE ed extra-UE, permessi di soggiorno e casi transfrontalieri. Nessuna commissione da agenzie o venditori su questo servizio.",
+    "heroPrimaryCta": "Richiedi il tuo piano gratuito",
+    "heroSecondaryCta": "Scopri di più",
+    "inlineBeforeLink": "Non sai ancora quanto puoi permetterti?",
+    "inlineLink": "Richiedi il piano gratuito su Banks4All",
+    "footerLink": "Qualificazione finanziaria gratuita (Banks4All)",
     "externalHint": "Si apre su {host} in una nuova scheda"
   },
   "footer": {
