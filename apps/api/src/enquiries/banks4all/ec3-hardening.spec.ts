@@ -23,9 +23,7 @@ function enquiry(over: Partial<Enquiry> = {}): Enquiry {
     b4aToken: 'tokentokentokentoken',
     b4aBandMaxCents: 32_500_000,
     b4aExpiresAt: '2026-07-28',
-    b4aCheckedAt: new Date('2026-07-01T12:00:00Z'),
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    b4aCheckedAt: '2026-07-01T12:00:00.000Z',
     ...over,
   };
 }
@@ -87,7 +85,7 @@ describe('EnquiriesService.create fail-soft', () => {
         b4aToken: (input.b4aToken as string | null) ?? null,
         b4aBandMaxCents: (input.b4aBandMaxCents as number | null) ?? null,
         b4aExpiresAt: (input.b4aExpiresAt as string | null) ?? null,
-        b4aCheckedAt: (input.b4aCheckedAt as Date | null) ?? null,
+        b4aCheckedAt: (input.b4aCheckedAt as string | Date | null) ?? null,
       })),
     };
     const listings = {
