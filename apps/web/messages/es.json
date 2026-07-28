@@ -321,7 +321,8 @@
       "taxonomy": "Taxonomía del inmueble",
       "specs": "Superficie y precio",
       "media": "Fotos y vídeo",
-      "preview": "Vista previa antes de publicar"
+      "preview": "Vista previa antes de publicar",
+      "availability": "Disponibilidad de visitas"
     },
     "fields": {
       "title": "Título",
@@ -385,7 +386,8 @@
       "stats": "{views} visualizaciones · {unique} únicas",
       "useLink": "Usar este enlace",
       "errorGeneric": "No se pudo gestionar el SmartLink. Inténtalo de nuevo."
-    }
+    },
+    "editAvailability": "Editar disponibilidad de visitas"
   },
   "banks4AllReferral": {
     "heroTitle": "¿Puedes permitirte esta casa?",
@@ -926,5 +928,31 @@
     "b4aRange": "rango indicativo hasta {band} · válido hasta {expires}",
     "b4aDisclaimer": "Evaluación independiente de asequibilidad. No es una oferta de crédito, aprobación ni compromiso de ningún prestamista.",
     "b4aGroup": "Banks4All y EasyCasa forman parte del grupo Mundida."
+  },
+  "availability": {
+    "timezoneNote": "Horarios en hora italiana.",
+    "skipConsequence": "Sin disponibilidad, los visitantes no podrán reservar una visita — solo podrán escribirte.",
+    "dayOff": "No disponible",
+    "weeklyHours": "{hours} horas por semana",
+    "windowCount": "{count} ventanas",
+    "previewTitle": "Vista previa de franjas (lo que ven los visitantes)",
+    "previewEmpty": "No hay franjas — selecciona al menos una ventana horaria.",
+    "editTitle": "Disponibilidad de visitas",
+    "editSubtitle": "Edita las franjas semanales en las que se puede reservar.",
+    "save": "Guardar disponibilidad",
+    "saving": "Guardando…",
+    "saved": "Disponibilidad actualizada.",
+    "saveFailed": "No se pudo guardar. Inténtalo de nuevo.",
+    "backToListing": "Volver al anuncio",
+    "signInRequired": "Inicia sesión para editar la disponibilidad.",
+    "weekday": {
+      "0": "Domingo",
+      "1": "Lunes",
+      "2": "Martes",
+      "3": "Miércoles",
+      "4": "Jueves",
+      "5": "Viernes",
+      "6": "Sábado"
+    }
   }
 }

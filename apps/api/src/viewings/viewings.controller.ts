@@ -63,14 +63,27 @@ export class ViewingsController {
     return this.service.slots(listingId, Number(from), Number(to));
   }
 
+  /** Conductor: read current weekly windows (needed for post-publish edit). */
+  @Get('listings/:listingId/availability')
+  async getAvailability(
+    @CurrentUser() user: AuthUser,
+    @Param('listingId') listingId: string,
+  ) {
+    const me = await this.users.getOrCreate(user);
+    const windows = await this.service.getAvailability(me.id, listingId);
+    return { windows };
+  }
+
   @Post('listings/:listingId/availability')
   async setAvailability(
     @CurrentUser() user: AuthUser,
     @Param('listingId') listingId: string,
     @Body() dto: SetAvailabilityDto,
+    @Query('source') source?: string,
   ) {
     const me = await this.users.getOrCreate(user);
-    await this.service.setAvailability(me.id, listingId, dto.windows);
+    const src = source === 'edit' ? 'edit' : 'publish';
+    await this.service.setAvailability(me.id, listingId, dto.windows, src);
     return { ok: true as const };
   }
 

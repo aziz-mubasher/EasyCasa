@@ -13,7 +13,9 @@ import {
   SELLER_TYPE_SLUGS,
   TRANSACTION_TYPE_SLUGS,
   comuniForProvince,
+  defaultAvailabilityWindows,
   primaryTransactionType,
+  type AvailabilityWindow,
   type FeatureSlug,
   type FinancingOptionSlug,
   type SellerTypeSlug,
@@ -23,10 +25,13 @@ import { Button } from '@/components/ui/Button';
 import { Field, Input, Select, TextArea } from '@/components/ui/Field';
 import { ValuationBandLive } from '@/components/valuation/ValuationBandLive';
 import { SmartLinkManager } from '@/components/smartlink/SmartLinkManager';
+import { AvailabilityWindowsEditor } from '@/components/viewings/AvailabilityWindowsEditor';
 import { useAuth } from '@/auth/AuthProvider';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
+import { Link } from '@/i18n/routing';
+import { useViewingsApi } from '@/lib/viewings-api';
 
-const TOTAL = 5;
+const TOTAL = 6;
 const ENERGY_CLASSES = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
 const MAX_IMAGES = 12;
 
@@ -116,8 +121,12 @@ export default function AddListingPage() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(initialForm);
   const [images, setImages] = useState<LocalImage[]>([]);
+  const [availabilityWindows, setAvailabilityWindows] = useState<AvailabilityWindow[]>(() =>
+    defaultAvailabilityWindows(),
+  );
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const viewingsApi = useViewingsApi();
   const [createdId, setCreatedId] = useState<string | null>(null);
 
   const comuni = useMemo(
@@ -250,6 +259,7 @@ export default function AddListingPage() {
     for (const img of images) URL.revokeObjectURL(img.previewUrl);
     setImages([]);
     setForm(initialForm);
+    setAvailabilityWindows(defaultAvailabilityWindows());
     setStep(1);
     setCreatedId(null);
     setError(null);
@@ -307,6 +317,9 @@ export default function AddListingPage() {
       const created = (await res.json()) as { id?: string };
       if (!created.id) throw new Error(t('errors.generic'));
 
+      // Availability before publish — empty windows are an explicit skip (API emits skipped).
+      await viewingsApi.setAvailability(created.id, availabilityWindows, 'publish');
+
       for (const img of images) {
         await uploadListingImage(authedFetch, created.id, img.file);
       }
@@ -354,6 +367,14 @@ export default function AddListingPage() {
       <section className="mx-auto max-w-2xl px-5 py-12">
         <h1 className="font-display text-3xl font-semibold mb-4">{t('successTitle')}</h1>
         <p className="text-muted mb-6">{t('successBody')}</p>
+        <p className="text-sm text-muted mb-4">
+          <Link
+            href={`/listings/${createdId}/availability`}
+            className="text-azure underline hover:no-underline"
+          >
+            {t('editAvailability')}
+          </Link>
+        </p>
         <SmartLinkManager listingId={createdId} />
         <div className="mt-8">
           <Button onClick={resetAll}>{t('addAnother')}</Button>
@@ -646,6 +667,16 @@ export default function AddListingPage() {
         )}
 
         {step === 5 && (
+          <div className="space-y-4">
+            <p className="text-sm font-medium text-ink">{t('sections.availability')}</p>
+            <AvailabilityWindowsEditor
+              windows={availabilityWindows}
+              onChange={setAvailabilityWindows}
+            />
+          </div>
+        )}
+
+        {step === 6 && (
           <div className="space-y-5">
             <p className="text-sm font-medium text-ink">{t('sections.preview')}</p>
             <p className="text-xs text-muted">{t('previewHint')}</p>
@@ -791,7 +822,7 @@ export default function AddListingPage() {
           {t('back')}
         </Button>
         {step < TOTAL ? (
-          <Button onClick={goNext}>{step === 4 ? t('toPreview') : t('next')}</Button>
+          <Button onClick={goNext}>{step === 5 ? t('toPreview') : t('next')}</Button>
         ) : (
           <Button disabled={submitting} onClick={() => void submit()}>
             {submitting ? t('publishing') : t('publish')}

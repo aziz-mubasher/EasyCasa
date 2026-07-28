@@ -9,6 +9,7 @@ import { RequireSignInLink } from '@/components/AuthControls';
 import { Button } from '@/components/ui/Button';
 import { Link } from '@/i18n/routing';
 import { useViewingsApi } from '@/lib/viewings-api';
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 import {
   formatRomeDay,
   formatRomeTime,
@@ -51,7 +52,19 @@ export function BookViewingPicker({ listingId, listingSlug, listingTitle, areaLa
     void api
       .slots(listingId, range.from, range.to)
       .then((rows) => {
-        if (!cancelled) setSlots(rows);
+        if (cancelled) return;
+        setSlots(rows);
+        if (rows.length === 0) {
+          trackProduct(PRODUCT_EVENTS.VIEWING_PICKER_EMPTY, {
+            listingId,
+            slots_available: 0,
+          });
+        } else {
+          trackProduct(PRODUCT_EVENTS.VIEWING_PICKER_VIEWED, {
+            listingId,
+            slots_available: rows.length,
+          });
+        }
       })
       .catch(() => {
         if (!cancelled) {

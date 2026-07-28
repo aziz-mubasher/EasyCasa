@@ -321,7 +321,8 @@
       "taxonomy": "Tassonomia immobile",
       "specs": "Superficie e prezzo",
       "media": "Foto e video",
-      "preview": "Anteprima prima della pubblicazione"
+      "preview": "Anteprima prima della pubblicazione",
+      "availability": "Disponibilità visite"
     },
     "fields": {
       "title": "Titolo",
@@ -385,7 +386,8 @@
       "stats": "{views} visualizzazioni · {unique} uniche",
       "useLink": "Usa questo link",
       "errorGeneric": "Impossibile gestire lo SmartLink. Riprova."
-    }
+    },
+    "editAvailability": "Modifica disponibilità visite"
   },
   "banks4AllReferral": {
     "heroTitle": "Puoi permetterti questa casa?",
@@ -926,5 +928,31 @@
     "b4aRange": "fascia indicativa fino a {band} · valida fino al {expires}",
     "b4aDisclaimer": "Valutazione indipendente di affordability. Non è un’offerta di credito, un’approvazione o un impegno di alcun finanziatore.",
     "b4aGroup": "Banks4All ed EasyCasa fanno entrambe parte del gruppo Mundida."
+  },
+  "availability": {
+    "timezoneNote": "Orari in ora italiana.",
+    "skipConsequence": "Senza disponibilità i visitatori non potranno prenotare una visita — potranno solo scriverti.",
+    "dayOff": "Non disponibile",
+    "weeklyHours": "{hours} ore a settimana",
+    "windowCount": "{count} finestre",
+    "previewTitle": "Anteprima slot (come li vedono i visitatori)",
+    "previewEmpty": "Nessuno slot generato — seleziona almeno una fascia oraria.",
+    "editTitle": "Disponibilità visite",
+    "editSubtitle": "Modifica le fasce orarie in cui i visitatori possono prenotare.",
+    "save": "Salva disponibilità",
+    "saving": "Salvataggio…",
+    "saved": "Disponibilità aggiornata.",
+    "saveFailed": "Salvataggio non riuscito. Riprova.",
+    "backToListing": "Torna all’annuncio",
+    "signInRequired": "Accedi per modificare la disponibilità.",
+    "weekday": {
+      "0": "Domenica",
+      "1": "Lunedì",
+      "2": "Martedì",
+      "3": "Mercoledì",
+      "4": "Giovedì",
+      "5": "Venerdì",
+      "6": "Sabato"
+    }
   }
 }
