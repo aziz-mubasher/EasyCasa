@@ -3,8 +3,13 @@ import type { AvailabilityWindow, Slot, Viewing, ViewingEvent, ViewingStatus } f
 export class ViewingTransitionError extends Error {}
 
 const TRANSITIONS: Readonly<Record<ViewingStatus, Partial<Record<ViewingEvent, ViewingStatus>>>> = {
-  REQUESTED: { CONFIRM: 'CONFIRMED', CANCEL: 'CANCELLED' },
-  CONFIRMED: { COMPLETE: 'COMPLETED', CANCEL: 'CANCELLED', NO_SHOW: 'NO_SHOW' },
+  REQUESTED: { CONFIRM: 'CONFIRMED', CANCEL: 'CANCELLED', RESCHEDULE: 'REQUESTED' },
+  CONFIRMED: {
+    COMPLETE: 'COMPLETED',
+    CANCEL: 'CANCELLED',
+    NO_SHOW: 'NO_SHOW',
+    RESCHEDULE: 'REQUESTED',
+  },
   COMPLETED: {},
   CANCELLED: {},
   NO_SHOW: {},
@@ -25,7 +30,7 @@ export interface AvailabilityRepository {
 
 export interface ViewingRepository {
   /** Active (non-cancelled) viewings for a listing, as slots, for conflict checks. */
-  activeSlots(listingId: string): Promise<Slot[]>;
+  activeSlots(listingId: string, excludeViewingId?: string): Promise<Slot[]>;
   create(input: {
     listingId: string;
     seekerUserId: string;
@@ -38,6 +43,15 @@ export interface ViewingRepository {
   listForSeeker(seekerUserId: string): Promise<Viewing[]>;
   listForConductor(conductorUserId: string): Promise<Viewing[]>;
   setStatus(id: string, status: ViewingStatus): Promise<void>;
+  /** Atomically move to a new slot, set REQUESTED, bump ICS SEQUENCE. */
+  reschedule(id: string, startMs: number, endMs: number): Promise<Viewing>;
+  /** CONFIRMED viewings due for a reminder window that have not been marked sent. */
+  listDueReminders(
+    kind: '24h' | '2h',
+    windowStartMs: number,
+    windowEndMs: number,
+  ): Promise<Viewing[]>;
+  markReminderSent(id: string, kind: '24h' | '2h'): Promise<void>;
 }
 
 /** Resolves who conducts a listing's viewings (assigned mediator, else owner). */
@@ -50,9 +64,16 @@ export interface ViewingListingLookup {
     ownerUserId: string;
     title: string;
     address: string | null;
+    city: string | null;
+    province: string | null;
+    timezone: string;
   } | null>;
 }
 
 export interface ViewingNotifier {
-  notify(userId: string, viewing: Viewing, kind: 'requested' | 'confirmed' | 'cancelled'): Promise<void>;
+  notify(
+    userId: string,
+    viewing: Viewing,
+    kind: 'requested' | 'confirmed' | 'cancelled' | 'reminder24h' | 'reminder2h',
+  ): Promise<void>;
 }

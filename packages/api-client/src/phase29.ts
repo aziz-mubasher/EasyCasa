@@ -30,6 +30,16 @@ export const ViewingSchema = z.object({
   startMs: z.number().int(),
   endMs: z.number().int(),
   status: ViewingStatusSchema,
+  /** ICS SEQUENCE — present when API returns it (reschedule support). */
+  icsSequence: z.number().int().optional(),
+  timezone: z.string().optional(),
+  /** City/province — preferred when REQUESTED (street withheld). */
+  areaLabel: z.string().nullable().optional(),
+  /** Street address — preferred when CONFIRMED / for conductor. */
+  address: z.string().nullable().optional(),
+  listingTitle: z.string().nullable().optional(),
+  b4aBandMaxCents: z.number().int().nullable().optional(),
+  b4aExpiresAt: z.string().nullable().optional(),
 });
 export type Viewing = z.infer<typeof ViewingSchema>;
 
@@ -81,6 +91,14 @@ export class EasyCasaViewingsApi {
   act(id: string, action: ViewingAction): Promise<Viewing> {
     return this.request(`/viewings/${encodeURIComponent(id)}/${action}`, ViewingSchema, {
       method: 'POST',
+    });
+  }
+
+  /** Propose a new slot — returns REQUESTED with bumped icsSequence. */
+  reschedule(id: string, startMs: number): Promise<Viewing> {
+    return this.request(`/viewings/${encodeURIComponent(id)}/reschedule`, ViewingSchema, {
+      method: 'POST',
+      body: JSON.stringify({ startMs }),
     });
   }
 }

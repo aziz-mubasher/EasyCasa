@@ -143,6 +143,85 @@ export function viewingConfirmed(p: ViewingConfirmedParams, locale: Locale = 'it
   };
 }
 
+
+export interface ViewingRequestedParams {
+  conductorName: string;
+  seekerName: string;
+  listingTitle: string;
+  areaLabel: string;
+  whenLocal: string;
+}
+export function viewingRequested(p: ViewingRequestedParams, locale: Locale = 'it'): Rendered {
+  if (locale === 'en') {
+    return {
+      subject: `Viewing requested — ${p.listingTitle}`,
+      text: `Hi ${p.conductorName},\n\n${p.seekerName} requested a viewing:\n\n${p.listingTitle}\n${p.areaLabel}\n${p.whenLocal}\n\nConfirm or decline in EasyCasa.\n\n— EasyCasa`,
+      html: wrap(
+        `<p>Hi ${esc(p.conductorName)},</p><p><strong>${esc(p.seekerName)}</strong> requested a viewing:</p><p><strong>${esc(p.listingTitle)}</strong><br>${esc(p.areaLabel)}<br>${esc(p.whenLocal)}</p>`,
+      ),
+    };
+  }
+  return {
+    subject: `Richiesta di visita — ${p.listingTitle}`,
+    text: `Ciao ${p.conductorName},\n\n${p.seekerName} ha richiesto una visita:\n\n${p.listingTitle}\n${p.areaLabel}\n${p.whenLocal}\n\nConferma o rifiuta su EasyCasa.\n\n— EasyCasa`,
+    html: wrap(
+      `<p>Ciao ${esc(p.conductorName)},</p><p><strong>${esc(p.seekerName)}</strong> ha richiesto una visita:</p><p><strong>${esc(p.listingTitle)}</strong><br>${esc(p.areaLabel)}<br>${esc(p.whenLocal)}</p>`,
+    ),
+  };
+}
+
+export interface ViewingCancelledParams {
+  recipientName: string;
+  listingTitle: string;
+  whenLocal: string;
+  areaLabel: string;
+}
+export function viewingCancelled(p: ViewingCancelledParams, locale: Locale = 'it'): Rendered {
+  if (locale === 'en') {
+    return {
+      subject: `Viewing cancelled — ${p.listingTitle}`,
+      text: `Hi ${p.recipientName},\n\nThe viewing was cancelled:\n\n${p.listingTitle}\n${p.areaLabel}\n${p.whenLocal}\n\n— EasyCasa`,
+      html: wrap(
+        `<p>Hi ${esc(p.recipientName)},</p><p>The viewing was cancelled:</p><p><strong>${esc(p.listingTitle)}</strong><br>${esc(p.areaLabel)}<br>${esc(p.whenLocal)}</p>`,
+      ),
+    };
+  }
+  return {
+    subject: `Visita annullata — ${p.listingTitle}`,
+    text: `Ciao ${p.recipientName},\n\nLa visita è stata annullata:\n\n${p.listingTitle}\n${p.areaLabel}\n${p.whenLocal}\n\n— EasyCasa`,
+    html: wrap(
+      `<p>Ciao ${esc(p.recipientName)},</p><p>La visita è stata annullata:</p><p><strong>${esc(p.listingTitle)}</strong><br>${esc(p.areaLabel)}<br>${esc(p.whenLocal)}</p>`,
+    ),
+  };
+}
+
+export interface ViewingReminderParams {
+  seekerName: string;
+  listingTitle: string;
+  address: string;
+  whenLocal: string;
+  hoursBefore: 24 | 2;
+}
+export function viewingReminder(p: ViewingReminderParams, locale: Locale = 'it'): Rendered {
+  const when = p.hoursBefore === 24 ? (locale === 'en' ? 'tomorrow' : 'domani') : (locale === 'en' ? 'in 2 hours' : 'tra 2 ore');
+  if (locale === 'en') {
+    return {
+      subject: `Reminder: viewing ${when} — ${p.listingTitle}`,
+      text: `Hi ${p.seekerName},\n\nReminder: your viewing is ${when}.\n\n${p.listingTitle}\n${p.address}\n${p.whenLocal}\n\n— EasyCasa`,
+      html: wrap(
+        `<p>Hi ${esc(p.seekerName)},</p><p>Reminder: your viewing is <strong>${esc(when)}</strong>.</p><p><strong>${esc(p.listingTitle)}</strong><br>${esc(p.address)}<br>${esc(p.whenLocal)}</p>`,
+      ),
+    };
+  }
+  return {
+    subject: `Promemoria visita ${when} — ${p.listingTitle}`,
+    text: `Ciao ${p.seekerName},\n\nPromemoria: la tua visita è ${when}.\n\n${p.listingTitle}\n${p.address}\n${p.whenLocal}\n\n— EasyCasa`,
+    html: wrap(
+      `<p>Ciao ${esc(p.seekerName)},</p><p>Promemoria: la tua visita è <strong>${esc(when)}</strong>.</p><p><strong>${esc(p.listingTitle)}</strong><br>${esc(p.address)}<br>${esc(p.whenLocal)}</p>`,
+    ),
+  };
+}
+
 export interface AlertListing {
   title: string;
   priceLabel: string;
