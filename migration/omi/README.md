@@ -11,54 +11,39 @@ band (`DrizzleOmiPort` / listing valuation UI).
 |------|------|
 | `import_omi.py` | Re-import from Entratel `QI_*_VALORI` + `QI_*_ZONE` CSVs |
 | `load.sql` | `\copy` upsert into `omi_zone_quotes` + derived `omi_quotes` |
-| `omi_quotes.csv.gz` | ~29k comune-level medians (`basis=zone_median`) |
-| `omi_zone_quotes.csv.gz` | ~157k zone-level bands (source of truth) |
+| `verify.sql` | National pass/fail checks (run after load) |
+| `fixtures/` | Lombardia slice for CI (`omi-load` workflow) |
 
-Schema migration lives at `migration/sql/0031_omi_zone_quotes.sql` (not a second
-`0018` — that number is already Phase 29 in this repo).
+**National CSVs are not in git.** Retrieve `omi_quotes.csv.gz` and
+`omi_zone_quotes.csv.gz` from MinIO (see [`docs/omi-import.md`](../../docs/omi-import.md)).
+
+Schema migration: `migration/sql/0031_omi_zone_quotes.sql`.
 
 ## Activate on a database
 
-From the monorepo root (VPS or local with `DATABASE_URL`):
-
 ```bash
-# 1. Schema
 pnpm --filter @easycasa/migration migrate
-# or: psql "$DATABASE_URL" -f migration/sql/0031_omi_zone_quotes.sql
 
-# 2. Unpack + load (cwd must be this folder for \copy paths)
 cd migration/omi
+# fetch gz from MinIO first (see docs/omi-import.md)
 gunzip -k -f omi_quotes.csv.gz omi_zone_quotes.csv.gz
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f load.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f verify.sql
 ```
 
-`load.sql` normalizes seed periods `2025S2` → `2025-H2` and uppercases comune /
-provincia so they match `normalizeOmiComune` / `normalizeProvinceSlug`.
-
-Derived `omi_quotes` rows use natural-key defaults
-`(omi_zone='', stato='', cod_tip=0, geo_level=comune)` so they coexist with
-microzone rows from `pnpm --filter @easycasa/api omi:import`.
-
-No Nest API change is required for comune-level blending: once `omi_quotes` is
-populated, `POST /avm/estimate` and the listing valuation band start returning
-OMI bands for covered comuni.
+`load.sql` normalizes `2025S2` → `2025-H2` and uppercases comune/provincia.
+Idempotent upsert — safe to re-run; does not truncate microzone rows.
 
 ## Refresh from a new Entratel export
 
 ```bash
-python3 import_omi.py \
-  --valori /path/to/QI_*_VALORI.csv \
-  --zone   /path/to/QI_*_ZONE.csv \
-  --out    ./out
+python3 import_omi.py --valori … --zone … --out ./out
 gzip -kf ./out/omi_quotes.csv ./out/omi_zone_quotes.csv
-# copy gz here, then re-run load.sql
+# upload gz to MinIO, then load + verify
 ```
 
-Do **not** commit raw Entratel ZIP/CSV source dumps. The compressed derived
-load files in this folder are intentional seed artifacts.
+Do **not** commit raw Entratel dumps or the national derived gz files.
 
-## Follow-on (not in this drop)
+## Follow-on
 
-Point-in-polygon zone lookup needs Geopoi / open-licence perimeters in
-`omi_zone_quotes.geom` (or `omi_zone_polygons`) and a small change to
-`DrizzleOmiPort` to prefer the matched zone over the comune median.
+Zone polygons / Geopoi → `omi_zone_quotes.geom` + `DrizzleOmiPort` preference.

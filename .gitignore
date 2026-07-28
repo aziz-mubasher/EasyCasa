@@ -22,3 +22,9 @@ migration/out/*.md
 migration/out/*.caddy
 *.sql.gz
 wp-dump.sql
+
+# National OMI seed CSVs — retrieve from MinIO (see docs/omi-import.md). Keep fixtures/.
+migration/omi/omi_quotes.csv
+migration/omi/omi_quotes.csv.gz
+migration/omi/omi_zone_quotes.csv
+migration/omi/omi_zone_quotes.csv.gz
