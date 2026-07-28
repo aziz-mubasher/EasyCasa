@@ -4,8 +4,11 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
+import { PRODUCT_EVENTS, weeklyHours } from '@easycasa/shared';
 
+import { ProductAnalyticsService } from '../analytics/product-analytics.service';
 import { generateSlots } from './domain/slots';
 import { DEFAULT_CONFIG, validateBooking, type SchedulingConfig } from './domain/booking';
 import { nextViewingStatus, ViewingTransitionError } from './domain/ports';
@@ -32,16 +35,48 @@ export class ViewingsService {
     @Inject(VIEWING_REPOSITORY) private readonly viewings: ViewingRepository,
     @Inject(VIEWING_LISTING_LOOKUP) private readonly listings: ViewingListingLookup,
     @Inject(VIEWING_NOTIFIER) private readonly notifier: ViewingNotifier,
+    @Optional() private readonly analytics?: ProductAnalyticsService,
   ) {}
 
-  /** Owner / mediator sets the weekly availability for a listing. */
+  /** Owner / mediator reads weekly availability windows. */
+  async getAvailability(
+    actorUserId: string,
+    listingIdOrSlug: string,
+  ): Promise<AvailabilityWindow[]> {
+    const conductor = await this.assertConductor(actorUserId, listingIdOrSlug);
+    return this.availability.getWindows(conductor.listingId);
+  }
+
+  /**
+   * Owner / mediator sets the weekly availability for a listing.
+   * `source`: `publish` | `edit` — drives analytics event name.
+   */
   async setAvailability(
     actorUserId: string,
     listingIdOrSlug: string,
     windows: AvailabilityWindow[],
+    source: 'publish' | 'edit' = 'publish',
   ): Promise<void> {
     const conductor = await this.assertConductor(actorUserId, listingIdOrSlug);
     await this.availability.setWindows(conductor.listingId, windows);
+    const hours = weeklyHours(windows);
+    if (source === 'edit') {
+      this.analytics?.track(PRODUCT_EVENTS.LISTING_AVAILABILITY_EDITED, {
+        listingId: conductor.listingId,
+        windowCount: windows.length,
+        weeklyHours: hours,
+      });
+    } else if (windows.length === 0) {
+      this.analytics?.track(PRODUCT_EVENTS.LISTING_AVAILABILITY_SKIPPED, {
+        listingId: conductor.listingId,
+      });
+    } else {
+      this.analytics?.track(PRODUCT_EVENTS.LISTING_AVAILABILITY_SET, {
+        listingId: conductor.listingId,
+        windowCount: windows.length,
+        weeklyHours: hours,
+      });
+    }
   }
 
   /** Bookable slots for a listing over a window (public — for seekers). */
@@ -99,6 +134,11 @@ export class ViewingsService {
       enquiryId: input.enquiryId ?? null,
       startMs: request.startMs,
       endMs: request.endMs,
+    });
+    this.analytics?.track(PRODUCT_EVENTS.VIEWING_REQUESTED, {
+      listingId: conductor.listingId,
+      viewingId: viewing.id,
+      weeklyHours: weeklyHours(windows),
     });
     await this.notifier.notify(conductor.conductorUserId, viewing, 'requested');
     return this.enrich(viewing, seekerUserId);

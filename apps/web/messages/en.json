@@ -321,7 +321,8 @@
       "taxonomy": "Property taxonomy",
       "specs": "Size & price",
       "media": "Photos & video",
-      "preview": "Preview before publish"
+      "preview": "Preview before publish",
+      "availability": "Viewing availability"
     },
     "fields": {
       "title": "Title",
@@ -385,7 +386,8 @@
       "stats": "{views} views · {unique} unique",
       "useLink": "Use this link",
       "errorGeneric": "Could not manage SmartLink. Try again."
-    }
+    },
+    "editAvailability": "Edit viewing availability"
   },
   "banks4AllReferral": {
     "heroTitle": "Can you afford this home?",
@@ -926,5 +928,31 @@
     "b4aRange": "indicative range up to {band} · valid to {expires}",
     "b4aDisclaimer": "Independent affordability assessment. Not a credit offer, approval or commitment by any lender.",
     "b4aGroup": "Banks4All and EasyCasa are both part of the Mundida group."
+  },
+  "availability": {
+    "timezoneNote": "Times in Italian local time.",
+    "skipConsequence": "Without availability, visitors won’t be able to book a viewing — they can only write to you.",
+    "dayOff": "Unavailable",
+    "weeklyHours": "{hours} hours per week",
+    "windowCount": "{count} windows",
+    "previewTitle": "Slot preview (what visitors will see)",
+    "previewEmpty": "No slots generated — select at least one time window.",
+    "editTitle": "Viewing availability",
+    "editSubtitle": "Edit the weekly windows when visitors can book.",
+    "save": "Save availability",
+    "saving": "Saving…",
+    "saved": "Availability updated.",
+    "saveFailed": "Couldn’t save. Please try again.",
+    "backToListing": "Back to listing",
+    "signInRequired": "Sign in to edit availability.",
+    "weekday": {
+      "0": "Sunday",
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday"
+    }
   }
 }

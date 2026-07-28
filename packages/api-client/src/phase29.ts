@@ -49,6 +49,12 @@ export interface AvailabilityWindow {
   endMinutes: number;
 }
 
+const WindowSchema = z.object({
+  weekday: z.number().int().min(0).max(6),
+  startMinutes: z.number().int().min(0).max(1440),
+  endMinutes: z.number().int().min(0).max(1440),
+});
+
 export type ViewingAction = 'confirm' | 'cancel' | 'complete' | 'no-show';
 
 const OkSchema = z.object({ ok: z.literal(true) });
@@ -66,8 +72,20 @@ export class EasyCasaViewingsApi {
     return this.request(`/listings/${encodeURIComponent(listingId)}/slots${qs}`, z.array(SlotSchema));
   }
 
-  setAvailability(listingId: string, windows: AvailabilityWindow[]): Promise<void> {
-    return this.request(`/listings/${encodeURIComponent(listingId)}/availability`, OkSchema, {
+  getAvailability(listingId: string): Promise<AvailabilityWindow[]> {
+    return this.request(
+      `/listings/${encodeURIComponent(listingId)}/availability`,
+      z.object({ windows: z.array(WindowSchema) }),
+    ).then((r) => r.windows);
+  }
+
+  setAvailability(
+    listingId: string,
+    windows: AvailabilityWindow[],
+    source: 'publish' | 'edit' = 'publish',
+  ): Promise<void> {
+    const qs = source === 'edit' ? '?source=edit' : '';
+    return this.request(`/listings/${encodeURIComponent(listingId)}/availability${qs}`, OkSchema, {
       method: 'POST',
       body: JSON.stringify({ windows }),
     }).then(() => undefined);

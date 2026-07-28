@@ -17,6 +17,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
+import { ProductAnalyticsService } from '../analytics/product-analytics.service';
 import type {
   AvailabilityRepository,
   ViewingListingLookup,
@@ -490,6 +491,7 @@ export class DefaultViewingNotifier implements ViewingNotifier {
   providers: [
     ViewingsService,
     ViewingsReminderScheduler,
+    ProductAnalyticsService,
     { provide: AVAILABILITY_REPOSITORY, useClass: DrizzleAvailabilityRepository },
     { provide: VIEWING_REPOSITORY, useClass: DrizzleViewingRepository },
     { provide: VIEWING_LISTING_LOOKUP, useClass: DrizzleViewingListingLookup },
