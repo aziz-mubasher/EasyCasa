@@ -214,7 +214,8 @@
         "b4aWarningPlanRef": "That looks like a plan reference (PIP-…), not a tracking link. Leave it blank or paste the tracking URL from your Banks4All portal.",
         "b4aWarningInitials": "We couldn’t attach an affordability badge to this enquiry. Your enquiry was still sent.",
         "b4aWarningConsent": "Tick the Banks4All sharing consent to attach your affordability assessment.",
-        "b4aWarningUnresolved": "We couldn’t verify that Banks4All link right now. Your enquiry was still sent."
+        "b4aWarningUnresolved": "We couldn’t verify that Banks4All link right now. Your enquiry was still sent.",
+        "b4aRetryHint": "You can correct the Banks4All link or consent below and submit again to attach the badge (this sends another enquiry)."
       }
     },
     "energy": {

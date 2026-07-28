@@ -214,7 +214,8 @@
         "b4aWarningPlanRef": "Eso parece una referencia de plan (PIP-…), no un enlace de seguimiento. Déjalo en blanco o pega la URL de seguimiento del portal Banks4All.",
         "b4aWarningInitials": "No pudimos adjuntar la insignia de asequibilidad a esta consulta. La consulta se envió de todos modos.",
         "b4aWarningConsent": "Marca el consentimiento de compartir Banks4All para adjuntar tu evaluación de asequibilidad.",
-        "b4aWarningUnresolved": "No pudimos verificar ese enlace de Banks4All ahora. La consulta se envió de todos modos."
+        "b4aWarningUnresolved": "No pudimos verificar ese enlace de Banks4All ahora. La consulta se envió de todos modos.",
+        "b4aRetryHint": "Puedes corregir el enlace de Banks4All o el consentimiento abajo y enviar de nuevo para adjuntar la insignia (se crea otra consulta)."
       }
     },
     "energy": {

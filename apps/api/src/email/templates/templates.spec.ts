@@ -44,6 +44,26 @@ describe('email templates', () => {
     expect(r.text).toContain('WhatsApp');
   });
 
+  it('enquiry->owner B4A badge formats cents as euros (not ×100)', () => {
+    const r = t.enquiryReceivedOwner(
+      {
+        ownerName: 'Luca',
+        seekerName: 'Anna',
+        seekerEmail: 'anna@e.it',
+        listingTitle: 'Trilocale',
+        message: 'Hi',
+        b4aBandMaxCents: 32_500_000,
+        b4aExpiresAt: '2027-01-27',
+      },
+      'en',
+    );
+    expect(r.text).toContain('Affordability assessed');
+    expect(r.text).toContain('Mundida');
+    expect(r.text).toContain('Not a credit offer');
+    expect(r.text).toMatch(/€325,000|325,000/);
+    expect(r.text).not.toMatch(/€32,500,000|32,500,000€/);
+  });
+
   it('viewing confirmed shows address + local time', () => {
     const r = t.viewingConfirmed({
       seekerName: 'Anna',
