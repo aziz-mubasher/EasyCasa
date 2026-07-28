@@ -8,7 +8,7 @@
     "add": "Pubblica annuncio",
     "favorites": "Preferiti",
     "pricing": "Prezzi",
-    "b4aPlan": "B4A Plan",
+    "b4aPlan": "Property Investment Plan",
     "signin": "Accedi",
     "signout": "Esci",
     "acquistoAssistito": "Acquisto assistito"
@@ -414,11 +414,23 @@
     "externalHint": "Si apre su {host} in una nuova scheda"
   },
   "footer": {
+    "companyName": "Easy Casa Italia",
+    "tagline": "Compra, vendi e affitta — paghi solo i servizi che usi, con un'agenzia regolare.",
     "rights": "Tutti i diritti riservati.",
     "pricing": "Listino servizi",
+    "search": "Cerca",
+    "add": "Pubblica annuncio",
+    "favorites": "Preferiti",
     "disclosure": "Una provvigione si applica solo a mediazione conclusa e risulta sempre nell'incarico.",
     "acquistoAssistito": "Acquisto assistito",
-    "valutazioneGratuita": "Valutazione gratuita"
+    "valutazioneGratuita": "Valutazione gratuita",
+    "propertyInvestmentPlan": "Property Investment Plan",
+    "externalHint": "Si apre su {host} in una nuova scheda",
+    "columns": {
+      "explore": "Esplora",
+      "services": "Servizi",
+      "financing": "Finanziamento"
+    }
   },
   "pricing": {
     "title": "Prezzi à la carte",

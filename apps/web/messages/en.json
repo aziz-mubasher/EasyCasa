@@ -8,7 +8,7 @@
     "add": "List a property",
     "favorites": "Favorites",
     "pricing": "Pricing",
-    "b4aPlan": "B4A Plan",
+    "b4aPlan": "Property Investment Plan",
     "signin": "Sign in",
     "signout": "Sign out",
     "acquistoAssistito": "Assisted purchase"
@@ -414,11 +414,23 @@
     "externalHint": "Opens on {host} in a new tab"
   },
   "footer": {
+    "companyName": "Easy Casa Italia",
+    "tagline": "Buy, sell, and rent — pay only for the services you use, from a licensed agency.",
     "rights": "All rights reserved.",
     "pricing": "Service prices",
+    "search": "Search",
+    "add": "List a property",
+    "favorites": "Favorites",
     "disclosure": "A mediation fee (provvigione) applies only when a deal closes through our work, and is always stated in the mandate.",
     "acquistoAssistito": "Assisted purchase",
-    "valutazioneGratuita": "Free valuation"
+    "valutazioneGratuita": "Free valuation",
+    "propertyInvestmentPlan": "Property Investment Plan",
+    "externalHint": "Opens on {host} in a new tab",
+    "columns": {
+      "explore": "Explore",
+      "services": "Services",
+      "financing": "Financing"
+    }
   },
   "pricing": {
     "title": "À la carte pricing",

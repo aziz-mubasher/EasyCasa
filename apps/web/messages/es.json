@@ -8,7 +8,7 @@
     "add": "Publicar inmueble",
     "favorites": "Favoritos",
     "pricing": "Precios",
-    "b4aPlan": "B4A Plan",
+    "b4aPlan": "Property Investment Plan",
     "signin": "Entrar",
     "signout": "Cerrar sesión",
     "acquistoAssistito": "Compra asistida"
@@ -414,11 +414,23 @@
     "externalHint": "Se abre en {host} en una pestaña nueva"
   },
   "footer": {
+    "companyName": "Easy Casa Italia",
+    "tagline": "Compra, vende y alquila — paga solo por los servicios que usas, con una agencia regulada.",
     "rights": "Todos los derechos reservados.",
     "pricing": "Precios de servicios",
+    "search": "Buscar",
+    "add": "Publicar inmueble",
+    "favorites": "Favoritos",
     "disclosure": "Una comisión de mediación (provvigione) se aplica solo al cerrar la operación con nuestro trabajo, y siempre figura en el mandato.",
     "acquistoAssistito": "Compra asistida",
-    "valutazioneGratuita": "Valoración gratuita"
+    "valutazioneGratuita": "Valoración gratuita",
+    "propertyInvestmentPlan": "Property Investment Plan",
+    "externalHint": "Se abre en {host} en una pestaña nueva",
+    "columns": {
+      "explore": "Explorar",
+      "services": "Servicios",
+      "financing": "Financiación"
+    }
   },
   "pricing": {
     "title": "Precios à la carte",
