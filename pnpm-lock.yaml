@@ -308,6 +308,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@easycasa/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
       '@easycasa/shared':
         specifier: workspace:*
         version: link:../../packages/shared

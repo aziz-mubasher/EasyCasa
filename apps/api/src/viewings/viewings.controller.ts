@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -36,6 +37,12 @@ export class BookDto {
   @IsInt()
   startMs!: number;
   @IsOptional() @IsString() enquiryId?: string;
+}
+
+export class RescheduleDto {
+  @Type(() => Number)
+  @IsInt()
+  startMs!: number;
 }
 
 @Controller()
@@ -114,5 +121,16 @@ export class ViewingsController {
   async noShow(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     const me = await this.users.getOrCreate(user);
     return this.service.transition(me.id, id, 'NO_SHOW');
+  }
+
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @Post('viewings/:id/reschedule')
+  async reschedule(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: RescheduleDto,
+  ) {
+    const me = await this.users.getOrCreate(user);
+    return this.service.reschedule(me.id, id, dto.startMs);
   }
 }

@@ -4,7 +4,7 @@ import { EMAIL_PORT, type EmailPort, type EmailResult } from './email-port';
 import * as t from './templates/templates';
 
 /**
- * Feature-facing email API — Phase 36. Best-effort: provider failures are
+ * Feature-facing email API — Phase 36 / EC-4. Best-effort: provider failures are
  * logged and swallowed so notifications never break the primary request.
  */
 @Injectable()
@@ -13,9 +13,27 @@ export class EmailService {
 
   constructor(@Inject(EMAIL_PORT) private readonly port: EmailPort) {}
 
-  private async dispatch(to: string, r: t.Rendered): Promise<EmailResult> {
+  private async dispatch(
+    to: string,
+    r: t.Rendered,
+    ics?: { filename: string; content: string },
+  ): Promise<EmailResult> {
     try {
-      return await this.port.send({ to, subject: r.subject, text: r.text, html: r.html });
+      return await this.port.send({
+        to,
+        subject: r.subject,
+        text: r.text,
+        html: r.html,
+        attachments: ics
+          ? [
+              {
+                filename: ics.filename,
+                content: ics.content,
+                contentType: 'text/calendar; charset=utf-8; method=REQUEST',
+              },
+            ]
+          : undefined,
+      });
     } catch (err) {
       this.logger.error(`send failed "${r.subject}" -> ${to}: ${String(err)}`);
       return { provider: 'noop', delivered: false };
@@ -28,8 +46,37 @@ export class EmailService {
   enquiryReceivedOwner(to: string, p: t.EnquiryOwnerParams, locale?: t.Locale) {
     return this.dispatch(to, t.enquiryReceivedOwner(p, locale));
   }
-  viewingConfirmed(to: string, p: t.ViewingConfirmedParams, locale?: t.Locale) {
-    return this.dispatch(to, t.viewingConfirmed(p, locale));
+  viewingConfirmed(
+    to: string,
+    p: t.ViewingConfirmedParams,
+    locale?: t.Locale,
+    ics?: { filename: string; content: string },
+  ) {
+    return this.dispatch(to, t.viewingConfirmed(p, locale), ics);
+  }
+  viewingRequested(
+    to: string,
+    p: t.ViewingRequestedParams,
+    locale?: t.Locale,
+    ics?: { filename: string; content: string },
+  ) {
+    return this.dispatch(to, t.viewingRequested(p, locale), ics);
+  }
+  viewingCancelled(
+    to: string,
+    p: t.ViewingCancelledParams,
+    locale?: t.Locale,
+    ics?: { filename: string; content: string },
+  ) {
+    return this.dispatch(to, t.viewingCancelled(p, locale), ics);
+  }
+  viewingReminder(
+    to: string,
+    p: t.ViewingReminderParams,
+    locale?: t.Locale,
+    ics?: { filename: string; content: string },
+  ) {
+    return this.dispatch(to, t.viewingReminder(p, locale), ics);
   }
   savedSearchAlert(to: string, p: t.SavedSearchAlertParams, locale?: t.Locale) {
     return this.dispatch(to, t.savedSearchAlert(p, locale));

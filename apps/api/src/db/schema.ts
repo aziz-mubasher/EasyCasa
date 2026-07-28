@@ -95,6 +95,8 @@ export const listings = pgTable('listings', {
   propertyType: text('property_type'),
   hasFloorPlan: boolean('has_floor_plan').notNull().default(false),
   address: text('address'),
+  /** IANA TZ for viewing availability wall-clock (EC-4). */
+  timezone: text('timezone').notNull().default('Europe/Rome'),
   city: text('city'),
   province: text('province'),
   postalCode: text('postal_code'),
@@ -650,6 +652,9 @@ export const viewings = pgTable('viewings', {
   endAt: timestamp('end_at', { withTimezone: true }).notNull(),
   status: text('status').notNull().default('REQUESTED'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  icsSequence: integer('ics_sequence').notNull().default(0),
+  reminder24hSentAt: timestamp('reminder_24h_sent_at', { withTimezone: true }),
+  reminder2hSentAt: timestamp('reminder_2h_sent_at', { withTimezone: true }),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 

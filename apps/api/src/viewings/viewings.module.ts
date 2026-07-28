@@ -4,13 +4,15 @@ import {
   Injectable,
   Logger,
   Module,
+  NotFoundException,
 } from '@nestjs/common';
-import { and, asc, eq, inArray } from 'drizzle-orm';
+import { and, asc, eq, gte, inArray, isNull, lte, ne, sql } from 'drizzle-orm';
 
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { listings, viewingAvailability, viewings } from '../db/schema';
+import { enquiries, listings, viewingAvailability, viewings } from '../db/schema';
 import { EmailService } from '../email/email.service';
+import { isExpiresOnOrAfterRomeToday } from '../enquiries/banks4all/rome-date';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UsersModule } from '../users/users.module';
@@ -22,7 +24,10 @@ import type {
   ViewingRepository,
 } from './domain/ports';
 import type { AvailabilityWindow, Slot, Viewing, ViewingStatus } from './domain/types';
+import { DEFAULT_LISTING_TIMEZONE } from './domain/zoned-time';
+import { buildViewingIcs, viewingIcsUid } from './ics';
 import { ViewingsController } from './viewings.controller';
+import { ViewingsReminderScheduler } from './viewings-reminder.scheduler';
 import {
   AVAILABILITY_REPOSITORY,
   VIEWING_LISTING_LOOKUP,
@@ -43,7 +48,20 @@ function toViewing(r: ViewingRow): Viewing {
     startMs: r.startAt.getTime(),
     endMs: r.endAt.getTime(),
     status: r.status as ViewingStatus,
+    icsSequence: r.icsSequence ?? 0,
   };
+}
+
+function formatWhenLocal(startMs: number, timeZone: string): string {
+  return new Intl.DateTimeFormat('it-IT', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone,
+  }).format(new Date(startMs));
 }
 
 @Injectable()
@@ -86,7 +104,7 @@ export class DrizzleAvailabilityRepository implements AvailabilityRepository {
 export class DrizzleViewingRepository implements ViewingRepository {
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
-  async activeSlots(listingId: string): Promise<Slot[]> {
+  async activeSlots(listingId: string, excludeViewingId?: string): Promise<Slot[]> {
     const rows = await this.db
       .select({ startAt: viewings.startAt, endAt: viewings.endAt })
       .from(viewings)
@@ -94,6 +112,7 @@ export class DrizzleViewingRepository implements ViewingRepository {
         and(
           eq(viewings.listingId, listingId),
           inArray(viewings.status, ['REQUESTED', 'CONFIRMED']),
+          excludeViewingId ? ne(viewings.id, excludeViewingId) : undefined,
         ),
       );
     return rows.map((r) => ({ startMs: r.startAt.getTime(), endMs: r.endAt.getTime() }));
@@ -146,17 +165,83 @@ export class DrizzleViewingRepository implements ViewingRepository {
 
   async listForConductor(conductorUserId: string): Promise<Viewing[]> {
     const rows = await this.db
-      .select()
+      .select({
+        viewing: viewings,
+        b4aBandMaxCents: enquiries.b4aBandMaxCents,
+        b4aExpiresAt: enquiries.b4aExpiresAt,
+      })
       .from(viewings)
+      .leftJoin(enquiries, eq(viewings.enquiryId, enquiries.id))
       .where(eq(viewings.conductorUserId, conductorUserId))
       .orderBy(asc(viewings.startAt));
-    return rows.map(toViewing);
+
+    return rows.map((r) => {
+      const v = toViewing(r.viewing);
+      if (r.b4aExpiresAt && isExpiresOnOrAfterRomeToday(r.b4aExpiresAt)) {
+        return {
+          ...v,
+          b4aBandMaxCents: r.b4aBandMaxCents,
+          b4aExpiresAt: r.b4aExpiresAt,
+        };
+      }
+      return v;
+    });
   }
 
   async setStatus(id: string, status: ViewingStatus): Promise<void> {
     await this.db
       .update(viewings)
       .set({ status, updatedAt: new Date() })
+      .where(eq(viewings.id, id));
+  }
+
+  async reschedule(id: string, startMs: number, endMs: number): Promise<Viewing> {
+    const [r] = await this.db
+      .update(viewings)
+      .set({
+        startAt: new Date(startMs),
+        endAt: new Date(endMs),
+        status: 'REQUESTED',
+        icsSequence: sql`${viewings.icsSequence} + 1`,
+        reminder24hSentAt: null,
+        reminder2hSentAt: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(viewings.id, id))
+      .returning();
+    if (!r) throw new NotFoundException(`Viewing ${id} not found`);
+    return toViewing(r);
+  }
+
+  async listDueReminders(
+    kind: '24h' | '2h',
+    windowStartMs: number,
+    windowEndMs: number,
+  ): Promise<Viewing[]> {
+    const reminderCol = kind === '24h' ? viewings.reminder24hSentAt : viewings.reminder2hSentAt;
+    const rows = await this.db
+      .select()
+      .from(viewings)
+      .where(
+        and(
+          eq(viewings.status, 'CONFIRMED'),
+          gte(viewings.startAt, new Date(windowStartMs)),
+          lte(viewings.startAt, new Date(windowEndMs)),
+          isNull(reminderCol),
+        ),
+      );
+    return rows.map(toViewing);
+  }
+
+  async markReminderSent(id: string, kind: '24h' | '2h'): Promise<void> {
+    const now = new Date();
+    await this.db
+      .update(viewings)
+      .set(
+        kind === '24h'
+          ? { reminder24hSentAt: now, updatedAt: now }
+          : { reminder2hSentAt: now, updatedAt: now },
+      )
       .where(eq(viewings.id, id));
   }
 }
@@ -171,6 +256,9 @@ export class DrizzleViewingListingLookup implements ViewingListingLookup {
     ownerUserId: string;
     title: string;
     address: string | null;
+    city: string | null;
+    province: string | null;
+    timezone: string;
   } | null> {
     const byId =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
@@ -184,6 +272,9 @@ export class DrizzleViewingListingLookup implements ViewingListingLookup {
         agentId: listings.agentId,
         title: listings.title,
         address: listings.address,
+        city: listings.city,
+        province: listings.province,
+        timezone: listings.timezone,
       })
       .from(listings)
       .where(byId ? eq(listings.id, listingIdOrSlug) : eq(listings.slug, listingIdOrSlug))
@@ -198,6 +289,9 @@ export class DrizzleViewingListingLookup implements ViewingListingLookup {
       ownerUserId,
       title: r.title,
       address: r.address,
+      city: r.city,
+      province: r.province,
+      timezone: r.timezone || DEFAULT_LISTING_TIMEZONE,
     };
   }
 }
@@ -216,8 +310,11 @@ export class DefaultViewingNotifier implements ViewingNotifier {
   async notify(
     userId: string,
     viewing: Viewing,
-    kind: 'requested' | 'confirmed' | 'cancelled',
+    kind: 'requested' | 'confirmed' | 'cancelled' | 'reminder24h' | 'reminder2h',
   ): Promise<void> {
+    const channels: Array<'in_app' | 'push'> =
+      kind === 'reminder2h' ? ['in_app', 'push'] : kind.startsWith('reminder') ? ['in_app'] : ['in_app', 'push'];
+
     try {
       await this.notifications.notify(
         userId,
@@ -228,7 +325,7 @@ export class DefaultViewingNotifier implements ViewingNotifier {
           startMs: viewing.startMs,
           status: viewing.status,
         },
-        ['in_app', 'push'],
+        channels,
       );
     } catch (err) {
       this.logger.warn(
@@ -236,45 +333,154 @@ export class DefaultViewingNotifier implements ViewingNotifier {
       );
     }
 
-    if (kind === 'confirmed') {
-      await this.sendConfirmedEmail(userId, viewing);
+    try {
+      if (kind === 'requested') await this.sendRequestedEmail(userId, viewing);
+      else if (kind === 'confirmed') await this.sendConfirmedEmail(userId, viewing);
+      else if (kind === 'cancelled') await this.sendCancelledEmail(userId, viewing);
+      else if (kind === 'reminder24h') await this.sendReminderEmail(userId, viewing, 24);
+      else if (kind === 'reminder2h') await this.sendReminderEmail(userId, viewing, 2);
+    } catch (err) {
+      this.logger.warn(
+        `viewing email failed kind=${kind}: ${err instanceof Error ? err.message : String(err)}`,
+      );
     }
   }
 
+  private async listingMeta(listingId: string): Promise<{
+    title: string;
+    address: string | null;
+    city: string | null;
+    province: string | null;
+    timezone: string;
+  } | null> {
+    const rows = await this.db
+      .select({
+        title: listings.title,
+        address: listings.address,
+        city: listings.city,
+        province: listings.province,
+        timezone: listings.timezone,
+      })
+      .from(listings)
+      .where(eq(listings.id, listingId))
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    return {
+      ...r,
+      timezone: r.timezone || DEFAULT_LISTING_TIMEZONE,
+    };
+  }
+
+  private areaLabel(listing: { city: string | null; province: string | null }): string {
+    return [listing.city, listing.province].filter(Boolean).join(', ');
+  }
+
+  private icsAttachment(
+    viewing: Viewing,
+    listing: { title: string; address: string | null; city: string | null; province: string | null },
+    opts: { location: string; method?: 'REQUEST' | 'CANCEL' },
+  ): { filename: string; content: string } {
+    return {
+      filename: 'viewing.ics',
+      content: buildViewingIcs({
+        uid: viewingIcsUid(viewing.id),
+        sequence: viewing.icsSequence ?? 0,
+        startMs: viewing.startMs,
+        endMs: viewing.endMs,
+        summary: `Visita — ${listing.title}`,
+        location: opts.location,
+        description: listing.title,
+        method: opts.method,
+      }),
+    };
+  }
+
+  private async sendRequestedEmail(conductorUserId: string, viewing: Viewing): Promise<void> {
+    const conductor = await this.users.findById(conductorUserId);
+    if (!conductor?.email) return;
+    const listing = await this.listingMeta(viewing.listingId);
+    if (!listing) return;
+    const seeker = await this.users.findById(viewing.seekerUserId);
+    const area = this.areaLabel(listing);
+    const whenLocal = formatWhenLocal(viewing.startMs, listing.timezone);
+    await this.email.viewingRequested(
+      conductor.email,
+      {
+        conductorName: conductor.displayName ?? conductor.email.split('@')[0] ?? 'Host',
+        seekerName: seeker?.displayName ?? seeker?.email?.split('@')[0] ?? 'Seeker',
+        listingTitle: listing.title,
+        areaLabel: area,
+        whenLocal,
+      },
+      undefined,
+      this.icsAttachment(viewing, listing, { location: area }),
+    );
+  }
+
   private async sendConfirmedEmail(seekerUserId: string, viewing: Viewing): Promise<void> {
-    try {
-      const seeker = await this.users.findById(seekerUserId);
-      if (!seeker?.email) return;
-      const rows = await this.db
-        .select({
-          title: listings.title,
-          address: listings.address,
-        })
-        .from(listings)
-        .where(eq(listings.id, viewing.listingId))
-        .limit(1);
-      const listing = rows[0];
-      if (!listing) return;
-      const whenLocal = new Intl.DateTimeFormat('it-IT', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'Europe/Rome',
-      }).format(new Date(viewing.startMs));
-      await this.email.viewingConfirmed(seeker.email, {
+    const seeker = await this.users.findById(seekerUserId);
+    if (!seeker?.email) return;
+    const listing = await this.listingMeta(viewing.listingId);
+    if (!listing) return;
+    const address = listing.address ?? this.areaLabel(listing);
+    const whenLocal = formatWhenLocal(viewing.startMs, listing.timezone);
+    await this.email.viewingConfirmed(
+      seeker.email,
+      {
         seekerName: seeker.displayName ?? seeker.email.split('@')[0] ?? 'Seeker',
         listingTitle: listing.title,
-        address: listing.address ?? '',
+        address,
         whenLocal,
-      });
-    } catch (err) {
-      this.logger.warn(
-        `viewing email failed: ${err instanceof Error ? err.message : String(err)}`,
-      );
-    }
+      },
+      undefined,
+      this.icsAttachment(viewing, listing, { location: address }),
+    );
+  }
+
+  private async sendCancelledEmail(recipientUserId: string, viewing: Viewing): Promise<void> {
+    const recipient = await this.users.findById(recipientUserId);
+    if (!recipient?.email) return;
+    const listing = await this.listingMeta(viewing.listingId);
+    if (!listing) return;
+    const area = this.areaLabel(listing);
+    const whenLocal = formatWhenLocal(viewing.startMs, listing.timezone);
+    await this.email.viewingCancelled(
+      recipient.email,
+      {
+        recipientName: recipient.displayName ?? recipient.email.split('@')[0] ?? 'User',
+        listingTitle: listing.title,
+        whenLocal,
+        areaLabel: area,
+      },
+      undefined,
+      this.icsAttachment(viewing, listing, { location: area, method: 'CANCEL' }),
+    );
+  }
+
+  private async sendReminderEmail(
+    seekerUserId: string,
+    viewing: Viewing,
+    hoursBefore: 24 | 2,
+  ): Promise<void> {
+    const seeker = await this.users.findById(seekerUserId);
+    if (!seeker?.email) return;
+    const listing = await this.listingMeta(viewing.listingId);
+    if (!listing) return;
+    const address = listing.address ?? this.areaLabel(listing);
+    const whenLocal = formatWhenLocal(viewing.startMs, listing.timezone);
+    await this.email.viewingReminder(
+      seeker.email,
+      {
+        seekerName: seeker.displayName ?? seeker.email.split('@')[0] ?? 'Seeker',
+        listingTitle: listing.title,
+        address,
+        whenLocal,
+        hoursBefore,
+      },
+      undefined,
+      this.icsAttachment(viewing, listing, { location: address }),
+    );
   }
 }
 
@@ -283,6 +489,7 @@ export class DefaultViewingNotifier implements ViewingNotifier {
   controllers: [ViewingsController],
   providers: [
     ViewingsService,
+    ViewingsReminderScheduler,
     { provide: AVAILABILITY_REPOSITORY, useClass: DrizzleAvailabilityRepository },
     { provide: VIEWING_REPOSITORY, useClass: DrizzleViewingRepository },
     { provide: VIEWING_LISTING_LOOKUP, useClass: DrizzleViewingListingLookup },

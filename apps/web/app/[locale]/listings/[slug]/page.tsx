@@ -134,6 +134,7 @@ export default async function ListingPage({
 
           <ListingContactSection
             listingId={listing.id}
+            listingSlug={listing.slug}
             listingTitle={listing.title}
             agentName={listing.agent?.displayName ?? null}
             agentPhone={listing.agent?.phone ?? null}

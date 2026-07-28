@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@easycasa/api-client": "workspace:*",
     "@easycasa/shared": "workspace:*",
     "@stripe/react-stripe-js": "^6.8.0",
     "@stripe/stripe-js": "^9.12.0",

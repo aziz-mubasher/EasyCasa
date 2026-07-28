@@ -23,6 +23,11 @@ export class SmtpEmailProvider implements EmailPort {
       subject: msg.subject,
       text: msg.text,
       html: msg.html,
+      attachments: msg.attachments?.map((a) => ({
+        filename: a.filename,
+        content: a.content,
+        contentType: a.contentType ?? 'text/calendar; charset=utf-8; method=REQUEST',
+      })),
     });
     return { provider: 'smtp', delivered: true, id: (info as { messageId?: string }).messageId };
   }

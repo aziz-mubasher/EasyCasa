@@ -1,10 +1,17 @@
-/** A message to send. `html` is optional; `text` is always required (fallback). */
+/** A message to send. `text` is always required (fallback). */
+export interface EmailAttachment {
+  filename: string;
+  content: string;
+  contentType?: string;
+}
+
 export interface EmailMessage {
   to: string;
   subject: string;
   text: string;
   html?: string;
   from?: string;
+  attachments?: EmailAttachment[];
 }
 
 export interface EmailResult {
