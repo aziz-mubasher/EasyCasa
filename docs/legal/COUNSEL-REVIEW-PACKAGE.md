@@ -19,8 +19,14 @@ This package describes **what the system actually does today**, as inferred from
 
 | Document | Path | Served in production |
 | --- | --- | --- |
+| **Counsel instruction letter** (send this) | `docs/legal/counsel-instruction-letter.md` | No — outbound brief |
+| **Counsel send checklist** (attachments map) | `docs/legal/counsel-send-checklist.md` | No |
 | Privacy policy template | `docs/legal/privacy-policy.md` | Yes — web route `/it/legal/privacy` shows version **v1-draft** |
 | Mediation disclosure template | `docs/legal/mediation-disclosure.md` | Yes — web route `/it/legal/mediation` (linked from Contatta flow) |
+
+**How this package relates to the instruction letter:** the letter asks counsel for
+decisions and drafted text (A1–A4, B1–B6). **This package** answers “what does the
+code do today?” so counsel does not need the repository. Send both.
 
 **Production context (from product/ops brief, not verified in this PR):** the **Contatta (enquiry) flow is live**, collecting real personal data. Consent records are written with `policyVersion: "v1-draft"`. Counsel must decide whether that is acceptable and what remediation is required.
 
@@ -289,6 +295,8 @@ Described as implemented controls, **not** as adequacy conclusions.
 
 | Item | Status |
 | --- | --- |
+| `docs/legal/counsel-instruction-letter.md` | **Ready to send** after AZM fills contact / timing placeholders |
+| `docs/legal/counsel-send-checklist.md` | Attachment map for counsel email |
 | `docs/legal/privacy-policy.md` | **Draft template** — header states not legal advice; bracketed fields unfilled |
 | `docs/legal/mediation-disclosure.md` | **Draft template** — REA/fees bracketed |
 | Counsel review | **Never completed** |
