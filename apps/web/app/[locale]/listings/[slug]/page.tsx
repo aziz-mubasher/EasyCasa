@@ -1,18 +1,19 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getListing } from '@/lib/api';
-import { parseListingDetail, listingShowsSale } from '@/lib/listing-detail';
+import { parseListingDetail } from '@/lib/listing-detail';
 import { ListingStructuredData } from '@/components/StructuredData';
-import { ListingLandingShell } from '@/components/listings/ListingLandingShell';
-import { ListingCompGallery } from '@/components/listings/ListingCompGallery';
-import { ListingScheda, ListingPriceBlock } from '@/components/listings/ListingScheda';
-import { ListingAsidePanel } from '@/components/listings/ListingAsidePanel';
-import { ListingOmiSection } from '@/components/listings/ListingOmiSection';
+import { ListingPhotoGallery } from '@/components/listings/ListingPhotoGallery';
 import { AffordThisHomeReferralBlock } from '@/components/financing/AffordThisHomeReferralBlock';
+import { ListingLandingShell } from '@/components/listings/ListingLandingShell';
+import { ListingSummaryCard } from '@/components/listings/ListingSummaryCard';
+import { ListingContactSection } from '@/components/listings/ListingContactSection';
+import { ListingValuationGate } from '@/components/listings/ListingValuationGate';
+import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 import { MapView } from '@/components/search/MapView';
+import { listingShowsSale } from '@/lib/listing-detail';
 import { formatProvinceName } from '@/lib/province-display';
 import type { ListingSummary } from '@easycasa/shared';
-import '@/components/listings/listing-detail.css';
 
 export default async function ListingPage({
   params,
@@ -28,11 +29,6 @@ export default async function ListingPage({
 
   const provinceName = formatProvinceName(listing.province);
   const locationLine = [listing.city, provinceName].filter(Boolean).join(' · ');
-  const whereLine = [listing.address, locationLine].filter(Boolean).join(' · ');
-  const crumb = [listing.city, listing.address?.split(',')[0] ?? provinceName]
-    .filter(Boolean)
-    .join(' › ');
-
   const hasLocation = listing.latitude != null && listing.longitude != null;
   const hasDescription = Boolean(listing.description);
   const pagePath = `/${locale}/listings/${listing.slug}`;
@@ -40,7 +36,6 @@ export default async function ListingPage({
     listing.transactionTypes,
     listing.transactionType,
   );
-
   const mapItem: ListingSummary | null = hasLocation
     ? {
         id: listing.id,
@@ -69,7 +64,7 @@ export default async function ListingPage({
   ];
 
   return (
-    <div className="ld bg-paper min-h-full">
+    <div className="bg-sand/30 min-h-full">
       <ListingStructuredData
         locale={locale}
         listing={{
@@ -96,60 +91,56 @@ export default async function ListingPage({
         tablistLabel={t('tabs.tablist')}
         sections={sections}
       >
-        <div className="ld-wrap">
-          {crumb ? <p className="ld-crumb">{crumb}</p> : null}
-
-          <ListingCompGallery title={listing.title} urls={listing.photoUrls} />
-
-          <div className="ld-cols">
-            <main id="details" className="scroll-mt-28 min-w-0">
-              <h1 className="ld-title">{listing.title}</h1>
-              {whereLine ? <p className="ld-where">{whereLine}</p> : null}
-
-              <ListingPriceBlock listing={listing} locale={locale} />
-
-              <ListingScheda listing={listing} locale={locale} />
-
-              {hasDescription ? (
-                <div id="description" className="ld-desc scroll-mt-28">
-                  <h3>{t('tabs.description')}</h3>
-                  <p>{listing.description}</p>
-                </div>
-              ) : null}
-
-              <div id="valuation" className="scroll-mt-28">
-                <ListingOmiSection slug={listing.slug} />
+        <article className="mx-auto max-w-6xl px-5 py-8 space-y-14 pb-16">
+          <section id="details" className="scroll-mt-28">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)] lg:items-start">
+              <div className="min-w-0 space-y-5">
+                <ListingPhotoGallery title={listing.title} urls={listing.photoUrls} />
+                {showFinancingReferral ? <AffordThisHomeReferralBlock /> : null}
               </div>
+              <ListingSummaryCard listing={listing} locale={locale} />
+            </div>
+          </section>
 
-              {showFinancingReferral ? (
-                <div className="mt-8">
-                  <AffordThisHomeReferralBlock />
-                </div>
-              ) : null}
-
-              {hasLocation && mapItem ? (
-                <div id="location" className="ld-map scroll-mt-28">
-                  <div className="ld-map-inner">
-                    <MapView items={[mapItem]} showNavigation={false} />
-                  </div>
-                  <p className="ld-map-cap">{t('map.approxCaption')}</p>
-                </div>
-              ) : null}
-
-              <div id="contact" className="scroll-mt-28 sr-only" aria-hidden>
-                {t('tabs.contact')}
+          {hasDescription ? (
+            <section id="description" className="scroll-mt-28 max-w-3xl">
+              <h2 className="font-display text-2xl font-semibold text-ink mb-2">{t('tabs.description')}</h2>
+              <p className="text-sm text-muted mb-5">{t('descriptionIntro')}</p>
+              <div className="rounded-xl2 border border-line bg-paper p-5 sm:p-6">
+                <p className="leading-relaxed whitespace-pre-line text-ink text-base">
+                  {listing.description}
+                </p>
               </div>
-            </main>
+            </section>
+          ) : null}
 
-            <ListingAsidePanel
-              listingId={listing.id}
-              listingSlug={listing.slug}
-              listingTitle={listing.title}
-              sellerType={listing.sellerType}
-              agentName={listing.agent?.displayName ?? null}
-            />
-          </div>
-        </div>
+          <ListingValuationGate>
+            <ListingValuationBandSection slug={listing.slug} />
+          </ListingValuationGate>
+
+          {hasLocation && mapItem ? (
+            <section id="location" className="scroll-mt-28 space-y-4">
+              <h2 className="font-display text-2xl font-semibold text-ink">{t('tabs.location')}</h2>
+              {listing.address || locationLine ? (
+                <p className="text-sm text-muted">
+                  {[listing.address, locationLine].filter(Boolean).join(' · ')}
+                </p>
+              ) : null}
+              <div className="h-[420px] rounded-xl2 overflow-hidden border border-line bg-paper">
+                <MapView items={[mapItem]} showNavigation />
+              </div>
+            </section>
+          ) : null}
+
+          <ListingContactSection
+            listingId={listing.id}
+            listingSlug={listing.slug}
+            listingTitle={listing.title}
+            agentName={listing.agent?.displayName ?? null}
+            agentPhone={listing.agent?.phone ?? null}
+            showFinancingReferral={showFinancingReferral}
+          />
+        </article>
       </ListingLandingShell>
     </div>
   );

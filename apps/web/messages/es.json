@@ -264,12 +264,7 @@
       "status": "Estado del anuncio",
       "province": "Provincia",
       "city": "Municipio",
-      "address": "Dirección",
-      "floorOf": "de {total}",
-      "withElevator": "con ascensor",
-      "condoFees": "Gastos de comunidad",
-      "condoFeesValue": "{amount} / año",
-      "heating": "Calefacción"
+      "address": "Dirección"
     },
     "status": {
       "draft": "Borrador",
@@ -297,35 +292,6 @@
       "lightboxTitle": "Galería: {title}",
       "thumbnails": "Miniaturas",
       "selectPhoto": "Mostrar foto {n}"
-    },
-    "scheda": {
-      "heading": "Ficha del inmueble"
-    },
-    "pricePerSqmLine": "{perM2}/m² · superficie comercial {surface}",
-    "aside": {
-      "privateOwner": "Propietario particular",
-      "privateRole": "verificado · anuncio directo",
-      "agencyRole": "anuncio de agencia",
-      "save": "☆ Guardar",
-      "saved": "★ Guardado",
-      "freefeeTitle": "Sin comisión",
-      "freefeeBody": "EasyCasa no percibe comisión del vendedor. Si pides un servicio de pago, el precio se indica antes del pedido y no depende del precio del inmueble.",
-      "refLabel": "Ref. anuncio"
-    },
-    "omi": {
-      "heading": "Valores de mercado para esta zona",
-      "bandRange": "{low} – {high} /m²",
-      "zoneComune": "Valores medios del municipio de {zone} · no una banda OMI de microzona",
-      "zoneMicro": "Zona OMI {zone} · viviendas · estado normal",
-      "thisListing": "este inmueble · {price}",
-      "noteBelow": "La banda indica valores de zona, no una tasación de este inmueble. El precio pedido está por debajo de la banda: comprueba el motivo antes de ofertar.",
-      "noteAbove": "La banda indica valores de zona, no una tasación de este inmueble. El precio pedido está por encima de la banda: comprueba el motivo antes de ofertar.",
-      "noteInBand": "La banda indica valores de zona, no una tasación de este inmueble. El precio pedido está dentro de la banda.",
-      "sourceOmi": "Fuente: Agenzia Entrate — OMI",
-      "sourceComparable": "Fuente: estimación provisional a partir de anuncios comparables"
-    },
-    "map": {
-      "approxCaption": "La dirección exacta se comunica al confirmar la visita."
     }
   },
   "add": {

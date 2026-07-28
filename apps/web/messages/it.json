@@ -264,12 +264,7 @@
       "status": "Stato annuncio",
       "province": "Provincia",
       "city": "Comune",
-      "address": "Indirizzo",
-      "floorOf": "di {total}",
-      "withElevator": "con ascensore",
-      "condoFees": "Spese condominiali",
-      "condoFeesValue": "{amount} / anno",
-      "heating": "Riscaldamento"
+      "address": "Indirizzo"
     },
     "status": {
       "draft": "Bozza",
@@ -297,35 +292,6 @@
       "lightboxTitle": "Galleria: {title}",
       "thumbnails": "Anteprime foto",
       "selectPhoto": "Mostra foto {n}"
-    },
-    "scheda": {
-      "heading": "Scheda immobile"
-    },
-    "pricePerSqmLine": "{perM2}/m² · superficie commerciale {surface}",
-    "aside": {
-      "privateOwner": "Proprietario privato",
-      "privateRole": "verificato · annuncio diretto",
-      "agencyRole": "annuncio agenzia",
-      "save": "☆ Salva",
-      "saved": "★ Salvato",
-      "freefeeTitle": "Nessuna provvigione",
-      "freefeeBody": "EasyCasa non percepisce alcuna provvigione dal venditore. Se richiedi un servizio a pagamento, il prezzo è indicato prima dell'ordine e non dipende dal prezzo dell'immobile.",
-      "refLabel": "Rif. annuncio"
-    },
-    "omi": {
-      "heading": "Valori di mercato per questa zona",
-      "bandRange": "{low} – {high} /m²",
-      "zoneComune": "Valori medi per il comune di {zone} · non una banda OMI di microzona",
-      "zoneMicro": "Zona OMI {zone} · abitazioni civili · stato normale",
-      "thisListing": "questo immobile · {price}",
-      "noteBelow": "La banda indica i valori di area, non una valutazione di questo immobile. Il prezzo richiesto si colloca sotto la banda: verificane il motivo prima di formulare una proposta.",
-      "noteAbove": "La banda indica i valori di area, non una valutazione di questo immobile. Il prezzo richiesto si colloca sopra la banda: verificane il motivo prima di formulare una proposta.",
-      "noteInBand": "La banda indica i valori di area, non una valutazione di questo immobile. Il prezzo richiesto si colloca entro la banda.",
-      "sourceOmi": "Fonte: Agenzia Entrate — OMI",
-      "sourceComparable": "Fonte: stima provvisoria da annunci comparabili"
-    },
-    "map": {
-      "approxCaption": "L'indirizzo esatto viene comunicato alla conferma della visita."
     }
   },
   "add": {

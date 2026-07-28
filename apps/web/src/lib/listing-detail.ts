@@ -40,9 +40,6 @@ export interface ParsedListingDetail {
   address: string | null;
   latitude: number | null;
   longitude: number | null;
-  sellerType: string | null;
-  condominioFeesCents: number | null;
-  heating: string | null;
   photoUrls: string[];
   agent: {
     displayName: string | null;
@@ -131,9 +128,6 @@ export function parseListingDetail(raw: Record<string, unknown>, slugFallback: s
     address: str(raw.address),
     latitude: num(raw.latitude),
     longitude: num(raw.longitude),
-    sellerType: str(raw.sellerType),
-    condominioFeesCents: num(raw.condominioFeesCents),
-    heating: str(raw.heating),
     photoUrls: photoUrlsFromListing(raw),
     agent: parseAgent(raw.agent),
   };
