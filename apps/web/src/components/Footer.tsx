@@ -26,6 +26,9 @@ export function Footer() {
             <Link href="/acquisto-assistito" className="text-sm text-azure hover:underline">
               {t('acquistoAssistito')}
             </Link>
+            <Link href="/valutazione-gratuita" className="text-sm text-azure hover:underline">
+              {t('valutazioneGratuita')}
+            </Link>
             <Banks4AllFinancingReferral variant="footerLink" />
           </div>
         </div>

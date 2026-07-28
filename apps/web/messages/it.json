@@ -417,7 +417,8 @@
     "rights": "Tutti i diritti riservati.",
     "pricing": "Listino servizi",
     "disclosure": "Una provvigione si applica solo a mediazione conclusa e risulta sempre nell'incarico.",
-    "acquistoAssistito": "Acquisto assistito"
+    "acquistoAssistito": "Acquisto assistito",
+    "valutazioneGratuita": "Valutazione gratuita"
   },
   "pricing": {
     "title": "Prezzi à la carte",
@@ -963,6 +964,142 @@
       "4": "Giovedì",
       "5": "Venerdì",
       "6": "Sabato"
+    }
+  },
+  "valutazioneGratuita": {
+    "meta": {
+      "title": "Quanto vale davvero la tua casa — EasyCasa",
+      "description": "Valutazione gratuita basata sui valori ufficiali dell'Agenzia delle Entrate per la tua microzona. Nessun agente ti richiama. Nessuna provvigione."
+    },
+    "hero": {
+      "eyebrow": "Valutazione gratuita · tutta Italia",
+      "title": "Quanto vale",
+      "titleEm": "davvero.",
+      "standfirst": "Il valore della tua casa secondo i dati ufficiali dell'Agenzia delle Entrate per la tua microzona. Non secondo chi vuole l'incarico.",
+      "promise1": "Gratuita e immediata.",
+      "promise2": "Nessun agente ti richiama.",
+      "promise3": "Nessuna provvigione, mai, dal venditore."
+    },
+    "form": {
+      "title": "Inizia da qui",
+      "address": "Indirizzo",
+      "addressPlaceholder": "Via, civico, comune",
+      "size": "Superficie",
+      "sizePlaceholder": "m² commerciali",
+      "condition": "Stato",
+      "conditions": {
+        "renovate": "Da ristrutturare",
+        "normal": "Normale",
+        "renovated": "Ristrutturato",
+        "new": "Nuovo / ottimo"
+      },
+      "cta": "Calcola il valore",
+      "note": "Il risultato compare subito in questa pagina. L'email serve solo se vuoi conservarlo — non è obbligatoria e non finisce in nessuna lista.",
+      "resultBody": "Stiamo collegando indirizzo → microzona OMI per le bande in tempo reale. I tuoi dati restano tuoi; puoi già pubblicare senza provvigione dal venditore.",
+      "resultCta": "Pubblica senza provvigione"
+    },
+    "compare": {
+      "kicker": "Perché i numeri non tornano mai",
+      "title": "La stima più alta non è un complimento.",
+      "lede": "In Italia il modo più semplice per ottenere un incarico è promettere un prezzo che il mercato non pagherà. Poi, dopo tre mesi senza visite, arriva la telefonata sul ribasso.",
+      "usual": {
+        "tag": "Come funziona di solito",
+        "title": "Un numero costruito per convincerti",
+        "body": "Tre agenzie, tre cifre diverse, nessuna che spieghi da dove arriva. Chi valuta guadagna solo se firmi, quindi la stima serve a farti firmare — non a farti vendere."
+      },
+      "here": {
+        "tag": "Come funziona qui",
+        "title": "Un numero che puoi verificare",
+        "body": "Partiamo dai valori che l'Agenzia delle Entrate registra per la tua microzona, e ti mostriamo ogni elemento del calcolo. Non prendiamo provvigione dal venditore, quindi non abbiamo motivo di gonfiarlo."
+      }
+    },
+    "method": {
+      "kicker": "Da dove arriva il numero",
+      "title": "Ti mostriamo i conti, non solo il totale.",
+      "lede": "Ogni valutazione indica su cosa poggia. Dove una cifra è stimata anziché registrata, lo diciamo.",
+      "factors": [
+        {
+          "no": "01",
+          "what": "Microzona OMI",
+          "sub": "Valori ufficiali",
+          "body": "La banda di valore registrata dall'Agenzia delle Entrate per la zona specifica dell'immobile — non per il comune intero. A Milano la differenza tra due zone può superare il 300%."
+        },
+        {
+          "no": "02",
+          "what": "Superficie commerciale",
+          "sub": "Base di calcolo",
+          "body": "I valori OMI sono al metro quadro lordo. Se usi la superficie calpestabile il risultato sbaglia del 15–25%: convertiamo prima di calcolare e ti diciamo quale base abbiamo usato."
+        },
+        {
+          "no": "03",
+          "what": "Stato conservativo",
+          "sub": "Correzione",
+          "body": "L'Agenzia pubblica bande distinte per stato normale, ottimo e scadente. Usiamo quella corretta invece di applicare una percentuale a occhio."
+        },
+        {
+          "no": "04",
+          "what": "Caratteristiche",
+          "sub": "Correzione",
+          "body": "Piano, ascensore, affaccio, terrazzo, box. Ogni correzione è elencata con il suo peso, così puoi contestarla se non sei d'accordo."
+        }
+      ],
+      "exampleAria": "Esempio banda OMI",
+      "exampleFig": "€ 8.700 – 10.900 /m²",
+      "exampleZone": "Esempio · zona OMI B12 · Milano, Navigli · abitazioni civili · stato normale",
+      "exampleMin": "minimo zona",
+      "exampleMax": "massimo zona",
+      "exampleSrc": "Fonte: Agenzia Entrate — OMI · semestre 2025/2"
+    },
+    "next": {
+      "kicker": "E poi",
+      "title": "Il numero è tuo. Anche se non fai altro.",
+      "lede": "Puoi tenerlo e basta — per decidere, per discutere con chi ti ha dato una cifra diversa, o per capire se conviene aspettare. Se invece vuoi vendere, pubblichi qui senza provvigione.",
+      "optionA": {
+        "tag": "Opzione A",
+        "title": "Prendi il numero e vai",
+        "body": "Nessun seguito, nessuna chiamata, nessuna newsletter. Se torni fra sei mesi la valutazione si aggiorna con i dati nuovi."
+      },
+      "optionB": {
+        "tag": "Opzione B",
+        "title": "Pubblica senza provvigione",
+        "body": "Il tuo annuncio, i tuoi contatti, le tue visite. I servizi che vuoi aggiungere — foto, documenti, APE — hanno un prezzo fisso indicato prima dell'ordine."
+      }
+    },
+    "faq": {
+      "kicker": "Domande",
+      "title": "Dove sta la fregatura",
+      "items": [
+        {
+          "q": "Se è gratis, come guadagnate?",
+          "a": "Dai servizi che scegli, non dalla vendita. Fotografie, certificazione energetica, verifica dei documenti, assistenza alla trattativa: ognuno ha un prezzo fisso, indicato prima dell'ordine, uguale su una casa da 150.000 € e su una da 800.000 €. Dal venditore non prendiamo provvigione."
+        },
+        {
+          "q": "Mi chiamerà qualcuno?",
+          "a": "No. Non passiamo il tuo indirizzo o i tuoi dati ad agenzie, e non esiste una rete di agenti che compra questi contatti. Se vuoi parlare con qualcuno lo chiedi tu."
+        },
+        {
+          "q": "Quanto è precisa?",
+          "a": "È una stima, e la trattiamo come tale: ti diamo un intervallo, non una cifra secca. I valori OMI sono ufficiali ma per definizione approssimativi — indicano la banda della microzona, non il valore del tuo specifico immobile. Per una perizia serve un tecnico, e te lo diciamo apertamente invece di far finta che un algoritmo basti."
+        },
+        {
+          "q": "Da dove arrivano i dati?",
+          "a": "Dall'Osservatorio del Mercato Immobiliare dell'Agenzia delle Entrate, che pubblica ogni sei mesi i valori registrati per ogni microzona di ogni comune italiano. Sono gli stessi dati che usano banche e periti come riferimento. Indichiamo sempre il semestre di riferimento."
+        },
+        {
+          "q": "Vale anche fuori Milano?",
+          "a": "Sì. La copertura è nazionale: 7.866 comuni, tutte le province."
+        }
+      ]
+    },
+    "close": {
+      "kicker": "Due minuti",
+      "title": "Scopri il numero prima che te lo dica qualcun altro.",
+      "lede": "Indirizzo, metri quadri, stato. Nient'altro.",
+      "cta": "Calcola il valore"
+    },
+    "footer": {
+      "left": "EasyCasa · MUNDIDA S.r.l. · P.IVA IT04531990986",
+      "right": "Dati di mercato: Agenzia Entrate — OMI"
     }
   }
 }

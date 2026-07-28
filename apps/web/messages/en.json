@@ -417,7 +417,8 @@
     "rights": "All rights reserved.",
     "pricing": "Service prices",
     "disclosure": "A mediation fee (provvigione) applies only when a deal closes through our work, and is always stated in the mandate.",
-    "acquistoAssistito": "Assisted purchase"
+    "acquistoAssistito": "Assisted purchase",
+    "valutazioneGratuita": "Free valuation"
   },
   "pricing": {
     "title": "À la carte pricing",
@@ -963,6 +964,142 @@
       "4": "Thursday",
       "5": "Friday",
       "6": "Saturday"
+    }
+  },
+  "valutazioneGratuita": {
+    "meta": {
+      "title": "What your home is really worth — EasyCasa",
+      "description": "Free valuation based on official Agenzia delle Entrate values for your microzone. No agent calls you back. No seller commission."
+    },
+    "hero": {
+      "eyebrow": "Free valuation · all of Italy",
+      "title": "What it's",
+      "titleEm": "really worth.",
+      "standfirst": "Your home’s value from official Agenzia delle Entrate data for your microzone — not from whoever wants the mandate.",
+      "promise1": "Free and immediate.",
+      "promise2": "No agent calls you back.",
+      "promise3": "No seller commission, ever."
+    },
+    "form": {
+      "title": "Start here",
+      "address": "Address",
+      "addressPlaceholder": "Street, number, town",
+      "size": "Floor area",
+      "sizePlaceholder": "Commercial m²",
+      "condition": "Condition",
+      "conditions": {
+        "renovate": "Needs renovation",
+        "normal": "Average",
+        "renovated": "Renovated",
+        "new": "New / excellent"
+      },
+      "cta": "Calculate value",
+      "note": "The result appears on this page. Email is only if you want to keep it — optional, and never sold as a lead list.",
+      "resultBody": "We’re connecting address → OMI microzone for live bands. Your details stay with you; you can already list with no seller commission.",
+      "resultCta": "List without commission"
+    },
+    "compare": {
+      "kicker": "Why the numbers never add up",
+      "title": "The highest estimate isn’t a compliment.",
+      "lede": "In Italy the easiest way to win a mandate is to promise a price the market won’t pay. Then, after months with no viewings, comes the call to cut the price.",
+      "usual": {
+        "tag": "How it usually works",
+        "title": "A number built to convince you",
+        "body": "Three agencies, three different figures, none that explain where they came from. Whoever values you only earns if you sign — so the estimate is there to get the signature, not to help you sell."
+      },
+      "here": {
+        "tag": "How it works here",
+        "title": "A number you can check",
+        "body": "We start from the values the Agenzia delle Entrate records for your microzone, and we show every part of the calculation. We take no seller commission, so we have no reason to inflate it."
+      }
+    },
+    "method": {
+      "kicker": "Where the number comes from",
+      "title": "We show the sums, not only the total.",
+      "lede": "Every valuation shows what it rests on. Where a figure is estimated rather than recorded, we say so.",
+      "factors": [
+        {
+          "no": "01",
+          "what": "OMI microzone",
+          "sub": "Official values",
+          "body": "The value band the Agenzia delle Entrate records for the property’s specific zone — not the whole municipality. In Milan the gap between two zones can exceed 300%."
+        },
+        {
+          "no": "02",
+          "what": "Commercial floor area",
+          "sub": "Calculation base",
+          "body": "OMI values are per m² of gross area. Using net floor area skews the result by 15–25%: we convert before calculating and tell you which base we used."
+        },
+        {
+          "no": "03",
+          "what": "State of repair",
+          "sub": "Adjustment",
+          "body": "The Agency publishes distinct bands for average, excellent and poor condition. We use the right band instead of an eyeballed percentage."
+        },
+        {
+          "no": "04",
+          "what": "Features",
+          "sub": "Adjustment",
+          "body": "Floor, lift, outlook, terrace, garage. Every adjustment is listed with its weight, so you can challenge it if you disagree."
+        }
+      ],
+      "exampleAria": "Example OMI band",
+      "exampleFig": "€ 8,700 – 10,900 /m²",
+      "exampleZone": "Example · OMI zone B12 · Milan, Navigli · residential · average condition",
+      "exampleMin": "zone minimum",
+      "exampleMax": "zone maximum",
+      "exampleSrc": "Source: Agenzia Entrate — OMI · semester 2025/2"
+    },
+    "next": {
+      "kicker": "And then",
+      "title": "The number is yours. Even if you do nothing else.",
+      "lede": "Keep it — to decide, to challenge someone else’s figure, or to wait. If you want to sell, you publish here with no commission.",
+      "optionA": {
+        "tag": "Option A",
+        "title": "Take the number and go",
+        "body": "No follow-up, no call, no newsletter. If you come back in six months the valuation updates with new data."
+      },
+      "optionB": {
+        "tag": "Option B",
+        "title": "List with no commission",
+        "body": "Your listing, your contacts, your viewings. Add-ons you choose — photos, documents, EPC — have a fixed price shown before you order."
+      }
+    },
+    "faq": {
+      "kicker": "Questions",
+      "title": "Where’s the catch",
+      "items": [
+        {
+          "q": "If it’s free, how do you make money?",
+          "a": "From services you choose, not from the sale. Photography, energy certificate, document checks, deal support: each has a fixed price shown before you order, the same on a €150,000 home and an €800,000 one. We take no seller commission."
+        },
+        {
+          "q": "Will someone call me?",
+          "a": "No. We don’t pass your address or details to agencies, and there is no agent network buying these leads. If you want to talk to someone, you ask."
+        },
+        {
+          "q": "How accurate is it?",
+          "a": "It’s an estimate, and we treat it as one: we give a range, not a single figure. OMI values are official but by definition approximate — they describe the microzone band, not your exact flat. A surveyor’s appraisal is different, and we say so instead of pretending an algorithm is enough."
+        },
+        {
+          "q": "Where does the data come from?",
+          "a": "From the Agenzia delle Entrate’s Osservatorio del Mercato Immobiliare, which publishes recorded values every six months for every microzone in every Italian municipality. Banks and valuers use the same reference. We always cite the semester."
+        },
+        {
+          "q": "Does it work outside Milan?",
+          "a": "Yes. Coverage is national: 7,866 municipalities, every province."
+        }
+      ]
+    },
+    "close": {
+      "kicker": "Two minutes",
+      "title": "See the number before someone else tells you theirs.",
+      "lede": "Address, square metres, condition. Nothing else.",
+      "cta": "Calculate value"
+    },
+    "footer": {
+      "left": "EasyCasa · MUNDIDA S.r.l. · VAT IT04531990986",
+      "right": "Market data: Agenzia Entrate — OMI"
     }
   }
 }
