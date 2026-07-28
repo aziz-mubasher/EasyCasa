@@ -167,16 +167,16 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
   if (status === 'ok') {
     return (
       <div className={className} role="status">
-        <p className="text-pine font-[var(--font-display)] text-lg">{t('success')}</p>
-        {b4aNote ? <p className="mt-2 text-sm text-muted">{b4aNote}</p> : null}
+        <p className="text-pine font-[var(--font-display)] text-lg leading-snug">{t('success')}</p>
+        {b4aNote ? <p className="mt-2 text-sm leading-relaxed text-ink-soft">{b4aNote}</p> : null}
       </div>
     );
   }
 
   if (ready && !isAuthenticated) {
     return (
-      <div className={className || 'mt-8 max-w-md'}>
-        <p className="text-sm text-muted mb-3">{t('signInPrompt')}</p>
+      <div className={className || 'mt-8 max-w-lg'}>
+        <p className="text-base leading-relaxed text-ink-soft mb-4">{t('signInPrompt')}</p>
         <RequireSignInLink />
       </div>
     );
@@ -185,12 +185,12 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
   const versionLabel = policyVersion ?? '…';
 
   return (
-    <form onSubmit={onSubmit} className={`mt-8 max-w-md space-y-4 ${className}`.trim()} noValidate>
+    <form onSubmit={onSubmit} className={`mt-8 max-w-lg space-y-5 ${className}`.trim()} noValidate>
       {b4aNote ? (
-        <div className="rounded-lg border border-line bg-paper px-3 py-2 text-sm" role="status">
+        <div className="rounded-xl2 border border-line bg-sand/40 px-4 py-3 text-sm leading-relaxed" role="status">
           <p className="text-pine font-[var(--font-display)]">{t('success')}</p>
-          <p className="mt-1 text-muted">{b4aNote}</p>
-          <p className="mt-1 text-muted">{t('b4aRetryHint')}</p>
+          <p className="mt-1.5 text-ink-soft">{b4aNote}</p>
+          <p className="mt-1.5 text-ink-soft">{t('b4aRetryHint')}</p>
         </div>
       ) : null}
       <Field label={t('emailLabel')}>
@@ -235,10 +235,10 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
             aria-invalid={error === t('errorPhoneInvalid') ? true : undefined}
           />
         </div>
-        <span className="mt-1 block text-xs text-muted">{t('phoneHint')}</span>
+        <span className="mt-1.5 block text-sm leading-relaxed text-ink-soft">{t('phoneHint')}</span>
       </div>
 
-      <div className="flex gap-3 items-start text-sm leading-snug">
+      <div className="flex gap-3 items-start text-[0.95rem] leading-relaxed">
         <input
           id={`${dialSelectId}-whatsapp`}
           type="checkbox"
@@ -246,14 +246,14 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
           checked={whatsappOnPhone}
           onChange={(e) => setWhatsappOnPhone(e.target.checked)}
         />
-        <label htmlFor={`${dialSelectId}-whatsapp`} className="cursor-pointer select-none">
+        <label htmlFor={`${dialSelectId}-whatsapp`} className="cursor-pointer select-none text-ink">
           {t('whatsappLabel')}
         </label>
       </div>
 
       <Field label={t('messageLabel')}>
         <textarea
-          className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm min-h-[100px]"
+          className="w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-base leading-relaxed min-h-[120px]"
           required
           minLength={1}
           maxLength={2000}
@@ -270,64 +270,66 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
           placeholder="https://portal.banks4all.eu/it/property-plan/track/…"
           autoComplete="off"
         />
-        <span className="mt-1 block text-xs text-muted">{t('banks4AllTrackingHint')}</span>
+        <span className="mt-1.5 block text-sm leading-relaxed text-ink-soft">{t('banks4AllTrackingHint')}</span>
       </Field>
 
-      <div className="flex gap-3 items-start text-sm leading-snug">
-        <input
-          id={`${dialSelectId}-b4a`}
-          type="checkbox"
-          className="mt-1 h-4 w-4 shrink-0 accent-azure"
-          checked={b4aShareOk}
-          onChange={(e) => setB4aShareOk(e.target.checked)}
-        />
-        <label htmlFor={`${dialSelectId}-b4a`} className="cursor-pointer select-none">
-          {t('banks4AllConsent')}
-        </label>
-      </div>
+      <div className="space-y-3.5 rounded-xl2 border border-line bg-sand/30 px-4 py-4">
+        <div className="flex gap-3 items-start text-[0.95rem] leading-relaxed">
+          <input
+            id={`${dialSelectId}-b4a`}
+            type="checkbox"
+            className="mt-1 h-4 w-4 shrink-0 accent-azure"
+            checked={b4aShareOk}
+            onChange={(e) => setB4aShareOk(e.target.checked)}
+          />
+          <label htmlFor={`${dialSelectId}-b4a`} className="cursor-pointer select-none text-ink">
+            {t('banks4AllConsent')}
+          </label>
+        </div>
 
-      <div className="flex gap-3 items-start text-sm leading-snug">
-        <input
-          id={`${dialSelectId}-privacy`}
-          type="checkbox"
-          className="mt-1 h-4 w-4 shrink-0 accent-azure"
-          checked={privacyOk}
-          onChange={(e) => setPrivacyOk(e.target.checked)}
-          required
-        />
-        <label htmlFor={`${dialSelectId}-privacy`} className="cursor-pointer">
-          {t('privacyConsentBefore')}
-          <a className="underline" href={privacyHref} target="_blank" rel="noreferrer">
-            {t('privacyLink')}
-          </a>
-          {t('privacyConsentAfter', { version: versionLabel })}
-        </label>
-      </div>
+        <div className="flex gap-3 items-start text-[0.95rem] leading-relaxed">
+          <input
+            id={`${dialSelectId}-privacy`}
+            type="checkbox"
+            className="mt-1 h-4 w-4 shrink-0 accent-azure"
+            checked={privacyOk}
+            onChange={(e) => setPrivacyOk(e.target.checked)}
+            required
+          />
+          <label htmlFor={`${dialSelectId}-privacy`} className="cursor-pointer text-ink">
+            {t('privacyConsentBefore')}
+            <a className="underline text-azure" href={privacyHref} target="_blank" rel="noreferrer">
+              {t('privacyLink')}
+            </a>
+            {t('privacyConsentAfter', { version: versionLabel })}
+          </label>
+        </div>
 
-      <div className="flex gap-3 items-start text-sm leading-snug">
-        <input
-          id={`${dialSelectId}-mediation`}
-          type="checkbox"
-          className="mt-1 h-4 w-4 shrink-0 accent-azure"
-          checked={mediationOk}
-          onChange={(e) => setMediationOk(e.target.checked)}
-          required
-        />
-        <label htmlFor={`${dialSelectId}-mediation`} className="cursor-pointer">
-          {t('mediationConsentBefore')}
-          <a className="underline" href={mediationHref} target="_blank" rel="noreferrer">
-            {t('mediationLink')}
-          </a>
-          {t('mediationConsentAfter')}
-        </label>
+        <div className="flex gap-3 items-start text-[0.95rem] leading-relaxed">
+          <input
+            id={`${dialSelectId}-mediation`}
+            type="checkbox"
+            className="mt-1 h-4 w-4 shrink-0 accent-azure"
+            checked={mediationOk}
+            onChange={(e) => setMediationOk(e.target.checked)}
+            required
+          />
+          <label htmlFor={`${dialSelectId}-mediation`} className="cursor-pointer text-ink">
+            {t('mediationConsentBefore')}
+            <a className="underline text-azure" href={mediationHref} target="_blank" rel="noreferrer">
+              {t('mediationLink')}
+            </a>
+            {t('mediationConsentAfter')}
+          </label>
+        </div>
       </div>
 
       {error ? (
-        <p className="text-sm text-muted" role="alert">
+        <p className="text-sm leading-relaxed text-ink" role="alert">
           {error}
         </p>
       ) : null}
-      <Button type="submit" disabled={status === 'sending' || !privacyOk || !mediationOk}>
+      <Button type="submit" className="w-full sm:w-auto py-3" disabled={status === 'sending' || !privacyOk || !mediationOk}>
         {status === 'sending' ? t('submitting') : t('submit')}
       </Button>
     </form>

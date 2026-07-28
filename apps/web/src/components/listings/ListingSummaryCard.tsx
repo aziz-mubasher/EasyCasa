@@ -7,6 +7,7 @@ import {
 } from '@/lib/listing-detail';
 import { ListingPriceLines } from '@/components/listings/ListingFactsTable';
 import { formatProvinceName } from '@/lib/province-display';
+import { Link } from '@/i18n/routing';
 
 type FactRow = { label: string; value: string };
 
@@ -131,6 +132,22 @@ export async function ListingSummaryCard({
           </ul>
         </div>
       ) : null}
+
+      <div className="border-t border-line pt-4 space-y-2.5">
+        <p className="eyebrow">{t('contact.label')}</p>
+        <Link
+          href={`/listings/${listing.slug}/book`}
+          className="inline-flex w-full items-center justify-center rounded-full bg-azure px-5 py-3 text-sm font-medium font-[var(--font-display)] text-paper transition hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-azure"
+        >
+          {t('contact.bookViewing')}
+        </Link>
+        <a
+          href="#contact"
+          className="inline-flex w-full items-center justify-center rounded-full border border-ink/25 bg-transparent px-5 py-3 text-sm font-medium font-[var(--font-display)] text-ink transition hover:border-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-azure"
+        >
+          {t('contact.cta')}
+        </a>
+      </div>
     </div>
   );
 }
