@@ -4,7 +4,12 @@ import { IsBoolean, IsIn, IsString, MinLength } from 'class-validator';
 
 import { CURRENT_POLICY_VERSION } from '../consent.service';
 
-export const CONSENT_PURPOSES = ['privacy_policy', 'mediation_disclosure', 'marketing'] as const;
+export const CONSENT_PURPOSES = [
+  'privacy_policy',
+  'mediation_disclosure',
+  'marketing',
+  'b4a_affordability_share',
+] as const;
 export type ConsentPurposeDto = (typeof CONSENT_PURPOSES)[number];
 
 /** Body for POST /me/privacy/consents — GDPR Art. 7 evidence record. */

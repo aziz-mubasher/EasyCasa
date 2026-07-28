@@ -16,13 +16,23 @@
       "CONVERTED": "CONVERTED",
       "CLOSED": "CLOSED"
     },
-    "intents": { "info": "Question", "viewing": "Viewing request", "offer": "Offer" },
+    "intents": {
+      "info": "Question",
+      "viewing": "Viewing request",
+      "offer": "Offer"
+    },
     "actions": {
       "markContacted": "Mark contacted",
       "qualify": "Qualify",
       "convert": "Convert to order",
       "close": "Close",
       "reopen": "Reopen"
+    },
+    "b4a": {
+      "title": "Affordability assessed · Banks4All",
+      "range": "indicative range up to {{band}} · valid to {{expires}}",
+      "disclaimer": "Independent affordability assessment. Not a credit offer, approval or commitment by any lender.",
+      "group": "Banks4All and EasyCasa are both part of the Mundida group."
     }
   }
 }

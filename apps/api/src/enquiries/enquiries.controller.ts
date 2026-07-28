@@ -16,6 +16,8 @@ export class CreateEnquiryDto {
   @IsOptional() @IsEmail() contactEmail?: string;
   @IsOptional() @IsString() @MaxLength(40) contactPhone?: string;
   @IsOptional() @IsBoolean() contactWhatsappAvailable?: boolean;
+  /** Full Banks4All tracking URL or bare token (EC-1). */
+  @IsOptional() @IsString() @MaxLength(500) banks4AllTracking?: string;
 }
 
 export class TransitionDto {

@@ -25,6 +25,17 @@ export interface Enquiry {
   contactPhone: string | null;
   contactWhatsappAvailable: boolean;
   orderId: string | null;
+  /** Banks4All tracking token — EC-1. Null when no badge. */
+  b4aToken: string | null;
+  b4aBandMaxCents: number | null;
+  /** Inclusive YYYY-MM-DD. */
+  b4aExpiresAt: string | null;
+  b4aCheckedAt: string | null;
+  /**
+   * Ephemeral create-response only — why attestation was not attached.
+   * Never persisted; omit from list endpoints.
+   */
+  b4aWarning?: 'plan_ref' | 'initials_mismatch' | 'consent_required' | 'unresolved' | null;
 }
 
 /** Who to notify + whether the mediator should get a follow-up task. */

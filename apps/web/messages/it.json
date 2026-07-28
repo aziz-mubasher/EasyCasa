@@ -207,7 +207,14 @@
         "errorPolicyVersion": "Versione policy non disponibile",
         "errorConsentRecord": "Consenso non registrato",
         "errorPhoneInvalid": "Inserisci un numero di telefono valido (cifre, spazi, +, -, parentesi).",
-        "errorGeneric": "Invio non riuscito"
+        "errorGeneric": "Invio non riuscito",
+        "banks4AllTrackingLabel": "Link di tracking Banks4All (opzionale)",
+        "banks4AllTrackingHint": "Incolla l’URL di tracking del property-plan o il token da Banks4All.",
+        "banks4AllConsent": "Condividi la mia valutazione di affordability Banks4All con il proprietario dell’immobile.",
+        "b4aWarningPlanRef": "Sembra un riferimento piano (PIP-…), non un link di tracking. Lascia vuoto o incolla l’URL di tracking dal portale Banks4All.",
+        "b4aWarningInitials": "Non siamo riusciti ad allegare il badge di affordability a questa richiesta. La richiesta è stata comunque inviata.",
+        "b4aWarningConsent": "Seleziona il consenso di condivisione Banks4All per allegare la valutazione di affordability.",
+        "b4aWarningUnresolved": "Non siamo riusciti a verificare quel link Banks4All al momento. La richiesta è stata comunque inviata."
       }
     },
     "energy": {

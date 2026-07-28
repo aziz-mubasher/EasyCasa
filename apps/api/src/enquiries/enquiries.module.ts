@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, Module } from '@nestjs/common';
-import { desc, eq, or } from 'drizzle-orm';
+import { and, desc, eq, isNotNull, lt, or } from 'drizzle-orm';
 
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
@@ -9,11 +9,16 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { OrdersModule } from '../orders/orders.module';
 import { OrdersService } from '../orders/orders.service';
 import { UsersModule } from '../users/users.module';
+import { Banks4AllAttestationScheduler } from './banks4all/banks4all-attestation.scheduler';
+import { Banks4AllAttestationSweep } from './banks4all/banks4all-attestation.sweep';
+import { BANKS4ALL_PORT } from './banks4all/banks4all.port';
+import { HttpBanks4AllAdapter } from './banks4all/http-banks4all.adapter';
 import {
   ENQUIRY_NOTIFIER,
   ENQUIRY_REPOSITORY,
   LISTING_LOOKUP,
   ORDER_CREATION,
+  type Banks4AllAttestationFields,
   type EnquiryNotifier,
   type EnquiryRepository,
   type ListingLookupPort,
@@ -48,6 +53,10 @@ function toDomain(r: Row): Enquiry {
     contactPhone: r.contactPhone,
     contactWhatsappAvailable: r.contactWhatsappAvailable,
     orderId: r.orderId,
+    b4aToken: r.b4aToken ?? null,
+    b4aBandMaxCents: r.b4aBandMaxCents ?? null,
+    b4aExpiresAt: r.b4aExpiresAt ?? null,
+    b4aCheckedAt: r.b4aCheckedAt ? r.b4aCheckedAt.toISOString() : null,
   };
 }
 
@@ -65,6 +74,10 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
     contactEmail: string | null;
     contactPhone: string | null;
     contactWhatsappAvailable: boolean;
+    b4aToken?: string | null;
+    b4aBandMaxCents?: number | null;
+    b4aExpiresAt?: string | null;
+    b4aCheckedAt?: Date | null;
   }): Promise<Enquiry> {
     const [r] = await this.db
       .insert(enquiries)
@@ -79,6 +92,10 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
         contactEmail: input.contactEmail,
         contactPhone: input.contactPhone,
         contactWhatsappAvailable: input.contactWhatsappAvailable,
+        b4aToken: input.b4aToken ?? null,
+        b4aBandMaxCents: input.b4aBandMaxCents ?? null,
+        b4aExpiresAt: input.b4aExpiresAt ?? null,
+        b4aCheckedAt: input.b4aCheckedAt ?? null,
       })
       .returning();
     return toDomain(r);
@@ -119,6 +136,52 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
       .update(enquiries)
       .set({ orderId, status, updatedAt: new Date() })
       .where(eq(enquiries.id, id));
+  }
+
+  async setBanks4All(id: string, fields: Banks4AllAttestationFields): Promise<void> {
+    await this.db
+      .update(enquiries)
+      .set({
+        b4aToken: fields.b4aToken,
+        b4aBandMaxCents: fields.b4aBandMaxCents,
+        b4aExpiresAt: fields.b4aExpiresAt,
+        b4aCheckedAt: fields.b4aCheckedAt,
+        updatedAt: new Date(),
+      })
+      .where(eq(enquiries.id, id));
+  }
+
+  async clearBanks4All(id: string): Promise<void> {
+    await this.setBanks4All(id, {
+      b4aToken: null,
+      b4aBandMaxCents: null,
+      b4aExpiresAt: null,
+      b4aCheckedAt: null,
+    });
+  }
+
+  async clearBanks4AllForSeeker(seekerUserId: string): Promise<number> {
+    const updated = await this.db
+      .update(enquiries)
+      .set({
+        b4aToken: null,
+        b4aBandMaxCents: null,
+        b4aExpiresAt: null,
+        b4aCheckedAt: null,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(enquiries.seekerUserId, seekerUserId), isNotNull(enquiries.b4aToken)))
+      .returning({ id: enquiries.id });
+    return updated.length;
+  }
+
+  async listBanks4AllDueForSweep(): Promise<Enquiry[]> {
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const rows = await this.db
+      .select()
+      .from(enquiries)
+      .where(and(isNotNull(enquiries.b4aToken), lt(enquiries.b4aCheckedAt, cutoff)));
+    return rows.map(toDomain);
   }
 }
 
@@ -194,6 +257,9 @@ export class DefaultEnquiryNotifier implements EnquiryNotifier {
     { provide: ENQUIRY_REPOSITORY, useClass: DrizzleEnquiryRepository },
     { provide: LISTING_LOOKUP, useClass: DrizzleListingLookup },
     { provide: ENQUIRY_NOTIFIER, useClass: DefaultEnquiryNotifier },
+    { provide: BANKS4ALL_PORT, useClass: HttpBanks4AllAdapter },
+    Banks4AllAttestationSweep,
+    Banks4AllAttestationScheduler,
 
     // Phase 26: bridge → mapping → Phase 10 adapter (OrdersModule exports OrdersService).
     { provide: ORDER_CREATION, useClass: OrdersBridge },
@@ -201,6 +267,6 @@ export class DefaultEnquiryNotifier implements EnquiryNotifier {
     { provide: ORDERS_SERVICE, useClass: Phase10OrdersAdapter },
     { provide: PHASE10_ORDERS_SERVICE, useExisting: OrdersService },
   ],
-  exports: [EnquiriesService],
+  exports: [EnquiriesService, ENQUIRY_REPOSITORY],
 })
 export class EnquiriesModule {}

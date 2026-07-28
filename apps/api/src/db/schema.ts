@@ -172,6 +172,11 @@ export const enquiries = pgTable('enquiries', {
   contactPhone: text('contact_phone'),
   contactWhatsappAvailable: boolean('contact_whatsapp_available').notNull().default(false),
   orderId: uuid('order_id'),
+  /** Banks4All tracking token (EC-1). Never store response bodies. */
+  b4aToken: text('b4a_token'),
+  b4aBandMaxCents: integer('b4a_band_max_cents'),
+  b4aExpiresAt: date('b4a_expires_at', { mode: 'string' }),
+  b4aCheckedAt: timestamp('b4a_checked_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

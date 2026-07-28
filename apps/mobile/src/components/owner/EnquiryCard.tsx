@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-nati
 import { useTranslation } from 'react-i18next';
 
 import type { Enquiry, EnquiryEvent, EnquiryStatus } from '@easycasa/api-client';
+import { Banks4AllAffordabilityBadge } from './Banks4AllAffordabilityBadge';
 import { EnquiryStatusPill } from './EnquiryStatusPill';
 import { useTheme } from '../../theme/useTheme';
 
@@ -57,6 +58,7 @@ export function EnquiryCard({
       <Text style={[styles.message, { color: theme.colors.text }]} numberOfLines={3}>
         {enquiry.message}
       </Text>
+      <Banks4AllAffordabilityBadge enquiry={enquiry} />
       {contact ? (
         <Text style={[styles.contact, { color: theme.colors.textMuted }]}>{contact}</Text>
       ) : null}

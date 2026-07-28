@@ -94,6 +94,10 @@ const Schema = z
     // Phase 38 — GDPR retention window for unconverted enquiry leads (days)
     RETENTION_LEAD_DAYS: z.coerce.number().int().positive().default(90),
 
+    // EC-1 — Banks4All B4A-1 partner attestation (empty → fail soft, no badge)
+    BANKS4ALL_ATTESTATION_BASE_URL: z.string().default(''),
+    BANKS4ALL_PARTNER_TOKEN: z.string().default(''),
+
     // Phase 39 — error tracking (empty → fail-soft noop reporter)
     SENTRY_DSN: z.string().default(''),
 

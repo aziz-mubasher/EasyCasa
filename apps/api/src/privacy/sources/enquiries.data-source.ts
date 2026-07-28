@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull } from 'drizzle-orm';
 
 import { DRIZZLE } from '../../db/db.module';
 import type { Db } from '../../db/drizzle';
@@ -31,6 +31,8 @@ export class EnquiriesDataSource implements PersonalDataSource {
         contactEmail: enquiries.contactEmail,
         contactPhone: enquiries.contactPhone,
         orderId: enquiries.orderId,
+        b4aBandMaxCents: enquiries.b4aBandMaxCents,
+        b4aExpiresAt: enquiries.b4aExpiresAt,
         createdAt: enquiries.createdAt,
       })
       .from(enquiries)
@@ -46,6 +48,8 @@ export class EnquiriesDataSource implements PersonalDataSource {
         contactEmail: r.contactEmail,
         contactPhone: r.contactPhone,
         converted: r.orderId != null,
+        hasBanks4AllAttestation: r.b4aBandMaxCents != null,
+        b4aExpiresAt: r.b4aExpiresAt,
         createdAt: r.createdAt.toISOString(),
       })),
     };
@@ -67,6 +71,10 @@ export class EnquiriesDataSource implements PersonalDataSource {
           contactEmail: null,
           contactPhone: null,
           contactWhatsappAvailable: false,
+          b4aToken: null,
+          b4aBandMaxCents: null,
+          b4aExpiresAt: null,
+          b4aCheckedAt: null,
           updatedAt: new Date(),
         })
         .where(inArray(enquiries.id, erasable))
@@ -81,5 +89,21 @@ export class EnquiriesDataSource implements PersonalDataSource {
         ? 'converted enquiries retained (linked to a transaction)'
         : undefined,
     };
+  }
+
+  /** Consent withdrawal for b4a_affordability_share — clear EC-1 columns. */
+  async clearBanks4AllAttestation(subjectId: string): Promise<number> {
+    const updated = await this.db
+      .update(enquiries)
+      .set({
+        b4aToken: null,
+        b4aBandMaxCents: null,
+        b4aExpiresAt: null,
+        b4aCheckedAt: null,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(enquiries.seekerUserId, subjectId), isNotNull(enquiries.b4aToken)))
+      .returning({ id: enquiries.id });
+    return updated.length;
   }
 }

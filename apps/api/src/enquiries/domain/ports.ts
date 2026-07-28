@@ -1,5 +1,12 @@
 import type { Enquiry, EnquiryIntent, ListingParties, OrderDraft } from './types';
 
+export interface Banks4AllAttestationFields {
+  b4aToken: string | null;
+  b4aBandMaxCents: number | null;
+  b4aExpiresAt: string | null;
+  b4aCheckedAt: Date | null;
+}
+
 export interface EnquiryRepository {
   create(input: {
     listingId: string;
@@ -11,6 +18,10 @@ export interface EnquiryRepository {
     contactEmail: string | null;
     contactPhone: string | null;
     contactWhatsappAvailable: boolean;
+    b4aToken?: string | null;
+    b4aBandMaxCents?: number | null;
+    b4aExpiresAt?: string | null;
+    b4aCheckedAt?: Date | null;
   }): Promise<Enquiry>;
   get(id: string): Promise<Enquiry | null>;
   listForSeeker(seekerUserId: string): Promise<Enquiry[]>;
@@ -18,6 +29,12 @@ export interface EnquiryRepository {
   listForOwner(userId: string): Promise<Enquiry[]>;
   setStatus(id: string, status: Enquiry['status']): Promise<void>;
   setOrder(id: string, orderId: string, status: Enquiry['status']): Promise<void>;
+  setBanks4All(id: string, fields: Banks4AllAttestationFields): Promise<void>;
+  clearBanks4All(id: string): Promise<void>;
+  /** Clear attestation columns for all enquiries of a seeker (consent withdrawal). */
+  clearBanks4AllForSeeker(seekerUserId: string): Promise<number>;
+  /** Tokens due for nightly re-verify (`b4a_checked_at` older than 24h). */
+  listBanks4AllDueForSweep(): Promise<Enquiry[]>;
 }
 
 /** Resolve a listing's owner (and assigned mediator, if any). */

@@ -50,6 +50,9 @@ export interface EnquiryOwnerParams {
   contactWhatsappAvailable?: boolean;
   listingTitle: string;
   message: string;
+  /** EC-1 — show badge only when both set and not expired. */
+  b4aBandMaxCents?: number | null;
+  b4aExpiresAt?: string | null;
 }
 
 function formatSeekerContact(p: EnquiryOwnerParams): string {
@@ -61,14 +64,42 @@ function formatSeekerContact(p: EnquiryOwnerParams): string {
   return parts.filter(Boolean).join(', ');
 }
 
+function formatBandEuro(cents: number): string {
+  return `€${Math.round(cents / 100).toLocaleString('it-IT')}`;
+}
+
+function formatB4aBadge(p: EnquiryOwnerParams, locale: Locale): string | null {
+  if (p.b4aBandMaxCents == null || !p.b4aExpiresAt) return null;
+  const band = formatBandEuro(p.b4aBandMaxCents);
+  if (locale === 'en') {
+    return (
+      `Affordability assessed · Banks4All\n` +
+      `indicative range up to ${band} · valid to ${p.b4aExpiresAt}\n` +
+      `Independent affordability assessment. Not a credit offer, approval or commitment by any lender.\n` +
+      `Banks4All and EasyCasa are both part of the Mundida group.`
+    );
+  }
+  return (
+    `Affordabilità valutata · Banks4All\n` +
+    `fascia indicativa fino a ${band} · valida fino al ${p.b4aExpiresAt}\n` +
+    `Valutazione indipendente di affordability. Non è un'offerta di credito, un'approvazione o un impegno di alcun finanziatore.\n` +
+    `Banks4All ed EasyCasa fanno entrambe parte del gruppo Mundida.`
+  );
+}
+
 export function enquiryReceivedOwner(p: EnquiryOwnerParams, locale: Locale = 'it'): Rendered {
   const contactLine = formatSeekerContact(p);
+  const badge = formatB4aBadge(p, locale);
+  const badgeText = badge ? `\n\n${badge}\n` : '';
+  const badgeHtml = badge
+    ? `<pre style="font-family:ui-monospace,monospace;font-size:12px;white-space:pre-wrap;margin:16px 0;padding:12px;background:#f3ede1;border:1px solid #E7DFCF">${esc(badge)}</pre>`
+    : '';
   if (locale === 'en') {
     return {
       subject: `New enquiry — ${p.listingTitle}`,
-      text: `Hi ${p.ownerName},\n\n${p.seekerName} (${contactLine}) enquired about "${p.listingTitle}":\n\n"${p.message}"\n\nReply directly to get in touch.\n\n— EasyCasa`,
+      text: `Hi ${p.ownerName},\n\n${p.seekerName} (${contactLine}) enquired about "${p.listingTitle}":\n\n"${p.message}"${badgeText}\nReply directly to get in touch.\n\n— EasyCasa`,
       html: wrap(
-        `<p>Hi ${esc(p.ownerName)},</p><p><strong>${esc(p.seekerName)}</strong> (${esc(contactLine)}) enquired about <strong>${esc(p.listingTitle)}</strong>:</p><blockquote>${esc(p.message)}</blockquote>`,
+        `<p>Hi ${esc(p.ownerName)},</p><p><strong>${esc(p.seekerName)}</strong> (${esc(contactLine)}) enquired about <strong>${esc(p.listingTitle)}</strong>:</p><blockquote>${esc(p.message)}</blockquote>${badgeHtml}`,
       ),
     };
   }
@@ -78,9 +109,9 @@ export function enquiryReceivedOwner(p: EnquiryOwnerParams, locale: Locale = 'it
     : p.seekerEmail;
   return {
     subject: `Nuova richiesta — ${p.listingTitle}`,
-    text: `Ciao ${p.ownerName},\n\n${p.seekerName} (${contactIt}) ha inviato una richiesta per "${p.listingTitle}":\n\n"${p.message}"\n\nRispondi per metterti in contatto.\n\n— EasyCasa`,
+    text: `Ciao ${p.ownerName},\n\n${p.seekerName} (${contactIt}) ha inviato una richiesta per "${p.listingTitle}":\n\n"${p.message}"${badgeText}\nRispondi per metterti in contatto.\n\n— EasyCasa`,
     html: wrap(
-      `<p>Ciao ${esc(p.ownerName)},</p><p><strong>${esc(p.seekerName)}</strong> (${esc(contactIt)}) ha inviato una richiesta per <strong>${esc(p.listingTitle)}</strong>:</p><blockquote>${esc(p.message)}</blockquote>`,
+      `<p>Ciao ${esc(p.ownerName)},</p><p><strong>${esc(p.seekerName)}</strong> (${esc(contactIt)}) ha inviato una richiesta per <strong>${esc(p.listingTitle)}</strong>:</p><blockquote>${esc(p.message)}</blockquote>${badgeHtml}`,
     ),
   };
 }

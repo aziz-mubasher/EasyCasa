@@ -33,6 +33,14 @@ export const EnquirySchema = z.object({
   contactPhone: z.string().nullable(),
   contactWhatsappAvailable: z.boolean(),
   orderId: z.string().nullable(),
+  b4aToken: z.string().nullable().optional(),
+  b4aBandMaxCents: z.number().int().nullable().optional(),
+  b4aExpiresAt: z.string().nullable().optional(),
+  b4aCheckedAt: z.string().nullable().optional(),
+  b4aWarning: z
+    .enum(['plan_ref', 'initials_mismatch', 'consent_required', 'unresolved'])
+    .nullable()
+    .optional(),
 });
 export type Enquiry = z.infer<typeof EnquirySchema>;
 
@@ -57,6 +65,7 @@ export class EasyCasaEnquiriesApi {
       contactEmail?: string;
       contactPhone?: string;
       contactWhatsappAvailable?: boolean;
+      banks4AllTracking?: string;
     },
   ): Promise<Enquiry> {
     return this.request(`/listings/${encodeURIComponent(listingId)}/enquiries`, EnquirySchema, {

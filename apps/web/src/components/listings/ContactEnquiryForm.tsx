@@ -21,10 +21,10 @@ type Props = {
   className?: string;
 };
 
-type ConsentPurpose = 'privacy_policy' | 'mediation_disclosure';
+type ConsentPurpose = 'privacy_policy' | 'mediation_disclosure' | 'b4a_affordability_share';
 
 /**
- * Contact-agent CTA — Phase 37/38. Records required consents then posts enquiry.
+ * Contact-agent CTA — Phase 37/38 + EC-1 Banks4All attestation (optional).
  * Requires OIDC PKCE sign-in (Authorization: Bearer).
  */
 export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: Props) {
@@ -38,11 +38,14 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
   const [dialCode, setDialCode] = useState(DEFAULT_DIAL_CODE);
   const [nationalNumber, setNationalNumber] = useState('');
   const [whatsappOnPhone, setWhatsappOnPhone] = useState(true);
+  const [banks4AllTracking, setBanks4AllTracking] = useState('');
+  const [b4aShareOk, setB4aShareOk] = useState(false);
   const [privacyOk, setPrivacyOk] = useState(false);
   const [mediationOk, setMediationOk] = useState(false);
   const [policyVersion, setPolicyVersion] = useState<string | null>(null);
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [b4aNote, setB4aNote] = useState<string | null>(null);
 
   const phone = useMemo(
     () => composeEnquiryPhone(dialCode, nationalNumber),
@@ -89,6 +92,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
     }
     setStatus('sending');
     setError(null);
+    setB4aNote(null);
     try {
       const token = await getAccessToken();
       if (!token) {
@@ -100,6 +104,9 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
 
       await recordConsent('privacy_policy', version);
       await recordConsent('mediation_disclosure', version);
+      if (b4aShareOk) {
+        await recordConsent('b4a_affordability_share', version);
+      }
 
       const trimmedPhone = enquiryPhoneForSubmit(phone);
       const body: {
@@ -108,6 +115,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
         contactEmail: string;
         contactPhone?: string;
         contactWhatsappAvailable?: boolean;
+        banks4AllTracking?: string;
       } = {
         intent: 'info',
         message,
@@ -117,6 +125,8 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
         body.contactPhone = trimmedPhone;
         body.contactWhatsappAvailable = whatsappOnPhone;
       }
+      const tracking = banks4AllTracking.trim();
+      if (tracking) body.banks4AllTracking = tracking;
 
       const res = await authedFetch(apiUrl(`/listings/${encodeURIComponent(listingId)}/enquiries`), {
         method: 'POST',
@@ -130,6 +140,13 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
           : (errBody?.message ?? t('errorGeneric'));
         throw new Error(msg);
       }
+      const created = (await res.json().catch(() => null)) as {
+        b4aWarning?: 'plan_ref' | 'initials_mismatch' | 'consent_required' | 'unresolved' | null;
+      } | null;
+      if (created?.b4aWarning === 'plan_ref') setB4aNote(t('b4aWarningPlanRef'));
+      else if (created?.b4aWarning === 'initials_mismatch') setB4aNote(t('b4aWarningInitials'));
+      else if (created?.b4aWarning === 'consent_required') setB4aNote(t('b4aWarningConsent'));
+      else if (created?.b4aWarning === 'unresolved') setB4aNote(t('b4aWarningUnresolved'));
       setStatus('ok');
     } catch (err) {
       setStatus('err');
@@ -142,9 +159,10 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
 
   if (status === 'ok') {
     return (
-      <p className={`text-pine font-[var(--font-display)] text-lg ${className}`} role="status">
-        {t('success')}
-      </p>
+      <div className={className} role="status">
+        <p className="text-pine font-[var(--font-display)] text-lg">{t('success')}</p>
+        {b4aNote ? <p className="mt-2 text-sm text-muted">{b4aNote}</p> : null}
+      </div>
     );
   }
 
@@ -229,6 +247,30 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
           onChange={(e) => setMessage(e.target.value)}
         />
       </Field>
+
+      <Field label={t('banks4AllTrackingLabel')}>
+        <Input
+          type="text"
+          value={banks4AllTracking}
+          onChange={(e) => setBanks4AllTracking(e.target.value)}
+          placeholder="https://portal.banks4all.eu/it/property-plan/track/…"
+          autoComplete="off"
+        />
+        <span className="mt-1 block text-xs text-muted">{t('banks4AllTrackingHint')}</span>
+      </Field>
+
+      <div className="flex gap-3 items-start text-sm leading-snug">
+        <input
+          id={`${dialSelectId}-b4a`}
+          type="checkbox"
+          className="mt-1 h-4 w-4 shrink-0 accent-azure"
+          checked={b4aShareOk}
+          onChange={(e) => setB4aShareOk(e.target.checked)}
+        />
+        <label htmlFor={`${dialSelectId}-b4a`} className="cursor-pointer select-none">
+          {t('banks4AllConsent')}
+        </label>
+      </div>
 
       <div className="flex gap-3 items-start text-sm leading-snug">
         <input

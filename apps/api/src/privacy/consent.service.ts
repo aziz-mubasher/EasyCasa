@@ -1,7 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 /** A purpose the subject can consent to. Extend as the product grows. */
-export type ConsentPurpose = 'privacy_policy' | 'mediation_disclosure' | 'marketing';
+export type ConsentPurpose =
+  | 'privacy_policy'
+  | 'mediation_disclosure'
+  | 'marketing'
+  | 'b4a_affordability_share';
 
 export interface ConsentRecord {
   subjectId: string;

@@ -207,7 +207,14 @@
         "errorPolicyVersion": "Versión de la política no disponible",
         "errorConsentRecord": "No se pudo registrar el consentimiento",
         "errorPhoneInvalid": "Introduce un número válido (dígitos, espacios, +, -, paréntesis).",
-        "errorGeneric": "No se pudo enviar la consulta"
+        "errorGeneric": "No se pudo enviar la consulta",
+        "banks4AllTrackingLabel": "Enlace de seguimiento Banks4All (opcional)",
+        "banks4AllTrackingHint": "Pega la URL de seguimiento del property-plan o el token de Banks4All.",
+        "banks4AllConsent": "Compartir mi evaluación de asequibilidad de Banks4All con el propietario del inmueble.",
+        "b4aWarningPlanRef": "Eso parece una referencia de plan (PIP-…), no un enlace de seguimiento. Déjalo en blanco o pega la URL de seguimiento del portal Banks4All.",
+        "b4aWarningInitials": "No pudimos adjuntar la insignia de asequibilidad a esta consulta. La consulta se envió de todos modos.",
+        "b4aWarningConsent": "Marca el consentimiento de compartir Banks4All para adjuntar tu evaluación de asequibilidad.",
+        "b4aWarningUnresolved": "No pudimos verificar ese enlace de Banks4All ahora. La consulta se envió de todos modos."
       }
     },
     "energy": {

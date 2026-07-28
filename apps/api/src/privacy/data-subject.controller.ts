@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Optional, Post, Req } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import type { Request } from 'express';
 
@@ -13,6 +13,7 @@ import {
 import { RecordConsentDto } from './dto/record-consent.dto';
 import { DsarService } from './dsar.service';
 import { ErasureService } from './erasure.service';
+import { EnquiriesDataSource } from './sources/enquiries.data-source';
 
 /**
  * Data-subject rights endpoints (GDPR Art. 7, 15, 17) — Phase 38.
@@ -25,6 +26,7 @@ export class DataSubjectController {
     private readonly erasure: ErasureService,
     private readonly consent: ConsentService,
     private readonly users: UsersService,
+    @Optional() private readonly enquiriesData: EnquiriesDataSource | null,
   ) {}
 
   @Get('export')
@@ -54,6 +56,13 @@ export class DataSubjectController {
       policyVersion: body.policyVersion || CURRENT_POLICY_VERSION,
       ipHash: ip ? createHash('sha256').update(ip).digest('hex').slice(0, 16) : undefined,
     });
+    if (
+      body.purpose === 'b4a_affordability_share' &&
+      body.granted === false &&
+      this.enquiriesData
+    ) {
+      await this.enquiriesData.clearBanks4AllAttestation(me.id);
+    }
     return { ok: true as const, policyVersion: body.policyVersion || CURRENT_POLICY_VERSION };
   }
 

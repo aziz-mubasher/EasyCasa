@@ -121,6 +121,12 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 |---|---|---|
 | RETENTION_LEAD_DAYS | api | Days before unconverted enquiry leads are anonymized (default `90`). |
 
+## EC-1 — Banks4All attestation
+| Variable | Used by | Notes |
+|---|---|---|
+| BANKS4ALL_ATTESTATION_BASE_URL | api | Origin for B4A-1 `GET /v1/attestations/:token` (e.g. `https://portal.banks4all.eu`). Empty → fail soft. |
+| BANKS4ALL_PARTNER_TOKEN | api | Bearer token matching Banks4All `B4A_PARTNER_TOKEN`. Empty → fail soft. |
+
 ## Phase 39 — observability
 | Variable | Used by | Notes |
 |---|---|---|

@@ -86,6 +86,10 @@ describe('enquiry routing + conversion', () => {
       contactPhone: null,
       contactWhatsappAvailable: false,
       orderId: null,
+      b4aToken: null,
+      b4aBandMaxCents: null,
+      b4aExpiresAt: null,
+      b4aCheckedAt: null,
       ...over,
     };
   }
