@@ -13,10 +13,6 @@ export interface CalendarYmd {
   day: number;
 }
 
-function pad2(n: number): string {
-  return n < 10 ? `0${n}` : String(n);
-}
-
 /** Format parts for `utcMs` in `timeZone`. */
 function zonedParts(
   utcMs: number,
