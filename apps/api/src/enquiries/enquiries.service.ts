@@ -11,7 +11,9 @@ import { assertEnquiryConsents } from '../privacy/enquiry-consent.gate';
 import { ConsentService } from '../privacy/consent.service';
 import { UsersService } from '../users/users.service';
 import { BANKS4ALL_PORT, type Banks4AllPort } from './banks4all/banks4all.port';
+import { enquiryForOwnerApi, enquiryForSeekerApi } from './banks4all/enquiry-api-view';
 import { initialsMatch } from './banks4all/initials';
+import { isExpiresOnOrAfterRomeToday } from './banks4all/rome-date';
 import { extractBanks4AllTrackingToken, isPipPlanRefFormat } from './banks4all/token';
 import type { Banks4AllAttachWarning } from './banks4all/types';
 import {
@@ -32,13 +34,12 @@ import {
 import { nextEnquiryStatus, validateEnquiryInput } from './domain/state';
 import type { Enquiry, EnquiryEvent, EnquiryIntent } from './domain/types';
 
-/** True when the cached attestation should still be shown to the owner. */
-export function isBanks4AllBadgeVisible(enquiry: Enquiry, today = new Date()): boolean {
-  if (!enquiry.b4aToken || enquiry.b4aBandMaxCents == null || !enquiry.b4aExpiresAt) {
+/** True when the cached attestation should still be shown to the owner (Europe/Rome). */
+export function isBanks4AllBadgeVisible(enquiry: Enquiry, now = new Date()): boolean {
+  if (enquiry.b4aBandMaxCents == null || !enquiry.b4aExpiresAt) {
     return false;
   }
-  const todayStr = today.toISOString().slice(0, 10);
-  return enquiry.b4aExpiresAt >= todayStr;
+  return isExpiresOnOrAfterRomeToday(enquiry.b4aExpiresAt, now);
 }
 
 @Injectable()
@@ -103,15 +104,19 @@ export class EnquiriesService {
     }
 
     await this.sendEnquiryEmails(enquiry, parties);
-    return b4aWarning ? { ...enquiry, b4aWarning } : enquiry;
+    const withWarn = b4aWarning ? { ...enquiry, b4aWarning } : enquiry;
+    // Seeker create response: keep ephemeral warning; strip token/band from wire.
+    return enquiryForSeekerApi(withWarn);
   }
 
-  listMine(seekerUserId: string): Promise<Enquiry[]> {
-    return this.repo.listForSeeker(seekerUserId);
+  async listMine(seekerUserId: string): Promise<Enquiry[]> {
+    const rows = await this.repo.listForSeeker(seekerUserId);
+    return rows.map(enquiryForSeekerApi);
   }
 
-  listInbound(ownerUserId: string): Promise<Enquiry[]> {
-    return this.repo.listForOwner(ownerUserId);
+  async listInbound(ownerUserId: string): Promise<Enquiry[]> {
+    const rows = await this.repo.listForOwner(ownerUserId);
+    return rows.map(enquiryForOwnerApi);
   }
 
   /** Owner / mediator advances the enquiry through its lifecycle. */
@@ -120,12 +125,12 @@ export class EnquiriesService {
       await this.convertToOrder(actorUserId, id);
       const updated = await this.repo.get(id);
       if (!updated) throw new NotFoundException(`Enquiry ${id} not found`);
-      return updated;
+      return enquiryForOwnerApi(updated);
     }
     const enquiry = await this.ownedByOwnerOrMediator(actorUserId, id);
     const status = nextEnquiryStatus(enquiry.status, event);
     await this.repo.setStatus(id, status);
-    return { ...enquiry, status };
+    return enquiryForOwnerApi({ ...enquiry, status });
   }
 
   /** Convert a qualified enquiry into an order in the Phase 10 pipeline. */

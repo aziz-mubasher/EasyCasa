@@ -2,6 +2,8 @@
  * Transactional email templates for the seeker pilot — Phase 36 / 36.1.
  * Pure functions: (params, locale) -> { subject, text, html }.
  */
+import { formatBandMaxCentsEuro } from '../../enquiries/banks4all/format-band';
+
 export type Locale = 'it' | 'en';
 
 export interface Rendered {
@@ -64,13 +66,13 @@ function formatSeekerContact(p: EnquiryOwnerParams): string {
   return parts.filter(Boolean).join(', ');
 }
 
-function formatBandEuro(cents: number): string {
-  return `€${Math.round(cents / 100).toLocaleString('it-IT')}`;
+function formatBandEuro(cents: number, locale: Locale): string {
+  return formatBandMaxCentsEuro(cents, locale === 'en' ? 'en-US' : 'it-IT');
 }
 
 function formatB4aBadge(p: EnquiryOwnerParams, locale: Locale): string | null {
   if (p.b4aBandMaxCents == null || !p.b4aExpiresAt) return null;
-  const band = formatBandEuro(p.b4aBandMaxCents);
+  const band = formatBandEuro(p.b4aBandMaxCents, locale);
   if (locale === 'en') {
     return (
       `Affordability assessed · Banks4All\n` +

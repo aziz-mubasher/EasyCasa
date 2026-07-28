@@ -147,7 +147,14 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       else if (created?.b4aWarning === 'initials_mismatch') setB4aNote(t('b4aWarningInitials'));
       else if (created?.b4aWarning === 'consent_required') setB4aNote(t('b4aWarningConsent'));
       else if (created?.b4aWarning === 'unresolved') setB4aNote(t('b4aWarningUnresolved'));
-      setStatus('ok');
+
+      // EC-3: on financing attach failure, keep the form so the seeker can fix
+      // the tracking URL / consent and submit again (enquiry itself already sent).
+      if (created?.b4aWarning) {
+        setStatus('idle');
+      } else {
+        setStatus('ok');
+      }
     } catch (err) {
       setStatus('err');
       setError(err instanceof Error ? err.message : t('errorGeneric'));
@@ -179,6 +186,13 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
 
   return (
     <form onSubmit={onSubmit} className={`mt-8 max-w-md space-y-4 ${className}`.trim()} noValidate>
+      {b4aNote ? (
+        <div className="rounded-lg border border-line bg-paper px-3 py-2 text-sm" role="status">
+          <p className="text-pine font-[var(--font-display)]">{t('success')}</p>
+          <p className="mt-1 text-muted">{b4aNote}</p>
+          <p className="mt-1 text-muted">{t('b4aRetryHint')}</p>
+        </div>
+      ) : null}
       <Field label={t('emailLabel')}>
         <Input
           type="email"

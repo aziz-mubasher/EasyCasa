@@ -214,7 +214,8 @@
         "b4aWarningPlanRef": "Sembra un riferimento piano (PIP-…), non un link di tracking. Lascia vuoto o incolla l’URL di tracking dal portale Banks4All.",
         "b4aWarningInitials": "Non siamo riusciti ad allegare il badge di affordability a questa richiesta. La richiesta è stata comunque inviata.",
         "b4aWarningConsent": "Seleziona il consenso di condivisione Banks4All per allegare la valutazione di affordability.",
-        "b4aWarningUnresolved": "Non siamo riusciti a verificare quel link Banks4All al momento. La richiesta è stata comunque inviata."
+        "b4aWarningUnresolved": "Non siamo riusciti a verificare quel link Banks4All al momento. La richiesta è stata comunque inviata.",
+        "b4aRetryHint": "Puoi correggere il link Banks4All o il consenso qui sotto e inviare di nuovo per allegare il badge (viene creata un’altra richiesta)."
       }
     },
     "energy": {

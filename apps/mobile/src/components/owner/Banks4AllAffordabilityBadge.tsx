@@ -5,12 +5,21 @@ import { useTranslation } from 'react-i18next';
 import type { Enquiry } from '@easycasa/api-client';
 import { useTheme } from '../../theme/useTheme';
 
-function isBadgeVisible(enquiry: Enquiry): boolean {
+/** YYYY-MM-DD in Europe/Rome — must match API `isBanks4AllBadgeVisible`. */
+function calendarDateInRome(date: Date = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Rome',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+}
+
+function isBadgeVisible(enquiry: Enquiry, now = new Date()): boolean {
   const band = enquiry.b4aBandMaxCents;
   const expires = enquiry.b4aExpiresAt;
   if (band == null || !expires) return false;
-  const today = new Date().toISOString().slice(0, 10);
-  return expires >= today;
+  return expires >= calendarDateInRome(now);
 }
 
 function formatBand(cents: number, locale: string): string {
@@ -26,7 +35,7 @@ function formatBand(cents: number, locale: string): string {
   }
 }
 
-/** Owner-facing Banks4All affordability badge — EC-1. Absence renders nothing. */
+/** Owner-facing Banks4All affordability badge — EC-1 / EC-3. Absence renders nothing. */
 export function Banks4AllAffordabilityBadge({ enquiry }: { enquiry: Enquiry }) {
   const theme = useTheme();
   const { t, i18n } = useTranslation();
@@ -58,6 +67,9 @@ export function Banks4AllAffordabilityBadge({ enquiry }: { enquiry: Enquiry }) {
     </View>
   );
 }
+
+/** Exported for unit tests (cents ÷ 100). */
+export const __test = { formatBand, isBadgeVisible, calendarDateInRome };
 
 const styles = StyleSheet.create({
   wrap: {
