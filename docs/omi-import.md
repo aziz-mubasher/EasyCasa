@@ -29,11 +29,24 @@ Preferred path for nationwide coverage: load the pre-built seed under
 VALORI+ZONE). That creates `omi_zone_quotes` and upserts derived comune medians
 into `omi_quotes` with `basis=zone_median`.
 
+**National seed objects are not stored in git** (EC-2). Fetch from MinIO, then load:
+
 ```bash
+# Place objects (ops): easycasa MinIO bucket prefix omi/2025-H2/
+#   omi_zone_quotes.csv.gz
+#   omi_quotes.csv.gz
+mc cp "$MINIO_ALIAS/easycasa-media/omi/2025-H2/omi_zone_quotes.csv.gz" migration/omi/
+mc cp "$MINIO_ALIAS/easycasa-media/omi/2025-H2/omi_quotes.csv.gz" migration/omi/
+
 cd migration/omi
 gunzip -k -f omi_quotes.csv.gz omi_zone_quotes.csv.gz
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f load.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f verify.sql
 ```
+
+CI uses the Lombardia fixture under `migration/omi/fixtures/` (see
+`.github/workflows/omi-load.yml`). VPS runbook: [`RUNBOOK-omi-vps-load.md`](./RUNBOOK-omi-vps-load.md).
+Rehearsal timings: [`ec-2-omi-load-rehearsal.md`](./ec-2-omi-load-rehearsal.md).
 
 Use `omi:import` below when you have a single open-licence CSV (or counsel-approved
 VALORI) and want row-level microzone upserts instead of the median rollup.

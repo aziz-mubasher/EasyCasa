@@ -1,0 +1,88 @@
+name: omi-load
+
+# EC-2 — fixture load + verify against scratch PostGIS+pgvector.
+# National CSVs are not in git; CI uses migration/omi/fixtures/ (Lombardia).
+
+on:
+  pull_request:
+    paths:
+      - 'migration/sql/**'
+      - 'migration/omi/**'
+      - 'infra/postgres/**'
+      - '.github/workflows/omi-load.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'migration/sql/**'
+      - 'migration/omi/**'
+      - 'infra/postgres/**'
+      - '.github/workflows/omi-load.yml'
+  workflow_dispatch:
+
+jobs:
+  fixture-load:
+    name: OMI fixture migrate + load + verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build PostGIS + pgvector image
+        run: docker build -t easycasa-omi-db ./infra/postgres
+
+      - name: Start scratch database
+        run: |
+          # No host port publish (avoids runner conflicts). Larger shm avoids
+          # PostGIS init crashes. Wait through the entrypoint stop/restart cycle.
+          docker run -d --name omi-db \
+            --shm-size=1g \
+            -e POSTGRES_USER=omi \
+            -e POSTGRES_PASSWORD=omi \
+            -e POSTGRES_DB=omi \
+            easycasa-omi-db
+          ready=0
+          for i in $(seq 1 90); do
+            if docker exec omi-db pg_isready -U omi -d omi >/dev/null 2>&1; then
+              ready=$((ready + 1))
+              if [ "$ready" -ge 5 ]; then
+                echo "postgres stable after ${i}s"
+                break
+              fi
+            else
+              ready=0
+            fi
+            sleep 1
+          done
+          docker exec omi-db pg_isready -U omi -d omi
+          docker inspect -f '{{.State.Status}}' omi-db | grep -q running
+
+      - name: Apply migrations from zero
+        run: |
+          for f in migration/sql/*.sql; do
+            echo "APPLY $(basename "$f")"
+            # Retry once if entrypoint briefly restarts mid-batch
+            if ! docker exec -i omi-db psql -U omi -d omi -v ON_ERROR_STOP=1 < "$f"; then
+              sleep 3
+              docker exec omi-db pg_isready -U omi -d omi
+              docker exec -i omi-db psql -U omi -d omi -v ON_ERROR_STOP=1 < "$f"
+            fi
+          done
+
+      - name: Load Lombardia fixture
+        working-directory: migration/omi/fixtures
+        run: |
+          docker cp omi_zone_quotes.csv omi-db:/tmp/
+          docker cp omi_quotes.csv omi-db:/tmp/
+          sed "s|FROM 'omi_zone_quotes.csv'|FROM '/tmp/omi_zone_quotes.csv'|; s|FROM 'omi_quotes.csv'|FROM '/tmp/omi_quotes.csv'|" load.sql > /tmp/load-abs.sql
+          docker cp /tmp/load-abs.sql omi-db:/tmp/load-abs.sql
+          docker exec omi-db psql -U omi -d omi -v ON_ERROR_STOP=1 -f /tmp/load-abs.sql
+
+      - name: Verify fixture
+        run: |
+          docker cp migration/omi/fixtures/verify.sql omi-db:/tmp/verify.sql
+          docker exec omi-db psql -U omi -d omi -v ON_ERROR_STOP=1 -f /tmp/verify.sql
+
+      - name: Idempotent second load
+        run: |
+          docker exec omi-db psql -U omi -d omi -v ON_ERROR_STOP=1 -f /tmp/load-abs.sql
+          docker cp migration/omi/fixtures/verify.sql omi-db:/tmp/verify.sql
+          docker exec omi-db psql -U omi -d omi -v ON_ERROR_STOP=1 -f /tmp/verify.sql

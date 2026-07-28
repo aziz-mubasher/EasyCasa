@@ -40,4 +40,8 @@ regexes = [
   '''postgres(?:ql)?://u:p@''',
   '''postgres(?:ql)?://easycasa:easycasa@''',
   '''postgres(?:ql)?://easycasa:x@''',
+  # Domain field names (Banks4All attestation cache) — not credentials.
+  '''b4aBandMaxCents''',
+  '''b4aToken''',
+  '''b4aExpiresAt''',
 ]
