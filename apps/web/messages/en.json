@@ -264,7 +264,12 @@
       "status": "Listing status",
       "province": "Province",
       "city": "Municipality",
-      "address": "Address"
+      "address": "Address",
+      "floorOf": "of {total}",
+      "withElevator": "with elevator",
+      "condoFees": "Condo fees",
+      "condoFeesValue": "{amount} / year",
+      "heating": "Heating"
     },
     "status": {
       "draft": "Draft",
@@ -292,6 +297,35 @@
       "lightboxTitle": "Gallery: {title}",
       "thumbnails": "Photo thumbnails",
       "selectPhoto": "Show photo {n}"
+    },
+    "scheda": {
+      "heading": "Property record"
+    },
+    "pricePerSqmLine": "{perM2}/m² · commercial surface {surface}",
+    "aside": {
+      "privateOwner": "Private owner",
+      "privateRole": "verified · direct listing",
+      "agencyRole": "agency listing",
+      "save": "☆ Save",
+      "saved": "★ Saved",
+      "freefeeTitle": "No commission",
+      "freefeeBody": "EasyCasa takes no commission from the seller. If you order a paid service, the price is shown before you confirm and does not depend on the property price.",
+      "refLabel": "Listing ref."
+    },
+    "omi": {
+      "heading": "Market values for this area",
+      "bandRange": "{low} – {high} /m²",
+      "zoneComune": "Average values for the municipality of {zone} · not an official OMI microzone band",
+      "zoneMicro": "OMI zone {zone} · residential · normal condition",
+      "thisListing": "this listing · {price}",
+      "noteBelow": "The band shows registry-derived area values, not an appraisal of this property. The asking price sits below the band — find out why before making an offer.",
+      "noteAbove": "The band shows registry-derived area values, not an appraisal of this property. The asking price sits above the band — find out why before making an offer.",
+      "noteInBand": "The band shows registry-derived area values, not an appraisal of this property. The asking price sits within the band.",
+      "sourceOmi": "Source: Agenzia Entrate — OMI",
+      "sourceComparable": "Source: provisional estimate from comparable listings"
+    },
+    "map": {
+      "approxCaption": "The exact address is shared when a viewing is confirmed."
     }
   },
   "add": {
