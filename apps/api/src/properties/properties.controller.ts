@@ -9,6 +9,7 @@ import {
 import { IsBoolean, IsIn, IsOptional, IsString } from 'class-validator';
 import { PropertiesService } from './properties.service';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 
@@ -19,6 +20,7 @@ class CreatePropertyDto {
 }
 
 @Controller()
+@RequiresAuth()
 export class PropertiesController {
   constructor(
     private readonly properties: PropertiesService,

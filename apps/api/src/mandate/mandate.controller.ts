@@ -11,12 +11,15 @@ import {
 } from '@nestjs/common';
 import type { Request } from 'express';
 
+import { RequiresAuth } from '../auth/capability.decorator';
+import { Public } from '../auth/public.decorator';
 import { apiConfig } from '../config';
 import { MandateService } from './mandate.service';
 import { CreateMandateDto, RequestSignatureDto, SignatureWebhookDto } from './dto';
 import { verifySignatureWebhook } from './signature.provider';
 
 @Controller()
+@RequiresAuth()
 export class MandateController {
   constructor(private readonly service: MandateService) {}
 
@@ -46,6 +49,7 @@ export class MandateController {
    * Signature provider webhook. Requires `x-signature` = HMAC-SHA256(hex) of
    * the raw body with SIGNATURE_WEBHOOK_SECRET when that secret is set.
    */
+  @Public()
   @Post('webhooks/signature')
   async webhook(
     @Req() req: RawBodyRequest<Request>,

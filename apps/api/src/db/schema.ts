@@ -473,6 +473,19 @@ export const serviceDemandLog = pgTable('service_demand_log', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-11 — append-only personal-data / admin access audit. */
+export const authorityAuditLog = pgTable('authority_audit_log', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  actorUserId: uuid('actor_user_id'),
+  actorSub: text('actor_sub'),
+  subjectUserId: uuid('subject_user_id'),
+  resource: text('resource').notNull(),
+  action: text('action').notNull(),
+  reason: text('reason'),
+  meta: jsonb('meta'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 // ---------------- Phase 12 — rentals / AML ----------------
 export const leaseType = pgEnum('lease_type', [
   'libero_4_4', 'concordato_3_2', 'transitorio', 'studenti',
@@ -715,6 +728,7 @@ export const schema = {
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,
+  authorityAuditLog,
   leases, kycCases,
   paymentIntents, invoices, stripeWebhookEvents,
   omiQuotes, valuationRequests,

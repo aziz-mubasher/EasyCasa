@@ -3,6 +3,7 @@ import { Throttle } from '@nestjs/throttler';
 import { IsBoolean, IsEmail, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 import { EnquiriesService } from './enquiries.service';
@@ -25,6 +26,7 @@ export class TransitionDto {
 }
 
 @Controller()
+@RequiresAuth()
 export class EnquiriesController {
   constructor(
     private readonly service: EnquiriesService,

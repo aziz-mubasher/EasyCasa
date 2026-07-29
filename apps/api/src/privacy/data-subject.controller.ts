@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import type { Request } from 'express';
 
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 import {
@@ -20,6 +21,7 @@ import { EnquiriesDataSource } from './sources/enquiries.data-source';
  * Subject is the logged-in internal user UUID (via UsersService.getOrCreate).
  */
 @Controller('me/privacy')
+@RequiresAuth()
 export class DataSubjectController {
   constructor(
     private readonly dsar: DsarService,

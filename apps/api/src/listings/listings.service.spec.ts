@@ -80,6 +80,21 @@ describe('ListingsService', () => {
     await expect(svc.update('l1', { title: 'x' }, user, 'me')).rejects.toThrow('not your listing');
   });
 
+  it('allows ownerUserId to update even when agentId differs (EC-11)', async () => {
+    const findById = vi.fn().mockResolvedValue({
+      id: 'l1',
+      agentId: 'agency-agent',
+      ownerUserId: 'me',
+      mediatorUserId: null,
+    });
+    const update = vi.fn().mockResolvedValue({ id: 'l1' });
+    const svc = makeService(makeRepo({ findById, update }));
+    const user: AuthUser = { sub: 'u', roles: ['seller'] };
+
+    const res = await svc.update('l1', { title: 'x' }, user, 'me');
+    expect(res).toEqual({ id: 'l1' });
+  });
+
   it('allows admin to update any listing', async () => {
     const findById = vi.fn().mockResolvedValue({ id: 'l1', agentId: 'someone-else' });
     const update = vi.fn().mockResolvedValue({ id: 'l1' });

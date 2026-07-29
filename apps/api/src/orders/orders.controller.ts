@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 import { PropertiesService } from '../properties/properties.service';
@@ -15,6 +16,7 @@ import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto';
 
 @Controller()
+@RequiresAuth()
 export class OrdersController {
   constructor(
     private readonly service: OrdersService,

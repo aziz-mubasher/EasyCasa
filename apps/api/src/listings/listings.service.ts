@@ -208,7 +208,12 @@ export class ListingsService {
   async update(id: string, dto: UpdateListingDto, user: AuthUser, ownerId: string | null) {
     const existing = await this.repo.findById(id);
     if (!existing) throw new NotFoundException('listing not found');
-    if (!user.roles.includes('admin') && existing.agentId !== ownerId) {
+    if (
+      !user.roles.includes('admin') &&
+      existing.agentId !== ownerId &&
+      existing.ownerUserId !== ownerId &&
+      existing.mediatorUserId !== ownerId
+    ) {
       throw new ForbiddenException('not your listing');
     }
     const transactionTypes =
@@ -276,7 +281,12 @@ export class ListingsService {
   async publish(id: string, user: AuthUser, ownerId: string | null) {
     const existing = await this.repo.findById(id);
     if (!existing) throw new NotFoundException('listing not found');
-    if (!user.roles.includes('admin') && existing.agentId !== ownerId) {
+    if (
+      !user.roles.includes('admin') &&
+      existing.agentId !== ownerId &&
+      existing.ownerUserId !== ownerId &&
+      existing.mediatorUserId !== ownerId
+    ) {
       throw new ForbiddenException('not your listing');
     }
     const published = await this.repo.update(id, { status: 'published', publishedAt: new Date() });

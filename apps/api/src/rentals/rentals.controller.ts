@@ -1,10 +1,12 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 
 import { Roles } from '../auth/roles.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import { RentalsService } from './rentals.service';
 import { LeaseDto, RegisterLeaseDto } from './dto';
 
 @Controller()
+@RequiresAuth()
 export class RentalsController {
   constructor(private readonly service: RentalsService) {}
 

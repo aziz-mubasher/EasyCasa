@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { IsIn, IsString, MinLength } from 'class-validator';
 import { UsersService } from './users.service';
 import { Public } from '../auth/public.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 
@@ -12,6 +13,7 @@ class RegisterDeviceDto {
 }
 
 @Controller()
+@RequiresAuth()
 export class UsersController {
   constructor(private readonly users: UsersService) {}
 

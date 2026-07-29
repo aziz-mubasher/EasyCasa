@@ -1,6 +1,10 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { jwtVerify, type JWTPayload } from 'jose';
-import type { UserRole } from '@easycasa/shared';
+import {
+  adminRolesFromRoles,
+  capabilitiesFromRoles,
+  type UserRole,
+} from '@easycasa/shared';
 
 import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
@@ -34,6 +38,7 @@ export class JwtVerifier {
 
     if (!payload.sub) throw new UnauthorizedException('token missing subject');
 
+    const roles = extractRoles(payload, this.config.OIDC_ROLES_CLAIM);
     return {
       sub: payload.sub,
       email: typeof payload.email === 'string' ? payload.email : undefined,
@@ -42,7 +47,9 @@ export class JwtVerifier {
         typeof payload.preferred_username === 'string'
           ? payload.preferred_username
           : undefined,
-      roles: extractRoles(payload, this.config.OIDC_ROLES_CLAIM),
+      roles,
+      capabilities: capabilitiesFromRoles(roles.map(String)),
+      adminRoles: adminRolesFromRoles(roles.map(String)),
     };
   }
 }

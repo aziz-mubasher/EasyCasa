@@ -9,6 +9,7 @@ import {
 import { FascicoloService } from './fascicolo.service';
 import { AddDocumentDto } from './dto';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { Roles } from '../auth/roles.decorator';
 import { Inject } from '@nestjs/common';
@@ -21,6 +22,7 @@ import { FASCICOLO_REPOSITORY } from './fascicolo.service';
 import type { FascicoloRepository } from './domain/ports';
 
 @Controller('properties/:propertyId/fascicolo')
+@RequiresAuth()
 export class FascicoloController {
   constructor(
     private readonly service: FascicoloService,

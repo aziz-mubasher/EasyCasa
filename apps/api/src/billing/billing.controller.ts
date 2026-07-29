@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { IsString } from 'class-validator';
 import { StripeService } from './stripe.service';
 import { Public } from '../auth/public.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
@@ -9,6 +10,7 @@ import { UsersService } from '../users/users.service';
 class CheckoutDto { @IsString() planKey!: string; }
 
 @Controller('billing')
+@RequiresAuth()
 export class BillingController {
   constructor(
     private readonly stripe: StripeService,

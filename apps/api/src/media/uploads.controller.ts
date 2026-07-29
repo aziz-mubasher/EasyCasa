@@ -2,6 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { IsString, MinLength } from 'class-validator';
 import { MediaService } from './media.service';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 
@@ -11,6 +12,7 @@ class UploadPresignDto {
 }
 
 @Controller('uploads')
+@RequiresAuth()
 export class UploadsController {
   constructor(
     private readonly media: MediaService,

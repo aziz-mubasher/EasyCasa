@@ -3,6 +3,9 @@ import { IsUrl } from 'class-validator';
 
 import type { AuthUser } from '../auth/auth.types';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth, RequiresCapability } from '../auth/capability.decorator';
+import { RequiresRelationship } from '../auth/relationship.decorator';
+import { SerializeFor } from '../auth/serialize-for.decorator';
 import { UsersService } from '../users/users.service';
 import { ProMeService } from './professional-me.service';
 
@@ -12,6 +15,9 @@ export class DeliverDto {
 }
 
 @Controller('me')
+@RequiresAuth()
+@RequiresCapability('professional')
+@SerializeFor('professional')
 export class ProMeController {
   constructor(
     private readonly service: ProMeService,
@@ -30,12 +36,14 @@ export class ProMeController {
     return this.service.assignments(me.id);
   }
 
+  @RequiresRelationship('assignment.self')
   @Post('assignments/:id/start')
   async start(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     const me = await this.users.getOrCreate(user);
     return this.service.start(me.id, id);
   }
 
+  @RequiresRelationship('assignment.self')
   @Post('assignments/:id/deliver')
   async deliver(
     @CurrentUser() user: AuthUser,
