@@ -3,6 +3,7 @@ import { ConfigModule } from './config/config.module';
 import { SeamsModule } from './config/adapters/seams.module';
 import { DbModule } from './db/db.module';
 import { AuthModule } from './auth/auth.module';
+import { AuthorityModule } from './authority/authority.module';
 import { EmailModule } from './email/email.module';
 import { HealthController } from './health/health.controller';
 import { ListingsModule } from './listings/listings.module';
@@ -59,6 +60,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     SeamsModule,
     DbModule,
     AuthModule,
+    AuthorityModule,
     EmailModule,
     ObservabilityModule,
     PrivacyModule.forRootProduction(),

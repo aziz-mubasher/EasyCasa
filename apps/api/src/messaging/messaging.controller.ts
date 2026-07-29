@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { IsString, MinLength } from 'class-validator';
 import { MessagingService } from './messaging.service';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 
@@ -14,6 +15,7 @@ class MessageDto {
 }
 
 @Controller('conversations')
+@RequiresAuth()
 export class MessagingController {
   constructor(
     private readonly messaging: MessagingService,

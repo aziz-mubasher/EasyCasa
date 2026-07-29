@@ -1,0 +1,78 @@
+/**
+ * EC-11 — Authority vocabulary (capability ≠ relationship ≠ projection).
+ *
+ * Capability is the coarse gate only. Relationship and field projection narrow it.
+ * See docs/ec-11-authority-model.md.
+ */
+
+/** Product capabilities — Keycloak realm roles map into these. */
+export type Capability =
+  | 'seeker'
+  | 'owner'
+  | 'professional'
+  | 'conductor'
+  | 'agency_member'
+  | 'admin';
+
+/** Fine-grained admin personas — never a single omniscient admin. */
+export type AdminRole =
+  | 'support'
+  | 'operations'
+  | 'finance'
+  | 'dpo'
+  | 'aml'
+  | 'superadmin';
+
+/** Realm role names that grant AdminRole (additive; plain `admin` → superadmin for legacy). */
+export const ADMIN_ROLE_REALM: Readonly<Record<string, AdminRole>> = {
+  admin_support: 'support',
+  admin_operations: 'operations',
+  admin_finance: 'finance',
+  admin_dpo: 'dpo',
+  admin_aml: 'aml',
+  admin_superadmin: 'superadmin',
+};
+
+/**
+ * Map Keycloak / UserRole strings → capabilities.
+ * `seeker` is granted to every authenticated principal (registration default).
+ */
+export function capabilitiesFromRoles(roles: readonly string[]): Capability[] {
+  const caps = new Set<Capability>(['seeker']);
+  for (const raw of roles) {
+    const r = raw.trim().toLowerCase();
+    if (!r) continue;
+    if (r === 'buyer' || r === 'seeker') caps.add('seeker');
+    if (r === 'seller') {
+      caps.add('owner');
+      caps.add('conductor');
+    }
+    if (r === 'agent' || r === 'partner' || r === 'pro_marketer') {
+      caps.add('agency_member');
+      caps.add('conductor');
+      // Agency staff may publish (capability); listing.agency membership is relationship.
+      caps.add('owner');
+    }
+    if (r === 'professional') {
+      caps.add('professional');
+      caps.add('conductor');
+    }
+    if (r === 'conductor') caps.add('conductor');
+    if (r === 'admin' || r.startsWith('admin_')) caps.add('admin');
+  }
+  return [...caps];
+}
+
+export function adminRolesFromRoles(roles: readonly string[]): AdminRole[] {
+  const out = new Set<AdminRole>();
+  let hasLegacyAdmin = false;
+  for (const raw of roles) {
+    const r = raw.trim().toLowerCase();
+    if (r === 'admin') hasLegacyAdmin = true;
+    const mapped = ADMIN_ROLE_REALM[r];
+    if (mapped) out.add(mapped);
+  }
+  // Back-compat: monolithic `admin` acts as superadmin.
+  if (hasLegacyAdmin) out.add('superadmin');
+  return [...out];
+}

@@ -5,12 +5,14 @@ import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
 import { Public } from '../auth/public.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import { apiConfig } from '../config';
 import { CreateIntentDto, WebhookDto } from './dto';
 import { PaymentsService } from './payments.service';
 import { StripePaymentsWebhookHandler } from './stripe-webhook.handler';
 
 @Controller('payments')
+@RequiresAuth()
 export class PaymentsController {
   constructor(
     private readonly service: PaymentsService,

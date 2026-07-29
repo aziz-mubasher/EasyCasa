@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 
 import { Roles } from '../auth/roles.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import { AssignmentsService } from './assignments.service';
 import {
   AssignDto,
@@ -11,6 +12,7 @@ import {
 } from './dto';
 
 @Controller()
+@RequiresAuth()
 export class AssignmentsController {
   constructor(private readonly service: AssignmentsService) {}
 
@@ -39,11 +41,13 @@ export class AssignmentsController {
   }
 
   @Post('assignments/:id/start')
+  @Roles('admin')
   start(@Param('id') id: string) {
     return this.service.start(id);
   }
 
   @Post('assignments/:id/deliver')
+  @Roles('admin')
   deliver(@Param('id') id: string, @Body() dto: DeliverDto) {
     return this.service.deliver(id, dto.deliverableUrl);
   }
@@ -55,6 +59,7 @@ export class AssignmentsController {
   }
 
   @Get('professionals/:professionalId/assignments')
+  @Roles('admin')
   forProfessional(@Param('professionalId') professionalId: string) {
     return this.service.listForProfessional(professionalId);
   }

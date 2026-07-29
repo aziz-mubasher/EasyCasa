@@ -5,7 +5,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { UserRole } from '@easycasa/shared';
+import {
+  adminRolesFromRoles,
+  capabilitiesFromRoles,
+  type UserRole,
+} from '@easycasa/shared';
 
 import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
@@ -51,12 +55,7 @@ export class JwtAuthGuard implements CanActivate {
     if (this.config.DEV_AUTH) {
       const sub = header(req.headers, 'x-dev-user');
       if (!sub) throw new UnauthorizedException('DEV_AUTH: missing x-dev-user');
-      req.user = {
-        sub,
-        email: header(req.headers, 'x-dev-email'),
-        preferredUsername: sub,
-        roles: parseRoles(header(req.headers, 'x-dev-roles') ?? 'buyer'),
-      };
+      req.user = authFromDev(sub, header(req.headers, 'x-dev-email'), header(req.headers, 'x-dev-roles'));
       return true;
     }
 
@@ -76,12 +75,11 @@ export class JwtAuthGuard implements CanActivate {
       if (this.config.DEV_AUTH) {
         const sub = header(req.headers, 'x-dev-user');
         if (!sub) return;
-        req.user = {
+        req.user = authFromDev(
           sub,
-          email: header(req.headers, 'x-dev-email'),
-          preferredUsername: sub,
-          roles: parseRoles(header(req.headers, 'x-dev-roles') ?? 'buyer'),
-        };
+          header(req.headers, 'x-dev-email'),
+          header(req.headers, 'x-dev-roles'),
+        );
         return;
       }
       const token = bearer(req.headers);
@@ -91,6 +89,22 @@ export class JwtAuthGuard implements CanActivate {
       // public route stays anonymous
     }
   }
+}
+
+function authFromDev(
+  sub: string,
+  email: string | undefined,
+  rolesHeader: string | undefined,
+): AuthUser {
+  const roles = parseRoles(rolesHeader ?? 'buyer');
+  return {
+    sub,
+    email,
+    preferredUsername: sub,
+    roles,
+    capabilities: capabilitiesFromRoles(roles.map(String)),
+    adminRoles: adminRolesFromRoles(roles.map(String)),
+  };
 }
 
 function header(headers: Record<string, unknown>, key: string): string | undefined {

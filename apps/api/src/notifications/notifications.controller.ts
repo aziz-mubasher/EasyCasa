@@ -1,10 +1,12 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 
 @Controller('me/notifications')
+@RequiresAuth()
 export class NotificationsController {
   constructor(
     private readonly notifications: NotificationsService,

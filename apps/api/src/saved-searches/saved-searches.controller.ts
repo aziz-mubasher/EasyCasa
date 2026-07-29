@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { IsIn, IsObject, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 import { CurrentUser } from '../auth/current-user.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import type { SavedSearchCriteria } from '../alerts/domain/types';
 import { UsersService } from '../users/users.service';
@@ -34,6 +35,7 @@ export class SetFrequencyDto {
 }
 
 @Controller('me/saved-searches')
+@RequiresAuth()
 export class SavedSearchesController {
   constructor(
     private readonly service: SavedSearchesService,

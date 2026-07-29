@@ -1,8 +1,10 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
+import { RequiresAuth } from '../auth/capability.decorator';
 
 import { InvoicingService } from './invoicing.service';
 
 @Controller('invoices')
+@RequiresAuth()
 export class InvoicingController {
   constructor(private readonly service: InvoicingService) {}
 

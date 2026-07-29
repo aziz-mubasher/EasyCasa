@@ -2,6 +2,7 @@ import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 
 import { Public } from '../auth/public.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
@@ -13,6 +14,7 @@ import { ShareLinksService } from './share-links.service';
  * {@link ShareLinksService} (owners may create without `seller` realm role).
  */
 @Controller('share-links')
+@RequiresAuth()
 export class ShareLinksController {
   constructor(
     private readonly service: ShareLinksService,

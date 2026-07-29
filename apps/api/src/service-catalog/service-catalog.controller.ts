@@ -9,6 +9,7 @@ import {
 import { IsArray, IsInt, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { ServiceCatalogService } from './service-catalog.service';
 import { Public } from '../auth/public.decorator';
+import { RequiresAuth } from '../auth/capability.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { apiConfig } from '../config';
@@ -58,6 +59,7 @@ const PACKAGE_CONTENTS: Record<string, readonly string[]> = Object.fromEntries(
 );
 
 @Controller('service-catalog')
+@RequiresAuth()
 export class ServiceCatalogController {
   constructor(
     private readonly service: ServiceCatalogService,
