@@ -326,10 +326,10 @@
     "reviewTitle": "Summary",
     "previewHint": "Check everything below. Publishing will create the listing, upload photos, then make it public.",
     "removeImage": "Remove image",
-    "mediaPlaceholder": "Add up to 12 photos (JPEG, PNG or WebP).",
+    "mediaPlaceholder": "Add up to 20 photos (JPEG, PNG or WebP).",
     "casafari": {
       "title": "Import from Casafari share link",
-      "body": "Paste a Casafari sharepage URL to pull listing details and up to 10 photos into a draft.",
+      "body": "Paste a Casafari sharepage URL to pull listing details and up to 20 photos into a draft (muba-admin only).",
       "urlLabel": "Casafari share URL",
       "urlHint": "Example: https://www.casafari.com/estate/sharepage/…",
       "preview": "Preview",
@@ -381,7 +381,7 @@
       "financing": "Optional. Select every NIB mode you will accept (no traditional mortgage required).",
       "leaseType": "Required for rentals — drives contract and RLI rules.",
       "characteristics": "Optional. Select amenities that apply to this property.",
-      "images": "Up to 12 images (JPEG/PNG/WebP). Uploaded when you publish.",
+      "images": "Up to 20 images (JPEG/PNG/WebP). Uploaded when you publish.",
       "videoUrl": "Optional YouTube, Vimeo, or direct video URL."
     },
     "errors": {

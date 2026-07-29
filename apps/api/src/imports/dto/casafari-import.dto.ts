@@ -1,4 +1,6 @@
+import { Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsOptional, IsString, IsUrl, Max, Min, MinLength } from 'class-validator';
+import { CASAFARI_MAX_IMAGES } from '../casafari/casafari-scrape';
 
 export class CasafariPreviewDto {
   @IsString()
@@ -10,11 +12,12 @@ export class CasafariPreviewDto {
   @IsBoolean()
   refreshCache?: boolean;
 
-  /** Max photos per draft (default 10, max 12). */
+  /** Max photos per draft (default 20, max 20). */
   @IsOptional()
+  @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(12)
+  @Max(CASAFARI_MAX_IMAGES)
   maxImages?: number;
 }
 
@@ -34,9 +37,10 @@ export class CasafariCreateDto {
   refreshCache?: boolean;
 
   @IsOptional()
+  @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(12)
+  @Max(CASAFARI_MAX_IMAGES)
   maxImages?: number;
 
   /** Optional province sigla (e.g. BS) — Casafari rarely provides it. */

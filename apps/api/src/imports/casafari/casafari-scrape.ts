@@ -10,7 +10,7 @@ const IMPORT_CACHE = new Map<string, { at: number; drafts: CasafariRawDraft[] }>
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 /** Default max images returned per draft (EasyCasa listing gallery). */
-export const CASAFARI_MAX_IMAGES = 10;
+export const CASAFARI_MAX_IMAGES = 20;
 
 const CASAFARI_FEATURE_LABELS: Record<number, string> = {
   1: 'Balcony',

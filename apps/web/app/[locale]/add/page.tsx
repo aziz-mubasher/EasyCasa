@@ -29,13 +29,14 @@ import { SmartLinkManager } from '@/components/smartlink/SmartLinkManager';
 import { AvailabilityWindowsEditor } from '@/components/viewings/AvailabilityWindowsEditor';
 import { CasafariImportPanel, type CasafariImportDraft } from '@/components/add/CasafariImportPanel';
 import { useAuth } from '@/auth/AuthProvider';
+import { useCanImportCasafari } from '@/auth/useCanImportCasafari';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 import { Link } from '@/i18n/routing';
 import { useViewingsApi } from '@/lib/viewings-api';
 
 const TOTAL = 6;
 const ENERGY_CLASSES = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
-const MAX_IMAGES = 12;
+const MAX_IMAGES = 20;
 
 type FormState = {
   title: string;
@@ -118,6 +119,7 @@ export default function AddListingPage() {
   const tf = useTranslations('search.filters');
   const locale = useLocale();
   const { getAccessToken, isAuthenticated, ready, signIn } = useAuth();
+  const { canImport: canImportCasafari } = useCanImportCasafari();
   const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
 
   const [step, setStep] = useState(1);
@@ -453,7 +455,7 @@ export default function AddListingPage() {
       <h1 className="font-display text-3xl font-semibold mb-2">{t('title')}</h1>
       <p className="text-sm text-muted mb-6">{t('subtitle')}</p>
 
-      {step === 1 && (
+      {step === 1 && canImportCasafari && (
         <CasafariImportPanel
           authedFetch={authedFetch}
           province={form.province}
@@ -461,7 +463,7 @@ export default function AddListingPage() {
           onImported={onCasafariImported}
         />
       )}
-      {casafariImportNote && step === 1 && (
+      {casafariImportNote && step === 1 && canImportCasafari && (
         <p className="text-sm text-azure mb-4">{casafariImportNote}</p>
       )}
 

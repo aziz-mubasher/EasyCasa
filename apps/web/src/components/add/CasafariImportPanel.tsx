@@ -85,7 +85,7 @@ export function CasafariImportPanel({
       const res = await authedFetch(apiUrl('/imports/casafari/preview'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url.trim(), maxImages: 10 }),
+        body: JSON.stringify({ url: url.trim(), maxImages: 20 }),
       });
       if (!res.ok) {
         const text = await res.text();
@@ -109,7 +109,7 @@ export function CasafariImportPanel({
     try {
       const body: Record<string, unknown> = {
         url: url.trim(),
-        maxImages: 10,
+        maxImages: 20,
       };
       if (selected.casafariId) body.casafariId = selected.casafariId;
       const provinceSigla = province.trim() || selected.province || '';
@@ -121,7 +121,16 @@ export function CasafariImportPanel({
       });
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text || `import failed: ${res.status}`);
+        let message = text || `import failed: ${res.status}`;
+        try {
+          const parsed = JSON.parse(text) as { message?: string | string[]; error?: string };
+          if (Array.isArray(parsed.message)) message = parsed.message.join('; ');
+          else if (typeof parsed.message === 'string') message = parsed.message;
+          else if (parsed.error) message = parsed.error;
+        } catch {
+          /* keep raw text */
+        }
+        throw new Error(message);
       }
       const data = (await res.json()) as CreateResponse;
       onImported(data);

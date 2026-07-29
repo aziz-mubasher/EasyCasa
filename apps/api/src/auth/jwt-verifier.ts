@@ -37,6 +37,11 @@ export class JwtVerifier {
     return {
       sub: payload.sub,
       email: typeof payload.email === 'string' ? payload.email : undefined,
+      name: typeof payload.name === 'string' ? payload.name : undefined,
+      preferredUsername:
+        typeof payload.preferred_username === 'string'
+          ? payload.preferred_username
+          : undefined,
       roles: extractRoles(payload, this.config.OIDC_ROLES_CLAIM),
     };
   }

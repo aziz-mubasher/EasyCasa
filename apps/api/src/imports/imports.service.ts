@@ -31,6 +31,7 @@ const PHOTO_HOST_ALLOWLIST = [
 ];
 
 const MAX_PHOTO_BYTES = 12 * 1024 * 1024;
+const PHOTO_FETCH_CONCURRENCY = 4;
 
 function slugify(input: string): string {
   return input
@@ -50,6 +51,24 @@ function isAllowedPhotoUrl(url: string): boolean {
   } catch {
     return false;
   }
+}
+
+async function mapPool<T, R>(
+  items: T[],
+  concurrency: number,
+  worker: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = new Array(items.length);
+  let next = 0;
+  const runners = Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+    while (next < items.length) {
+      const i = next;
+      next += 1;
+      results[i] = await worker(items[i]!, i);
+    }
+  });
+  await Promise.all(runners);
+  return results;
 }
 
 @Injectable()
@@ -77,7 +96,8 @@ export class ImportsService {
     const raw = await importCasafariShare(url, {
       refreshCache: dto.refreshCache,
       maxImages,
-      enrichDetails: true,
+      // Preview can use list payload; detail enrich is optional and slow.
+      enrichDetails: false,
     });
     const drafts = raw.map(mapCasafariDraftToEasyCasa);
     return {
@@ -96,10 +116,11 @@ export class ImportsService {
     imagesImported: number;
     imageErrors: string[];
   }> {
+    const maxImages = dto.maxImages ?? CASAFARI_MAX_IMAGES;
     const preview = await this.previewCasafari({
       url: dto.url,
       refreshCache: dto.refreshCache,
-      maxImages: dto.maxImages ?? CASAFARI_MAX_IMAGES,
+      maxImages,
     });
     if (!preview.drafts.length) {
       throw new NotFoundException('No properties found on that Casafari share link');
@@ -176,7 +197,7 @@ export class ImportsService {
 
     const { imported, errors } = await this.importPhotos(
       created.id,
-      draft.photoUrls,
+      draft.photoUrls.slice(0, maxImages),
       draft.title,
     );
 
@@ -195,10 +216,14 @@ export class ImportsService {
   ): Promise<{ imported: number; errors: string[] }> {
     const errors: string[] = [];
     let imported = 0;
-    for (const [i, url] of urls.entries()) {
+
+    type Fetched =
+      | { ok: true; index: number; url: string; buf: Buffer; contentType: string }
+      | { ok: false; error: string };
+
+    const fetched = await mapPool(urls, PHOTO_FETCH_CONCURRENCY, async (url, index): Promise<Fetched> => {
       if (!isAllowedPhotoUrl(url)) {
-        errors.push(`blocked host: ${url}`);
-        continue;
+        return { ok: false, error: `blocked host: ${url}` };
       }
       try {
         const res = await fetch(url, {
@@ -209,27 +234,58 @@ export class ImportsService {
           redirect: 'follow',
         });
         if (!res.ok) {
-          errors.push(`${url} → HTTP ${res.status}`);
-          continue;
+          return { ok: false, error: `${url} → HTTP ${res.status}` };
         }
         const buf = Buffer.from(await res.arrayBuffer());
         if (!buf.length || buf.length > MAX_PHOTO_BYTES) {
-          errors.push(`${url} → invalid size ${buf.length}`);
-          continue;
+          return { ok: false, error: `${url} → invalid size ${buf.length}` };
         }
-        await this.media.uploadListingImage(
-          listingId,
+        return {
+          ok: true,
+          index,
+          url,
           buf,
-          res.headers.get('content-type') || 'image/jpeg',
-          `${altBase} — photo ${i + 1}`,
-        );
-        imported += 1;
+          contentType: res.headers.get('content-type') || 'image/jpeg',
+        };
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        this.log.warn(`Casafari photo import failed: ${msg}`);
-        errors.push(`${url} → ${msg}`);
+        return { ok: false, error: `${url} → ${msg}` };
+      }
+    });
+
+    for (const item of fetched) {
+      if (!item.ok) {
+        errors.push(item.error);
+        continue;
+      }
+      try {
+        await this.media.uploadListingImage(
+          listingId,
+          item.buf,
+          item.contentType,
+          `${altBase} — photo ${item.index + 1}`,
+        );
+        imported += 1;
+      } catch (uploadErr) {
+        const msg = uploadErr instanceof Error ? uploadErr.message : String(uploadErr);
+        this.log.warn(`Casafari photo upload failed, storing remote URL: ${msg}`);
+        try {
+          await this.listings.insertMedia({
+            listingId,
+            url: item.url,
+            type: 'image',
+            position: imported,
+            alt: `${altBase} — photo ${item.index + 1}`,
+            originalWpUrl: item.url,
+          });
+          imported += 1;
+        } catch (fallbackErr) {
+          const fb = fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr);
+          errors.push(`${item.url} → upload ${msg}; fallback ${fb}`);
+        }
       }
     }
+
     return { imported, errors };
   }
 }

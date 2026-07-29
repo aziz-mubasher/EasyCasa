@@ -326,10 +326,10 @@
     "reviewTitle": "Riepilogo",
     "previewHint": "Controlla tutto qui sotto. Pubblicando creerai l’annuncio, caricherai le foto e lo renderai pubblico.",
     "removeImage": "Rimuovi foto",
-    "mediaPlaceholder": "Aggiungi fino a 12 foto (JPEG, PNG o WebP).",
+    "mediaPlaceholder": "Aggiungi fino a 20 foto (JPEG, PNG o WebP).",
     "casafari": {
       "title": "Importa da link Casafari",
-      "body": "Incolla un URL sharepage Casafari per importare i dati dell’annuncio e fino a 10 foto in una bozza.",
+      "body": "Incolla un URL sharepage Casafari per importare i dati dell’annuncio e fino a 20 foto in una bozza (solo muba-admin).",
       "urlLabel": "URL share Casafari",
       "urlHint": "Esempio: https://www.casafari.com/estate/sharepage/…",
       "preview": "Anteprima",
@@ -381,7 +381,7 @@
       "financing": "Opzionale. Seleziona ogni modalità NIB che accetti (senza mutuo bancario tradizionale).",
       "leaseType": "Obbligatorio per gli affitti — influenza contratto e RLI.",
       "characteristics": "Opzionale. Seleziona le caratteristiche presenti nell’immobile.",
-      "images": "Fino a 12 immagini (JPEG/PNG/WebP). Caricate al momento della pubblicazione.",
+      "images": "Fino a 20 immagini (JPEG/PNG/WebP). Caricate al momento della pubblicazione.",
       "videoUrl": "Opzionale: YouTube, Vimeo o URL video diretto."
     },
     "errors": {

@@ -54,6 +54,7 @@ export class JwtAuthGuard implements CanActivate {
       req.user = {
         sub,
         email: header(req.headers, 'x-dev-email'),
+        preferredUsername: sub,
         roles: parseRoles(header(req.headers, 'x-dev-roles') ?? 'buyer'),
       };
       return true;
@@ -78,6 +79,7 @@ export class JwtAuthGuard implements CanActivate {
         req.user = {
           sub,
           email: header(req.headers, 'x-dev-email'),
+          preferredUsername: sub,
           roles: parseRoles(header(req.headers, 'x-dev-roles') ?? 'buyer'),
         };
         return;
