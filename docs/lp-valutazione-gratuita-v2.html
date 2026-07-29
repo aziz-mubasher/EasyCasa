@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quanto vale davvero la tua casa — EasyCasa</title>
+<meta name="description" content="Valutazione gratuita basata sui valori ufficiali dell'Agenzia delle Entrate per la tua microzona. Nessun agente ti richiama. Nessuna provvigione.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14212E; --ink-soft:#4C5D6E; --paper:#F3EDE1; --paper-deep:#E8DFCC;
+  --azure:#2C6E9B; --azure-pale:#A9C8DC; --ochre:#C08A1E;
+  --rule:rgba(20,33,46,.16); --rule-strong:rgba(20,33,46,.34);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --gutter:clamp(1.25rem,5vw,4rem);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:clamp(1rem,.96rem + .2vw,1.0625rem);line-height:1.62;font-optical-sizing:auto}
+a{color:inherit}
+:focus-visible{outline:2.5px solid var(--azure);outline-offset:3px}
+.wrap{max-width:62rem;margin-inline:auto;padding-inline:var(--gutter)}
+
+.mast{border-bottom:1px solid var(--rule-strong)}
+.mast .wrap{display:flex;align-items:center;gap:1.5rem;padding-block:1rem;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.015em}
+.brand span{color:var(--azure)}
+.lang{margin-left:auto;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--ink-soft)}
+.lang b{color:var(--ink)}
+
+.hero{padding-block:clamp(3rem,7vw,5.5rem) clamp(2.5rem,5vw,4rem)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
+  gap:clamp(2rem,5vw,4rem);align-items:start}
+@media(max-width:880px){.hero .wrap{grid-template-columns:1fr}}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--azure);margin:0 0 1.3rem}
+h1{font-family:var(--display);font-weight:760;font-variation-settings:"wdth" 88;
+  font-size:clamp(2.4rem,6vw,4.1rem);line-height:.96;letter-spacing:-.035em;margin:0 0 1.3rem;text-wrap:balance}
+h1 em{font-style:normal;color:var(--azure);display:block}
+.standfirst{font-size:clamp(1.08rem,1rem + .4vw,1.28rem);line-height:1.5;max-width:33ch;
+  color:var(--ink-soft);margin:0 0 1.6rem}
+.promise{font-family:var(--mono);font-size:.76rem;letter-spacing:.03em;color:var(--ink);
+  border-left:2px solid var(--azure);padding-left:.9rem;line-height:1.75;margin:0}
+
+/* form card */
+.card{border:1px solid var(--rule-strong);background:rgba(255,255,255,.5)}
+.card h2{font-family:var(--mono);font-size:.66rem;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--paper);background:var(--ink);margin:0;padding:.8rem 1.3rem}
+.card .in{padding:1.3rem}
+label{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);margin:0 0 .35rem}
+input,select{width:100%;font-family:var(--body);font-size:1rem;padding:.65rem .75rem;
+  border:1px solid var(--rule-strong);border-radius:2px;background:var(--paper);color:var(--ink)}
+.f{margin-bottom:.9rem}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.cta{display:block;width:100%;text-align:center;font-family:var(--display);font-weight:650;
+  font-size:1rem;background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+  padding:.85rem 1rem;border-radius:2px;text-decoration:none;cursor:pointer;
+  margin-top:.4rem;transition:background .18s ease}
+.cta:hover{background:var(--azure);border-color:var(--azure)}
+.small{font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);letter-spacing:.03em;
+  line-height:1.7;margin:.85rem 0 0}
+
+.band{padding-block:clamp(3rem,6vw,4.5rem);border-top:1px solid var(--rule-strong)}
+.band--ink{background:var(--ink);color:var(--paper-deep);border-top-color:var(--ink)}
+.band--ink h2,.band--ink h3{color:var(--paper)}
+.band--ink .kicker{color:var(--azure-pale)}
+.kicker{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--azure);margin:0 0 1rem}
+h2{font-family:var(--display);font-weight:720;font-variation-settings:"wdth" 90;
+  font-size:clamp(1.7rem,3.4vw,2.6rem);line-height:1.05;letter-spacing:-.025em;margin:0 0 1.1rem;text-wrap:balance}
+.lede{max-width:52ch;color:var(--ink-soft);margin:0 0 2.4rem}
+.band--ink .lede{color:var(--azure-pale)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule-strong);
+  border:1px solid var(--rule-strong)}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+.two > div{background:var(--paper);padding:1.5rem 1.4rem}
+.two h3{font-family:var(--display);font-weight:680;font-size:1.05rem;letter-spacing:-.015em;margin:0 0 .5rem}
+.two .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-soft);display:block;margin-bottom:.7rem}
+.two p{margin:0;font-size:.94rem;color:var(--ink-soft);line-height:1.55}
+.two .hi .tag{color:var(--azure)}
+
+/* register — what the number is built from */
+.reg{border-top:1px solid rgba(255,255,255,.24)}
+.reg .row{display:grid;grid-template-columns:2.6rem minmax(0,13rem) minmax(0,1fr);
+  gap:1.4rem;align-items:baseline;padding:1.1rem 0;border-bottom:1px solid rgba(255,255,255,.14)}
+@media(max-width:760px){.reg .row{grid-template-columns:2.2rem 1fr;row-gap:.4rem}}
+.reg .no{font-family:var(--mono);font-size:.76rem;color:var(--azure-pale)}
+.reg .what{font-family:var(--display);font-weight:660;font-size:1.02rem;color:var(--paper);letter-spacing:-.015em}
+.reg .what small{display:block;font-family:var(--mono);font-weight:400;font-size:.66rem;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--azure-pale);margin-top:.25rem}
+.reg p{margin:0;font-size:.93rem;color:var(--paper-deep);line-height:1.55}
+
+.rail{margin:2.4rem 0 0;border:1px solid rgba(255,255,255,.22);padding:1.2rem 1.3rem}
+.rail .fig{font-family:var(--mono);font-size:1.35rem;color:var(--ochre);letter-spacing:-.02em;margin:0 0 .2rem}
+.rail .z{font-family:var(--mono);font-size:.7rem;color:var(--azure-pale);letter-spacing:.05em;margin:0 0 .9rem}
+.rail .track{height:6px;background:rgba(255,255,255,.14);position:relative;margin-bottom:.5rem}
+.rail .fill{position:absolute;left:16%;right:24%;top:0;bottom:0;background:var(--azure-pale)}
+.rail .lg{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.66rem;
+  color:var(--azure-pale);letter-spacing:.04em;margin:0 0 .8rem}
+.rail .src{font-family:var(--mono);font-size:.64rem;color:var(--azure-pale);letter-spacing:.05em;margin:0}
+
+.faq{border-top:1px solid var(--rule-strong);max-width:44rem}
+.faq details{border-bottom:1px solid var(--rule)}
+.faq summary{cursor:pointer;list-style:none;padding:1.15rem 2rem 1.15rem 0;position:relative;
+  font-family:var(--display);font-weight:640;font-size:1.02rem;letter-spacing:-.015em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:.2rem;top:1.05rem;
+  font-family:var(--mono);color:var(--azure);font-size:1.1rem;transition:transform .2s ease}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{margin:0 0 1.2rem;color:var(--ink-soft);font-size:.95rem;max-width:60ch}
+
+.close{text-align:center;padding-block:clamp(3.5rem,7vw,5.5rem)}
+.close h2{max-width:18ch;margin-inline:auto}
+.close .lede{margin-inline:auto;margin-bottom:2rem}
+.close .cta{display:inline-block;width:auto;padding-inline:2.2rem}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper-deep);padding-block:clamp(2.8rem,6vw,4rem) 2rem}
+.fbrand{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.015em;
+  color:var(--paper);margin:0 0 2.2rem}
+.fbrand span{color:var(--azure-pale)}
+
+.dir{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem clamp(1.5rem,4vw,3rem);
+  padding-bottom:2.4rem;border-bottom:1px solid rgba(255,255,255,.16)}
+@media(max-width:800px){.dir{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.dir{grid-template-columns:1fr}}
+
+.dir h3{font-family:var(--mono);font-size:.66rem;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--azure-pale);margin:0 0 .35rem;
+  padding-bottom:.7rem;border-bottom:1px solid rgba(255,255,255,.16)}
+.dir .model{font-family:var(--mono);font-size:.63rem;letter-spacing:.04em;line-height:1.6;
+  color:rgba(232,223,204,.62);margin:.7rem 0 1rem}
+.dir ul{list-style:none;margin:0;padding:0}
+.dir li{margin-bottom:.55rem}
+.dir a{color:var(--paper-deep);text-decoration:none;font-size:.92rem;line-height:1.4;
+  border-bottom:1px solid transparent;transition:border-color .15s ease,color .15s ease}
+.dir a:hover{color:var(--paper);border-bottom-color:var(--azure-pale)}
+.dir .ext::after{content:" ↗";font-family:var(--mono);font-size:.68rem;color:var(--azure-pale)}
+.dir .note{font-family:var(--mono);font-size:.62rem;line-height:1.65;letter-spacing:.03em;
+  color:rgba(232,223,204,.6);margin:1.1rem 0 0;padding-top:.9rem;border-top:1px dotted rgba(255,255,255,.2)}
+
+.legal{padding-top:1.8rem;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
+  gap:1.2rem clamp(1.5rem,4vw,3rem);font-family:var(--mono);font-size:.65rem;
+  letter-spacing:.04em;line-height:1.85;color:rgba(232,223,204,.66)}
+@media(max-width:700px){.legal{grid-template-columns:1fr}}
+.legal a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.22)}
+.legal a:hover{color:var(--paper)}
+.legal .pol{display:flex;gap:1rem;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="brand">Easy<span>Casa</span></div>
+    <span class="lang"><b>IT</b> · EN · ES</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Valutazione gratuita · tutta Italia</p>
+      <h1>Quanto vale<em>davvero.</em></h1>
+      <p class="standfirst">Il valore della tua casa secondo i dati ufficiali
+      dell'Agenzia delle Entrate per la tua microzona. Non secondo chi vuole
+      l'incarico.</p>
+      <p class="promise">
+        Gratuita e immediata.<br>
+        Nessun agente ti richiama.<br>
+        Nessuna provvigione, mai, dal venditore.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Inizia da qui</h2>
+      <div class="in">
+        <div class="f">
+          <label for="ind">Indirizzo</label>
+          <input id="ind" type="text" placeholder="Via, civico, comune">
+        </div>
+        <div class="pair">
+          <div class="f">
+            <label for="mq">Superficie</label>
+            <input id="mq" type="text" placeholder="m² commerciali">
+          </div>
+          <div class="f">
+            <label for="st">Stato</label>
+            <select id="st">
+              <option>Da ristrutturare</option>
+              <option selected>Normale</option>
+              <option>Ristrutturato</option>
+              <option>Nuovo / ottimo</option>
+            </select>
+          </div>
+        </div>
+        <button class="cta" type="button">Calcola il valore</button>
+        <p class="small">Il risultato compare subito in questa pagina.
+        L'email serve solo se vuoi conservarlo — non è obbligatoria e non
+        finisce in nessuna lista.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="kicker">Perché i numeri non tornano mai</p>
+    <h2>La stima più alta non è un complimento.</h2>
+    <p class="lede">In Italia il modo più semplice per ottenere un incarico è
+    promettere un prezzo che il mercato non pagherà. Poi, dopo tre mesi senza
+    visite, arriva la telefonata sul ribasso.</p>
+
+    <div class="two">
+      <div>
+        <span class="tag">Come funziona di solito</span>
+        <h3>Un numero costruito per convincerti</h3>
+        <p>Tre agenzie, tre cifre diverse, nessuna che spieghi da dove arriva.
+        Chi valuta guadagna solo se firmi, quindi la stima serve a farti firmare —
+        non a farti vendere.</p>
+      </div>
+      <div class="hi">
+        <span class="tag">Come funziona qui</span>
+        <h3>Un numero che puoi verificare</h3>
+        <p>Partiamo dai valori che l'Agenzia delle Entrate registra per la tua
+        microzona, e ti mostriamo ogni elemento del calcolo. Non prendiamo
+        provvigione dal venditore, quindi non abbiamo motivo di gonfiarlo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band band--ink">
+  <div class="wrap">
+    <p class="kicker">Da dove arriva il numero</p>
+    <h2>Ti mostriamo i conti, non solo il totale.</h2>
+    <p class="lede">Ogni valutazione indica su cosa poggia. Dove una cifra è
+    stimata anziché registrata, lo diciamo.</p>
+
+    <div class="reg">
+      <div class="row">
+        <span class="no">01</span>
+        <span class="what">Microzona OMI<small>Valori ufficiali</small></span>
+        <p>La banda di valore registrata dall'Agenzia delle Entrate per la zona
+        specifica dell'immobile — non per il comune intero. A Milano la differenza
+        tra due zone può superare il 300%.</p>
+      </div>
+      <div class="row">
+        <span class="no">02</span>
+        <span class="what">Superficie commerciale<small>Base di calcolo</small></span>
+        <p>I valori OMI sono al metro quadro <em>lordo</em>. Se usi la superficie
+        calpestabile il risultato sbaglia del 15–25%: convertiamo prima di calcolare
+        e ti diciamo quale base abbiamo usato.</p>
+      </div>
+      <div class="row">
+        <span class="no">03</span>
+        <span class="what">Stato conservativo<small>Correzione</small></span>
+        <p>L'Agenzia pubblica bande distinte per stato normale, ottimo e scadente.
+        Usiamo quella corretta invece di applicare una percentuale a occhio.</p>
+      </div>
+      <div class="row">
+        <span class="no">04</span>
+        <span class="what">Caratteristiche<small>Correzione</small></span>
+        <p>Piano, ascensore, affaccio, terrazzo, box. Ogni correzione è elencata
+        con il suo peso, così puoi contestarla se non sei d'accordo.</p>
+      </div>
+    </div>
+
+    <div class="rail">
+      <p class="fig">€ 8.700 – 10.900 /m²</p>
+      <p class="z">Esempio · zona OMI B12 · Milano, Navigli · abitazioni civili · stato normale</p>
+      <div class="track"><span class="fill"></span></div>
+      <div class="lg"><span>minimo zona</span><span>massimo zona</span></div>
+      <p class="src">Fonte: Agenzia Entrate — OMI · semestre 2025/2</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="kicker">E poi</p>
+    <h2>Il numero è tuo. Anche se non fai altro.</h2>
+    <p class="lede">Puoi tenerlo e basta — per decidere, per discutere con chi ti
+    ha dato una cifra diversa, o per capire se conviene aspettare. Se invece vuoi
+    vendere, pubblichi qui senza provvigione.</p>
+
+    <div class="two">
+      <div>
+        <span class="tag">Opzione A</span>
+        <h3>Prendi il numero e vai</h3>
+        <p>Nessun seguito, nessuna chiamata, nessuna newsletter. Se torni fra sei
+        mesi la valutazione si aggiorna con i dati nuovi.</p>
+      </div>
+      <div class="hi">
+        <span class="tag">Opzione B</span>
+        <h3>Pubblica senza provvigione</h3>
+        <p>Il tuo annuncio, i tuoi contatti, le tue visite. I servizi che vuoi
+        aggiungere — foto, documenti, APE — hanno un prezzo fisso indicato prima
+        dell'ordine.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="kicker">Domande</p>
+    <h2>Dove sta la fregatura</h2>
+    <div class="faq">
+      <details>
+        <summary>Se è gratis, come guadagnate?</summary>
+        <p>Dai servizi che scegli, non dalla vendita. Fotografie, certificazione
+        energetica, verifica dei documenti, assistenza alla trattativa: ognuno ha
+        un prezzo fisso, indicato prima dell'ordine, uguale su una casa da
+        150.000 € e su una da 800.000 €. Dal venditore non prendiamo provvigione.</p>
+      </details>
+      <details>
+        <summary>Mi chiamerà qualcuno?</summary>
+        <p>No. Non passiamo il tuo indirizzo o i tuoi dati ad agenzie, e non
+        esiste una rete di agenti che compra questi contatti. Se vuoi parlare con
+        qualcuno lo chiedi tu.</p>
+      </details>
+      <details>
+        <summary>Quanto è precisa?</summary>
+        <p>È una stima, e la trattiamo come tale: ti diamo un intervallo, non una
+        cifra secca. I valori OMI sono ufficiali ma per definizione approssimativi
+        — indicano la banda della microzona, non il valore del tuo specifico
+        immobile. Per una perizia serve un tecnico, e te lo diciamo apertamente
+        invece di far finta che un algoritmo basti.</p>
+      </details>
+      <details>
+        <summary>Da dove arrivano i dati?</summary>
+        <p>Dall'Osservatorio del Mercato Immobiliare dell'Agenzia delle Entrate,
+        che pubblica ogni sei mesi i valori registrati per ogni microzona di ogni
+        comune italiano. Sono gli stessi dati che usano banche e periti come
+        riferimento. Indichiamo sempre il semestre di riferimento.</p>
+      </details>
+      <details>
+        <summary>Vale anche fuori Milano?</summary>
+        <p>Sì. La copertura è nazionale: 7.866 comuni, tutte le province.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="band close">
+  <div class="wrap">
+    <p class="kicker">Due minuti</p>
+    <h2>Scopri il numero prima che te lo dica qualcun altro.</h2>
+    <p class="lede">Indirizzo, metri quadri, stato. Nient'altro.</p>
+    <a class="cta" href="#">Calcola il valore</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="fbrand">Easy<span>Casa</span></p>
+
+    <div class="dir">
+      <div>
+        <h3>Per chi vende</h3>
+        <p class="model">Nessuna provvigione dal venditore.<br>Servizi a prezzo fisso, indicato prima dell'ordine.</p>
+        <ul>
+          <li><a href="/it/valutazione">Valutazione gratuita</a></li>
+          <li><a href="/it/pubblica">Pubblica un annuncio</a></li>
+          <li><a href="/it/servizi/foto">Servizio fotografico e virtual tour</a></li>
+          <li><a href="/it/servizi/ape">Certificazione energetica (APE)</a></li>
+          <li><a href="/it/servizi/documenti">Verifica documenti</a></li>
+          <li><a href="/it/servizi/conformita">Conformità catastale e urbanistica</a></li>
+          <li><a href="/it/servizi/affitto">Contratto d'affitto e registrazione RLI</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Per chi compra</h3>
+        <p class="model">Ricerca e visite sempre gratuite.<br>I servizi di verifica sono facoltativi.</p>
+        <ul>
+          <li><a href="/it/cerca">Cerca casa</a></li>
+          <li><a href="/it/visite">Prenota una visita</a></li>
+          <li><a href="/it/servizi/verifica">Verifica immobile — visure e condominio</a></li>
+          <li><a href="/it/servizi/proposta">Redazione della proposta</a></li>
+          <li><a href="/it/servizi/rogito">Assistenza al rogito</a></li>
+          <li><a href="/it/acquisto-assistito">Comprare dall'estero</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Finanziamento</h3>
+        <p class="model">Servizi di Banks4All.<br>Consulenza indipendente, non è un istituto di credito.</p>
+        <ul>
+          <li><a class="ext" href="https://www.banks4all.eu/it/property-investment-plan">Property Investment Plan</a></li>
+          <li><a class="ext" href="https://www.banks4all.eu/it/property-investment-plan">Verified Buyer Badge</a></li>
+          <li><a class="ext" href="https://www.banks4all.eu/it/book/discovery-call">Call conoscitiva gratuita</a></li>
+          <li><a class="ext" href="https://www.banks4all.eu/it/trasparenza">Come viene pagata Banks4All</a></li>
+        </ul>
+        <p class="note">Banks4All ed EasyCasa sono società distinte del gruppo
+        Mundida. Banks4All non percepisce compensi da EasyCasa, da agenzie o da
+        venditori. La mediazione creditizia è svolta da operatori iscritti negli
+        albi obbligatori.</p>
+      </div>
+    </div>
+
+    <div class="legal">
+      <div>
+        MUNDIDA S.r.l. · P.IVA IT04531990986 · REA [—] · Sede legale [—] · PEC [—]<br>
+        Attività di mediazione immobiliare — iscrizione [—]<br>
+        Dati di mercato: Agenzia Entrate — OMI, semestre 2025/2
+      </div>
+      <div class="pol">
+        <a href="/it/privacy">Privacy</a>
+        <a href="/it/cookie">Cookie</a>
+        <a href="/it/termini">Termini</a>
+        <a href="/it/i-miei-dati">I miei dati</a>
+        <a href="/it/contatti">Contatti</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

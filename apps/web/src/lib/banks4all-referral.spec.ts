@@ -25,4 +25,13 @@ describe('getBanks4AllReferralUrl', () => {
       `${BANKS4ALL_SITE_ORIGIN}/es/property-investment-plan`,
     );
   });
+
+  it('supports discovery call and transparency pages', () => {
+    expect(getBanks4AllReferralUrl('it', 'discoveryCall')).toBe(
+      `${BANKS4ALL_SITE_ORIGIN}/it/book/discovery-call`,
+    );
+    expect(getBanks4AllReferralUrl('en', 'transparency')).toBe(
+      `${BANKS4ALL_SITE_ORIGIN}/en/transparency`,
+    );
+  });
 });

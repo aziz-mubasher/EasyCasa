@@ -9,7 +9,11 @@ export const BANKS4ALL_PORTAL_ORIGIN = 'https://portal.banks4all.eu' as const;
 
 export type Banks4AllSiteLocale = 'it' | 'en' | 'es';
 
-export type Banks4AllReferralEntry = 'propertyPlanPortal' | 'propertyInvestmentPlan';
+export type Banks4AllReferralEntry =
+  | 'propertyPlanPortal'
+  | 'propertyInvestmentPlan'
+  | 'discoveryCall'
+  | 'transparency';
 
 /** Info page — Property Investment Plan overview (secondary “learn more”). */
 const PROPERTY_INVESTMENT_PLAN_PATH: Record<Banks4AllSiteLocale, string> = {
@@ -23,6 +27,18 @@ const PROPERTY_PLAN_PORTAL_PATH: Record<Banks4AllSiteLocale, string> = {
   it: '/it/property-plan',
   en: '/en/property-plan',
   es: '/es/property-plan',
+};
+
+const DISCOVERY_CALL_PATH: Record<Banks4AllSiteLocale, string> = {
+  it: '/it/book/discovery-call',
+  en: '/en/book/discovery-call',
+  es: '/es/book/discovery-call',
+};
+
+const TRANSPARENCY_PATH: Record<Banks4AllSiteLocale, string> = {
+  it: '/it/trasparenza',
+  en: '/en/transparency',
+  es: '/es/transparencia',
 };
 
 /** Default outbound entry: free plan request on the Banks4All portal. */
@@ -43,6 +59,12 @@ export function getBanks4AllReferralUrl(
   const b4aLocale = resolveBanks4AllSiteLocale(easycasaLocale);
   if (entry === 'propertyPlanPortal') {
     return `${BANKS4ALL_PORTAL_ORIGIN}${PROPERTY_PLAN_PORTAL_PATH[b4aLocale]}`;
+  }
+  if (entry === 'discoveryCall') {
+    return `${BANKS4ALL_SITE_ORIGIN}${DISCOVERY_CALL_PATH[b4aLocale]}`;
+  }
+  if (entry === 'transparency') {
+    return `${BANKS4ALL_SITE_ORIGIN}${TRANSPARENCY_PATH[b4aLocale]}`;
   }
   return `${BANKS4ALL_SITE_ORIGIN}${PROPERTY_INVESTMENT_PLAN_PATH[b4aLocale]}`;
 }

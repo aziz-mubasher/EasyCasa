@@ -5,17 +5,18 @@ Standalone marketing page for free OMI-based home valuation aimed at sellers.
 ## Route
 
 - `/{locale}/valutazione-gratuita` — EN / IT / ES via next-intl
-- Source design: `EC Startup /lp-valutazione-gratuita.html` (copy in `docs/lp-valutazione-gratuita.html`)
+- Source design: `EC Startup /lp-valutazione-gratuita.html` (V1) and `lp-valutazione-gratuita V2.html` (footer pattern)
+- Copies: `docs/lp-valutazione-gratuita.html`, `docs/lp-valutazione-gratuita-v2.html`
 
 ## Chrome
 
 - Minimal masthead (brand + locale) — `isMarketingServicePath`
-- App footer hidden on this route; page ships its own mono footer
-- Linked from the main app footer on other pages
+- App site footer hidden on this route (marketing) and on listing landings; V2 ink footer is the site chrome elsewhere
+- Linked from the site footer (“Per chi vende”)
 
 ## Form
 
-Hero form collects address, commercial m², and condition. Live address→microzone OMI calculation is not wired yet; submit shows an honest next-step CTA to `/add` (list without seller commission). Example OMI band on the page is labelled as an example.
+Hero form collects address, commercial m², and condition. Live address→microzone OMI calculation is not wired yet; submit shows an honest next-step CTA to `/add`.
 
 ## Counsel note
 

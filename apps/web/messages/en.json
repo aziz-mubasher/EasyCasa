@@ -22,7 +22,8 @@
     "wherePlaceholder": "City, province or region…",
     "searchRowLabel": "Search properties on the map",
     "dealLabel": "Buy or rent",
-    "sellerLabel": "Private or agency"
+    "sellerLabel": "Private or agency",
+    "commissionDisclosure": "A mediation fee (provvigione) applies only when a deal closes through our work, and is always stated in the mandate."
   },
   "search": {
     "title": "Search properties",
@@ -414,22 +415,40 @@
     "externalHint": "Opens on {host} in a new tab"
   },
   "footer": {
-    "companyName": "Easy Casa Italia",
-    "tagline": "Buy, sell, and rent — pay only for the services you use, from a licensed agency.",
-    "rights": "All rights reserved.",
-    "pricing": "Service prices",
-    "search": "Search",
-    "add": "List a property",
-    "favorites": "Favorites",
-    "disclosure": "A mediation fee (provvigione) applies only when a deal closes through our work, and is always stated in the mandate.",
-    "acquistoAssistito": "Assisted purchase",
-    "valutazioneGratuita": "Free valuation",
-    "propertyInvestmentPlan": "Property Investment Plan",
     "externalHint": "Opens on {host} in a new tab",
     "columns": {
-      "explore": "Explore",
-      "services": "Services",
+      "sellers": "For sellers",
+      "buyers": "For buyers",
       "financing": "Financing"
+    },
+    "sellers": {
+      "valutazioneGratuita": "Free valuation",
+      "add": "List a property",
+      "photo": "Photography and virtual tour",
+      "ape": "Energy certificate (APE)",
+      "documents": "Document checks",
+      "compliance": "Cadastral and planning compliance",
+      "rentContract": "Rental contract and RLI registration"
+    },
+    "buyers": {
+      "search": "Search homes",
+      "viewings": "Book a viewing",
+      "verify": "Property check — title and condominium",
+      "proposal": "Draft the offer",
+      "deed": "Support at the deed",
+      "buyAbroad": "Buying from abroad"
+    },
+    "financing": {
+      "propertyInvestmentPlan": "Property Investment Plan",
+      "verifiedBuyerBadge": "Verified Buyer Badge",
+      "discoveryCall": "Free discovery call",
+      "transparency": "How Banks4All is paid"
+    },
+    "legal": {
+      "privacy": "Privacy",
+      "mediation": "Mediation",
+      "myData": "My data",
+      "contacts": "Contacts"
     }
   },
   "pricing": {

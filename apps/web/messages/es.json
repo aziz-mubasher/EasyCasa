@@ -22,7 +22,8 @@
     "wherePlaceholder": "Municipio, provincia o región…",
     "searchRowLabel": "Buscar inmuebles en el mapa",
     "dealLabel": "Venta o alquiler",
-    "sellerLabel": "Particular o agencia"
+    "sellerLabel": "Particular o agencia",
+    "commissionDisclosure": "Una comisión de mediación (provvigione) se aplica solo al cerrar la operación con nuestro trabajo, y siempre figura en el mandato."
   },
   "search": {
     "title": "Buscar inmuebles",
@@ -414,22 +415,40 @@
     "externalHint": "Se abre en {host} en una pestaña nueva"
   },
   "footer": {
-    "companyName": "Easy Casa Italia",
-    "tagline": "Compra, vende y alquila — paga solo por los servicios que usas, con una agencia regulada.",
-    "rights": "Todos los derechos reservados.",
-    "pricing": "Precios de servicios",
-    "search": "Buscar",
-    "add": "Publicar inmueble",
-    "favorites": "Favoritos",
-    "disclosure": "Una comisión de mediación (provvigione) se aplica solo al cerrar la operación con nuestro trabajo, y siempre figura en el mandato.",
-    "acquistoAssistito": "Compra asistida",
-    "valutazioneGratuita": "Valoración gratuita",
-    "propertyInvestmentPlan": "Property Investment Plan",
     "externalHint": "Se abre en {host} en una pestaña nueva",
     "columns": {
-      "explore": "Explorar",
-      "services": "Servicios",
+      "sellers": "Para quien vende",
+      "buyers": "Para quien compra",
       "financing": "Financiación"
+    },
+    "sellers": {
+      "valutazioneGratuita": "Valoración gratuita",
+      "add": "Publicar un anuncio",
+      "photo": "Servicio fotográfico y tour virtual",
+      "ape": "Certificado energético (APE)",
+      "documents": "Verificación de documentos",
+      "compliance": "Conformidad catastral y urbanística",
+      "rentContract": "Contrato de alquiler y registro RLI"
+    },
+    "buyers": {
+      "search": "Buscar casa",
+      "viewings": "Reservar una visita",
+      "verify": "Verificación del inmueble — títulos y comunidad",
+      "proposal": "Redacción de la propuesta",
+      "deed": "Asistencia a la escritura",
+      "buyAbroad": "Comprar desde el extranjero"
+    },
+    "financing": {
+      "propertyInvestmentPlan": "Property Investment Plan",
+      "verifiedBuyerBadge": "Verified Buyer Badge",
+      "discoveryCall": "Llamada de descubrimiento gratuita",
+      "transparency": "Cómo se paga Banks4All"
+    },
+    "legal": {
+      "privacy": "Privacidad",
+      "mediation": "Mediación",
+      "myData": "Mis datos",
+      "contacts": "Contactos"
     }
   },
   "pricing": {

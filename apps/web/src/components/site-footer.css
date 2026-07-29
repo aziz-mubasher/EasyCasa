@@ -1,0 +1,116 @@
+/* Site footer — ink directory from lp-valutazione-gratuita V2 (scoped under .sf) */
+
+.sf {
+  --sf-gutter: clamp(1.25rem, 5vw, 4rem);
+  --sf-measure: 62rem;
+  background: var(--ink);
+  color: var(--paper-deep);
+  padding-block: clamp(2.8rem, 6vw, 4rem) 2rem;
+  margin-top: 4rem;
+}
+
+.sf .sf-wrap {
+  max-width: var(--sf-measure);
+  margin-inline: auto;
+  padding-inline: var(--sf-gutter);
+}
+
+.sf .sf-brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+  margin: 0 0 2.2rem;
+}
+
+.sf .sf-brand span {
+  color: var(--azure-pale);
+}
+
+.sf .sf-dir {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 4vw, 3rem);
+  padding-bottom: 2.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+@media (max-width: 800px) {
+  .sf .sf-dir {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .sf .sf-dir {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sf .sf-dir h2 {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--azure-pale);
+  margin: 0 0 1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.sf .sf-dir ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sf .sf-dir li {
+  margin-bottom: 0.55rem;
+}
+
+.sf .sf-dir a {
+  color: var(--paper-deep);
+  text-decoration: none;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  border-bottom: 1px solid transparent;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.sf .sf-dir a:hover {
+  color: var(--paper);
+  border-bottom-color: var(--azure-pale);
+}
+
+.sf .sf-dir a.sf-ext::after {
+  content: ' ↗';
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--azure-pale);
+}
+
+.sf .sf-legal {
+  padding-top: 1.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  line-height: 1.85;
+  color: rgba(232, 223, 204, 0.66);
+}
+
+.sf .sf-legal a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.sf .sf-legal a:hover {
+  color: var(--paper);
+}

@@ -3,100 +3,107 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { getBanks4AllReferralUrl } from '@/lib/banks4all-referral';
+import { isListingLandingPath } from '@/lib/listing-landing';
 import { isMarketingServicePath } from '@/lib/marketing-service';
+import './site-footer.css';
+
+type InternalItem = { key: string; href: string };
+type ExternalItem = { key: string; entry: 'propertyInvestmentPlan' | 'discoveryCall' | 'transparency' };
+
+const SELLER_LINKS: InternalItem[] = [
+  { key: 'valutazioneGratuita', href: '/valutazione-gratuita' },
+  { key: 'add', href: '/add' },
+  { key: 'photo', href: '/pricing' },
+  { key: 'ape', href: '/pricing' },
+  { key: 'documents', href: '/pricing' },
+  { key: 'compliance', href: '/pricing' },
+  { key: 'rentContract', href: '/pricing' },
+];
+
+const BUYER_LINKS: InternalItem[] = [
+  { key: 'search', href: '/search' },
+  { key: 'viewings', href: '/viewings' },
+  { key: 'verify', href: '/pricing' },
+  { key: 'proposal', href: '/pricing' },
+  { key: 'deed', href: '/pricing' },
+  { key: 'buyAbroad', href: '/acquisto-assistito' },
+];
+
+const FINANCE_LINKS: ExternalItem[] = [
+  { key: 'propertyInvestmentPlan', entry: 'propertyInvestmentPlan' },
+  { key: 'verifiedBuyerBadge', entry: 'propertyInvestmentPlan' },
+  { key: 'discoveryCall', entry: 'discoveryCall' },
+  { key: 'transparency', entry: 'transparency' },
+];
 
 export function Footer() {
   const t = useTranslations('footer');
   const locale = useLocale();
   const pathname = usePathname();
-  if (isMarketingServicePath(pathname)) return null;
 
-  const propertyPlanHref = getBanks4AllReferralUrl(locale, 'propertyInvestmentPlan');
+  if (isListingLandingPath(pathname) || isMarketingServicePath(pathname)) return null;
+
   const externalHint = t('externalHint', { host: 'banks4all.eu' });
-  const linkClass = 'text-sm text-ink-soft hover:text-azure transition-colors';
 
   return (
-    <footer className="border-t border-line mt-16 bg-paper">
-      <div className="mx-auto max-w-7xl px-5 py-12">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="sm:col-span-2 lg:col-span-1 space-y-3 max-w-sm">
-            <div className="font-display text-lg font-semibold tracking-tight text-ink">
-              {t('companyName')}
-            </div>
-            <p className="text-sm leading-relaxed text-ink-soft">{t('tagline')}</p>
-            <p className="text-xs leading-relaxed text-muted">{t('disclosure')}</p>
-          </div>
+    <footer className="sf">
+      <div className="sf-wrap">
+        <p className="sf-brand">
+          Easy<span>Casa</span>
+        </p>
 
-          <nav aria-labelledby="footer-explore">
-            <h2 id="footer-explore" className="eyebrow mb-3">
-              {t('columns.explore')}
-            </h2>
-            <ul className="space-y-2.5">
-              <li>
-                <Link href="/search" className={linkClass}>
-                  {t('search')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/add" className={linkClass}>
-                  {t('add')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/pricing" className={linkClass}>
-                  {t('pricing')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/favorites" className={linkClass}>
-                  {t('favorites')}
-                </Link>
-              </li>
+        <div className="sf-dir">
+          <nav aria-labelledby="footer-sellers">
+            <h2 id="footer-sellers">{t('columns.sellers')}</h2>
+            <ul>
+              {SELLER_LINKS.map((item) => (
+                <li key={item.key}>
+                  <Link href={item.href}>{t(`sellers.${item.key}`)}</Link>
+                </li>
+              ))}
             </ul>
           </nav>
 
-          <nav aria-labelledby="footer-services">
-            <h2 id="footer-services" className="eyebrow mb-3">
-              {t('columns.services')}
-            </h2>
-            <ul className="space-y-2.5">
-              <li>
-                <Link href="/acquisto-assistito" className={linkClass}>
-                  {t('acquistoAssistito')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/valutazione-gratuita" className={linkClass}>
-                  {t('valutazioneGratuita')}
-                </Link>
-              </li>
+          <nav aria-labelledby="footer-buyers">
+            <h2 id="footer-buyers">{t('columns.buyers')}</h2>
+            <ul>
+              {BUYER_LINKS.map((item) => (
+                <li key={item.key}>
+                  <Link href={item.href}>{t(`buyers.${item.key}`)}</Link>
+                </li>
+              ))}
             </ul>
           </nav>
 
           <nav aria-labelledby="footer-financing">
-            <h2 id="footer-financing" className="eyebrow mb-3">
-              {t('columns.financing')}
-            </h2>
-            <ul className="space-y-2.5">
-              <li>
-                <a
-                  href={propertyPlanHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={linkClass}
-                  aria-label={`${t('propertyInvestmentPlan')} — ${externalHint}`}
-                >
-                  {t('propertyInvestmentPlan')}
-                </a>
-              </li>
+            <h2 id="footer-financing">{t('columns.financing')}</h2>
+            <ul>
+              {FINANCE_LINKS.map((item) => {
+                const href = getBanks4AllReferralUrl(locale, item.entry);
+                const label = t(`financing.${item.key}`);
+                return (
+                  <li key={item.key}>
+                    <a
+                      className="sf-ext"
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${label} — ${externalHint}`}
+                    >
+                      {label}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-line flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <p className="data text-xs text-muted">
-            © {new Date().getFullYear()} {t('companyName')} · MUNDIDA · {t('rights')}
-          </p>
+        <div className="sf-legal">
+          <Link href="/legal/privacy">{t('legal.privacy')}</Link>
+          <Link href="/legal/mediation">{t('legal.mediation')}</Link>
+          <Link href="/privacy">{t('legal.myData')}</Link>
+          <a href="mailto:acquisti@easycasaita.com">{t('legal.contacts')}</a>
         </div>
       </div>
     </footer>
