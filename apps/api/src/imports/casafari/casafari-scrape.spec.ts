@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   estateToCasafariDraft,
   extractCasafariEstatesArray,
+  extractCasafariPhotoEntries,
   extractCasafariPhotos,
   upgradeCasafariPhotoUrl,
 } from './casafari-scrape';
@@ -78,16 +79,8 @@ describe('casafari-scrape', () => {
     );
   });
 
-  it('keeps retelligence /c/ thumb sizes (xxl rewrite 404s)', () => {
-    expect(
-      upgradeCasafariPhotoUrl(
-        'https://st2.retelligence.co/c/6620/d/5d/777f796b4d45c2c8cde18e6f52f3ed5d350.jpg',
-      ),
-    ).toContain('350.jpg');
-  });
-
-  it('falls back to thumbnail when Idealista original is a dead blur host', () => {
-    const photos = extractCasafariPhotos(
+  it('keeps a retelligence thumb as fallback when Idealista original is preferred', () => {
+    const { urls, fallbacks } = extractCasafariPhotoEntries(
       {
         allPhotos: [
           {
@@ -105,8 +98,16 @@ describe('casafari-scrape', () => {
       },
       5,
     );
-    expect(photos).toHaveLength(1);
-    expect(photos[0]).toContain('img3.idealista.it');
+    expect(urls[0]).toContain('img3.idealista.it');
+    expect(fallbacks[0]).toContain('st2.retelligence.co');
+  });
+
+  it('keeps retelligence /c/ thumb sizes (xxl rewrite 404s)', () => {
+    expect(
+      upgradeCasafariPhotoUrl(
+        'https://st2.retelligence.co/c/6620/d/5d/777f796b4d45c2c8cde18e6f52f3ed5d350.jpg',
+      ),
+    ).toContain('350.jpg');
   });
 
   it('caps photos at maxImages and prefers selected allPhotos group', () => {

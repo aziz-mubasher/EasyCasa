@@ -72,6 +72,8 @@ export interface CasafariRawDraft {
   floor: string;
   description: string;
   photos: string[];
+  /** Parallel to `photos`: alternate CDN URLs to try if the primary fetch fails. */
+  photoFallbacks: string[];
   bathrooms: number | null;
   rooms: number | null;
   constructionYear: number | null;
@@ -263,6 +265,7 @@ function isUsableCasafariPhotoUrl(url: string): boolean {
 
 function pushPhoto(
   urls: string[],
+  fallbacks: string[],
   seen: Set<string>,
   seenCrypt: Set<string>,
   photoLike: unknown,
@@ -273,6 +276,7 @@ function pushPhoto(
     if (!upgraded || !isUsableCasafariPhotoUrl(upgraded) || seen.has(upgraded)) return;
     seen.add(upgraded);
     urls.push(upgraded);
+    fallbacks.push('');
     return;
   }
   if (typeof photoLike !== 'object') return;
@@ -293,6 +297,9 @@ function pushPhoto(
   }
   seen.add(chosen);
   urls.push(chosen);
+  const fallback = candidates.find((u) => u !== chosen) ?? '';
+  if (fallback) seen.add(fallback);
+  fallbacks.push(fallback);
   if (crypt) seenCrypt.add(crypt);
 }
 
@@ -300,9 +307,21 @@ export function extractCasafariPhotos(
   estate: CasafariEstate,
   maxImages = CASAFARI_MAX_IMAGES,
 ): string[] {
+  return extractCasafariPhotoEntries(estate, maxImages).urls;
+}
+
+export function extractCasafariPhotoEntries(
+  estate: CasafariEstate,
+  maxImages = CASAFARI_MAX_IMAGES,
+): { urls: string[]; fallbacks: string[] } {
   const urls: string[] = [];
+  const fallbacks: string[] = [];
   const seen = new Set<string>();
   const seenCrypt = new Set<string>();
+
+  const take = (photoLike: unknown) => {
+    pushPhoto(urls, fallbacks, seen, seenCrypt, photoLike);
+  };
 
   const allPhotos = Array.isArray(estate.allPhotos)
     ? (estate.allPhotos as Array<Record<string, unknown>>)
@@ -310,27 +329,38 @@ export function extractCasafariPhotos(
   const selected = allPhotos.find((g) => g.selected) ?? allPhotos[0];
   if (selected && Array.isArray(selected.photos)) {
     for (const p of selected.photos) {
-      pushPhoto(urls, seen, seenCrypt, p);
-      if (urls.length >= maxImages) return urls.slice(0, maxImages);
+      take(p);
+      if (urls.length >= maxImages) {
+        return { urls: urls.slice(0, maxImages), fallbacks: fallbacks.slice(0, maxImages) };
+      }
     }
   }
 
   for (const p of (estate.photo as unknown[]) || []) {
-    pushPhoto(urls, seen, seenCrypt, p);
-    if (urls.length >= maxImages) return urls.slice(0, maxImages);
+    take(p);
+    if (urls.length >= maxImages) {
+      return { urls: urls.slice(0, maxImages), fallbacks: fallbacks.slice(0, maxImages) };
+    }
   }
   for (const p of (estate.photos as unknown[]) || []) {
-    pushPhoto(urls, seen, seenCrypt, p);
-    if (urls.length >= maxImages) return urls.slice(0, maxImages);
+    take(p);
+    if (urls.length >= maxImages) {
+      return { urls: urls.slice(0, maxImages), fallbacks: fallbacks.slice(0, maxImages) };
+    }
   }
   for (const group of allPhotos) {
     if (group === selected) continue;
     for (const p of (group.photos as unknown[]) || []) {
-      pushPhoto(urls, seen, seenCrypt, p);
-      if (urls.length >= maxImages) return urls.slice(0, maxImages);
+      take(p);
+      if (urls.length >= maxImages) {
+        return { urls: urls.slice(0, maxImages), fallbacks: fallbacks.slice(0, maxImages) };
+      }
     }
   }
-  return urls.slice(0, maxImages);
+  return {
+    urls: urls.slice(0, maxImages),
+    fallbacks: fallbacks.slice(0, maxImages),
+  };
 }
 
 function isImageOrCdnAsset(url: string): boolean {
@@ -480,7 +510,9 @@ export function estateToCasafariDraft(
     positiveNumber(estate.area);
 
   const beds = positiveNumber(estate.bedrooms) ?? positiveNumber(estate.rooms);
-  const photos = extractCasafariPhotos(estate, maxImages);
+  const photoEntries = extractCasafariPhotoEntries(estate, maxImages);
+  const photos = photoEntries.urls;
+  const photoFallbacks = photoEntries.fallbacks;
   const estateId = estate.estateId ? String(estate.estateId) : '';
   const propertyUrl = estateId
     ? buildCasafariPropertyUrl(shareUrl, estateId)
@@ -532,6 +564,7 @@ export function estateToCasafariDraft(
     floor,
     description: buildCasafariDescription(estate, sellerType, sellerLabel, listingSource),
     photos,
+    photoFallbacks,
     bathrooms: positiveNumber(estate.bathrooms),
     rooms: positiveNumber(estate.rooms),
     constructionYear: positiveNumber(estate.constructionYear)
@@ -655,6 +688,7 @@ export async function importCasafariShare(
     floor: '',
     description: ogDescription,
     photos: ogImage ? [upgradeCasafariPhotoUrl(ogImage)].slice(0, maxImages) : [],
+    photoFallbacks: [],
     bathrooms: null,
     rooms: null,
     constructionYear: null,

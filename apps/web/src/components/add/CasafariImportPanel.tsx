@@ -36,6 +36,7 @@ export type CasafariImportDraft = {
   latitude: number | null;
   longitude: number | null;
   photoUrls: string[];
+  photoFallbacks?: string[];
   listingSource: string;
   listingUrls: string[];
   sellerLabel: string;

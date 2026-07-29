@@ -55,6 +55,70 @@ function isAllowedPhotoUrl(url: string): boolean {
   }
 }
 
+/**
+ * Idealista (and some other portals) hotlink-protect CDN images: a Casafari
+ * Referer yields HTTP 404 with a tiny JPEG body. Match the portal Referer.
+ */
+export function referersForPhotoUrl(url: string): Array<string | undefined> {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    if (/(^|\.)idealista\.(it|com|pt|es)$/i.test(host)) {
+      return ['https://www.idealista.it/', 'https://www.idealista.com/', undefined];
+    }
+    if (/(^|\.)immobiliare\.it$/i.test(host) || /(^|\.)im-cdn\.it$/i.test(host)) {
+      return ['https://www.immobiliare.it/', 'https://www.casafari.com/', undefined];
+    }
+    if (/(^|\.)tecnocasa\.(it|com)$/i.test(host) || /(^|\.)medialabtc\.it$/i.test(host)) {
+      return ['https://www.tecnocasa.it/', 'https://www.casafari.com/', undefined];
+    }
+    if (/(^|\.)retelligence\.co$/i.test(host)) {
+      return ['https://www.casafari.com/', 'https://www.idealista.it/', undefined];
+    }
+    return ['https://www.casafari.com/', undefined];
+  } catch {
+    return [undefined];
+  }
+}
+
+async function fetchPhotoBuffer(
+  url: string,
+): Promise<{ buf: Buffer; contentType: string } | { error: string }> {
+  let lastError = `${url} → fetch failed`;
+  for (const referer of referersForPhotoUrl(url)) {
+    try {
+      const headers: Record<string, string> = {
+        'User-Agent': CASAFARI_USER_AGENT,
+        Accept: 'image/jpeg,image/png,image/webp,image/*;q=0.8,*/*;q=0.5',
+      };
+      if (referer) headers.Referer = referer;
+      const res = await fetch(url, { headers, redirect: 'follow' });
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (!res.ok) {
+        lastError = `${url} → HTTP ${res.status} (referer=${referer ?? 'none'})`;
+        continue;
+      }
+      if (!buf.length || buf.length > MAX_PHOTO_BYTES) {
+        lastError = `${url} → invalid size ${buf.length}`;
+        continue;
+      }
+      // Idealista sometimes returns a tiny placeholder JPEG with a non-2xx we
+      // already skipped; still guard absurdly small “success” bodies.
+      if (buf.length < 2500) {
+        lastError = `${url} → too small (${buf.length}b), likely placeholder`;
+        continue;
+      }
+      return {
+        buf,
+        contentType: res.headers.get('content-type') || 'image/jpeg',
+      };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      lastError = `${url} → ${msg}`;
+    }
+  }
+  return { error: lastError };
+}
+
 async function mapPool<T, R>(
   items: T[],
   concurrency: number,
@@ -323,6 +387,7 @@ export class ImportsService {
       created.id,
       draft.photoUrls.slice(0, opts.maxImages),
       draft.title,
+      draft.photoFallbacks?.slice(0, opts.maxImages),
     );
 
     return {
@@ -337,6 +402,7 @@ export class ImportsService {
     listingId: string,
     urls: string[],
     altBase: string,
+    fallbacks: string[] = [],
   ): Promise<{ imported: number; errors: string[] }> {
     const errors: string[] = [];
     let imported = 0;
@@ -346,36 +412,32 @@ export class ImportsService {
       | { ok: false; error: string };
 
     const fetched = await mapPool(urls, PHOTO_FETCH_CONCURRENCY, async (url, index): Promise<Fetched> => {
-      if (!isAllowedPhotoUrl(url)) {
-        return { ok: false, error: `blocked host: ${url}` };
-      }
-      try {
-        const res = await fetch(url, {
-          headers: {
-            'User-Agent': CASAFARI_USER_AGENT,
-            Accept: 'image/jpeg,image/png,image/webp,image/*;q=0.8,*/*;q=0.5',
-            Referer: 'https://www.casafari.com/',
-          },
-          redirect: 'follow',
-        });
-        if (!res.ok) {
-          return { ok: false, error: `${url} → HTTP ${res.status}` };
+      const tryUrls = [url, fallbacks[index] || ''].filter(
+        (u, i, arr) => Boolean(u) && arr.indexOf(u) === i,
+      );
+      const attemptErrors: string[] = [];
+      for (const candidate of tryUrls) {
+        if (!isAllowedPhotoUrl(candidate)) {
+          attemptErrors.push(`blocked host: ${candidate}`);
+          continue;
         }
-        const buf = Buffer.from(await res.arrayBuffer());
-        if (!buf.length || buf.length > MAX_PHOTO_BYTES) {
-          return { ok: false, error: `${url} → invalid size ${buf.length}` };
+        const got = await fetchPhotoBuffer(candidate);
+        if ('error' in got) {
+          attemptErrors.push(got.error);
+          continue;
         }
         return {
           ok: true,
           index,
-          url,
-          buf,
-          contentType: res.headers.get('content-type') || 'image/jpeg',
+          url: candidate,
+          buf: got.buf,
+          contentType: got.contentType,
         };
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        return { ok: false, error: `${url} → ${msg}` };
       }
+      return {
+        ok: false,
+        error: attemptErrors.join(' | ') || `${url} → fetch failed`,
+      };
     });
 
     for (const item of fetched) {

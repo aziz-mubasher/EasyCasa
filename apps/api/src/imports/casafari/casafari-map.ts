@@ -41,6 +41,8 @@ export interface EasyCasaImportDraft {
   latitude: number | null;
   longitude: number | null;
   photoUrls: string[];
+  /** Parallel alternates when a primary CDN URL fails to download. */
+  photoFallbacks: string[];
   listingSource: string;
   listingUrls: string[];
   sellerLabel: string;
@@ -174,6 +176,7 @@ export function mapCasafariDraftToEasyCasa(draft: CasafariRawDraft): EasyCasaImp
     latitude: draft.latitude,
     longitude: draft.longitude,
     photoUrls: draft.photos,
+    photoFallbacks: draft.photoFallbacks ?? [],
     listingSource: draft.listingSource,
     listingUrls: draft.listingUrls,
     sellerLabel: draft.sellerLabel,
