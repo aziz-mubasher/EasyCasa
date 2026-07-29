@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { runPreflight } from '../../src/pilot/smoke/pilot-preflight';
 
 const goodEnv = {
-  DEV_AUTH: 'false',
+  ALLOW_PROVIDER_STUBS: 'false', EC_TEST_AUTH: 'false',
   OIDC_ISSUER: 'https://kc/realms/e',
   OIDC_JWKS_URL: 'https://kc/certs',
   OIDC_AUDIENCE: 'easycasa-api',
@@ -21,15 +21,15 @@ describe('pilot preflight (go/no-go)', () => {
     expect(r.checks.every((c) => c.pass)).toBe(true);
   });
 
-  it('NO-GO when DEV_AUTH is on (blocker)', async () => {
+  it('NO-GO when local-header-auth is on (blocker)', async () => {
     const r = await runPreflight({
-      env: { ...goodEnv, DEV_AUTH: 'true' },
+      env: { ...goodEnv, ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true' },
       probe: ready,
       fetchUrl: jwksOk,
       listingCount: seeded,
     });
     expect(r.go).toBe(false);
-    expect(r.checks.find((c) => c.name === 'DEV_AUTH is off')?.pass).toBe(false);
+    expect(r.checks.find((c) => c.name === 'ALLOW_PROVIDER_STUBS is off')?.pass).toBe(false);
   });
 
   it('NO-GO when email is unset (blocker)', async () => {

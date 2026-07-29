@@ -22,7 +22,7 @@ export interface SmokeReport {
 export interface SmokeOptions {
   baseUrl: string;
   fetchFn?: typeof fetch;
-  /** Extra headers for authed steps (Authorization or x-dev-* under DEV_AUTH). */
+  /** Extra headers for authed steps (Authorization or x-dev-* under local-header-auth). */
   authHeaders?: Record<string, string>;
   seeker?: { name: string; email: string };
   /** `contract` = reference app; `live` = production Nest routes. */

@@ -38,6 +38,7 @@ import { ViewingsModule } from './viewings/viewings.module';
 import { ShareLinksModule } from './share-links/share-links.module';
 import { PilotModule } from './pilot/pilot.module';
 import { PrivacyModule } from './privacy/privacy.module';
+import { PhoneVerifyModule } from './phone-verify/phone-verify.module';
 import { ObservabilityModule } from './observability/observability.module';
 import { HealthIndicatorRegistry } from './health/health-indicator.registry';
 import { EmailHealthIndicator } from './health/email.health';
@@ -99,6 +100,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     AvmModule,
     ViewingsModule,
     ShareLinksModule,
+    PhoneVerifyModule,
     PilotModule,
   ],
   controllers: [HealthController, ReadinessController],

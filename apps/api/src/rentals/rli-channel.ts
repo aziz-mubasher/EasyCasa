@@ -6,7 +6,7 @@ import type { RliChannel } from './domain/ports';
 import type { RliPayload } from './domain/types';
 
 /**
- * Entratel/RLI-web telematic seam. When unconfigured, DEV_AUTH yields a stub
+ * Entratel/RLI-web telematic seam. When unconfigured, local-header-auth yields a stub
  * protocollo so local flows work; production must set RLI_CHANNEL_*.
  */
 @Injectable()
@@ -16,7 +16,7 @@ export class EntratelRliChannel implements RliChannel {
     const credential = apiConfig.RLI_CHANNEL_CREDENTIAL;
 
     if (!endpoint || !credential) {
-      if (!apiConfig.DEV_AUTH) {
+      if (!apiConfig.ALLOW_PROVIDER_STUBS) {
         throw new Error('RLI channel is not configured (RLI_CHANNEL_URL/CREDENTIAL)');
       }
       const digest = createHmac('sha256', 'dev-rli')

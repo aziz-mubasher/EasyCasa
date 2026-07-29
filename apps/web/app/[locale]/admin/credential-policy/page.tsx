@@ -1,5 +1,8 @@
 'use client';
 
+import { RequireSignInLink } from '@/components/AuthControls';
+import { useAdminAuthedFetch } from '@/auth/useAdminAuthedFetch';
+
 import { useCallback, useEffect, useState } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://easycasaita.com/api';
@@ -17,13 +20,6 @@ interface PolicyRow {
   requiredCredential: RequiredCredential;
 }
 
-const HEADERS = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-  'x-dev-user': 'admin-demo',
-  'x-dev-email': 'admin@easycasaita.com',
-  'x-dev-roles': 'admin',
-};
 
 const OPTIONS: RequiredCredential[] = [
   'NONE',
@@ -35,31 +31,33 @@ const OPTIONS: RequiredCredential[] = [
 ];
 
 export default function CredentialPolicyAdminPage() {
+  const { ready, isAuthenticated, authedFetch } = useAdminAuthedFetch();
   const [items, setItems] = useState<PolicyRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setError(null);
-    const res = await fetch(`${API}/admin/credential-policy`, { headers: HEADERS });
+    const res = await authedFetch(`${API}/admin/credential-policy`);
     if (!res.ok) {
       setError(`Load failed (${res.status})`);
       return;
     }
     setItems((await res.json()) as PolicyRow[]);
-  }, []);
+  }, [authedFetch]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     void load();
-  }, [load]);
+  }, [load, isAuthenticated]);
 
   async function setPolicy(itemCode: string, requiredCredential: RequiredCredential) {
     setBusy(itemCode);
     setError(null);
     try {
-      const res = await fetch(`${API}/admin/credential-policy/${encodeURIComponent(itemCode)}`, {
+      const res = await authedFetch(`${API}/admin/credential-policy/${encodeURIComponent(itemCode)}`, {
         method: 'PATCH',
-        headers: HEADERS,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ requiredCredential }),
       });
       if (!res.ok) {
@@ -70,6 +68,15 @@ export default function CredentialPolicyAdminPage() {
     } finally {
       setBusy(null);
     }
+  }
+
+  if (ready && !isAuthenticated) {
+    return (
+      <div className="mx-auto max-w-3xl px-5 py-10">
+        <p className="text-[var(--muted)] mb-4">Accedi con un account admin.</p>
+        <RequireSignInLink />
+      </div>
+    );
   }
 
   return (

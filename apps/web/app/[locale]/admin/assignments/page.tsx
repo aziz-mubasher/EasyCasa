@@ -1,5 +1,8 @@
 'use client';
 
+import { RequireSignInLink } from '@/components/AuthControls';
+import { useAdminAuthedFetch } from '@/auth/useAdminAuthedFetch';
+
 import { useCallback, useEffect, useState } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://easycasaita.com/api';
@@ -29,15 +32,9 @@ interface Blocker {
   messageIt: string;
 }
 
-const HEADERS = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-  'x-dev-user': 'admin-demo',
-  'x-dev-email': 'admin@easycasaita.com',
-  'x-dev-roles': 'admin',
-};
 
 export default function AssignmentsAdminPage() {
+  const { ready, isAuthenticated, authedFetch } = useAdminAuthedFetch();
   const [items, setItems] = useState<Assignment[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
@@ -46,24 +43,25 @@ export default function AssignmentsAdminPage() {
 
   const load = useCallback(async () => {
     setError(null);
-    const res = await fetch(`${API}/assignments`, { headers: HEADERS });
+    const res = await authedFetch(`${API}/assignments`);
     if (!res.ok) {
       setError(`Load failed (${res.status})`);
       return;
     }
     const all = (await res.json()) as Assignment[];
     setItems(all.filter((a) => a.status !== 'APPROVED'));
-  }, []);
+  }, [authedFetch]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     void load();
-  }, [load]);
+  }, [load, isAuthenticated]);
 
   async function loadCandidates(id: string) {
     setSelected(id);
     setBlockers([]);
     setError(null);
-    const res = await fetch(`${API}/assignments/${id}/candidates`, { headers: HEADERS });
+    const res = await authedFetch(`${API}/assignments/${id}/candidates`);
     if (!res.ok) {
       setError(`Candidates failed (${res.status})`);
       return;
@@ -74,9 +72,9 @@ export default function AssignmentsAdminPage() {
   async function assign(assignmentId: string, professionalId: string) {
     setError(null);
     setBlockers([]);
-    const res = await fetch(`${API}/assignments/${assignmentId}/assign`, {
+    const res = await authedFetch(`${API}/assignments/${assignmentId}/assign`, {
       method: 'POST',
-      headers: HEADERS,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ professionalId }),
     });
     if (res.status === 409) {
@@ -95,15 +93,23 @@ export default function AssignmentsAdminPage() {
   }
 
   async function approve(id: string) {
-    const res = await fetch(`${API}/assignments/${id}/approve`, {
+    const res = await authedFetch(`${API}/assignments/${id}/approve`, {
       method: 'POST',
-      headers: HEADERS,
     });
     if (!res.ok) {
       setError(`Approve failed (${res.status})`);
       return;
     }
     await load();
+  }
+
+  if (ready && !isAuthenticated) {
+    return (
+      <div className="mx-auto max-w-3xl px-5 py-10">
+        <p className="text-[var(--muted)] mb-4">Accedi con un account admin.</p>
+        <RequireSignInLink />
+      </div>
+    );
   }
 
   return (

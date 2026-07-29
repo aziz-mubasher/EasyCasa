@@ -5,7 +5,7 @@ import type { AmlScreeningProvider } from '../rentals/domain/ports';
 
 /**
  * PEP / sanctions screening. Unconfigured + non-DEV fails safe (errors).
- * DEV_AUTH returns a clean screen so local KYC flows can run.
+ * local-header-auth returns a clean screen so local KYC flows can run.
  */
 @Injectable()
 export class HttpAmlScreeningProvider implements AmlScreeningProvider {
@@ -17,7 +17,7 @@ export class HttpAmlScreeningProvider implements AmlScreeningProvider {
     const key = apiConfig.AML_SCREENING_KEY;
 
     if (!url || !key) {
-      if (!apiConfig.DEV_AUTH) {
+      if (!apiConfig.ALLOW_PROVIDER_STUBS) {
         throw new Error('AML screening provider is not configured (AML_SCREENING_URL/KEY)');
       }
       return { pep: false, sanctionsHit: false };

@@ -38,13 +38,17 @@ class Routes {
   }
 }
 
-async function build(devAuth: boolean, resolver: JwksResolver): Promise<INestApplication> {
+async function build(
+  opts: { ecTestAuth: boolean },
+  resolver: JwksResolver,
+): Promise<INestApplication> {
   const config = {
     OIDC_ISSUER: ISSUER,
     OIDC_AUDIENCE: AUDIENCE,
     OIDC_ROLES_CLAIM: 'realm_access.roles',
     OIDC_JWKS_URL: 'https://kc.easycasa.test/jwks',
-    DEV_AUTH: devAuth,
+    EC_TEST_AUTH: opts.ecTestAuth,
+    ALLOW_PROVIDER_STUBS: false,
   } as ApiConfig;
 
   @Module({
@@ -69,7 +73,7 @@ describe('Auth pipeline (e2e via supertest)', () => {
   let sign: (claims: Record<string, unknown>) => Promise<string>;
   let resolver: JwksResolver;
   let prodApp: INestApplication;
-  let devApp: INestApplication;
+  let testAuthApp: INestApplication;
 
   beforeAll(async () => {
     const { publicKey, privateKey } = await generateKeyPair('RS256');
@@ -86,13 +90,13 @@ describe('Auth pipeline (e2e via supertest)', () => {
         .setExpirationTime('5m')
         .sign(privateKey);
 
-    prodApp = await build(false, resolver);
-    devApp = await build(true, resolver);
+    prodApp = await build({ ecTestAuth: false }, resolver);
+    testAuthApp = await build({ ecTestAuth: true }, resolver);
   }, 60_000);
 
   afterAll(async () => {
     await prodApp?.close();
-    await devApp?.close();
+    await testAuthApp?.close();
   });
 
   it('public route needs no auth', async () => {
@@ -127,12 +131,12 @@ describe('Auth pipeline (e2e via supertest)', () => {
       .expect(200);
   });
 
-  it('DEV_AUTH trusts x-dev-* headers (pre-cutover path)', async () => {
-    await request(devApp.getHttpServer()).get('/me').set('x-dev-user', 'dev-1').expect(200);
-    await request(devApp.getHttpServer()).get('/me').expect(401);
+  it('EC_TEST_AUTH trusts x-dev-* headers only under NODE_ENV=test', async () => {
+    await request(testAuthApp.getHttpServer()).get('/me').set('x-dev-user', 'dev-1').expect(200);
+    await request(testAuthApp.getHttpServer()).get('/me').expect(401);
   });
 
-  it('rejects forged x-dev-* headers when DEV_AUTH is false', async () => {
+  it('rejects forged x-dev-* headers when EC_TEST_AUTH is false', async () => {
     await request(prodApp.getHttpServer())
       .get('/me')
       .set('x-dev-user', 'attacker')

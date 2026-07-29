@@ -45,7 +45,7 @@ class BoomController {
   }
 }
 
-/** Maps DEV_AUTH principal → subject id without hitting Postgres. */
+/** Maps local-header-auth principal → subject id without hitting Postgres. */
 @Injectable()
 class StubUsersService {
   async getOrCreate(user: AuthUser): Promise<{ id: string }> {

@@ -7,7 +7,7 @@ import { runSeed } from './seed-cli';
 
 /**
  * CLI entry: seed pilot listings into the live Drizzle + Meili sink.
- *   DATABASE_URL=… DEV_AUTH=true node dist/pilot/seed/run-seed.js
+ *   DATABASE_URL=… ALLOW_PROVIDER_STUBS=true EC_TEST_AUTH=true node dist/pilot/seed/run-seed.js
  */
 async function main(): Promise<void> {
   resetConfigCache();

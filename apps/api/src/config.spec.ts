@@ -7,32 +7,32 @@ const base = {
 };
 
 describe('loadApiConfig', () => {
-  it('allows missing OIDC when DEV_AUTH=true', () => {
-    const cfg = loadApiConfig({ ...base, DEV_AUTH: 'true' });
-    expect(cfg.DEV_AUTH).toBe(true);
+  it('allows missing OIDC when ALLOW_PROVIDER_STUBS=true EC_TEST_AUTH=true', () => {
+    const cfg = loadApiConfig({ ...base, ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true' });
+    expect(cfg.ALLOW_PROVIDER_STUBS).toBe(true);
     expect(cfg.OIDC_ISSUER).toBeUndefined();
   });
 
-  it('requires OIDC when DEV_AUTH is false', () => {
-    expect(() => loadApiConfig({ ...base, DEV_AUTH: 'false' })).toThrow(/OIDC_ISSUER/);
+  it('requires OIDC when stubs/test-auth are off', () => {
+    expect(() => loadApiConfig({ ...base, ALLOW_PROVIDER_STUBS: 'false', EC_TEST_AUTH: 'false' })).toThrow(/OIDC_ISSUER/);
   });
 
-  it('accepts full OIDC when DEV_AUTH is false', () => {
+  it('accepts full OIDC when stubs/test-auth are off', () => {
     const cfg = loadApiConfig({
       ...base,
-      DEV_AUTH: 'false',
+      ALLOW_PROVIDER_STUBS: 'false', EC_TEST_AUTH: 'false',
       OIDC_ISSUER: 'https://auth.example/realms/easycasa',
       OIDC_AUDIENCE: 'easycasa-api',
       OIDC_JWKS_URL: 'https://auth.example/realms/easycasa/protocol/openid-connect/certs',
     });
-    expect(cfg.DEV_AUTH).toBe(false);
+    expect(cfg.ALLOW_PROVIDER_STUBS).toBe(false);
     expect(cfg.OIDC_ISSUER).toContain('easycasa');
   });
 
-  it('treats blank OIDC_* env values as unset (DEV_AUTH boot)', () => {
+  it('treats blank OIDC_* env values as unset', () => {
     const cfg = loadApiConfig({
       ...base,
-      DEV_AUTH: 'true',
+      ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true',
       OIDC_ISSUER: '',
       OIDC_AUDIENCE: '',
       OIDC_JWKS_URL: '',
@@ -42,12 +42,12 @@ describe('loadApiConfig', () => {
   });
 
   it('defaults OIDC_ROLES_CLAIM to realm_access.roles', () => {
-    const cfg = loadApiConfig({ ...base, DEV_AUTH: 'true' });
+    const cfg = loadApiConfig({ ...base, ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true' });
     expect(cfg.OIDC_ROLES_CLAIM).toBe('realm_access.roles');
   });
 
   it('defaults Phase 30 notification seams to empty', () => {
-    const cfg = loadApiConfig({ ...base, DEV_AUTH: 'true' });
+    const cfg = loadApiConfig({ ...base, ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true' });
     expect(cfg.PUSH_PROVIDER_URL).toBe('');
     expect(cfg.EMAIL_PROVIDER_URL).toBe('');
     expect(cfg.REDIS_URL).toBe('');

@@ -1,5 +1,8 @@
 'use client';
 
+import { RequireSignInLink } from '@/components/AuthControls';
+import { useAdminAuthedFetch } from '@/auth/useAdminAuthedFetch';
+
 import { useCallback, useEffect, useState } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://easycasaita.com/api';
@@ -18,15 +21,9 @@ interface Professional {
   maxConcurrent: number;
 }
 
-const HEADERS = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-  'x-dev-user': 'admin-demo',
-  'x-dev-email': 'admin@easycasaita.com',
-  'x-dev-roles': 'admin',
-};
 
 export default function ProfessionalsAdminPage() {
+  const { ready, isAuthenticated, authedFetch } = useAdminAuthedFetch();
   const [items, setItems] = useState<Professional[]>([]);
   const [name, setName] = useState('');
   const [provinces, setProvinces] = useState('MI');
@@ -34,23 +31,24 @@ export default function ProfessionalsAdminPage() {
 
   const load = useCallback(async () => {
     setError(null);
-    const res = await fetch(`${API}/professionals`, { headers: HEADERS });
+    const res = await authedFetch(`${API}/professionals`);
     if (!res.ok) {
       setError(`Load failed (${res.status})`);
       return;
     }
     setItems((await res.json()) as Professional[]);
-  }, []);
+  }, [authedFetch]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     void load();
-  }, [load]);
+  }, [load, isAuthenticated]);
 
   async function create() {
     setError(null);
-    const res = await fetch(`${API}/professionals`, {
+    const res = await authedFetch(`${API}/professionals`, {
       method: 'POST',
-      headers: HEADERS,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         displayName: name || 'Professionista',
         coverageProvinces: provinces
@@ -68,9 +66,9 @@ export default function ProfessionalsAdminPage() {
   }
 
   async function verify(id: string, type: string, status: 'VERIFIED' | 'REJECTED') {
-    const res = await fetch(`${API}/professionals/${id}/credentials/status`, {
+    const res = await authedFetch(`${API}/professionals/${id}/credentials/status`, {
       method: 'PUT',
-      headers: HEADERS,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type, status }),
     });
     if (!res.ok) {
@@ -78,6 +76,15 @@ export default function ProfessionalsAdminPage() {
       return;
     }
     await load();
+  }
+
+  if (ready && !isAuthenticated) {
+    return (
+      <div className="mx-auto max-w-3xl px-5 py-10">
+        <p className="text-[var(--muted)] mb-4">Accedi con un account admin.</p>
+        <RequireSignInLink />
+      </div>
+    );
   }
 
   return (

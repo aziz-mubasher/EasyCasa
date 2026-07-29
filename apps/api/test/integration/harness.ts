@@ -67,7 +67,7 @@ async function bootOnce(): Promise<IntegrationContext> {
   const meiliUrl = `http://${meili.getHost()}:${meili.getMappedPort(7700)}`;
 
   process.env.NODE_ENV = 'test';
-  process.env.DEV_AUTH = 'true';
+  process.env.ALLOW_PROVIDER_STUBS = 'true';
   process.env.DATABASE_URL = databaseUrl;
   process.env.MEILI_URL = meiliUrl;
   process.env.MEILI_MASTER_KEY = 'test';

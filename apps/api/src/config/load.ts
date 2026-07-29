@@ -9,8 +9,10 @@ const Schema = z
     NODE_ENV: z.string().default('production'),
     DATABASE_URL: z.string().url(),
 
-    // Auth (OIDC). In dev, DEV_AUTH=true trusts x-dev-* headers instead.
-    DEV_AUTH: bool(false),
+    // Auth. Header bypass only via EC_TEST_AUTH under NODE_ENV=test.
+    // Provider stubs use ALLOW_PROVIDER_STUBS (not an auth bypass).
+    EC_TEST_AUTH: bool(false),
+    ALLOW_PROVIDER_STUBS: bool(false),
     OIDC_ISSUER: z
       .string()
       .optional()
@@ -24,6 +26,14 @@ const Schema = z
       .optional()
       .transform((v) => (v && v.trim() ? v.trim() : undefined)),
     OIDC_ROLES_CLAIM: z.string().default('realm_access.roles'),
+
+    // EC-12 — WhatsApp Cloud API phone OTP (empty → email fallback)
+    WHATSAPP_TOKEN: z.string().default(''),
+    WHATSAPP_PHONE_NUMBER_ID: z.string().default(''),
+    WHATSAPP_OTP_TEMPLATE: z.string().default(''),
+    WHATSAPP_OTP_TEMPLATE_LANG: z.string().default('it'),
+    WHATSAPP_GRAPH_VERSION: z.string().default('v21.0'),
+    PHONE_OTP_PEPPER: z.string().min(16).default('dev-phone-otp-pepper-change-me'),
 
     // Billing (Stripe — hosted checkout, no card data on our servers)
     STRIPE_SECRET_KEY: z.string().default(''),
@@ -154,14 +164,14 @@ const Schema = z
       }
     }
 
-    // When DEV_AUTH is off, OIDC must be fully configured (Phase 16 fail-fast).
-    if (cfg.DEV_AUTH) return;
+    // When provider stubs / test auth are off, OIDC must be fully configured.
+    if (cfg.ALLOW_PROVIDER_STUBS || cfg.EC_TEST_AUTH) return;
     for (const key of ['OIDC_ISSUER', 'OIDC_AUDIENCE', 'OIDC_JWKS_URL'] as const) {
       if (!cfg[key]) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: [key],
-          message: `${key} is required when DEV_AUTH is not true`,
+          message: `${key} is required when ALLOW_PROVIDER_STUBS/EC_TEST_AUTH are not true`,
         });
       }
     }

@@ -8,7 +8,7 @@ import type { PaymentsService } from './payments.service';
 describe('StripePaymentsWebhookHandler', () => {
   beforeEach(() => {
     Object.assign(process.env, {
-      DEV_AUTH: 'true',
+      ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true',
       DATABASE_URL: 'postgresql://u:p@127.0.0.1:5432/db',
       PAYMENTS_ENABLED: 'true',
       STRIPE_SECRET_KEY: 'sk_test_x',

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useAuth } from '@/auth/AuthProvider';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 import { RequireSignInLink } from '@/components/AuthControls';
+import { PhoneVerifyPanel } from '@/components/privacy/PhoneVerifyPanel';
 import { Link } from '@/i18n/routing';
 import './privacy-doc.css';
 
@@ -150,6 +151,10 @@ export function MyDataView() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="pd-card">
+          <PhoneVerifyPanel />
         </div>
 
         <div className="pd-card">

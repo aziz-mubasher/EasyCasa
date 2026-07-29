@@ -82,6 +82,15 @@ export class EmailService {
     return this.dispatch(to, t.savedSearchAlert(p, locale));
   }
 
+  /** Ad-hoc transactional text (EC-12 phone OTP email fallback). */
+  sendText(to: string, subject: string, text: string, html?: string): Promise<EmailResult> {
+    return this.dispatch(to, {
+      subject,
+      text,
+      html: html ?? `<p>${text.replace(/\n/g, '<br/>')}</p>`,
+    });
+  }
+
   /** Diagnostic CLI — exercises the same port/enquiry dispatch path as production mail. */
   sendDiagnosticTest(to: string): Promise<EmailResult> {
     const now = new Date().toISOString();

@@ -40,7 +40,6 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
   const [whatsappOnPhone, setWhatsappOnPhone] = useState(true);
   const [banks4AllTracking, setBanks4AllTracking] = useState('');
   const [b4aShareOk, setB4aShareOk] = useState(false);
-  const [privacyOk, setPrivacyOk] = useState(false);
   const [mediationOk, setMediationOk] = useState(false);
   const [policyVersion, setPolicyVersion] = useState<string | null>(null);
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle');
@@ -80,7 +79,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       setStatus('err');
       return;
     }
-    if (!privacyOk || !mediationOk) {
+    if (!mediationOk) {
       setError(t('errorConsent'));
       setStatus('err');
       return;
@@ -102,7 +101,6 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       const version = policyVersion ?? (await fetchPolicyVersion());
       if (!policyVersion) setPolicyVersion(version);
 
-      await recordConsent('privacy_policy', version);
       await recordConsent('mediation_disclosure', version);
       if (b4aShareOk) {
         await recordConsent('b4a_affordability_share', version);
@@ -181,8 +179,6 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       </div>
     );
   }
-
-  const versionLabel = policyVersion ?? '…';
 
   return (
     <form onSubmit={onSubmit} className={`mt-8 max-w-lg space-y-5 ${className}`.trim()} noValidate>
@@ -274,6 +270,14 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
       </Field>
 
       <div className="space-y-3.5 rounded-xl2 border border-line bg-sand/30 px-4 py-4">
+        <p className="text-[0.95rem] leading-relaxed text-ink-soft">
+          {t('privacyNoticeBefore')}
+          <a className="underline text-azure" href={privacyHref} target="_blank" rel="noreferrer">
+            {t('privacyLink')}
+          </a>
+          {t('privacyNoticeAfter')}
+        </p>
+
         <div className="flex gap-3 items-start text-[0.95rem] leading-relaxed">
           <input
             id={`${dialSelectId}-b4a`}
@@ -284,24 +288,6 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
           />
           <label htmlFor={`${dialSelectId}-b4a`} className="cursor-pointer select-none text-ink">
             {t('banks4AllConsent')}
-          </label>
-        </div>
-
-        <div className="flex gap-3 items-start text-[0.95rem] leading-relaxed">
-          <input
-            id={`${dialSelectId}-privacy`}
-            type="checkbox"
-            className="mt-1 h-4 w-4 shrink-0 accent-azure"
-            checked={privacyOk}
-            onChange={(e) => setPrivacyOk(e.target.checked)}
-            required
-          />
-          <label htmlFor={`${dialSelectId}-privacy`} className="cursor-pointer text-ink">
-            {t('privacyConsentBefore')}
-            <a className="underline text-azure" href={privacyHref} target="_blank" rel="noreferrer">
-              {t('privacyLink')}
-            </a>
-            {t('privacyConsentAfter', { version: versionLabel })}
           </label>
         </div>
 
@@ -329,7 +315,7 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
           {error}
         </p>
       ) : null}
-      <Button type="submit" className="w-full sm:w-auto py-3" disabled={status === 'sending' || !privacyOk || !mediationOk}>
+      <Button type="submit" className="w-full sm:w-auto py-3" disabled={status === 'sending' || !mediationOk}>
         {status === 'sending' ? t('submitting') : t('submit')}
       </Button>
     </form>

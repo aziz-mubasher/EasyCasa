@@ -5,7 +5,7 @@ import { apiConfig } from '../config';
 import type { PaymentProvider } from './domain/ports';
 
 /**
- * Generic PSP seam (Stripe / Nexi / PayPal / Satispay). DEV_AUTH stubs a
+ * Generic PSP seam (Stripe / Nexi / PayPal / Satispay). local-header-auth stubs a
  * client secret when PSP_* is unset so local checkout can proceed.
  */
 @Injectable()
@@ -19,7 +19,7 @@ export class PspPaymentProvider implements PaymentProvider {
     const url = apiConfig.PSP_API_URL;
 
     if (!key || !url) {
-      if (!apiConfig.DEV_AUTH) {
+      if (!apiConfig.ALLOW_PROVIDER_STUBS) {
         throw new Error('Payment provider is not configured (PSP_API_URL / PSP_SECRET_KEY)');
       }
       const digest = createHmac('sha256', 'dev-psp')
@@ -48,7 +48,7 @@ export class PspPaymentProvider implements PaymentProvider {
     const key = apiConfig.PSP_SECRET_KEY;
     const url = apiConfig.PSP_API_URL;
     if (!key || !url) {
-      if (!apiConfig.DEV_AUTH) {
+      if (!apiConfig.ALLOW_PROVIDER_STUBS) {
         throw new Error('Payment provider is not configured (PSP_API_URL / PSP_SECRET_KEY)');
       }
       return;
