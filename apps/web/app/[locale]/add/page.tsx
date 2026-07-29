@@ -15,6 +15,7 @@ import {
   comuniForProvince,
   defaultAvailabilityWindows,
   primaryTransactionType,
+  provinceFromComune,
   type AvailabilityWindow,
   type FeatureSlug,
   type FinancingOptionSlug,
@@ -26,6 +27,7 @@ import { Field, Input, Select, TextArea } from '@/components/ui/Field';
 import { ValuationBandLive } from '@/components/valuation/ValuationBandLive';
 import { SmartLinkManager } from '@/components/smartlink/SmartLinkManager';
 import { AvailabilityWindowsEditor } from '@/components/viewings/AvailabilityWindowsEditor';
+import { CasafariImportPanel, type CasafariImportDraft } from '@/components/add/CasafariImportPanel';
 import { useAuth } from '@/auth/AuthProvider';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 import { Link } from '@/i18n/routing';
@@ -128,6 +130,7 @@ export default function AddListingPage() {
   const [submitting, setSubmitting] = useState(false);
   const viewingsApi = useViewingsApi();
   const [createdId, setCreatedId] = useState<string | null>(null);
+  const [casafariImportNote, setCasafariImportNote] = useState<string | null>(null);
 
   const comuni = useMemo(
     () => (form.province ? comuniForProvince(form.province) : []),
@@ -262,7 +265,60 @@ export default function AddListingPage() {
     setAvailabilityWindows(defaultAvailabilityWindows());
     setStep(1);
     setCreatedId(null);
+    setCasafariImportNote(null);
     setError(null);
+  };
+
+  const applyCasafariDraft = (draft: CasafariImportDraft) => {
+    const inferredProvince = draft.city ? provinceFromComune(draft.city) : null;
+    const province = form.province || inferredProvince || '';
+    const cityMatch =
+      province && draft.city
+        ? comuniForProvince(province).find(
+            (c) => c.name.toLowerCase() === draft.city!.toLowerCase(),
+          )?.name
+        : undefined;
+    setForm((f) => ({
+      ...f,
+      title: draft.title || f.title,
+      description: draft.description || f.description,
+      address: draft.address || f.address,
+      province: province || f.province,
+      city: cityMatch || draft.city || f.city,
+      sellerType: draft.sellerType || f.sellerType,
+      transactionTypes:
+        draft.transactionTypes.length > 0
+          ? (draft.transactionTypes as TransactionTypeSlug[])
+          : f.transactionTypes,
+      assetClass: draft.assetClass || f.assetClass,
+      propertyType: draft.propertyType || f.propertyType,
+      condition: draft.condition || f.condition,
+      features: (draft.features as FeatureSlug[]) || f.features,
+      price: draft.price != null ? String(draft.price) : f.price,
+      surfaceSqm: draft.surfaceSqm != null ? String(draft.surfaceSqm) : f.surfaceSqm,
+      sizeSqm: draft.sizeSqm != null ? String(draft.sizeSqm) : f.sizeSqm,
+      bedrooms: draft.bedrooms != null ? String(draft.bedrooms) : f.bedrooms,
+      bathrooms: draft.bathrooms != null ? String(draft.bathrooms) : f.bathrooms,
+      yearBuilt: draft.yearBuilt != null ? String(draft.yearBuilt) : f.yearBuilt,
+      energyClass: draft.energyClass || f.energyClass,
+    }));
+    setCasafariImportNote(t('casafari.appliedHint'));
+    setError(null);
+    setStep(1);
+  };
+
+  const onCasafariImported = (result: {
+    listing: { id: string };
+    imagesImported: number;
+    draft: CasafariImportDraft;
+  }) => {
+    setCreatedId(result.listing.id);
+    setCasafariImportNote(
+      t('casafari.importedHint', {
+        n: result.imagesImported,
+        missing: result.draft.missingRequired.join(', ') || '—',
+      }),
+    );
   };
 
   const submit = async () => {
@@ -367,6 +423,11 @@ export default function AddListingPage() {
       <section className="mx-auto max-w-2xl px-5 py-12">
         <h1 className="font-display text-3xl font-semibold mb-4">{t('successTitle')}</h1>
         <p className="text-muted mb-6">{t('successBody')}</p>
+        {casafariImportNote && (
+          <p className="text-sm text-muted mb-4 rounded-lg border border-line bg-white p-3">
+            {casafariImportNote}
+          </p>
+        )}
         <p className="text-sm text-muted mb-4">
           <Link
             href={`/listings/${createdId}/availability`}
@@ -391,6 +452,18 @@ export default function AddListingPage() {
       <p className="eyebrow mb-2">{t('step', { n: step, total: TOTAL })}</p>
       <h1 className="font-display text-3xl font-semibold mb-2">{t('title')}</h1>
       <p className="text-sm text-muted mb-6">{t('subtitle')}</p>
+
+      {step === 1 && (
+        <CasafariImportPanel
+          authedFetch={authedFetch}
+          province={form.province}
+          onApplyToForm={applyCasafariDraft}
+          onImported={onCasafariImported}
+        />
+      )}
+      {casafariImportNote && step === 1 && (
+        <p className="text-sm text-azure mb-4">{casafariImportNote}</p>
+      )}
 
       <div className="rounded-xl2 border border-line p-6 space-y-5">
         {step === 1 && (

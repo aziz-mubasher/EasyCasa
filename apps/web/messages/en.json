@@ -327,6 +327,27 @@
     "previewHint": "Check everything below. Publishing will create the listing, upload photos, then make it public.",
     "removeImage": "Remove image",
     "mediaPlaceholder": "Add up to 12 photos (JPEG, PNG or WebP).",
+    "casafari": {
+      "title": "Import from Casafari share link",
+      "body": "Paste a Casafari sharepage URL to pull listing details and up to 10 photos into a draft.",
+      "urlLabel": "Casafari share URL",
+      "urlHint": "Example: https://www.casafari.com/estate/sharepage/…",
+      "preview": "Preview",
+      "previewing": "Fetching…",
+      "applyToForm": "Apply to form",
+      "importDraft": "Import as draft + photos",
+      "importing": "Importing…",
+      "photos": "photos",
+      "folderCount": "{n} properties on this share folder — pick one.",
+      "singleCount": "1 property found.",
+      "missing": "Still needed: {fields}",
+      "appliedHint": "Casafari fields applied to the form. Choose province, review, then publish — or use Import as draft to download photos.",
+      "importedHint": "Imported draft with {n} photos. Still check: {missing}.",
+      "errors": {
+        "preview": "Could not read that Casafari link.",
+        "import": "Import failed. Try again."
+      }
+    },
     "sections": {
       "basics": "Basics & seller",
       "taxonomy": "Property taxonomy",

@@ -17,6 +17,7 @@ import { FascicoloModule } from './fascicolo/fascicolo.module';
 import { FeaturedModule } from './featured/featured.module';
 import { InvoicingModule } from './invoicing/invoicing.module';
 import { ListingsModule } from './listings/listings.module';
+import { ImportsModule } from './imports/imports.module';
 import { MandateModule } from './mandate/mandate.module';
 import { MediaModule } from './media/media.module';
 import { MessagingModule } from './messaging/messaging.module';
@@ -50,6 +51,7 @@ const REQUIRED_STATIC = [
   ObservabilityModule,
   UsersModule,
   ListingsModule,
+  ImportsModule,
   TaxonomyModule,
   MediaModule,
   AdminModule,

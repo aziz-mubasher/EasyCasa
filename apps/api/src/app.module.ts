@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { HealthController } from './health/health.controller';
 import { ListingsModule } from './listings/listings.module';
+import { ImportsModule } from './imports/imports.module';
 import { TaxonomyModule } from './taxonomy/taxonomy.module';
 import { UsersModule } from './users/users.module';
 import { MediaModule } from './media/media.module';
@@ -65,6 +66,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     NotificationsModule,
     // discovery & media
     ListingsModule,
+    ImportsModule,
     TaxonomyModule,
     MediaModule,
     SearchModule,

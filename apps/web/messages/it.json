@@ -327,6 +327,27 @@
     "previewHint": "Controlla tutto qui sotto. Pubblicando creerai l’annuncio, caricherai le foto e lo renderai pubblico.",
     "removeImage": "Rimuovi foto",
     "mediaPlaceholder": "Aggiungi fino a 12 foto (JPEG, PNG o WebP).",
+    "casafari": {
+      "title": "Importa da link Casafari",
+      "body": "Incolla un URL sharepage Casafari per importare i dati dell’annuncio e fino a 10 foto in una bozza.",
+      "urlLabel": "URL share Casafari",
+      "urlHint": "Esempio: https://www.casafari.com/estate/sharepage/…",
+      "preview": "Anteprima",
+      "previewing": "Recupero…",
+      "applyToForm": "Applica al modulo",
+      "importDraft": "Importa bozza + foto",
+      "importing": "Importazione…",
+      "photos": "foto",
+      "folderCount": "{n} immobili in questa cartella condivisa — scegline uno.",
+      "singleCount": "1 immobile trovato.",
+      "missing": "Ancora necessari: {fields}",
+      "appliedHint": "Campi Casafari applicati al modulo. Scegli la provincia, rivedi, poi pubblica — oppure usa Importa bozza per scaricare le foto.",
+      "importedHint": "Bozza importata con {n} foto. Controlla ancora: {missing}.",
+      "errors": {
+        "preview": "Impossibile leggere quel link Casafari.",
+        "import": "Importazione non riuscita. Riprova."
+      }
+    },
     "sections": {
       "basics": "Dati base e venditore",
       "taxonomy": "Tassonomia immobile",
