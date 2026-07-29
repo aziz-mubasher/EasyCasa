@@ -24,6 +24,8 @@ export interface QuoteRequest {
   items?: string[];
   packageCode?: string;
   referenceValueCents?: number;
+  /** Province sigla for EC-10 coverage guard. */
+  province?: string;
 }
 
 /** Structural mirror of the Phase 8 Quote (kept decoupled from the pricing pkg). */

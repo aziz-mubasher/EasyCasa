@@ -39,7 +39,7 @@ export class ServiceCatalogService {
     req: QuoteRequest,
   ): Promise<{ orderId: string; quote: Quote }> {
     const rows = await this.db
-      .select({ id: properties.id })
+      .select({ id: properties.id, province: properties.province })
       .from(properties)
       .where(eq(properties.id, propertyId))
       .limit(1);
@@ -73,5 +73,15 @@ export class ServiceCatalogService {
       );
     }
     return { orderId: order.id, quote };
+  }
+
+  async propertyProvince(propertyId: string): Promise<string | null> {
+    const rows = await this.db
+      .select({ province: properties.province })
+      .from(properties)
+      .where(eq(properties.id, propertyId))
+      .limit(1);
+    if (!rows[0]) throw new NotFoundException(`Property ${propertyId} not found`);
+    return rows[0].province ?? null;
   }
 }

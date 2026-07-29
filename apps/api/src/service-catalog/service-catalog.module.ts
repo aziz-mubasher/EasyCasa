@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { DbModule } from '../db/db.module';
 import { OrdersModule } from '../orders/orders.module';
 import { UsersModule } from '../users/users.module';
+import { AssignmentsModule } from '../assignments/assignments.module';
 import { ServiceCatalogController } from './service-catalog.controller';
 import { ServiceCatalogService } from './service-catalog.service';
 
 @Module({
-  imports: [DbModule, OrdersModule, UsersModule],
+  imports: [DbModule, OrdersModule, UsersModule, AssignmentsModule],
   controllers: [ServiceCatalogController],
   providers: [ServiceCatalogService],
   exports: [ServiceCatalogService],

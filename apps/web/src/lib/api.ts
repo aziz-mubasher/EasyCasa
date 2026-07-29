@@ -89,10 +89,20 @@ export interface CatalogItemRow {
   amountCents?: number | null;
   ratePercent?: number | null;
   ivaApplicable: boolean;
+  /** EC-10 — false when no qualified professional covers the province. */
+  available?: boolean;
+  capacityConstrained?: boolean;
+  availabilityReason?: string;
+  availabilityReasonEn?: string;
+  availabilityReasonIt?: string;
+  requiredCredential?: string;
 }
 
-export async function listServiceCatalog(): Promise<CatalogItemRow[]> {
-  const res = await fetch(`${BASE}/service-catalog`, { next: { revalidate: 600 } });
+export async function listServiceCatalog(province?: string): Promise<CatalogItemRow[]> {
+  const q = province ? `?province=${encodeURIComponent(province)}` : '';
+  const res = await fetch(`${BASE}/service-catalog${q}`, {
+    ...(province ? { cache: 'no-store' as const } : { next: { revalidate: 600 } }),
+  });
   if (!res.ok) return [];
   return res.json() as Promise<CatalogItemRow[]>;
 }
@@ -134,6 +144,7 @@ export interface QuoteRequestBody {
   items?: string[];
   packageCode?: string;
   referenceValueCents?: number;
+  province?: string;
 }
 
 export async function listServicePackages(): Promise<ServicePackageRow[]> {
@@ -150,8 +161,27 @@ export async function requestServiceQuote(body: QuoteRequestBody): Promise<Servi
     cache: 'no-store',
   });
   if (!res.ok) {
-    const err = (await res.json().catch(() => null)) as { message?: string } | null;
-    throw new Error(err?.message ?? `quote failed: ${res.status}`);
+    const err = (await res.json().catch(() => null)) as { message?: string | string[] } | null;
+    const msg = Array.isArray(err?.message) ? err.message.join('; ') : err?.message;
+    throw new Error(msg ?? `quote failed: ${res.status}`);
   }
   return res.json() as Promise<ServiceQuoteRow>;
+}
+
+/** EC-10 — notify demand when a catalogue item is unavailable in a province. */
+export async function logServiceDemand(body: {
+  itemCode: string;
+  province: string;
+}): Promise<{ id: string }> {
+  const res = await fetch(`${BASE}/service-catalog/demand`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+  });
+  if (!res.ok) {
+    const err = (await res.json().catch(() => null)) as { message?: string } | null;
+    throw new Error(err?.message ?? `demand failed: ${res.status}`);
+  }
+  return res.json() as Promise<{ id: string }>;
 }

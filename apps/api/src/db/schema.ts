@@ -464,6 +464,15 @@ export const credentialPolicies = pgTable('credential_policies', {
   requiredCredential: text('required_credential').notNull().default('NONE'),
 });
 
+/** EC-10 — demand signal when a catalogue item is unavailable in a province. */
+export const serviceDemandLog = pgTable('service_demand_log', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  itemCode: text('item_code').notNull(),
+  province: text('province').notNull(),
+  userId: uuid('user_id'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 // ---------------- Phase 12 — rentals / AML ----------------
 export const leaseType = pgEnum('lease_type', [
   'libero_4_4', 'concordato_3_2', 'transitorio', 'studenti',
@@ -699,12 +708,13 @@ export const shareLinkViewDedup = pgTable(
 
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
+
   enquiries,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
   devices, partnerProfiles, leads, payouts,
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
-  professionals, credentials, serviceTasks, assignments, credentialPolicies,
+  professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,
   leases, kycCases,
   paymentIntents, invoices, stripeWebhookEvents,
   omiQuotes, valuationRequests,

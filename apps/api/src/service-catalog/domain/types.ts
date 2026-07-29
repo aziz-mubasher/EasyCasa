@@ -63,6 +63,8 @@ export interface QuoteRequest {
    * The actual provvigione matures later, on conclusione dell'affare.
    */
   referenceValueCents?: number;
+  /** Province sigla for EC-10 coverage guard (e.g. BS, MI). */
+  province?: string;
 }
 
 export type QuoteLineKind = PriceModel | 'bundle';
