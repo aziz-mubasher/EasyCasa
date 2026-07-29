@@ -20,6 +20,11 @@ import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { media } from '../db/schema';
 import { buildObjectKey, isAllowedContentType } from '../uploads/domain/keys';
+import {
+  publicUrlForStorageKey,
+  resolveObjectStorage,
+  type ObjectStorageConfig,
+} from './object-storage';
 
 const MAX_LISTING_IMAGE_EDGE_PX = 2560;
 const LISTING_OUTPUT_MIME = 'image/webp' as const;
@@ -123,20 +128,21 @@ export function assertSafeMediaKey(key: string): void {
 
 @Injectable()
 export class MediaService {
-  private s3 = new S3Client({
-    endpoint: apiConfig.S3_ENDPOINT,
-    region: apiConfig.S3_REGION,
+  private readonly storage: ObjectStorageConfig = resolveObjectStorage(apiConfig);
+  private readonly s3 = new S3Client({
+    endpoint: this.storage.endpoint,
+    region: this.storage.region,
     forcePathStyle: true,
     credentials: {
-      accessKeyId: apiConfig.MINIO_ROOT_USER,
-      secretAccessKey: apiConfig.MINIO_ROOT_PASSWORD,
+      accessKeyId: this.storage.accessKeyId,
+      secretAccessKey: this.storage.secretAccessKey,
     },
   });
 
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
   publicUrlForKey(key: string): string {
-    return `${apiConfig.MEDIA_PUBLIC_BASE.replace(/\/$/, '')}/${key}`;
+    return publicUrlForStorageKey(this.storage, key);
   }
 
   /**
@@ -149,7 +155,7 @@ export class MediaService {
     const ext = contentType.split('/')[1] ?? 'bin';
     const quarantineKey = `listings/${listing}/${LISTING_QUARANTINE_SUBPATH}/${randomUUID()}.${ext}`;
     const cmd = new PutObjectCommand({
-      Bucket: apiConfig.MINIO_BUCKET,
+      Bucket: this.storage.bucket,
       Key: quarantineKey,
       ContentType: contentType,
     });
@@ -183,7 +189,7 @@ export class MediaService {
     // Cacheable immutable master at the edge
     await this.s3.send(
       new PutObjectCommand({
-        Bucket: apiConfig.MINIO_BUCKET,
+        Bucket: this.storage.bucket,
         Key: key,
         Body: webp,
         ContentType: LISTING_OUTPUT_MIME,
@@ -200,7 +206,7 @@ export class MediaService {
     try {
       const out = await this.s3.send(
         new GetObjectCommand({
-          Bucket: apiConfig.MINIO_BUCKET,
+          Bucket: this.storage.bucket,
           Key: key,
         }),
       );
@@ -224,7 +230,7 @@ export class MediaService {
         // Load quarantine → process → immutable key
         const out = await this.s3.send(
           new GetObjectCommand({
-            Bucket: apiConfig.MINIO_BUCKET,
+            Bucket: this.storage.bucket,
             Key: key,
           }),
         );
@@ -239,7 +245,7 @@ export class MediaService {
 
         await this.s3.send(
           new PutObjectCommand({
-            Bucket: apiConfig.MINIO_BUCKET,
+            Bucket: this.storage.bucket,
             Key: finalKey,
             Body: webp,
             ContentType: LISTING_OUTPUT_MIME,
@@ -250,7 +256,7 @@ export class MediaService {
         // Delete quarantine object to avoid leaking unprocessed originals
         await this.s3.send(
           new DeleteObjectCommand({
-            Bucket: apiConfig.MINIO_BUCKET,
+            Bucket: this.storage.bucket,
             Key: key,
           }),
         );
@@ -261,7 +267,7 @@ export class MediaService {
         try {
           await this.s3.send(
             new DeleteObjectCommand({
-              Bucket: apiConfig.MINIO_BUCKET,
+              Bucket: this.storage.bucket,
               Key: key,
             }),
           );
@@ -312,7 +318,7 @@ export class MediaService {
     }
     const key = buildObjectKey(userId, filename, randomUUID());
     const cmd = new PutObjectCommand({
-      Bucket: apiConfig.MINIO_BUCKET,
+      Bucket: this.storage.bucket,
       Key: key,
       ContentType: contentType,
     });

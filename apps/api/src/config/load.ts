@@ -57,13 +57,29 @@ const Schema = z
     MEILI_URL: z.string().default('http://meilisearch:7700'),
     MEILI_MASTER_KEY: z.string().default('change_me_meili_key'),
 
-    // Object storage (MinIO / S3)
+    // Object storage (MinIO / S3, or Bunny Storage Zone via MEDIA_ORIGIN=bunny)
+    MEDIA_ORIGIN: z.enum(['minio', 'bunny']).default('minio'),
     S3_ENDPOINT: z.string().default('http://minio:9000'),
     S3_REGION: z.string().default('us-east-1'),
     MINIO_ROOT_USER: z.string().default('easycasa'),
     MINIO_ROOT_PASSWORD: z.string().default('change_me_minio'),
     MINIO_BUCKET: z.string().default('easycasa-media'),
+    /** Listing image public URLs (CDN when on Bunny; API proxy when MinIO-only). */
     MEDIA_PUBLIC_BASE: z.string().default('http://localhost:9000/easycasa-media'),
+    /**
+     * Private `users/` document URLs. Empty → when MEDIA_ORIGIN=bunny, defaults to
+     * the API media proxy so fascicolo docs are not exposed on the public CDN.
+     */
+    MEDIA_PRIVATE_BASE: z.string().default(''),
+    /** Bunny Storage Zone name (S3 access key id + bucket). Required when MEDIA_ORIGIN=bunny. */
+    BUNNY_STORAGE_ZONE: z.string().default(''),
+    /** Bunny Storage Zone password / FTP password. Never commit. Required when MEDIA_ORIGIN=bunny. */
+    BUNNY_STORAGE_PASSWORD: z.string().default(''),
+    BUNNY_STORAGE_ENDPOINT: z.string().default('https://storage.bunnycdn.com'),
+    /** Pull Zone custom hostname, e.g. https://cdn.easycasaita.com */
+    BUNNY_CDN_BASE: z.string().default(''),
+    /** Bunny S3 region hint (zone region code, e.g. de / uk). */
+    BUNNY_S3_REGION: z.string().default('de'),
 
     // Phase 10 — e-signature (FEA/QES). Empty URL/KEY → stub envelopes in DEV.
     SIGNATURE_PROVIDER_URL: z.string().default(''),

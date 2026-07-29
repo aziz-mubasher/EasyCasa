@@ -10,7 +10,12 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | DATABASE_URL | api, migration | Full Postgres connection string. |
 | REDIS_URL | api | Cache / queues. |
 | MEILI_MASTER_KEY / MEILI_URL | api, meilisearch | Search engine. |
-| MINIO_ROOT_USER / _PASSWORD / MINIO_BUCKET / S3_ENDPOINT | api, minio | Object storage. |
+| MINIO_ROOT_USER / _PASSWORD / MINIO_BUCKET / S3_ENDPOINT | api, minio | Object storage (local / fallback). |
+| MEDIA_ORIGIN | api | `minio` (default) or `bunny` — listing image write target. |
+| BUNNY_STORAGE_ZONE / BUNNY_STORAGE_PASSWORD | api | Bunny Storage Zone name + access key. Required when `MEDIA_ORIGIN=bunny`. Never commit password. |
+| BUNNY_STORAGE_ENDPOINT / BUNNY_S3_REGION | api | Bunny S3 endpoint (default `https://storage.bunnycdn.com`) + region hint (`de` / `uk`). |
+| BUNNY_CDN_BASE | api | Pull Zone base, e.g. `https://cdn.easycasaita.com`. |
+| MEDIA_PRIVATE_BASE | api | Private `users/` doc URLs. Empty + bunny → API media proxy (not the public CDN). |
 | API_PORT / WEB_PORT / AI_PORT | apps | Internal ports. |
 | NODE_ENV | apps | `production` on the VPS. |
 | RESTIC_REPOSITORY / RESTIC_PASSWORD | backup.sh | Optional offsite backups. |
@@ -24,7 +29,7 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WP_PERMALINK_BASE | migration | Old permalink base for redirect map. |
 | WP_UPLOADS_BASE_URL | migration | Base URL of WP media. |
 | GEOCODER / NOMINATIM_URL / GEOCODER_USER_AGENT | migration | Geocoding provider + polite UA. |
-| MEDIA_PUBLIC_BASE | api, migration | Public base URL for media objects. On the VPS MinIO is not browser-reachable and `cdn.easycasaita.com` is unused — set to `https://easycasaita.com/api/media/file` so keys resolve via the API read proxy (`GET /media/file/*`). |
+| MEDIA_PUBLIC_BASE | api, migration | Public base for **listing** media URLs. MinIO: `https://easycasaita.com/api/media/file`. Bunny: `https://cdn.easycasaita.com` (or set `BUNNY_CDN_BASE`). See `docs/media-hosting.md`. |
 | S3_REGION | migration / api | MinIO region (any value; path-style). |
 
 ## Phase 2 — auth
