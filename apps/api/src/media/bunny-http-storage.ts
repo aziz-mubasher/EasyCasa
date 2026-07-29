@@ -66,7 +66,8 @@ export async function bunnyHttpPut(
   const res = await fetch(objectUrl(cfg, key), {
     method: 'PUT',
     headers,
-    body,
+    // Node Buffer is not in DOM BodyInit typings used by tsc
+    body: new Uint8Array(body),
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
