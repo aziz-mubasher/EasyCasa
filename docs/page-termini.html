@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Termini e condizioni — EasyCasa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,300..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14212E; --ink-soft:#4C5D6E; --paper:#F3EDE1; --paper-deep:#E8DFCC;
+  --azure:#2C6E9B; --azure-pale:#A9C8DC; --ochre:#C08A1E;
+  --rule:rgba(20,33,46,.16); --rule-strong:rgba(20,33,46,.34);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --gutter:clamp(1.25rem,5vw,3.5rem);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:1.0625rem;line-height:1.7;font-optical-sizing:auto}
+a{color:var(--azure)}
+:focus-visible{outline:2.5px solid var(--azure);outline-offset:3px}
+.wrap{max-width:66rem;margin-inline:auto;padding-inline:var(--gutter)}
+
+.mast{border-bottom:1px solid var(--rule-strong)}
+.mast .wrap{display:flex;align-items:center;gap:1.5rem;padding-block:1rem;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.015em;text-decoration:none;color:var(--ink)}
+.brand span{color:var(--azure)}
+.lang{margin-left:auto;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--ink-soft)}
+.lang b{color:var(--ink)}
+
+/* header block */
+.head{padding-block:clamp(2.5rem,6vw,4rem) 2rem;border-bottom:1px solid var(--rule-strong)}
+h1{font-family:var(--display);font-weight:740;font-variation-settings:"wdth" 90;
+  font-size:clamp(2rem,4.5vw,3.2rem);line-height:1.02;letter-spacing:-.03em;margin:0 0 1rem}
+.meta{display:flex;gap:2rem;flex-wrap:wrap;font-family:var(--mono);font-size:.72rem;
+  letter-spacing:.05em;color:var(--ink-soft);margin:0}
+.meta b{color:var(--ink);font-weight:500}
+.meta a{color:var(--azure);text-decoration:none;border-bottom:1px solid rgba(44,110,155,.35)}
+
+/* layout */
+.cols{display:grid;grid-template-columns:15rem minmax(0,1fr);gap:clamp(2rem,5vw,4rem);
+  padding-block:2.5rem 5rem;align-items:start}
+@media(max-width:880px){.cols{grid-template-columns:1fr}}
+
+/* toc */
+.toc{position:sticky;top:1.5rem}
+@media(max-width:880px){.toc{position:static;border:1px solid var(--rule-strong);padding:1rem 1.2rem}}
+.toc h2{font-family:var(--mono);font-size:.64rem;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-soft);margin:0 0 .9rem;padding-bottom:.65rem;
+  border-bottom:1px solid var(--rule)}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:t}
+.toc li{counter-increment:t;margin-bottom:.5rem}
+.toc a{display:flex;gap:.6rem;text-decoration:none;color:var(--ink-soft);font-size:.88rem;line-height:1.35}
+.toc a::before{content:counter(t,decimal-leading-zero);font-family:var(--mono);font-size:.68rem;
+  color:var(--azure);flex:none;padding-top:.15rem}
+.toc a:hover,.toc a[aria-current]{color:var(--ink)}
+
+/* sections */
+section{border-bottom:1px solid var(--rule);padding-bottom:2rem;margin-bottom:2.4rem}
+section:last-of-type{border-bottom:0}
+h2.s{font-family:var(--display);font-weight:700;font-size:1.4rem;letter-spacing:-.022em;
+  margin:0 0 1rem;scroll-margin-top:1.5rem}
+h2.s .n{font-family:var(--mono);font-size:.8rem;color:var(--azure);font-weight:500;margin-right:.6rem}
+
+/* layered notice — the design idea */
+.brief{background:rgba(255,255,255,.5);border:1px solid var(--rule-strong);
+  border-left:3px solid var(--azure);padding:1rem 1.2rem;margin:0 0 1.3rem}
+.brief .tag{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--azure);display:block;margin-bottom:.45rem}
+.brief p{margin:0;font-size:.98rem;line-height:1.6}
+.brief p + p{margin-top:.6rem}
+
+details.full{border-top:1px dotted var(--rule);padding-top:.9rem}
+details.full summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:.7rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);position:relative;padding-right:1.5rem}
+details.full summary::-webkit-details-marker{display:none}
+details.full summary::after{content:"+";position:absolute;right:.2rem;top:-.15rem;
+  color:var(--azure);font-size:1rem;transition:transform .2s ease}
+details.full[open] summary::after{transform:rotate(45deg)}
+details.full .body{padding-top:1rem;font-size:.98rem}
+details.full .body p{margin:0 0 .9rem}
+
+/* placeholder marker */
+.todo{border:1px dashed var(--ochre);background:rgba(192,138,30,.07);padding:.85rem 1rem;
+  font-family:var(--mono);font-size:.75rem;line-height:1.65;color:var(--ink);letter-spacing:.02em}
+.todo b{color:var(--ochre);letter-spacing:.1em;text-transform:uppercase;font-size:.62rem;display:block;margin-bottom:.35rem}
+
+/* data table */
+table{width:100%;border-collapse:collapse;font-size:.92rem;margin:0 0 1rem}
+th{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-soft);text-align:left;padding:.6rem .8rem .6rem 0;border-bottom:1px solid var(--rule-strong)}
+td{padding:.65rem .8rem .65rem 0;border-bottom:1px dotted var(--rule);vertical-align:top;color:var(--ink-soft)}
+td:first-child{color:var(--ink)}
+td.mono{font-family:var(--mono);font-size:.8rem;white-space:nowrap}
+
+.help{background:var(--ink);color:var(--paper-deep);padding:1.4rem 1.5rem;margin-top:3rem}
+.help h3{font-family:var(--display);font-weight:680;font-size:1.1rem;color:var(--paper);margin:0 0 .5rem;letter-spacing:-.015em}
+.help p{margin:0 0 1rem;font-size:.95rem}
+.help a.btn{display:inline-block;font-family:var(--display);font-weight:640;font-size:.92rem;
+  background:var(--paper);color:var(--ink);padding:.6rem 1.3rem;border-radius:2px;text-decoration:none}
+
+footer{border-top:1px solid var(--rule-strong);padding-block:1.8rem;
+  font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);letter-spacing:.04em;line-height:1.8}
+
+@media print{
+  .mast,.toc,.help,footer,.lang{display:none}
+  .cols{grid-template-columns:1fr;padding-block:0}
+  details.full{border:0}
+  details.full summary{display:none}
+  details.full .body{padding-top:0}
+  details.full[open] .body,details.full .body{display:block}
+  body{background:#fff;font-size:10.5pt}
+  section{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <a class="brand" href="/it">Easy<span>Casa</span></a>
+    <span class="lang"><b>IT</b> · EN · ES — prevale la versione italiana</span>
+  </div>
+</header>
+
+<div class="head">
+  <div class="wrap">
+    <h1>Termini e condizioni</h1>
+    <p class="meta">
+      <span>Versione <b>1.0-draft</b></span>
+      <span>In vigore dal <b>[—]</b></span>
+      <span>Ultimo aggiornamento <b>[—]</b></span>
+      <span><a href="/it/privacy/versioni">Versioni precedenti</a></span>
+    </p>
+  </div>
+</div>
+
+<div class="wrap cols">
+
+  <nav class="toc" aria-label="Indice">
+    <h2>Indice</h2>
+    <ol>
+      <li><a href="#t1" aria-current="true">Chi siamo e cosa facciamo</a></li>
+      <li><a href="#t2">Cosa EasyCasa non è</a></li>
+      <li><a href="#t3">Account</a></li>
+      <li><a href="#t4">Se pubblichi un annuncio</a></li>
+      <li><a href="#t5">Se cerchi casa</a></li>
+      <li><a href="#t6">Servizi a pagamento e provvigioni</a></li>
+      <li><a href="#t7">Diritto di recesso</a></li>
+      <li><a href="#t8">Responsabilità</a></li>
+      <li><a href="#t9">Sospensione e chiusura</a></li>
+      <li><a href="#t10">Reclami e controversie</a></li>
+      <li><a href="#t11">Legge applicabile e modifiche</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section>
+      <h2 class="s" id="t1"><span class="n">01</span>Chi siamo e cosa facciamo</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>EasyCasa è una piattaforma gestita da MUNDIDA S.r.l. dove proprietari e acquirenti si trovano direttamente. Dal venditore non prendiamo provvigione. Offriamo inoltre servizi a prezzo fisso che puoi scegliere liberamente.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Identificazione completa della società, estremi di iscrizione per l'attività di mediazione immobiliare ai sensi della L. 39/1989, ambito territoriale, estremi della polizza R.C. professionale.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t2"><span class="n">02</span>Cosa EasyCasa non è</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Non siamo parte del contratto di compravendita o di locazione: quello lo stipuli tu con l'altra parte. Non garantiamo che un immobile sia come descritto, né che una trattativa vada a buon fine.</p><p>Verifichiamo quello che possiamo verificare e ti diciamo apertamente cosa resta non verificato. Dove svolgiamo attività di mediazione, lo indichiamo nel relativo incarico scritto.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Delimitazione del ruolo di hosting provider rispetto a quello di mediatore, coordinamento con gli obblighi del Digital Services Act per le piattaforme online (punto di contatto, procedura di notice-and-action, motivazione delle rimozioni), e verifica dell'applicabilità delle esenzioni per le piccole imprese.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t3"><span class="n">03</span>Account</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Serve un account per inviare richieste, prenotare visite o pubblicare. I dati che inserisci devono essere veri: è l'unica cosa che rende affidabile la piattaforma per tutti gli altri.</p><p>Devi avere almeno 18 anni.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Requisiti di registrazione, responsabilità sulle credenziali, disciplina degli account per conto di società.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t4"><span class="n">04</span>Se pubblichi un annuncio</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Devi avere il diritto di vendere o affittare quell'immobile, e l'annuncio deve indicare la classe energetica: è un obbligo di legge, non una nostra richiesta. Le foto devono essere dell'immobile reale e attuali.</p><p>L'annuncio resta tuo. Puoi ritirarlo quando vuoi, senza penali e senza periodo di esclusiva.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Obbligo di indicazione della prestazione energetica negli annunci e relative sanzioni; dichiarazione di titolarità; licenza d'uso dei contenuti caricati; conseguenze delle inserzioni non veritiere; gestione degli annunci duplicati.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t5"><span class="n">05</span>Se cerchi casa</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Cercare, salvare ricerche, contattare i proprietari e prenotare visite è gratuito e lo resterà.</p><p>Ti chiediamo di presentarti con dati veri e di disdire una visita che non puoi fare: dall'altra parte c'è una persona che ti aspetta.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Regole d'uso, divieto di raccolta massiva dei dati degli annunci, disciplina delle mancate presentazioni ripetute.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t6"><span class="n">06</span>Servizi a pagamento e provvigioni</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Ogni servizio ha un prezzo fisso, indicato prima dell'ordine, che non dipende dal valore dell'immobile. I costi di terzi — notaio, imposte, diritti catastali — te li giriamo al costo, con la ricevuta.</p><p>Dove è prevista una provvigione di mediazione, l'importo è concordato per iscritto nell'incarico prima di qualsiasi attività, e matura solo alla conclusione dell'affare.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          <b>Voce prioritaria del batch legale (A2).</b> Conferma che nessuna norma fissa una provvigione minima; disciplina dell'incarico di mediazione con indicazione obbligatoria della misura; momento di maturazione del diritto ex art. 1755 c.c.; trattamento delle spese anticipate; regime IVA. Verificare inoltre l'assenza di clausole vessatorie ex art. 1341 c.c. e la conformità al Codice del Consumo.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t7"><span class="n">07</span>Diritto di recesso</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Se sei un consumatore e acquisti un servizio online, hai <strong>quattordici giorni</strong> per cambiare idea.</p><p>Se ci chiedi di iniziare subito — perché un sopralluogo o una verifica non possono aspettare — te lo facciamo confermare esplicitamente, perché così perdi il diritto di recesso una volta che il servizio è concluso. Te lo diciamo prima, non dopo.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Disciplina del recesso ex Codice del Consumo per i servizi acquistati a distanza, inclusa la deroga per esecuzione anticipata con consenso espresso e riconoscimento della perdita del diritto. <b>Ha impatto sul flusso di checkout, non solo sul testo:</b> serve una spunta separata e registrata. Fornire il modulo di recesso tipo.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t8"><span class="n">08</span>Responsabilità</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Rispondiamo di quello che facciamo noi. Non rispondiamo di quello che dichiara o fa l'altra parte, né dei difetti di un immobile che non abbiamo ispezionato.</p><p>Nessuna clausola qui esclude la responsabilità che per legge non può essere esclusa.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Limitazioni di responsabilità compatibili con il Codice del Consumo — attenzione alla nullità delle clausole limitative nei rapporti con i consumatori. Disponibilità del servizio e manutenzioni programmate.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t9"><span class="n">09</span>Sospensione e chiusura</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Puoi chiudere il tuo account quando vuoi da <a href="/it/i-miei-dati">I miei dati</a>. Possiamo sospendere un account che pubblica annunci falsi, molesta altri utenti o usa la piattaforma per fini diversi da quelli previsti — spiegando sempre il motivo e dandoti modo di rispondere.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Procedura di sospensione conforme al Digital Services Act: motivazione, mezzi di ricorso interni, termini. Effetti sugli ordini in corso.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t10"><span class="n">10</span>Reclami e controversie</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Prima parliamone: scrivi a <a href="mailto:reclami@easycasaita.com">reclami@easycasaita.com</a> e rispondiamo nel merito.</p><p>Se non basta, come consumatore puoi rivolgerti agli organismi di mediazione o alla piattaforma europea ODR. Non sei obbligato a passare da noi per primi.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Indicazione dell'organismo ADR eventualmente aderente, link ODR obbligatorio, coordinamento con la mediazione civile obbligatoria per le controversie in materia di contratti immobiliari.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t11"><span class="n">11</span>Legge applicabile e modifiche</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Si applica la legge italiana. Se sei un consumatore, restano ferme le tutele del Paese in cui risiedi e il foro del tuo luogo di residenza.</p><p>Se modifichiamo questi termini in modo sostanziale te lo comunichiamo prima, con un preavviso ragionevole. Le versioni precedenti restano consultabili.</p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Legge applicabile, foro competente distinguendo consumatori e professionisti, preavviso per le modifiche (il DSA richiede un termine specifico per le piattaforme online), lingua prevalente.</div></div>
+      </details>
+    </section>
+
+    <div class="help">
+      <h3>Qualcosa non ti torna?</h3>
+      <p>Se una clausola non è chiara, chiedicelo prima di accettarla. Rispondiamo
+      nel merito — è più utile per entrambi di una controversia dopo.</p>
+      <a class="btn" href="/it/contatti">Contattaci</a>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">MUNDIDA S.r.l. · P.IVA IT04531990986 · REA [—] · Sede legale [—] · PEC [—]</div>
+</footer>
+
+</body>
+</html>

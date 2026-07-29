@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contatti — EasyCasa</title>
+<meta name="description" content="Scrivici su WhatsApp o via e-mail. Nessun call center, nessuna richiamata automatica.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,300..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14212E; --ink-soft:#4C5D6E; --paper:#F3EDE1; --paper-deep:#E8DFCC;
+  --azure:#2C6E9B; --azure-pale:#A9C8DC; --ochre:#C08A1E;
+  --rule:rgba(20,33,46,.16); --rule-strong:rgba(20,33,46,.34);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --gutter:clamp(1.25rem,5vw,3.5rem);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:1.0625rem;line-height:1.65;font-optical-sizing:auto}
+a{color:var(--azure)}
+:focus-visible{outline:2.5px solid var(--azure);outline-offset:3px}
+.wrap{max-width:58rem;margin-inline:auto;padding-inline:var(--gutter)}
+
+.mast{border-bottom:1px solid var(--rule-strong)}
+.mast .wrap{display:flex;align-items:center;gap:1.5rem;padding-block:1rem;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.015em;text-decoration:none;color:var(--ink)}
+.brand span{color:var(--azure)}
+.lang{margin-left:auto;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--ink-soft)}
+.lang b{color:var(--ink)}
+
+.head{padding-block:clamp(2.5rem,6vw,4rem) 2rem}
+h1{font-family:var(--display);font-weight:740;font-variation-settings:"wdth" 90;
+  font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.02;letter-spacing:-.03em;margin:0 0 .9rem}
+.sub{color:var(--ink-soft);max-width:46ch;margin:0}
+
+/* primary channels */
+.chans{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule-strong);
+  border:1px solid var(--rule-strong);margin-bottom:2.6rem}
+@media(max-width:680px){.chans{grid-template-columns:1fr}}
+.chan{background:rgba(255,255,255,.5);padding:1.6rem 1.5rem;display:flex;flex-direction:column}
+.chan .tag{font-family:var(--mono);font-size:.64rem;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--azure);margin:0 0 .7rem}
+.chan .val{font-family:var(--mono);font-size:1.12rem;letter-spacing:-.01em;margin:0 0 .5rem;
+  word-break:break-word}
+.chan .val a{text-decoration:none;border-bottom:1px solid rgba(44,110,155,.35)}
+.chan p{margin:0 0 1.1rem;font-size:.92rem;color:var(--ink-soft);flex:1}
+.chan .when{font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;color:var(--ink-soft);margin:0 0 1rem}
+.btn{display:inline-block;align-self:flex-start;font-family:var(--display);font-weight:645;
+  font-size:.92rem;background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+  padding:.62rem 1.3rem;border-radius:2px;text-decoration:none;transition:background .18s ease}
+.btn:hover{background:var(--azure);border-color:var(--azure)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule-strong)}
+.btn.ghost:hover{background:transparent;color:var(--azure);border-color:var(--azure)}
+
+/* routed */
+h2{font-family:var(--display);font-weight:720;font-variation-settings:"wdth" 90;
+  font-size:1.55rem;letter-spacing:-.025em;margin:0 0 .8rem}
+.lede{color:var(--ink-soft);max-width:52ch;margin:0 0 1.6rem}
+.routes{border-top:1px solid var(--rule-strong);margin-bottom:2.8rem}
+.route{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,1fr) minmax(0,10rem);
+  gap:1.2rem;align-items:baseline;padding:1rem 0;border-bottom:1px solid var(--rule)}
+@media(max-width:760px){.route{grid-template-columns:1fr;gap:.35rem}}
+.route .k{font-family:var(--display);font-weight:660;font-size:1rem;letter-spacing:-.015em}
+.route .d{font-size:.92rem;color:var(--ink-soft)}
+.route .a{font-family:var(--mono);font-size:.78rem;text-align:right;word-break:break-word}
+@media(max-width:760px){.route .a{text-align:left}}
+.route .a a{text-decoration:none;border-bottom:1px solid rgba(44,110,155,.35)}
+
+/* no-callcentre note */
+.note{border-left:3px solid var(--azure);background:rgba(255,255,255,.5);
+  padding:1rem 1.2rem;margin:0 0 2.8rem;font-size:.95rem;line-height:1.6}
+.note b{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--azure);display:block;margin-bottom:.4rem}
+
+/* identification */
+.ident{background:var(--ink);color:var(--paper-deep);padding:clamp(1.5rem,4vw,2.2rem)}
+.ident h2{color:var(--paper);font-size:1.25rem;margin-bottom:1.2rem}
+.ident dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0 2.5rem}
+@media(max-width:640px){.ident dl{grid-template-columns:1fr}}
+.ident div{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;
+  padding:.55rem 0;border-bottom:1px dotted rgba(255,255,255,.2)}
+.ident dt{font-size:.9rem;color:var(--azure-pale)}
+.ident dd{margin:0;font-family:var(--mono);font-size:.8rem;text-align:right;color:var(--paper)}
+.ident dd.todo{color:var(--ochre)}
+.ident .foot{font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;line-height:1.75;
+  color:rgba(232,223,204,.66);margin:1.4rem 0 0;padding-top:1rem;border-top:1px solid rgba(255,255,255,.16)}
+
+footer{border-top:1px solid var(--rule-strong);margin-top:3rem;padding-block:1.8rem;
+  font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);letter-spacing:.04em;line-height:1.8}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <a class="brand" href="/it">Easy<span>Casa</span></a>
+    <span class="lang"><b>IT</b> · EN · ES</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <h1>Contatti</h1>
+    <p class="sub">Ci risponde una persona. Non c'è un call center, non ci sono
+    richiamate automatiche e non passiamo il tuo numero a nessuno.</p>
+  </div>
+
+  <div class="chans">
+    <div class="chan">
+      <p class="tag">WhatsApp</p>
+      <p class="val"><a href="https://wa.me/393793306605">+39 379 330 6605</a></p>
+      <p>Il modo più rapido. Scrivi pure in italiano, inglese o spagnolo — e
+      allega foto o documenti se servono.</p>
+      <p class="when">Lun–ven 9:00–19:00 · sab 9:00–13:00 · di norma entro 2 ore</p>
+      <a class="btn" href="https://wa.me/393793306605">Apri WhatsApp</a>
+    </div>
+
+    <div class="chan">
+      <p class="tag">E-mail</p>
+      <p class="val"><a href="mailto:info@easycasaita.com">info@easycasaita.com</a></p>
+      <p>Per tutto ciò che richiede allegati, una traccia scritta o semplicemente
+      più spazio di un messaggio.</p>
+      <p class="when">Risposta entro un giorno lavorativo</p>
+      <a class="btn ghost" href="mailto:info@easycasaita.com">Scrivi un'e-mail</a>
+    </div>
+  </div>
+
+  <h2>A chi scrivere, per cosa</h2>
+  <p class="lede">Indirizzi diversi per esigenze diverse: arriva prima alla persona
+  giusta e i tempi di risposta sono più affidabili.</p>
+
+  <div class="routes">
+    <div class="route">
+      <span class="k">Domande generali</span>
+      <span class="d">Un annuncio, una visita, come funziona la piattaforma, i prezzi dei servizi.</span>
+      <span class="a"><a href="mailto:info@easycasaita.com">info@easycasaita.com</a></span>
+    </div>
+    <div class="route">
+      <span class="k">Privacy e dati</span>
+      <span class="d">Accesso, correzione, cancellazione, revoca dei consensi. La maggior parte puoi farla da solo da <a href="/it/i-miei-dati">I miei dati</a>.</span>
+      <span class="a"><a href="mailto:privacy@easycasaita.com">privacy@easycasaita.com</a></span>
+    </div>
+    <div class="route">
+      <span class="k">Reclami</span>
+      <span class="d">Se qualcosa non ha funzionato. Rispondiamo nel merito, non con un numero di ticket.</span>
+      <span class="a"><a href="mailto:reclami@easycasaita.com">reclami@easycasaita.com</a></span>
+    </div>
+    <div class="route">
+      <span class="k">Segnalare un annuncio</span>
+      <span class="d">Contenuti ingannevoli, immobili inesistenti, dati altrui pubblicati senza consenso.</span>
+      <span class="a"><a href="mailto:segnalazioni@easycasaita.com">segnalazioni@easycasaita.com</a></span>
+    </div>
+    <div class="route">
+      <span class="k">Comunicazioni legali</span>
+      <span class="d">Atti, diffide e comunicazioni con valore legale.</span>
+      <span class="a todo">PEC — [da definire]</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Una cosa che non facciamo</b>
+    Se lasci un contatto su EasyCasa, quel contatto resta qui. Non lo vendiamo,
+    non lo giriamo a reti di agenzie e nessuno ti richiamerà per proporti una
+    valutazione. Se vuoi parlare con qualcuno, lo chiedi tu.
+  </div>
+
+  <div class="ident">
+    <h2>Dati dell'operatore</h2>
+    <dl>
+      <div><dt>Ragione sociale</dt><dd>MUNDIDA S.r.l.</dd></div>
+      <div><dt>Marchio</dt><dd>EasyCasa</dd></div>
+      <div><dt>Partita IVA</dt><dd>IT04531990986</dd></div>
+      <div><dt>Codice fiscale</dt><dd class="todo">[da definire]</dd></div>
+      <div><dt>Sede legale</dt><dd class="todo">[da definire]</dd></div>
+      <div><dt>REA</dt><dd class="todo">[da definire]</dd></div>
+      <div><dt>Capitale sociale</dt><dd class="todo">[da definire]</dd></div>
+      <div><dt>PEC</dt><dd class="todo">[da definire]</dd></div>
+      <div><dt>Mediazione immobiliare</dt><dd class="todo">iscr. [da definire]</dd></div>
+      <div><dt>Assicurazione R.C.</dt><dd class="todo">[da definire]</dd></div>
+    </dl>
+    <p class="foot">
+      EasyCasa e Banks4All sono società distinte del gruppo Mundida. Banks4All non
+      percepisce compensi da EasyCasa, da agenzie o da venditori.<br>
+      Per le controversie con i consumatori è disponibile la piattaforma europea di
+      risoluzione online delle controversie: <a href="https://ec.europa.eu/consumers/odr">ec.europa.eu/consumers/odr</a>
+    </p>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">MUNDIDA S.r.l. · P.IVA IT04531990986 · <a href="/it/privacy">Privacy</a> · <a href="/it/cookie">Cookie</a> · <a href="/it/termini">Termini</a></div>
+</footer>
+
+</body>
+</html>

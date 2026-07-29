@@ -447,6 +447,7 @@
     "legal": {
       "privacy": "Privacidad",
       "mediation": "Mediación",
+      "terms": "Términos",
       "myData": "Mis datos",
       "contacts": "Contactos"
     }
@@ -1429,6 +1430,211 @@
       "title": "¿Quieres ver qué tenemos sobre ti?",
       "body": "No hace falta escribirnos. Accede y encuentras todo — datos, consentimientos, exportación y eliminación — en una sola página.",
       "cta": "Ir a Mis datos"
+    }
+  },
+  "contatti": {
+    "metaTitle": "Contacto — EasyCasa",
+    "metaDescription": "Escríbenos por WhatsApp o por correo. Sin call center ni llamadas automáticas.",
+    "title": "Contacto",
+    "sub": "Te responde una persona. No hay call center, no hay llamadas automáticas y no pasamos tu número a nadie.",
+    "channels": [
+      {
+        "tag": "WhatsApp",
+        "value": "+39 379 330 6605",
+        "href": "https://wa.me/393793306605",
+        "body": "La forma más rápida. Escribe en italiano, inglés o español — y adjunta fotos o documentos si hace falta.",
+        "when": "Lun–vie 9:00–19:00 · sáb 9:00–13:00 · normalmente en 2 horas",
+        "cta": "Abrir WhatsApp"
+      },
+      {
+        "tag": "Correo",
+        "value": "info@easycasaita.com",
+        "href": "mailto:info@easycasaita.com",
+        "body": "Para lo que necesite adjuntos, un rastro escrito o simplemente más espacio que un mensaje.",
+        "when": "Respuesta en un día laborable",
+        "cta": "Escribir un correo",
+        "ghost": true
+      }
+    ],
+    "routesTitle": "A quién escribir, para qué",
+    "routesLede": "Direcciones distintas para necesidades distintas: llegas antes a la persona adecuada y los tiempos de respuesta son más fiables.",
+    "routes": [
+      {
+        "key": "Preguntas generales",
+        "desc": "Un anuncio, una visita, cómo funciona la plataforma, los precios de los servicios.",
+        "address": "info@easycasaita.com",
+        "href": "mailto:info@easycasaita.com"
+      },
+      {
+        "key": "Privacidad y datos",
+        "desc": "Acceso, corrección, eliminación, revocación de consentimientos. La mayor parte puedes hacerla tú desde",
+        "descLink": "Mis datos",
+        "descAfter": ".",
+        "address": "privacy@easycasaita.com",
+        "href": "mailto:privacy@easycasaita.com"
+      },
+      {
+        "key": "Reclamaciones",
+        "desc": "Si algo no ha funcionado. Respondemos al fondo, no con un número de ticket.",
+        "address": "reclami@easycasaita.com",
+        "href": "mailto:reclami@easycasaita.com"
+      },
+      {
+        "key": "Denunciar un anuncio",
+        "desc": "Contenidos engañosos, inmuebles inexistentes, datos de terceros publicados sin consentimiento.",
+        "address": "segnalazioni@easycasaita.com",
+        "href": "mailto:segnalazioni@easycasaita.com"
+      },
+      {
+        "key": "Comunicaciones legales",
+        "desc": "Actos, requerimientos y comunicaciones con valor legal.",
+        "address": "PEC — [por definir]",
+        "todo": true
+      }
+    ],
+    "note": {
+      "tag": "Una cosa que no hacemos",
+      "body": "Si dejas un contacto en EasyCasa, ese contacto se queda aquí. No lo vendemos, no lo pasamos a redes de agencias y nadie te llamará para proponerte una valoración. Si quieres hablar con alguien, lo pides tú."
+    },
+    "ident": {
+      "title": "Datos del operador",
+      "rows": [
+        { "label": "Razón social", "value": "MUNDIDA S.r.l." },
+        { "label": "Marca", "value": "EasyCasa" },
+        { "label": "NIF/IVA", "value": "IT04531990986" },
+        { "label": "Código fiscal", "value": "[por definir]", "todo": true },
+        { "label": "Domicilio social", "value": "[por definir]", "todo": true },
+        { "label": "REA", "value": "[por definir]", "todo": true },
+        { "label": "Capital social", "value": "[por definir]", "todo": true },
+        { "label": "PEC", "value": "[por definir]", "todo": true },
+        { "label": "Mediación inmobiliaria", "value": "inscr. [por definir]", "todo": true },
+        { "label": "Seguro R.C.", "value": "[por definir]", "todo": true }
+      ],
+      "footBefore": "EasyCasa y Banks4All son sociedades distintas del grupo Mundida. Banks4All no percibe honorarios de EasyCasa, de agencias ni de vendedores.",
+      "footOdrBefore": "Para controversias de consumidores está disponible la plataforma europea de resolución de litigios en línea:",
+      "footOdrLink": "ec.europa.eu/consumers/odr"
+    }
+  },
+  "termsConditions": {
+    "metaTitle": "Términos y condiciones — EasyCasa",
+    "metaDescription": "Condiciones de uso de la plataforma EasyCasa: cuenta, anuncios, servicios de pago, desistimiento, responsabilidad y controversias.",
+    "title": "Términos y condiciones",
+    "briefTag": "En breve",
+    "todoLabel": "Por completar — legal",
+    "fullText": "Texto completo",
+    "tocLabel": "Índice",
+    "meta": {
+      "versionLabel": "Versión",
+      "version": "1.0-draft",
+      "inForceLabel": "En vigor desde",
+      "inForce": "[—]",
+      "updatedLabel": "Última actualización",
+      "updated": "[—]",
+      "italianPrevails": "Prevalece la versión italiana"
+    },
+    "toc": [
+      { "id": "t1", "label": "Quiénes somos y qué hacemos" },
+      { "id": "t2", "label": "Qué no es EasyCasa" },
+      { "id": "t3", "label": "Cuenta" },
+      { "id": "t4", "label": "Si publicas un anuncio" },
+      { "id": "t5", "label": "Si buscas casa" },
+      { "id": "t6", "label": "Servicios de pago y comisiones" },
+      { "id": "t7", "label": "Derecho de desistimiento" },
+      { "id": "t8", "label": "Responsabilidad" },
+      { "id": "t9", "label": "Suspensión y cierre" },
+      { "id": "t10", "label": "Reclamaciones y controversias" },
+      { "id": "t11", "label": "Ley aplicable y modificaciones" }
+    ],
+    "s1": {
+      "title": "Quiénes somos y qué hacemos",
+      "briefs": [
+        "EasyCasa es una plataforma gestionada por MUNDIDA S.r.l. donde propietarios y compradores se encuentran directamente. Al vendedor no le cobramos comisión. Ofrecemos además servicios a precio fijo que puedes elegir libremente."
+      ],
+      "fullTodo": "Identificación completa de la sociedad, datos de inscripción para la mediación inmobiliaria conforme a la L. 39/1989 italiana, ámbito territorial, datos de la póliza de responsabilidad civil profesional."
+    },
+    "s2": {
+      "title": "Qué no es EasyCasa",
+      "briefs": [
+        "No somos parte del contrato de compraventa o de arrendamiento: ese lo firmas tú con la otra parte. No garantizamos que un inmueble sea como se describe, ni que una negociación llegue a buen puerto.",
+        "Verificamos lo que podemos verificar y te decimos abiertamente qué queda sin verificar. Donde ejercemos mediación, lo indicamos en el mandato escrito."
+      ],
+      "fullTodo": "Delimitación del rol de hosting provider frente al de mediador; obligaciones del Digital Services Act para plataformas en línea; exenciones para pequeñas empresas."
+    },
+    "s3": {
+      "title": "Cuenta",
+      "briefs": [
+        "Hace falta una cuenta para enviar consultas, reservar visitas o publicar. Los datos que introduces deben ser verdaderos: es lo que hace fiable la plataforma para los demás.",
+        "Debes tener al menos 18 años."
+      ],
+      "fullTodo": "Requisitos de registro, responsabilidad sobre credenciales, régimen de cuentas en nombre de sociedades."
+    },
+    "s4": {
+      "title": "Si publicas un anuncio",
+      "briefs": [
+        "Debes tener derecho a vender o alquilar ese inmueble, y el anuncio debe indicar la clase energética: es una obligación legal, no una preferencia nuestra. Las fotos deben ser del inmueble real y actuales.",
+        "El anuncio sigue siendo tuyo. Puedes retirarlo cuando quieras, sin penalizaciones ni periodo de exclusividad."
+      ],
+      "fullTodo": "Obligación de indicar el rendimiento energético en anuncios y sanciones; declaración de titularidad; licencia de uso de contenidos; consecuencias de anuncios no veraces; gestión de duplicados."
+    },
+    "s5": {
+      "title": "Si buscas casa",
+      "briefs": [
+        "Buscar, guardar búsquedas, contactar propietarios y reservar visitas es gratuito y lo seguirá siendo.",
+        "Te pedimos que te presentes con datos verdaderos y que canceles una visita a la que no puedas ir: al otro lado hay una persona esperándote."
+      ],
+      "fullTodo": "Normas de uso, prohibición de recopilación masiva de datos de anuncios, régimen de inasistencias repetidas."
+    },
+    "s6": {
+      "title": "Servicios de pago y comisiones",
+      "briefs": [
+        "Cada servicio tiene un precio fijo, indicado antes del pedido, que no depende del valor del inmueble. Los costes de terceros — notario, impuestos, derechos catastrales — te los repercutimos al coste, con el recibo.",
+        "Donde haya una comisión de mediación, el importe se acuerda por escrito en el mandato antes de cualquier actividad, y solo nace al concluirse el negocio."
+      ],
+      "fullTodo": "Prioridad del lote legal (A2). Confirmar que ninguna norma fija una comisión mínima; mandato de mediación con indicación obligatoria de la cuantía; momento de nacimiento del derecho ex art. 1755 c.c. italiano; gastos anticipados; IVA. Comprobar cláusulas abusivas y Código del Consumo."
+    },
+    "s7": {
+      "title": "Derecho de desistimiento",
+      "briefs": [
+        "Si eres consumidor y compras un servicio en línea, tienes catorce días para cambiar de opinión.",
+        "Si nos pides empezar de inmediato — porque una visita o una verificación no pueden esperar — te lo haremos confirmar expresamente, porque así pierdes el derecho de desistimiento una vez concluido el servicio. Te lo decimos antes, no después."
+      ],
+      "fullTodo": "Régimen de desistimiento del Código del Consumo para servicios a distancia, incluida la excepción por ejecución anticipada con consentimiento expreso. Impacta el checkout: hace falta una casilla separada y registrada. Facilitar el formulario tipo de desistimiento."
+    },
+    "s8": {
+      "title": "Responsabilidad",
+      "briefs": [
+        "Respondemos de lo que hacemos nosotros. No respondemos de lo que declara o hace la otra parte, ni de defectos de un inmueble que no hayamos inspeccionado.",
+        "Ninguna cláusula aquí excluye la responsabilidad que la ley no permite excluir."
+      ],
+      "fullTodo": "Limitaciones de responsabilidad compatibles con el Código del Consumo. Disponibilidad del servicio y mantenimientos programados."
+    },
+    "s9": {
+      "title": "Suspensión y cierre",
+      "briefBefore": "Puedes cerrar tu cuenta cuando quieras desde",
+      "briefLink": "Mis datos",
+      "briefAfter": ". Podemos suspender una cuenta que publique anuncios falsos, moleste a otros usuarios o use la plataforma para fines distintos de los previstos — explicando siempre el motivo y dándote ocasión de responder.",
+      "fullTodo": "Procedimiento de suspensión conforme al DSA: motivación, vías de recurso internas, plazos. Efectos sobre pedidos en curso."
+    },
+    "s10": {
+      "title": "Reclamaciones y controversias",
+      "briefBefore": "Hablemos primero: escribe a",
+      "briefEmail": "reclami@easycasaita.com",
+      "briefAfter": " y respondemos al fondo.",
+      "brief2": "Si no basta, como consumidor puedes acudir a organismos de mediación o a la plataforma europea ODR. No estás obligado a pasar primero por nosotros.",
+      "fullTodo": "Indicación del organismo ADR eventualmente adherido, enlace ODR obligatorio, coordinación con la mediación civil obligatoria en contratos inmobiliarios."
+    },
+    "s11": {
+      "title": "Ley aplicable y modificaciones",
+      "briefs": [
+        "Se aplica la ley italiana. Si eres consumidor, quedan a salvo las protecciones del país donde resides y el foro de tu lugar de residencia.",
+        "Si modificamos estos términos de forma sustancial te lo comunicamos antes, con un preaviso razonable. Las versiones anteriores siguen consultables."
+      ],
+      "fullTodo": "Ley aplicable, foro competente distinguiendo consumidores y profesionales, preaviso de modificaciones (el DSA exige un plazo concreto), lengua prevalente."
+    },
+    "help": {
+      "title": "¿Algo no te cuadra?",
+      "body": "Si una cláusula no está clara, pregúntanos antes de aceptarla. Respondemos al fondo — es más útil para ambos que una controversia después.",
+      "cta": "Contáctanos"
     }
   }
 }

@@ -447,6 +447,7 @@
     "legal": {
       "privacy": "Privacy",
       "mediation": "Mediation",
+      "terms": "Terms",
       "myData": "My data",
       "contacts": "Contacts"
     }
@@ -1429,6 +1430,211 @@
       "title": "Want to see what we hold about you?",
       "body": "No need to write to us. Sign in and find everything — data, consents, export and erasure — on one page.",
       "cta": "Go to My data"
+    }
+  },
+  "contatti": {
+    "metaTitle": "Contact — EasyCasa",
+    "metaDescription": "Reach us on WhatsApp or by e-mail. No call centre, no automated callbacks.",
+    "title": "Contact",
+    "sub": "A person answers. There is no call centre, no automated callbacks, and we do not pass your number to anyone.",
+    "channels": [
+      {
+        "tag": "WhatsApp",
+        "value": "+39 379 330 6605",
+        "href": "https://wa.me/393793306605",
+        "body": "The fastest way. Write in Italian, English or Spanish — and attach photos or documents if needed.",
+        "when": "Mon–Fri 9:00–19:00 · Sat 9:00–13:00 · usually within 2 hours",
+        "cta": "Open WhatsApp"
+      },
+      {
+        "tag": "E-mail",
+        "value": "info@easycasaita.com",
+        "href": "mailto:info@easycasaita.com",
+        "body": "For anything that needs attachments, a written trail, or simply more room than a message.",
+        "when": "Reply within one working day",
+        "cta": "Write an e-mail",
+        "ghost": true
+      }
+    ],
+    "routesTitle": "Who to write, for what",
+    "routesLede": "Different addresses for different needs: you reach the right person sooner and response times are more reliable.",
+    "routes": [
+      {
+        "key": "General questions",
+        "desc": "A listing, a viewing, how the platform works, service prices.",
+        "address": "info@easycasaita.com",
+        "href": "mailto:info@easycasaita.com"
+      },
+      {
+        "key": "Privacy and data",
+        "desc": "Access, correction, erasure, withdrawing consents. Most of it you can do yourself from",
+        "descLink": "My data",
+        "descAfter": ".",
+        "address": "privacy@easycasaita.com",
+        "href": "mailto:privacy@easycasaita.com"
+      },
+      {
+        "key": "Complaints",
+        "desc": "If something did not work. We reply on the substance, not with a ticket number.",
+        "address": "reclami@easycasaita.com",
+        "href": "mailto:reclami@easycasaita.com"
+      },
+      {
+        "key": "Report a listing",
+        "desc": "Misleading content, non-existent properties, someone else's data published without consent.",
+        "address": "segnalazioni@easycasaita.com",
+        "href": "mailto:segnalazioni@easycasaita.com"
+      },
+      {
+        "key": "Legal notices",
+        "desc": "Formal notices and communications with legal effect.",
+        "address": "PEC — [to be defined]",
+        "todo": true
+      }
+    ],
+    "note": {
+      "tag": "One thing we do not do",
+      "body": "If you leave a contact on EasyCasa, that contact stays here. We do not sell it, we do not pass it to agency networks, and nobody will call you to pitch a valuation. If you want to talk to someone, you ask."
+    },
+    "ident": {
+      "title": "Operator details",
+      "rows": [
+        { "label": "Legal name", "value": "MUNDIDA S.r.l." },
+        { "label": "Brand", "value": "EasyCasa" },
+        { "label": "VAT number", "value": "IT04531990986" },
+        { "label": "Tax code", "value": "[to be defined]", "todo": true },
+        { "label": "Registered office", "value": "[to be defined]", "todo": true },
+        { "label": "REA", "value": "[to be defined]", "todo": true },
+        { "label": "Share capital", "value": "[to be defined]", "todo": true },
+        { "label": "PEC", "value": "[to be defined]", "todo": true },
+        { "label": "Estate mediation", "value": "reg. [to be defined]", "todo": true },
+        { "label": "Professional liability insurance", "value": "[to be defined]", "todo": true }
+      ],
+      "footBefore": "EasyCasa and Banks4All are separate companies in the Mundida group. Banks4All does not receive fees from EasyCasa, agencies or sellers.",
+      "footOdrBefore": "For consumer disputes, the European Online Dispute Resolution platform is available:",
+      "footOdrLink": "ec.europa.eu/consumers/odr"
+    }
+  },
+  "termsConditions": {
+    "metaTitle": "Terms and conditions — EasyCasa",
+    "metaDescription": "Terms of use for the EasyCasa platform: accounts, listings, paid services, withdrawal, liability and disputes.",
+    "title": "Terms and conditions",
+    "briefTag": "In brief",
+    "todoLabel": "To complete — legal",
+    "fullText": "Full text",
+    "tocLabel": "Contents",
+    "meta": {
+      "versionLabel": "Version",
+      "version": "1.0-draft",
+      "inForceLabel": "In force from",
+      "inForce": "[—]",
+      "updatedLabel": "Last updated",
+      "updated": "[—]",
+      "italianPrevails": "The Italian version prevails"
+    },
+    "toc": [
+      { "id": "t1", "label": "Who we are and what we do" },
+      { "id": "t2", "label": "What EasyCasa is not" },
+      { "id": "t3", "label": "Account" },
+      { "id": "t4", "label": "If you publish a listing" },
+      { "id": "t5", "label": "If you are looking for a home" },
+      { "id": "t6", "label": "Paid services and commissions" },
+      { "id": "t7", "label": "Right of withdrawal" },
+      { "id": "t8", "label": "Liability" },
+      { "id": "t9", "label": "Suspension and closure" },
+      { "id": "t10", "label": "Complaints and disputes" },
+      { "id": "t11", "label": "Governing law and changes" }
+    ],
+    "s1": {
+      "title": "Who we are and what we do",
+      "briefs": [
+        "EasyCasa is a platform run by MUNDIDA S.r.l. where owners and buyers find each other directly. We take no commission from the seller. We also offer fixed-price services you can choose freely."
+      ],
+      "fullTodo": "Full company identification, registration details for estate mediation under Italian Law 39/1989, territorial scope, professional liability insurance details."
+    },
+    "s2": {
+      "title": "What EasyCasa is not",
+      "briefs": [
+        "We are not a party to the sale or rental contract: you enter that with the other party. We do not guarantee that a property matches its description, or that a negotiation will succeed.",
+        "We verify what we can verify and tell you plainly what remains unverified. Where we act as mediators, we say so in the written mandate."
+      ],
+      "fullTodo": "Boundary between hosting provider and mediator roles; Digital Services Act duties for online platforms (contact point, notice-and-action, statement of reasons for removals); applicability of small-business exemptions."
+    },
+    "s3": {
+      "title": "Account",
+      "briefs": [
+        "You need an account to send enquiries, book viewings or publish. The details you enter must be true: that is what makes the platform trustworthy for everyone else.",
+        "You must be at least 18 years old."
+      ],
+      "fullTodo": "Registration requirements, credential responsibility, rules for accounts on behalf of companies."
+    },
+    "s4": {
+      "title": "If you publish a listing",
+      "briefs": [
+        "You must have the right to sell or let that property, and the listing must show the energy class: that is a legal duty, not our preference. Photos must be of the real property and current.",
+        "The listing remains yours. You can withdraw it whenever you want, with no penalties and no exclusivity period."
+      ],
+      "fullTodo": "Energy-performance disclosure in listings and related sanctions; ownership declaration; licence for uploaded content; consequences of untruthful ads; handling of duplicate listings."
+    },
+    "s5": {
+      "title": "If you are looking for a home",
+      "briefs": [
+        "Searching, saving searches, contacting owners and booking viewings is free and will stay free.",
+        "We ask you to present yourself with true details and to cancel a viewing you cannot attend: there is a person waiting on the other side."
+      ],
+      "fullTodo": "Usage rules, ban on mass scraping of listing data, rules for repeated no-shows."
+    },
+    "s6": {
+      "title": "Paid services and commissions",
+      "briefs": [
+        "Every service has a fixed price, shown before you order, that does not depend on the property value. Third-party costs — notary, taxes, cadastral fees — we pass through at cost, with the receipt.",
+        "Where a mediation commission applies, the amount is agreed in writing in the mandate before any activity, and becomes due only when the deal closes."
+      ],
+      "fullTodo": "Priority legal-batch item (A2). Confirm no statutory minimum commission; mediation mandate rules with mandatory fee disclosure; when the right accrues under Art. 1755 Italian Civil Code; advance expenses; VAT. Also check for unfair terms under Art. 1341 and Consumer Code compliance."
+    },
+    "s7": {
+      "title": "Right of withdrawal",
+      "briefs": [
+        "If you are a consumer and buy a service online, you have fourteen days to change your mind.",
+        "If you ask us to start immediately — because a site visit or check cannot wait — we will ask you to confirm expressly, because you then lose the right of withdrawal once the service is completed. We tell you before, not after."
+      ],
+      "fullTodo": "Consumer Code withdrawal rules for distance services, including early-performance waiver with express consent. Impacts checkout flow, not only copy: a separate recorded checkbox is required. Provide the standard withdrawal form."
+    },
+    "s8": {
+      "title": "Liability",
+      "briefs": [
+        "We are liable for what we do. We are not liable for what the other party states or does, or for defects in a property we have not inspected.",
+        "Nothing here excludes liability that the law does not allow to be excluded."
+      ],
+      "fullTodo": "Liability limits compatible with the Consumer Code — watch nullity of limiting clauses toward consumers. Service availability and scheduled maintenance."
+    },
+    "s9": {
+      "title": "Suspension and closure",
+      "briefBefore": "You can close your account whenever you want from",
+      "briefLink": "My data",
+      "briefAfter": ". We may suspend an account that publishes false listings, harasses other users or uses the platform for purposes other than those intended — always explaining why and giving you a chance to respond.",
+      "fullTodo": "DSA-compliant suspension procedure: reasons, internal redress, deadlines. Effects on open orders."
+    },
+    "s10": {
+      "title": "Complaints and disputes",
+      "briefBefore": "Talk to us first: write to",
+      "briefEmail": "reclami@easycasaita.com",
+      "briefAfter": " and we reply on the substance.",
+      "brief2": "If that is not enough, as a consumer you can turn to mediation bodies or the European ODR platform. You are not required to come to us first.",
+      "fullTodo": "Any ADR body we join, mandatory ODR link, coordination with compulsory civil mediation for property-contract disputes."
+    },
+    "s11": {
+      "title": "Governing law and changes",
+      "briefs": [
+        "Italian law applies. If you are a consumer, the protections of your country of residence and the courts of your place of residence remain.",
+        "If we change these terms in a material way we will tell you beforehand, with reasonable notice. Prior versions remain available."
+      ],
+      "fullTodo": "Governing law, competent court distinguishing consumers and professionals, notice period for changes (DSA sets a specific term for online platforms), prevailing language."
+    },
+    "help": {
+      "title": "Something unclear?",
+      "body": "If a clause is not clear, ask us before you accept it. We reply on the substance — more useful for both of us than a dispute later.",
+      "cta": "Contact us"
     }
   }
 }

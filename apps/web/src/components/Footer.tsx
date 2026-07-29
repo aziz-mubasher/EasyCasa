@@ -101,9 +101,10 @@ export function Footer() {
 
         <div className="sf-legal">
           <Link href="/legal/privacy">{t('legal.privacy')}</Link>
+          <Link href="/legal/terms">{t('legal.terms')}</Link>
           <Link href="/legal/mediation">{t('legal.mediation')}</Link>
           <Link href="/privacy">{t('legal.myData')}</Link>
-          <a href="mailto:acquisti@easycasaita.com">{t('legal.contacts')}</a>
+          <Link href="/contatti">{t('legal.contacts')}</Link>
         </div>
       </div>
     </footer>

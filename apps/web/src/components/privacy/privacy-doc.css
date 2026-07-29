@@ -570,6 +570,233 @@
   font-family: var(--font-mono);
 }
 
+/* ---- contacts page ---- */
+.pd .pd-wrap--contact {
+  max-width: 58rem;
+}
+
+.pd .pd-head--flush {
+  border-bottom: 0;
+  padding-bottom: 2rem;
+}
+
+.pd .pd-chans {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
+  margin-bottom: 2.6rem;
+}
+
+@media (max-width: 680px) {
+  .pd .pd-chans {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pd .pd-chan {
+  background: rgba(255, 255, 255, 0.5);
+  padding: 1.6rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.pd .pd-chan .tag {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--azure);
+  margin: 0 0 0.7rem;
+}
+
+.pd .pd-chan .val {
+  font-family: var(--font-mono);
+  font-size: 1.12rem;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem;
+  word-break: break-word;
+}
+
+.pd .pd-chan .val a {
+  text-decoration: none;
+  border-bottom: 1px solid rgba(44, 110, 155, 0.35);
+}
+
+.pd .pd-chan p {
+  margin: 0 0 1.1rem;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  flex: 1;
+}
+
+.pd .pd-chan .when {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  margin: 0 0 1rem;
+}
+
+.pd .pd-lede {
+  color: var(--ink-soft);
+  max-width: 52ch;
+  margin: 0 0 1.6rem;
+}
+
+.pd h2.pd-h {
+  font-family: var(--font-display);
+  font-weight: 720;
+  font-variation-settings: 'wdth' 90;
+  font-size: 1.55rem;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.8rem;
+}
+
+.pd .pd-routes {
+  border-top: 1px solid var(--line-strong);
+  margin-bottom: 2.8rem;
+}
+
+.pd .pd-route {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr) minmax(0, 10rem);
+  gap: 1.2rem;
+  align-items: baseline;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 760px) {
+  .pd .pd-route {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+}
+
+.pd .pd-route .k {
+  font-family: var(--font-display);
+  font-weight: 660;
+  font-size: 1rem;
+  letter-spacing: -0.015em;
+}
+
+.pd .pd-route .d {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+.pd .pd-route .a {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-align: right;
+  word-break: break-word;
+}
+
+@media (max-width: 760px) {
+  .pd .pd-route .a {
+    text-align: left;
+  }
+}
+
+.pd .pd-route .a a {
+  text-decoration: none;
+  border-bottom: 1px solid rgba(44, 110, 155, 0.35);
+}
+
+.pd .pd-route .a.todo,
+.pd .pd-ident dd.todo {
+  color: var(--ochre);
+}
+
+.pd .pd-note {
+  border-left: 3px solid var(--azure);
+  background: rgba(255, 255, 255, 0.5);
+  padding: 1rem 1.2rem;
+  margin: 0 0 2.8rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.pd .pd-note b {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--azure);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.pd .pd-ident {
+  background: var(--ink);
+  color: var(--paper-deep);
+  padding: clamp(1.5rem, 4vw, 2.2rem);
+  margin-bottom: 3rem;
+}
+
+.pd .pd-ident h2 {
+  font-family: var(--font-display);
+  font-weight: 720;
+  font-variation-settings: 'wdth' 90;
+  color: var(--paper);
+  font-size: 1.25rem;
+  margin: 0 0 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.pd .pd-ident dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 2.5rem;
+}
+
+@media (max-width: 640px) {
+  .pd .pd-ident dl {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pd .pd-ident div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.2);
+}
+
+.pd .pd-ident dt {
+  font-size: 0.9rem;
+  color: var(--azure-pale, #a9c8dc);
+}
+
+.pd .pd-ident dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-align: right;
+  color: var(--paper);
+}
+
+.pd .pd-ident .foot {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  line-height: 1.75;
+  color: rgba(232, 223, 204, 0.66);
+  margin: 1.4rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.pd .pd-ident .foot a {
+  color: var(--azure-pale, #a9c8dc);
+}
+
 @media print {
   .pd .pd-toc,
   .pd .pd-help {
