@@ -29,8 +29,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/valutazione-gratuita',
     '/legal/privacy',
     '/legal/terms',
+    '/legal/mediation',
     '/privacy',
     '/contatti',
+    '/trasparenza',
   ];
 
   const staticEntries: MetadataRoute.Sitemap = LOCALES.flatMap((loc) =>

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mediazione e provvigione — EasyCasa</title>
+<meta name="description" content="Nessuna legge italiana fissa una provvigione minima. Cosa dice davvero la norma, da dove arriva il 3% e cosa controllare prima di firmare un incarico.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,300..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14212E;--ink-soft:#4C5D6E;--paper:#F3EDE1;--paper-deep:#E8DFCC;
+  --azure:#2C6E9B;--azure-pale:#A9C8DC;--ochre:#C08A1E;
+  --rule:rgba(20,33,46,.16);--rule-strong:rgba(20,33,46,.34);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Newsreader",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;--gutter:clamp(1.25rem,5vw,3.5rem)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:1.0625rem;line-height:1.68;font-optical-sizing:auto}
+a{color:var(--azure)}:focus-visible{outline:2.5px solid var(--azure);outline-offset:3px}
+.wrap{max-width:52rem;margin-inline:auto;padding-inline:var(--gutter)}
+.mast{border-bottom:1px solid var(--rule-strong)}
+.mast .wrap{max-width:60rem;display:flex;align-items:center;gap:1.5rem;padding-block:1rem;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.015em;text-decoration:none;color:var(--ink)}
+.brand span{color:var(--azure)}
+.lang{margin-left:auto;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--ink-soft)}
+.lang b{color:var(--ink)}
+.head{padding-block:clamp(2.5rem,6vw,4.5rem) 1.2rem}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--azure);margin:0 0 1.2rem}
+h1{font-family:var(--display);font-weight:750;font-variation-settings:"wdth" 88;
+  font-size:clamp(2.2rem,5.5vw,3.6rem);line-height:1;letter-spacing:-.032em;margin:0 0 1.1rem;text-wrap:balance}
+h1 em{font-style:normal;color:var(--azure)}
+.sub{color:var(--ink-soft);max-width:46ch;margin:0 0 1rem;font-size:1.12rem}
+.stamp{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink-soft);margin:0}
+section{padding-block:2.2rem;border-top:1px solid var(--rule)}
+section:first-of-type{border-top:1px solid var(--rule-strong)}
+h2{font-family:var(--display);font-weight:710;font-size:clamp(1.4rem,3vw,1.9rem);
+  line-height:1.1;letter-spacing:-.025em;margin:0 0 1rem;text-wrap:balance}
+p{margin:0 0 1rem;max-width:62ch}
+.pull{border-left:3px solid var(--azure);background:rgba(255,255,255,.5);
+  padding:1.1rem 1.3rem;margin:1.4rem 0}
+.pull p{margin:0;font-size:1.02rem}
+.pull p+p{margin-top:.7rem}
+.pull b{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--azure);display:block;margin-bottom:.45rem}
+.warn{border-left-color:var(--ochre)}
+.warn b{color:var(--ochre)}
+.law{font-family:var(--mono);font-size:.78rem;letter-spacing:.03em;color:var(--ink-soft);
+  border-top:1px dotted var(--rule);padding-top:.8rem;margin-top:1.2rem;line-height:1.8}
+.law span{display:block}
+.check{list-style:none;padding:0;margin:1.2rem 0 0;counter-reset:c}
+.check li{counter-increment:c;position:relative;padding-left:2.2rem;margin-bottom:1rem;max-width:60ch}
+.check li::before{content:counter(c,decimal-leading-zero);position:absolute;left:0;top:.1rem;
+  font-family:var(--mono);font-size:.72rem;color:var(--azure)}
+.check b{display:block;font-family:var(--display);font-weight:660;font-size:1.02rem;letter-spacing:-.015em;margin-bottom:.2rem}
+.check span{font-size:.95rem;color:var(--ink-soft)}
+.ours{background:var(--ink);color:var(--paper-deep);padding:clamp(1.4rem,4vw,2rem);margin:2.4rem 0 0}
+.ours h2{color:var(--paper);margin-bottom:.9rem}
+.ours p{color:var(--paper-deep)}
+.ours .row{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;
+  padding:.6rem 0;border-bottom:1px dotted rgba(255,255,255,.2);font-size:.97rem}
+.ours .row:last-of-type{border-bottom:0}
+.ours .row span:last-child{font-family:var(--mono);font-size:.84rem;color:var(--azure-pale);white-space:nowrap}
+.ident{font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;line-height:1.9;
+  color:var(--ink-soft);border-top:1px solid var(--rule-strong);padding-block:1.8rem 3rem;margin-top:2.5rem}
+.ident .todo{color:var(--ochre)}
+footer{border-top:1px solid var(--rule-strong);padding-block:1.6rem;font-family:var(--mono);
+  font-size:.66rem;color:var(--ink-soft);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<header class="mast"><div class="wrap">
+  <a class="brand" href="/it">Easy<span>Casa</span></a>
+  <span class="lang"><b>IT</b> · EN · ES</span>
+</div></header>
+
+<div class="wrap">
+  <div class="head">
+    <p class="eyebrow">Mediazione e provvigione</p>
+    <h1>Il 3% non è<br><em>una legge.</em></h1>
+    <p class="sub">Se ti hanno detto che la provvigione minima è fissata per
+    legge, ti hanno detto una cosa falsa. Ecco cosa dice davvero la norma.</p>
+    <p class="stamp">Pagina informativa · non sostituisce un parere legale</p>
+  </div>
+
+  <section>
+    <h2>Cosa dice la legge</h2>
+    <p>L'attività di mediazione immobiliare è disciplinata dalla legge 39 del
+    1989. Sulla misura della provvigione, l'articolo 6 dice una cosa sola: è
+    stabilita dalle parti.</p>
+    <p>Non esiste una tariffa minima. Non è mai esistita una tariffa vincolante
+    per questo settore, e nel 2004 l'Autorità Garante della Concorrenza e del
+    Mercato ha confermato espressamente che le tariffe non vi si applicano. La
+    misura è oggetto di libera trattativa.</p>
+    <div class="law">
+      <span>L. 39/1989, art. 6 — la provvigione è stabilita dalle parti</span>
+      <span>AGCM, provv. n. 13035/2004 — tariffe non applicabili al settore</span>
+      <span>Art. 1755 c.c. — il diritto matura con la conclusione dell'affare</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Allora da dove arriva il 3%?</h2>
+    <p>Dalle raccolte degli usi delle Camere di Commercio. Ogni CCIAA registra le
+    percentuali consuetudinarie della propria provincia — spesso intorno al 3%
+    da ciascuna delle due parti, più IVA.</p>
+    <p>Sono <strong>usi</strong>, non norme. Servono a colmare un vuoto: si
+    applicano soltanto quando le parti non hanno concordato nulla per iscritto.
+    Se un importo è pattuito, vale quello.</p>
+    <div class="pull warn">
+      <b>Qui sta la trappola</b>
+      <p>Il silenzio non gioca a tuo favore. Un incarico che non indica la misura
+      della provvigione può essere ricondotto agli usi locali — cioè, in molte
+      province, proprio a quel 3% da entrambe le parti.</p>
+      <p>Non firmare mai un incarico con la percentuale in bianco, "da concordare"
+      o rinviata a un allegato che non hai letto.</p>
+    </div>
+    <p>I giudici, del resto, sono scesi ben sotto quella soglia quando il lavoro
+    svolto non la giustificava: in un caso deciso dal Tribunale di Venezia è stato
+    ritenuto congruo lo 0,5% del valore dell'immobile, perché l'agente non aveva
+    condotto la trattativa né raccolto la proposta.</p>
+  </section>
+
+  <section>
+    <h2>Quando la provvigione è dovuta</h2>
+    <p>Non alla firma dell'incarico, e non quando arriva un potenziale acquirente.
+    Il diritto matura con la <strong>conclusione dell'affare</strong>: quando le
+    parti sono vincolate, cioè in genere alla proposta accettata.</p>
+    <p>Fino a quel momento qualunque cifra ti venga indicata è una stima, non un
+    debito. Se un preventivo non lo dice, chiedilo per iscritto.</p>
+  </section>
+
+  <div class="ours">
+    <h2>Cosa facciamo noi</h2>
+    <p>EasyCasa non prende provvigione dal venditore. Su questo non ci sono
+    condizioni, soglie o eccezioni.</p>
+    <div class="row"><span>Provvigione dal venditore sul prezzo di vendita</span><span>€ 0</span></div>
+    <div class="row"><span>Pubblicare un annuncio</span><span>gratuito</span></div>
+    <div class="row"><span>Cercare, contattare, prenotare visite</span><span>gratuito</span></div>
+    <div class="row"><span>Servizi facoltativi (foto, APE, verifiche, proposta)</span><span>prezzo fisso</span></div>
+    <div class="row"><span>Costi di terzi (notaio, imposte, catasto)</span><span>al costo</span></div>
+    <p style="margin-top:1.2rem">I prezzi fissi non variano con il valore
+    dell'immobile: sono gli stessi su una casa da 150.000 € e su una da 800.000 €.
+    Sono indicati prima dell'ordine e non aumentano dopo.</p>
+    <p style="margin-bottom:0">Dove dovesse applicarsi un'attività di mediazione
+    con provvigione, l'importo è concordato per iscritto nell'incarico prima di
+    qualsiasi attività, e matura solo alla conclusione dell'affare.</p>
+  </div>
+
+  <section>
+    <h2>Cinque cose da controllare prima di firmare</h2>
+    <p>Vale per qualsiasi incarico, non solo per il nostro.</p>
+    <ol class="check">
+      <li><b>La percentuale, o l'importo, è scritto?</b>
+        <span>Se manca, o è rinviata "agli usi", stai firmando un importo che non
+        conosci.</span></li>
+      <li><b>Chi paga: tu, l'altra parte, o entrambi?</b>
+        <span>In Italia è consuetudine che l'agenzia incassi da tutte e due. Deve
+        essere esplicito.</span></li>
+      <li><b>Quando matura il diritto?</b>
+        <span>Deve dire "alla conclusione dell'affare". Diffida di formule che
+        anticipano il momento.</span></li>
+      <li><b>C'è un'esclusiva, e per quanto?</b>
+        <span>Controlla durata, rinnovo automatico e penali in caso di recesso.</span></li>
+      <li><b>Cosa succede se vendi da solo?</b>
+        <span>Alcuni incarichi prevedono comunque un compenso. È legittimo, ma
+        devi saperlo prima.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Perché ti diciamo tutto questo</h2>
+    <p>Perché non abbiamo nulla da perderci. Non guadagniamo una percentuale sul
+    prezzo di vendita, quindi non abbiamo motivo di lasciarti credere che il 3%
+    sia obbligatorio.</p>
+    <p>Se dopo aver letto questa pagina scegli un'agenzia tradizionale e negozi
+    una percentuale più bassa, per noi va benissimo. Il punto era che tu potessi
+    negoziarla.</p>
+    <div class="pull">
+      <b>Domande</b>
+      <p>Scrivici su WhatsApp al <a href="https://wa.me/393793306605">+39 379 330 6605</a>
+      o a <a href="mailto:info@easycasaita.com">info@easycasaita.com</a>. Ti
+      rispondiamo anche se non sei nostro cliente.</p>
+    </div>
+  </section>
+
+  <div class="ident">
+    EasyCasa Italia · P.IVA IT04531990986<br>
+    Attività di mediazione immobiliare — iscrizione <span class="todo">[—]</span><br>
+    Dati di mercato: Agenzia Entrate — OMI, semestre 2025/2<br><br>
+    Banks4All ed EasyCasa sono società distinte del gruppo Mundida. Banks4All non
+    percepisce compensi da EasyCasa, da agenzie o da venditori. La mediazione
+    creditizia è svolta da operatori iscritti negli albi obbligatori.<br><br>
+    <a href="/it/trasparenza">Trasparenza</a> · <a href="/it/termini">Termini</a> ·
+    <a href="/it/contatti">Contatti</a>
+  </div>
+</div>
+
+<footer><div class="wrap">EasyCasa Italia · P.IVA IT04531990986</div></footer>
+</body>
+</html>

@@ -16,16 +16,17 @@
 }
 
 .sf .sf-brand {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: -0.015em;
-  color: var(--paper);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  color: rgba(232, 223, 204, 0.78);
   margin: 0 0 2.2rem;
 }
 
 .sf .sf-brand span {
-  color: var(--azure-pale);
+  color: inherit;
 }
 
 .sf .sf-dir {

@@ -416,6 +416,7 @@
   },
   "footer": {
     "externalHint": "Opens on {host} in a new tab",
+    "entity": "EasyCasa Italia · P.IVA IT04531990986",
     "columns": {
       "sellers": "For sellers",
       "buyers": "For buyers",
@@ -442,11 +443,12 @@
       "propertyInvestmentPlan": "Property Investment Plan",
       "verifiedBuyerBadge": "Verified Buyer Badge",
       "discoveryCall": "Free discovery call",
-      "transparency": "How Banks4All is paid"
+      "transparency": "Transparency"
     },
     "legal": {
       "privacy": "Privacy",
       "mediation": "Mediation",
+      "transparency": "Transparency",
       "terms": "Terms",
       "myData": "My data",
       "contacts": "Contacts"
@@ -916,7 +918,7 @@
       "ctaNote": "Or write to acquisti@easycasaita.com"
     },
     "footer": {
-      "left": "EasyCasa · operated by MUNDIDA · easycasaita.com",
+      "left": "EasyCasa Italia · P.IVA IT04531990986",
       "right": "Property data: Agenzia Entrate — OMI"
     }
   },
@@ -1130,7 +1132,7 @@
       "cta": "Calculate value"
     },
     "footer": {
-      "left": "EasyCasa · MUNDIDA S.r.l. · VAT IT04531990986",
+      "left": "EasyCasa Italia · P.IVA IT04531990986",
       "right": "Market data: Agenzia Entrate — OMI"
     }
   },
@@ -1499,16 +1501,53 @@
     "ident": {
       "title": "Operator details",
       "rows": [
-        { "label": "Legal name", "value": "MUNDIDA S.r.l." },
-        { "label": "Brand", "value": "EasyCasa" },
-        { "label": "VAT number", "value": "IT04531990986" },
-        { "label": "Tax code", "value": "[to be defined]", "todo": true },
-        { "label": "Registered office", "value": "[to be defined]", "todo": true },
-        { "label": "REA", "value": "[to be defined]", "todo": true },
-        { "label": "Share capital", "value": "[to be defined]", "todo": true },
-        { "label": "PEC", "value": "[to be defined]", "todo": true },
-        { "label": "Estate mediation", "value": "reg. [to be defined]", "todo": true },
-        { "label": "Professional liability insurance", "value": "[to be defined]", "todo": true }
+        {
+          "label": "Legal name",
+          "value": "MUNDIDA S.r.l."
+        },
+        {
+          "label": "Brand",
+          "value": "EasyCasa"
+        },
+        {
+          "label": "VAT number",
+          "value": "IT04531990986"
+        },
+        {
+          "label": "Tax code",
+          "value": "[to be defined]",
+          "todo": true
+        },
+        {
+          "label": "Registered office",
+          "value": "[to be defined]",
+          "todo": true
+        },
+        {
+          "label": "REA",
+          "value": "[to be defined]",
+          "todo": true
+        },
+        {
+          "label": "Share capital",
+          "value": "[to be defined]",
+          "todo": true
+        },
+        {
+          "label": "PEC",
+          "value": "[to be defined]",
+          "todo": true
+        },
+        {
+          "label": "Estate mediation",
+          "value": "reg. [to be defined]",
+          "todo": true
+        },
+        {
+          "label": "Professional liability insurance",
+          "value": "[to be defined]",
+          "todo": true
+        }
       ],
       "footBefore": "EasyCasa and Banks4All are separate companies in the Mundida group. Banks4All does not receive fees from EasyCasa, agencies or sellers.",
       "footOdrBefore": "For consumer disputes, the European Online Dispute Resolution platform is available:",
@@ -1533,17 +1572,50 @@
       "italianPrevails": "The Italian version prevails"
     },
     "toc": [
-      { "id": "t1", "label": "Who we are and what we do" },
-      { "id": "t2", "label": "What EasyCasa is not" },
-      { "id": "t3", "label": "Account" },
-      { "id": "t4", "label": "If you publish a listing" },
-      { "id": "t5", "label": "If you are looking for a home" },
-      { "id": "t6", "label": "Paid services and commissions" },
-      { "id": "t7", "label": "Right of withdrawal" },
-      { "id": "t8", "label": "Liability" },
-      { "id": "t9", "label": "Suspension and closure" },
-      { "id": "t10", "label": "Complaints and disputes" },
-      { "id": "t11", "label": "Governing law and changes" }
+      {
+        "id": "t1",
+        "label": "Who we are and what we do"
+      },
+      {
+        "id": "t2",
+        "label": "What EasyCasa is not"
+      },
+      {
+        "id": "t3",
+        "label": "Account"
+      },
+      {
+        "id": "t4",
+        "label": "If you publish a listing"
+      },
+      {
+        "id": "t5",
+        "label": "If you are looking for a home"
+      },
+      {
+        "id": "t6",
+        "label": "Paid services and commissions"
+      },
+      {
+        "id": "t7",
+        "label": "Right of withdrawal"
+      },
+      {
+        "id": "t8",
+        "label": "Liability"
+      },
+      {
+        "id": "t9",
+        "label": "Suspension and closure"
+      },
+      {
+        "id": "t10",
+        "label": "Complaints and disputes"
+      },
+      {
+        "id": "t11",
+        "label": "Governing law and changes"
+      }
     ],
     "s1": {
       "title": "Who we are and what we do",
@@ -1635,6 +1707,280 @@
       "title": "Something unclear?",
       "body": "If a clause is not clear, ask us before you accept it. We reply on the substance — more useful for both of us than a dispute later.",
       "cta": "Contact us"
+    }
+  },
+  "mediationPage": {
+    "metaTitle": "Mediation and commission — EasyCasa",
+    "metaDescription": "No Italian law sets a minimum mediation fee. What the rules actually say, where the 3% comes from, and what to check before you sign a mandate.",
+    "eyebrow": "Mediation and commission",
+    "titleBefore": "3% is not",
+    "titleEm": "a law.",
+    "sub": "If someone told you the minimum commission is fixed by law, they told you something false. Here is what the rules actually say.",
+    "stamp": "Information page · not a substitute for legal advice",
+    "law": {
+      "title": "What the law says",
+      "p1": "Estate mediation is governed by Law 39 of 1989. On the amount of the commission, Article 6 says only one thing: it is set by the parties.",
+      "p2": "There is no minimum tariff. There has never been a binding tariff for this sector, and in 2004 the Italian Competition Authority expressly confirmed that tariffs do not apply. The amount is freely negotiated.",
+      "lines": [
+        "L. 39/1989, art. 6 — the commission is set by the parties",
+        "AGCM, decision no. 13035/2004 — tariffs not applicable to the sector",
+        "Art. 1755 Italian Civil Code — the right accrues when the deal concludes"
+      ]
+    },
+    "origin": {
+      "title": "So where does the 3% come from?",
+      "p1": "From the collections of commercial customs kept by Chambers of Commerce. Each chamber records customary percentages for its province — often around 3% from each of the two parties, plus VAT.",
+      "p2Before": "They are",
+      "p2Strong": "customs",
+      "p2After": ", not statutes. They fill a gap: they apply only when the parties have not agreed anything in writing. If an amount is agreed, that amount prevails.",
+      "p3": "Courts, for that matter, have gone well below that threshold when the work done did not justify it: in a case decided by the Venice Tribunal, 0.5% of the property value was held reasonable because the agent had neither conducted the negotiation nor collected the offer."
+    },
+    "trap": {
+      "tag": "Here is the trap",
+      "paras": [
+        "Silence does not work in your favour. A mandate that does not state the commission can be referred back to local customs — that is, in many provinces, exactly that 3% from both parties.",
+        "Never sign a mandate with a blank percentage, \"to be agreed\", or deferred to an annex you have not read."
+      ]
+    },
+    "when": {
+      "title": "When the commission is due",
+      "p1Before": "Not on signing the mandate, and not when a potential buyer appears. The right accrues on",
+      "p1Strong": "conclusion of the deal",
+      "p1After": ": when the parties are bound, typically on an accepted offer.",
+      "p2": "Until then, any figure you are shown is an estimate, not a debt. If a quote does not say so, ask for it in writing."
+    },
+    "ours": {
+      "title": "What we do",
+      "intro": "EasyCasa takes no commission from the seller. On this there are no conditions, thresholds or exceptions.",
+      "rows": [
+        {
+          "label": "Seller commission on the sale price",
+          "value": "€ 0"
+        },
+        {
+          "label": "Publishing a listing",
+          "value": "free"
+        },
+        {
+          "label": "Searching, contacting, booking viewings",
+          "value": "free"
+        },
+        {
+          "label": "Optional services (photos, EPC, checks, offer)",
+          "value": "fixed price"
+        },
+        {
+          "label": "Third-party costs (notary, taxes, cadastre)",
+          "value": "at cost"
+        }
+      ],
+      "outro1": "Fixed prices do not change with property value: they are the same on a €150,000 home and an €800,000 one. They are shown before you order and do not rise afterwards.",
+      "outro2": "Where mediation with a commission applies, the amount is agreed in writing in the mandate before any activity, and becomes due only when the deal concludes."
+    },
+    "checks": {
+      "title": "Five things to check before you sign",
+      "lede": "This applies to any mandate, not only ours.",
+      "items": [
+        {
+          "title": "Is the percentage, or the amount, written down?",
+          "body": "If it is missing, or deferred \"to custom\", you are signing an amount you do not know."
+        },
+        {
+          "title": "Who pays: you, the other party, or both?",
+          "body": "In Italy it is customary for the agency to collect from both. It must be explicit."
+        },
+        {
+          "title": "When does the right accrue?",
+          "body": "It must say \"on conclusion of the deal\". Be wary of wording that brings that moment forward."
+        },
+        {
+          "title": "Is there exclusivity, and for how long?",
+          "body": "Check duration, automatic renewal and penalties if you withdraw."
+        },
+        {
+          "title": "What if you sell on your own?",
+          "body": "Some mandates still provide for a fee. That can be lawful, but you need to know before."
+        }
+      ]
+    },
+    "why": {
+      "title": "Why we tell you all this",
+      "p1": "Because we have nothing to lose by it. We do not earn a percentage of the sale price, so we have no reason to let you believe 3% is mandatory.",
+      "p2": "If after reading this page you choose a traditional agency and negotiate a lower percentage, that is fine with us. The point was that you could negotiate it."
+    },
+    "questions": {
+      "tag": "Questions",
+      "beforeWa": "Write to us on WhatsApp at",
+      "wa": "+39 379 330 6605",
+      "or": "or to",
+      "email": "info@easycasaita.com",
+      "after": ". We reply even if you are not our client."
+    },
+    "ident": {
+      "line1": "EasyCasa Italia · P.IVA IT04531990986",
+      "line2Before": "Estate mediation activity — registration",
+      "regTodo": "[—]",
+      "omi": "Market data: Agenzia Entrate — OMI, H2 2025",
+      "banks": "Banks4All and EasyCasa are separate companies in the Mundida group. Banks4All does not receive fees from EasyCasa, agencies or sellers. Credit mediation is carried out by operators registered in the mandatory registers.",
+      "linkTransparency": "Transparency",
+      "linkTerms": "Terms",
+      "linkContacts": "Contact"
+    }
+  },
+  "transparencyPage": {
+    "metaTitle": "Transparency — EasyCasa",
+    "metaDescription": "How EasyCasa earns, who pays us and who does not. No seller commission, fixed prices shown before you order.",
+    "eyebrow": "Transparency",
+    "titleBefore": "Who pays us,",
+    "titleEm": "and who does not.",
+    "sub": "The fastest way to know whom to trust in this sector is to know how they earn. Here is ours, in full.",
+    "model": {
+      "kicker": "The model",
+      "title": "Three service groups, three different rules",
+      "pillars": [
+        {
+          "tag": "For sellers",
+          "title": "No commission from the seller",
+          "paras": [
+            "We do not take a percentage of the sale price. Ever, in any form.",
+            "Add-on services — photos, EPC, document checks — have a fixed price, shown before you order, the same on a €150,000 home and an €800,000 one."
+          ]
+        },
+        {
+          "tag": "For buyers",
+          "title": "Search and viewings always free",
+          "paras": [
+            "Searching, saving searches, contacting owners and booking viewings costs nothing and will stay free.",
+            "Verification services — title, compliance, condominium, offer support — are optional. You can use the platform without buying any."
+          ]
+        },
+        {
+          "tag": "Financing",
+          "title": "Banks4All services",
+          "paras": [
+            "Independent advice on whether the purchase is sustainable. Banks4All is not a lender: it does not grant loans and does not guarantee approvals.",
+            "Credit mediation is carried out by operators registered in the mandatory registers."
+          ]
+        }
+      ]
+    },
+    "pay": {
+      "kicker": "Who pays us",
+      "title": "The full list",
+      "lede": "If a party is not on this list, they do not pay us in any form — not commissions, kickbacks or indirect fees.",
+      "rows": [
+        {
+          "who": "Anyone who buys a fixed-price service",
+          "amt": "list price"
+        },
+        {
+          "who": "The seller, on the property price",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Estate agencies",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Banks and financial intermediaries",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Banks4All or other group companies",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Professionals on our directory",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Advertisers",
+          "amt": "€ 0",
+          "zero": true
+        }
+      ],
+      "noteTag": "Third-party costs",
+      "note": "Notary, taxes, cadastral fees, translations and surveys are passed through at cost, with the receipt attached. We do not add a markup."
+    },
+    "rules": {
+      "kicker": "What we do not do",
+      "title": "Things common in this sector that we do not do",
+      "lede": "This is not a promise of good intentions: these are direct consequences of not earning on the sale.",
+      "items": [
+        {
+          "title": "We do not inflate valuations",
+          "body": "Anyone who earns only if you sign a mandate has an interest in promising a high price. We do not, so we start from official Agenzia delle Entrate values and show you the calculation."
+        },
+        {
+          "title": "We do not sell your contacts",
+          "body": "There is no agency network buying leads collected here. If you ask for a valuation, nobody calls you back."
+        },
+        {
+          "title": "We take no fees for referrals",
+          "body": "When we suggest a technician, notary or service, we receive nothing from the provider. If that ever changes, we will write it here first."
+        },
+        {
+          "title": "We do not lock you into exclusivity",
+          "body": "Your listing stays yours. You can withdraw it whenever you want, with no penalties and no minimum periods."
+        },
+        {
+          "title": "We do not show ads",
+          "body": "Nobody can pay to rank higher in search results."
+        }
+      ]
+    },
+    "sources": {
+      "kicker": "Where the numbers come from",
+      "title": "Market data sources",
+      "lede": "The valuations and price bands we show rest on the Real Estate Market Observatory of the Agenzia delle Entrate, which publishes every six months the recorded values for every micro-zone of every Italian municipality.",
+      "noteTag": "Source",
+      "note": "Agenzia Entrate — OMI, H2 2025. National coverage: 7,866 municipalities. We always show the reference semester next to every figure derived from this data.",
+      "aside": "OMI values are official but by definition approximate: they indicate a micro-zone band, not the value of a specific property. A survey needs a licensed technician, and we say so plainly instead of pretending an algorithm is enough."
+    },
+    "banks": {
+      "kicker": "Corporate structure",
+      "title": "The relationship with Banks4All",
+      "lede": "Banks4All and EasyCasa are separate companies in the Mundida group. We write it here because transparency on relationships matters as much as transparency on fees — and because you will find Banks4All links on this site.",
+      "items": [
+        "Banks4All does not receive fees from EasyCasa, agencies or sellers.",
+        "EasyCasa does not receive fees from Banks4All.",
+        "Neither influences the other's recommendations.",
+        "Using Banks4All is never a condition for using EasyCasa: it is not required to search, contact an owner or book a viewing.",
+        "Credit mediation is not carried out by Banks4All but by operators registered in the mandatory registers."
+      ]
+    },
+    "limits": {
+      "kicker": "Limits",
+      "title": "What we cannot guarantee",
+      "lede": "An honest list is worth more than a long one.",
+      "items": [
+        "We do not guarantee a property matches its description: we verify what we can and tell you what remains unverified.",
+        "We are not a party to the sale contract. You enter that with the other party.",
+        "Our valuations are estimates with a range, not surveys.",
+        "We cannot guarantee a negotiation will succeed, or how quickly a private owner will reply.",
+        "We do not control the timelines of notaries, banks or public offices."
+      ]
+    },
+    "ident": {
+      "title": "Operator details",
+      "line1": "EasyCasa Italia · P.IVA IT04531990986",
+      "line2Before": "Estate mediation activity — registration",
+      "regTodo": "[—]",
+      "sedeBefore": "Registered office",
+      "reaBefore": "REA",
+      "pecBefore": "PEC",
+      "todo": "[—]",
+      "omi": "Market data: Agenzia Entrate — OMI, H2 2025",
+      "banks": "Banks4All and EasyCasa are separate companies in the Mundida group. Banks4All does not receive fees from EasyCasa, agencies or sellers. Credit mediation is carried out by operators registered in the mandatory registers.",
+      "linkMediation": "Mediation and commission →",
+      "linkTerms": "Terms",
+      "linkPrivacy": "Privacy",
+      "linkContacts": "Contact"
     }
   }
 }

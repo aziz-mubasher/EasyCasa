@@ -416,6 +416,7 @@
   },
   "footer": {
     "externalHint": "Se abre en {host} en una pestaña nueva",
+    "entity": "EasyCasa Italia · P.IVA IT04531990986",
     "columns": {
       "sellers": "Para quien vende",
       "buyers": "Para quien compra",
@@ -442,11 +443,12 @@
       "propertyInvestmentPlan": "Property Investment Plan",
       "verifiedBuyerBadge": "Verified Buyer Badge",
       "discoveryCall": "Llamada de descubrimiento gratuita",
-      "transparency": "Cómo se paga Banks4All"
+      "transparency": "Transparencia"
     },
     "legal": {
       "privacy": "Privacidad",
       "mediation": "Mediación",
+      "transparency": "Transparencia",
       "terms": "Términos",
       "myData": "Mis datos",
       "contacts": "Contactos"
@@ -916,7 +918,7 @@
       "ctaNote": "O escribe a acquisti@easycasaita.com"
     },
     "footer": {
-      "left": "EasyCasa · operado por MUNDIDA · easycasaita.com",
+      "left": "EasyCasa Italia · P.IVA IT04531990986",
       "right": "Datos inmobiliarios: Agenzia Entrate — OMI"
     }
   },
@@ -1130,7 +1132,7 @@
       "cta": "Calcular el valor"
     },
     "footer": {
-      "left": "EasyCasa · MUNDIDA S.r.l. · P.IVA IT04531990986",
+      "left": "EasyCasa Italia · P.IVA IT04531990986",
       "right": "Datos de mercado: Agenzia Entrate — OMI"
     }
   },
@@ -1499,16 +1501,53 @@
     "ident": {
       "title": "Datos del operador",
       "rows": [
-        { "label": "Razón social", "value": "MUNDIDA S.r.l." },
-        { "label": "Marca", "value": "EasyCasa" },
-        { "label": "NIF/IVA", "value": "IT04531990986" },
-        { "label": "Código fiscal", "value": "[por definir]", "todo": true },
-        { "label": "Domicilio social", "value": "[por definir]", "todo": true },
-        { "label": "REA", "value": "[por definir]", "todo": true },
-        { "label": "Capital social", "value": "[por definir]", "todo": true },
-        { "label": "PEC", "value": "[por definir]", "todo": true },
-        { "label": "Mediación inmobiliaria", "value": "inscr. [por definir]", "todo": true },
-        { "label": "Seguro R.C.", "value": "[por definir]", "todo": true }
+        {
+          "label": "Razón social",
+          "value": "MUNDIDA S.r.l."
+        },
+        {
+          "label": "Marca",
+          "value": "EasyCasa"
+        },
+        {
+          "label": "NIF/IVA",
+          "value": "IT04531990986"
+        },
+        {
+          "label": "Código fiscal",
+          "value": "[por definir]",
+          "todo": true
+        },
+        {
+          "label": "Domicilio social",
+          "value": "[por definir]",
+          "todo": true
+        },
+        {
+          "label": "REA",
+          "value": "[por definir]",
+          "todo": true
+        },
+        {
+          "label": "Capital social",
+          "value": "[por definir]",
+          "todo": true
+        },
+        {
+          "label": "PEC",
+          "value": "[por definir]",
+          "todo": true
+        },
+        {
+          "label": "Mediación inmobiliaria",
+          "value": "inscr. [por definir]",
+          "todo": true
+        },
+        {
+          "label": "Seguro R.C.",
+          "value": "[por definir]",
+          "todo": true
+        }
       ],
       "footBefore": "EasyCasa y Banks4All son sociedades distintas del grupo Mundida. Banks4All no percibe honorarios de EasyCasa, de agencias ni de vendedores.",
       "footOdrBefore": "Para controversias de consumidores está disponible la plataforma europea de resolución de litigios en línea:",
@@ -1533,17 +1572,50 @@
       "italianPrevails": "Prevalece la versión italiana"
     },
     "toc": [
-      { "id": "t1", "label": "Quiénes somos y qué hacemos" },
-      { "id": "t2", "label": "Qué no es EasyCasa" },
-      { "id": "t3", "label": "Cuenta" },
-      { "id": "t4", "label": "Si publicas un anuncio" },
-      { "id": "t5", "label": "Si buscas casa" },
-      { "id": "t6", "label": "Servicios de pago y comisiones" },
-      { "id": "t7", "label": "Derecho de desistimiento" },
-      { "id": "t8", "label": "Responsabilidad" },
-      { "id": "t9", "label": "Suspensión y cierre" },
-      { "id": "t10", "label": "Reclamaciones y controversias" },
-      { "id": "t11", "label": "Ley aplicable y modificaciones" }
+      {
+        "id": "t1",
+        "label": "Quiénes somos y qué hacemos"
+      },
+      {
+        "id": "t2",
+        "label": "Qué no es EasyCasa"
+      },
+      {
+        "id": "t3",
+        "label": "Cuenta"
+      },
+      {
+        "id": "t4",
+        "label": "Si publicas un anuncio"
+      },
+      {
+        "id": "t5",
+        "label": "Si buscas casa"
+      },
+      {
+        "id": "t6",
+        "label": "Servicios de pago y comisiones"
+      },
+      {
+        "id": "t7",
+        "label": "Derecho de desistimiento"
+      },
+      {
+        "id": "t8",
+        "label": "Responsabilidad"
+      },
+      {
+        "id": "t9",
+        "label": "Suspensión y cierre"
+      },
+      {
+        "id": "t10",
+        "label": "Reclamaciones y controversias"
+      },
+      {
+        "id": "t11",
+        "label": "Ley aplicable y modificaciones"
+      }
     ],
     "s1": {
       "title": "Quiénes somos y qué hacemos",
@@ -1635,6 +1707,280 @@
       "title": "¿Algo no te cuadra?",
       "body": "Si una cláusula no está clara, pregúntanos antes de aceptarla. Respondemos al fondo — es más útil para ambos que una controversia después.",
       "cta": "Contáctanos"
+    }
+  },
+  "mediationPage": {
+    "metaTitle": "Mediación y comisión — EasyCasa",
+    "metaDescription": "Ninguna ley italiana fija una comisión mínima. Qué dice realmente la norma, de dónde sale el 3% y qué comprobar antes de firmar un mandato.",
+    "eyebrow": "Mediación y comisión",
+    "titleBefore": "El 3% no es",
+    "titleEm": "una ley.",
+    "sub": "Si te dijeron que la comisión mínima está fijada por ley, te dijeron algo falso. Aquí está lo que dice realmente la norma.",
+    "stamp": "Página informativa · no sustituye un dictamen legal",
+    "law": {
+      "title": "Qué dice la ley",
+      "p1": "La mediación inmobiliaria se rige por la ley 39 de 1989. Sobre la cuantía de la comisión, el artículo 6 dice una sola cosa: la establecen las partes.",
+      "p2": "No existe una tarifa mínima. Nunca ha existido una tarifa vinculante para este sector, y en 2004 la Autoridad de Competencia italiana confirmó expresamente que las tarifas no se aplican. La cuantía es de libre negociación.",
+      "lines": [
+        "L. 39/1989, art. 6 — la comisión la establecen las partes",
+        "AGCM, prov. n.º 13035/2004 — tarifas no aplicables al sector",
+        "Art. 1755 c.c. italiano — el derecho nace al concluirse el negocio"
+      ]
+    },
+    "origin": {
+      "title": "Entonces, ¿de dónde sale el 3%?",
+      "p1": "De las recopilaciones de usos de las Cámaras de Comercio. Cada cámara registra los porcentajes habituales de su provincia — a menudo alrededor del 3% de cada una de las dos partes, más IVA.",
+      "p2Before": "Son",
+      "p2Strong": "usos",
+      "p2After": ", no normas. Sirven para llenar un vacío: solo se aplican cuando las partes no han acordado nada por escrito. Si hay un importe pactado, vale ese.",
+      "p3": "Los jueces, por lo demás, han bajado muy por debajo de ese umbral cuando el trabajo no lo justificaba: en un caso del Tribunal de Venecia se consideró congruente el 0,5% del valor del inmueble porque el agente no había conducido la negociación ni recogido la oferta."
+    },
+    "trap": {
+      "tag": "Aquí está la trampa",
+      "paras": [
+        "El silencio no juega a tu favor. Un mandato que no indica la cuantía de la comisión puede remitirse a los usos locales — es decir, en muchas provincias, exactamente ese 3% de ambas partes.",
+        "Nunca firmes un mandato con el porcentaje en blanco, \"a acordar\" o remitido a un anexo que no hayas leído."
+      ]
+    },
+    "when": {
+      "title": "Cuándo se debe la comisión",
+      "p1Before": "No al firmar el mandato, ni cuando aparece un posible comprador. El derecho nace con la",
+      "p1Strong": "conclusión del negocio",
+      "p1After": ": cuando las partes quedan obligadas, normalmente con la oferta aceptada.",
+      "p2": "Hasta entonces, cualquier cifra que te indiquen es una estimación, no una deuda. Si un presupuesto no lo dice, pídelo por escrito."
+    },
+    "ours": {
+      "title": "Qué hacemos nosotros",
+      "intro": "EasyCasa no cobra comisión al vendedor. En esto no hay condiciones, umbrales ni excepciones.",
+      "rows": [
+        {
+          "label": "Comisión al vendedor sobre el precio de venta",
+          "value": "€ 0"
+        },
+        {
+          "label": "Publicar un anuncio",
+          "value": "gratis"
+        },
+        {
+          "label": "Buscar, contactar, reservar visitas",
+          "value": "gratis"
+        },
+        {
+          "label": "Servicios opcionales (fotos, APE, verificaciones, oferta)",
+          "value": "precio fijo"
+        },
+        {
+          "label": "Costes de terceros (notario, impuestos, catastro)",
+          "value": "al coste"
+        }
+      ],
+      "outro1": "Los precios fijos no varían con el valor del inmueble: son los mismos en una casa de 150.000 € y en una de 800.000 €. Se indican antes del pedido y no suben después.",
+      "outro2": "Donde se aplique mediación con comisión, el importe se acuerda por escrito en el mandato antes de cualquier actividad, y solo nace al concluirse el negocio."
+    },
+    "checks": {
+      "title": "Cinco cosas que comprobar antes de firmar",
+      "lede": "Vale para cualquier mandato, no solo el nuestro.",
+      "items": [
+        {
+          "title": "¿Está escrita la porcentaje o el importe?",
+          "body": "Si falta, o se remite \"a los usos\", estás firmando un importe que no conoces."
+        },
+        {
+          "title": "¿Quién paga: tú, la otra parte, o ambos?",
+          "body": "En Italia es habitual que la agencia cobre a las dos. Debe ser explícito."
+        },
+        {
+          "title": "¿Cuándo nace el derecho?",
+          "body": "Debe decir \"al concluirse el negocio\". Desconfía de fórmulas que adelantan ese momento."
+        },
+        {
+          "title": "¿Hay exclusividad, y durante cuánto?",
+          "body": "Revisa duración, renovación automática y penalizaciones si te retiras."
+        },
+        {
+          "title": "¿Qué pasa si vendes por tu cuenta?",
+          "body": "Algunos mandatos prevén igualmente un honorario. Es legítimo, pero debes saberlo antes."
+        }
+      ]
+    },
+    "why": {
+      "title": "Por qué te contamos todo esto",
+      "p1": "Porque no tenemos nada que perder. No ganamos un porcentaje sobre el precio de venta, así que no tenemos motivo para dejarte creer que el 3% es obligatorio.",
+      "p2": "Si después de leer esta página eliges una agencia tradicional y negocias un porcentaje más bajo, nos parece bien. El punto era que pudieras negociarlo."
+    },
+    "questions": {
+      "tag": "Preguntas",
+      "beforeWa": "Escríbenos por WhatsApp al",
+      "wa": "+39 379 330 6605",
+      "or": "o a",
+      "email": "info@easycasaita.com",
+      "after": ". Respondemos aunque no seas cliente nuestro."
+    },
+    "ident": {
+      "line1": "EasyCasa Italia · P.IVA IT04531990986",
+      "line2Before": "Actividad de mediación inmobiliaria — inscripción",
+      "regTodo": "[—]",
+      "omi": "Datos de mercado: Agenzia Entrate — OMI, semestre 2025/2",
+      "banks": "Banks4All y EasyCasa son sociedades distintas del grupo Mundida. Banks4All no percibe honorarios de EasyCasa, de agencias ni de vendedores. La mediación crediticia la realizan operadores inscritos en los registros obligatorios.",
+      "linkTransparency": "Transparencia",
+      "linkTerms": "Términos",
+      "linkContacts": "Contacto"
+    }
+  },
+  "transparencyPage": {
+    "metaTitle": "Transparencia — EasyCasa",
+    "metaDescription": "Cómo gana EasyCasa, quién nos paga y quién no. Sin comisión al vendedor, precios fijos indicados antes del pedido.",
+    "eyebrow": "Transparencia",
+    "titleBefore": "Quién nos paga,",
+    "titleEm": "y quién no.",
+    "sub": "La forma más rápida de saber de quién fiarse en este sector es saber cómo gana. Aquí está el nuestro, entero.",
+    "model": {
+      "kicker": "El modelo",
+      "title": "Tres grupos de servicios, tres reglas distintas",
+      "pillars": [
+        {
+          "tag": "Para quien vende",
+          "title": "Ninguna comisión al vendedor",
+          "paras": [
+            "No cobramos un porcentaje sobre el precio de venta. Nunca, de ninguna forma.",
+            "Los servicios que puedes añadir — fotos, APE, verificación de documentos — tienen precio fijo, indicado antes del pedido, igual en una casa de 150.000 € y en una de 800.000 €."
+          ]
+        },
+        {
+          "tag": "Para quien compra",
+          "title": "Búsqueda y visitas siempre gratis",
+          "paras": [
+            "Buscar, guardar búsquedas, contactar propietarios y reservar visitas no cuesta nada y no costará nada.",
+            "Los servicios de verificación — notas, conformidad, comunidad, asistencia a la oferta — son opcionales. Puedes usar la plataforma sin comprar ninguno."
+          ]
+        },
+        {
+          "tag": "Financiación",
+          "title": "Servicios de Banks4All",
+          "paras": [
+            "Asesoramiento independiente sobre la sostenibilidad de la compra. Banks4All no es una entidad de crédito: no concede financiación ni garantiza aprobaciones.",
+            "La mediación crediticia la realizan operadores inscritos en los registros obligatorios."
+          ]
+        }
+      ]
+    },
+    "pay": {
+      "kicker": "Quién nos paga",
+      "title": "La lista completa",
+      "lede": "Si un sujeto no aparece en esta lista, no nos abona dinero de ninguna forma — ni comisiones, ni retrocesiones, ni honorarios indirectos.",
+      "rows": [
+        {
+          "who": "Quien compra un servicio a precio fijo",
+          "amt": "precio de tarifa"
+        },
+        {
+          "who": "El vendedor, sobre el precio del inmueble",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Agencias inmobiliarias",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Bancos e intermediarios financieros",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Banks4All u otras sociedades del grupo",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Proveedores de nuestro listado de profesionales",
+          "amt": "€ 0",
+          "zero": true
+        },
+        {
+          "who": "Anunciantes",
+          "amt": "€ 0",
+          "zero": true
+        }
+      ],
+      "noteTag": "Costes de terceros",
+      "note": "Notario, impuestos, derechos catastrales, traducciones y peritajes te los repercutimos al coste, con el recibo adjunto. No nos aplicamos un recargo."
+    },
+    "rules": {
+      "kicker": "Qué no hacemos",
+      "title": "Cosas que en este sector se hacen, y nosotros no",
+      "lede": "No es una promesa de buenas intenciones: son consecuencias directas de que no ganamos con la venta.",
+      "items": [
+        {
+          "title": "No inflamos las valoraciones",
+          "body": "Quien solo gana si firmas el mandato tiene interés en prometerte un precio alto. Nosotros no, así que partimos de los valores oficiales de la Agenzia delle Entrate y te mostramos el cálculo."
+        },
+        {
+          "title": "No vendemos tus contactos",
+          "body": "No existe una red de agencias que compre los datos recogidos aquí. Si pides una valoración, nadie te llama."
+        },
+        {
+          "title": "No cobramos por derivarte",
+          "body": "Cuando te sugerimos un técnico, un notario o un servicio, no recibimos nada de quien lo presta. Si algún día cambia, lo escribiremos aquí antes."
+        },
+        {
+          "title": "No vinculamos con exclusividad",
+          "body": "Tu anuncio sigue siendo tuyo. Puedes retirarlo cuando quieras, sin penalizaciones ni periodos mínimos."
+        },
+        {
+          "title": "No mostramos publicidad",
+          "body": "Nadie puede pagar por aparecer más arriba en los resultados de búsqueda."
+        }
+      ]
+    },
+    "sources": {
+      "kicker": "De dónde salen los números",
+      "title": "Fuentes de datos de mercado",
+      "lede": "Las valoraciones y bandas de precio que mostramos se apoyan en el Observatorio del Mercado Inmobiliario de la Agenzia delle Entrate, que publica cada seis meses los valores registrados por cada microzona de cada municipio italiano.",
+      "noteTag": "Fuente",
+      "note": "Agenzia Entrate — OMI, semestre 2025/2. Cobertura nacional: 7.866 municipios. Indicamos siempre el semestre de referencia junto a cada cifra derivada de estos datos.",
+      "aside": "Los valores OMI son oficiales pero por definición aproximados: indican la banda de una microzona, no el valor de un inmueble concreto. Para una pericia hace falta un técnico habilitado, y lo decimos abiertamente en lugar de fingir que basta un algoritmo."
+    },
+    "banks": {
+      "kicker": "Estructura societaria",
+      "title": "La relación con Banks4All",
+      "lede": "Banks4All y EasyCasa son sociedades distintas del grupo Mundida. Lo escribimos aquí porque la transparencia sobre las relaciones vale tanto como la de los honorarios — y porque encontrarás enlaces a Banks4All en este sitio.",
+      "items": [
+        "Banks4All no percibe honorarios de EasyCasa, de agencias ni de vendedores.",
+        "EasyCasa no percibe honorarios de Banks4All.",
+        "Ninguno de los dos influye en las recomendaciones del otro.",
+        "Usar Banks4All nunca es una condición para usar EasyCasa: no se exige para buscar casa, contactar a un propietario o reservar una visita.",
+        "La mediación crediticia no la realiza Banks4All sino operadores inscritos en los registros obligatorios."
+      ]
+    },
+    "limits": {
+      "kicker": "Límites",
+      "title": "Qué no podemos garantizar",
+      "lede": "Una lista honesta vale más que una lista larga.",
+      "items": [
+        "No garantizamos que un inmueble sea como se describe: verificamos lo que podemos y te decimos qué queda sin verificar.",
+        "No somos parte del contrato de compraventa. Ese lo firmas tú con la otra parte.",
+        "Nuestras valoraciones son estimaciones con un intervalo, no pericias.",
+        "No podemos garantizar que una negociación llegue a buen puerto, ni los tiempos de respuesta de un propietario particular.",
+        "No controlamos los plazos de notarios, bancos u oficinas públicas."
+      ]
+    },
+    "ident": {
+      "title": "Datos del operador",
+      "line1": "EasyCasa Italia · P.IVA IT04531990986",
+      "line2Before": "Actividad de mediación inmobiliaria — inscripción",
+      "regTodo": "[—]",
+      "sedeBefore": "Domicilio social",
+      "reaBefore": "REA",
+      "pecBefore": "PEC",
+      "todo": "[—]",
+      "omi": "Datos de mercado: Agenzia Entrate — OMI, semestre 2025/2",
+      "banks": "Banks4All y EasyCasa son sociedades distintas del grupo Mundida. Banks4All no percibe honorarios de EasyCasa, de agencias ni de vendedores. La mediación crediticia la realizan operadores inscritos en los registros obligatorios.",
+      "linkMediation": "Mediación y comisión →",
+      "linkTerms": "Términos",
+      "linkPrivacy": "Privacidad",
+      "linkContacts": "Contacto"
     }
   }
 }

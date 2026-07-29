@@ -8,7 +8,7 @@ import { isMarketingServicePath } from '@/lib/marketing-service';
 import './site-footer.css';
 
 type InternalItem = { key: string; href: string };
-type ExternalItem = { key: string; entry: 'propertyInvestmentPlan' | 'discoveryCall' | 'transparency' };
+type ExternalItem = { key: string; entry: 'propertyInvestmentPlan' | 'discoveryCall' };
 
 const SELLER_LINKS: InternalItem[] = [
   { key: 'valutazioneGratuita', href: '/valutazione-gratuita' },
@@ -33,8 +33,9 @@ const FINANCE_LINKS: ExternalItem[] = [
   { key: 'propertyInvestmentPlan', entry: 'propertyInvestmentPlan' },
   { key: 'verifiedBuyerBadge', entry: 'propertyInvestmentPlan' },
   { key: 'discoveryCall', entry: 'discoveryCall' },
-  { key: 'transparency', entry: 'transparency' },
 ];
+
+const FINANCE_INTERNAL: InternalItem[] = [{ key: 'transparency', href: '/trasparenza' }];
 
 export function Footer() {
   const t = useTranslations('footer');
@@ -48,9 +49,7 @@ export function Footer() {
   return (
     <footer className="sf">
       <div className="sf-wrap">
-        <p className="sf-brand">
-          Easy<span>Casa</span>
-        </p>
+        <p className="sf-brand">{t('entity')}</p>
 
         <div className="sf-dir">
           <nav aria-labelledby="footer-sellers">
@@ -95,6 +94,11 @@ export function Footer() {
                   </li>
                 );
               })}
+              {FINANCE_INTERNAL.map((item) => (
+                <li key={item.key}>
+                  <Link href={item.href}>{t(`financing.${item.key}`)}</Link>
+                </li>
+              ))}
             </ul>
           </nav>
         </div>
@@ -103,6 +107,7 @@ export function Footer() {
           <Link href="/legal/privacy">{t('legal.privacy')}</Link>
           <Link href="/legal/terms">{t('legal.terms')}</Link>
           <Link href="/legal/mediation">{t('legal.mediation')}</Link>
+          <Link href="/trasparenza">{t('legal.transparency')}</Link>
           <Link href="/privacy">{t('legal.myData')}</Link>
           <Link href="/contatti">{t('legal.contacts')}</Link>
         </div>
