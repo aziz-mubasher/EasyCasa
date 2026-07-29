@@ -23,6 +23,9 @@ type Props = {
   onSelectPackage: (code: string | null) => void;
   onRequestQuote: () => void;
   quoteBusy: boolean;
+  province?: string;
+  notifyState?: Record<string, 'idle' | 'busy' | 'done' | 'error'>;
+  onNotify?: (code: string) => void;
 };
 
 function formatPriceCell(
@@ -30,6 +33,7 @@ function formatPriceCell(
   locale: string,
   t: (key: string, values?: Record<string, string>) => string,
 ): string {
+  if (item.available === false) return '—';
   if (item.priceModel === 'fixed' && item.amountCents != null) {
     return formatEuroCents(item.amountCents, locale);
   }
@@ -47,35 +51,66 @@ function ServiceRow({
   locale,
   selected,
   onToggle,
+  province,
+  notifyState,
+  onNotify,
 }: {
   item: CatalogItemRow;
   locale: string;
   selected: boolean;
   onToggle: () => void;
+  province?: string;
+  notifyState?: 'idle' | 'busy' | 'done' | 'error';
+  onNotify?: () => void;
 }) {
   const t = useTranslations('pricing');
   const label = catalogLabel(item, locale);
   const price = formatPriceCell(item, locale, t);
+  const unavailable = item.available === false;
+  const reason = locale.startsWith('it')
+    ? item.availabilityReasonIt
+    : item.availabilityReasonEn;
 
   return (
     <li className="py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-line last:border-b-0">
       <div className="min-w-0">
-        <div className="font-medium text-ink">{label}</div>
-        {item.ivaApplicable && item.priceModel === 'fixed' ? (
+        <div className={`font-medium ${unavailable ? 'text-muted' : 'text-ink'}`}>{label}</div>
+        {unavailable ? (
+          <div className="text-xs text-clay mt-1">{reason ?? t('coverage.unavailable')}</div>
+        ) : item.ivaApplicable && item.priceModel === 'fixed' ? (
           <div className="text-xs text-muted mt-0.5">{t('ivaExcluded')}</div>
+        ) : null}
+        {item.capacityConstrained && !unavailable ? (
+          <div className="text-xs text-muted mt-1">{t('coverage.capacityNote')}</div>
         ) : null}
       </div>
       <div className="flex items-center gap-3 shrink-0">
         <div className="data text-sm font-medium text-ink">{price}</div>
-        <Button
-          type="button"
-          variant={selected ? 'primary' : 'outline'}
-          className="text-xs px-4 py-2"
-          onClick={onToggle}
-          aria-pressed={selected}
-        >
-          {selected ? t('quote.inSelection') : t('quote.add')}
-        </Button>
+        {unavailable ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="text-xs px-4 py-2"
+            disabled={!province || notifyState === 'busy' || notifyState === 'done'}
+            onClick={onNotify}
+          >
+            {notifyState === 'done'
+              ? t('coverage.notifyDone')
+              : notifyState === 'busy'
+                ? t('coverage.notifyBusy')
+                : t('coverage.notify')}
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant={selected ? 'primary' : 'outline'}
+            className="text-xs px-4 py-2"
+            onClick={onToggle}
+            aria-pressed={selected}
+          >
+            {selected ? t('quote.inSelection') : t('quote.add')}
+          </Button>
+        )}
       </div>
     </li>
   );
@@ -87,12 +122,18 @@ function JourneyBlock({
   itemsByCode,
   selectedItems,
   onToggleItem,
+  province,
+  notifyState,
+  onNotify,
 }: {
   journey: PricingJourney;
   locale: string;
   itemsByCode: Map<string, CatalogItemRow>;
   selectedItems: Set<string>;
   onToggleItem: (code: string) => void;
+  province?: string;
+  notifyState?: Record<string, 'idle' | 'busy' | 'done' | 'error'>;
+  onNotify?: (code: string) => void;
 }) {
   const t = useTranslations('pricing.journeys');
   const codes = JOURNEY_ITEM_CODES[journey];
@@ -114,6 +155,9 @@ function JourneyBlock({
             locale={locale}
             selected={selectedItems.has(item.code)}
             onToggle={() => onToggleItem(item.code)}
+            province={province}
+            notifyState={notifyState?.[item.code]}
+            onNotify={onNotify ? () => onNotify(item.code) : undefined}
           />
         ))}
       </ul>
@@ -139,15 +183,17 @@ function PackageCard({
   onSelect: () => void;
 }) {
   const t = useTranslations('pricing.packages');
+  const tCov = useTranslations('pricing.coverage');
   const label = packageLabel(pkg, locale);
   const saving =
     partsGrossCents != null && bundleGrossCents != null
       ? Math.max(0, partsGrossCents - bundleGrossCents)
       : null;
+  const blocked = pkg.includes.some((code) => catalogByCode.get(code)?.available === false);
 
   return (
     <article
-      className={`rounded-xl border p-5 flex flex-col ${selected ? 'border-azure bg-azure/5' : 'border-line bg-paper'}`}
+      className={`rounded-xl border p-5 flex flex-col ${selected ? 'border-azure bg-azure/5' : 'border-line bg-paper'} ${blocked ? 'opacity-70' : ''}`}
     >
       <h3 className="font-display text-lg font-semibold text-ink">{label}</h3>
       <ul className="mt-3 text-sm text-muted space-y-1 flex-1">
@@ -158,15 +204,18 @@ function PackageCard({
         })}
       </ul>
       <div className="mt-4 space-y-1">
-        {bundleGrossCents != null ? (
+        {blocked ? (
+          <p className="text-sm text-clay">{tCov('unavailable')}</p>
+        ) : null}
+        {!blocked && bundleGrossCents != null ? (
           <p className="data text-2xl font-semibold text-ink">{formatEuroCents(bundleGrossCents, locale)}</p>
         ) : null}
-        {partsGrossCents != null ? (
+        {!blocked && partsGrossCents != null ? (
           <p className="text-xs text-muted">
             {t('partsTotal', { amount: formatEuroCents(partsGrossCents, locale) })}
           </p>
         ) : null}
-        {saving != null && saving > 0 ? (
+        {!blocked && saving != null && saving > 0 ? (
           <p className="text-sm text-pine data font-medium">
             {t('saving', { amount: formatEuroCents(saving, locale) })}
           </p>
@@ -179,6 +228,7 @@ function PackageCard({
         className="mt-4 w-full"
         onClick={onSelect}
         aria-pressed={selected}
+        disabled={blocked}
       >
         {selected ? t('selected') : t('select')}
       </Button>
@@ -198,6 +248,9 @@ export function PricingCatalogSections({
   quoteBusy,
   packagePartTotals,
   packageBundleTotals,
+  province,
+  notifyState,
+  onNotify,
 }: Props & {
   packagePartTotals: Record<string, number | null>;
   packageBundleTotals: Record<string, number | null>;
@@ -247,6 +300,9 @@ export function PricingCatalogSections({
         itemsByCode={itemsByCode}
         selectedItems={selectedItems}
         onToggleItem={onToggleItem}
+        province={province}
+        notifyState={notifyState}
+        onNotify={onNotify}
       />
       <JourneyBlock
         journey="buy"
@@ -254,6 +310,9 @@ export function PricingCatalogSections({
         itemsByCode={itemsByCode}
         selectedItems={selectedItems}
         onToggleItem={onToggleItem}
+        province={province}
+        notifyState={notifyState}
+        onNotify={onNotify}
       />
       <JourneyBlock
         journey="rent"
@@ -261,6 +320,9 @@ export function PricingCatalogSections({
         itemsByCode={itemsByCode}
         selectedItems={selectedItems}
         onToggleItem={onToggleItem}
+        province={province}
+        notifyState={notifyState}
+        onNotify={onNotify}
       />
 
       <section className="mt-12">
@@ -281,6 +343,9 @@ export function PricingCatalogSections({
                 locale={locale}
                 selected={selectedItems.has(item.code)}
                 onToggle={() => onToggleItem(item.code)}
+                province={province}
+                notifyState={notifyState?.[item.code]}
+                onNotify={onNotify ? () => onNotify(item.code) : undefined}
               />
             ))}
           </ul>

@@ -4,15 +4,17 @@ import { useAuth } from './auth/AuthProvider';
 import { Orchestration } from './pages/Orchestration';
 import { Credentials } from './pages/Credentials';
 import { ComplianceConfig } from './pages/ComplianceConfig';
+import { CoverageMatrix } from './pages/CoverageMatrix';
 import { AmlCases } from './pages/AmlCases';
 import { RliMonitor } from './pages/RliMonitor';
 
-type View = 'orchestration' | 'credentials' | 'compliance' | 'aml' | 'rli';
+type View = 'orchestration' | 'credentials' | 'compliance' | 'coverage' | 'aml' | 'rli';
 
 const NAV: { key: View; label: string; hint: string }[] = [
   { key: 'orchestration', label: 'Orchestration', hint: 'Assign tasks' },
   { key: 'credentials', label: 'Credentials', hint: 'Verify professionals' },
   { key: 'compliance', label: 'Compliance', hint: 'Legal basis & credentials' },
+  { key: 'coverage', label: 'Coverage', hint: 'Province × service' },
   { key: 'aml', label: 'AML / KYC', hint: 'Risk cases' },
   { key: 'rli', label: 'RLI monitor', hint: 'Registration deadlines' },
 ];
@@ -21,6 +23,7 @@ const VIEWS: Record<View, React.ReactNode> = {
   orchestration: <Orchestration />,
   credentials: <Credentials />,
   compliance: <ComplianceConfig />,
+  coverage: <CoverageMatrix />,
   aml: <AmlCases />,
   rli: <RliMonitor />,
 };

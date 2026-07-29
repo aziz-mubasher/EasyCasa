@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { IsIn } from 'class-validator';
 import { eq, sql } from 'drizzle-orm';
@@ -24,6 +25,7 @@ import {
 import { RetentionService } from '../privacy/retention.service';
 import { CATALOG } from '../service-catalog/domain/catalog';
 import { Phase8PricingAdapter } from '../orders/phase8-pricing.adapter';
+import { CoverageAvailabilityService } from '../professionals/coverage-availability.service';
 import type { RequiredCredential } from '../professionals/domain/types';
 import type { LegalBasis } from '../transactions/domain/types';
 import { toDbLegalBasis, toDomainLegalBasis } from '../transactions/status-map';
@@ -54,6 +56,7 @@ export class AdminController {
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly pricing: Phase8PricingAdapter,
     private readonly credentialPolicy: DefaultCredentialPolicy,
+    private readonly coverage: CoverageAvailabilityService,
     @Inject(EMAIL_OUTBOX) private readonly outbox: OutboxEmailProvider,
     private readonly retention: RetentionService,
     @InjectConfig() private readonly config: ApiConfig,
@@ -66,6 +69,25 @@ export class AdminController {
       .from(listings)
       .groupBy(listings.status);
     return { listingsByStatus: rows };
+  }
+
+  /**
+   * EC-10 — province × catalog-item coverage matrix (recruiting board).
+   * Optional `?provinces=BS,MI,CR` filters columns; otherwise seeds + known coverage.
+   */
+  @Get('coverage-matrix')
+  async coverageMatrix(@Query('provinces') provinces?: string) {
+    const list = provinces
+      ?.split(',')
+      .map((p) => p.trim())
+      .filter(Boolean);
+    return this.coverage.matrix(list);
+  }
+
+  @Get('coverage-demand')
+  async coverageDemand(@Query('limit') limit?: string) {
+    const n = limit ? Number(limit) : 50;
+    return this.coverage.recentDemand(Number.isFinite(n) ? n : 50);
   }
 
   /** Pilot email audit trail — most recent last. */

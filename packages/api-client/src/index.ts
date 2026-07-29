@@ -193,9 +193,13 @@ export {
   LegalBasisSchema,
   RequiredCredentialSchema,
   AdminCatalogItemSchema,
+  CoverageMatrixCellSchema,
+  CoverageDemandRowSchema,
   type LegalBasis,
   type RequiredCredential,
   type AdminCatalogItem,
+  type CoverageMatrixCell,
+  type CoverageDemandRow,
 } from './admin';
 
 export {

@@ -53,6 +53,26 @@ export type AdminCatalogItem = z.infer<typeof AdminCatalogItemSchema>;
 export type CatalogItem = AdminCatalogItem;
 export const CatalogItemSchema = AdminCatalogItemSchema;
 
+/** EC-10 — province × item coverage cell for recruiting board. */
+export const CoverageMatrixCellSchema = z.object({
+  itemCode: z.string(),
+  province: z.string(),
+  available: z.boolean(),
+  qualifiedCount: z.number(),
+  capacityConstrained: z.boolean(),
+  demandCount: z.number(),
+});
+export type CoverageMatrixCell = z.infer<typeof CoverageMatrixCellSchema>;
+
+export const CoverageDemandRowSchema = z.object({
+  id: z.string(),
+  itemCode: z.string(),
+  province: z.string(),
+  userId: z.string().nullable(),
+  createdAt: z.union([z.string(), z.coerce.date()]),
+});
+export type CoverageDemandRow = z.infer<typeof CoverageDemandRowSchema>;
+
 /* Client --------------------------------------------------------------- */
 
 export class EasyCasaAdminApi {
@@ -118,6 +138,21 @@ export class EasyCasaAdminApi {
       `/admin/catalog/${encodeURIComponent(code)}/credential`,
       AdminCatalogItemSchema,
       { method: 'PUT', body: JSON.stringify({ requiredCredential }) },
+    );
+  }
+
+  /* EC-10 coverage */
+  coverageMatrix(provinces?: string[]): Promise<CoverageMatrixCell[]> {
+    const q =
+      provinces && provinces.length > 0
+        ? `?provinces=${encodeURIComponent(provinces.join(','))}`
+        : '';
+    return this.request(`/admin/coverage-matrix${q}`, z.array(CoverageMatrixCellSchema));
+  }
+  coverageDemand(limit = 50): Promise<CoverageDemandRow[]> {
+    return this.request(
+      `/admin/coverage-demand?limit=${encodeURIComponent(String(limit))}`,
+      z.array(CoverageDemandRowSchema),
     );
   }
 

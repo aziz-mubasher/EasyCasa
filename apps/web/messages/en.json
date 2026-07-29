@@ -530,6 +530,17 @@
     "ivaExcluded": "+ VAT where applicable",
     "mediationLinkBefore": "Mediation and provvigione details:",
     "mediationLink": "mediation disclosure",
+    "coverage": {
+      "provinceLabel": "Property province",
+      "provinceHint": "Needed to check whether technical services (APE, conformity…) are available where the property is.",
+      "provincePlaceholder": "Select province",
+      "checking": "Checking availability…",
+      "unavailable": "Not yet available in this province.",
+      "capacityNote": "Turnaround may be longer due to current workload.",
+      "notify": "Notify me when available",
+      "notifyBusy": "Sending…",
+      "notifyDone": "Request logged"
+    },
     "comparison": {
       "title": "How much could you save vs a traditional agency?",
       "intro": "Indicative comparison for a typical seller: à la carte services plus mediation only if the deal closes. Adjust the property value to update the estimate.",

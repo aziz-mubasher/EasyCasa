@@ -8,6 +8,7 @@ import type {
   AdminCatalogItem,
   Assignment,
   Candidate,
+  CoverageMatrixCell,
   CredentialType,
   KycCase,
   Lease,
@@ -40,6 +41,14 @@ export function useProfessionals(): UseQueryResult<Professional[]> {
 export function useCatalog(): UseQueryResult<AdminCatalogItem[]> {
   const api = useApi();
   return useQuery({ queryKey: ['catalog'], queryFn: () => api.listCatalog() });
+}
+
+export function useCoverageMatrix(provinces?: string[]): UseQueryResult<CoverageMatrixCell[]> {
+  const api = useApi();
+  return useQuery({
+    queryKey: ['coverage-matrix', provinces?.join(',') ?? ''],
+    queryFn: () => api.coverageMatrix(provinces),
+  });
 }
 
 export function useKycCases(): UseQueryResult<KycCase[]> {

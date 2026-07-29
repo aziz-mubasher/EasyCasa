@@ -530,6 +530,17 @@
     "ivaExcluded": "+ IVA ove applicabile",
     "mediationLinkBefore": "Dettagli su mediazione e provvigione:",
     "mediationLink": "informativa mediazione",
+    "coverage": {
+      "provinceLabel": "Provincia dell'immobile",
+      "provinceHint": "Serve per verificare se i servizi tecnici (APE, conformità…) sono disponibili dove si trova l'immobile.",
+      "provincePlaceholder": "Seleziona provincia",
+      "checking": "Verifica disponibilità…",
+      "unavailable": "Non ancora disponibile in questa provincia.",
+      "capacityNote": "Tempi di consegna potrebbero allungarsi per carico di lavoro.",
+      "notify": "Avvisami quando disponibile",
+      "notifyBusy": "Invio…",
+      "notifyDone": "Richiesta registrata"
+    },
     "comparison": {
       "title": "Quanto risparmi rispetto a un'agenzia tradizionale?",
       "intro": "Confronto indicativo per un venditore tipico: servizi à la carte + mediazione solo a conclusione dell'affare. Regola il valore dell'immobile per vedere la stima.",

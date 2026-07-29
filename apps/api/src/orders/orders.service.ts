@@ -2,6 +2,7 @@ import { BadRequestException, Inject, Injectable, Logger, NotFoundException, Opt
 import { eq } from 'drizzle-orm';
 
 import { AssignmentsService } from '../assignments/assignments.service';
+import { CoverageAvailabilityService } from '../professionals/coverage-availability.service';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { listings } from '../db/schema';
@@ -31,10 +32,15 @@ export class OrdersService {
     @Optional()
     @Inject(forwardRef(() => AssignmentsService))
     private readonly assignments?: AssignmentsService,
+    @Optional() private readonly coverage?: CoverageAvailabilityService,
   ) {}
 
   /** Public pricing page — catalog order linked to signed-in user (no property yet). */
   async createCatalogOrder(userId: string, req: QuoteRequest): Promise<OrderRecord> {
+    const itemCodes = this.pricing.resolveItemCodes(req);
+    if (this.coverage) {
+      await this.coverage.assertOrderable(itemCodes, req.province);
+    }
     const quote = this.pricing.quote(req);
     const payable = cardPayableGrossCents(quote.lines);
     if (payable <= 0) {
@@ -42,7 +48,6 @@ export class OrdersService {
         'Nothing payable by card — provvigione and passthrough stay quote-only',
       );
     }
-    const itemCodes = this.pricing.resolveItemCodes(req);
     return this.orders.create({
       propertyId: null,
       listingId: null,
@@ -86,8 +91,14 @@ export class OrdersService {
 
   private async createWithSubject(subject: OrderSubject, req: QuoteRequest): Promise<OrderRecord> {
     assertOrderSubject(subject);
-    const quote = this.pricing.quote(req);
     const itemCodes = this.pricing.resolveItemCodes(req);
+    const province =
+      req.province?.trim() || (await this.resolveProvince(subject)) || null;
+    if (this.coverage) {
+      // Never invent MI for sellability — missing province blocks credentialed items.
+      await this.coverage.assertOrderable(itemCodes, province);
+    }
+    const quote = this.pricing.quote(req);
 
     const order = await this.orders.create({
       propertyId: subject.propertyId,
@@ -114,13 +125,18 @@ export class OrdersService {
 
     if (this.assignments && subject.propertyId) {
       try {
-        const province = await this.resolveProvince(subject);
-        await this.assignments.spawnForOrder({
-          orderId: order.id,
-          propertyId: subject.propertyId,
-          itemCodes: order.itemCodes,
-          province,
-        });
+        if (!province) {
+          this.log.warn(
+            `Skip professional spawn for order ${order.id}: province unknown`,
+          );
+        } else {
+          await this.assignments.spawnForOrder({
+            orderId: order.id,
+            propertyId: subject.propertyId,
+            itemCodes: order.itemCodes,
+            province,
+          });
+        }
       } catch (err) {
         this.log.warn(
           `Failed to spawn professional tasks for order ${order.id}: ${
@@ -146,7 +162,11 @@ export class OrdersService {
     return { ...order, status };
   }
 
-  private async resolveProvince(subject: OrderSubject): Promise<string> {
+  /**
+   * Resolve listing/property province. Returns null when unknown —
+   * do not invent MI (EC-10: blind fallback sold work nobody can deliver).
+   */
+  private async resolveProvince(subject: OrderSubject): Promise<string | null> {
     if (subject.propertyId) {
       const property = await this.properties.get(subject.propertyId);
       if (property.province) return property.province;
@@ -167,6 +187,6 @@ export class OrdersService {
         .limit(1);
       if (rows[0]?.province) return rows[0].province;
     }
-    return 'MI';
+    return null;
   }
 }
