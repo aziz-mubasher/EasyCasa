@@ -5,7 +5,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { primaryTransactionType } from '@easycasa/shared';
+import type { AuthUser } from '../auth/auth.types';
 import { ListingsRepository } from '../listings/listings.repository';
+import { ListingsService } from '../listings/listings.service';
 import { MediaService } from '../media/media.service';
 import { mapCasafariDraftToEasyCasa, type EasyCasaImportDraft } from './casafari/casafari-map';
 import {
@@ -77,6 +79,7 @@ export class ImportsService {
 
   constructor(
     private readonly listings: ListingsRepository,
+    private readonly listingsService: ListingsService,
     private readonly media: MediaService,
   ) {}
 
@@ -110,11 +113,13 @@ export class ImportsService {
   async createFromCasafari(
     dto: CasafariCreateDto,
     agentId: string,
+    user?: AuthUser,
   ): Promise<{
     listing: Awaited<ReturnType<ListingsRepository['insert']>>;
     draft: EasyCasaImportDraft;
     imagesImported: number;
     imageErrors: string[];
+    published: boolean;
   }> {
     const maxImages = dto.maxImages ?? CASAFARI_MAX_IMAGES;
     const preview = await this.previewCasafari({
@@ -141,10 +146,16 @@ export class ImportsService {
       );
     }
 
-    return this.persistDraft(draft, agentId, {
+    const created = await this.persistDraft(draft, agentId, {
       province: dto.province,
       maxImages,
     });
+    let published = false;
+    if (dto.publish && user) {
+      await this.listingsService.publish(created.listing.id, user, agentId);
+      published = true;
+    }
+    return { ...created, published };
   }
 
   /**
@@ -154,9 +165,11 @@ export class ImportsService {
   async createManyFromCasafari(
     dto: CasafariCreateManyDto,
     agentId: string,
+    user: AuthUser,
   ): Promise<{
     imported: number;
     failed: number;
+    published: number;
     results: Array<{
       casafariId: string;
       ok: boolean;
@@ -165,6 +178,7 @@ export class ImportsService {
       title?: string;
       imagesImported?: number;
       imageErrors?: string[];
+      published?: boolean;
       error?: string;
     }>;
   }> {
@@ -196,6 +210,7 @@ export class ImportsService {
       title?: string;
       imagesImported?: number;
       imageErrors?: string[];
+      published?: boolean;
       error?: string;
     }> = [];
 
@@ -205,6 +220,11 @@ export class ImportsService {
           province: dto.province,
           maxImages,
         });
+        let published = false;
+        if (dto.publish) {
+          await this.listingsService.publish(created.listing.id, user, agentId);
+          published = true;
+        }
         results.push({
           casafariId: draft.casafariId,
           ok: true,
@@ -213,6 +233,7 @@ export class ImportsService {
           title: created.draft.title,
           imagesImported: created.imagesImported,
           imageErrors: created.imageErrors,
+          published,
         });
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -229,6 +250,7 @@ export class ImportsService {
     return {
       imported: results.filter((r) => r.ok).length,
       failed: results.filter((r) => !r.ok).length,
+      published: results.filter((r) => r.published).length,
       results,
     };
   }
@@ -331,7 +353,8 @@ export class ImportsService {
         const res = await fetch(url, {
           headers: {
             'User-Agent': CASAFARI_USER_AGENT,
-            Accept: 'image/jpeg,image/png,image/webp,image/*;q=0.8',
+            Accept: 'image/jpeg,image/png,image/webp,image/*;q=0.8,*/*;q=0.5',
+            Referer: 'https://www.casafari.com/',
           },
           redirect: 'follow',
         });

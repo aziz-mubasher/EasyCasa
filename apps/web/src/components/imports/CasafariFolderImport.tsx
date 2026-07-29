@@ -19,6 +19,7 @@ type PreviewResponse = {
 type CreateManyResponse = {
   imported: number;
   failed: number;
+  published: number;
   results: Array<{
     casafariId: string;
     ok: boolean;
@@ -27,6 +28,7 @@ type CreateManyResponse = {
     title?: string;
     imagesImported?: number;
     imageErrors?: string[];
+    published?: boolean;
     error?: string;
   }>;
 };
@@ -48,6 +50,7 @@ export function CasafariFolderImport() {
 
   const [url, setUrl] = useState('');
   const [province, setProvince] = useState('');
+  const [publishAfter, setPublishAfter] = useState(false);
   const [busy, setBusy] = useState<'preview' | 'import' | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<PreviewResponse | null>(null);
@@ -111,6 +114,10 @@ export function CasafariFolderImport() {
 
   const onImport = async () => {
     if (!preview || selectedCount === 0) return;
+    if (publishAfter) {
+      const ok = window.confirm(t('confirmPublish', { n: selectedCount }));
+      if (!ok) return;
+    }
     setBusy('import');
     setError(null);
     setResults(null);
@@ -124,6 +131,7 @@ export function CasafariFolderImport() {
           maxImages: 20,
           refreshCache: false,
           province: province.trim() || undefined,
+          publish: publishAfter,
         }),
       });
       if (!res.ok) {
@@ -194,6 +202,19 @@ export function CasafariFolderImport() {
             disabled={busy !== null}
           />
         </Field>
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="checkbox"
+            className="mt-0.5"
+            checked={publishAfter}
+            onChange={(e) => setPublishAfter(e.target.checked)}
+            disabled={busy !== null}
+          />
+          <span>
+            <span className="font-medium">{t('publishLabel')}</span>
+            <span className="block text-xs text-muted mt-0.5">{t('publishHint')}</span>
+          </span>
+        </label>
         <div className="flex flex-wrap gap-3">
           <Button
             type="button"
@@ -210,7 +231,9 @@ export function CasafariFolderImport() {
             >
               {busy === 'import'
                 ? t('importing')
-                : t('importSelected', { n: selectedCount })}
+                : publishAfter
+                  ? t('importAndPublish', { n: selectedCount })
+                  : t('importSelected', { n: selectedCount })}
             </Button>
           )}
         </div>
@@ -263,6 +286,7 @@ export function CasafariFolderImport() {
                       src={thumb}
                       alt=""
                       className="h-20 w-28 shrink-0 rounded-md object-cover bg-mist"
+                      referrerPolicy="no-referrer"
                     />
                   ) : (
                     <div className="h-20 w-28 shrink-0 rounded-md bg-mist" />
@@ -292,7 +316,11 @@ export function CasafariFolderImport() {
         <div className="mt-8 rounded-xl border border-line bg-white p-5">
           <h2 className="font-display text-xl font-semibold mb-2">{t('resultsTitle')}</h2>
           <p className="text-sm text-muted mb-4">
-            {t('resultsSummary', { ok: results.imported, fail: results.failed })}
+            {t('resultsSummary', {
+              ok: results.imported,
+              fail: results.failed,
+              published: results.published ?? 0,
+            })}
           </p>
           <ul className="space-y-2 text-sm">
             {results.results.map((r) => (
@@ -309,14 +337,24 @@ export function CasafariFolderImport() {
                     <span className="font-medium">{r.title ?? r.casafariId}</span>
                     {' — '}
                     {t('importedPhotos', { n: r.imagesImported ?? 0 })}
+                    {r.published ? ` · ${t('publishedBadge')}` : ` · ${t('draftBadge')}`}
+                    {r.imageErrors && r.imageErrors.length > 0 ? (
+                      <span className="block text-xs text-amber-800 mt-1">
+                        {t('imageWarnings', { n: r.imageErrors.length })}
+                      </span>
+                    ) : null}
                     {r.listingId ? (
                       <>
                         {' · '}
                         <Link
-                          href={`/listings/${r.listingId}/availability`}
+                          href={
+                            r.published
+                              ? `/listings/${r.slug || r.listingId}`
+                              : `/listings/${r.listingId}/availability`
+                          }
                           className="text-azure underline hover:no-underline"
                         >
-                          {t('openDraft')}
+                          {r.published ? t('openListing') : t('openDraft')}
                         </Link>
                       </>
                     ) : null}

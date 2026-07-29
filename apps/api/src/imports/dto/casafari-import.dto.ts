@@ -58,6 +58,11 @@ export class CasafariCreateDto {
   @IsOptional()
   @IsString()
   province?: string;
+
+  /** When true, publish the draft after photos import. */
+  @IsOptional()
+  @IsBoolean()
+  publish?: boolean;
 }
 
 export class CasafariCreateManyDto {
@@ -89,4 +94,9 @@ export class CasafariCreateManyDto {
   @IsOptional()
   @IsString()
   province?: string;
+
+  /** When true, publish each successfully created draft after photos import. */
+  @IsOptional()
+  @IsBoolean()
+  publish?: boolean;
 }

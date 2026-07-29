@@ -225,17 +225,40 @@ function detectSellerType(
   return 'unknown';
 }
 
+/**
+ * Idealista often exposes `img*it.retelligence.co/blur/…` which 404s; the same
+ * path on `img3.idealista.it` serves the image. Retelligence `/c/…350.jpg`
+ * thumbs are usable as-is — rewriting them to `xxl.jpg` 404s.
+ */
 export function upgradeCasafariPhotoUrl(url: string): string {
   const u = String(url || '').trim();
   if (!u) return '';
+  if (/retelligence\.co\/blur\//i.test(u)) {
+    try {
+      const parsed = new URL(u);
+      parsed.protocol = 'https:';
+      parsed.host = 'img3.idealista.it';
+      return parsed.toString();
+    } catch {
+      return u.replace(/^https?:\/\/[^/]+/i, 'https://img3.idealista.it');
+    }
+  }
   if (/\/xxl\.(jpg|jpeg|webp)$/i.test(u)) return u;
   if (/pwm\.im-cdn\.it\/image\/\d+\//i.test(u)) {
     return u.replace(/\/(small|medium|large|xl)\.(jpg|jpeg|webp)$/i, '/xxl.$2');
   }
+  // Keep /c/…{size}.jpg thumbs — numeric→xxl rewrite is unreliable.
   if (/retelligence\.co\/c\//i.test(u)) {
-    return u.replace(/(\d{3})\.jpg$/i, 'xxl.jpg');
+    return u;
   }
   return u;
+}
+
+function isUsableCasafariPhotoUrl(url: string): boolean {
+  if (!url) return false;
+  // Pre-upgrade blur hosts are dead; after upgrade they point at idealista.it.
+  if (/retelligence\.co\/blur\//i.test(url)) return false;
+  return true;
 }
 
 function pushPhoto(
@@ -247,7 +270,7 @@ function pushPhoto(
   if (!photoLike) return;
   if (typeof photoLike === 'string') {
     const upgraded = upgradeCasafariPhotoUrl(photoLike);
-    if (!upgraded || seen.has(upgraded)) return;
+    if (!upgraded || !isUsableCasafariPhotoUrl(upgraded) || seen.has(upgraded)) return;
     seen.add(upgraded);
     urls.push(upgraded);
     return;
@@ -257,22 +280,20 @@ function pushPhoto(
   const crypt = String(obj.crypt || obj.cryptId || '');
   if (crypt && seenCrypt.has(crypt)) return;
 
-  const original = upgradeCasafariPhotoUrl(String(obj.original || ''));
-  if (original) {
-    if (!seen.has(original)) {
-      seen.add(original);
-      urls.push(original);
-    }
-    if (crypt) seenCrypt.add(crypt);
+  const candidates = [
+    upgradeCasafariPhotoUrl(String(obj.original || '')),
+    upgradeCasafariPhotoUrl(String(obj.thumbnail || '')),
+    upgradeCasafariPhotoUrl(String(obj.url || '')),
+  ].filter((u) => u && isUsableCasafariPhotoUrl(u) && isImageOrCdnAsset(u));
+
+  const chosen = candidates[0];
+  if (!chosen || seen.has(chosen)) {
+    if (crypt && chosen) seenCrypt.add(crypt);
     return;
   }
-
-  const fallback = upgradeCasafariPhotoUrl(String(obj.thumbnail || ''));
-  if (fallback && !seen.has(fallback)) {
-    seen.add(fallback);
-    urls.push(fallback);
-    if (crypt) seenCrypt.add(crypt);
-  }
+  seen.add(chosen);
+  urls.push(chosen);
+  if (crypt) seenCrypt.add(crypt);
 }
 
 export function extractCasafariPhotos(
@@ -315,7 +336,11 @@ export function extractCasafariPhotos(
 function isImageOrCdnAsset(url: string): boolean {
   const lower = String(url || '').toLowerCase();
   if (/\.(jpg|jpeg|webp|png|gif|avif)(\?|$)/i.test(lower)) return true;
-  if (/retelligence\.co|pwm\.im-cdn\.it|im-cdn\.it|cdn-media\.medialabtc\.it/i.test(lower)) {
+  if (
+    /retelligence\.co|pwm\.im-cdn\.it|im-cdn\.it|cdn-media\.medialabtc\.it|idealista\.(it|com|pt|es)/i.test(
+      lower,
+    )
+  ) {
     return true;
   }
   return false;

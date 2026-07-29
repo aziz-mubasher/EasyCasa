@@ -19,7 +19,8 @@ Primary surface: **`/{locale}/imports/casafari`** (nav link “Casafari import�
 2. **Preview folder** → all estates listed with checkboxes (all selected by default)
 3. Optionally set province sigla (applied to every draft)
 4. **Import N as drafts** → creates one `listings` row per selected estate
-   (`source=casafari`, status `draft`) and downloads ≤20 photos each
+   (`source=casafari`) and downloads ≤20 photos each. Optional **Publish after
+   import** (with confirm dialog) sets status to `published` and indexes search.
 
 `/{locale}/add` links to this page for allowed users (manual listing wizard unchanged).
 
@@ -47,11 +48,13 @@ Primary surface: **`/{locale}/imports/casafari`** (nav link “Casafari import�
   "casafariIds": ["8017…", "8017…"],
   "maxImages": 20,
   "province": "BS",
-  "refreshCache": true
+  "refreshCache": true,
+  "publish": false
 }
 ```
 
-Omit or empty `casafariIds` → import every estate on the share.
+Omit or empty `casafariIds` → import every estate on the share. Set `publish: true`
+to publish each successful import after photos are stored.
 
 ## Code
 

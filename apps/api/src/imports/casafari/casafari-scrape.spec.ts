@@ -68,6 +68,47 @@ describe('casafari-scrape', () => {
     );
   });
 
+  it('rewrites Idealista retelligence blur hosts to img3.idealista.it', () => {
+    expect(
+      upgradeCasafariPhotoUrl(
+        'https://img4it.retelligence.co/blur/WEB_DETAIL_TOP/0/id.pro.it.image.master/9f/60/c1/817471968.jpg',
+      ),
+    ).toBe(
+      'https://img3.idealista.it/blur/WEB_DETAIL_TOP/0/id.pro.it.image.master/9f/60/c1/817471968.jpg',
+    );
+  });
+
+  it('keeps retelligence /c/ thumb sizes (xxl rewrite 404s)', () => {
+    expect(
+      upgradeCasafariPhotoUrl(
+        'https://st2.retelligence.co/c/6620/d/5d/777f796b4d45c2c8cde18e6f52f3ed5d350.jpg',
+      ),
+    ).toContain('350.jpg');
+  });
+
+  it('falls back to thumbnail when Idealista original is a dead blur host', () => {
+    const photos = extractCasafariPhotos(
+      {
+        allPhotos: [
+          {
+            selected: true,
+            photos: [
+              {
+                original:
+                  'https://img4it.retelligence.co/blur/WEB_DETAIL_TOP/0/id.pro.it.image.master/9f/60/c1/817471968.jpg',
+                thumbnail:
+                  'https://st2.retelligence.co/c/6620/d/5d/777f796b4d45c2c8cde18e6f52f3ed5d350.jpg',
+              },
+            ],
+          },
+        ],
+      },
+      5,
+    );
+    expect(photos).toHaveLength(1);
+    expect(photos[0]).toContain('img3.idealista.it');
+  });
+
   it('caps photos at maxImages and prefers selected allPhotos group', () => {
     const photos = extractCasafariPhotos(FIXTURE_ESTATE, 2);
     expect(photos).toHaveLength(2);

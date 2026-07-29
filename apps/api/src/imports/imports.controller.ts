@@ -16,7 +16,7 @@ export class ImportsController {
 
   /**
    * Scrape a Casafari sharepage and return mapped listing drafts (no DB write).
-   * Restricted to muba-seller / muba-admin. Up to 20 photo URLs per draft.
+   * Restricted to admin (or allowlisted importer). Up to 20 photo URLs per draft.
    */
   @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Post('casafari/preview')
@@ -26,24 +26,25 @@ export class ImportsController {
   }
 
   /**
-   * Create a draft listing from one Casafari estate.
+   * Create a draft listing from one Casafari estate (optionally publish).
    */
   @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Post('casafari/create')
   async create(@Body() dto: CasafariCreateDto, @CurrentUser() user: AuthUser) {
     assertCasafariImporter(user);
     const me = await this.users.getOrCreate(user);
-    return this.imports.createFromCasafari(dto, me.id);
+    return this.imports.createFromCasafari(dto, me.id, user);
   }
 
   /**
-   * Import every (or selected) estate from a Casafari share folder as drafts.
+   * Import every (or selected) estate from a Casafari share folder as drafts
+   * (optionally publish each after photos are imported).
    */
   @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Post('casafari/create-many')
   async createMany(@Body() dto: CasafariCreateManyDto, @CurrentUser() user: AuthUser) {
     assertCasafariImporter(user);
     const me = await this.users.getOrCreate(user);
-    return this.imports.createManyFromCasafari(dto, me.id);
+    return this.imports.createManyFromCasafari(dto, me.id, user);
   }
 }
