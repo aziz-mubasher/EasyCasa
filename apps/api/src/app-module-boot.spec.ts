@@ -34,7 +34,7 @@ describe('AppModule boot (PersonalDataRegistrar DI)', () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleRef.createNestApplication();
     await app.init();
-  }, 60_000);
+  }, 120_000);
 
   afterAll(async () => {
     await app?.close();

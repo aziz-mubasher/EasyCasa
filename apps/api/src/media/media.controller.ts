@@ -74,7 +74,7 @@ export class MediaController {
     const key = idx >= 0 ? decodeURIComponent(req.path.slice(idx + marker.length)) : '';
     const obj = await this.media.getObject(key);
     res.setHeader('Content-Type', obj.contentType);
-    res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     obj.body.pipe(res);
   }
 }
