@@ -1,5 +1,5 @@
 import { ForbiddenException } from '@nestjs/common';
-import type { AuthUser } from '../auth/auth.types';
+import type { AuthUser } from '../../auth/auth.types';
 
 /** Only this Keycloak username may use Casafari share import. */
 export const CASAFARI_IMPORTER_USERNAMES = ['muba-admin'] as const;
