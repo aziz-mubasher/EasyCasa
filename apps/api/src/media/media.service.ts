@@ -12,7 +12,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createHash, randomUUID } from 'node:crypto';
-import type { Readable } from 'node:stream';
+import { Readable } from 'node:stream';
 import sharp from 'sharp';
 import { eq, sql } from 'drizzle-orm';
 import { apiConfig } from '../config';
@@ -20,6 +20,13 @@ import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { media } from '../db/schema';
 import { buildObjectKey, isAllowedContentType } from '../uploads/domain/keys';
+import {
+  bunnyHttpDelete,
+  bunnyHttpGet,
+  bunnyHttpPut,
+  resolveBunnyHttpBase,
+  type BunnyHttpStorageConfig,
+} from './bunny-http-storage';
 import {
   publicUrlForStorageKey,
   resolveObjectStorage,
@@ -129,6 +136,14 @@ export function assertSafeMediaKey(key: string): void {
 @Injectable()
 export class MediaService {
   private readonly storage: ObjectStorageConfig = resolveObjectStorage(apiConfig);
+  private readonly bunnyHttp: BunnyHttpStorageConfig | null =
+    this.storage.origin === 'bunny'
+      ? {
+          zone: this.storage.bucket,
+          accessKey: this.storage.secretAccessKey,
+          httpBase: resolveBunnyHttpBase(this.storage.endpoint, this.storage.region),
+        }
+      : null;
   private readonly s3 = new S3Client({
     endpoint: this.storage.endpoint,
     region: this.storage.region,
@@ -145,12 +160,52 @@ export class MediaService {
     return publicUrlForStorageKey(this.storage, key);
   }
 
+  private async putObject(
+    key: string,
+    body: Buffer,
+    contentType: string,
+    cacheControl?: string,
+  ): Promise<void> {
+    if (this.bunnyHttp) {
+      await bunnyHttpPut(this.bunnyHttp, key, body, contentType, cacheControl);
+      return;
+    }
+    await this.s3.send(
+      new PutObjectCommand({
+        Bucket: this.storage.bucket,
+        Key: key,
+        Body: body,
+        ContentType: contentType,
+        ...(cacheControl ? { CacheControl: cacheControl } : {}),
+      }),
+    );
+  }
+
+  private async deleteObject(key: string): Promise<void> {
+    if (this.bunnyHttp) {
+      await bunnyHttpDelete(this.bunnyHttp, key);
+      return;
+    }
+    await this.s3.send(
+      new DeleteObjectCommand({
+        Bucket: this.storage.bucket,
+        Key: key,
+      }),
+    );
+  }
+
   /**
    * Presigned PUT for direct browser→object-store upload.
    * Prefer {@link uploadListingImage} in production when the store is not
    * publicly reachable (MinIO is internal-only on the VPS).
+   * Bunny Storage HTTP has no S3-style presign — use {@link uploadListingImage}.
    */
   async presign(listingId: string, contentType: string) {
+    if (this.bunnyHttp) {
+      throw new BadRequestException(
+        'Direct presign is not supported with MEDIA_ORIGIN=bunny; use POST /media/upload',
+      );
+    }
     const listing = sanitizeListingId(listingId);
     const ext = contentType.split('/')[1] ?? 'bin';
     const quarantineKey = `listings/${listing}/${LISTING_QUARANTINE_SUBPATH}/${randomUUID()}.${ext}`;
@@ -187,14 +242,11 @@ export class MediaService {
     const { key } = buildContentAddressedListingImageKey({ listingId, webpBytes: webp });
 
     // Cacheable immutable master at the edge
-    await this.s3.send(
-      new PutObjectCommand({
-        Bucket: this.storage.bucket,
-        Key: key,
-        Body: webp,
-        ContentType: LISTING_OUTPUT_MIME,
-        CacheControl: 'public, max-age=31536000, immutable',
-      }),
+    await this.putObject(
+      key,
+      webp,
+      LISTING_OUTPUT_MIME,
+      'public, max-age=31536000, immutable',
     );
 
     return this.insertMediaRow({ listingId, key, alt, width, height });
@@ -204,6 +256,13 @@ export class MediaService {
   async getObject(key: string): Promise<{ body: Readable; contentType: string }> {
     assertSafeMediaKey(key);
     try {
+      if (this.bunnyHttp) {
+        const out = await bunnyHttpGet(this.bunnyHttp, key);
+        return {
+          body: Readable.from(out.body),
+          contentType: out.contentType,
+        };
+      }
       const out = await this.s3.send(
         new GetObjectCommand({
           Bucket: this.storage.bucket,
@@ -228,14 +287,20 @@ export class MediaService {
     if (isQuarantineKey(listingId, key)) {
       try {
         // Load quarantine → process → immutable key
-        const out = await this.s3.send(
-          new GetObjectCommand({
-            Bucket: this.storage.bucket,
-            Key: key,
-          }),
-        );
-        if (!out.Body) throw new NotFoundException('media not found');
-        const inputBytes = await streamToBuffer(out.Body as Readable);
+        let inputBytes: Buffer;
+        if (this.bunnyHttp) {
+          const out = await bunnyHttpGet(this.bunnyHttp, key);
+          inputBytes = out.body;
+        } else {
+          const out = await this.s3.send(
+            new GetObjectCommand({
+              Bucket: this.storage.bucket,
+              Key: key,
+            }),
+          );
+          if (!out.Body) throw new NotFoundException('media not found');
+          inputBytes = await streamToBuffer(out.Body as Readable);
+        }
 
         // Validate + transcode to WebP
         // (requirement: validate on upload)
@@ -243,34 +308,21 @@ export class MediaService {
         const { webp, width, height } = await transcodeListingImageToWebp(inputBytes);
         const { key: finalKey } = buildContentAddressedListingImageKey({ listingId, webpBytes: webp });
 
-        await this.s3.send(
-          new PutObjectCommand({
-            Bucket: this.storage.bucket,
-            Key: finalKey,
-            Body: webp,
-            ContentType: LISTING_OUTPUT_MIME,
-            CacheControl: 'public, max-age=31536000, immutable',
-          }),
+        await this.putObject(
+          finalKey,
+          webp,
+          LISTING_OUTPUT_MIME,
+          'public, max-age=31536000, immutable',
         );
 
         // Delete quarantine object to avoid leaking unprocessed originals
-        await this.s3.send(
-          new DeleteObjectCommand({
-            Bucket: this.storage.bucket,
-            Key: key,
-          }),
-        );
+        await this.deleteObject(key);
 
         return this.insertMediaRow({ listingId, key: finalKey, alt, width, height });
       } catch (err) {
         // Best-effort cleanup quarantine; ignore purge errors but fail the request.
         try {
-          await this.s3.send(
-            new DeleteObjectCommand({
-              Bucket: this.storage.bucket,
-              Key: key,
-            }),
-          );
+          await this.deleteObject(key);
         } catch {
           // ignore
         }
@@ -311,6 +363,11 @@ export class MediaService {
 
   /** Owner fascicolo / general document upload — key scoped to the user. */
   async presignForUser(userId: string, filename: string, contentType: string) {
+    if (this.bunnyHttp) {
+      throw new BadRequestException(
+        'Direct user-doc presign is not supported with MEDIA_ORIGIN=bunny yet',
+      );
+    }
     if (!isAllowedContentType(contentType)) {
       throw new BadRequestException(
         `Content type not allowed: ${contentType}. Use pdf, jpeg, png, or webp.`,

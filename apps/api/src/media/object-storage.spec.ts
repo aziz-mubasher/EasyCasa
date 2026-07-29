@@ -41,7 +41,7 @@ describe('resolveObjectStorage', () => {
       }),
     );
     expect(s.origin).toBe('bunny');
-    expect(s.endpoint).toBe('https://storage.bunnycdn.com');
+    expect(s.endpoint).toBe('https://de-s3.storage.bunnycdn.com');
     expect(s.accessKeyId).toBe('easycasaita');
     expect(s.secretAccessKey).toBe('rotated-password');
     expect(s.bucket).toBe('easycasaita');

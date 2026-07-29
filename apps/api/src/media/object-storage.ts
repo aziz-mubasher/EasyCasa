@@ -18,6 +18,23 @@ export type ObjectStorageConfig = {
   privateBase: string;
 };
 
+/**
+ * Bunny's S3 API rejects the global host with PermanentRedirect to
+ * `{region}-s3.storage.bunnycdn.com`. Prefer an explicit endpoint; otherwise
+ * derive the regional host from `BUNNY_S3_REGION`.
+ */
+export function resolveBunnyS3Endpoint(endpoint: string, region: string): string {
+  const trimmed = endpoint.replace(/\/$/, '');
+  const globalHosts = new Set([
+    'https://storage.bunnycdn.com',
+    'http://storage.bunnycdn.com',
+  ]);
+  if (!globalHosts.has(trimmed)) return trimmed;
+  const r = region.trim().toLowerCase();
+  if (!r || r === 'us-east-1') return trimmed;
+  return `https://${r}-s3.storage.bunnycdn.com`;
+}
+
 export function resolveObjectStorage(cfg: ApiConfig): ObjectStorageConfig {
   const origin = cfg.MEDIA_ORIGIN;
   const privateBase = (
@@ -33,11 +50,12 @@ export function resolveObjectStorage(cfg: ApiConfig): ObjectStorageConfig {
         'MEDIA_ORIGIN=bunny requires BUNNY_STORAGE_ZONE and BUNNY_STORAGE_PASSWORD',
       );
     }
+    const region = cfg.BUNNY_S3_REGION.trim() || cfg.S3_REGION;
     const cdn = (cfg.BUNNY_CDN_BASE.trim() || cfg.MEDIA_PUBLIC_BASE).replace(/\/$/, '');
     return {
       origin: 'bunny',
-      endpoint: cfg.BUNNY_STORAGE_ENDPOINT.replace(/\/$/, ''),
-      region: cfg.BUNNY_S3_REGION.trim() || cfg.S3_REGION,
+      endpoint: resolveBunnyS3Endpoint(cfg.BUNNY_STORAGE_ENDPOINT, region),
+      region,
       accessKeyId: zone,
       secretAccessKey: password,
       bucket: zone,

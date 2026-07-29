@@ -2,6 +2,8 @@
 
 **Status:** Listing uploads validate/strip EXIF and write content-addressed WebP
 masters. Origin is selectable via env (`minio` default, `bunny` for production CDN).
+Bunny writes use the **Storage HTTP API** (`AccessKey` + PUT) because the zone’s
+S3-compatible API may be disabled (`ServiceUnavailable: S3 API is not enabled`).
 
 ## Architecture (pilot)
 
@@ -23,7 +25,7 @@ listing images use the CDN.
 | `MEDIA_ORIGIN` | `minio` (default) or `bunny` |
 | `BUNNY_STORAGE_ZONE` | Storage zone name (= S3 access key id + bucket), e.g. `easycasaita` |
 | `BUNNY_STORAGE_PASSWORD` | Storage zone access key / FTP password (**rotate if ever pasted in chat**) |
-| `BUNNY_STORAGE_ENDPOINT` | Default `https://storage.bunnycdn.com` (use regional host if Bunny shows one) |
+| `BUNNY_STORAGE_ENDPOINT` | Prefer regional S3 host, e.g. `https://de-s3.storage.bunnycdn.com`. Global `storage.bunnycdn.com` is rewritten using `BUNNY_S3_REGION`. |
 | `BUNNY_S3_REGION` | Zone region hint, e.g. `de` / `uk` |
 | `BUNNY_CDN_BASE` | Pull Zone URL, e.g. `https://cdn.easycasaita.com` |
 | `MEDIA_PUBLIC_BASE` | Fallback listing URL base (MinIO proxy or CDN) |
@@ -54,7 +56,7 @@ Set:
 MEDIA_ORIGIN=bunny
 BUNNY_STORAGE_ZONE=easycasaita
 BUNNY_STORAGE_PASSWORD=<rotated-password-here>
-BUNNY_STORAGE_ENDPOINT=https://storage.bunnycdn.com
+BUNNY_STORAGE_ENDPOINT=https://de-s3.storage.bunnycdn.com
 BUNNY_S3_REGION=de
 BUNNY_CDN_BASE=https://cdn.easycasaita.com
 MEDIA_PUBLIC_BASE=https://cdn.easycasaita.com

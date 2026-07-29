@@ -13,7 +13,7 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | MINIO_ROOT_USER / _PASSWORD / MINIO_BUCKET / S3_ENDPOINT | api, minio | Object storage (local / fallback). |
 | MEDIA_ORIGIN | api | `minio` (default) or `bunny` — listing image write target. |
 | BUNNY_STORAGE_ZONE / BUNNY_STORAGE_PASSWORD | api | Bunny Storage Zone name + access key. Required when `MEDIA_ORIGIN=bunny`. Never commit password. |
-| BUNNY_STORAGE_ENDPOINT / BUNNY_S3_REGION | api | Bunny S3 endpoint (default `https://storage.bunnycdn.com`) + region hint (`de` / `uk`). |
+| BUNNY_STORAGE_ENDPOINT / BUNNY_S3_REGION | api | Bunny S3 endpoint — use regional host e.g. `https://de-s3.storage.bunnycdn.com` (global `storage.bunnycdn.com` is rewritten from region). |
 | BUNNY_CDN_BASE | api | Pull Zone base, e.g. `https://cdn.easycasaita.com`. |
 | MEDIA_PRIVATE_BASE | api | Private `users/` doc URLs. Empty + bunny → API media proxy (not the public CDN). |
 | API_PORT / WEB_PORT / AI_PORT | apps | Internal ports. |
