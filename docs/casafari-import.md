@@ -3,8 +3,8 @@
 Import EasyCasa draft listings from a public Casafari **sharepage** URL
 (same approach as Banks4All partners properties collection).
 
-> **Access:** Keycloak usernames **`muba-seller`** or **`muba-admin`** (API + UI).
-> Prefer **`muba-seller`** for publishing (needs Keycloak **`seller`** role).
+> **Access:** Keycloak **`admin`** role (API + UI). Allowlisted importer usernames
+> also work for publish workflows; the UI only says “reserved for admin use”.
 >
 > **Legal note:** this reads embedded `"estates":[...]` JSON from the sharepage HTML.
 > It is not the official Casafari Property Data API. Confirm ToS / counsel before
@@ -27,9 +27,9 @@ Primary surface: **`/{locale}/imports/casafari`** (nav link “Casafari import�
 
 | Method | Path | Access | Purpose |
 |---|---|---|---|
-| POST | `/imports/casafari/preview` | muba-seller / muba-admin | Scrape → drafts (no DB write) |
-| POST | `/imports/casafari/create` | muba-seller / muba-admin | Create one draft + ≤20 photos |
-| POST | `/imports/casafari/create-many` | muba-seller / muba-admin | Create many drafts from a folder |
+| POST | `/imports/casafari/preview` | admin (or allowlisted) | Scrape → drafts (no DB write) |
+| POST | `/imports/casafari/create` | admin (or allowlisted) | Create one draft + ≤20 photos |
+| POST | `/imports/casafari/create-many` | admin (or allowlisted) | Create many drafts from a folder |
 
 ### Preview / create body
 
