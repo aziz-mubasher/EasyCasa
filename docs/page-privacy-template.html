@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Informativa privacy — EasyCasa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,300..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14212E; --ink-soft:#4C5D6E; --paper:#F3EDE1; --paper-deep:#E8DFCC;
+  --azure:#2C6E9B; --azure-pale:#A9C8DC; --ochre:#C08A1E;
+  --rule:rgba(20,33,46,.16); --rule-strong:rgba(20,33,46,.34);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --gutter:clamp(1.25rem,5vw,3.5rem);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:1.0625rem;line-height:1.7;font-optical-sizing:auto}
+a{color:var(--azure)}
+:focus-visible{outline:2.5px solid var(--azure);outline-offset:3px}
+.wrap{max-width:66rem;margin-inline:auto;padding-inline:var(--gutter)}
+
+.mast{border-bottom:1px solid var(--rule-strong)}
+.mast .wrap{display:flex;align-items:center;gap:1.5rem;padding-block:1rem;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.015em;text-decoration:none;color:var(--ink)}
+.brand span{color:var(--azure)}
+.lang{margin-left:auto;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--ink-soft)}
+.lang b{color:var(--ink)}
+
+/* header block */
+.head{padding-block:clamp(2.5rem,6vw,4rem) 2rem;border-bottom:1px solid var(--rule-strong)}
+h1{font-family:var(--display);font-weight:740;font-variation-settings:"wdth" 90;
+  font-size:clamp(2rem,4.5vw,3.2rem);line-height:1.02;letter-spacing:-.03em;margin:0 0 1rem}
+.meta{display:flex;gap:2rem;flex-wrap:wrap;font-family:var(--mono);font-size:.72rem;
+  letter-spacing:.05em;color:var(--ink-soft);margin:0}
+.meta b{color:var(--ink);font-weight:500}
+.meta a{color:var(--azure);text-decoration:none;border-bottom:1px solid rgba(44,110,155,.35)}
+
+/* layout */
+.cols{display:grid;grid-template-columns:15rem minmax(0,1fr);gap:clamp(2rem,5vw,4rem);
+  padding-block:2.5rem 5rem;align-items:start}
+@media(max-width:880px){.cols{grid-template-columns:1fr}}
+
+/* toc */
+.toc{position:sticky;top:1.5rem}
+@media(max-width:880px){.toc{position:static;border:1px solid var(--rule-strong);padding:1rem 1.2rem}}
+.toc h2{font-family:var(--mono);font-size:.64rem;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-soft);margin:0 0 .9rem;padding-bottom:.65rem;
+  border-bottom:1px solid var(--rule)}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:t}
+.toc li{counter-increment:t;margin-bottom:.5rem}
+.toc a{display:flex;gap:.6rem;text-decoration:none;color:var(--ink-soft);font-size:.88rem;line-height:1.35}
+.toc a::before{content:counter(t,decimal-leading-zero);font-family:var(--mono);font-size:.68rem;
+  color:var(--azure);flex:none;padding-top:.15rem}
+.toc a:hover,.toc a[aria-current]{color:var(--ink)}
+
+/* sections */
+section{border-bottom:1px solid var(--rule);padding-bottom:2rem;margin-bottom:2.4rem}
+section:last-of-type{border-bottom:0}
+h2.s{font-family:var(--display);font-weight:700;font-size:1.4rem;letter-spacing:-.022em;
+  margin:0 0 1rem;scroll-margin-top:1.5rem}
+h2.s .n{font-family:var(--mono);font-size:.8rem;color:var(--azure);font-weight:500;margin-right:.6rem}
+
+/* layered notice — the design idea */
+.brief{background:rgba(255,255,255,.5);border:1px solid var(--rule-strong);
+  border-left:3px solid var(--azure);padding:1rem 1.2rem;margin:0 0 1.3rem}
+.brief .tag{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--azure);display:block;margin-bottom:.45rem}
+.brief p{margin:0;font-size:.98rem;line-height:1.6}
+.brief p + p{margin-top:.6rem}
+
+details.full{border-top:1px dotted var(--rule);padding-top:.9rem}
+details.full summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:.7rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);position:relative;padding-right:1.5rem}
+details.full summary::-webkit-details-marker{display:none}
+details.full summary::after{content:"+";position:absolute;right:.2rem;top:-.15rem;
+  color:var(--azure);font-size:1rem;transition:transform .2s ease}
+details.full[open] summary::after{transform:rotate(45deg)}
+details.full .body{padding-top:1rem;font-size:.98rem}
+details.full .body p{margin:0 0 .9rem}
+
+/* placeholder marker */
+.todo{border:1px dashed var(--ochre);background:rgba(192,138,30,.07);padding:.85rem 1rem;
+  font-family:var(--mono);font-size:.75rem;line-height:1.65;color:var(--ink);letter-spacing:.02em}
+.todo b{color:var(--ochre);letter-spacing:.1em;text-transform:uppercase;font-size:.62rem;display:block;margin-bottom:.35rem}
+
+/* data table */
+table{width:100%;border-collapse:collapse;font-size:.92rem;margin:0 0 1rem}
+th{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-soft);text-align:left;padding:.6rem .8rem .6rem 0;border-bottom:1px solid var(--rule-strong)}
+td{padding:.65rem .8rem .65rem 0;border-bottom:1px dotted var(--rule);vertical-align:top;color:var(--ink-soft)}
+td:first-child{color:var(--ink)}
+td.mono{font-family:var(--mono);font-size:.8rem;white-space:nowrap}
+
+.help{background:var(--ink);color:var(--paper-deep);padding:1.4rem 1.5rem;margin-top:3rem}
+.help h3{font-family:var(--display);font-weight:680;font-size:1.1rem;color:var(--paper);margin:0 0 .5rem;letter-spacing:-.015em}
+.help p{margin:0 0 1rem;font-size:.95rem}
+.help a.btn{display:inline-block;font-family:var(--display);font-weight:640;font-size:.92rem;
+  background:var(--paper);color:var(--ink);padding:.6rem 1.3rem;border-radius:2px;text-decoration:none}
+
+footer{border-top:1px solid var(--rule-strong);padding-block:1.8rem;
+  font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);letter-spacing:.04em;line-height:1.8}
+
+@media print{
+  .mast,.toc,.help,footer,.lang{display:none}
+  .cols{grid-template-columns:1fr;padding-block:0}
+  details.full{border:0}
+  details.full summary{display:none}
+  details.full .body{padding-top:0}
+  details.full[open] .body,details.full .body{display:block}
+  body{background:#fff;font-size:10.5pt}
+  section{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <a class="brand" href="/it">Easy<span>Casa</span></a>
+    <span class="lang"><b>IT</b> · EN · ES — prevale la versione italiana</span>
+  </div>
+</header>
+
+<div class="head">
+  <div class="wrap">
+    <h1>Informativa privacy</h1>
+    <p class="meta">
+      <span>Versione <b>1.0-draft</b></span>
+      <span>In vigore dal <b>[—]</b></span>
+      <span>Ultimo aggiornamento <b>[—]</b></span>
+      <span><a href="/it/privacy/versioni">Versioni precedenti</a></span>
+    </p>
+  </div>
+</div>
+
+<div class="wrap cols">
+
+  <nav class="toc" aria-label="Indice">
+    <h2>Indice</h2>
+    <ol>
+      <li><a href="#t1" aria-current="true">Chi tratta i tuoi dati</a></li>
+      <li><a href="#t2">Quali dati raccogliamo</a></li>
+      <li><a href="#t3">Perché e con quale base giuridica</a></li>
+      <li><a href="#t4">A chi li comunichiamo</a></li>
+      <li><a href="#t5">Per quanto tempo li conserviamo</a></li>
+      <li><a href="#t6">Trasferimenti fuori dall'UE</a></li>
+      <li><a href="#t7">I tuoi diritti</a></li>
+      <li><a href="#t8">Come esercitarli</a></li>
+      <li><a href="#t9">Modifiche a questa informativa</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section>
+      <h2 class="s" id="t1"><span class="n">01</span>Chi tratta i tuoi dati</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Il titolare del trattamento è MUNDIDA S.r.l., che gestisce EasyCasa.
+        Puoi scriverci in qualsiasi momento all'indirizzo indicato qui sotto.</p>
+      </div>
+      <div class="todo"><b>Da completare — legale</b>
+        Ragione sociale completa, sede legale, P.IVA, REA, PEC, indirizzo e-mail
+        privacy, ed eventuale DPO con relativi contatti (obbligatorio se
+        designato ai sensi dell'art. 37 GDPR).</div>
+    </section>
+
+    <section>
+      <h2 class="s" id="t2"><span class="n">02</span>Quali dati raccogliamo</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Raccogliamo quello che ci dai tu — nome, contatti, i messaggi che
+        invii — e alcuni dati tecnici generati dall'uso del sito. Non raccogliamo
+        dati particolari (salute, opinioni politiche, orientamento sessuale) e
+        non li vogliamo: se li scrivi in un messaggio, ti chiediamo di
+        rimuoverli.</p>
+      </div>
+      <table>
+        <thead><tr><th>Categoria</th><th>Esempi</th><th>Da dove</th></tr></thead>
+        <tbody>
+          <tr><td>Identificativi</td><td>Nome, cognome, e-mail, telefono</td><td class="mono">da te</td></tr>
+          <tr><td>Contenuti</td><td>Richieste di informazioni, note sulle visite</td><td class="mono">da te</td></tr>
+          <tr><td>Annunci</td><td>Indirizzo dell'immobile, foto, documenti</td><td class="mono">da te</td></tr>
+          <tr><td>Consensi</td><td>Registro dei consensi con data e versione</td><td class="mono">generati</td></tr>
+          <tr><td>Tecnici</td><td>Indirizzo IP, dispositivo, pagine visitate</td><td class="mono">generati</td></tr>
+          <tr><td>Verifica finanziaria</td><td>Stato, fascia indicativa, scadenza</td><td class="mono">Banks4All, col tuo consenso</td></tr>
+        </tbody>
+      </table>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Elenco puntuale delle categorie ex art. 13 GDPR, con indicazione dei
+          dati obbligatori e facoltativi e delle conseguenze del rifiuto.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t3"><span class="n">03</span>Perché e con quale base giuridica</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>La maggior parte dei trattamenti serve a farti usare il servizio che
+        hai chiesto: in quei casi non ti chiediamo il consenso, perché la base è
+        il contratto. Il consenso te lo chiediamo solo dove serve davvero — per
+        il marketing e per la condivisione della verifica finanziaria con il
+        proprietario — e puoi revocarlo quando vuoi.</p>
+      </div>
+      <table>
+        <thead><tr><th>Finalità</th><th>Base giuridica</th></tr></thead>
+        <tbody>
+          <tr><td>Gestire il tuo account e le richieste di contatto</td><td class="mono">art. 6.1.b — contratto</td></tr>
+          <tr><td>Prenotare e gestire le visite</td><td class="mono">art. 6.1.b — contratto</td></tr>
+          <tr><td>Sicurezza del sito e prevenzione degli abusi</td><td class="mono">art. 6.1.f — interesse legittimo</td></tr>
+          <tr><td>Obblighi fiscali e antiriciclaggio</td><td class="mono">art. 6.1.c — obbligo di legge</td></tr>
+          <tr><td>Condividere la verifica finanziaria col proprietario</td><td class="mono">art. 6.1.a — consenso</td></tr>
+          <tr><td>Comunicazioni commerciali</td><td class="mono">art. 6.1.a — consenso</td></tr>
+        </tbody>
+      </table>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Conferma delle basi giuridiche, descrizione dell'interesse legittimo e
+          del relativo bilanciamento, riferimenti alle norme antiriciclaggio
+          applicabili all'attività di mediazione.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t4"><span class="n">04</span>A chi li comunichiamo</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Ai proprietari degli immobili per cui invii una richiesta — è il senso
+        del servizio. Ai fornitori che ci aiutano a farlo funzionare, vincolati
+        da contratto. Alle autorità, se la legge lo impone. <strong>Non vendiamo
+        i tuoi dati e non li cediamo a reti di agenzie.</strong></p>
+      </div>
+      <details class="full">
+        <summary>Testo completo</summary>
+        <div class="body"><div class="todo"><b>Da completare — legale</b>
+          Elenco delle categorie di destinatari, qualificazione di ciascuno come
+          responsabile ex art. 28 o titolare autonomo, e trattamento del rapporto
+          infragruppo con Banks4All.</div></div>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="s" id="t5"><span class="n">05</span>Per quanto tempo li conserviamo</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Il tempo necessario, poi li cancelliamo automaticamente. Alcuni dati
+        restano più a lungo perché la legge ce lo impone — in quel caso non
+        possiamo cancellarli su richiesta, e te lo diciamo chiaramente invece di
+        far finta di averlo fatto.</p>
+      </div>
+      <div class="todo"><b>Da completare — legale</b>
+        Tabella dei periodi di conservazione per categoria, con il fondamento
+        normativo di ciascuna conservazione obbligatoria. I periodi devono
+        corrispondere a quelli implementati nel job di purge automatico.</div>
+    </section>
+
+    <section>
+      <h2 class="s" id="t6"><span class="n">06</span>Trasferimenti fuori dall'UE</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>I tuoi dati restano nell'Unione Europea. Se un fornitore dovesse
+        trattarli altrove, lo indichiamo qui con le garanzie applicate.</p>
+      </div>
+      <div class="todo"><b>Da completare — legale</b>
+        Verifica di ogni sub-fornitore. Se esistono trasferimenti, indicare
+        Paese, garanzie ex artt. 44-49 e come ottenerne copia.</div>
+    </section>
+
+    <section>
+      <h2 class="s" id="t7"><span class="n">07</span>I tuoi diritti</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Puoi vedere che dati abbiamo, correggerli, scaricarli, chiederne la
+        cancellazione, opporti a certi trattamenti e revocare i consensi. La
+        maggior parte di queste cose la puoi fare da solo, subito, senza
+        scriverci.</p>
+      </div>
+      <table>
+        <thead><tr><th>Diritto</th><th>Dove</th></tr></thead>
+        <tbody>
+          <tr><td>Accesso e copia dei dati</td><td class="mono"><a href="/it/i-miei-dati">I miei dati</a></td></tr>
+          <tr><td>Rettifica</td><td class="mono"><a href="/it/i-miei-dati">I miei dati</a></td></tr>
+          <tr><td>Cancellazione</td><td class="mono"><a href="/it/i-miei-dati">I miei dati</a></td></tr>
+          <tr><td>Revoca dei consensi</td><td class="mono"><a href="/it/i-miei-dati">I miei dati</a></td></tr>
+          <tr><td>Opposizione, limitazione, portabilità</td><td class="mono">scrivendoci</td></tr>
+          <tr><td>Reclamo</td><td class="mono">Garante privacy</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2 class="s" id="t8"><span class="n">08</span>Come esercitarli</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Dalla pagina <a href="/it/i-miei-dati">I miei dati</a> per quasi tutto,
+        oppure scrivendo all'indirizzo indicato. Rispondiamo entro un mese. Se
+        pensi che qualcosa non vada, puoi rivolgerti al Garante per la protezione
+        dei dati personali senza doverci prima contattare.</p>
+      </div>
+      <div class="todo"><b>Da completare — legale</b>
+        Indirizzo e-mail dedicato, modalità di verifica dell'identità del
+        richiedente, e recapiti completi del Garante.</div>
+    </section>
+
+    <section>
+      <h2 class="s" id="t9"><span class="n">09</span>Modifiche a questa informativa</h2>
+      <div class="brief">
+        <span class="tag">In breve</span>
+        <p>Se cambiamo qualcosa di sostanziale te lo diciamo, non ci limitiamo ad
+        aggiornare la data. Le versioni precedenti restano consultabili, così
+        puoi vedere cosa è cambiato e quando.</p>
+      </div>
+    </section>
+
+    <div class="help">
+      <h3>Vuoi vedere cosa abbiamo su di te?</h3>
+      <p>Non serve scriverci. Accedi e trovi tutto — dati, consensi, esportazione
+      e cancellazione — in una sola pagina.</p>
+      <a class="btn" href="/it/i-miei-dati">Vai a I miei dati</a>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">MUNDIDA S.r.l. · P.IVA IT04531990986 · REA [—] · Sede legale [—] · PEC [—]</div>
+</footer>
+
+</body>
+</html>

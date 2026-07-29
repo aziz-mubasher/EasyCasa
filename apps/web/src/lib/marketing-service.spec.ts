@@ -7,16 +7,14 @@ describe('isMarketingServicePath', () => {
     expect(isMarketingServicePath('/acquisto-assistito/')).toBe(true);
   });
 
-  it('matches valutazione-gratuita landing', () => {
-    expect(isMarketingServicePath('/valutazione-gratuita')).toBe(true);
-    expect(isMarketingServicePath('/valutazione-gratuita/')).toBe(true);
+  it('does not treat valutazione-gratuita as marketing chrome', () => {
+    expect(isMarketingServicePath('/valutazione-gratuita')).toBe(false);
   });
 
   it('rejects other paths', () => {
     expect(isMarketingServicePath('/')).toBe(false);
     expect(isMarketingServicePath('/listings/foo')).toBe(false);
     expect(isMarketingServicePath('/acquisto-assistito/extra')).toBe(false);
-    expect(isMarketingServicePath('/valutazione-gratuita/extra')).toBe(false);
     expect(isMarketingServicePath(null)).toBe(false);
   });
 });

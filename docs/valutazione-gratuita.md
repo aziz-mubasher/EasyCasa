@@ -10,8 +10,7 @@ Standalone marketing page for free OMI-based home valuation aimed at sellers.
 
 ## Chrome
 
-- Minimal masthead (brand + locale) — `isMarketingServicePath`
-- App site footer hidden on this route (marketing) and on listing landings; V2 ink footer is the site chrome elsewhere
+- Uses the main site header and V2 ink site footer (not marketing chrome). Only `/acquisto-assistito` uses `isMarketingServicePath`. Listing landings still hide the site footer.
 - Linked from the site footer (“Per chi vende”)
 
 ## Form

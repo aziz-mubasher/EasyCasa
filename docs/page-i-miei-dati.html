@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I miei dati — EasyCasa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,300..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14212E; --ink-soft:#4C5D6E; --paper:#F3EDE1; --paper-deep:#E8DFCC;
+  --azure:#2C6E9B; --azure-pale:#A9C8DC; --ochre:#C08A1E;
+  --rule:rgba(20,33,46,.16); --rule-strong:rgba(20,33,46,.34);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --gutter:clamp(1.25rem,5vw,3.5rem);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:1.0625rem;line-height:1.65;font-optical-sizing:auto}
+a{color:var(--azure)}
+:focus-visible{outline:2.5px solid var(--azure);outline-offset:3px}
+.wrap{max-width:52rem;margin-inline:auto;padding-inline:var(--gutter)}
+
+.mast{border-bottom:1px solid var(--rule-strong)}
+.mast .wrap{max-width:66rem;display:flex;align-items:center;gap:1.5rem;padding-block:1rem;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.015em;text-decoration:none;color:var(--ink)}
+.brand span{color:var(--azure)}
+.who{margin-left:auto;font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;color:var(--ink-soft)}
+
+.head{padding-block:clamp(2.5rem,6vw,3.5rem) 1.6rem}
+h1{font-family:var(--display);font-weight:740;font-variation-settings:"wdth" 90;
+  font-size:clamp(2rem,4.5vw,3rem);line-height:1.03;letter-spacing:-.03em;margin:0 0 .8rem}
+.sub{color:var(--ink-soft);max-width:44ch;margin:0}
+
+.card{border:1px solid var(--rule-strong);background:rgba(255,255,255,.45);margin-bottom:1.5rem}
+.card > h2{font-family:var(--mono);font-size:.66rem;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--paper);background:var(--ink);margin:0;padding:.75rem 1.3rem}
+.card .in{padding:1.3rem}
+.card p.lead{margin:0 0 1.1rem;font-size:.96rem;color:var(--ink-soft);max-width:52ch}
+
+/* held data */
+.rows{margin:0}
+.row{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;
+  padding:.65rem 0;border-bottom:1px dotted var(--rule)}
+.row:last-child{border-bottom:0;padding-bottom:0}
+.row .k{font-size:.95rem}
+.row .v{font-family:var(--mono);font-size:.82rem;color:var(--ink-soft);text-align:right;white-space:nowrap}
+.row .v a{text-decoration:none;border-bottom:1px solid rgba(44,110,155,.35)}
+
+/* consents */
+.cons{border-top:1px dotted var(--rule);padding-top:1rem;margin-top:.4rem}
+.cons:first-child{border-top:0;padding-top:0;margin-top:0}
+.cons .top{display:flex;gap:1rem;align-items:flex-start;justify-content:space-between}
+.cons h3{font-family:var(--display);font-weight:660;font-size:1rem;letter-spacing:-.015em;margin:0 0 .3rem}
+.cons p{margin:0;font-size:.9rem;color:var(--ink-soft);max-width:44ch}
+.cons .hist{font-family:var(--mono);font-size:.68rem;color:var(--ink-soft);letter-spacing:.03em;margin:.55rem 0 0}
+.tog{flex:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--rule-strong);background:transparent;color:var(--ink);
+  padding:.45rem .9rem;border-radius:2px;cursor:pointer}
+.tog[data-on="true"]{background:var(--azure);border-color:var(--azure);color:#fff}
+.locked{flex:none;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;
+  color:var(--ink-soft);border:1px dashed var(--rule-strong);padding:.42rem .8rem;border-radius:2px}
+
+.btn{display:inline-block;font-family:var(--display);font-weight:645;font-size:.94rem;
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:.7rem 1.4rem;
+  border-radius:2px;text-decoration:none;cursor:pointer;transition:background .18s ease}
+.btn:hover{background:var(--azure);border-color:var(--azure)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule-strong)}
+.btn.ghost:hover{background:transparent;color:var(--azure);border-color:var(--azure)}
+.btns{display:flex;gap:.6rem;flex-wrap:wrap}
+
+.hold{border-left:3px solid var(--ochre);background:rgba(192,138,30,.08);padding:.9rem 1.1rem;
+  margin:1.1rem 0 0;font-size:.92rem;line-height:1.6}
+.hold b{font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ochre);display:block;margin-bottom:.35rem}
+.hold ul{margin:.6rem 0 0;padding-left:1.1rem;color:var(--ink-soft);font-size:.9rem}
+.hold li{margin-bottom:.3rem}
+
+.timeline{font-family:var(--mono);font-size:.8rem}
+.timeline .t{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;
+  border-bottom:1px dotted var(--rule)}
+.timeline .t:last-child{border-bottom:0}
+.timeline .t span:last-child{color:var(--ink-soft)}
+
+footer{border-top:1px solid var(--rule-strong);margin-top:3rem;padding-block:1.8rem;
+  font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);letter-spacing:.04em;line-height:1.8}
+footer .wrap{max-width:66rem}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <a class="brand" href="/it">Easy<span>Casa</span></a>
+    <span class="who">m.aziz@example.com</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <h1>I miei dati</h1>
+    <p class="sub">Tutto quello che sappiamo di te, in una pagina. Puoi scaricarlo,
+    correggerlo o cancellarlo senza scriverci.</p>
+  </div>
+
+  <div class="card">
+    <h2>Cosa conserviamo</h2>
+    <div class="in">
+      <div class="rows">
+        <div class="row"><span class="k">Account</span><span class="v">Muba Aziz · m.aziz@example.com</span></div>
+        <div class="row"><span class="k">Richieste di informazioni</span><span class="v">4 · <a href="#">vedi</a></span></div>
+        <div class="row"><span class="k">Visite prenotate</span><span class="v">2 · <a href="#">vedi</a></span></div>
+        <div class="row"><span class="k">Ricerche salvate</span><span class="v">3 · <a href="#">vedi</a></span></div>
+        <div class="row"><span class="k">Verifica finanziaria</span><span class="v">Banks4All · scad. 27/01/2027</span></div>
+        <div class="row"><span class="k">Registro dei consensi</span><span class="v">9 eventi · <a href="#">vedi</a></span></div>
+        <div class="row"><span class="k">Annunci pubblicati</span><span class="v">nessuno</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>I tuoi consensi</h2>
+    <div class="in">
+      <p class="lead">Ogni consenso è separato e revocabile in qualsiasi momento.
+      Revocarne uno non ha effetto sugli altri e non chiude il tuo account.</p>
+
+      <div class="cons">
+        <div class="top">
+          <div>
+            <h3>Condivisione della verifica finanziaria</h3>
+            <p>Il proprietario dell'immobile per cui chiedi una visita vede che la
+            tua capacità di acquisto è stata verificata, con la fascia indicativa
+            e la scadenza. Non vede redditi, banca, né documenti.</p>
+            <p class="hist">Concesso il 14/07/2026 · versione 1.0</p>
+          </div>
+          <button class="tog" data-on="true" type="button">Attivo</button>
+        </div>
+      </div>
+
+      <div class="cons">
+        <div class="top">
+          <div>
+            <h3>Comunicazioni commerciali</h3>
+            <p>Novità e aggiornamenti da EasyCasa via e-mail.</p>
+            <p class="hist">Mai concesso</p>
+          </div>
+          <button class="tog" data-on="false" type="button">Disattivo</button>
+        </div>
+      </div>
+
+      <div class="cons">
+        <div class="top">
+          <div>
+            <h3>Trattamento per l'invio delle richieste</h3>
+            <p>Necessario per trasmettere le tue richieste ai proprietari. È la base
+            del servizio che hai chiesto, quindi non è un consenso revocabile: per
+            interromperlo puoi cancellare l'account.</p>
+            <p class="hist">Base giuridica · art. 6.1.b — contratto</p>
+          </div>
+          <span class="locked">non revocabile</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Scarica una copia</h2>
+    <div class="in">
+      <p class="lead">Un file leggibile con tutto quello elencato sopra, in formato
+      aperto. Pronto entro pochi minuti, il link resta valido 7 giorni.</p>
+      <div class="btns">
+        <button class="btn" type="button">Richiedi l'esportazione</button>
+        <button class="btn ghost" type="button">JSON o CSV?</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Quando cancelliamo da soli</h2>
+    <div class="in">
+      <p class="lead">Non conserviamo niente più a lungo del necessario. Questi
+      termini sono applicati automaticamente, senza che tu debba chiedere.</p>
+      <div class="timeline">
+        <div class="t"><span>Ricerche salvate, se inattive</span><span>12 mesi</span></div>
+        <div class="t"><span>Richieste senza risposta</span><span>24 mesi</span></div>
+        <div class="t"><span>Visite annullate</span><span>12 mesi</span></div>
+        <div class="t"><span>Verifica finanziaria</span><span>alla scadenza</span></div>
+        <div class="t"><span>Dati di accesso e sicurezza</span><span>12 mesi</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Cancella l'account</h2>
+    <div class="in">
+      <p class="lead">Cancelliamo il tuo account e i dati collegati. È definitivo:
+      non c'è un cestino e non possiamo recuperarli dopo.</p>
+
+      <div class="hold">
+        <b>Cosa non possiamo cancellare</b>
+        Alcuni dati restano perché la legge ci obbliga a conservarli. Preferiamo
+        dirtelo prima che scoprirlo dopo:
+        <ul>
+          <li>Documenti fiscali relativi a servizi che hai pagato — 10 anni</li>
+          <li>Registro dei consensi, come prova di averli raccolti correttamente</li>
+          <li>Dati oggetto di una verifica antiriciclaggio già avviata</li>
+        </ul>
+      </div>
+
+      <div class="btns" style="margin-top:1.2rem">
+        <button class="btn ghost" type="button">Cancella il mio account</button>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:.92rem;color:var(--ink-soft);max-width:50ch">
+    Se qualcosa non funziona o vuoi esercitare un diritto che non trovi qui —
+    opposizione, limitazione, portabilità — scrivici a
+    <a href="mailto:privacy@easycasaita.com">privacy@easycasaita.com</a>.
+    Rispondiamo entro un mese. Puoi anche rivolgerti direttamente al Garante per
+    la protezione dei dati personali, senza contattarci prima.
+  </p>
+</div>
+
+<footer>
+  <div class="wrap">MUNDIDA S.r.l. · P.IVA IT04531990986 · REA [—] · Sede legale [—] · PEC [—] · <a href="/it/privacy">Informativa privacy</a></div>
+</footer>
+
+</body>
+</html>

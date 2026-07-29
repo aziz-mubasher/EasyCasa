@@ -1132,5 +1132,303 @@
       "left": "EasyCasa · MUNDIDA S.r.l. · VAT IT04531990986",
       "right": "Market data: Agenzia Entrate — OMI"
     }
+  },
+  "myData": {
+    "metaTitle": "My data — EasyCasa",
+    "metaDescription": "View, export or erase your EasyCasa data.",
+    "title": "My data",
+    "subtitle": "Everything we know about you, on one page. Download, correct or erase it without writing to us.",
+    "signInPrompt": "Sign in to view, download or erase your data.",
+    "signedInAs": "Signed in as",
+    "held": {
+      "title": "What we hold",
+      "account": "Account",
+      "accountSignedIn": "Signed-in account",
+      "enquiries": "Enquiries",
+      "viewings": "Booked viewings",
+      "searches": "Saved searches",
+      "finance": "Affordability check",
+      "financeValue": "Banks4All · if present in export",
+      "consents": "Consent log",
+      "seeExport": "see in export",
+      "open": "open"
+    },
+    "consents": {
+      "title": "Your consents",
+      "lead": "Each consent is separate and can be withdrawn anytime. Withdrawing one does not affect the others and does not close your account.",
+      "on": "On",
+      "off": "Off",
+      "locked": "not withdrawable",
+      "finance": {
+        "title": "Share affordability check",
+        "body": "The owner of a home you request to view can see that your buying capacity was verified, with the indicative band and expiry. They do not see income, bank or documents.",
+        "hist": "Preference on this page · also update in enquiries"
+      },
+      "marketing": {
+        "title": "Marketing communications",
+        "body": "News and updates from EasyCasa by email.",
+        "hist": "Local preference"
+      },
+      "service": {
+        "title": "Processing to send your requests",
+        "body": "Needed to pass your requests to owners. It is the basis of the service you asked for, so it is not a withdrawable consent: to stop it, delete your account.",
+        "hist": "Legal basis · Art. 6.1.b — contract"
+      }
+    },
+    "export": {
+      "title": "Download a copy",
+      "lead": "A readable file with the data we process about you, in an open format.",
+      "cta": "Request export"
+    },
+    "retention": {
+      "title": "When we delete on our own",
+      "lead": "We do not keep anything longer than needed. These terms apply automatically."
+    },
+    "retentionRows": [
+      {
+        "label": "Saved searches, if inactive",
+        "period": "12 months"
+      },
+      {
+        "label": "Unanswered enquiries",
+        "period": "24 months"
+      },
+      {
+        "label": "Cancelled viewings",
+        "period": "12 months"
+      },
+      {
+        "label": "Affordability check",
+        "period": "at expiry"
+      },
+      {
+        "label": "Access and security data",
+        "period": "12 months"
+      }
+    ],
+    "erase": {
+      "title": "Delete account",
+      "lead": "We delete your account and linked data. It is final: there is no recycle bin.",
+      "holdTitle": "What we cannot delete",
+      "holdIntro": "Some data remains because the law requires it. We prefer to say so upfront:",
+      "confirm": "Confirm your data erasure request?",
+      "cta": "Delete my account"
+    },
+    "holdItems": [
+      "Tax documents for paid services — 10 years",
+      "Consent log, as proof consents were collected correctly",
+      "Data subject to an AML check already started"
+    ],
+    "footnoteBefore": "If something does not work or you want a right not listed here — objection, restriction, portability — write to",
+    "footnoteAfter": ". We reply within one month. You may also contact the Italian Data Protection Authority without writing to us first.",
+    "policyLink": "Privacy notice",
+    "errors": {
+      "export": "Export failed ({status})",
+      "erase": "Erasure failed ({status})",
+      "generic": "Error"
+    }
+  },
+  "privacyPolicy": {
+    "metaTitle": "Privacy notice — EasyCasa",
+    "metaDescription": "How EasyCasa processes your personal data: controller, purposes, legal bases, rights, and how to exercise them.",
+    "title": "Privacy notice",
+    "briefTag": "In brief",
+    "todoLabel": "To complete — legal",
+    "fullText": "Full text",
+    "tocLabel": "Contents",
+    "meta": {
+      "versionLabel": "Version",
+      "version": "1.0-draft",
+      "inForceLabel": "In force from",
+      "inForce": "[—]",
+      "updatedLabel": "Last updated",
+      "updated": "[—]",
+      "italianPrevails": "The Italian version prevails"
+    },
+    "toc": [
+      {
+        "id": "t1",
+        "label": "Who processes your data"
+      },
+      {
+        "id": "t2",
+        "label": "What data we collect"
+      },
+      {
+        "id": "t3",
+        "label": "Why and on what legal basis"
+      },
+      {
+        "id": "t4",
+        "label": "Who we share it with"
+      },
+      {
+        "id": "t5",
+        "label": "How long we keep it"
+      },
+      {
+        "id": "t6",
+        "label": "Transfers outside the EU"
+      },
+      {
+        "id": "t7",
+        "label": "Your rights"
+      },
+      {
+        "id": "t8",
+        "label": "How to exercise them"
+      },
+      {
+        "id": "t9",
+        "label": "Changes to this notice"
+      }
+    ],
+    "s1": {
+      "title": "Who processes your data",
+      "brief": "The data controller is MUNDIDA S.r.l., which operates EasyCasa. You can write to us at any time at the address indicated below.",
+      "todo": "Full legal name, registered office, VAT number, REA, PEC, privacy e-mail address, and any DPO with contact details (mandatory if appointed under Art. 37 GDPR)."
+    },
+    "s2": {
+      "title": "What data we collect",
+      "brief": "We collect what you give us — name, contact details, the messages you send — and some technical data generated by using the site. We do not collect special-category data (health, political opinions, sexual orientation) and we do not want it: if you write it in a message, we ask you to remove it.",
+      "thCat": "Category",
+      "thExamples": "Examples",
+      "thFrom": "From",
+      "fullTodo": "Detailed list of categories under Art. 13 GDPR, indicating mandatory and optional data and the consequences of refusal."
+    },
+    "s3": {
+      "title": "Why and on what legal basis",
+      "brief": "Most processing is to let you use the service you asked for: in those cases we do not ask for consent, because the basis is the contract. We only ask for consent where it is truly needed — for marketing and for sharing the financial verification with the owner — and you can withdraw it at any time.",
+      "thPurpose": "Purpose",
+      "thBasis": "Legal basis",
+      "fullTodo": "Confirmation of legal bases, description of legitimate interest and the related balancing test, references to anti-money-laundering rules applicable to mediation activities."
+    },
+    "s4": {
+      "title": "Who we share it with",
+      "brief": "With property owners for whom you submit a request — that is the point of the service. With providers who help us make it work, bound by contract. With authorities, if the law requires it. We do not sell your data and we do not hand it to agency networks.",
+      "fullTodo": "List of recipient categories, qualification of each as processor under Art. 28 or independent controller, and treatment of the intragroup relationship with Banks4All."
+    },
+    "s5": {
+      "title": "How long we keep it",
+      "brief": "For as long as needed, then we delete it automatically. Some data is kept longer because the law requires it — in that case we cannot erase it on request, and we tell you clearly instead of pretending we did.",
+      "todo": "Table of retention periods by category, with the legal basis for each mandatory retention. Periods must match those implemented in the automatic purge job."
+    },
+    "s6": {
+      "title": "Transfers outside the EU",
+      "brief": "Your data stays in the European Union. If a provider were to process it elsewhere, we state that here with the safeguards applied.",
+      "todo": "Review of every sub-processor. If transfers exist, indicate country, safeguards under Arts. 44–49, and how to obtain a copy."
+    },
+    "s7": {
+      "title": "Your rights",
+      "brief": "You can see what data we hold, correct it, download it, request erasure, object to certain processing, and withdraw consents. Most of this you can do yourself, immediately, without writing to us.",
+      "thRight": "Right",
+      "thWhere": "Where"
+    },
+    "s8": {
+      "title": "How to exercise them",
+      "briefBefore": "From the",
+      "briefLink": "My data",
+      "briefAfter": "page for almost everything, or by writing to the address indicated. We reply within one month. If you think something is wrong, you can contact the Italian Data Protection Authority (Garante) without contacting us first.",
+      "todo": "Dedicated e-mail address, identity-verification method for the requester, and full contact details of the Garante."
+    },
+    "s9": {
+      "title": "Changes to this notice",
+      "brief": "If we change something substantial we will tell you; we will not merely update the date. Previous versions remain available so you can see what changed and when."
+    },
+    "dataRows": [
+      {
+        "cat": "Identifiers",
+        "examples": "First name, last name, e-mail, phone",
+        "from": "from you"
+      },
+      {
+        "cat": "Content",
+        "examples": "Information requests, viewing notes",
+        "from": "from you"
+      },
+      {
+        "cat": "Listings",
+        "examples": "Property address, photos, documents",
+        "from": "from you"
+      },
+      {
+        "cat": "Consents",
+        "examples": "Consent log with date and version",
+        "from": "generated"
+      },
+      {
+        "cat": "Technical",
+        "examples": "IP address, device, pages visited",
+        "from": "generated"
+      },
+      {
+        "cat": "Financial verification",
+        "examples": "Status, indicative band, expiry",
+        "from": "Banks4All, with your consent"
+      }
+    ],
+    "purposeRows": [
+      {
+        "purpose": "Manage your account and contact requests",
+        "basis": "Art. 6.1.b — contract"
+      },
+      {
+        "purpose": "Book and manage viewings",
+        "basis": "Art. 6.1.b — contract"
+      },
+      {
+        "purpose": "Site security and abuse prevention",
+        "basis": "Art. 6.1.f — legitimate interest"
+      },
+      {
+        "purpose": "Tax and anti-money-laundering obligations",
+        "basis": "Art. 6.1.c — legal obligation"
+      },
+      {
+        "purpose": "Share financial verification with the owner",
+        "basis": "Art. 6.1.a — consent"
+      },
+      {
+        "purpose": "Commercial communications",
+        "basis": "Art. 6.1.a — consent"
+      }
+    ],
+    "rightRows": [
+      {
+        "right": "Access and copy of data",
+        "where": "My data",
+        "link": true
+      },
+      {
+        "right": "Rectification",
+        "where": "My data",
+        "link": true
+      },
+      {
+        "right": "Erasure",
+        "where": "My data",
+        "link": true
+      },
+      {
+        "right": "Withdrawal of consents",
+        "where": "My data",
+        "link": true
+      },
+      {
+        "right": "Objection, restriction, portability",
+        "where": "by writing to us",
+        "link": false
+      },
+      {
+        "right": "Complaint",
+        "where": "Garante privacy",
+        "link": false
+      }
+    ],
+    "help": {
+      "title": "Want to see what we hold about you?",
+      "body": "No need to write to us. Sign in and find everything — data, consents, export and erasure — on one page.",
+      "cta": "Go to My data"
+    }
   }
 }

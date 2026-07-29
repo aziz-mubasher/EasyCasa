@@ -1132,5 +1132,303 @@
       "left": "EasyCasa · MUNDIDA S.r.l. · P.IVA IT04531990986",
       "right": "Dati di mercato: Agenzia Entrate — OMI"
     }
+  },
+  "myData": {
+    "metaTitle": "I miei dati — EasyCasa",
+    "metaDescription": "Consulta, esporta o cancella i tuoi dati EasyCasa.",
+    "title": "I miei dati",
+    "subtitle": "Tutto quello che sappiamo di te, in una pagina. Puoi scaricarlo, correggerlo o cancellarlo senza scriverci.",
+    "signInPrompt": "Accedi per vedere, scaricare o cancellare i tuoi dati.",
+    "signedInAs": "Accesso come",
+    "held": {
+      "title": "Cosa conserviamo",
+      "account": "Account",
+      "accountSignedIn": "Account autenticato",
+      "enquiries": "Richieste di informazioni",
+      "viewings": "Visite prenotate",
+      "searches": "Ricerche salvate",
+      "finance": "Verifica finanziaria",
+      "financeValue": "Banks4All · se presente nell’esportazione",
+      "consents": "Registro dei consensi",
+      "seeExport": "vedi nell’esportazione",
+      "open": "apri"
+    },
+    "consents": {
+      "title": "I tuoi consensi",
+      "lead": "Ogni consenso è separato e revocabile in qualsiasi momento. Revocarne uno non ha effetto sugli altri e non chiude il tuo account.",
+      "on": "Attivo",
+      "off": "Disattivo",
+      "locked": "non revocabile",
+      "finance": {
+        "title": "Condivisione della verifica finanziaria",
+        "body": "Il proprietario dell'immobile per cui chiedi una visita vede che la tua capacità di acquisto è stata verificata, con la fascia indicativa e la scadenza. Non vede redditi, banca, né documenti.",
+        "hist": "Preferenza in questa pagina · aggiorna anche nelle richieste"
+      },
+      "marketing": {
+        "title": "Comunicazioni commerciali",
+        "body": "Novità e aggiornamenti da EasyCasa via e-mail.",
+        "hist": "Preferenza locale"
+      },
+      "service": {
+        "title": "Trattamento per l'invio delle richieste",
+        "body": "Necessario per trasmettere le tue richieste ai proprietari. È la base del servizio che hai chiesto, quindi non è un consenso revocabile: per interromperlo puoi cancellare l'account.",
+        "hist": "Base giuridica · art. 6.1.b — contratto"
+      }
+    },
+    "export": {
+      "title": "Scarica una copia",
+      "lead": "Un file leggibile con i dati che trattiamo su di te, in formato aperto.",
+      "cta": "Richiedi l'esportazione"
+    },
+    "retention": {
+      "title": "Quando cancelliamo da soli",
+      "lead": "Non conserviamo niente più a lungo del necessario. Questi termini sono applicati automaticamente, senza che tu debba chiedere."
+    },
+    "retentionRows": [
+      {
+        "label": "Ricerche salvate, se inattive",
+        "period": "12 mesi"
+      },
+      {
+        "label": "Richieste senza risposta",
+        "period": "24 mesi"
+      },
+      {
+        "label": "Visite annullate",
+        "period": "12 mesi"
+      },
+      {
+        "label": "Verifica finanziaria",
+        "period": "alla scadenza"
+      },
+      {
+        "label": "Dati di accesso e sicurezza",
+        "period": "12 mesi"
+      }
+    ],
+    "erase": {
+      "title": "Cancella l'account",
+      "lead": "Cancelliamo il tuo account e i dati collegati. È definitivo: non c'è un cestino e non possiamo recuperarli dopo.",
+      "holdTitle": "Cosa non possiamo cancellare",
+      "holdIntro": "Alcuni dati restano perché la legge ci obbliga a conservarli. Preferiamo dirtelo prima che scoprirlo dopo:",
+      "confirm": "Confermi la richiesta di cancellazione dei tuoi dati?",
+      "cta": "Cancella il mio account"
+    },
+    "holdItems": [
+      "Documenti fiscali relativi a servizi che hai pagato — 10 anni",
+      "Registro dei consensi, come prova di averli raccolti correttamente",
+      "Dati oggetto di una verifica antiriciclaggio già avviata"
+    ],
+    "footnoteBefore": "Se qualcosa non funziona o vuoi esercitare un diritto che non trovi qui — opposizione, limitazione, portabilità — scrivici a",
+    "footnoteAfter": ". Rispondiamo entro un mese. Puoi anche rivolgerti direttamente al Garante per la protezione dei dati personali, senza contattarci prima.",
+    "policyLink": "Informativa privacy",
+    "errors": {
+      "export": "Esportazione non riuscita ({status})",
+      "erase": "Cancellazione non riuscita ({status})",
+      "generic": "Errore"
+    }
+  },
+  "privacyPolicy": {
+    "metaTitle": "Informativa privacy — EasyCasa",
+    "metaDescription": "Come EasyCasa tratta i tuoi dati personali: titolare, finalità, basi giuridiche, diritti e modalità di esercizio.",
+    "title": "Informativa privacy",
+    "briefTag": "In breve",
+    "todoLabel": "Da completare — legale",
+    "fullText": "Testo completo",
+    "tocLabel": "Indice",
+    "meta": {
+      "versionLabel": "Versione",
+      "version": "1.0-draft",
+      "inForceLabel": "In vigore dal",
+      "inForce": "[—]",
+      "updatedLabel": "Ultimo aggiornamento",
+      "updated": "[—]",
+      "italianPrevails": "Prevale la versione italiana"
+    },
+    "toc": [
+      {
+        "id": "t1",
+        "label": "Chi tratta i tuoi dati"
+      },
+      {
+        "id": "t2",
+        "label": "Quali dati raccogliamo"
+      },
+      {
+        "id": "t3",
+        "label": "Perché e con quale base giuridica"
+      },
+      {
+        "id": "t4",
+        "label": "A chi li comunichiamo"
+      },
+      {
+        "id": "t5",
+        "label": "Per quanto tempo li conserviamo"
+      },
+      {
+        "id": "t6",
+        "label": "Trasferimenti fuori dall'UE"
+      },
+      {
+        "id": "t7",
+        "label": "I tuoi diritti"
+      },
+      {
+        "id": "t8",
+        "label": "Come esercitarli"
+      },
+      {
+        "id": "t9",
+        "label": "Modifiche a questa informativa"
+      }
+    ],
+    "s1": {
+      "title": "Chi tratta i tuoi dati",
+      "brief": "Il titolare del trattamento è MUNDIDA S.r.l., che gestisce EasyCasa. Puoi scriverci in qualsiasi momento all'indirizzo indicato qui sotto.",
+      "todo": "Ragione sociale completa, sede legale, P.IVA, REA, PEC, indirizzo e-mail privacy, ed eventuale DPO con relativi contatti (obbligatorio se designato ai sensi dell'art. 37 GDPR)."
+    },
+    "s2": {
+      "title": "Quali dati raccogliamo",
+      "brief": "Raccogliamo quello che ci dai tu — nome, contatti, i messaggi che invii — e alcuni dati tecnici generati dall'uso del sito. Non raccogliamo dati particolari (salute, opinioni politiche, orientamento sessuale) e non li vogliamo: se li scrivi in un messaggio, ti chiediamo di rimuoverli.",
+      "thCat": "Categoria",
+      "thExamples": "Esempi",
+      "thFrom": "Da dove",
+      "fullTodo": "Elenco puntuale delle categorie ex art. 13 GDPR, con indicazione dei dati obbligatori e facoltativi e delle conseguenze del rifiuto."
+    },
+    "s3": {
+      "title": "Perché e con quale base giuridica",
+      "brief": "La maggior parte dei trattamenti serve a farti usare il servizio che hai chiesto: in quei casi non ti chiediamo il consenso, perché la base è il contratto. Il consenso te lo chiediamo solo dove serve davvero — per il marketing e per la condivisione della verifica finanziaria con il proprietario — e puoi revocarlo quando vuoi.",
+      "thPurpose": "Finalità",
+      "thBasis": "Base giuridica",
+      "fullTodo": "Conferma delle basi giuridiche, descrizione dell'interesse legittimo e del relativo bilanciamento, riferimenti alle norme antiriciclaggio applicabili all'attività di mediazione."
+    },
+    "s4": {
+      "title": "A chi li comunichiamo",
+      "brief": "Ai proprietari degli immobili per cui invii una richiesta — è il senso del servizio. Ai fornitori che ci aiutano a farlo funzionare, vincolati da contratto. Alle autorità, se la legge lo impone. Non vendiamo i tuoi dati e non li cediamo a reti di agenzie.",
+      "fullTodo": "Elenco delle categorie di destinatari, qualificazione di ciascuno come responsabile ex art. 28 o titolare autonomo, e trattamento del rapporto infragruppo con Banks4All."
+    },
+    "s5": {
+      "title": "Per quanto tempo li conserviamo",
+      "brief": "Il tempo necessario, poi li cancelliamo automaticamente. Alcuni dati restano più a lungo perché la legge ce lo impone — in quel caso non possiamo cancellarli su richiesta, e te lo diciamo chiaramente invece di far finta di averlo fatto.",
+      "todo": "Tabella dei periodi di conservazione per categoria, con il fondamento normativo di ciascuna conservazione obbligatoria. I periodi devono corrispondere a quelli implementati nel job di purge automatico."
+    },
+    "s6": {
+      "title": "Trasferimenti fuori dall'UE",
+      "brief": "I tuoi dati restano nell'Unione Europea. Se un fornitore dovesse trattarli altrove, lo indichiamo qui con le garanzie applicate.",
+      "todo": "Verifica di ogni sub-fornitore. Se esistono trasferimenti, indicare Paese, garanzie ex artt. 44-49 e come ottenerne copia."
+    },
+    "s7": {
+      "title": "I tuoi diritti",
+      "brief": "Puoi vedere che dati abbiamo, correggerli, scaricarli, chiederne la cancellazione, opporti a certi trattamenti e revocare i consensi. La maggior parte di queste cose la puoi fare da solo, subito, senza scriverci.",
+      "thRight": "Diritto",
+      "thWhere": "Dove"
+    },
+    "s8": {
+      "title": "Come esercitarli",
+      "briefBefore": "Dalla pagina",
+      "briefLink": "I miei dati",
+      "briefAfter": "per quasi tutto, oppure scrivendo all'indirizzo indicato. Rispondiamo entro un mese. Se pensi che qualcosa non vada, puoi rivolgerti al Garante per la protezione dei dati personali senza doverci prima contattare.",
+      "todo": "Indirizzo e-mail dedicato, modalità di verifica dell'identità del richiedente, e recapiti completi del Garante."
+    },
+    "s9": {
+      "title": "Modifiche a questa informativa",
+      "brief": "Se cambiamo qualcosa di sostanziale te lo diciamo, non ci limitiamo ad aggiornare la data. Le versioni precedenti restano consultabili, così puoi vedere cosa è cambiato e quando."
+    },
+    "dataRows": [
+      {
+        "cat": "Identificativi",
+        "examples": "Nome, cognome, e-mail, telefono",
+        "from": "da te"
+      },
+      {
+        "cat": "Contenuti",
+        "examples": "Richieste di informazioni, note sulle visite",
+        "from": "da te"
+      },
+      {
+        "cat": "Annunci",
+        "examples": "Indirizzo dell'immobile, foto, documenti",
+        "from": "da te"
+      },
+      {
+        "cat": "Consensi",
+        "examples": "Registro dei consensi con data e versione",
+        "from": "generati"
+      },
+      {
+        "cat": "Tecnici",
+        "examples": "Indirizzo IP, dispositivo, pagine visitate",
+        "from": "generati"
+      },
+      {
+        "cat": "Verifica finanziaria",
+        "examples": "Stato, fascia indicativa, scadenza",
+        "from": "Banks4All, col tuo consenso"
+      }
+    ],
+    "purposeRows": [
+      {
+        "purpose": "Gestire il tuo account e le richieste di contatto",
+        "basis": "art. 6.1.b — contratto"
+      },
+      {
+        "purpose": "Prenotare e gestire le visite",
+        "basis": "art. 6.1.b — contratto"
+      },
+      {
+        "purpose": "Sicurezza del sito e prevenzione degli abusi",
+        "basis": "art. 6.1.f — interesse legittimo"
+      },
+      {
+        "purpose": "Obblighi fiscali e antiriciclaggio",
+        "basis": "art. 6.1.c — obbligo di legge"
+      },
+      {
+        "purpose": "Condividere la verifica finanziaria col proprietario",
+        "basis": "art. 6.1.a — consenso"
+      },
+      {
+        "purpose": "Comunicazioni commerciali",
+        "basis": "art. 6.1.a — consenso"
+      }
+    ],
+    "rightRows": [
+      {
+        "right": "Accesso e copia dei dati",
+        "where": "I miei dati",
+        "link": true
+      },
+      {
+        "right": "Rettifica",
+        "where": "I miei dati",
+        "link": true
+      },
+      {
+        "right": "Cancellazione",
+        "where": "I miei dati",
+        "link": true
+      },
+      {
+        "right": "Revoca dei consensi",
+        "where": "I miei dati",
+        "link": true
+      },
+      {
+        "right": "Opposizione, limitazione, portabilità",
+        "where": "scrivendoci",
+        "link": false
+      },
+      {
+        "right": "Reclamo",
+        "where": "Garante privacy",
+        "link": false
+      }
+    ],
+    "help": {
+      "title": "Vuoi vedere cosa abbiamo su di te?",
+      "body": "Non serve scriverci. Accedi e trovi tutto — dati, consensi, esportazione e cancellazione — in una sola pagina.",
+      "cta": "Vai a I miei dati"
+    }
   }
 }

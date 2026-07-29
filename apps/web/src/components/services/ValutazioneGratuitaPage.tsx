@@ -214,13 +214,6 @@ export function ValutazioneGratuitaPage() {
           </a>
         </div>
       </section>
-
-      <footer className="vg-footer">
-        <div className="wrap">
-          <div>{t('footer.left')}</div>
-          <div>{t('footer.right')}</div>
-        </div>
-      </footer>
     </div>
   );
 }
