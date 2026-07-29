@@ -19,8 +19,9 @@ NestJS + Drizzle over the Phase 1 Postgres schema. OpenAPI at `/docs`
 | POST | /listings | seller/agent/partner/pro | Create draft |
 | PATCH | /listings/:id | owner/admin | Update |
 | POST | /listings/:id/publish | owner/admin | Publish |
-| POST | /imports/casafari/preview | muba-seller only | Preview Casafari sharepage → drafts (see `docs/casafari-import.md`) |
-| POST | /imports/casafari/create | muba-seller only | Create draft listing + import ≤20 photos from Casafari |
+| POST | /imports/casafari/preview | muba-seller / muba-admin | Preview Casafari sharepage → drafts (see `docs/casafari-import.md`) |
+| POST | /imports/casafari/create | muba-seller / muba-admin | Create one draft listing + import ≤20 photos from Casafari |
+| POST | /imports/casafari/create-many | muba-seller / muba-admin | Bulk-create drafts from a Casafari share folder |
 | GET | /categories, /regions | public | Taxonomy |
 | GET | /me | authed | Current user (auto-provisioned) |
 | GET | /agents/:slug | public | Agent profile |

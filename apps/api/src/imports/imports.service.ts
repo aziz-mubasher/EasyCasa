@@ -15,7 +15,7 @@ import {
   importCasafariShare,
   isCasafariShareUrl,
 } from './casafari/casafari-scrape';
-import type { CasafariCreateDto, CasafariPreviewDto } from './dto/casafari-import.dto';
+import type { CasafariCreateDto, CasafariCreateManyDto, CasafariPreviewDto } from './dto/casafari-import.dto';
 
 const PHOTO_HOST_ALLOWLIST = [
   /(^|\.)casafari\.com$/i,
@@ -137,10 +137,112 @@ export class ImportsService {
       draft = match;
     } else if (preview.drafts.length > 1) {
       throw new BadRequestException(
-        `Share folder has ${preview.drafts.length} properties — pass casafariId to choose one`,
+        `Share folder has ${preview.drafts.length} properties — pass casafariId, or use create-many`,
       );
     }
 
+    return this.persistDraft(draft, agentId, {
+      province: dto.province,
+      maxImages,
+    });
+  }
+
+  /**
+   * Import one or more estates from a Casafari share folder into draft listings.
+   * When `casafariIds` is empty/omitted, every estate on the share is imported.
+   */
+  async createManyFromCasafari(
+    dto: CasafariCreateManyDto,
+    agentId: string,
+  ): Promise<{
+    imported: number;
+    failed: number;
+    results: Array<{
+      casafariId: string;
+      ok: boolean;
+      listingId?: string;
+      slug?: string | null;
+      title?: string;
+      imagesImported?: number;
+      imageErrors?: string[];
+      error?: string;
+    }>;
+  }> {
+    const maxImages = dto.maxImages ?? CASAFARI_MAX_IMAGES;
+    const preview = await this.previewCasafari({
+      url: dto.url,
+      refreshCache: dto.refreshCache ?? true,
+      maxImages,
+    });
+    if (!preview.drafts.length) {
+      throw new NotFoundException('No properties found on that Casafari share link');
+    }
+
+    const selectedIds = (dto.casafariIds ?? []).map((id) => String(id).trim()).filter(Boolean);
+    const drafts =
+      selectedIds.length === 0
+        ? preview.drafts
+        : preview.drafts.filter((d) => selectedIds.includes(d.casafariId));
+
+    if (!drafts.length) {
+      throw new NotFoundException('None of the requested casafariIds were on that share link');
+    }
+
+    const results: Array<{
+      casafariId: string;
+      ok: boolean;
+      listingId?: string;
+      slug?: string | null;
+      title?: string;
+      imagesImported?: number;
+      imageErrors?: string[];
+      error?: string;
+    }> = [];
+
+    for (const draft of drafts) {
+      try {
+        const created = await this.persistDraft(draft, agentId, {
+          province: dto.province,
+          maxImages,
+        });
+        results.push({
+          casafariId: draft.casafariId,
+          ok: true,
+          listingId: created.listing.id,
+          slug: created.listing.slug,
+          title: created.draft.title,
+          imagesImported: created.imagesImported,
+          imageErrors: created.imageErrors,
+        });
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        this.log.warn(`Casafari create-many failed for ${draft.casafariId}: ${msg}`);
+        results.push({
+          casafariId: draft.casafariId || draft.title,
+          ok: false,
+          title: draft.title,
+          error: msg,
+        });
+      }
+    }
+
+    return {
+      imported: results.filter((r) => r.ok).length,
+      failed: results.filter((r) => !r.ok).length,
+      results,
+    };
+  }
+
+  private async persistDraft(
+    draft: EasyCasaImportDraft,
+    agentId: string,
+    opts: { province?: string; maxImages: number },
+  ): Promise<{
+    listing: Awaited<ReturnType<ListingsRepository['insert']>>;
+    draft: EasyCasaImportDraft;
+    imagesImported: number;
+    imageErrors: string[];
+  }> {
     const transactionTypes = draft.transactionTypes;
     const transactionType = primaryTransactionType(transactionTypes) ?? 'sale';
     const price =
@@ -169,7 +271,7 @@ export class ImportsService {
       yearBuilt: draft.yearBuilt ?? undefined,
       address: draft.address ?? undefined,
       city: draft.city ?? undefined,
-      province: dto.province?.trim() || draft.province || undefined,
+      province: opts.province?.trim() || draft.province || undefined,
       postalCode: draft.postalCode || undefined,
       energyClass: draft.energyClass ?? undefined,
       floor: draft.floor ?? undefined,
@@ -197,7 +299,7 @@ export class ImportsService {
 
     const { imported, errors } = await this.importPhotos(
       created.id,
-      draft.photoUrls.slice(0, maxImages),
+      draft.photoUrls.slice(0, opts.maxImages),
       draft.title,
     );
 

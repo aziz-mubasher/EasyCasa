@@ -4,7 +4,7 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 import { assertCasafariImporter } from './casafari/casafari-access';
-import { CasafariCreateDto, CasafariPreviewDto } from './dto/casafari-import.dto';
+import { CasafariCreateDto, CasafariCreateManyDto, CasafariPreviewDto } from './dto/casafari-import.dto';
 import { ImportsService } from './imports.service';
 
 @Controller('imports')
@@ -16,7 +16,7 @@ export class ImportsController {
 
   /**
    * Scrape a Casafari sharepage and return mapped listing drafts (no DB write).
-   * Restricted to Keycloak user `muba-seller`. Up to 20 photo URLs per draft.
+   * Restricted to muba-seller / muba-admin. Up to 20 photo URLs per draft.
    */
   @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Post('casafari/preview')
@@ -26,8 +26,7 @@ export class ImportsController {
   }
 
   /**
-   * Create a draft listing from a Casafari sharepage estate and download photos.
-   * Restricted to `muba-seller` (same account that can publish as seller).
+   * Create a draft listing from one Casafari estate.
    */
   @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Post('casafari/create')
@@ -35,5 +34,16 @@ export class ImportsController {
     assertCasafariImporter(user);
     const me = await this.users.getOrCreate(user);
     return this.imports.createFromCasafari(dto, me.id);
+  }
+
+  /**
+   * Import every (or selected) estate from a Casafari share folder as drafts.
+   */
+  @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
+  @Post('casafari/create-many')
+  async createMany(@Body() dto: CasafariCreateManyDto, @CurrentUser() user: AuthUser) {
+    assertCasafariImporter(user);
+    const me = await this.users.getOrCreate(user);
+    return this.imports.createManyFromCasafari(dto, me.id);
   }
 }

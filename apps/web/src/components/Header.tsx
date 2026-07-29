@@ -8,6 +8,7 @@ import { isListingLandingPath } from '@/lib/listing-landing';
 import { isMarketingServicePath } from '@/lib/marketing-service';
 import { useListingLanding } from '@/components/listings/ListingLandingContext';
 import { ListingShareActions } from '@/components/listings/ListingShareActions';
+import { useCanImportCasafari } from '@/auth/useCanImportCasafari';
 
 export function Header() {
   const t = useTranslations('nav');
@@ -16,6 +17,7 @@ export function Header() {
   const landing = isListingLandingPath(pathname);
   const marketing = isMarketingServicePath(pathname);
   const listing = useListingLanding();
+  const { canImport } = useCanImportCasafari();
 
   if (marketing) {
     return (
@@ -72,6 +74,11 @@ export function Header() {
           <Link href="/add" className="hover:text-azure">
             {t('add')}
           </Link>
+          {canImport ? (
+            <Link href="/imports/casafari" className="hover:text-azure">
+              {t('casafariImport')}
+            </Link>
+          ) : null}
           <Link href="/favorites" className="hover:text-azure">
             {t('favorites')}
           </Link>

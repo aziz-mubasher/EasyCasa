@@ -1,8 +1,8 @@
 import { ForbiddenException } from '@nestjs/common';
 import type { AuthUser } from '../../auth/auth.types';
 
-/** Only this Keycloak username may use Casafari share import + draft create. */
-export const CASAFARI_IMPORTER_USERNAMES = ['muba-seller'] as const;
+/** Only these Keycloak usernames may use Casafari share import. */
+export const CASAFARI_IMPORTER_USERNAMES = ['muba-seller', 'muba-admin'] as const;
 
 /** Resolve login name from JWT fields (preferred_username, else email local-part). */
 export function casafariImporterIdentity(user: AuthUser | null | undefined): string {
@@ -22,7 +22,7 @@ export function isCasafariImporter(user: AuthUser | null | undefined): boolean {
 export function assertCasafariImporter(user: AuthUser): void {
   if (!isCasafariImporter(user)) {
     throw new ForbiddenException(
-      'Casafari import is restricted to the muba-seller account',
+      'Casafari import is restricted to muba-seller (or muba-admin)',
     );
   }
 }

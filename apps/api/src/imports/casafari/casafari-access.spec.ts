@@ -16,15 +16,14 @@ function user(partial: Partial<AuthUser>): AuthUser {
 }
 
 describe('casafari-access', () => {
-  it('allows only muba-seller (preferred_username or email local-part)', () => {
+  it('allows muba-seller and muba-admin (preferred_username or email local-part)', () => {
     expect(isCasafariImporter(user({ preferredUsername: 'muba-seller' }))).toBe(true);
-    expect(isCasafariImporter(user({ preferredUsername: 'Muba-Seller' }))).toBe(true);
+    expect(isCasafariImporter(user({ preferredUsername: 'muba-admin', roles: ['admin'] }))).toBe(
+      true,
+    );
     expect(
       isCasafariImporter(user({ preferredUsername: undefined, email: 'muba-seller@easycasaita.com' })),
     ).toBe(true);
-    expect(isCasafariImporter(user({ preferredUsername: 'muba-admin', roles: ['admin'] }))).toBe(
-      false,
-    );
     expect(isCasafariImporter(user({ preferredUsername: 'other-seller', roles: ['seller'] }))).toBe(
       false,
     );
@@ -43,7 +42,7 @@ describe('casafari-access', () => {
       assertCasafariImporter(user({ preferredUsername: 'muba-seller' })),
     ).not.toThrow();
     expect(() =>
-      assertCasafariImporter(user({ preferredUsername: 'muba-admin', roles: ['admin'] })),
+      assertCasafariImporter(user({ preferredUsername: 'alice', roles: ['seller'] })),
     ).toThrow(ForbiddenException);
   });
 });

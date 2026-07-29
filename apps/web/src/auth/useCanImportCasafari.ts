@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/auth/AuthProvider';
 
-const CASAFARI_IMPORTER_USERNAMES = new Set(['muba-seller']);
+const CASAFARI_IMPORTER_USERNAMES = new Set(['muba-seller', 'muba-admin']);
 
 function importerIdentityFromJwt(accessToken: string | null): string | null {
   if (!accessToken) return null;
@@ -27,7 +27,7 @@ function importerIdentityFromJwt(accessToken: string | null): string | null {
   }
 }
 
-/** True only for Keycloak user `muba-seller` (Casafari import + publish). */
+/** True for Keycloak users `muba-seller` or `muba-admin` (Casafari folder import). */
 export function useCanImportCasafari(): { ready: boolean; canImport: boolean } {
   const { ready, getAccessToken, isAuthenticated } = useAuth();
   const [canImport, setCanImport] = useState(false);
