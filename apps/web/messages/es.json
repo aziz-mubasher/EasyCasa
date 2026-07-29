@@ -329,7 +329,7 @@
     "mediaPlaceholder": "Añade hasta 20 fotos (JPEG, PNG o WebP).",
     "casafari": {
       "title": "Importar desde enlace Casafari",
-      "body": "Pega una URL sharepage de Casafari para traer los datos del anuncio y hasta 20 fotos a un borrador (solo muba-admin).",
+      "body": "Pega una URL sharepage de Casafari para traer los datos del anuncio y hasta 20 fotos a un borrador (solo muba-seller).",
       "urlLabel": "URL compartida de Casafari",
       "urlHint": "Ejemplo: https://www.casafari.com/estate/sharepage/…",
       "preview": "Vista previa",

@@ -33,7 +33,11 @@ export class UsersService {
         ? 'professional'
         : user.roles.includes('agent')
           ? 'agent'
-          : 'buyer';
+          : user.roles.includes('seller') ||
+              user.roles.includes('partner') ||
+              user.roles.includes('pro_marketer')
+            ? 'seller'
+            : 'buyer';
     const inserted = await this.db
       .insert(users)
       .values({ email: user.email, displayName: user.name, role, slug: subSlug })

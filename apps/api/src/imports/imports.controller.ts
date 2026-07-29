@@ -16,9 +16,9 @@ export class ImportsController {
 
   /**
    * Scrape a Casafari sharepage and return mapped listing drafts (no DB write).
-   * Restricted to Keycloak user `muba-admin`. Up to 20 photo URLs per draft.
+   * Restricted to Keycloak user `muba-seller`. Up to 20 photo URLs per draft.
    */
-  @Roles('admin')
+  @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Post('casafari/preview')
   preview(@Body() dto: CasafariPreviewDto, @CurrentUser() user: AuthUser) {
     assertCasafariImporter(user);
@@ -26,10 +26,10 @@ export class ImportsController {
   }
 
   /**
-   * Create a draft listing from a Casafari sharepage estate and download photos
-   * into EasyCasa media storage (default 20 images). Restricted to `muba-admin`.
+   * Create a draft listing from a Casafari sharepage estate and download photos.
+   * Restricted to `muba-seller` (same account that can publish as seller).
    */
-  @Roles('admin')
+  @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Post('casafari/create')
   async create(@Body() dto: CasafariCreateDto, @CurrentUser() user: AuthUser) {
     assertCasafariImporter(user);

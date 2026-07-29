@@ -2,6 +2,7 @@ import { ForbiddenException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import {
   assertCasafariImporter,
+  casafariImporterIdentity,
   isCasafariImporter,
 } from './casafari-access';
 import type { AuthUser } from '../../auth/auth.types';
@@ -9,27 +10,40 @@ import type { AuthUser } from '../../auth/auth.types';
 function user(partial: Partial<AuthUser>): AuthUser {
   return {
     sub: 'sub',
-    roles: ['admin'],
+    roles: ['seller'],
     ...partial,
   };
 }
 
 describe('casafari-access', () => {
-  it('allows only preferredUsername muba-admin', () => {
-    expect(isCasafariImporter(user({ preferredUsername: 'muba-admin' }))).toBe(true);
-    expect(isCasafariImporter(user({ preferredUsername: 'Muba-Admin' }))).toBe(true);
-    expect(isCasafariImporter(user({ preferredUsername: 'other-admin', roles: ['admin'] }))).toBe(
+  it('allows only muba-seller (preferred_username or email local-part)', () => {
+    expect(isCasafariImporter(user({ preferredUsername: 'muba-seller' }))).toBe(true);
+    expect(isCasafariImporter(user({ preferredUsername: 'Muba-Seller' }))).toBe(true);
+    expect(
+      isCasafariImporter(user({ preferredUsername: undefined, email: 'muba-seller@easycasaita.com' })),
+    ).toBe(true);
+    expect(isCasafariImporter(user({ preferredUsername: 'muba-admin', roles: ['admin'] }))).toBe(
       false,
     );
-    expect(isCasafariImporter(user({ preferredUsername: 'seller1', roles: ['seller'] }))).toBe(
+    expect(isCasafariImporter(user({ preferredUsername: 'other-seller', roles: ['seller'] }))).toBe(
       false,
     );
   });
 
+  it('casafariImporterIdentity prefers preferredUsername over email', () => {
+    expect(
+      casafariImporterIdentity(
+        user({ preferredUsername: 'muba-seller', email: 'other@example.com' }),
+      ),
+    ).toBe('muba-seller');
+  });
+
   it('assertCasafariImporter throws for everyone else', () => {
-    expect(() => assertCasafariImporter(user({ preferredUsername: 'muba-admin' }))).not.toThrow();
-    expect(() => assertCasafariImporter(user({ preferredUsername: 'alice', roles: ['admin'] }))).toThrow(
-      ForbiddenException,
-    );
+    expect(() =>
+      assertCasafariImporter(user({ preferredUsername: 'muba-seller' })),
+    ).not.toThrow();
+    expect(() =>
+      assertCasafariImporter(user({ preferredUsername: 'muba-admin', roles: ['admin'] })),
+    ).toThrow(ForbiddenException);
   });
 });

@@ -3,8 +3,9 @@
 Import EasyCasa draft listings from a public Casafari **sharepage** URL
 (same approach as Banks4All partners properties collection).
 
-> **Access:** only Keycloak username **`muba-admin`** (API + `/add` UI). Sellers and
-> other admins are denied.
+> **Access:** only Keycloak username **`muba-seller`** (API + `/add` UI). Sellers other
+> than this account, and admins, are denied. `muba-seller` should hold the Keycloak
+> **`seller`** role so create/publish works.
 >
 > **Legal note:** this reads embedded `"estates":[...]` JSON from the sharepage HTML.
 > It is not the official Casafari Property Data API. Confirm ToS / counsel before
@@ -12,7 +13,7 @@ Import EasyCasa draft listings from a public Casafari **sharepage** URL
 
 ## UI
 
-`/{locale}/add` — “Import from Casafari share link” panel (step 1), visible only to `muba-admin`:
+`/{locale}/add` — “Import from Casafari share link” panel (step 1), visible only to `muba-seller`:
 
 1. Paste `https://www.casafari.com/estate/sharepage/{shareId}/…`
 2. **Preview** → mapped draft(s), up to **20** photo URLs
@@ -25,8 +26,8 @@ Import EasyCasa draft listings from a public Casafari **sharepage** URL
 
 | Method | Path | Access | Purpose |
 |---|---|---|---|
-| POST | `/imports/casafari/preview` | `muba-admin` only | Scrape → drafts (no DB write) |
-| POST | `/imports/casafari/create` | `muba-admin` only | Create draft listing + import ≤20 photos |
+| POST | `/imports/casafari/preview` | `muba-seller` only | Scrape → drafts (no DB write) |
+| POST | `/imports/casafari/create` | `muba-seller` only | Create draft listing + import ≤20 photos |
 
 ### Preview / create body
 

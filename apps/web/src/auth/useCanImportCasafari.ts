@@ -3,24 +3,31 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/auth/AuthProvider';
 
-const CASAFARI_IMPORTER_USERNAMES = new Set(['muba-admin']);
+const CASAFARI_IMPORTER_USERNAMES = new Set(['muba-seller']);
 
-function preferredUsernameFromJwt(accessToken: string | null): string | null {
+function importerIdentityFromJwt(accessToken: string | null): string | null {
   if (!accessToken) return null;
   try {
     const payloadPart = accessToken.split('.')[1];
     if (!payloadPart) return null;
     const json = atob(payloadPart.replace(/-/g, '+').replace(/_/g, '/'));
-    const payload = JSON.parse(json) as { preferred_username?: unknown };
-    return typeof payload.preferred_username === 'string'
-      ? payload.preferred_username
-      : null;
+    const payload = JSON.parse(json) as {
+      preferred_username?: unknown;
+      email?: unknown;
+    };
+    if (typeof payload.preferred_username === 'string' && payload.preferred_username.trim()) {
+      return payload.preferred_username.trim().toLowerCase();
+    }
+    if (typeof payload.email === 'string' && payload.email.includes('@')) {
+      return payload.email.split('@')[0]!.trim().toLowerCase();
+    }
+    return null;
   } catch {
     return null;
   }
 }
 
-/** True only for Keycloak user `muba-admin` (Casafari import privilege). */
+/** True only for Keycloak user `muba-seller` (Casafari import + publish). */
 export function useCanImportCasafari(): { ready: boolean; canImport: boolean } {
   const { ready, getAccessToken, isAuthenticated } = useAuth();
   const [canImport, setCanImport] = useState(false);
@@ -34,7 +41,7 @@ export function useCanImportCasafari(): { ready: boolean; canImport: boolean } {
     let cancelled = false;
     void getAccessToken().then((token) => {
       if (cancelled) return;
-      const uname = preferredUsernameFromJwt(token)?.trim().toLowerCase() ?? '';
+      const uname = importerIdentityFromJwt(token) ?? '';
       setCanImport(CASAFARI_IMPORTER_USERNAMES.has(uname));
     });
     return () => {

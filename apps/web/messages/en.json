@@ -329,7 +329,7 @@
     "mediaPlaceholder": "Add up to 20 photos (JPEG, PNG or WebP).",
     "casafari": {
       "title": "Import from Casafari share link",
-      "body": "Paste a Casafari sharepage URL to pull listing details and up to 20 photos into a draft (muba-admin only).",
+      "body": "Paste a Casafari sharepage URL to pull listing details and up to 20 photos into a draft (muba-seller only).",
       "urlLabel": "Casafari share URL",
       "urlHint": "Example: https://www.casafari.com/estate/sharepage/…",
       "preview": "Preview",
