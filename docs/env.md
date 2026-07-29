@@ -35,18 +35,22 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 ## Phase 2 — auth
 | Variable | Used by | Notes |
 |---|---|---|
-| DEV_AUTH | api | `true` trusts `x-dev-user` / `x-dev-roles` / `x-dev-email` headers (local/dev). When `false`, boot fails unless OIDC_* are set (Phase 16). |
-| OIDC_ISSUER / OIDC_AUDIENCE / OIDC_JWKS_URL | api | Real Keycloak settings. **Required** when `DEV_AUTH` is not `true`. JWKS must be reachable for pilot preflight. |
+| EC_TEST_AUTH | api | `true` only with `NODE_ENV=test` — trusts `x-dev-*` headers in vitest. **Never** on VPS. |
+| ALLOW_PROVIDER_STUBS | api | Allows empty PSP/SdI/AML/RLI seams and optional OIDC at boot (local/CI). **Off** in pilot/production. |
+| OIDC_ISSUER / OIDC_AUDIENCE / OIDC_JWKS_URL | api | Real Keycloak settings. **Required** when stubs/test-auth are off. |
+| WHATSAPP_TOKEN / WHATSAPP_PHONE_NUMBER_ID / WHATSAPP_OTP_TEMPLATE | api | Meta Cloud API for EC-12 phone OTP. Empty → email fallback. |
+| WHATSAPP_OTP_TEMPLATE_LANG / WHATSAPP_GRAPH_VERSION | api | Defaults `it` / `v21.0`. |
+| PHONE_OTP_PEPPER | api | SHA-256 pepper for OTP hashes (min 16 chars). |
 | KEYCLOAK_HOSTNAME | keycloak (VPS) | Public hostname (default `auth.easycasaita.com`). |
 | KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD | keycloak (VPS) | Bootstrap admin — set on VPS only; never commit. |
 | KEYCLOAK_DB | keycloak (VPS) | Postgres database name (default `keycloak`; created by `infra/postgres/init/02-keycloak-db.sql`). |
 | NEXT_PUBLIC_OIDC_ISSUER / NEXT_PUBLIC_OIDC_CLIENT_ID | web (build) | PKCE client for seeker sign-in (`easycasa-web`). Baked at image build. |
-| NEXT_PUBLIC_MAP_STYLE | web (build) | MapLibre basemap style JSON URL (default: OpenFreeMap Liberty — keyless, OSM data). **Rebuild web** after changing. Startup logs ERROR if unset in production builds. |
+| NEXT_PUBLIC_MAP_STYLE | web (build) | MapLibre basemap style JSON URL (default: OpenFreeMap Liberty — keyless, OSM data). **Rebuild web** after changing. |
 | NEXT_PUBLIC_VALUATION_BAND_ENABLED | web (build) | Show the provisional market valuation band on listing detail and add-listing price step. Must match API `VALUATION_BAND_ENABLED`. Rebuild web after changing. |
 | VALUATION_BAND_ENABLED | api | Serve `GET /listings/:slug/valuation-band` and `POST /avm/band`. Uses OMI cache when populated, else stub comparables. Default `false`. |
 | SHARE_VIEW_HMAC_SECRET | api | Pepper for SmartLink daily unique-view SHA-256 hashes (min 16 chars). **No raw IP or visitor id stored** — see `docs/smartlink-view-tracking.md`. |
 | AGENCY_PUBLIC_NAME / AGENCY_PUBLIC_EMAIL / AGENCY_PUBLIC_PHONE | api | Public agency block on SmartLink pages. |
-| VITE_OIDC_ISSUER / VITE_OIDC_CLIENT_ID / VITE_DEV_AUTH | admin (build) | Admin SPA PKCE client (`easycasa-admin`). Keep `VITE_DEV_AUTH=true` until Keycloak is live; see `docs/runbooks/oidc-cutover.md`. |
+| VITE_OIDC_ISSUER / VITE_OIDC_CLIENT_ID / VITE_DEV_AUTH | admin (build) | Admin SPA PKCE. Prefer `VITE_DEV_AUTH=false` once Keycloak admin client is live. |
 | EXPO_PUBLIC_OIDC_ISSUER / EXPO_PUBLIC_OIDC_CLIENT_ID | mobile | PKCE client for Expo (`easycasa-app`). |
 | OIDC_ROLES_CLAIM | api | Dot path to roles in JWT (default `realm_access.roles`). |
 

@@ -1,6 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import { useAuth } from '@/auth/AuthProvider';
+import { createAuthedFetch } from '@/auth/authedFetch';
+import { RequireSignInLink } from '@/components/AuthControls';
 
 type FascicoloView = {
   propertyId: string;
@@ -19,17 +23,6 @@ type FascicoloView = {
 };
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://easycasaita.com/api';
-
-function authHeaders(): HeadersInit {
-  // DEV_AUTH: match Phase 2 headers when OIDC is not yet configured.
-  return {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    'x-dev-user': 'owner-demo',
-    'x-dev-email': 'owner@easycasaita.com',
-    'x-dev-roles': 'seller',
-  };
-}
 
 function GateBanner({
   title,
@@ -63,15 +56,17 @@ function GateBanner({
 }
 
 export function FascicoloWizard({ propertyId }: { propertyId: string }) {
+  const { ready, isAuthenticated, getAccessToken } = useAuth();
+  const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
   const [view, setView] = useState<FascicoloView | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [url, setUrl] = useState('https://example.com/ape.pdf');
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
+    if (!isAuthenticated) return;
     setError(null);
-    const res = await fetch(`${API}/properties/${propertyId}/fascicolo`, {
-      headers: authHeaders(),
+    const res = await authedFetch(`${API}/properties/${propertyId}/fascicolo`, {
       cache: 'no-store',
     });
     if (!res.ok) {
@@ -79,7 +74,7 @@ export function FascicoloWizard({ propertyId }: { propertyId: string }) {
       return;
     }
     setView((await res.json()) as FascicoloView);
-  }, [propertyId]);
+  }, [propertyId, authedFetch, isAuthenticated]);
 
   useEffect(() => {
     void load();
@@ -89,9 +84,9 @@ export function FascicoloWizard({ propertyId }: { propertyId: string }) {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch(`${API}/properties/${propertyId}/fascicolo/documents`, {
+      const res = await authedFetch(`${API}/properties/${propertyId}/fascicolo/documents`, {
         method: 'POST',
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, url, issuedAt: new Date().toISOString() }),
       });
       if (!res.ok) {
@@ -102,6 +97,15 @@ export function FascicoloWizard({ propertyId }: { propertyId: string }) {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (ready && !isAuthenticated) {
+    return (
+      <div>
+        <p className="text-[var(--muted)] mb-4">Accedi per gestire il fascicolo.</p>
+        <RequireSignInLink />
+      </div>
+    );
   }
 
   if (error && !view) {

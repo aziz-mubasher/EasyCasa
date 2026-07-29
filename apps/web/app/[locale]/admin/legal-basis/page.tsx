@@ -1,5 +1,8 @@
 'use client';
 
+import { RequireSignInLink } from '@/components/AuthControls';
+import { useAdminAuthedFetch } from '@/auth/useAdminAuthedFetch';
+
 import { useCallback, useEffect, useState } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://easycasaita.com/api';
@@ -14,15 +17,9 @@ interface Item {
   legalBasis: LegalBasis;
 }
 
-const HEADERS = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-  'x-dev-user': 'admin-demo',
-  'x-dev-email': 'admin@easycasaita.com',
-  'x-dev-roles': 'admin',
-};
 
 export default function LegalBasisAdminPage() {
+  const { ready, isAuthenticated, authedFetch } = useAdminAuthedFetch();
   const [items, setItems] = useState<Item[]>([]);
   const [reviewRequiredCount, setReviewRequiredCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +28,7 @@ export default function LegalBasisAdminPage() {
   const load = useCallback(async () => {
     setError(null);
     try {
-      const res = await fetch(`${API}/admin/catalog/legal-basis`, { headers: HEADERS });
+      const res = await authedFetch(`${API}/admin/catalog/legal-basis`);
       if (!res.ok) {
         setError(`Load failed (${res.status})`);
         return;
@@ -42,19 +39,20 @@ export default function LegalBasisAdminPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Load failed');
     }
-  }, []);
+  }, [authedFetch]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     void load();
-  }, [load]);
+  }, [load, isAuthenticated]);
 
   async function setBasis(code: string, legalBasis: LegalBasis) {
     setBusy(code);
     setError(null);
     try {
-      const res = await fetch(`${API}/admin/catalog/${encodeURIComponent(code)}/legal-basis`, {
+      const res = await authedFetch(`${API}/admin/catalog/${encodeURIComponent(code)}/legal-basis`, {
         method: 'PATCH',
-        headers: HEADERS,
+      headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ legalBasis }),
       });
       if (!res.ok) {
@@ -65,6 +63,15 @@ export default function LegalBasisAdminPage() {
     } finally {
       setBusy(null);
     }
+  }
+
+  if (ready && !isAuthenticated) {
+    return (
+      <div className="mx-auto max-w-3xl px-5 py-10">
+        <p className="text-[var(--muted)] mb-4">Accedi con un account admin.</p>
+        <RequireSignInLink />
+      </div>
+    );
   }
 
   return (

@@ -6,7 +6,7 @@ import type { Invoice } from './domain/fattura';
 import type { SdIChannel } from '../payments/domain/ports';
 
 /**
- * SdI transmission seam. DEV_AUTH stubs a protocollo when SDI_* is unset.
+ * SdI transmission seam. local-header-auth stubs a protocollo when SDI_* is unset.
  * Production must serialise FatturaPA 1.2.2 XML, sign, and transmit.
  */
 @Injectable()
@@ -16,7 +16,7 @@ export class SdIChannelProvider implements SdIChannel {
     const key = apiConfig.SDI_CHANNEL_KEY;
 
     if (!url || !key) {
-      if (!apiConfig.DEV_AUTH) {
+      if (!apiConfig.ALLOW_PROVIDER_STUBS) {
         throw new Error('SdI channel is not configured (SDI_CHANNEL_URL / SDI_CHANNEL_KEY)');
       }
       const digest = createHmac('sha256', 'dev-sdi')

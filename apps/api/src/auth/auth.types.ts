@@ -7,8 +7,8 @@ export interface AuthUser {
   /** Keycloak `preferred_username` (e.g. muba-admin). */
   preferredUsername?: string;
   roles: UserRole[];
-  /** EC-11 derived capabilities (filled at verify / DEV_AUTH attach). */
+  /** EC-11 derived capabilities (filled at verify / local-header-auth attach). */
   capabilities?: Capability[];
-  /** EC-11 admin personas (filled at verify / DEV_AUTH attach). */
+  /** EC-11 admin personas (filled at verify / local-header-auth attach). */
   adminRoles?: AdminRole[];
 }

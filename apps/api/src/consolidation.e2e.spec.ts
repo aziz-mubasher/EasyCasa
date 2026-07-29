@@ -21,7 +21,7 @@ describe('Consolidation 32–39 (full spine)', () => {
       OIDC_ISSUER: 'http://localhost:8080/realms/easycasa',
       OIDC_JWKS_URL: 'http://localhost:8080/realms/easycasa/protocol/openid-connect/certs',
       OIDC_AUDIENCE: 'easycasa-api',
-      DEV_AUTH: 'true',
+      ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true',
       MEILI_URL: 'http://127.0.0.1:7700',
       MEILI_MASTER_KEY: 'test',
       SMTP_URL: '',

@@ -15,7 +15,7 @@ export class EmailStartupService implements OnModuleInit {
   constructor(@InjectConfig() private readonly config: ApiConfig) {}
 
   onModuleInit(): void {
-    if (this.config.DEV_AUTH) return;
+    if (this.config.ALLOW_PROVIDER_STUBS) return;
     if (isEmailTransportConfigured(this.config)) return;
 
     this.logger.error(

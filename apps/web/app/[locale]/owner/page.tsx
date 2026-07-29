@@ -1,12 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import { useAuth } from '@/auth/AuthProvider';
+import { createAuthedFetch } from '@/auth/authedFetch';
+import { RequireSignInLink } from '@/components/AuthControls';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://easycasaita.com/api';
 
 export default function OwnerPropertiesPage() {
   const router = useRouter();
+  const { ready, isAuthenticated, getAccessToken, signIn } = useAuth();
+  const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
   const [title, setTitle] = useState('');
   const [dealType, setDealType] = useState<'sale' | 'rent'>('sale');
   const [inCondominio, setInCondominio] = useState(false);
@@ -14,17 +20,18 @@ export default function OwnerPropertiesPage() {
   const [busy, setBusy] = useState(false);
 
   async function create() {
+    if (!isAuthenticated) {
+      await signIn(window.location.pathname);
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch(`${API}/properties`, {
+      const res = await authedFetch(`${API}/properties`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          'x-dev-user': 'owner-demo',
-          'x-dev-email': 'owner@easycasaita.com',
-          'x-dev-roles': 'seller',
         },
         body: JSON.stringify({ title: title || 'Nuovo immobile', dealType, inCondominio }),
       });
@@ -38,6 +45,19 @@ export default function OwnerPropertiesPage() {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (ready && !isAuthenticated) {
+    return (
+      <div className="mx-auto max-w-xl px-5 py-10">
+        <p className="eyebrow mb-2">proprietario</p>
+        <h1 className="text-3xl font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
+          Onboard immobile
+        </h1>
+        <p className="mt-4 text-[var(--muted)] mb-4">Accedi per creare una Property e aprire il fascicolo.</p>
+        <RequireSignInLink />
+      </div>
+    );
   }
 
   return (
@@ -82,11 +102,11 @@ export default function OwnerPropertiesPage() {
         {error ? <p className="text-sm text-[var(--clay)]">{error}</p> : null}
         <button
           type="button"
-          disabled={busy}
+          disabled={busy || !ready}
           onClick={() => void create()}
-          className="rounded bg-[var(--azure)] px-4 py-2.5 text-white disabled:opacity-50"
+          className="rounded bg-[var(--azure)] px-4 py-2 text-white disabled:opacity-50"
         >
-          Crea e apri fascicolo
+          {busy ? 'Creazione…' : 'Crea Property'}
         </button>
       </div>
     </div>

@@ -18,6 +18,8 @@ export const users = pgTable('users', {
   slug: text('slug'),
   role: userRole('role').notNull().default('buyer'),
   phone: text('phone'),
+  /** EC-12 — set after WhatsApp/email OTP success. */
+  phoneVerifiedAt: timestamp('phone_verified_at', { withTimezone: true }),
   avatarUrl: text('avatar_url'),
   bio: text('bio'),
   membershipTier: text('membership_tier'),
@@ -486,6 +488,20 @@ export const authorityAuditLog = pgTable('authority_audit_log', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-12 — hashed phone OTP challenges (WhatsApp / email fallback). */
+export const phoneOtpChallenges = pgTable('phone_otp_challenges', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull(),
+  phoneE164: text('phone_e164').notNull(),
+  codeHash: text('code_hash').notNull(),
+  channel: text('channel').notNull(),
+  attempts: integer('attempts').notNull().default(0),
+  maxAttempts: integer('max_attempts').notNull().default(3),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  consumedAt: timestamp('consumed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 // ---------------- Phase 12 — rentals / AML ----------------
 export const leaseType = pgEnum('lease_type', [
   'libero_4_4', 'concordato_3_2', 'transitorio', 'studenti',
@@ -728,7 +744,7 @@ export const schema = {
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,
-  authorityAuditLog,
+  authorityAuditLog, phoneOtpChallenges,
   leases, kycCases,
   paymentIntents, invoices, stripeWebhookEvents,
   omiQuotes, valuationRequests,

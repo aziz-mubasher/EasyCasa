@@ -35,12 +35,12 @@ export async function runPreflight(input: PreflightInput): Promise<PreflightRepo
     detail?: string,
   ) => checks.push({ name, pass, level, detail });
 
-  // Auth must be real in a pilot — DEV_AUTH is a local-only bypass.
+  // Auth must be real in a pilot — no provider stubs / test header auth.
   add(
-    'DEV_AUTH is off',
-    env.DEV_AUTH !== 'true',
+    'ALLOW_PROVIDER_STUBS is off',
+    env.ALLOW_PROVIDER_STUBS !== 'true' && env.EC_TEST_AUTH !== 'true',
     'blocker',
-    'DEV_AUTH=true would trust spoofable headers',
+    'ALLOW_PROVIDER_STUBS/EC_TEST_AUTH must be off for a real pilot',
   );
   const jwks = env.OIDC_JWKS_URL || env.OIDC_JWKS_URI;
   const oidcConfigured = Boolean(env.OIDC_ISSUER && jwks && env.OIDC_AUDIENCE);

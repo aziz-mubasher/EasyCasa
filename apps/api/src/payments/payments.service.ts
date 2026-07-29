@@ -41,7 +41,7 @@ export class PaymentsService {
     purpose: PaymentPurpose;
     amountCents: number;
   }): Promise<{ intentId: string; clientSecret: string }> {
-    if (!apiConfig.PAYMENTS_ENABLED && !apiConfig.DEV_AUTH) {
+    if (!apiConfig.PAYMENTS_ENABLED && !apiConfig.ALLOW_PROVIDER_STUBS) {
       throw new ForbiddenException('Payments are disabled');
     }
     if (input.purpose === 'PROVVIGIONE') {

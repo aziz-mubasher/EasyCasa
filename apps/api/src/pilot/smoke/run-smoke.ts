@@ -11,7 +11,7 @@
  *   2. DevTools → Application → sessionStorage → `ec.access` (copy value).
  *   — or decode a fresh token from the Network tab after any authenticated /api call.
  *
- * Local-only fallback when DEV_AUTH=true (blocked from the public internet by Traefik):
+ * Local-only fallback when ALLOW_PROVIDER_STUBS=true EC_TEST_AUTH=true (blocked from the public internet by Traefik):
  *   SMOKE_DEV_USER=smoke-seeker SMOKE_DEV_ROLES=buyer
  *
  * Exits non-zero on any failed step (CI-friendly).

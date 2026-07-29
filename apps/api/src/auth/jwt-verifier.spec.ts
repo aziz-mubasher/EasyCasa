@@ -22,7 +22,7 @@ function cfg(over: Partial<ApiConfig> = {}): ApiConfig {
     OIDC_AUDIENCE: AUDIENCE,
     OIDC_ROLES_CLAIM: 'realm_access.roles',
     OIDC_JWKS_URL: 'https://kc.easycasa.test/jwks',
-    DEV_AUTH: false,
+    ALLOW_PROVIDER_STUBS: false,
     ...over,
   } as ApiConfig;
 }

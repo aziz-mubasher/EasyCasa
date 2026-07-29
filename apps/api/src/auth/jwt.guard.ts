@@ -23,14 +23,13 @@ interface Req {
 }
 
 /**
- * Global authentication guard — Phase 35 (OIDC cutover).
+ * Global authentication guard — Phase 35 + EC-12.
  *
- * `@Public` routes pass through (soft-attach identity when present for
- * `@OptionalUser`). Otherwise a Bearer token is verified via {@link JwtVerifier}.
+ * `@Public` routes pass through (soft-attach identity when present).
+ * Otherwise a Bearer token is verified via {@link JwtVerifier}.
  *
- * `DEV_AUTH=true` trusts `x-dev-user` / `x-dev-roles` / `x-dev-email` — the
- * pre-cutover path only. With `DEV_AUTH=false` those headers are never read;
- * callers must send `Authorization: Bearer`. Cutover = `DEV_AUTH=false` + live `OIDC_*`.
+ * Header-based local auth is only available when `NODE_ENV=test` and
+ * `EC_TEST_AUTH=true` (vitest). That path cannot run in production.
  */
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -52,10 +51,14 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
-    if (this.config.DEV_AUTH) {
+    if (this.testAuthEnabled()) {
       const sub = header(req.headers, 'x-dev-user');
-      if (!sub) throw new UnauthorizedException('DEV_AUTH: missing x-dev-user');
-      req.user = authFromDev(sub, header(req.headers, 'x-dev-email'), header(req.headers, 'x-dev-roles'));
+      if (!sub) throw new UnauthorizedException('EC_TEST_AUTH: missing x-dev-user');
+      req.user = authFromTestHeaders(
+        sub,
+        header(req.headers, 'x-dev-email'),
+        header(req.headers, 'x-dev-roles'),
+      );
       return true;
     }
 
@@ -72,10 +75,10 @@ export class JwtAuthGuard implements CanActivate {
   /** Best-effort auth for @Public routes — never throws. */
   private async tryAttachUser(req: Req): Promise<void> {
     try {
-      if (this.config.DEV_AUTH) {
+      if (this.testAuthEnabled()) {
         const sub = header(req.headers, 'x-dev-user');
         if (!sub) return;
-        req.user = authFromDev(
+        req.user = authFromTestHeaders(
           sub,
           header(req.headers, 'x-dev-email'),
           header(req.headers, 'x-dev-roles'),
@@ -89,9 +92,13 @@ export class JwtAuthGuard implements CanActivate {
       // public route stays anonymous
     }
   }
+
+  private testAuthEnabled(): boolean {
+    return process.env.NODE_ENV === 'test' && this.config.EC_TEST_AUTH === true;
+  }
 }
 
-function authFromDev(
+function authFromTestHeaders(
   sub: string,
   email: string | undefined,
   rolesHeader: string | undefined,

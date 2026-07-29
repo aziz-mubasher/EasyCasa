@@ -62,7 +62,7 @@ export class MandateController {
       if (!raw || !verifySignatureWebhook(raw, signature, secret)) {
         throw new UnauthorizedException('invalid webhook signature');
       }
-    } else if (!apiConfig.DEV_AUTH) {
+    } else if (!apiConfig.ALLOW_PROVIDER_STUBS) {
       throw new UnauthorizedException('SIGNATURE_WEBHOOK_SECRET is not configured');
     }
 

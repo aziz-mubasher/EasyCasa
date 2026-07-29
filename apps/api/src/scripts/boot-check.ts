@@ -3,7 +3,7 @@
  *
  * Builds the real AppModule and runs `app.init()` (no listener) so a broken DI
  * graph fails CI. Env is seeded before any Nest import so `loadApiConfig` /
- * Drizzle see DEV_AUTH test values (OIDC not required).
+ * Drizzle see local-header-auth test values (OIDC not required).
  *
  * Run: `node apps/api/dist/scripts/boot-check.js` (see .github/workflows/api-boot.yml).
  */
@@ -11,7 +11,7 @@ import 'reflect-metadata';
 
 const TEST_ENV: Record<string, string> = {
   NODE_ENV: 'test',
-  DEV_AUTH: 'true',
+  ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true',
   DATABASE_URL: 'postgresql://easycasa:easycasa@127.0.0.1:5432/easycasa_test',
   MEILI_URL: 'http://127.0.0.1:7700',
   MEILI_MASTER_KEY: 'test',
