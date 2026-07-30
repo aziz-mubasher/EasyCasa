@@ -20,13 +20,16 @@ async function main(): Promise<void> {
     const scenarios = app.get(DemoScenarioSeeder);
     await scenarios.wipe();
     const listings = buildDemoListings(120);
+    const docs = [];
     for (const listing of listings) {
-      await sink.upsert(listing);
+      const doc = await sink.upsert(listing);
+      if (doc) docs.push(doc);
     }
+    await sink.indexPublished(docs);
     const count = await sink.countDemo();
     const result = await scenarios.seed();
     // eslint-disable-next-line no-console
-    console.log(`demo:seed ok — listings=${count}`, result.summary);
+    console.log(`demo:seed ok — listings=${count} indexed=${docs.length}`, result.summary);
   } finally {
     await app.close();
   }

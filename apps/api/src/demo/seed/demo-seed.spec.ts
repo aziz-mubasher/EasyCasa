@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { createPrng } from '../prng';
+import { demoImageUrls } from './demo-images';
 import { buildDemoListings, DEMO_PRNG_SEED } from './generate-listings';
 import {
   DEMO_DSAR_EMAIL,
@@ -10,6 +11,12 @@ import {
 } from './seed-scenarios';
 
 describe('demo PRNG + inventory (EC-15)', () => {
+  it('demoImageUrls are deterministic and listing-scoped', () => {
+    expect(demoImageUrls('demo-sc1-verified')).toEqual(demoImageUrls('demo-sc1-verified'));
+    expect(demoImageUrls('demo-sc1-verified')[0]).toContain('ec15-demo-sc1-verified-0');
+    expect(demoImageUrls('a')[0]).not.toBe(demoImageUrls('b')[0]);
+  });
+
   it('is deterministic for the same seed', () => {
     const ra = createPrng(DEMO_PRNG_SEED);
     const rb = createPrng(DEMO_PRNG_SEED);
