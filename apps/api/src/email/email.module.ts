@@ -23,6 +23,8 @@ import { SmtpEmailProvider } from './providers/smtp-email.provider';
  * From-address uses `NOTIFY_FROM` (this repo's existing env name).
  */
 export function selectEmailProvider(config: ApiConfig): EmailPort {
+  // EC-15: demo never leaves the outbox — ignore SMTP / HTTP even if misconfigured.
+  if (config.DEMO_MODE) return new NoopEmailProvider();
   const from = config.NOTIFY_FROM;
   if (config.SMTP_URL) return SmtpEmailProvider.fromUrl(config.SMTP_URL, from);
   if (config.EMAIL_PROVIDER_URL) {

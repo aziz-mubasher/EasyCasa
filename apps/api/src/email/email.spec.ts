@@ -26,15 +26,16 @@ describe('provider selection (config-driven)', () => {
   it('neither -> NoopEmailProvider (fail-soft)', () => {
     expect(selectEmailProvider(base({}))).toBeInstanceOf(NoopEmailProvider);
   });
-  it('SMTP_URL takes precedence over EMAIL_PROVIDER_URL', () => {
+  it('DEMO_MODE forces Noop even when SMTP_URL is set', () => {
     expect(
       selectEmailProvider(
         base({
+          DEMO_MODE: true,
           SMTP_URL: 'smtp://localhost:25',
           EMAIL_PROVIDER_URL: 'https://mail.example/send',
         }),
       ),
-    ).toBeInstanceOf(SmtpEmailProvider);
+    ).toBeInstanceOf(NoopEmailProvider);
   });
 });
 

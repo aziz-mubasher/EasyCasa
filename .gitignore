@@ -12,6 +12,7 @@ __pycache__/
 !.env.example
 !.env.test
 !.env.oidc.example
+!.env.demo.example
 backups/
 caddy_data/
 caddy_config/

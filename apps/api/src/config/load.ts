@@ -124,6 +124,12 @@ const Schema = z
     BANKS4ALL_ATTESTATION_BASE_URL: z.string().default(''),
     BANKS4ALL_PARTNER_TOKEN: z.string().default(''),
 
+    /**
+     * EC-15 — demo stack. When true: never send email/WhatsApp outbound; ignore
+     * SMTP/EMAIL_PROVIDER/WhatsApp tokens even if set (compose also blanks them).
+     */
+    DEMO_MODE: bool(false),
+
     // Phase 39 — error tracking (empty → fail-soft noop reporter)
     SENTRY_DSN: z.string().default(''),
 
