@@ -37,9 +37,11 @@ import { UsersModule } from './users/users.module';
 import { ViewingsModule } from './viewings/viewings.module';
 import { ShareLinksModule } from './share-links/share-links.module';
 import { AdminModule } from './admin/admin.module';
+import { AuthorityModule } from './authority/authority.module';
 import { PilotModule } from './pilot/pilot.module';
 import { PrivacyModule } from './privacy/privacy.module';
 import { ObservabilityModule } from './observability/observability.module';
+import { PhoneVerifyModule } from './phone-verify/phone-verify.module';
 
 /** Static module imports (Privacy is DynamicModule via forRootProduction). */
 const REQUIRED_STATIC = [
@@ -47,6 +49,7 @@ const REQUIRED_STATIC = [
   SeamsModule,
   DbModule,
   AuthModule,
+  AuthorityModule,
   EmailModule,
   ObservabilityModule,
   UsersModule,
@@ -79,6 +82,7 @@ const REQUIRED_STATIC = [
   AvmModule,
   ViewingsModule,
   ShareLinksModule,
+  PhoneVerifyModule,
   PilotModule,
 ] as const;
 
@@ -115,7 +119,7 @@ describe('AppModule composition root (Phase 32/39.1)', () => {
         'provide' in p &&
         (p as { provide: unknown }).provide?.toString().includes('APP_GUARD'),
     );
-    expect(appGuardEntries).toHaveLength(2);
+    expect(appGuardEntries).toHaveLength(3);
     for (const entry of appGuardEntries) {
       expect((entry as { useExisting?: unknown }).useExisting).toBeDefined();
       expect((entry as { useClass?: unknown }).useClass).toBeUndefined();

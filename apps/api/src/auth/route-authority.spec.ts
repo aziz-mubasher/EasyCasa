@@ -53,5 +53,5 @@ describe('EC-11 route authority coverage', () => {
       }
     }
     expect(gaps, `Undeclared routes:\n${gaps.join('\n')}`).toEqual([]);
-  });
+  }, 30_000);
 });

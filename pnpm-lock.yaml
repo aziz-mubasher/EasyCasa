@@ -47,6 +47,9 @@ importers:
       '@easycasa/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@easycasa/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@tanstack/react-query':
         specifier: ^5.51.1
         version: 5.101.2(react@18.3.1)
@@ -138,6 +141,9 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
+      sharp:
+        specifier: ^0.33.5
+        version: 0.33.5
       stripe:
         specifier: ^17.2.1
         version: 17.7.0

@@ -12,5 +12,3 @@ export const oidcConfig = {
 export function isOidcConfigured(): boolean {
   return Boolean(oidcConfig.issuer.trim() && oidcConfig.clientId.trim());
 }
-
-export const devAuthEnabled = import.meta.env.VITE_DEV_AUTH === 'true';

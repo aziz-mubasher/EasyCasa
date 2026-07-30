@@ -58,6 +58,9 @@ services:
     build:
       context: ..
       dockerfile: apps/api/Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-unknown}
+        BUILD_TIME: ${BUILD_TIME:-unknown}
     restart: unless-stopped
     env_file: ../.env
     depends_on:
@@ -95,7 +98,9 @@ services:
       dockerfile: apps/admin/Dockerfile
       args:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://easycasaita.com/api}
-        VITE_DEV_AUTH: ${VITE_DEV_AUTH:-true}
+        VITE_OIDC_ISSUER: ${VITE_OIDC_ISSUER:-}
+        VITE_OIDC_CLIENT_ID: ${VITE_OIDC_CLIENT_ID:-easycasa-admin}
+        VITE_GIT_SHA: ${GIT_SHA:-unknown}
     restart: unless-stopped
     depends_on:
       - api

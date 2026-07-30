@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthorityModule } from './authority/authority.module';
 import { EmailModule } from './email/email.module';
 import { HealthController } from './health/health.controller';
+import { VersionController } from './health/version.controller';
 import { ListingsModule } from './listings/listings.module';
 import { ImportsModule } from './imports/imports.module';
 import { TaxonomyModule } from './taxonomy/taxonomy.module';
@@ -103,7 +104,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     PhoneVerifyModule,
     PilotModule,
   ],
-  controllers: [HealthController, ReadinessController],
+  controllers: [HealthController, ReadinessController, VersionController],
   providers: [
     HealthIndicatorRegistry,
     PostgresHealthIndicator,

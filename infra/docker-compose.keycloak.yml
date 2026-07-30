@@ -6,7 +6,7 @@
 #   # or: docker compose -f infra/docker-compose.keycloak.yml up -d
 #   # realm: http://localhost:8080/realms/easycasa  (admin/admin — change if shared)
 #
-# Then merge .env.oidc.example into .env (DEV_AUTH=false + OIDC_*).
+# Then merge .env.oidc.example into .env (OIDC_* + EC_TEST_AUTH=false).
 
 services:
   keycloak:

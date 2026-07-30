@@ -11,6 +11,10 @@ RUN pnpm --filter @easycasa/api build
 FROM node:20-alpine AS run
 RUN corepack enable
 WORKDIR /repo
+ARG GIT_SHA=unknown
+ARG BUILD_TIME=unknown
+ENV GIT_SHA=$GIT_SHA
+ENV BUILD_TIME=$BUILD_TIME
 COPY --from=build /repo /repo
 WORKDIR /repo/apps/api
 EXPOSE 4000

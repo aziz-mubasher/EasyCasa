@@ -39,7 +39,31 @@
       },
       {
         "name": "admin",
-        "description": "Platform administrator (superuser)"
+        "description": "Admin capability only — assign admin_* for portal access (EC-14 fail-closed)"
+      },
+      {
+        "name": "admin_support",
+        "description": "Admin portal — support (redacted PII by default)"
+      },
+      {
+        "name": "admin_operations",
+        "description": "Admin portal — operations (credentials, coverage, takedown, identity)"
+      },
+      {
+        "name": "admin_finance",
+        "description": "Admin portal — finance"
+      },
+      {
+        "name": "admin_dpo",
+        "description": "Admin portal — DPO (DSAR / retention)"
+      },
+      {
+        "name": "admin_aml",
+        "description": "Admin portal — AML / KYC cases"
+      },
+      {
+        "name": "admin_superadmin",
+        "description": "Admin portal — all admin personas"
       }
     ]
   },
@@ -569,7 +593,7 @@
     },
     {
       "clientId": "easycasa-admin",
-      "description": "Admin SPA — public client, PKCE (future cutover; still on DEV_AUTH today).",
+      "description": "Admin SPA — public client, PKCE (OIDC only).",
       "enabled": true,
       "publicClient": true,
       "standardFlowEnabled": true,
