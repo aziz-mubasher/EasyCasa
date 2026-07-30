@@ -49,9 +49,14 @@ export function Footer() {
   return (
     <footer className="sf">
       <div className="sf-wrap">
-        <p className="sf-brand">{t('entity')}</p>
-
         <div className="sf-dir">
+          <div className="sf-about">
+            <Link href="/" className="sf-logo" aria-label="EasyCasa">
+              Easy<span>Casa</span>
+            </Link>
+            <p className="sf-blurb">{t('blurb')}</p>
+          </div>
+
           <nav aria-labelledby="footer-sellers">
             <h2 id="footer-sellers">{t('columns.sellers')}</h2>
             <ul>
@@ -104,12 +109,15 @@ export function Footer() {
         </div>
 
         <div className="sf-legal">
-          <Link href="/legal/privacy">{t('legal.privacy')}</Link>
-          <Link href="/legal/terms">{t('legal.terms')}</Link>
-          <Link href="/legal/mediation">{t('legal.mediation')}</Link>
-          <Link href="/trasparenza">{t('legal.transparency')}</Link>
-          <Link href="/privacy">{t('legal.myData')}</Link>
-          <Link href="/contatti">{t('legal.contacts')}</Link>
+          <p className="sf-entity">{t('entity')}</p>
+          <div className="sf-legal-links">
+            <Link href="/legal/privacy">{t('legal.privacy')}</Link>
+            <Link href="/legal/terms">{t('legal.terms')}</Link>
+            <Link href="/legal/mediation">{t('legal.mediation')}</Link>
+            <Link href="/trasparenza">{t('legal.transparency')}</Link>
+            <Link href="/privacy">{t('legal.myData')}</Link>
+            <Link href="/contatti">{t('legal.contacts')}</Link>
+          </div>
         </div>
       </div>
     </footer>

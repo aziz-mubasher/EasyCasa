@@ -2,7 +2,7 @@
 
 .sf {
   --sf-gutter: clamp(1.25rem, 5vw, 4rem);
-  --sf-measure: 62rem;
+  --sf-measure: 72rem;
   background: var(--ink);
   color: var(--paper-deep);
   padding-block: clamp(2.8rem, 6vw, 4rem) 2rem;
@@ -15,31 +15,21 @@
   padding-inline: var(--sf-gutter);
 }
 
-.sf .sf-brand {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  line-height: 1.7;
-  color: rgba(232, 223, 204, 0.78);
-  margin: 0 0 2.2rem;
-}
-
-.sf .sf-brand span {
-  color: inherit;
-}
-
 .sf .sf-dir {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(12rem, 1.35fr) repeat(3, minmax(0, 1fr));
   gap: 2rem clamp(1.5rem, 4vw, 3rem);
   padding-bottom: 2.4rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
 }
 
-@media (max-width: 800px) {
+@media (max-width: 960px) {
   .sf .sf-dir {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .sf .sf-about {
+    grid-column: 1 / -1;
   }
 }
 
@@ -47,6 +37,34 @@
   .sf .sf-dir {
     grid-template-columns: 1fr;
   }
+}
+
+.sf .sf-about {
+  min-width: 0;
+}
+
+.sf .sf-logo {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  color: var(--paper);
+  text-decoration: none;
+  margin: 0 0 0.85rem;
+}
+
+.sf .sf-logo span {
+  color: var(--azure-pale);
+}
+
+.sf .sf-blurb {
+  margin: 0;
+  max-width: 18rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(232, 223, 204, 0.78);
 }
 
 .sf .sf-dir h2 {
@@ -98,6 +116,24 @@
   padding-top: 1.8rem;
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+}
+
+.sf .sf-entity {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  color: rgba(232, 223, 204, 0.78);
+}
+
+.sf .sf-legal-links {
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   font-family: var(--font-mono);
   font-size: 0.65rem;
@@ -106,12 +142,12 @@
   color: rgba(232, 223, 204, 0.66);
 }
 
-.sf .sf-legal a {
+.sf .sf-legal-links a {
   color: inherit;
   text-decoration: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.22);
 }
 
-.sf .sf-legal a:hover {
+.sf .sf-legal-links a:hover {
   color: var(--paper);
 }
