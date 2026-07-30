@@ -50,13 +50,14 @@ export class ViewingsReminderScheduler implements OnModuleInit {
       now + windowStartOffsetMs,
       now + windowEndOffsetMs,
     );
+    const notifyKind = kind === '24h' ? 'reminder24h' : 'reminder2h';
     for (const viewing of due) {
       try {
-        await this.notifier.notify(
-          viewing.seekerUserId,
-          viewing,
-          kind === '24h' ? 'reminder24h' : 'reminder2h',
-        );
+        // Plan: reminders to both seeker and conductor (same sent_at gate).
+        const recipients = [...new Set([viewing.seekerUserId, viewing.conductorUserId])];
+        for (const userId of recipients) {
+          await this.notifier.notify(userId, viewing, notifyKind);
+        }
         await this.viewings.markReminderSent(viewing.id, kind);
       } catch (err) {
         this.logger.warn(

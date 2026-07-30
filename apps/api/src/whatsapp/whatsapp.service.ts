@@ -37,7 +37,7 @@ export class WhatsAppService {
     return this.cloud.verifySignature(rawBody, signatureHeader);
   }
 
-  /** Phase A: log delivery statuses; persistence lands with Phase C. */
+  /** Phase A–C: log delivery statuses; durable status table deferred. */
   ingestStatusPayload(payload: unknown): void {
     const entries = extractStatuses(payload);
     for (const s of entries) {

@@ -59,4 +59,36 @@ describe('WhatsAppService / CloudClient (Phase A)', () => {
       }),
     ).not.toThrow();
   });
+
+  it('sendTemplate rejects empty template name as not_configured', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    const cloud = new WhatsAppCloudClient(cfg() as never);
+    const res = await cloud.sendTemplate({
+      phoneE164: '+393331112233',
+      templateName: '  ',
+      bodyParams: ['a'],
+    });
+    expect(res).toEqual({ ok: false, reason: 'not_configured' });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('sendTemplate posts utility body params', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ messages: [{ id: 'wamid.util' }] }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const cloud = new WhatsAppCloudClient(cfg() as never);
+    const res = await cloud.sendTemplate({
+      phoneE164: '+393331112233',
+      templateName: 'easycasa_viewing_reminder_24h',
+      languageCode: 'it',
+      bodyParams: ['Anna', 'Attico', 'Milano, MI', 'domani'],
+    });
+    expect(res).toEqual({ ok: true, messageId: 'wamid.util' });
+    const body = JSON.parse(String(fetchMock.mock.calls[0]![1].body));
+    expect(body.template.name).toBe('easycasa_viewing_reminder_24h');
+    expect(body.template.components[0].parameters).toHaveLength(4);
+  });
 });

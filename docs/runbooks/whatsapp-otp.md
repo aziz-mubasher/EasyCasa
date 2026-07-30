@@ -58,5 +58,5 @@ docker compose … exec -T db psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
 
 ## Not Phase B
 
-- Utility templates / viewing reminders → Phase C (`K EC 8.7`)
+- Utility templates / viewing reminders → Phase C (`K EC 8.7`) — `docs/runbooks/whatsapp-utility.md`
 - Support queue / AI → Phase D–E (`K EC 7.3`)

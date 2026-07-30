@@ -1,6 +1,8 @@
 import { Inject, Injectable, Logger, Module } from '@nestjs/common';
 import { and, desc, eq, isNotNull, lt, or } from 'drizzle-orm';
 
+import type { ApiConfig } from '../config';
+import { InjectConfig } from '../config/inject-config.decorator';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { enquiries, listings } from '../db/schema';
@@ -9,6 +11,9 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { OrdersModule } from '../orders/orders.module';
 import { OrdersService } from '../orders/orders.service';
 import { UsersModule } from '../users/users.module';
+import { UsersService } from '../users/users.service';
+import { verifiedPhoneE164 } from '../viewings/viewing-whatsapp';
+import { WhatsAppService } from '../whatsapp/whatsapp.service';
 import { Banks4AllAttestationScheduler } from './banks4all/banks4all-attestation.scheduler';
 import { Banks4AllAttestationSweep } from './banks4all/banks4all-attestation.sweep';
 import { BANKS4ALL_PORT } from './banks4all/banks4all.port';
@@ -226,7 +231,13 @@ export class DrizzleListingLookup implements ListingLookupPort {
 export class DefaultEnquiryNotifier implements EnquiryNotifier {
   private readonly logger = new Logger(DefaultEnquiryNotifier.name);
 
-  constructor(private readonly notifications: NotificationsService) {}
+  constructor(
+    private readonly notifications: NotificationsService,
+    private readonly users: UsersService,
+    private readonly whatsapp: WhatsAppService,
+    @InjectConfig() private readonly config: ApiConfig,
+    @Inject(DRIZZLE) private readonly db: Db,
+  ) {}
 
   async notifyNewEnquiry(userId: string, enquiry: Enquiry): Promise<void> {
     try {
@@ -244,6 +255,44 @@ export class DefaultEnquiryNotifier implements EnquiryNotifier {
     } catch (err) {
       this.logger.warn(
         `enquiry notify failed user=${userId}: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+
+    try {
+      await this.sendEnquiryWhatsApp(userId, enquiry);
+    } catch (err) {
+      this.logger.warn(
+        `enquiry whatsapp failed: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+  }
+
+  /** Utility template — no street address / contact PII in body params. */
+  private async sendEnquiryWhatsApp(userId: string, enquiry: Enquiry): Promise<void> {
+    const templateName = this.config.WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE.trim();
+    if (!this.whatsapp.configured || !templateName) return;
+
+    const recipient = await this.users.findById(userId);
+    const phoneE164 = verifiedPhoneE164(recipient);
+    if (!phoneE164) return;
+
+    const rows = await this.db
+      .select({ title: listings.title })
+      .from(listings)
+      .where(eq(listings.id, enquiry.listingId))
+      .limit(1);
+    const listingTitle = rows[0]?.title ?? 'Listing';
+    const ownerName = recipient?.displayName ?? recipient?.email?.split('@')[0] ?? 'Owner';
+
+    const result = await this.whatsapp.sendTemplate({
+      phoneE164,
+      templateName,
+      languageCode: this.config.WHATSAPP_OTP_TEMPLATE_LANG,
+      bodyParams: [ownerName, listingTitle, enquiry.intent],
+    });
+    if (!result.ok) {
+      this.logger.warn(
+        `enquiry whatsapp skip reason=${result.reason}${result.message ? ` ${result.message}` : ''}`,
       );
     }
   }

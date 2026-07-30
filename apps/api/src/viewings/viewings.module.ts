@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { and, asc, eq, gte, inArray, isNull, lte, ne, sql } from 'drizzle-orm';
 
+import type { ApiConfig } from '../config';
+import { InjectConfig } from '../config/inject-config.decorator';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { enquiries, listings, viewingAvailability, viewings } from '../db/schema';
@@ -18,6 +20,12 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
+import { WhatsAppService } from '../whatsapp/whatsapp.service';
+import {
+  verifiedPhoneE164,
+  viewingUtilityBodyParams,
+  viewingUtilityTemplateName,
+} from './viewing-whatsapp';
 import type {
   AvailabilityRepository,
   ViewingListingLookup,
@@ -305,6 +313,8 @@ export class DefaultViewingNotifier implements ViewingNotifier {
     private readonly notifications: NotificationsService,
     private readonly email: EmailService,
     private readonly users: UsersService,
+    private readonly whatsapp: WhatsAppService,
+    @InjectConfig() private readonly config: ApiConfig,
     @Inject(DRIZZLE) private readonly db: Db,
   ) {}
 
@@ -343,6 +353,57 @@ export class DefaultViewingNotifier implements ViewingNotifier {
     } catch (err) {
       this.logger.warn(
         `viewing email failed kind=${kind}: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+
+    try {
+      await this.sendWhatsApp(userId, viewing, kind);
+    } catch (err) {
+      this.logger.warn(
+        `viewing whatsapp failed kind=${kind}: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+  }
+
+  /** Fail-soft utility template; skip when Cloud / template / verified phone missing. */
+  private async sendWhatsApp(
+    userId: string,
+    viewing: Viewing,
+    kind: 'requested' | 'confirmed' | 'cancelled' | 'reminder24h' | 'reminder2h',
+  ): Promise<void> {
+    const templateName = viewingUtilityTemplateName(kind, this.config);
+    if (!this.whatsapp.configured || !templateName) return;
+
+    const recipient = await this.users.findById(userId);
+    const phoneE164 = verifiedPhoneE164(recipient);
+    if (!phoneE164) return;
+
+    const listing = await this.listingMeta(viewing.listingId);
+    if (!listing) return;
+
+    const recipientName =
+      recipient?.displayName ?? recipient?.email?.split('@')[0] ?? 'User';
+    let seekerName: string | undefined;
+    if (kind === 'requested') {
+      const seeker = await this.users.findById(viewing.seekerUserId);
+      seekerName = seeker?.displayName ?? seeker?.email?.split('@')[0] ?? 'Seeker';
+    }
+
+    const whenLocal = formatWhenLocal(viewing.startMs, listing.timezone);
+    const result = await this.whatsapp.sendTemplate({
+      phoneE164,
+      templateName,
+      languageCode: this.config.WHATSAPP_OTP_TEMPLATE_LANG,
+      bodyParams: viewingUtilityBodyParams(kind, {
+        recipientName,
+        seekerName,
+        listing,
+        whenLocal,
+      }),
+    });
+    if (!result.ok) {
+      this.logger.warn(
+        `viewing whatsapp skip kind=${kind} reason=${result.reason}${result.message ? ` ${result.message}` : ''}`,
       );
     }
   }
