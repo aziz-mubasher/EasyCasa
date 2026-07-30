@@ -11,6 +11,7 @@ const rea: Credential = { type: 'REA_MEDIATORE', status: 'VERIFIED' };
 function mediator(id: string, load: number, provinces = ['MI']): Professional {
   return {
     id,
+    displayName: id,
     coverageProvinces: provinces,
     credentials: [rea, ins],
     activeAssignments: load,
@@ -28,6 +29,7 @@ describe('routing', () => {
       mediator('mid', 2),
       {
         id: 'noins',
+        displayName: 'noins',
         coverageProvinces: ['MI'],
         credentials: [rea],
         activeAssignments: 0,

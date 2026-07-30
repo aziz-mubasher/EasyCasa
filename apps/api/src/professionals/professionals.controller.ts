@@ -1,41 +1,128 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
 
-import { Roles } from '../auth/roles.decorator';
-import { RequiresAuth } from '../auth/capability.decorator';
+import { RequiresAdminRole } from '../auth/admin-role.decorator';
+import { RequiresCapability } from '../auth/capability.decorator';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { AuthUser } from '../auth/auth.types';
+import { AdminAuditService } from '../authority/admin-audit.service';
+import { UsersService } from '../users/users.service';
 import { ProfessionalsService } from './professionals.service';
-import { AddCredentialDto, CreateProfessionalDto, SetCredentialStatusDto } from './dto';
+import {
+  AddCredentialDto,
+  CreateProfessionalDto,
+  SetCredentialStatusDto,
+  UpdateCoverageDto,
+} from './dto';
 
 @Controller('professionals')
-@RequiresAuth()
+@RequiresCapability('admin')
 export class ProfessionalsController {
-  constructor(private readonly service: ProfessionalsService) {}
+  constructor(
+    private readonly service: ProfessionalsService,
+    private readonly audit: AdminAuditService,
+    private readonly users: UsersService,
+  ) {}
 
   @Get()
-  @Roles('admin')
-  list() {
-    return this.service.list();
+  @RequiresAdminRole('operations', 'support')
+  async list(@CurrentUser() user: AuthUser) {
+    const actor = await this.users.getOrCreate(user);
+    const rows = await this.service.list();
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'read',
+      resourceType: 'professional',
+      resourceId: '*',
+      reason: 'list professionals / credentials',
+    });
+    return rows;
   }
 
   @Post()
-  @Roles('admin')
-  create(@Body() dto: CreateProfessionalDto) {
-    return this.service.create(dto);
+  @RequiresAdminRole('operations')
+  async create(@CurrentUser() user: AuthUser, @Body() dto: CreateProfessionalDto) {
+    const actor = await this.users.getOrCreate(user);
+    const pro = await this.service.create(dto);
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'create',
+      resourceType: 'professional',
+      resourceId: pro.id,
+      reason: 'create professional',
+    });
+    return pro;
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
-    return this.service.get(id);
+  @RequiresAdminRole('operations', 'support')
+  async get(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    const actor = await this.users.getOrCreate(user);
+    const pro = await this.service.get(id);
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'read',
+      resourceType: 'professional',
+      resourceId: id,
+      reason: 'view professional',
+    });
+    return pro;
+  }
+
+  @Patch(':id/coverage')
+  @RequiresAdminRole('operations')
+  async setCoverage(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: UpdateCoverageDto,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    const pro = await this.service.setCoverage(id, dto.coverageProvinces);
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'update_coverage',
+      resourceType: 'professional',
+      resourceId: id,
+      reason: `coverage=${dto.coverageProvinces.join(',')}`,
+    });
+    return pro;
   }
 
   @Post(':id/credentials')
-  addCredential(@Param('id') id: string, @Body() dto: AddCredentialDto) {
-    return this.service.addCredential(id, dto);
+  @RequiresAdminRole('operations')
+  async addCredential(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: AddCredentialDto,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    const pro = await this.service.addCredential(id, dto);
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'add_credential',
+      resourceType: 'credential',
+      resourceId: `${id}:${dto.type}`,
+      reason: 'add credential pending verification',
+    });
+    return pro;
   }
 
-  /** Admin: verify or reject a credential. */
+  /** Admin: verify or reject a credential (reason required — EC-13). */
   @Put(':id/credentials/status')
-  @Roles('admin')
-  setStatus(@Param('id') id: string, @Body() dto: SetCredentialStatusDto) {
-    return this.service.setCredentialStatus(id, dto.type, dto.status);
+  @RequiresAdminRole('operations')
+  async setStatus(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: SetCredentialStatusDto,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    const pro = await this.service.setCredentialStatus(id, dto.type, dto.status);
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: dto.status === 'VERIFIED' ? 'verify_credential' : 'reject_credential',
+      resourceType: 'credential',
+      resourceId: `${id}:${dto.type}`,
+      reason: dto.reason,
+    });
+    return pro;
   }
 }

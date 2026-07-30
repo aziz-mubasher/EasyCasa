@@ -7,23 +7,41 @@ import { ComplianceConfig } from './pages/ComplianceConfig';
 import { CoverageMatrix } from './pages/CoverageMatrix';
 import { AmlCases } from './pages/AmlCases';
 import { RliMonitor } from './pages/RliMonitor';
+import { DsarQueue } from './pages/DsarQueue';
+import { ListingTakedown } from './pages/ListingTakedown';
+import { IdentityReview } from './pages/IdentityReview';
 
-type View = 'orchestration' | 'credentials' | 'compliance' | 'coverage' | 'aml' | 'rli';
+type View =
+  | 'credentials'
+  | 'coverage'
+  | 'dsar'
+  | 'takedown'
+  | 'identity'
+  | 'orchestration'
+  | 'compliance'
+  | 'aml'
+  | 'rli';
 
 const NAV: { key: View; label: string; hint: string }[] = [
+  { key: 'credentials', label: 'Credentials', hint: 'Ops · expiring first' },
+  { key: 'coverage', label: 'Coverage', hint: 'Ops / support read' },
+  { key: 'dsar', label: 'DSAR', hint: 'DPO only' },
+  { key: 'takedown', label: 'Takedown', hint: 'DSA reports' },
+  { key: 'identity', label: 'Identity', hint: 'Manual verify' },
   { key: 'orchestration', label: 'Orchestration', hint: 'Assign tasks' },
-  { key: 'credentials', label: 'Credentials', hint: 'Verify professionals' },
-  { key: 'compliance', label: 'Compliance', hint: 'Legal basis & credentials' },
-  { key: 'coverage', label: 'Coverage', hint: 'Province × service' },
+  { key: 'compliance', label: 'Compliance', hint: 'Legal basis' },
   { key: 'aml', label: 'AML / KYC', hint: 'Risk cases' },
-  { key: 'rli', label: 'RLI monitor', hint: 'Registration deadlines' },
+  { key: 'rli', label: 'RLI monitor', hint: 'Lease deadlines' },
 ];
 
 const VIEWS: Record<View, React.ReactNode> = {
-  orchestration: <Orchestration />,
   credentials: <Credentials />,
-  compliance: <ComplianceConfig />,
   coverage: <CoverageMatrix />,
+  dsar: <DsarQueue />,
+  takedown: <ListingTakedown />,
+  identity: <IdentityReview />,
+  orchestration: <Orchestration />,
+  compliance: <ComplianceConfig />,
   aml: <AmlCases />,
   rli: <RliMonitor />,
 };
@@ -59,7 +77,7 @@ function LoginGate({ children }: { children: React.ReactNode }) {
 }
 
 export function App() {
-  const [view, setView] = useState<View>('orchestration');
+  const [view, setView] = useState<View>('credentials');
   const { usesDevAuth, isAuthenticated, signOut } = useAuth();
 
   return (

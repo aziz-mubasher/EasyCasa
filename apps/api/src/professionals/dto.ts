@@ -1,10 +1,14 @@
-import { IsArray, IsIn, IsInt, IsISO8601, IsOptional, IsString, Min } from 'class-validator';
+import { IsArray, IsIn, IsInt, IsISO8601, IsOptional, IsString, Min, MinLength } from 'class-validator';
 
-const CREDENTIAL_TYPES = [
+export const CREDENTIAL_TYPES = [
   'REA_MEDIATORE',
   'RC_INSURANCE',
+  'RC_PROFESSIONALE',
   'ALBO_TECNICO',
+  'ALBO_ISCRIZIONE',
   'APE_CERTIFIER',
+  'CENED_ACCREDITAMENTO',
+  'PARTITA_IVA',
   'PHOTOGRAPHER',
   'NOTAIO',
 ] as const;
@@ -28,6 +32,12 @@ export class CreateProfessionalDto {
   userId?: string;
 }
 
+export class UpdateCoverageDto {
+  @IsArray()
+  @IsString({ each: true })
+  coverageProvinces!: string[];
+}
+
 export class AddCredentialDto {
   @IsIn(CREDENTIAL_TYPES)
   type!: (typeof CREDENTIAL_TYPES)[number];
@@ -39,6 +49,10 @@ export class AddCredentialDto {
   @IsOptional()
   @IsISO8601()
   expiresAt?: string;
+
+  @IsOptional()
+  @IsString()
+  documentUrl?: string;
 }
 
 export class SetCredentialStatusDto {
@@ -47,4 +61,9 @@ export class SetCredentialStatusDto {
 
   @IsIn(['VERIFIED', 'REJECTED'])
   status!: 'VERIFIED' | 'REJECTED';
+
+  /** Required when verifying (EC-13 audit). */
+  @IsString()
+  @MinLength(3)
+  reason!: string;
 }

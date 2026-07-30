@@ -89,8 +89,12 @@ export function useVerifyCredential() {
   const api = useApi();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (v: { professionalId: string; type: CredentialType; status: 'VERIFIED' | 'REJECTED' }) =>
-      api.verifyCredential(v.professionalId, { type: v.type, status: v.status }),
+    mutationFn: (v: {
+      professionalId: string;
+      type: CredentialType;
+      status: 'VERIFIED' | 'REJECTED';
+      reason: string;
+    }) => api.verifyCredential(v.professionalId, { type: v.type, status: v.status, reason: v.reason }),
     onSuccess: () => void qc.invalidateQueries({ queryKey: ['professionals'] }),
   });
 }

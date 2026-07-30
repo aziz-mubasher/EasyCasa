@@ -69,7 +69,11 @@ export default function ProfessionalsAdminPage() {
     const res = await authedFetch(`${API}/professionals/${id}/credentials/status`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, status }),
+      body: JSON.stringify({
+        type,
+        status,
+        reason: status === 'VERIFIED' ? 'web admin verify' : 'web admin reject',
+      }),
     });
     if (!res.ok) {
       setError(`Verify failed (${res.status})`);

@@ -57,6 +57,13 @@ export class DrizzleProfessionalRepository implements ProfessionalRepository {
     return rows.map((r) => this.toDomain(r, byPro.get(r.id) ?? []));
   }
 
+  async setCoverage(id: string, coverageProvinces: string[]): Promise<void> {
+    await this.db
+      .update(professionals)
+      .set({ coverageProvinces })
+      .where(eq(professionals.id, id));
+  }
+
   async addCredential(id: string, credential: Credential): Promise<void> {
     await this.db.insert(credentials).values({
       professionalId: id,
@@ -64,6 +71,7 @@ export class DrizzleProfessionalRepository implements ProfessionalRepository {
       status: toDbVerification(credential.status),
       reference: credential.reference ?? null,
       expiresAt: credential.expiresAt ? new Date(credential.expiresAt) : null,
+      documentUrl: credential.documentUrl ?? null,
     });
   }
 
@@ -93,6 +101,7 @@ export class DrizzleProfessionalRepository implements ProfessionalRepository {
   ): Professional {
     return {
       id: row.id,
+      displayName: row.displayName,
       coverageProvinces: row.coverageProvinces ?? [],
       activeAssignments: row.activeAssignments,
       maxConcurrent: row.maxConcurrent,
@@ -101,6 +110,7 @@ export class DrizzleProfessionalRepository implements ProfessionalRepository {
         status: toDomainVerification(c.status) as VerificationStatus,
         ...(c.reference ? { reference: c.reference } : {}),
         ...(c.expiresAt ? { expiresAt: c.expiresAt.toISOString() } : {}),
+        ...(c.documentUrl ? { documentUrl: c.documentUrl } : {}),
       })),
     };
   }

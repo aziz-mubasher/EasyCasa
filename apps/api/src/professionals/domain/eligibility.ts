@@ -6,6 +6,7 @@ import type {
   Professional,
   TaskContext,
 } from './types';
+import { credentialTypeAliases } from './types';
 
 const MESSAGES: Record<EligibilityBlockerCode, { en: string; it: string }> = {
   MISSING_CREDENTIAL: { en: 'Required credential is missing.', it: 'Manca l’abilitazione richiesta.' },
@@ -27,8 +28,8 @@ function blocker(code: EligibilityBlockerCode): EligibilityBlocker {
   return { code, messageEn: MESSAGES[code].en, messageIt: MESSAGES[code].it };
 }
 
-function credentialOf(pro: Professional, type: Credential['type']): Credential | undefined {
-  return pro.credentials.find((c) => c.type === type);
+function credentialOf(pro: Professional, types: Credential['type'][]): Credential | undefined {
+  return pro.credentials.find((c) => types.includes(c.type));
 }
 
 function isValid(cred: Credential | undefined, now: Date): 'ok' | 'missing' | 'unverified' | 'expired' {
@@ -54,14 +55,15 @@ export function canAssign(
   if (pro.activeAssignments >= pro.maxConcurrent) blockers.push(blocker('AT_CAPACITY'));
 
   if (task.requiredCredential !== 'NONE') {
-    const status = isValid(credentialOf(pro, task.requiredCredential), now);
+    const aliases = credentialTypeAliases(task.requiredCredential);
+    const status = isValid(credentialOf(pro, aliases), now);
     if (status === 'missing') blockers.push(blocker('MISSING_CREDENTIAL'));
     else if (status === 'unverified') blockers.push(blocker('UNVERIFIED'));
     else if (status === 'expired') blockers.push(blocker('EXPIRED'));
 
     // Mediation additionally requires valid RC professional insurance.
     if (task.requiredCredential === 'REA_MEDIATORE') {
-      const ins = isValid(credentialOf(pro, 'RC_INSURANCE'), now);
+      const ins = isValid(credentialOf(pro, credentialTypeAliases('RC_INSURANCE')), now);
       if (ins === 'missing') blockers.push(blocker('MISSING_INSURANCE'));
       else if (ins !== 'ok') blockers.push(blocker('INSURANCE_EXPIRED'));
     }

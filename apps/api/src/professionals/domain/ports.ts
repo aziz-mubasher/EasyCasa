@@ -14,6 +14,7 @@ export interface ProfessionalRepository {
     maxConcurrent?: number;
     userId?: string;
   }): Promise<Professional>;
+  setCoverage(id: string, coverageProvinces: string[]): Promise<void>;
   addCredential(id: string, credential: Credential): Promise<void>;
   setCredentialStatus(
     id: string,
