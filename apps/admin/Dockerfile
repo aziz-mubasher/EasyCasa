@@ -13,6 +13,7 @@ ENV VITE_OIDC_CLIENT_ID=$VITE_OIDC_CLIENT_ID
 ENV VITE_GIT_SHA=$VITE_GIT_SHA
 COPY . .
 RUN pnpm install --no-frozen-lockfile
+RUN pnpm --filter @easycasa/shared build
 RUN pnpm --filter @easycasa/admin build
 
 FROM nginx:1.27-alpine AS run
