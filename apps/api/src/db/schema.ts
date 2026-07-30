@@ -500,6 +500,10 @@ export const phoneOtpChallenges = pgTable('phone_otp_challenges', {
   phoneE164: text('phone_e164').notNull(),
   codeHash: text('code_hash').notNull(),
   channel: text('channel').notNull(),
+  /** Cloud API wamid when sent via WhatsApp (Phase B). */
+  providerMessageId: text('provider_message_id'),
+  /** Why email was used instead of WhatsApp (Phase B). */
+  fallbackReason: text('fallback_reason'),
   attempts: integer('attempts').notNull().default(0),
   maxAttempts: integer('max_attempts').notNull().default(3),
   expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
