@@ -29,6 +29,12 @@ describe('RolesGuard', () => {
     expect(guard.canActivate(ctxWith({ roles: ['admin'] }))).toBe(true);
   });
 
+  it('admin_* persona passes legacy @Roles(admin) gates (EC-14)', () => {
+    const guard = new RolesGuard(reflectorWith(['admin']));
+    expect(guard.canActivate(ctxWith({ roles: ['admin_superadmin'] }))).toBe(true);
+    expect(guard.canActivate(ctxWith({ roles: ['admin_operations'] }))).toBe(true);
+  });
+
   it('throws when role missing', () => {
     const guard = new RolesGuard(reflectorWith(['agent']));
     expect(() => guard.canActivate(ctxWith({ roles: ['buyer'] }))).toThrow();
