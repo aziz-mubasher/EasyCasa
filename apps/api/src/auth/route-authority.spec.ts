@@ -25,7 +25,7 @@ function walk(dir: string, out: string[] = []): string[] {
 }
 
 function classLevelDeclared(text: string): boolean {
-  const m = text.match(/@Controller\([^\)]*\)([\s\S]*?)export class/);
+  const m = text.match(/@Controller\([^)]*\)([\s\S]*?)export class/);
   if (!m) return false;
   return AUTH_RE.test(m[1]);
 }
