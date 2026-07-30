@@ -37,6 +37,13 @@ const Schema = z
     WHATSAPP_VERIFY_TOKEN: z.string().default(''),
     /** App secret for X-Hub-Signature-256 on POST webhook. Empty → skip verify (dev only). */
     WHATSAPP_APP_SECRET: z.string().default(''),
+    /** K EC 8.7 Phase C — utility template names (empty → skip that WhatsApp send). */
+    WHATSAPP_VIEWING_REMINDER_24H_TEMPLATE: z.string().default(''),
+    WHATSAPP_VIEWING_REMINDER_2H_TEMPLATE: z.string().default(''),
+    WHATSAPP_VIEWING_REQUESTED_TEMPLATE: z.string().default(''),
+    WHATSAPP_VIEWING_CONFIRMED_TEMPLATE: z.string().default(''),
+    WHATSAPP_VIEWING_CANCELLED_TEMPLATE: z.string().default(''),
+    WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE: z.string().default(''),
     PHONE_OTP_PEPPER: z.string().min(16).default('dev-phone-otp-pepper-change-me'),
 
     // Billing (Stripe — hosted checkout, no card data on our servers)
