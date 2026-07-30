@@ -23,7 +23,7 @@ export type AdminRole =
   | 'aml'
   | 'superadmin';
 
-/** Realm role names that grant AdminRole (additive; plain `admin` → superadmin for legacy). */
+/** Realm role names that grant AdminRole. Bare `admin` grants capability only — fail closed. */
 export const ADMIN_ROLE_REALM: Readonly<Record<string, AdminRole>> = {
   admin_support: 'support',
   admin_operations: 'operations',
@@ -65,14 +65,11 @@ export function capabilitiesFromRoles(roles: readonly string[]): Capability[] {
 
 export function adminRolesFromRoles(roles: readonly string[]): AdminRole[] {
   const out = new Set<AdminRole>();
-  let hasLegacyAdmin = false;
   for (const raw of roles) {
     const r = raw.trim().toLowerCase();
-    if (r === 'admin') hasLegacyAdmin = true;
     const mapped = ADMIN_ROLE_REALM[r];
     if (mapped) out.add(mapped);
   }
-  // Back-compat: monolithic `admin` acts as superadmin.
-  if (hasLegacyAdmin) out.add('superadmin');
+  // EC-14: bare `admin` is not an AdminRole — absence of admin_* fails closed.
   return [...out];
 }

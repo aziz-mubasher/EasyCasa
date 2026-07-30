@@ -2,6 +2,7 @@ import { Controller, Get, Injectable, Module } from '@nestjs/common';
 
 import { AuthModule } from './auth/auth.module';
 import type { AuthUser } from './auth/auth.types';
+import { RequiresAuth } from './auth/capability.decorator';
 import { Roles } from './auth/roles.decorator';
 import { ConfigModule } from './config/config.module';
 import { SeamsModule } from './config/adapters/seams.module';
@@ -21,6 +22,7 @@ import { UsersService } from './users/users.service';
  * If any two phases fight over DI or the request pipeline, this fails.
  */
 @Controller('me')
+@RequiresAuth()
 class MeController {
   @Get()
   me() {
@@ -38,6 +40,7 @@ class AdminController {
 }
 
 @Controller('boom')
+@RequiresAuth()
 class BoomController {
   @Get()
   boom(): never {

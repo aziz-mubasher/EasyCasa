@@ -50,7 +50,7 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | VALUATION_BAND_ENABLED | api | Serve `GET /listings/:slug/valuation-band` and `POST /avm/band`. Uses OMI cache when populated, else stub comparables. Default `false`. |
 | SHARE_VIEW_HMAC_SECRET | api | Pepper for SmartLink daily unique-view SHA-256 hashes (min 16 chars). **No raw IP or visitor id stored** — see `docs/smartlink-view-tracking.md`. |
 | AGENCY_PUBLIC_NAME / AGENCY_PUBLIC_EMAIL / AGENCY_PUBLIC_PHONE | api | Public agency block on SmartLink pages. |
-| VITE_OIDC_ISSUER / VITE_OIDC_CLIENT_ID / VITE_DEV_AUTH | admin (build) | Admin SPA PKCE. Prefer `VITE_DEV_AUTH=false` once Keycloak admin client is live. |
+| VITE_OIDC_ISSUER / VITE_OIDC_CLIENT_ID | admin (build) | Admin SPA PKCE (`easycasa-admin`). Required — there is no client-side auth bypass. |
 | EXPO_PUBLIC_OIDC_ISSUER / EXPO_PUBLIC_OIDC_CLIENT_ID | mobile | PKCE client for Expo (`easycasa-app`). |
 | OIDC_ROLES_CLAIM | api | Dot path to roles in JWT (default `realm_access.roles`). |
 
@@ -107,15 +107,15 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | Variable | Used by | Notes |
 |---|---|---|
 | SIGNATURE_PROVIDER_URL / SIGNATURE_PROVIDER_KEY | api | Hosted FEA/QES provider. Empty → stub signing URLs (dev only). |
-| SIGNATURE_WEBHOOK_SECRET | api | HMAC-SHA256 secret for `x-signature` on `POST /webhooks/signature`. Required when `DEV_AUTH` is false. |
+| SIGNATURE_WEBHOOK_SECRET | api | HMAC-SHA256 secret for `x-signature` on `POST /webhooks/signature`. Required when provider stubs are off. |
 
 ## Phase 12 — rentals (RLI) + AML/KYC
 | Variable | Used by | Notes |
 |---|---|---|
-| RLI_CHANNEL_URL / RLI_CHANNEL_CREDENTIAL | api | Entratel/RLI-web telematic seam. Empty + `DEV_AUTH` → stub protocollo; production must configure. |
-| AML_SCREENING_URL / AML_SCREENING_KEY | api | PEP/sanctions screening. Empty + `DEV_AUTH` → clean screen; otherwise fails safe (errors). |
-| PSP_API_URL / PSP_SECRET_KEY | api | Phase 17 order PaymentIntents seam. Empty + `DEV_AUTH` → stub client secret. |
-| SDI_CHANNEL_URL / SDI_CHANNEL_KEY | api | Phase 17 SdI fattura transmission. Empty + `DEV_AUTH` → stub protocollo. |
+| RLI_CHANNEL_URL / RLI_CHANNEL_CREDENTIAL | api | Entratel/RLI-web telematic seam. Empty + `ALLOW_PROVIDER_STUBS` → stub protocollo; production must configure. |
+| AML_SCREENING_URL / AML_SCREENING_KEY | api | PEP/sanctions screening. Empty + `ALLOW_PROVIDER_STUBS` → clean screen; otherwise fails safe (errors). |
+| PSP_API_URL / PSP_SECRET_KEY | api | Phase 17 order PaymentIntents seam. Empty + `ALLOW_PROVIDER_STUBS` → stub client secret. |
+| SDI_CHANNEL_URL / SDI_CHANNEL_KEY | api | Phase 17 SdI fattura transmission. Empty + `ALLOW_PROVIDER_STUBS` → stub protocollo. |
 | EASYCASA_PIVA / EASYCASA_DENOMINAZIONE | api | Cedente on fattura elettronica (defaults to Easy Casa Ita). |
 
 ## Phase 22 / 30 — notification seams + ops
@@ -147,4 +147,4 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | Variable | Used by | Notes |
 |---|---|---|
 | VITE_API_BASE_URL | admin (build) | API base for the SPA (e.g. `https://easycasaita.com/api`). |
-| VITE_DEV_AUTH | admin (build) | When `true`, SPA sends `x-dev-user/roles` admin headers. Disable when OIDC is wired. |
+| VITE_OIDC_ISSUER / VITE_OIDC_CLIENT_ID | admin (build) | Required PKCE. Do **not** set any client auth bypass variable — absent, not false. |

@@ -8,7 +8,7 @@ import React, {
   type ReactNode,
 } from 'react';
 
-import { devAuthEnabled, isOidcConfigured } from './config';
+import { isOidcConfigured } from './config';
 import { buildAuthorizeUrl, buildLogoutUrl, exchangeCode, refreshTokens } from './oidc';
 import { pkceChallengeFromVerifier, randomString } from './pkce';
 import { tokenStore, type StoredTokens } from './tokenStore';
@@ -17,7 +17,7 @@ interface AuthState {
   ready: boolean;
   isAuthenticated: boolean;
   isConfigured: boolean;
-  usesDevAuth: boolean;
+  accessToken: string | null;
   signIn: () => Promise<void>;
   signOut: () => Promise<void>;
   getAccessToken: () => Promise<string | null>;
@@ -51,7 +51,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const [callbackError, setCallbackError] = useState<string | null>(null);
   const isConfigured = isOidcConfigured();
-  const usesDevAuth = devAuthEnabled;
 
   useEffect(() => {
     let cancelled = false;
@@ -103,7 +102,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [isConfigured]);
 
   const getAccessToken = useCallback(async (): Promise<string | null> => {
-    if (usesDevAuth) return null;
     if (!tokens) return null;
     if (tokens.expiresAt - Date.now() > 30_000) return tokens.accessToken;
     if (!tokens.refreshToken || !isConfigured) {
@@ -123,19 +121,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await signOut();
       return null;
     }
-  }, [tokens, isConfigured, persist, signOut, usesDevAuth]);
+  }, [tokens, isConfigured, persist, signOut]);
+
+  /** Sync peek for UI role gates (may be briefly stale during refresh). */
+  const accessToken = tokens?.accessToken ?? null;
 
   const value = useMemo<AuthState>(
     () => ({
       ready,
-      isAuthenticated: usesDevAuth || tokens !== null,
+      isAuthenticated: tokens !== null,
       isConfigured,
-      usesDevAuth,
+      accessToken,
       signIn,
       signOut,
       getAccessToken,
     }),
-    [ready, tokens, isConfigured, usesDevAuth, signIn, signOut, getAccessToken],
+    [ready, tokens, isConfigured, accessToken, signIn, signOut, getAccessToken],
   );
 
   if (callbackError) {

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { useAuth } from './auth/AuthProvider';
+import { adminRolesFromAccessToken, canAccessView } from './auth/roles';
 import { Orchestration } from './pages/Orchestration';
 import { Credentials } from './pages/Credentials';
 import { ComplianceConfig } from './pages/ComplianceConfig';
@@ -47,9 +48,9 @@ const VIEWS: Record<View, React.ReactNode> = {
 };
 
 function LoginGate({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isConfigured, usesDevAuth, signIn } = useAuth();
+  const { isAuthenticated, isConfigured, signIn } = useAuth();
 
-  if (usesDevAuth || isAuthenticated) {
+  if (isAuthenticated) {
     return <>{children}</>;
   }
 
@@ -57,7 +58,7 @@ function LoginGate({ children }: { children: React.ReactNode }) {
     return (
       <div className="shell">
         <main className="content">
-          <p>Admin OIDC is not configured. Set VITE_OIDC_ISSUER and rebuild, or enable VITE_DEV_AUTH.</p>
+          <p>Admin OIDC is not configured. Set VITE_OIDC_ISSUER and VITE_OIDC_CLIENT_ID, then rebuild the admin image.</p>
         </main>
       </div>
     );
@@ -76,9 +77,39 @@ function LoginGate({ children }: { children: React.ReactNode }) {
   );
 }
 
+function BuildMarker() {
+  const [sha, setSha] = useState<string>('…');
+  useEffect(() => {
+    const baked = import.meta.env.VITE_GIT_SHA as string | undefined;
+    if (baked?.trim()) {
+      setSha(baked.trim());
+      return;
+    }
+    const base = import.meta.env.VITE_API_BASE_URL ?? 'https://easycasaita.com/api';
+    void fetch(`${base.replace(/\/$/, '')}/version`)
+      .then((r) => r.json())
+      .then((j: { gitSha?: string }) => setSha(j.gitSha ?? 'unknown'))
+      .catch(() => setSha('unknown'));
+  }, []);
+  return (
+    <p className="muted" style={{ fontSize: '0.75rem', marginTop: '1rem' }}>
+      build {sha}
+    </p>
+  );
+}
+
 export function App() {
+  const { isAuthenticated, signOut, accessToken } = useAuth();
+  const adminRoles = useMemo(() => adminRolesFromAccessToken(accessToken), [accessToken]);
+  const allowedNav = useMemo(
+    () => NAV.filter((n) => canAccessView(adminRoles, n.key)),
+    [adminRoles],
+  );
   const [view, setView] = useState<View>('credentials');
-  const { usesDevAuth, isAuthenticated, signOut } = useAuth();
+
+  const activeView = allowedNav.some((n) => n.key === view)
+    ? view
+    : (allowedNav[0]?.key ?? null);
 
   return (
     <LoginGate>
@@ -87,16 +118,16 @@ export function App() {
           <div className="brand">
             EasyCasa <span>ops</span>
           </div>
-          {!usesDevAuth && isAuthenticated ? (
+          {isAuthenticated ? (
             <button type="button" className="nav-item" onClick={() => void signOut()}>
               <span className="nav-item__label">Sign out</span>
             </button>
           ) : null}
           <nav>
-            {NAV.map((n) => (
+            {allowedNav.map((n) => (
               <button
                 key={n.key}
-                className={`nav-item${view === n.key ? ' nav-item--active' : ''}`}
+                className={`nav-item${activeView === n.key ? ' nav-item--active' : ''}`}
                 onClick={() => setView(n.key)}
               >
                 <span className="nav-item__label">{n.label}</span>
@@ -104,8 +135,18 @@ export function App() {
               </button>
             ))}
           </nav>
+          <BuildMarker />
         </aside>
-        <main className="content">{VIEWS[view]}</main>
+        <main className="content">
+          {activeView ? (
+            VIEWS[activeView]
+          ) : (
+            <p>
+              No admin role on this account. Ask an operator to assign an{' '}
+              <code>admin_*</code> realm role in Keycloak. Bare <code>admin</code> is not enough.
+            </p>
+          )}
+        </main>
       </div>
     </LoginGate>
   );

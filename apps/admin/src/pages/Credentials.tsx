@@ -69,6 +69,11 @@ export function Credentials() {
       api.setCoverage(v.professionalId, v.coverageProvinces),
     onSuccess: () => void qc.invalidateQueries({ queryKey: ['professionals'] }),
   });
+  const unredact = useMutation({
+    mutationFn: (v: { professionalId: string; reason: string }) =>
+      api.unredactProfessional(v.professionalId, v.reason),
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ['professionals'] }),
+  });
 
   const rows: Row[] = useMemo(() => {
     const all: Row[] = (data ?? []).flatMap((p) =>
@@ -103,8 +108,16 @@ export function Credentials() {
       <h1>Credentials</h1>
       <p className="muted">
         Operations queue. Default tab: expiring within 30 days (empty = success). Verify requires a
-        reason (audit). CENED blocks APE coverage when missing.
+        reason (audit). CENED blocks APE coverage when missing. Support sees redacted names —
+        unredact is one record at a time with a typed reason.
       </p>
+
+      {(data ?? []).some((p) => p.redacted) ? (
+        <p className="muted" style={{ marginBottom: '1rem' }}>
+          Viewing redacted projection. To reveal one professional, enter a reason below and click
+          Reveal on that row.
+        </p>
+      ) : null}
 
       <div className="actions" style={{ marginBottom: '1rem' }}>
         <button
@@ -160,6 +173,21 @@ export function Credentials() {
                   <td>
                     <div>{r.professional.displayName}</div>
                     <div className="mono muted">{r.professional.coverageProvinces.join(', ')}</div>
+                    {r.professional.redacted ? (
+                      <button
+                        type="button"
+                        className="btn btn--sm"
+                        style={{ marginTop: 4 }}
+                        disabled={unredact.isPending || reason.trim().length < 5}
+                        onClick={() => {
+                          const why = reason.trim();
+                          if (why.length < 5) return;
+                          unredact.mutate({ professionalId: r.professional.id, reason: why });
+                        }}
+                      >
+                        Reveal…
+                      </button>
+                    ) : null}
                   </td>
                   <td>{r.type}</td>
                   <td className="mono">{r.reference ?? '—'}</td>

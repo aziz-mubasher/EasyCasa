@@ -2,7 +2,7 @@
 # Caddy is not started — see profiles on the caddy service in docker-compose.yml.
 # Auto-included by infra/deploy.sh when root_default exists.
 # Phase 6 / 32.1: security headers, AI rate limiting, www → apex 301.
-# K EC 1.3: strip spoofable x-dev-* headers at the public edge (DEV_AUTH still on in API).
+# K EC 1.3 / EC-14: strip spoofable x-dev-* headers at the public edge (API, web, admin, AI).
 # K EC 1.9 (F8): block public /api/metrics — Prometheus scrapes api:4000 on the Docker network.
 
 services:

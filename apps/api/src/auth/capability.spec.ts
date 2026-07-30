@@ -33,12 +33,16 @@ describe('capabilitiesFromRoles (EC-11)', () => {
   });
 });
 
-describe('adminRolesFromRoles (EC-11)', () => {
-  it('legacy admin becomes superadmin', () => {
-    expect(adminRolesFromRoles(['admin'])).toContain('superadmin');
+describe('adminRolesFromRoles (EC-14 fail-closed)', () => {
+  it('bare admin grants no AdminRole', () => {
+    expect(adminRolesFromRoles(['admin'])).toEqual([]);
   });
 
   it('maps admin_operations', () => {
     expect(adminRolesFromRoles(['admin_operations'])).toContain('operations');
+  });
+
+  it('maps admin_superadmin', () => {
+    expect(adminRolesFromRoles(['admin_superadmin'])).toContain('superadmin');
   });
 });

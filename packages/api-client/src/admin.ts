@@ -110,6 +110,13 @@ export class EasyCasaAdminApi {
   listProfessionals(): Promise<Professional[]> {
     return this.request('/professionals', z.array(ProfessionalSchema));
   }
+  unredactProfessional(professionalId: string, reason: string): Promise<Professional> {
+    return this.request(
+      `/professionals/${encodeURIComponent(professionalId)}/unredact`,
+      ProfessionalSchema,
+      { method: 'POST', body: JSON.stringify({ reason }) },
+    );
+  }
   verifyCredential(
     professionalId: string,
     body: { type: CredentialType; status: 'VERIFIED' | 'REJECTED'; reason: string },

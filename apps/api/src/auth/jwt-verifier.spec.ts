@@ -57,7 +57,11 @@ describe('JwtVerifier (real RS256 crypto)', () => {
     expect(p).toEqual({
       sub: 'user-123',
       email: 'seeker@example.it',
+      name: undefined,
+      preferredUsername: undefined,
       roles: ['buyer', 'seller'],
+      capabilities: ['seeker', 'owner', 'conductor'],
+      adminRoles: [],
     });
   });
 

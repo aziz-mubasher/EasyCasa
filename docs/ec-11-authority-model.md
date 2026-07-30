@@ -26,8 +26,8 @@ the vocabulary and fail-closed Nest guards, mapping **existing** Keycloak /
 | `admin` / `admin_*` | `admin` |
 
 Admin personas (`support`, `operations`, `finance`, `dpo`, `aml`, `superadmin`)
-are read from realm roles `admin_support`, … Legacy bare `admin` maps to
-`superadmin` for back-compat.
+are read from realm roles `admin_support`, … Bare `admin` grants capability
+`admin` only — **no** AdminRole (EC-14 fail-closed). See `docs/admin-roles.md`.
 
 ## Decorators
 

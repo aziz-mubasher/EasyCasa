@@ -40,6 +40,8 @@ export const ProfessionalSchema = z.object({
   credentials: z.array(CredentialSchema),
   activeAssignments: z.number().int(),
   maxConcurrent: z.number().int(),
+  /** EC-14 — present when API applied support redaction. */
+  redacted: z.boolean().optional(),
 });
 export type Professional = z.infer<typeof ProfessionalSchema>;
 
