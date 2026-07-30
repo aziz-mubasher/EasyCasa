@@ -54,16 +54,84 @@
     }
   },
   "home": {
-    "eyebrow": "Real estate · Italy",
-    "title": "Property, without the markup.",
-    "subtitle": "Pay only for the services you use — from a licensed agency. Search the map across thousands of homes in every Italian region.",
-    "cta": "Explore the map",
-    "where": "Where?",
-    "wherePlaceholder": "City, province or region…",
-    "searchRowLabel": "Search properties on the map",
-    "dealLabel": "Buy or rent",
-    "sellerLabel": "Private or agency",
-    "commissionDisclosure": "A mediation fee (provvigione) applies only when a deal closes through our work, and is always stated in the mandate."
+    "meta": {
+      "title": "EasyCasa — Verified listings, no seller commission",
+      "description": "The Italian property portal with no commission from the seller. Every listing has a verified owner; every asking price sits next to official Agenzia delle Entrate market bands. Free valuation, no sign-up.",
+      "ogTitle": "Every listing verified. No seller commission."
+    },
+    "hero": {
+      "title": "Every listing verified.",
+      "titleAccent": "No seller commission.",
+      "subtitle": "The owner is verified before a listing goes live. Market values come from Italy’s tax authority. And we take nothing from the seller.",
+      "ctaPrimary": "What is my home worth?",
+      "ctaSecondary": "Search homes",
+      "micro": "Free, instant, no registration. No agent will call you."
+    },
+    "problem": {
+      "eyebrow": "Why we exist",
+      "title": "Three things that don’t work — and nobody fixes them",
+      "items": [
+        {
+          "title": "Homes that aren’t real",
+          "body": "Below-market price, perfect photos, hot area. You call and nobody answers — or someone answers who wants to sell you a lead list. Portals react to reports because they live on listing volume."
+        },
+        {
+          "title": "Commission on both sides",
+          "body": "3% plus VAT from the seller and 3% plus VAT from the buyer, on the same home. On €300,000 that is nearly €22,000 leaving the deal."
+        },
+        {
+          "title": "Nobody knows who can buy",
+          "body": "Sellers don’t know if a visitor will get a mortgage. Visitors often don’t know either. Months are lost finding out."
+        }
+      ]
+    },
+    "method": {
+      "eyebrow": "The method",
+      "title": "We verify first, not after",
+      "steps": [
+        {
+          "title": "Every listing has a verified owner",
+          "body": "Identity confirmed and title checked before publication. If a listing stops getting answers, it leaves the platform. Publishing here is free, so verification costs us nothing — portals sell the inventory they refuse to clean."
+        },
+        {
+          "title": "Values are the official ones",
+          "body": "Every property shows the market band recorded by the Agenzia delle Entrate for its micro-zone, next to the asking price. If the price is off-band, we say so — and we say to ask why."
+        },
+        {
+          "title": "Buying capacity is verified; the name is not",
+          "body": "Sellers see that a buyer can sustain the purchase, with an indicative range and an expiry. They don’t see the surname and don’t get the phone number. Details are exchanged only when both sides confirm the viewing at the same time."
+        },
+        {
+          "title": "No commission from the seller",
+          "body": "We earn from the services you choose — photos, energy certificate, document checks — at a fixed price stated before you order. The same on a €150,000 home and an €800,000 one."
+        }
+      ]
+    },
+    "sellers": {
+      "title": "The highest estimate isn’t a compliment",
+      "body": "Anyone who only earns if you sign a mandate has a reason to promise a price the market won’t pay. Then, after three months without viewings, comes the call about cutting the price. We take no commission on the sale. We have no reason to inflate the number.",
+      "ctaPrimary": "See what it’s worth",
+      "ctaSecondary": "List for free"
+    },
+    "buyers": {
+      "title": "Do you already know what you can spend?",
+      "body": "Searching, contacting and booking viewings is free and stays free. Before you fall for a home, you can have your buying capacity checked for free — and show up as someone who can buy, not as one of twenty who called today.",
+      "ctaPrimary": "Search homes",
+      "ctaSecondary": "Check your capacity"
+    },
+    "languages": {
+      "title": "In Italian, English and Spanish",
+      "body": "Not only the interface. Every document you sign comes with an explanation in a language you actually read: what a proposal commits you to, why the notary is not your lawyer, what happens if you change your mind."
+    },
+    "transparency": {
+      "title": "Who pays us — and who doesn’t",
+      "body": "A complete list of who sends us money. Seven lines; six of them are zero.",
+      "cta": "Read the transparency page"
+    },
+    "close": {
+      "title": "Two minutes, no registration",
+      "cta": "What is my home worth?"
+    }
   },
   "search": {
     "title": "Search properties",
@@ -483,11 +551,12 @@
   "footer": {
     "externalHint": "Opens on {host} in a new tab",
     "entity": "EasyCasa Italia · P.IVA IT04531990986",
-    "blurb": "Italian property marketplace: buy, sell, and rent — pay only for the services you use, from a licensed agency.",
+    "blurb": "EasyCasa is the Italian property portal with no commission for the seller. Every listing has a verified owner. Every valuation rests on official Agenzia delle Entrate data.",
     "columns": {
       "sellers": "For sellers",
       "buyers": "For buyers",
-      "financing": "Financing"
+      "financing": "Financing",
+      "about": "About us"
     },
     "sellers": {
       "valutazioneGratuita": "Free valuation",
@@ -519,7 +588,8 @@
       "terms": "Terms",
       "myData": "My data",
       "contacts": "Contacts"
-    }
+    },
+    "about": "EasyCasa connects sellers and buyers of homes in Italy directly, with no commission from the seller. We verify the identity of who publishes before a listing goes live and show official market values next to every asking price. Services — photos, energy certificate, document checks, assistance — have a fixed price stated before you order. In Italian, English and Spanish."
   },
   "pricing": {
     "title": "À la carte pricing",

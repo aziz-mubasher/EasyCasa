@@ -54,16 +54,84 @@
     }
   },
   "home": {
-    "eyebrow": "Mercato immobiliare · Italia",
-    "title": "La casa, senza sovrapprezzo.",
-    "subtitle": "Paghi solo i servizi che usi — con un'agenzia regolare. Cerca sulla mappa tra migliaia di immobili in tutte le regioni italiane.",
-    "cta": "Esplora la mappa",
-    "where": "Dove?",
-    "wherePlaceholder": "Comune, provincia o regione…",
-    "searchRowLabel": "Cerca immobili sulla mappa",
-    "dealLabel": "Vendita o affitto",
-    "sellerLabel": "Privato o agenzia",
-    "commissionDisclosure": "Una provvigione si applica solo a mediazione conclusa e risulta sempre nell'incarico."
+    "meta": {
+      "title": "EasyCasa — Annunci verificati, nessuna provvigione",
+      "description": "Il portale immobiliare italiano senza provvigione dal venditore. Ogni annuncio ha un proprietario verificato, ogni prezzo accanto ai valori ufficiali dell’Agenzia delle Entrate. Valutazione gratuita, senza registrazione.",
+      "ogTitle": "Ogni annuncio verificato. Nessuna provvigione."
+    },
+    "hero": {
+      "title": "Ogni annuncio verificato.",
+      "titleAccent": "Nessuna provvigione.",
+      "subtitle": "Il proprietario è verificato prima che l’annuncio venga pubblicato. I valori di mercato sono quelli ufficiali dell’Agenzia delle Entrate. E dal venditore non prendiamo un euro.",
+      "ctaPrimary": "Quanto vale la mia casa",
+      "ctaSecondary": "Cerca casa",
+      "micro": "Gratuita, immediata, senza registrazione. Nessun agente ti richiama."
+    },
+    "problem": {
+      "eyebrow": "Perché esistiamo",
+      "title": "Tre cose che non funzionano, e nessuno le sistema",
+      "items": [
+        {
+          "title": "Case che non esistono",
+          "body": "Prezzo sotto mercato, foto perfette, zona richiesta. Chiami e non risponde nessuno — oppure risponde qualcuno che vuole venderti un elenco. I portali reagiscono alle segnalazioni, perché vivono sul numero di annunci."
+        },
+        {
+          "title": "Provvigioni da entrambe le parti",
+          "body": "Il 3% più IVA a chi vende e il 3% più IVA a chi compra, sulla stessa casa. Su 300.000 € sono quasi 22.000 € che escono dalla trattativa."
+        },
+        {
+          "title": "Nessuno sa chi può comprare",
+          "body": "Il venditore non sa se chi visita otterrà il mutuo. Chi visita spesso non lo sa neanche lui. Si perdono mesi per scoprirlo."
+        }
+      ]
+    },
+    "method": {
+      "eyebrow": "Il metodo",
+      "title": "Verifichiamo prima, non dopo",
+      "steps": [
+        {
+          "title": "Ogni annuncio ha un proprietario verificato",
+          "body": "Identità confermata e titolo verificato prima della pubblicazione. Se un annuncio non riceve risposta, esce dalla piattaforma. Pubblicare qui è gratis, quindi verificare non ci costa niente — ai portali costa il prodotto che vendono."
+        },
+        {
+          "title": "I valori sono quelli ufficiali",
+          "body": "Ogni immobile mostra la banda di mercato registrata dall’Agenzia delle Entrate per la sua microzona, accanto al prezzo richiesto. Se il prezzo è fuori banda, lo diciamo — e diciamo di chiedere perché."
+        },
+        {
+          "title": "La capacità di acquisto è verificata, il nome no",
+          "body": "Chi vende vede che l’acquirente può sostenere l’acquisto, con una fascia indicativa e una scadenza. Non vede il cognome e non riceve il numero di telefono. I dati si scambiano solo quando la visita è confermata, da entrambe le parti nello stesso momento."
+        },
+        {
+          "title": "Nessuna provvigione dal venditore",
+          "body": "Guadagnamo dai servizi che scegli — foto, certificazione energetica, verifica documenti — a prezzo fisso, indicato prima dell’ordine. Lo stesso su una casa da 150.000 € e su una da 800.000 €."
+        }
+      ]
+    },
+    "sellers": {
+      "title": "La stima più alta non è un complimento",
+      "body": "Chi guadagna solo se firmi l’incarico ha interesse a prometterti un prezzo che il mercato non pagherà. Poi, dopo tre mesi senza visite, arriva la telefonata sul ribasso. Noi non prendiamo provvigione sulla vendita. Non abbiamo motivo di gonfiare il numero.",
+      "ctaPrimary": "Scopri quanto vale",
+      "ctaSecondary": "Pubblica gratis"
+    },
+    "buyers": {
+      "title": "Sai già quanto puoi spendere?",
+      "body": "Cercare, contattare e prenotare visite è gratuito e resterà gratuito. Prima di innamorarti di una casa, puoi far verificare gratuitamente la tua capacità di acquisto — e presentarti come qualcuno che può comprare, non come uno dei venti che hanno chiamato oggi.",
+      "ctaPrimary": "Cerca casa",
+      "ctaSecondary": "Verifica la tua capacità"
+    },
+    "languages": {
+      "title": "In italiano, inglese e spagnolo",
+      "body": "Non solo l’interfaccia. Ogni documento che firmi arriva con una spiegazione in una lingua che leggi davvero: cosa impegna una proposta, perché il notaio non è il tuo avvocato, cosa succede se cambi idea."
+    },
+    "transparency": {
+      "title": "Chi ci paga, e chi no",
+      "body": "Un elenco completo di chi ci versa denaro. Sette righe, sei delle quali sono zero.",
+      "cta": "Leggi la pagina trasparenza"
+    },
+    "close": {
+      "title": "Due minuti, nessuna registrazione",
+      "cta": "Quanto vale la mia casa"
+    }
   },
   "search": {
     "title": "Cerca immobili",
@@ -483,11 +551,12 @@
   "footer": {
     "externalHint": "Si apre su {host} in una nuova scheda",
     "entity": "EasyCasa Italia · P.IVA IT04531990986",
-    "blurb": "Marketplace immobiliare italiano: compra, vendi e affitta pagando solo i servizi che usi, con un'agenzia regolare.",
+    "blurb": "EasyCasa è il portale immobiliare italiano senza provvigione per il venditore. Ogni annuncio ha un proprietario verificato. Ogni valutazione poggia sui dati ufficiali dell’Agenzia delle Entrate.",
     "columns": {
       "sellers": "Per chi vende",
       "buyers": "Per chi compra",
-      "financing": "Finanziamento"
+      "financing": "Finanziamento",
+      "about": "Chi siamo"
     },
     "sellers": {
       "valutazioneGratuita": "Valutazione gratuita",
@@ -519,7 +588,8 @@
       "terms": "Termini",
       "myData": "I miei dati",
       "contacts": "Contatti"
-    }
+    },
+    "about": "EasyCasa mette in contatto direttamente chi vende e chi compra casa in Italia, senza provvigione dal venditore. Verifichiamo l’identità di chi pubblica prima che l’annuncio sia online e mostriamo i valori di mercato ufficiali accanto a ogni prezzo. I servizi — foto, certificazione energetica, verifica documenti, assistenza — hanno un prezzo fisso, indicato prima dell’ordine. In italiano, inglese e spagnolo."
   },
   "pricing": {
     "title": "Prezzi à la carte",
