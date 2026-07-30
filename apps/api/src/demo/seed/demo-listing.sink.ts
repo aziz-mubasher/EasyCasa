@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { normalizeProvinceSlug } from '@easycasa/shared';
 import { eq, sql } from 'drizzle-orm';
 
-import { listingRowToPin } from '../../alerts/listing-pin';
 import { DRIZZLE } from '../../db/db.module';
 import type { Db } from '../../db/drizzle';
-import { listings, users } from '../../db/schema';
-import { SEARCH_INDEX, type SearchIndexPort } from '../../search/domain/ports';
+import { listings, media, users } from '../../db/schema';
+import type { ListingDoc } from '../../search/meili';
+import { SearchService } from '../../search/search.service';
+import { demoImageUrls } from './demo-images';
 import type { DemoListingSeed } from './generate-listings';
 
 export const DEMO_OWNER_EMAIL = 'demo-owner@easycasaita.com';
@@ -22,7 +24,7 @@ export function demoWpPostId(wpKey: string): number {
 export class DemoListingSink {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
-    @Inject(SEARCH_INDEX) private readonly index: SearchIndexPort,
+    private readonly search: SearchService,
   ) {}
 
   async ensureDemoOwner(): Promise<string> {
@@ -55,9 +57,14 @@ export class DemoListingSink {
     return row!.id;
   }
 
-  async upsert(listing: DemoListingSeed): Promise<void> {
+  /**
+   * Upsert listing + demo media. Returns a Meili doc when published (caller may
+   * batch-index); otherwise removes the id from the index.
+   */
+  async upsert(listing: DemoListingSeed): Promise<ListingDoc | null> {
     const ownerId = await this.ensureDemoOwner();
     const wpPostId = demoWpPostId(listing.wpKey);
+    const imageUrls = listing.imageDemoFlag ? demoImageUrls(listing.wpKey, 3) : [];
     const attributes = {
       demo: true,
       demoRef: listing.ref,
@@ -131,22 +138,75 @@ export class DemoListingSink {
       })
       .returning();
 
-    if (row && row.status === 'published') {
-      const pin = listingRowToPin({
-        id: row.id,
-        title: row.title,
-        latitude: row.latitude,
-        longitude: row.longitude,
-        price: row.price,
-        transactionType: row.transactionType,
-        bedrooms: row.bedrooms,
-        rooms: row.rooms,
-        sizeSqm: row.sizeSqm,
-        energyClass: row.energyClass,
-        propertyType: row.propertyType,
-      });
-      if (pin) await this.index.upsert(pin);
+    if (!row) return null;
+
+    await this.db.delete(media).where(eq(media.listingId, row.id));
+    if (imageUrls.length > 0) {
+      await this.db.insert(media).values(
+        imageUrls.map((url, position) => ({
+          listingId: row.id,
+          type: 'image' as const,
+          url,
+          position,
+          alt: `${listing.title} (demo)`,
+          width: 960,
+          height: 720,
+        })),
+      );
     }
+
+    if (row.status === 'published') {
+      return this.toSearchDoc(row, imageUrls);
+    }
+    await this.search.remove(row.id);
+    return null;
+  }
+
+  async indexPublished(docs: ListingDoc[]): Promise<void> {
+    if (docs.length === 0) return;
+    await this.search.indexBatch(docs);
+  }
+
+  private toSearchDoc(
+    row: typeof listings.$inferSelect,
+    imageUrls: string[],
+  ): ListingDoc {
+    return {
+      id: row.id,
+      slug: row.slug ?? row.id,
+      title: row.title,
+      description: row.description,
+      city: row.city,
+      provinceSlug: normalizeProvinceSlug(row.province),
+      regionSlug: null,
+      categorySlug: 'appartamento',
+      transactionType: row.transactionType,
+      transactionTypes: row.transactionType ? [row.transactionType] : [],
+      assetClass: 'residential',
+      propertyType: row.propertyType ?? 'apartment',
+      condition: null,
+      financingOptions: [],
+      leaseType: null,
+      sellerType: 'private',
+      price: row.price == null ? null : Number(row.price),
+      bedrooms: row.bedrooms,
+      bathrooms: row.bathrooms,
+      rooms: row.rooms ?? row.bedrooms,
+      sizeSqm: row.sizeSqm == null ? null : Number(row.sizeSqm),
+      surfaceSqm: null,
+      yearBuilt: row.yearBuilt ?? null,
+      yearRenovated: null,
+      energyClass: row.energyClass ?? null,
+      features: row.features ?? [],
+      coverUrl: imageUrls[0] ?? null,
+      imageUrls,
+      status: 'published',
+      _geo:
+        row.latitude != null && row.longitude != null
+          ? { lat: row.latitude, lng: row.longitude }
+          : undefined,
+      publishedAt: row.publishedAt ? row.publishedAt.getTime() : Date.now(),
+    };
   }
 
   async countDemo(): Promise<number> {

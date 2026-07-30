@@ -28,9 +28,12 @@ async function main(): Promise<void> {
     await db.delete(listings).where(eq(listings.source, 'demo'));
 
     const rows = buildDemoListings(120);
+    const docs = [];
     for (const listing of rows) {
-      await sink.upsert(listing);
+      const doc = await sink.upsert(listing);
+      if (doc) docs.push(doc);
     }
+    await sink.indexPublished(docs);
     const result = await scenarios.seed();
 
     const [{ c }] = await db

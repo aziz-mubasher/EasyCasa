@@ -29,6 +29,8 @@ export async function searchListings(params: Record<string, string | number | un
   // Meilisearch stores coordinates as `_geo`; map components expect lat/lng fields.
   raw.items = raw.items.map((item) => ({
     ...item,
+    // Meili partial upserts (e.g. map pin path) may omit slug — detail accepts UUID too.
+    slug: item.slug || item.id,
     latitude: item.latitude ?? item._geo?.lat ?? null,
     longitude: item.longitude ?? item._geo?.lng ?? null,
     imageUrls:

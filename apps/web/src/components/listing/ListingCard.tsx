@@ -46,9 +46,11 @@ export function ListingCard({ l }: { l: ListingSummary }) {
     el.scrollBy({ left: dir * el.clientWidth, behavior: 'smooth' });
   };
 
+  const hrefSlug = l.slug || l.id;
+
   return (
     <Link
-      href={`/listings/${l.slug}`}
+      href={`/listings/${hrefSlug}`}
       target="_blank"
       rel="noopener noreferrer"
       className="group block rounded-xl2 overflow-hidden border border-line bg-paper hover:border-ink transition"
