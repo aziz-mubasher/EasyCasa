@@ -74,6 +74,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     RETENTION_LEAD_DAYS: 90,
     BANKS4ALL_ATTESTATION_BASE_URL: '',
     BANKS4ALL_PARTNER_TOKEN: '',
+    DEMO_MODE: false,
     SENTRY_DSN: '',
     VALUATION_BAND_ENABLED: false,
     SHARE_VIEW_HMAC_SECRET: 'test-smartlink-view-secret',

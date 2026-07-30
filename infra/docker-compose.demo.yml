@@ -1,0 +1,169 @@
+# EasyCasa demo stack — isolated Compose project (EC-15).
+# Never reuse easycasa-ita_* volumes. Run with:
+#   COMPOSE_PROJECT_NAME=easycasa-demo docker compose -f infra/docker-compose.demo.yml --env-file .env.demo up -d --build
+# Or: ./infra/demo/up.sh
+
+name: easycasa-demo
+
+services:
+  db:
+    build:
+      context: ./postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - demo_db_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [demo_internal]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1"]
+    volumes:
+      - demo_redis_data:/data
+    networks: [demo_internal]
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.10
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      MEILI_ENV: development
+    volumes:
+      - demo_meili_data:/meili_data
+    networks: [demo_internal]
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - demo_minio_data:/data
+    networks: [demo_internal]
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-demo}
+        BUILD_TIME: ${BUILD_TIME:-unknown}
+    restart: unless-stopped
+    env_file: ../.env.demo
+    environment:
+      DEMO_MODE: "true"
+      # Hard guarantees even if .env.demo is mis-edited:
+      SMTP_URL: ""
+      EMAIL_PROVIDER_URL: ""
+      BANKS4ALL_ATTESTATION_BASE_URL: ""
+      BANKS4ALL_PARTNER_TOKEN: ""
+      WHATSAPP_TOKEN: ""
+      GO_LIVE_PAYMENTS_ACK: "false"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      meilisearch:
+        condition: service_started
+    networks: [demo_internal, traefik]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=root_default
+      - traefik.http.middlewares.easycasa-demo-noindex.headers.customResponseHeaders.X-Robots-Tag=noindex, nofollow
+      - traefik.http.middlewares.easycasa-demo-api-strip.stripprefix.prefixes=/api
+      - traefik.http.routers.easycasa-demo-api.rule=Host(`${DEMO_DOMAIN}`) && PathPrefix(`/api`)
+      - traefik.http.routers.easycasa-demo-api.entrypoints=websecure
+      - traefik.http.routers.easycasa-demo-api.tls=true
+      - traefik.http.routers.easycasa-demo-api.tls.certresolver=mytlschallenge
+      - traefik.http.routers.easycasa-demo-api.priority=100
+      - traefik.http.routers.easycasa-demo-api.middlewares=easycasa-demo-api-strip@docker,easycasa-demo-noindex@docker
+      - traefik.http.services.easycasa-demo-api.loadbalancer.server.port=4000
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://demo.easycasaita.com/api}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://demo.easycasaita.com}
+        NEXT_PUBLIC_OIDC_ISSUER: ${NEXT_PUBLIC_OIDC_ISSUER:-}
+        NEXT_PUBLIC_OIDC_CLIENT_ID: ${NEXT_PUBLIC_OIDC_CLIENT_ID:-easycasa-web}
+        NEXT_PUBLIC_MAP_STYLE: ${NEXT_PUBLIC_MAP_STYLE:-https://tiles.openfreemap.org/styles/liberty}
+        NEXT_PUBLIC_VALUATION_BAND_ENABLED: ${NEXT_PUBLIC_VALUATION_BAND_ENABLED:-true}
+        NEXT_PUBLIC_PAYMENTS_ENABLED: ${NEXT_PUBLIC_PAYMENTS_ENABLED:-true}
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
+        NEXT_PUBLIC_DEMO_MODE: "true"
+        API_URL: ${API_URL:-http://api:4000}
+    restart: unless-stopped
+    env_file: ../.env.demo
+    environment:
+      NEXT_PUBLIC_DEMO_MODE: "true"
+    depends_on:
+      - api
+    networks: [demo_internal, traefik]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=root_default
+      - traefik.http.middlewares.easycasa-demo-noindex.headers.customResponseHeaders.X-Robots-Tag=noindex, nofollow
+      - traefik.http.routers.easycasa-demo-web.rule=Host(`${DEMO_DOMAIN}`)
+      - traefik.http.routers.easycasa-demo-web.entrypoints=websecure
+      - traefik.http.routers.easycasa-demo-web.tls=true
+      - traefik.http.routers.easycasa-demo-web.tls.certresolver=mytlschallenge
+      - traefik.http.routers.easycasa-demo-web.priority=1
+      - traefik.http.routers.easycasa-demo-web.middlewares=easycasa-demo-noindex@docker
+      - traefik.http.services.easycasa-demo-web.loadbalancer.server.port=3000
+
+  admin:
+    build:
+      context: ..
+      dockerfile: apps/admin/Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://demo.easycasaita.com/api}
+        VITE_OIDC_ISSUER: ${VITE_OIDC_ISSUER:-}
+        VITE_OIDC_CLIENT_ID: ${VITE_OIDC_CLIENT_ID:-easycasa-admin}
+        VITE_GIT_SHA: ${GIT_SHA:-demo}
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks: [demo_internal, traefik]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=root_default
+      - traefik.http.middlewares.easycasa-demo-noindex.headers.customResponseHeaders.X-Robots-Tag=noindex, nofollow
+      - traefik.http.routers.easycasa-demo-admin.rule=Host(`admin.${DEMO_DOMAIN}`)
+      - traefik.http.routers.easycasa-demo-admin.entrypoints=websecure
+      - traefik.http.routers.easycasa-demo-admin.tls=true
+      - traefik.http.routers.easycasa-demo-admin.tls.certresolver=mytlschallenge
+      - traefik.http.routers.easycasa-demo-admin.middlewares=easycasa-demo-noindex@docker
+      - traefik.http.services.easycasa-demo-admin.loadbalancer.server.port=80
+
+networks:
+  demo_internal:
+    name: easycasa-demo_internal
+    driver: bridge
+  traefik:
+    external: true
+    name: root_default
+
+volumes:
+  demo_db_data:
+    name: easycasa-demo_db_data
+  demo_redis_data:
+    name: easycasa-demo_redis_data
+  demo_meili_data:
+    name: easycasa-demo_meili_data
+  demo_minio_data:
+    name: easycasa-demo_minio_data

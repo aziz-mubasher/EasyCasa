@@ -7,6 +7,7 @@ import { routing } from '@/i18n/routing';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Providers } from '@/components/Providers';
+import { DemoBanner } from '@/components/DemoBanner';
 import { OrganizationStructuredData } from '@/components/StructuredData';
 import '../globals.css';
 import '@/styles/easycasa-brand.css';
@@ -32,6 +33,13 @@ export function generateStaticParams() {
 
 type Locale = (typeof routing.locales)[number];
 
+export async function generateMetadata() {
+  if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') {
+    return { robots: { index: false, follow: false, nocache: true } };
+  }
+  return {};
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -49,6 +57,7 @@ export default async function LocaleLayout({
         <OrganizationStructuredData />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>
+            <DemoBanner />
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />

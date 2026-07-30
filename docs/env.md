@@ -136,6 +136,13 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | BANKS4ALL_ATTESTATION_BASE_URL | api | Origin for B4A-1 `GET /v1/attestations/:token` (e.g. `https://portal.banks4all.eu`). Empty → fail soft. |
 | BANKS4ALL_PARTNER_TOKEN | api | Bearer token matching Banks4All `B4A_PARTNER_TOKEN`. Empty → fail soft. |
 
+## EC-15 — Demo environment
+| Variable | Used by | Notes |
+|---|---|---|
+| DEMO_MODE | api | `true` on demo stack only. Forces email noop (ignores SMTP/HTTP), disables WhatsApp Cloud send. Compose also blanks outbound secrets. |
+| NEXT_PUBLIC_DEMO_MODE | web (build) | Permanent Italian demo banner + `robots` disallow + meta noindex. |
+| DEMO_DOMAIN | compose demo | Traefik host, default `demo.easycasaita.com`. See `.env.demo.example`. |
+
 ## Phase 39 — observability
 | Variable | Used by | Notes |
 |---|---|---|

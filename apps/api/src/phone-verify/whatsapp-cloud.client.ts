@@ -18,6 +18,7 @@ export class WhatsAppCloudClient {
   constructor(@InjectConfig() private readonly config: ApiConfig) {}
 
   get configured(): boolean {
+    if (this.config.DEMO_MODE) return false;
     return Boolean(
       this.config.WHATSAPP_TOKEN &&
         this.config.WHATSAPP_PHONE_NUMBER_ID &&

@@ -8,7 +8,9 @@
     "typecheck": "pnpm --filter @easycasa/shared build && pnpm -r --if-present typecheck",
     "test": "pnpm --filter @easycasa/shared build && pnpm -r --if-present test",
     "build": "pnpm --filter @easycasa/shared build && pnpm -r --if-present build",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "demo:seed": "pnpm --filter @easycasa/api demo:seed",
+    "demo:reset": "pnpm --filter @easycasa/api demo:reset"
   },
   "pnpm": {
     "overrides": {
