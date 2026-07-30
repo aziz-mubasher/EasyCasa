@@ -27,6 +27,8 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     WHATSAPP_OTP_TEMPLATE: '',
     WHATSAPP_OTP_TEMPLATE_LANG: 'it',
     WHATSAPP_GRAPH_VERSION: 'v21.0',
+    WHATSAPP_VERIFY_TOKEN: '',
+    WHATSAPP_APP_SECRET: '',
     PHONE_OTP_PEPPER: 'test-phone-otp-pepper-xx',
     STRIPE_SECRET_KEY: '',
     STRIPE_WEBHOOK_SECRET: '',
