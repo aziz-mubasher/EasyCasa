@@ -20,6 +20,9 @@ export const users = pgTable('users', {
   phone: text('phone'),
   /** EC-12 — set after WhatsApp/email OTP success. */
   phoneVerifiedAt: timestamp('phone_verified_at', { withTimezone: true }),
+  /** EC-13 — identity review success. */
+  identityVerifiedAt: timestamp('identity_verified_at', { withTimezone: true }),
+  identityMethod: text('identity_method'),
   avatarUrl: text('avatar_url'),
   bio: text('bio'),
   membershipTier: text('membership_tier'),
@@ -438,6 +441,8 @@ export const credentials = pgTable('credentials', {
   status: verificationStatus('status').notNull().default('pending'),
   reference: text('reference'),
   expiresAt: timestamp('expires_at', { withTimezone: true }),
+  /** EC-13 — supporting document link. */
+  documentUrl: text('document_url'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -499,6 +504,64 @@ export const phoneOtpChallenges = pgTable('phone_otp_challenges', {
   maxAttempts: integer('max_attempts').notNull().default(3),
   expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
   consumedAt: timestamp('consumed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** EC-13 — append-only admin portal audit. */
+export const adminAuditLog = pgTable('admin_audit_log', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  actorUserId: uuid('actor_user_id').notNull(),
+  action: text('action').notNull(),
+  resourceType: text('resource_type').notNull(),
+  resourceId: text('resource_id'),
+  subjectUserId: uuid('subject_user_id'),
+  reason: text('reason'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** EC-13 — DPO DSAR queue. */
+export const dsarAdminRequests = pgTable('dsar_admin_requests', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  subjectUserId: uuid('subject_user_id'),
+  subjectEmail: text('subject_email').notNull(),
+  requestType: text('request_type').notNull(),
+  status: text('status').notNull().default('open'),
+  receivedAt: timestamp('received_at', { withTimezone: true }).notNull().defaultNow(),
+  deadlineAt: timestamp('deadline_at', { withTimezone: true }).notNull(),
+  responseNote: text('response_note'),
+  responseSentAt: timestamp('response_sent_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** EC-13 — DSA listing report / takedown queue. */
+export const listingReports = pgTable('listing_reports', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id').notNull(),
+  reporterUserId: uuid('reporter_user_id'),
+  reporterEmail: text('reporter_email'),
+  category: text('category').notNull(),
+  freeText: text('free_text'),
+  status: text('status').notNull().default('open'),
+  decisionMotivation: text('decision_motivation'),
+  decidedAt: timestamp('decided_at', { withTimezone: true }),
+  decidedBy: uuid('decided_by'),
+  notifiedAt: timestamp('notified_at', { withTimezone: true }),
+  contestReceivedAt: timestamp('contest_received_at', { withTimezone: true }),
+  contestNote: text('contest_note'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** EC-13 — manual identity verification queue. */
+export const identityReviewRequests = pgTable('identity_review_requests', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull(),
+  accountName: text('account_name').notNull(),
+  documentUrl: text('document_url').notNull(),
+  status: text('status').notNull().default('pending'),
+  rejectReason: text('reject_reason'),
+  decidedAt: timestamp('decided_at', { withTimezone: true }),
+  decidedBy: uuid('decided_by'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -744,7 +807,8 @@ export const schema = {
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,
-  authorityAuditLog, phoneOtpChallenges,
+  authorityAuditLog, phoneOtpChallenges, adminAuditLog,
+  dsarAdminRequests, listingReports, identityReviewRequests,
   leases, kycCases,
   paymentIntents, invoices, stripeWebhookEvents,
   omiQuotes, valuationRequests,

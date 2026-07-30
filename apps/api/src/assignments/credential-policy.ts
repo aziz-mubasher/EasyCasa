@@ -14,7 +14,7 @@ import type { RequiredCredential } from '../professionals/domain/types';
 export const DEFAULT_CREDENTIAL_POLICY: Record<string, RequiredCredential> = {
   FULL_MEDIATION: 'REA_MEDIATORE',
   CONFORMITY_SURVEY: 'ALBO_TECNICO',
-  APE_ISSUANCE: 'APE_CERTIFIER',
+  APE_ISSUANCE: 'CENED_ACCREDITAMENTO',
   ROGITO_COORDINATION: 'NOTAIO',
   MEDIA_PACK: 'PHOTOGRAPHER',
   VIRTUAL_TOUR: 'PHOTOGRAPHER',

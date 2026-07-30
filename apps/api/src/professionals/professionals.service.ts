@@ -30,6 +30,12 @@ export class ProfessionalsService {
     return this.repo.create(input);
   }
 
+  async setCoverage(id: string, coverageProvinces: string[]): Promise<Professional> {
+    await this.get(id);
+    await this.repo.setCoverage(id, coverageProvinces.map((p) => p.trim().toUpperCase()).filter(Boolean));
+    return this.get(id);
+  }
+
   async addCredential(id: string, credential: Omit<Credential, 'status'>): Promise<Professional> {
     await this.get(id);
     await this.repo.addCredential(id, { ...credential, status: 'PENDING' });

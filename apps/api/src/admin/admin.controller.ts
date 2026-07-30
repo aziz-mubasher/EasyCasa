@@ -17,7 +17,8 @@ import { DefaultCredentialPolicy } from '../assignments/credential-policy';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { listings, serviceCatalogItems } from '../db/schema';
-import { Roles } from '../auth/roles.decorator';
+import { RequiresAdminRole } from '../auth/admin-role.decorator';
+import { RequiresCapability } from '../auth/capability.decorator';
 import {
   EMAIL_OUTBOX,
   OutboxEmailProvider,
@@ -42,7 +43,9 @@ class SetCredentialDto {
     'NONE',
     'REA_MEDIATORE',
     'ALBO_TECNICO',
+    'ALBO_ISCRIZIONE',
     'APE_CERTIFIER',
+    'CENED_ACCREDITAMENTO',
     'PHOTOGRAPHER',
     'NOTAIO',
   ])
@@ -50,7 +53,7 @@ class SetCredentialDto {
 }
 
 @Controller('admin')
-@Roles('admin')
+@RequiresCapability('admin')
 export class AdminController {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
@@ -63,6 +66,7 @@ export class AdminController {
   ) {}
 
   @Get('stats')
+  @RequiresAdminRole('operations', 'support', 'superadmin')
   async stats() {
     const rows = await this.db
       .select({ status: listings.status, n: sql<number>`count(*)::int` })
@@ -76,6 +80,7 @@ export class AdminController {
    * Optional `?provinces=BS,MI,CR` filters columns; otherwise seeds + known coverage.
    */
   @Get('coverage-matrix')
+  @RequiresAdminRole('operations', 'support')
   async coverageMatrix(@Query('provinces') provinces?: string) {
     const list = provinces
       ?.split(',')
@@ -85,6 +90,7 @@ export class AdminController {
   }
 
   @Get('coverage-demand')
+  @RequiresAdminRole('operations', 'support')
   async coverageDemand(@Query('limit') limit?: string) {
     const n = limit ? Number(limit) : 50;
     return this.coverage.recentDemand(Number.isFinite(n) ? n : 50);
@@ -92,6 +98,7 @@ export class AdminController {
 
   /** Pilot email audit trail — most recent last. */
   @Get('email-outbox')
+  @RequiresAdminRole('operations', 'dpo')
   emailOutbox() {
     return this.outbox.list().map((e) => ({
       at: e.at.toISOString(),
@@ -105,12 +112,14 @@ export class AdminController {
 
   /** Phase 38 — anonymize stale unconverted enquiry leads. */
   @Post('privacy/retention-purge')
+  @RequiresAdminRole('dpo')
   async retentionPurge() {
     const anonymized = await this.retention.purgeStaleLeads(this.config.RETENTION_LEAD_DAYS);
     return { anonymized, retentionDays: this.config.RETENTION_LEAD_DAYS };
   }
 
   @Post('listings/:id/archive')
+  @RequiresAdminRole('operations')
   archive(@Param('id') id: string) {
     return this.db
       .update(listings)
@@ -123,6 +132,7 @@ export class AdminController {
    * Full catalog for the Phase 13 compliance console (legal basis + credential).
    */
   @Get('catalog')
+  @RequiresAdminRole('operations', 'support')
   async listCatalog() {
     const dbRows = await this.db.select().from(serviceCatalogItems);
     const byCode = new Map(dbRows.map((r) => [r.code, r]));
@@ -150,6 +160,7 @@ export class AdminController {
    * counsel classifies them; `reviewRequiredCount` is what blocks mandate SEND.
    */
   @Get('catalog/legal-basis')
+  @RequiresAdminRole('operations', 'support')
   async listLegalBasis() {
     const items = await this.listCatalog();
     return {
@@ -166,12 +177,14 @@ export class AdminController {
 
   @Put('catalog/:code/legal-basis')
   @Patch('catalog/:code/legal-basis')
+  @RequiresAdminRole('operations')
   async setLegalBasis(@Param('code') code: string, @Body() body: SetLegalBasisDto) {
     await this.persistLegalBasis(code, body.legalBasis);
     return this.catalogItem(code);
   }
 
   @Put('catalog/:code/credential')
+  @RequiresAdminRole('operations')
   async setRequiredCredential(@Param('code') code: string, @Body() body: SetCredentialDto) {
     const seed = CATALOG.find((c) => c.code === code);
     if (!seed) throw new NotFoundException(`Unknown catalog item ${code}`);

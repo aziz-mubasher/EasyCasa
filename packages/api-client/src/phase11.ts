@@ -10,8 +10,12 @@ import { createRequester, type RequesterOptions } from './http';
 export const CredentialTypeSchema = z.enum([
   'REA_MEDIATORE',
   'RC_INSURANCE',
+  'RC_PROFESSIONALE',
   'ALBO_TECNICO',
+  'ALBO_ISCRIZIONE',
   'APE_CERTIFIER',
+  'CENED_ACCREDITAMENTO',
+  'PARTITA_IVA',
   'PHOTOGRAPHER',
   'NOTAIO',
 ]);
@@ -25,11 +29,13 @@ export const CredentialSchema = z.object({
   status: VerificationStatusSchema,
   reference: z.string().optional(),
   expiresAt: z.string().optional(),
+  documentUrl: z.string().optional(),
 });
 export type Credential = z.infer<typeof CredentialSchema>;
 
 export const ProfessionalSchema = z.object({
   id: z.string(),
+  displayName: z.string(),
   coverageProvinces: z.array(z.string()),
   credentials: z.array(CredentialSchema),
   activeAssignments: z.number().int(),
@@ -87,7 +93,7 @@ export class EasyCasaOrchestrationApi {
 
   verifyCredential(
     professionalId: string,
-    body: { type: CredentialType; status: 'VERIFIED' | 'REJECTED' },
+    body: { type: CredentialType; status: 'VERIFIED' | 'REJECTED'; reason: string },
   ): Promise<Professional> {
     return this.request(
       `/professionals/${encodeURIComponent(professionalId)}/credentials/status`,

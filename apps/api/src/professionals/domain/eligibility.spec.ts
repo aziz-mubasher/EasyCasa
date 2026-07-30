@@ -12,6 +12,7 @@ function cred(type: Credential['type'], over: Partial<Credential> = {}): Credent
 function pro(over: Partial<Professional> = {}): Professional {
   return {
     id: 'p1',
+    displayName: 'Pro One',
     coverageProvinces: ['MI'],
     credentials: [],
     activeAssignments: 0,
@@ -86,6 +87,22 @@ describe('canAssign', () => {
     expect(canAssign(bad, task, NOW).blockers.some((b) => b.code === 'MISSING_CREDENTIAL')).toBe(
       true,
     );
+  });
+
+  it('CENED_ACCREDITAMENTO satisfies APE_CERTIFIER requirement (EC-13)', () => {
+    const task: TaskContext = { requiredCredential: 'APE_CERTIFIER', province: 'MI' };
+    const p = pro({ credentials: [cred('CENED_ACCREDITAMENTO')] });
+    expect(canAssign(p, task, NOW).allowed).toBe(true);
+  });
+
+  it('RC_PROFESSIONALE satisfies mediation insurance (EC-13)', () => {
+    const p = pro({
+      credentials: [
+        cred('REA_MEDIATORE'),
+        cred('RC_PROFESSIONALE', { expiresAt: '2027-01-01' }),
+      ],
+    });
+    expect(canAssign(p, mediationTask, NOW).allowed).toBe(true);
   });
 
   it('NONE requirement → any in-coverage, under-capacity pro is eligible', () => {

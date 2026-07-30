@@ -12,6 +12,7 @@ function cred(type: Credential['type'], over: Partial<Credential> = {}): Credent
 function pro(over: Partial<Professional> = {}): Professional {
   return {
     id: 'p1',
+    displayName: 'Pro One',
     coverageProvinces: ['BS'],
     credentials: [],
     activeAssignments: 0,

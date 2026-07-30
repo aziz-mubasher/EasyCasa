@@ -31,7 +31,9 @@ export class SetCredentialPolicyDto {
     'NONE',
     'REA_MEDIATORE',
     'ALBO_TECNICO',
+    'ALBO_ISCRIZIONE',
     'APE_CERTIFIER',
+    'CENED_ACCREDITAMENTO',
     'PHOTOGRAPHER',
     'NOTAIO',
   ])

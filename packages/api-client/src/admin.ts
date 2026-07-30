@@ -30,7 +30,9 @@ export type LegalBasis = z.infer<typeof LegalBasisSchema>;
 export const RequiredCredentialSchema = z.enum([
   'REA_MEDIATORE',
   'ALBO_TECNICO',
+  'ALBO_ISCRIZIONE',
   'APE_CERTIFIER',
+  'CENED_ACCREDITAMENTO',
   'PHOTOGRAPHER',
   'NOTAIO',
   'NONE',
@@ -110,13 +112,115 @@ export class EasyCasaAdminApi {
   }
   verifyCredential(
     professionalId: string,
-    body: { type: CredentialType; status: 'VERIFIED' | 'REJECTED' },
+    body: { type: CredentialType; status: 'VERIFIED' | 'REJECTED'; reason: string },
   ): Promise<Professional> {
     return this.request(
       `/professionals/${encodeURIComponent(professionalId)}/credentials/status`,
       ProfessionalSchema,
       { method: 'PUT', body: JSON.stringify(body) },
     );
+  }
+  setCoverage(professionalId: string, coverageProvinces: string[]): Promise<Professional> {
+    return this.request(
+      `/professionals/${encodeURIComponent(professionalId)}/coverage`,
+      ProfessionalSchema,
+      { method: 'PATCH', body: JSON.stringify({ coverageProvinces }) },
+    );
+  }
+  addCredential(
+    professionalId: string,
+    body: {
+      type: CredentialType;
+      reference?: string;
+      expiresAt?: string;
+      documentUrl?: string;
+    },
+  ): Promise<Professional> {
+    return this.request(
+      `/professionals/${encodeURIComponent(professionalId)}/credentials`,
+      ProfessionalSchema,
+      { method: 'POST', body: JSON.stringify(body) },
+    );
+  }
+  createProfessional(body: {
+    displayName: string;
+    coverageProvinces: string[];
+    maxConcurrent?: number;
+  }): Promise<Professional> {
+    return this.request('/professionals', ProfessionalSchema, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  /* EC-13 DSAR */
+  listDsar(): Promise<unknown[]> {
+    return this.request('/admin/dsar', z.array(z.unknown()));
+  }
+  dsarLegalHolds(): Promise<{ it: string[]; en: string[] }> {
+    return this.request(
+      '/admin/dsar/legal-holds',
+      z.object({ it: z.array(z.string()), en: z.array(z.string()) }),
+    );
+  }
+  createDsar(body: {
+    subjectEmail: string;
+    requestType: string;
+    subjectUserId?: string;
+  }): Promise<unknown> {
+    return this.request('/admin/dsar', z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+  exportDsar(id: string): Promise<unknown> {
+    return this.request(`/admin/dsar/${encodeURIComponent(id)}/export`, z.unknown(), {
+      method: 'POST',
+    });
+  }
+  eraseDsar(id: string): Promise<unknown> {
+    return this.request(`/admin/dsar/${encodeURIComponent(id)}/erase`, z.unknown(), {
+      method: 'POST',
+    });
+  }
+  respondDsar(id: string, responseNote: string): Promise<unknown> {
+    return this.request(`/admin/dsar/${encodeURIComponent(id)}/response`, z.unknown(), {
+      method: 'PUT',
+      body: JSON.stringify({ responseNote }),
+    });
+  }
+
+  /* EC-13 listing reports */
+  listListingReports(): Promise<unknown[]> {
+    return this.request('/admin/listing-reports', z.array(z.unknown()));
+  }
+  decideListingReport(
+    id: string,
+    body: { decision: 'removed' | 'kept' | 'more_info'; motivation: string },
+  ): Promise<unknown> {
+    return this.request(`/admin/listing-reports/${encodeURIComponent(id)}/decision`, z.unknown(), {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+  }
+
+  /* EC-13 identity */
+  listIdentityReviews(): Promise<unknown[]> {
+    return this.request('/admin/identity-reviews', z.array(z.unknown()));
+  }
+  viewIdentityReview(id: string): Promise<unknown> {
+    return this.request(`/admin/identity-reviews/${encodeURIComponent(id)}`, z.unknown());
+  }
+  verifyIdentityReview(id: string): Promise<unknown> {
+    return this.request(`/admin/identity-reviews/${encodeURIComponent(id)}/verify`, z.unknown(), {
+      method: 'PUT',
+    });
+  }
+  rejectIdentityReview(id: string, reason: string): Promise<unknown> {
+    return this.request(`/admin/identity-reviews/${encodeURIComponent(id)}/reject`, z.unknown(), {
+      method: 'PUT',
+      body: JSON.stringify({ reason }),
+    });
   }
 
   /* Compliance config */

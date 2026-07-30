@@ -9,14 +9,23 @@
 
 export type CredentialType =
   | 'REA_MEDIATORE' // agente in mediazione, REA enrolment (L. 39/1989)
-  | 'RC_INSURANCE' // mandatory professional liability insurance
+  | 'RC_INSURANCE' // mandatory professional liability insurance (legacy name)
+  | 'RC_PROFESSIONALE' // EC-13 alias of RC_INSURANCE
   | 'ALBO_TECNICO' // geometra / architetto / ingegnere — conformity (RTI)
-  | 'APE_CERTIFIER' // certified energy assessor — APE
+  | 'ALBO_ISCRIZIONE' // EC-13 albo enrolment (treated as ALBO_TECNICO for gates)
+  | 'APE_CERTIFIER' // certified energy assessor — APE (legacy)
+  | 'CENED_ACCREDITAMENTO' // EC-13 Lombardy CENED — blocks APE_ISSUANCE when missing
+  | 'PARTITA_IVA' // EC-13 VAT registration
   | 'PHOTOGRAPHER' // media (unregulated role)
   | 'NOTAIO'; // rogito
 
-/** What a task requires. RC_INSURANCE is implied by REA_MEDIATORE, not requested directly. */
-export type RequiredCredential = Exclude<CredentialType, 'RC_INSURANCE'> | 'NONE';
+/** What a task requires. RC_* is implied by REA_MEDIATORE, not requested directly. */
+export type RequiredCredential =
+  | Exclude<
+      CredentialType,
+      'RC_INSURANCE' | 'RC_PROFESSIONALE' | 'PARTITA_IVA'
+    >
+  | 'NONE';
 
 export type VerificationStatus = 'PENDING' | 'VERIFIED' | 'REJECTED';
 
@@ -27,10 +36,13 @@ export interface Credential {
   reference?: string;
   /** For time-bound credentials (insurance, some enrolments). */
   expiresAt?: string;
+  /** Supporting document URL (EC-13). */
+  documentUrl?: string;
 }
 
 export interface Professional {
   id: string;
+  displayName: string;
   /** Provinces (sigla, e.g. "MI", "RM") the professional covers. */
   coverageProvinces: string[];
   credentials: Credential[];
@@ -72,3 +84,18 @@ export type AssignmentStatus =
   | 'APPROVED';
 
 export type AssignmentEvent = 'ASSIGN' | 'START' | 'DELIVER' | 'APPROVE' | 'REJECT' | 'REASSIGN';
+
+/** Types that satisfy a required credential (EC-13 aliases). */
+export function credentialTypeAliases(required: CredentialType | RequiredCredential): CredentialType[] {
+  if (required === 'NONE') return [];
+  if (required === 'APE_CERTIFIER' || required === 'CENED_ACCREDITAMENTO') {
+    return ['APE_CERTIFIER', 'CENED_ACCREDITAMENTO'];
+  }
+  if (required === 'ALBO_TECNICO' || required === 'ALBO_ISCRIZIONE') {
+    return ['ALBO_TECNICO', 'ALBO_ISCRIZIONE'];
+  }
+  if (required === 'RC_INSURANCE' || required === 'RC_PROFESSIONALE') {
+    return ['RC_INSURANCE', 'RC_PROFESSIONALE'];
+  }
+  return [required as CredentialType];
+}
