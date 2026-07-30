@@ -60,11 +60,23 @@
 }
 
 .sf .sf-blurb {
-  margin: 0;
-  max-width: 18rem;
+  margin: 0 0 1.25rem;
+  max-width: 22rem;
   font-size: 0.9rem;
   line-height: 1.55;
   color: rgba(232, 223, 204, 0.78);
+}
+
+.sf .sf-about-ext {
+  margin: 0;
+  max-width: 22rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: rgba(232, 223, 204, 0.68);
+}
+
+.sf .sf-about h2 {
+  margin-top: 0.25rem;
 }
 
 .sf .sf-dir h2 {

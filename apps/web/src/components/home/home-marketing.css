@@ -1,0 +1,332 @@
+/* Homepage marketing — valuation-first (scoped under .hm) */
+
+.hm {
+  --hm-gutter: clamp(1.25rem, 5vw, 4rem);
+  --hm-measure: 72rem;
+  color: var(--ink);
+}
+
+.hm .hm-wrap {
+  max-width: var(--hm-measure);
+  margin-inline: auto;
+  padding-inline: var(--hm-gutter);
+}
+
+/* —— Hero —— */
+.hm-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(3.5rem, 10vw, 6.5rem) clamp(3rem, 8vw, 5rem);
+  background:
+    radial-gradient(120% 80% at 85% 10%, rgba(44, 110, 155, 0.18), transparent 55%),
+    radial-gradient(90% 60% at 0% 100%, rgba(31, 111, 92, 0.08), transparent 50%),
+    linear-gradient(180deg, var(--paper-deep) 0%, var(--paper) 55%, var(--paper) 100%);
+}
+
+.hm-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(20, 33, 46, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 33, 46, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 85%);
+  pointer-events: none;
+}
+
+.hm-hero .hm-brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 4.5vw, 2.35rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0 0 1.35rem;
+  color: var(--ink);
+  animation: hm-rise 0.7s ease both;
+}
+
+.hm-hero .hm-brand span {
+  color: var(--azure);
+}
+
+.hm-hero h1 {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: clamp(2.35rem, 6.5vw, 3.85rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 14ch;
+  animation: hm-rise 0.75s 0.06s ease both;
+}
+
+.hm-hero h1 .hm-h1-accent {
+  display: block;
+  color: var(--azure);
+}
+
+.hm-hero .hm-lede {
+  margin: 1.35rem 0 0;
+  max-width: 36rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  animation: hm-rise 0.75s 0.12s ease both;
+}
+
+.hm-hero .hm-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 1.85rem;
+  animation: hm-rise 0.75s 0.18s ease both;
+}
+
+.hm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.85rem;
+  padding: 0.65rem 1.25rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-doc);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.hm-btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.hm-btn-primary:hover {
+  background: var(--azure);
+}
+
+.hm-btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.hm-btn-secondary:hover {
+  border-color: var(--azure);
+  color: var(--azure);
+}
+
+.hm-btn-ghost {
+  background: transparent;
+  color: var(--azure);
+  border-color: transparent;
+  padding-inline: 0.35rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.hm-btn-ghost:hover {
+  color: var(--ink);
+}
+
+.hm-hero .hm-micro {
+  margin: 0.95rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  animation: hm-rise 0.75s 0.24s ease both;
+}
+
+/* —— Sections —— */
+.hm-section {
+  padding-block: clamp(3.25rem, 8vw, 5.5rem);
+}
+
+.hm-section + .hm-section {
+  border-top: 1px solid var(--line);
+}
+
+.hm-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--azure);
+  margin: 0 0 0.85rem;
+}
+
+.hm-section h2 {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: clamp(1.65rem, 3.8vw, 2.35rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin: 0;
+  max-width: 22ch;
+}
+
+.hm-section .hm-body {
+  margin: 1.1rem 0 0;
+  max-width: 38rem;
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.hm-problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem clamp(1.25rem, 3vw, 2rem);
+  margin-top: 2.25rem;
+}
+
+@media (max-width: 860px) {
+  .hm-problem-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hm-problem-grid article {
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.hm-problem-grid h3 {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  padding-top: 0.85rem;
+  border-top: 2px solid var(--azure);
+}
+
+.hm-problem-grid p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.hm-steps {
+  list-style: none;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.65rem;
+  counter-reset: hm-step;
+}
+
+.hm-steps li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem 1.25rem;
+  counter-increment: hm-step;
+}
+
+.hm-steps li::before {
+  content: counter(hm-step);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--azure);
+  line-height: 1.4;
+  min-width: 1.5rem;
+}
+
+.hm-steps h3 {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4rem;
+}
+
+.hm-steps p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 42rem;
+}
+
+.hm-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 2rem clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+}
+
+@media (max-width: 760px) {
+  .hm-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hm-ctas-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 1.5rem;
+}
+
+.hm-languages,
+.hm-transparency {
+  background: linear-gradient(180deg, transparent, rgba(44, 110, 155, 0.06));
+}
+
+.hm-close {
+  text-align: center;
+  background: var(--ink);
+  color: var(--paper);
+  padding-block: clamp(3.5rem, 9vw, 5.5rem);
+  border-top: none;
+}
+
+.hm-close h2 {
+  margin-inline: auto;
+  color: var(--paper);
+  max-width: 18ch;
+}
+
+.hm-close .hm-ctas-inline {
+  justify-content: center;
+}
+
+.hm-close .hm-btn-primary {
+  background: var(--azure);
+  color: var(--paper);
+}
+
+.hm-close .hm-btn-primary:hover {
+  background: var(--azure-pale);
+  color: var(--ink);
+}
+
+@keyframes hm-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.65rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-hero .hm-brand,
+  .hm-hero h1,
+  .hm-hero .hm-lede,
+  .hm-hero .hm-ctas,
+  .hm-hero .hm-micro {
+    animation: none;
+  }
+}

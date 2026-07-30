@@ -28,7 +28,6 @@ async function main(): Promise<void> {
     await sink.indexPublished(docs);
     const count = await sink.countDemo();
     const result = await scenarios.seed();
-    // eslint-disable-next-line no-console
     console.log(`demo:seed ok — listings=${count} indexed=${docs.length}`, result.summary);
   } finally {
     await app.close();

@@ -40,7 +40,6 @@ async function main(): Promise<void> {
       .select({ c: sql<number>`count(*)::int` })
       .from(listings)
       .where(eq(listings.source, 'demo'));
-    // eslint-disable-next-line no-console
     console.log(`demo:reset ok — demo listings=${c}`, result.summary);
   } finally {
     await app.close();
