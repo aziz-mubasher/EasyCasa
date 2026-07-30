@@ -14,6 +14,8 @@ import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { phoneOtpChallenges, users } from '../db/schema';
 import { EmailService } from '../email/email.service';
+import type { WhatsAppSendResult } from '../whatsapp/whatsapp-cloud.client';
+import { WhatsAppService } from '../whatsapp/whatsapp.service';
 import {
   generateOtpCode,
   hashOtp,
@@ -21,11 +23,14 @@ import {
   otpExpiresAt,
   otpMatches,
 } from './otp';
-import { WhatsAppService } from '../whatsapp/whatsapp.service';
 
 const MAX_START_PER_USER_HOUR = 5;
 const MAX_START_PER_PHONE_HOUR = 5;
 
+/**
+ * K EC 7.1 Phase B — first WhatsAppService consumer (auth OTP template).
+ * Proves Cloud send end-to-end; email remains the fail-soft fallback.
+ */
 @Injectable()
 export class PhoneVerifyService {
   private readonly log = new Logger(PhoneVerifyService.name);
@@ -55,29 +60,16 @@ export class PhoneVerifyService {
     const codeHash = hashOtp(code, pepper);
     const expiresAt = otpExpiresAt();
 
-    let channel: 'whatsapp' | 'email' = 'whatsapp';
     const wa = await this.whatsapp.sendAuthenticationOtp(phone, code);
-    if (!wa.ok) {
-      if (!opts.email) {
-        throw new BadRequestException(
-          'WhatsApp delivery failed and no email on account for fallback',
-        );
-      }
-      channel = 'email';
-      await this.email.sendText(
-        opts.email,
-        'EasyCasa — codice di verifica telefono',
-        `Il tuo codice EasyCasa è ${code}. Scade tra 10 minuti. Se non l'hai richiesto, ignora questa email.`,
-        `<p>Il tuo codice EasyCasa è <strong>${code}</strong>.</p><p>Scade tra 10 minuti.</p>`,
-      );
-      this.log.log(`phone OTP email fallback user=${userId}`);
-    }
+    const delivery = await this.resolveDeliveryChannel(userId, phone, code, wa, opts.email);
 
     await this.db.insert(phoneOtpChallenges).values({
       userId,
       phoneE164: phone,
       codeHash,
-      channel,
+      channel: delivery.channel,
+      providerMessageId: delivery.providerMessageId,
+      fallbackReason: delivery.fallbackReason,
       expiresAt,
     });
 
@@ -87,7 +79,7 @@ export class PhoneVerifyService {
       .set({ phone, updatedAt: new Date() })
       .where(eq(users.id, userId));
 
-    return { channel, expiresAt: expiresAt.toISOString() };
+    return { channel: delivery.channel, expiresAt: expiresAt.toISOString() };
   }
 
   async confirm(userId: string, codeRaw: string): Promise<{ phoneVerifiedAt: string }> {
@@ -142,7 +134,55 @@ export class PhoneVerifyService {
       })
       .where(eq(users.id, userId));
 
+    this.log.log(
+      `phone verified user=${userId} channel=${challenge.channel}` +
+        (challenge.providerMessageId ? ` wamid=${challenge.providerMessageId}` : ''),
+    );
+
     return { phoneVerifiedAt: now.toISOString() };
+  }
+
+  private async resolveDeliveryChannel(
+    userId: string,
+    phone: string,
+    code: string,
+    wa: WhatsAppSendResult,
+    email: string | null | undefined,
+  ): Promise<{
+    channel: 'whatsapp' | 'email';
+    providerMessageId: string | null;
+    fallbackReason: string | null;
+  }> {
+    if (wa.ok) {
+      this.log.log(`phone OTP whatsapp user=${userId} phone=${phone} wamid=${wa.messageId}`);
+      return {
+        channel: 'whatsapp',
+        providerMessageId: wa.messageId,
+        fallbackReason: null,
+      };
+    }
+
+    if (!email) {
+      throw new BadRequestException(
+        'WhatsApp delivery failed and no email on account for fallback',
+      );
+    }
+
+    await this.email.sendText(
+      email,
+      'EasyCasa — codice di verifica telefono',
+      `Il tuo codice EasyCasa è ${code}. Scade tra 10 minuti. Se non l'hai richiesto, ignora questa email.`,
+      `<p>Il tuo codice EasyCasa è <strong>${code}</strong>.</p><p>Scade tra 10 minuti.</p>`,
+    );
+    this.log.log(
+      `phone OTP email fallback user=${userId} reason=${wa.reason}` +
+        (wa.message ? ` detail=${wa.message}` : ''),
+    );
+    return {
+      channel: 'email',
+      providerMessageId: null,
+      fallbackReason: wa.reason,
+    };
   }
 
   private assertIpRate(ip: string | null | undefined): void {

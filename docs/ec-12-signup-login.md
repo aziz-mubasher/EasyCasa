@@ -17,6 +17,7 @@ feature (WhatsApp authentication template, email fallback) — not phone-as-logi
 - OTP hashed (`PHONE_OTP_PEPPER`), 10 min TTL, max 3 attempts, rate limits per user/phone/IP
 - Meta Cloud API when `WHATSAPP_*` set; otherwise email fallback to the account email
 - Submit Meta **authentication** template with copy-code on day one (approval lag)
+- Ops runbook: `docs/runbooks/whatsapp-otp.md` (K EC 7.1 Phase B)
 
 ## Auth bypass removal
 

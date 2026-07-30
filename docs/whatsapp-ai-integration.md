@@ -25,16 +25,23 @@ NestJS WhatsAppService
 
 ## Sequencing
 
-| Phase | What | Depends on |
-|-------|------|------------|
-| **A** | `WhatsAppModule`: Cloud client, webhook verify + status ingest stub, template send facade | — |
-| **B** | OTP consumer via shared service (already exists; rewired to A) | A, EC-12 |
-| **C** | Utility templates + wire `ViewingsReminderScheduler` to WhatsApp | A |
-| **D** | Admin Support queue (`support` role) | EC-14 Part 2 (done) |
-| **E** | AI triage → queue drafts (no autonomous send) | A, D |
-| **F** | Grounded assistant | E + real conversation data |
+| Phase | What | Depends on | Status |
+|-------|------|------------|--------|
+| **A** | `WhatsAppModule`: Cloud client, webhook verify + status ingest stub, template send facade | — | Done (`#64`) |
+| **B** | OTP consumer via shared service — wamid / fallback_reason persistence, runbook | A, EC-12 | This work |
+| **C** | Utility templates + wire `ViewingsReminderScheduler` to WhatsApp | A | Next |
+| **D** | Admin Support queue (`support` role) | EC-14 Part 2 (done) | Deferred |
+| **E** | AI triage → queue drafts (no autonomous send) | A, D | Deferred |
+| **F** | Grounded assistant | E + real conversation data | Deferred |
 
-## Constraints (do not violate)
+## Phase B acceptance
+
+- [x] OTP uses `WhatsAppService` only (no parallel Cloud client)
+- [x] Challenge stores `provider_message_id` / `fallback_reason`
+- [x] Unit tests cover WhatsApp success + email fallback
+- [x] Runbook: `docs/runbooks/whatsapp-otp.md`
+- [ ] VPS `WHATSAPP_*` credentials + Meta auth template approved (ops)
+
 
 - 24h service window — free reply only after user message; else templates only.
 - Auth + Utility templates only — **no marketing templates**.
