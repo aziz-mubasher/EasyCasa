@@ -23,6 +23,7 @@ import { ProductAnalyticsService } from '../analytics/product-analytics.service'
 import { WhatsAppService } from '../whatsapp/whatsapp.service';
 import {
   verifiedPhoneE164,
+  formatViewingWhenParts,
   viewingUtilityBodyParams,
   viewingUtilityTemplateName,
 } from './viewing-whatsapp';
@@ -383,23 +384,44 @@ export class DefaultViewingNotifier implements ViewingNotifier {
 
     const recipientName =
       recipient?.displayName ?? recipient?.email?.split('@')[0] ?? 'User';
-    let seekerName: string | undefined;
-    if (kind === 'requested') {
-      const seeker = await this.users.findById(viewing.seekerUserId);
-      seekerName = seeker?.displayName ?? seeker?.email?.split('@')[0] ?? 'Seeker';
+
+    let conductorName: string | undefined;
+    if (kind === 'confirmed') {
+      const conductor = await this.users.findById(viewing.conductorUserId);
+      conductorName = conductor?.displayName ?? conductor?.email?.split('@')[0] ?? 'Host';
     }
 
-    const whenLocal = formatWhenLocal(viewing.startMs, listing.timezone);
+    let otherPartyPhone: string | undefined;
+    if (kind === 'reminder2h') {
+      const otherId =
+        userId === viewing.seekerUserId ? viewing.conductorUserId : viewing.seekerUserId;
+      const other = await this.users.findById(otherId);
+      otherPartyPhone = verifiedPhoneE164(other) ?? other?.phone ?? undefined;
+    }
+
+    const { whenLocal, dateLocal, timeLocal } = formatViewingWhenParts(
+      viewing.startMs,
+      listing.timezone,
+    );
     const result = await this.whatsapp.sendTemplate({
       phoneE164,
       templateName,
       languageCode: this.config.WHATSAPP_OTP_TEMPLATE_LANG,
       bodyParams: viewingUtilityBodyParams(kind, {
         recipientName,
-        seekerName,
+        conductorName,
+        otherPartyPhone,
         listing,
         whenLocal,
+        dateLocal,
+        timeLocal,
       }),
+      meta: {
+        toUserId: userId,
+        relatedType: 'viewing',
+        relatedId: viewing.id,
+        locale: this.config.WHATSAPP_OTP_TEMPLATE_LANG,
+      },
     });
     if (!result.ok) {
       this.logger.warn(

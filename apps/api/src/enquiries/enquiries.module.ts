@@ -288,7 +288,13 @@ export class DefaultEnquiryNotifier implements EnquiryNotifier {
       phoneE164,
       templateName,
       languageCode: this.config.WHATSAPP_OTP_TEMPLATE_LANG,
-      bodyParams: [ownerName, listingTitle, enquiry.intent],
+      bodyParams: [ownerName, listingTitle],
+      meta: {
+        toUserId: userId,
+        relatedType: 'enquiry',
+        relatedId: enquiry.id,
+        locale: this.config.WHATSAPP_OTP_TEMPLATE_LANG,
+      },
     });
     if (!result.ok) {
       this.logger.warn(

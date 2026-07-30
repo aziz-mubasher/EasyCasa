@@ -9,6 +9,7 @@ import { ProfileDataSource } from './sources/profile.data-source';
 import { SavedSearchesDataSource } from './sources/saved-searches.data-source';
 import { ViewingsDataSource } from './sources/viewings.data-source';
 import { WaInboundDataSource } from './sources/wa-inbound.data-source';
+import { WhatsAppMessagesDataSource } from './sources/whatsapp-messages.data-source';
 
 /** Registers all PersonalDataSource implementations into the registry at boot. */
 @Injectable()
@@ -21,6 +22,8 @@ export class PersonalDataRegistrar implements OnModuleInit {
     @Inject(ProfileDataSource) private readonly profile: ProfileDataSource,
     @Inject(ConsentLedgerDataSource) private readonly consent: ConsentLedgerDataSource,
     @Inject(WaInboundDataSource) private readonly waInbound: WaInboundDataSource,
+    @Inject(WhatsAppMessagesDataSource)
+    private readonly whatsappMessages: WhatsAppMessagesDataSource,
     @Inject(DsarService) private readonly dsar: DsarService,
     @Inject(ErasureService) private readonly erasure: ErasureService,
   ) {}
@@ -33,6 +36,7 @@ export class PersonalDataRegistrar implements OnModuleInit {
       this.profile,
       this.consent,
       this.waInbound,
+      this.whatsappMessages,
     ]) {
       this.registry.register(s);
     }

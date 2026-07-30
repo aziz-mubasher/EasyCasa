@@ -1,23 +1,23 @@
-# WhatsApp utility notifications (Phase C / K EC 8.7)
+# WhatsApp utility notifications (Phase C / EC-16 / K EC 8.7)
 
-Transactional **utility** templates only — no marketing. Sends go through `WhatsAppService.sendTemplate` from `DefaultViewingNotifier` / `DefaultEnquiryNotifier`.
+Transactional **utility** templates only — no marketing. Sends go through `WhatsAppService.sendTemplate` from `DefaultViewingNotifier` / `DefaultEnquiryNotifier`. Every Cloud attempt writes `whatsapp_messages` (no body content); webhook statuses update by `provider_message_id`.
 
 ## Prerequisites
 
-1. Phase A–B live: Cloud credentials + webhook (see `docs/runbooks/whatsapp-otp.md`).
-2. Recipient has `users.phone` + `users.phoneVerifiedAt` (EC-12). Unverified → skip WhatsApp (email/in-app still fire).
-3. Meta **Utility** templates approved with body variable counts below.
+1. Phase A–C live: Cloud credentials + webhook.
+2. Recipient has `users.phone` + `users.phoneVerifiedAt` (EC-12).
+3. Meta templates approved — **EC-16 Part 0** (7 names × `it`/`en`/`es`).
 4. `DEMO_MODE=true` → Cloud client reports not configured (no sends).
 
 ## Env (VPS `.env`)
 
 ```bash
-# Shared Cloud credentials (Phase A)
 WHATSAPP_TOKEN=…
 WHATSAPP_PHONE_NUMBER_ID=…
+# Auth OTP — separate from utility names (EC-16)
+WHATSAPP_OTP_TEMPLATE=easycasa_otp
 WHATSAPP_OTP_TEMPLATE_LANG=it
 
-# Phase C — empty string skips that template only
 WHATSAPP_VIEWING_REMINDER_24H_TEMPLATE=easycasa_viewing_reminder_24h
 WHATSAPP_VIEWING_REMINDER_2H_TEMPLATE=easycasa_viewing_reminder_2h
 WHATSAPP_VIEWING_REQUESTED_TEMPLATE=easycasa_viewing_requested
@@ -26,32 +26,33 @@ WHATSAPP_VIEWING_CANCELLED_TEMPLATE=easycasa_viewing_cancelled
 WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE=easycasa_enquiry_received
 ```
 
-Redeploy API after changing env (`docker compose … up -d --force-recreate --no-deps api`).
+Redeploy API after changing env (`--force-recreate --no-deps api`).
 
-## Meta template body parameter order
+## Meta template body parameter order (EC-16 pack)
 
-Must match code in `apps/api/src/viewings/viewing-whatsapp.ts`.
+| Template | Body variables |
+|---|---|
+| `easycasa_enquiry_received` | `{{1}}` owner name · `{{2}}` listing title |
+| `easycasa_viewing_requested` | `{{1}}` conductor · `{{2}}` listing · `{{3}}` when — **no seeker name** |
+| `easycasa_viewing_confirmed` | `{{1}}` listing · `{{2}}` when · `{{3}}` address · `{{4}}` conductor |
+| `easycasa_viewing_reminder_24h` | `{{1}}` listing · `{{2}}` time · `{{3}}` address |
+| `easycasa_viewing_reminder_2h` | `{{1}}` listing · `{{2}}` time · `{{3}}` address · `{{4}}` other party phone |
+| `easycasa_viewing_cancelled` | `{{1}}` listing · `{{2}}` date · `{{3}}` time |
 
-| Template env | Suggested Meta name | Body variables |
-|---|---|---|
-| `WHATSAPP_VIEWING_REMINDER_24H_TEMPLATE` | `easycasa_viewing_reminder_24h` | `{{1}}` name · `{{2}}` listing · `{{3}}` **area (city/province, no street)** · `{{4}}` when |
-| `WHATSAPP_VIEWING_REMINDER_2H_TEMPLATE` | `easycasa_viewing_reminder_2h` | `{{1}}` name · `{{2}}` listing · `{{3}}` **street address** · `{{4}}` when |
-| `WHATSAPP_VIEWING_CONFIRMED_TEMPLATE` | `easycasa_viewing_confirmed` | `{{1}}` name · `{{2}}` listing · `{{3}}` street address · `{{4}}` when |
-| `WHATSAPP_VIEWING_REQUESTED_TEMPLATE` | `easycasa_viewing_requested` | `{{1}}` conductor · `{{2}}` seeker · `{{3}}` listing · `{{4}}` area · `{{5}}` when |
-| `WHATSAPP_VIEWING_CANCELLED_TEMPLATE` | `easycasa_viewing_cancelled` | `{{1}}` name · `{{2}}` listing · `{{3}}` area · `{{4}}` when |
-| `WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE` | `easycasa_enquiry_received` | `{{1}}` owner/mediator · `{{2}}` listing · `{{3}}` intent |
+Italian copy is canonical; EN/ES must match meaning literally (see stakeholder EC-16 brief).
 
-Disclosure: street address only on **confirmed** and **2h reminder**.
+## Delivery status + measurement
+
+- Table: `whatsapp_messages` (migration `0039`).
+- Admin: `GET /admin/whatsapp/metrics?days=90` — reminder delivery rate, no-show with/without delivered reminder, failure rate by template.
+- Report raw counts until ~100 viewings; do not claim significance early.
+- Erasure: `to_user_id` set null; rows retained for stats.
 
 ## Behaviour
 
-- **Reminders:** `ViewingsReminderScheduler` notifies **seeker + conductor**, then sets `reminder_*_sent_at`.
-- Fail-soft: missing Cloud config, empty template name, unverified phone, or Graph error → log warn; never fail the email/in-app path.
-- **Orders:** no status WhatsApp yet (no order notifier in repo).
+- Reminders notify seeker + conductor.
+- Fail-soft: missing Cloud / empty template / unverified phone → skip WA; email/in-app continue.
 
-## Smoke check
+## Human checklist (Part 0)
 
-1. User with verified phone; confirmed viewing ~24h out.
-2. Wait for scheduler (15 min) or restart API (runs once on init).
-3. API logs: successful send or `viewing whatsapp skip reason=…`.
-4. Meta Business Manager → message delivery / template analytics.
+See `docs/ec-16-whatsapp-templates-measurement.md`.

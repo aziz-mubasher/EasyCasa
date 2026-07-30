@@ -61,7 +61,11 @@ export class PhoneVerifyService {
     const codeHash = hashOtp(code, pepper);
     const expiresAt = otpExpiresAt();
 
-    const wa = await this.whatsapp.sendAuthenticationOtp(phone, code);
+    const wa = await this.whatsapp.sendAuthenticationOtp(phone, code, {
+      toUserId: userId,
+      relatedType: 'otp',
+      locale: this.config.WHATSAPP_OTP_TEMPLATE_LANG,
+    });
     const delivery = await this.resolveDeliveryChannel(userId, phone, code, wa, opts.email);
 
     await this.db.insert(phoneOtpChallenges).values({

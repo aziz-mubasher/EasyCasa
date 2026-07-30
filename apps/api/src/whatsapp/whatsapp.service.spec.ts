@@ -75,7 +75,7 @@ describe('WhatsApp inbound helpers', () => {
   });
 });
 
-describe('WhatsAppService / CloudClient (Phase A + EC-17)', () => {
+describe('WhatsAppService / CloudClient (Phase A + EC-16 + EC-17)', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
@@ -114,18 +114,79 @@ describe('WhatsAppService / CloudClient (Phase A + EC-17)', () => {
     expect(cloud.verifySignature(raw, 'sha256=abc')).toBe(false);
   });
 
-  it('ingestStatusPayload logs statuses without throwing', () => {
+  it('ingestStatusPayload updates store by provider id', async () => {
     const cloud = new WhatsAppCloudClient(cfg() as never);
     const inbound = {
       persistNewMessages: vi.fn(),
       handleAfterPersist: vi.fn(),
     };
-    const svc = new WhatsAppService(cloud, inbound as never);
-    expect(() =>
-      svc.ingestStatusPayload({
-        entry: [{ changes: [{ value: { statuses: [{ id: 'm1', status: 'delivered' }] } }] }],
+    const store = {
+      recordSendAttempt: vi.fn().mockResolvedValue(undefined),
+      applyStatusUpdate: vi.fn().mockResolvedValue(undefined),
+    };
+    const svc = new WhatsAppService(cloud, inbound as never, store as never, cfg() as never);
+    await svc.ingestStatusPayload({
+      entry: [{ changes: [{ value: { statuses: [{ id: 'm1', status: 'delivered' }] } }] }],
+    });
+    expect(store.applyStatusUpdate).toHaveBeenCalledWith('m1', 'delivered', undefined);
+  });
+
+  it('sendAuthenticationOtp records send via messages store', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ messages: [{ id: 'wamid.1' }] }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const cloud = new WhatsAppCloudClient(cfg() as never);
+    const inbound = { persistNewMessages: vi.fn(), handleAfterPersist: vi.fn() };
+    const store = {
+      recordSendAttempt: vi.fn().mockResolvedValue(undefined),
+      applyStatusUpdate: vi.fn().mockResolvedValue(undefined),
+    };
+    const svc = new WhatsAppService(cloud, inbound as never, store as never, cfg() as never);
+    const res = await svc.sendAuthenticationOtp('+393331112233', '123456', {
+      toUserId: 'u1',
+      relatedType: 'otp',
+    });
+    expect(res).toEqual({ ok: true, messageId: 'wamid.1' });
+    expect(store.recordSendAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({
+        templateName: 'easycasa_phone_verify',
+        result: { ok: true, messageId: 'wamid.1' },
       }),
-    ).not.toThrow();
+    );
+  });
+
+  it('sendTemplate via service persists and skips persist on not_configured', async () => {
+    const cloud = new WhatsAppCloudClient(cfg() as never);
+    const inbound = { persistNewMessages: vi.fn(), handleAfterPersist: vi.fn() };
+    const store = {
+      recordSendAttempt: vi.fn().mockResolvedValue(undefined),
+      applyStatusUpdate: vi.fn().mockResolvedValue(undefined),
+    };
+    const svc = new WhatsAppService(cloud, inbound as never, store as never, cfg() as never);
+    const empty = await svc.sendTemplate({
+      phoneE164: '+393331112233',
+      templateName: '  ',
+      bodyParams: ['a'],
+    });
+    expect(empty).toEqual({ ok: false, reason: 'not_configured' });
+    expect(store.recordSendAttempt).not.toHaveBeenCalled();
+
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ messages: [{ id: 'wamid.util' }] }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const res = await svc.sendTemplate({
+      phoneE164: '+393331112233',
+      templateName: 'easycasa_viewing_reminder_24h',
+      languageCode: 'it',
+      bodyParams: ['Anna', 'Attico', 'Milano, MI', 'domani'],
+      meta: { toUserId: 'u1', relatedType: 'viewing', relatedId: 'v1' },
+    });
+    expect(res).toEqual({ ok: true, messageId: 'wamid.util' });
+    expect(store.recordSendAttempt).toHaveBeenCalled();
   });
 
   it('sendTemplate rejects empty template name as not_configured', async () => {
