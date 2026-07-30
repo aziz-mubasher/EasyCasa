@@ -38,8 +38,10 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | EC_TEST_AUTH | api | `true` only with `NODE_ENV=test` — trusts `x-dev-*` headers in vitest. **Never** on VPS. |
 | ALLOW_PROVIDER_STUBS | api | Allows empty PSP/SdI/AML/RLI seams and optional OIDC at boot (local/CI). **Off** in pilot/production. |
 | OIDC_ISSUER / OIDC_AUDIENCE / OIDC_JWKS_URL | api | Real Keycloak settings. **Required** when stubs/test-auth are off. |
-| WHATSAPP_TOKEN / WHATSAPP_PHONE_NUMBER_ID / WHATSAPP_OTP_TEMPLATE | api | Meta Cloud API for EC-12 phone OTP. Empty → email fallback. |
+| WHATSAPP_TOKEN / WHATSAPP_PHONE_NUMBER_ID / WHATSAPP_OTP_TEMPLATE | api | Meta Cloud API (K EC 7.1). Empty → OTP email fallback / no sends. |
 | WHATSAPP_OTP_TEMPLATE_LANG / WHATSAPP_GRAPH_VERSION | api | Defaults `it` / `v21.0`. |
+| WHATSAPP_VERIFY_TOKEN | api | Meta webhook `hub.verify_token` for `GET /whatsapp/webhook`. |
+| WHATSAPP_APP_SECRET | api | `X-Hub-Signature-256` on `POST /whatsapp/webhook`. Empty skips verify (dev only). |
 | PHONE_OTP_PEPPER | api | SHA-256 pepper for OTP hashes (min 16 chars). |
 | KEYCLOAK_HOSTNAME | keycloak (VPS) | Public hostname (default `auth.easycasaita.com`). |
 | KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD | keycloak (VPS) | Bootstrap admin — set on VPS only; never commit. |

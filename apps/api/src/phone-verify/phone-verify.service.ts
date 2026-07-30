@@ -21,7 +21,7 @@ import {
   otpExpiresAt,
   otpMatches,
 } from './otp';
-import { WhatsAppCloudClient } from './whatsapp-cloud.client';
+import { WhatsAppService } from '../whatsapp/whatsapp.service';
 
 const MAX_START_PER_USER_HOUR = 5;
 const MAX_START_PER_PHONE_HOUR = 5;
@@ -35,7 +35,7 @@ export class PhoneVerifyService {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
     @InjectConfig() private readonly config: ApiConfig,
-    private readonly whatsapp: WhatsAppCloudClient,
+    private readonly whatsapp: WhatsAppService,
     private readonly email: EmailService,
   ) {}
 

@@ -27,12 +27,16 @@ const Schema = z
       .transform((v) => (v && v.trim() ? v.trim() : undefined)),
     OIDC_ROLES_CLAIM: z.string().default('realm_access.roles'),
 
-    // EC-12 — WhatsApp Cloud API phone OTP (empty → email fallback)
+    // WhatsApp Cloud API (K EC 7.1) — empty token → OTP email fallback / no sends
     WHATSAPP_TOKEN: z.string().default(''),
     WHATSAPP_PHONE_NUMBER_ID: z.string().default(''),
     WHATSAPP_OTP_TEMPLATE: z.string().default(''),
     WHATSAPP_OTP_TEMPLATE_LANG: z.string().default('it'),
     WHATSAPP_GRAPH_VERSION: z.string().default('v21.0'),
+    /** Meta webhook hub.verify_token (GET challenge). */
+    WHATSAPP_VERIFY_TOKEN: z.string().default(''),
+    /** App secret for X-Hub-Signature-256 on POST webhook. Empty → skip verify (dev only). */
+    WHATSAPP_APP_SECRET: z.string().default(''),
     PHONE_OTP_PEPPER: z.string().min(16).default('dev-phone-otp-pepper-change-me'),
 
     // Billing (Stripe — hosted checkout, no card data on our servers)
