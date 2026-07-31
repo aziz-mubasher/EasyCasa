@@ -14,6 +14,7 @@ import { EnquiriesDataSource } from './sources/enquiries.data-source';
 import { ProfileDataSource } from './sources/profile.data-source';
 import { SavedSearchesDataSource } from './sources/saved-searches.data-source';
 import { ViewingsDataSource } from './sources/viewings.data-source';
+import { WaInboundDataSource } from './sources/wa-inbound.data-source';
 import { DrizzleConsentStore } from './stores/drizzle-consent.store';
 import { DrizzleRetentionSink } from './stores/drizzle-retention.sink';
 
@@ -69,6 +70,7 @@ export class PrivacyModule {
         SavedSearchesDataSource,
         ProfileDataSource,
         ConsentLedgerDataSource,
+        WaInboundDataSource,
         PersonalDataRegistrar,
       ],
     });

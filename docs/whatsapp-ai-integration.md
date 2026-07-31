@@ -12,7 +12,9 @@ Source plan: stakeholder brief 2026-07-30 (`plan-whatsapp-ai-integration.md`).
 
 Pilot = **A → B → C**. Do not start D/E until inbound volume justifies it.
 
-**Inbound reuse (2026-07-31):** do **not** share B4A’s webhook receiver (routing, single app secret, controller/PII). Reuse pattern + triage capability only (“build once, deploy twice”). §7 verified in B4A portals tree — see `docs/azm-deliverables/k-ec-whatsapp-inbound-reuse/`. Recommended next slice (not Full D): thin `messages` consumer + one auto-ack + ops email forward.
+**Inbound reuse (2026-07-31):** do **not** share B4A’s webhook receiver (routing, single app secret, controller/PII). Reuse pattern + triage capability only (“build once, deploy twice”). §7 verified in B4A portals tree — see `docs/azm-deliverables/k-ec-whatsapp-inbound-reuse/`.
+
+**EC-17 (minimal inbound):** signature-verified `messages` consumer, thin `wa_inbound_messages` persist, one free-form auto-ack per wa_id / 24h, ops email forward. Not a Support queue (D still held).
 
 ## Architecture
 

@@ -81,6 +81,29 @@ export class WhatsAppCloudClient {
       },
     };
 
+    return this.postMessages(url, body);
+  }
+
+  /** Free-form text inside an open customer-service window (EC-17). No template. */
+  async sendText(phoneE164: string, text: string): Promise<WhatsAppSendResult> {
+    if (!this.configured) return { ok: false, reason: 'not_configured' };
+    const bodyText = text.trim();
+    if (!bodyText) return { ok: false, reason: 'not_configured' };
+
+    const to = phoneE164.replace(/^\+/, '');
+    const url = `https://graph.facebook.com/${this.config.WHATSAPP_GRAPH_VERSION}/${this.config.WHATSAPP_PHONE_NUMBER_ID}/messages`;
+    return this.postMessages(url, {
+      messaging_product: 'whatsapp',
+      to,
+      type: 'text',
+      text: { body: bodyText },
+    });
+  }
+
+  private async postMessages(
+    url: string,
+    body: Record<string, unknown>,
+  ): Promise<WhatsAppSendResult> {
     try {
       const res = await fetch(url, {
         method: 'POST',

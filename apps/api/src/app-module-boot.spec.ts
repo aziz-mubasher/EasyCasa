@@ -48,6 +48,7 @@ describe('AppModule boot (PersonalDataRegistrar DI)', () => {
       'profile',
       'saved_searches',
       'viewings',
+      'wa_inbound_messages',
     ]);
   });
 });
