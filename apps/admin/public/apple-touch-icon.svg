@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="EasyCasa">
+  <rect width="180" height="180" fill="#14212E"/>
+  <text
+    x="42"
+    y="128"
+    fill="#F3EDE1"
+    font-family="system-ui, -apple-system, Segoe UI, sans-serif"
+    font-size="110"
+    font-weight="700"
+    letter-spacing="-6"
+  >E</text>
+  <circle cx="138" cy="124" r="12" fill="#2C6E9B"/>
+</svg>
