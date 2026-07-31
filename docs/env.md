@@ -73,7 +73,10 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 
 | Rotated (UTC date) | Operator | Notes |
 |---|---|---|
-| 2026-07-31 | — | Initial production set (EC-19a ship). |
+| 2026-07-31 | — | Initial production set (EC-19a ship). Fill operator after live inbound smoke. |
+
+| Variable | Used by | Notes |
+|---|---|---|
 | KEYCLOAK_HOSTNAME | keycloak (VPS) | Public hostname (default `auth.easycasaita.com`). |
 | KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD | keycloak (VPS) | Bootstrap admin — set on VPS only; never commit. |
 | KEYCLOAK_DB | keycloak (VPS) | Postgres database name (default `keycloak`; created by `infra/postgres/init/02-keycloak-db.sql`). |

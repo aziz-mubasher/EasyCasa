@@ -47,9 +47,9 @@ Env catalogue: `docs/env.md` (six Nest secrets + no-dump rule).
 - [ ] Real verified phone, real template, real locale.
 
 **Faster path while templates are still pending:** free-form auto-reply inside the 24h
-window needs no approved template — see `docs/runbooks/whatsapp-inbound-smoke.md`.
-If that reply lands on your phone, token + phone number ID are good independently of
-template approval.
+window needs no approved template. Run the full operator checklist in
+`docs/runbooks/whatsapp-inbound-smoke.md` (phone ×2 · viewer · forge+counter · DSAR)
+**before** briefing EC-20. Pass = all five sections, not “the reply arrived”.
 
 ## Never
 
