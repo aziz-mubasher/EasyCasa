@@ -47,6 +47,14 @@ const VIEWS: Record<View, React.ReactNode> = {
   rli: <RliMonitor />,
 };
 
+function BrandMark({ className = 'brand__mark' }: { className?: string }) {
+  return (
+    <div className={className} aria-hidden>
+      E<span>.</span>
+    </div>
+  );
+}
+
 function LoginGate({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isConfigured, signIn } = useAuth();
 
@@ -56,23 +64,44 @@ function LoginGate({ children }: { children: React.ReactNode }) {
 
   if (!isConfigured) {
     return (
-      <div className="shell">
-        <main className="content">
-          <p>Admin OIDC is not configured. Set VITE_OIDC_ISSUER and VITE_OIDC_CLIENT_ID, then rebuild the admin image.</p>
-        </main>
+      <div className="login login--plain">
+        <div className="login__panel">
+          <p className="login__eyebrow">EasyCasa · Back office</p>
+          <div className="login__brand">
+            <BrandMark className="login__mark" />
+            <p className="login__wordmark">EasyCasa</p>
+          </div>
+          <h1 className="login__title">OIDC not configured</h1>
+          <p className="login__copy">
+            Set <code className="mono">VITE_OIDC_ISSUER</code> and{' '}
+            <code className="mono">VITE_OIDC_CLIENT_ID</code>, then rebuild the admin image.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="shell">
-      <main className="content">
-        <h1>EasyCasa ops</h1>
-        <p>Sign in with your admin account to continue.</p>
-        <button type="button" onClick={() => void signIn()}>
-          Sign in
+    <div className="login">
+      <div className="login__panel">
+        <p className="login__eyebrow">Back office</p>
+        <div className="login__brand">
+          <BrandMark className="login__mark" />
+          <p className="login__wordmark">EasyCasa</p>
+        </div>
+        <h1 className="login__title">Sign in to continue</h1>
+        <p className="login__copy">
+          Operations, compliance, and support for the EasyCasa Italia platform.
+        </p>
+        <button type="button" className="btn btn--primary login__cta" onClick={() => void signIn()}>
+          Sign in with admin account
         </button>
-      </main>
+        <p className="login__foot">
+          <a href="https://easycasaita.com" target="_blank" rel="noreferrer">
+            easycasaita.com
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
@@ -92,7 +121,7 @@ function BuildMarker() {
       .catch(() => setSha('unknown'));
   }, []);
   return (
-    <p className="muted" style={{ fontSize: '0.75rem', marginTop: '1rem' }}>
+    <p className="muted mono" style={{ margin: '0.75rem 0 0' }}>
       build {sha}
     </p>
   );
@@ -116,11 +145,16 @@ export function App() {
       <div className="shell">
         <aside className="sidebar">
           <div className="brand">
-            EasyCasa <span>ops</span>
+            <BrandMark />
+            <div className="brand__text">
+              <span className="brand__name">EasyCasa</span>
+              <span className="brand__tag">Back office</span>
+            </div>
           </div>
           {isAuthenticated ? (
             <button type="button" className="nav-item" onClick={() => void signOut()}>
               <span className="nav-item__label">Sign out</span>
+              <span className="nav-item__hint">End session</span>
             </button>
           ) : null}
           <nav>
@@ -135,7 +169,9 @@ export function App() {
               </button>
             ))}
           </nav>
-          <BuildMarker />
+          <div className="sidebar__foot">
+            <BuildMarker />
+          </div>
         </aside>
         <main className="content">
           {activeView ? (
@@ -143,7 +179,8 @@ export function App() {
           ) : (
             <p>
               No admin role on this account. Ask an operator to assign an{' '}
-              <code>admin_*</code> realm role in Keycloak. Bare <code>admin</code> is not enough.
+              <code className="mono">admin_*</code> realm role in Keycloak. Bare{' '}
+              <code className="mono">admin</code> is not enough.
             </p>
           )}
         </main>
