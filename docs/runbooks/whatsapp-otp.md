@@ -47,6 +47,9 @@ docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml \
 
 Webhook URL for Meta: `https://easycasaita.com/api/whatsapp/webhook`
 
+Ops preflight (six Nest secrets + no-dump): `docs/runbooks/whatsapp-cloud-ops-preflight.md`.
+Inbound live smoke while templates are pending: `docs/runbooks/whatsapp-inbound-smoke.md`.
+
 ## Verify
 
 ```bash

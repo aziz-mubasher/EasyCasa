@@ -18,7 +18,9 @@ Pilot = **A → B → C**. Do not start D/E until inbound volume justifies it.
 
 **EC-19 (admin viewer):** read-only `GET /admin/whatsapp/inbound` behind `whatsapp:inbound:read`. List returns opaque `waHandle` (HMAC) only — never raw `waId`. Detail by handle is audited. No reply / no join to users or listings.
 
-**EC-19a:** `WA_HANDLE_SECRET` required at boot. Rotating it breaks `#whatsapp/<handle>` deep-links only — re-open from the list. Backfill: `pnpm exec tsx src/whatsapp/backfill-wa-handles.ts` from `apps/api`.
+**EC-19a:** `WA_HANDLE_SECRET` required at boot (Nest secrets list is now **six** — see `docs/env.md`). Rotating it breaks `#whatsapp/<handle>` deep-links only — re-open from the list; log the date in `docs/env.md`. Backfill: `pnpm exec tsx src/whatsapp/backfill-wa-handles.ts` from `apps/api`.
+
+**Ops:** `docs/runbooks/whatsapp-cloud-ops-preflight.md` · live inbound smoke (phone / forge / DSAR, no template gate): `docs/runbooks/whatsapp-inbound-smoke.md`.
 
 ## Architecture
 

@@ -46,9 +46,34 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WA_INBOUND_RETENTION_DAYS | api | EC-17 hard-delete window for `wa_inbound_messages` (default `90`). **COUNSEL TO CONFIRM.** |
 | WA_INBOUND_EMAIL_FORWARD | api | EC-19. `true` → legacy body-bearing ops email. Default `false` → subject-line alert + admin link only (no bodies). |
 | ADMIN_PUBLIC_URL | api | EC-19 base URL for inbound alert links (default `https://admin.easycasaita.com`). |
-| WA_HANDLE_SECRET | api | EC-19a HMAC secret for opaque `wa_handle` routing (min 16). **Required at boot** — no silent fallback. Rotation breaks open `#whatsapp/<handle>` deep-links only. |
+| WA_HANDLE_SECRET | api | EC-19a HMAC secret for opaque `wa_handle` routing (min 16). **Required at boot** — no silent fallback. Rotation breaks open `#whatsapp/<handle>` deep-links only — re-open from the list (do not blame the viewer). **Log every rotation** in the table below. |
 | WHATSAPP_VIEWING_*_TEMPLATE / WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE | api | K EC 8.7 Phase C utility templates. Empty name → skip that WhatsApp channel (email/in-app still run). |
 | PHONE_OTP_PEPPER | api | SHA-256 pepper for OTP hashes (min 16 chars). |
+
+### WhatsApp Nest secrets (ops preflight — six)
+
+These six are the Nest-loaded set. **WABA ID is Meta-console only** — not a Nest env.
+
+| # | Variable | Role |
+|---|---|---|
+| 1 | `WHATSAPP_TOKEN` | Cloud API permanent token |
+| 2 | `WHATSAPP_PHONE_NUMBER_ID` | Phone number ID (same app as token) |
+| 3 | `WHATSAPP_VERIFY_TOKEN` | Webhook `hub.verify_token` |
+| 4 | `WHATSAPP_APP_SECRET` | `X-Hub-Signature-256` |
+| 5 | Template name(s) | OTP + utility template **names** (language is a send param, not extra secrets) |
+| 6 | `WA_HANDLE_SECRET` | EC-19a opaque list/detail routing HMAC |
+
+**No secret dumps.** `docker compose config`, `env`, and `printenv` render the **full** resolved environment for that service — treat any one of them as having exposed every secret above (and siblings), not just the key you meant to inspect. That is what forced a prior rotation. Length-check inside the container only: `docker compose exec api sh -c 'echo ${#WHATSAPP_TOKEN}'` — never echo the value.
+
+Full gate checklist: `docs/runbooks/whatsapp-cloud-ops-preflight.md`. Live inbound smoke (phone → auto-reply → forge → DSAR): `docs/runbooks/whatsapp-inbound-smoke.md`.
+
+#### `WA_HANDLE_SECRET` rotation log
+
+Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<handle>` after a rotation is expected — re-open from the inbound list.
+
+| Rotated (UTC date) | Operator | Notes |
+|---|---|---|
+| 2026-07-31 | — | Initial production set (EC-19a ship). |
 | KEYCLOAK_HOSTNAME | keycloak (VPS) | Public hostname (default `auth.easycasaita.com`). |
 | KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD | keycloak (VPS) | Bootstrap admin — set on VPS only; never commit. |
 | KEYCLOAK_DB | keycloak (VPS) | Postgres database name (default `keycloak`; created by `infra/postgres/init/02-keycloak-db.sql`). |
