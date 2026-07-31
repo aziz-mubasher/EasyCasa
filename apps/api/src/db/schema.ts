@@ -493,6 +493,30 @@ export const authorityAuditLog = pgTable('authority_audit_log', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-17 — inbound WhatsApp messages (thin store; no queue). */
+export const waInboundMessages = pgTable(
+  'wa_inbound_messages',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    providerMessageId: text('provider_message_id').notNull(),
+    waId: text('wa_id').notNull(),
+    phoneNumberId: text('phone_number_id').notNull(),
+    messageType: text('message_type').notNull(),
+    body: text('body'),
+    receivedAt: timestamp('received_at', { withTimezone: true }).notNull(),
+    windowExpiresAt: timestamp('window_expires_at', { withTimezone: true }).notNull(),
+    autoRepliedAt: timestamp('auto_replied_at', { withTimezone: true }),
+    forwardedAt: timestamp('forwarded_at', { withTimezone: true }),
+    forwardError: text('forward_error'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    providerMessageIdKey: uniqueIndex('wa_inbound_messages_provider_message_id_key').on(
+      t.providerMessageId,
+    ),
+  }),
+);
+
 /** EC-12 — hashed phone OTP challenges (WhatsApp / email fallback). */
 export const phoneOtpChallenges = pgTable('phone_otp_challenges', {
   id: uuid('id').primaryKey().defaultRandom(),

@@ -5,16 +5,20 @@ import {
   type WhatsAppSendResult,
   type WhatsAppTemplateSendInput,
 } from './whatsapp-cloud.client';
+import { WhatsAppInboundService } from './whatsapp-inbound.service';
 
 /**
- * Single WhatsApp integration point (K EC 7.1 Phase A).
- * Consumers: phone OTP, transactional notifications, conversations (later).
+ * Single WhatsApp integration point (K EC 7.1 Phase A + EC-17 inbound).
+ * Consumers: phone OTP, transactional notifications, inbound ack.
  */
 @Injectable()
 export class WhatsAppService {
   private readonly log = new Logger(WhatsAppService.name);
 
-  constructor(private readonly cloud: WhatsAppCloudClient) {}
+  constructor(
+    private readonly cloud: WhatsAppCloudClient,
+    private readonly inbound: WhatsAppInboundService,
+  ) {}
 
   get configured(): boolean {
     return this.cloud.configured;
@@ -33,6 +37,10 @@ export class WhatsAppService {
     return this.cloud.sendTemplate(input);
   }
 
+  sendText(phoneE164: string, text: string): Promise<WhatsAppSendResult> {
+    return this.cloud.sendText(phoneE164, text);
+  }
+
   verifyWebhookSignature(rawBody: Buffer, signatureHeader: string | undefined): boolean {
     return this.cloud.verifySignature(rawBody, signatureHeader);
   }
@@ -43,6 +51,19 @@ export class WhatsAppService {
     for (const s of entries) {
       this.log.log(`whatsapp status id=${s.id} status=${s.status}`);
     }
+  }
+
+  /**
+   * EC-17: statuses (unchanged) + persist new inbound messages.
+   * Returns internal ids for fire-and-forget auto-reply / ops email after 200.
+   */
+  async ingestWebhookPayload(payload: unknown): Promise<string[]> {
+    this.ingestStatusPayload(payload);
+    return this.inbound.persistNewMessages(payload);
+  }
+
+  handleInboundAfterPersist(ids: string[]): Promise<void> {
+    return this.inbound.handleAfterPersist(ids);
   }
 }
 

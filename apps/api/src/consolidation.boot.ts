@@ -96,7 +96,14 @@ stubRegistry.register({
         { provide: CONSENT_STORE, useValue: consentStore },
         {
           provide: RETENTION_SINK,
-          useValue: { async anonymizeStaleLeadsBefore() { return 0; } },
+          useValue: {
+            async anonymizeStaleLeadsBefore() {
+              return 0;
+            },
+            async purgeWaInboundBefore() {
+              return 0;
+            },
+          },
         },
       ],
     }),

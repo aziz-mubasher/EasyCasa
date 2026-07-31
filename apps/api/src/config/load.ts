@@ -35,8 +35,12 @@ const Schema = z
     WHATSAPP_GRAPH_VERSION: z.string().default('v21.0'),
     /** Meta webhook hub.verify_token (GET challenge). */
     WHATSAPP_VERIFY_TOKEN: z.string().default(''),
-    /** App secret for X-Hub-Signature-256 on POST webhook. Empty → skip verify (dev only). */
+    /** App secret for X-Hub-Signature-256 on POST webhook. Empty → reject (fail closed). */
     WHATSAPP_APP_SECRET: z.string().default(''),
+    /** EC-17 — ops mailbox for inbound WhatsApp forwards (falls back to AGENCY_PUBLIC_EMAIL). */
+    WHATSAPP_INBOUND_OPS_EMAIL: z.string().default(''),
+    /** EC-17 — days before wa_inbound_messages hard-delete. COUNSEL TO CONFIRM (default 90). */
+    WA_INBOUND_RETENTION_DAYS: z.coerce.number().int().positive().default(90),
     /** K EC 8.7 Phase C — utility template names (empty → skip that WhatsApp send). */
     WHATSAPP_VIEWING_REMINDER_24H_TEMPLATE: z.string().default(''),
     WHATSAPP_VIEWING_REMINDER_2H_TEMPLATE: z.string().default(''),

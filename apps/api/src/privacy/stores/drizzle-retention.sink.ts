@@ -3,12 +3,13 @@ import { and, isNull, lt, sql } from 'drizzle-orm';
 
 import { DRIZZLE } from '../../db/db.module';
 import type { Db } from '../../db/drizzle';
-import { enquiries } from '../../db/schema';
+import { enquiries, waInboundMessages } from '../../db/schema';
 import type { RetentionSink } from '../retention.service';
 
 /**
  * Anonymize unconverted enquiry leads older than the cutoff (Phase 38 retention).
  * Converted enquiries (order_id set) are left alone.
+ * EC-17: hard-delete stale WhatsApp inbound rows.
  */
 @Injectable()
 export class DrizzleRetentionSink implements RetentionSink {
@@ -33,5 +34,13 @@ export class DrizzleRetentionSink implements RetentionSink {
       )
       .returning({ id: enquiries.id });
     return result.length;
+  }
+
+  async purgeWaInboundBefore(cutoff: Date): Promise<number> {
+    const deleted = await this.db
+      .delete(waInboundMessages)
+      .where(lt(waInboundMessages.createdAt, cutoff))
+      .returning({ id: waInboundMessages.id });
+    return deleted.length;
   }
 }

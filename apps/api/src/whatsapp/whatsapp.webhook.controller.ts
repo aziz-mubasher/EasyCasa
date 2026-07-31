@@ -15,6 +15,7 @@ import type { Request } from 'express';
 import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
 import { Public } from '../auth/public.decorator';
+import { whatsappInboundSignatureRejected } from '../observability/metrics';
 import { WhatsAppService } from './whatsapp.service';
 
 /**
@@ -47,21 +48,23 @@ export class WhatsAppWebhookController {
 
   @Public()
   @Post('webhook')
-  receive(
+  async receive(
     @Req() req: RawBodyRequest<Request>,
     @Headers('x-hub-signature-256') signature?: string,
-  ): { received: true } {
+  ): Promise<{ received: true }> {
     const raw = req.rawBody;
     if (!raw || !Buffer.isBuffer(raw)) {
       throw new BadRequestException('raw body required');
     }
-    // When APP_SECRET is unset (local), accept but do not treat as production-safe.
-    if (this.config.WHATSAPP_APP_SECRET) {
-      if (!this.whatsapp.verifyWebhookSignature(raw, signature)) {
-        throw new ForbiddenException('invalid webhook signature');
-      }
-    } else {
-      this.log.warn('WHATSAPP_APP_SECRET unset — skipping signature check');
+
+    // EC-17: fail closed — empty APP_SECRET rejects (same posture as forged HMAC).
+    if (!this.config.WHATSAPP_APP_SECRET.trim()) {
+      whatsappInboundSignatureRejected.inc();
+      throw new ForbiddenException('webhook signature required');
+    }
+    if (!this.whatsapp.verifyWebhookSignature(raw, signature)) {
+      whatsappInboundSignatureRejected.inc();
+      throw new ForbiddenException('invalid webhook signature');
     }
 
     let payload: unknown;
@@ -70,7 +73,14 @@ export class WhatsAppWebhookController {
     } catch {
       throw new BadRequestException('invalid json');
     }
-    this.whatsapp.ingestStatusPayload(payload);
+
+    const newIds = await this.whatsapp.ingestWebhookPayload(payload);
+    // Respond 200 fast; Meta retries on slow handlers.
+    if (newIds.length) {
+      void this.whatsapp.handleInboundAfterPersist(newIds).catch((err) => {
+        this.log.warn(`inbound after-persist failed: ${String(err)}`);
+      });
+    }
     return { received: true };
   }
 }

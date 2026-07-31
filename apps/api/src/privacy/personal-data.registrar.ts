@@ -8,6 +8,7 @@ import { EnquiriesDataSource } from './sources/enquiries.data-source';
 import { ProfileDataSource } from './sources/profile.data-source';
 import { SavedSearchesDataSource } from './sources/saved-searches.data-source';
 import { ViewingsDataSource } from './sources/viewings.data-source';
+import { WaInboundDataSource } from './sources/wa-inbound.data-source';
 
 /** Registers all PersonalDataSource implementations into the registry at boot. */
 @Injectable()
@@ -19,6 +20,7 @@ export class PersonalDataRegistrar implements OnModuleInit {
     @Inject(SavedSearchesDataSource) private readonly savedSearches: SavedSearchesDataSource,
     @Inject(ProfileDataSource) private readonly profile: ProfileDataSource,
     @Inject(ConsentLedgerDataSource) private readonly consent: ConsentLedgerDataSource,
+    @Inject(WaInboundDataSource) private readonly waInbound: WaInboundDataSource,
     @Inject(DsarService) private readonly dsar: DsarService,
     @Inject(ErasureService) private readonly erasure: ErasureService,
   ) {}
@@ -30,6 +32,7 @@ export class PersonalDataRegistrar implements OnModuleInit {
       this.savedSearches,
       this.profile,
       this.consent,
+      this.waInbound,
     ]) {
       this.registry.register(s);
     }

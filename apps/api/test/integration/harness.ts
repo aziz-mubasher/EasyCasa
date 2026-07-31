@@ -72,6 +72,12 @@ async function bootOnce(): Promise<IntegrationContext> {
   process.env.MEILI_URL = meiliUrl;
   process.env.MEILI_MASTER_KEY = 'test';
   process.env.API_PORT = '4000';
+  // EC-17 — fail-closed signature on webhook; enable Cloud client for auto-reply tests.
+  process.env.WHATSAPP_APP_SECRET = process.env.WHATSAPP_APP_SECRET || 'int-test-wa-secret';
+  process.env.WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN || 'int-tok';
+  process.env.WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID || 'int-pnid';
+  process.env.WHATSAPP_INBOUND_OPS_EMAIL =
+    process.env.WHATSAPP_INBOUND_OPS_EMAIL || 'ops@example.com';
 
   const { resetConfigCache } = await import('../../src/config');
   resetConfigCache();
