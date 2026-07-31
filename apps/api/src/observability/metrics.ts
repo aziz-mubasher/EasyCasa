@@ -1,4 +1,4 @@
-import { Registry, collectDefaultMetrics, Counter, Histogram } from 'prom-client';
+import { Registry, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
 
 /**
  * Prometheus registry + app metrics — Phase 39. A single registry so /metrics
@@ -55,5 +55,12 @@ export const whatsappAutoReplySuppressed = new Counter({
 export const whatsappInboundForwardFailed = new Counter({
   name: 'whatsapp_inbound_forward_failed_total',
   help: 'Ops email forwards that failed for inbound WhatsApp messages',
+  registers: [registry],
+});
+
+/** EC-19b — distinct inbound wa_id with no users.phone_e164 match (count only). */
+export const whatsappInboundUnmatchedSenders = new Gauge({
+  name: 'whatsapp_inbound_unmatched_senders',
+  help: 'Distinct wa_inbound_messages.wa_id with no matching users.phone_e164 (trend signal)',
   registers: [registry],
 });

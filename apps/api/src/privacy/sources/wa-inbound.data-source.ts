@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq, inArray } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 import { DRIZZLE } from '../../db/db.module';
 import type { Db } from '../../db/drizzle';
@@ -9,10 +9,10 @@ import type {
   ErasureOutcome,
   PersonalDataSource,
 } from '../personal-data-source';
-import { phoneMatchVariants } from '../../whatsapp/whatsapp-inbound.service';
 
 /**
- * EC-17 — DSAR/erasure for wa_inbound_messages, keyed via users.phone ↔ wa_id.
+ * EC-17 / EC-19b — DSAR/erasure for wa_inbound_messages, keyed via
+ * users.phone_e164 ↔ wa_id (Meta digits, no '+').
  */
 @Injectable()
 export class WaInboundDataSource implements PersonalDataSource {
@@ -20,20 +20,18 @@ export class WaInboundDataSource implements PersonalDataSource {
 
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
-  private async waIdsForSubject(subjectId: string): Promise<string[]> {
+  private async waIdForSubject(subjectId: string): Promise<string | null> {
     const rows = await this.db
-      .select({ phone: users.phone })
+      .select({ phoneE164: users.phoneE164 })
       .from(users)
       .where(eq(users.id, subjectId))
       .limit(1);
-    const phone = rows[0]?.phone;
-    if (!phone) return [];
-    return phoneMatchVariants(phone);
+    return rows[0]?.phoneE164 ?? null;
   }
 
   async collect(subjectId: string): Promise<CollectedData> {
-    const variants = await this.waIdsForSubject(subjectId);
-    if (!variants.length) return { source: this.source, records: [] };
+    const waId = await this.waIdForSubject(subjectId);
+    if (!waId) return { source: this.source, records: [] };
 
     const rows = await this.db
       .select({
@@ -44,7 +42,7 @@ export class WaInboundDataSource implements PersonalDataSource {
         autoRepliedAt: waInboundMessages.autoRepliedAt,
       })
       .from(waInboundMessages)
-      .where(inArray(waInboundMessages.waId, variants))
+      .where(eq(waInboundMessages.waId, waId))
       .orderBy(waInboundMessages.receivedAt);
 
     return {
@@ -60,13 +58,13 @@ export class WaInboundDataSource implements PersonalDataSource {
   }
 
   async erase(subjectId: string): Promise<ErasureOutcome> {
-    const variants = await this.waIdsForSubject(subjectId);
-    if (!variants.length) {
+    const waId = await this.waIdForSubject(subjectId);
+    if (!waId) {
       return { source: this.source, erased: 0, retainedUnderLegalHold: 0 };
     }
     const deleted = await this.db
       .delete(waInboundMessages)
-      .where(inArray(waInboundMessages.waId, variants))
+      .where(eq(waInboundMessages.waId, waId))
       .returning({ id: waInboundMessages.id });
     return {
       source: this.source,

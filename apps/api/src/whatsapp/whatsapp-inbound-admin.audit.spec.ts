@@ -1,5 +1,5 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { WhatsAppInboundAdminService } from './whatsapp-inbound-admin.service';
 import { waHandleFor } from './wa-handle';

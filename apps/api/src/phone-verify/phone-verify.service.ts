@@ -23,6 +23,7 @@ import {
   otpExpiresAt,
   otpMatches,
 } from './otp';
+import { toWaId } from '../whatsapp/phone';
 
 const MAX_START_PER_USER_HOUR = 5;
 const MAX_START_PER_PHONE_HOUR = 5;
@@ -76,7 +77,7 @@ export class PhoneVerifyService {
     // Persist phone (unverified) so profile shows pending number.
     await this.db
       .update(users)
-      .set({ phone, updatedAt: new Date() })
+      .set({ phone, phoneE164: toWaId(phone), updatedAt: new Date() })
       .where(eq(users.id, userId));
 
     return { channel: delivery.channel, expiresAt: expiresAt.toISOString() };
@@ -129,6 +130,7 @@ export class PhoneVerifyService {
       .update(users)
       .set({
         phone: challenge.phoneE164,
+        phoneE164: toWaId(challenge.phoneE164),
         phoneVerifiedAt: now,
         updatedAt: now,
       })
@@ -154,7 +156,7 @@ export class PhoneVerifyService {
     fallbackReason: string | null;
   }> {
     if (wa.ok) {
-      this.log.log(`phone OTP whatsapp user=${userId} phone=${phone} wamid=${wa.messageId}`);
+      this.log.log(`phone OTP whatsapp user=${userId} wamid=${wa.messageId}`);
       return {
         channel: 'whatsapp',
         providerMessageId: wa.messageId,
