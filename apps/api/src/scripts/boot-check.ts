@@ -13,6 +13,7 @@ const TEST_ENV: Record<string, string> = {
   NODE_ENV: 'test',
   ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true',
   DATABASE_URL: 'postgresql://easycasa:easycasa@127.0.0.1:5432/easycasa_test',
+  WA_HANDLE_SECRET: 'test-wa-handle-secret-xx',
   MEILI_URL: 'http://127.0.0.1:7700',
   MEILI_MASTER_KEY: 'test',
   API_PORT: '4000',

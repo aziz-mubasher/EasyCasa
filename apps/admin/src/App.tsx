@@ -139,8 +139,9 @@ export function App() {
     [adminRoles],
   );
   const initialView = ((): View => {
-    if (typeof window !== 'undefined' && window.location.hash.replace(/^#/, '') === 'whatsapp') {
-      return 'whatsapp';
+    if (typeof window !== 'undefined') {
+      const h = window.location.hash.replace(/^#/, '');
+      if (h === 'whatsapp' || h.startsWith('whatsapp/')) return 'whatsapp';
     }
     return 'credentials';
   })();
@@ -153,7 +154,12 @@ export function App() {
   function go(next: View) {
     setView(next);
     if (typeof window !== 'undefined') {
-      window.location.hash = next === 'whatsapp' ? 'whatsapp' : '';
+      if (next === 'whatsapp') {
+        const cur = window.location.hash.replace(/^#/, '');
+        if (!cur.startsWith('whatsapp')) window.location.hash = 'whatsapp';
+      } else {
+        window.location.hash = '';
+      }
     }
   }
 

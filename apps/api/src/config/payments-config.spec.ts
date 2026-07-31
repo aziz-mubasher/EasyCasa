@@ -9,6 +9,7 @@ describe('Stripe live-key guard', () => {
       loadApiConfig({
         DATABASE_URL: 'postgresql://u:p@127.0.0.1:5432/db',
         ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true',
+        WA_HANDLE_SECRET: 'test-wa-handle-secret-xx',
         STRIPE_SECRET_KEY: 'sk_live_abc',
         GO_LIVE_PAYMENTS_ACK: 'false',
       }),
@@ -20,6 +21,7 @@ describe('Stripe live-key guard', () => {
     const cfg = loadApiConfig({
       DATABASE_URL: 'postgresql://u:p@127.0.0.1:5432/db',
       ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true',
+      WA_HANDLE_SECRET: 'test-wa-handle-secret-xx',
       PAYMENTS_ENABLED: 'true',
       STRIPE_SECRET_KEY: 'sk_test_abc',
       STRIPE_WEBHOOK_SECRET: 'whsec_test',

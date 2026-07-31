@@ -16,7 +16,9 @@ Pilot = **A → B → C**. Do not start D/E until inbound volume justifies it.
 
 **EC-17 (minimal inbound):** signature-verified `messages` consumer, thin `wa_inbound_messages` persist, one free-form auto-ack per wa_id / 24h. Ops alert is subject-line + admin link by default (`WA_INBOUND_EMAIL_FORWARD=false`); body-bearing mail is legacy opt-in.
 
-**EC-19 (admin viewer):** read-only `GET /admin/whatsapp/inbound` behind `whatsapp:inbound:read`. List previews are pattern-masked; detail reveals are audited. No reply / no join to users or listings.
+**EC-19 (admin viewer):** read-only `GET /admin/whatsapp/inbound` behind `whatsapp:inbound:read`. List returns opaque `waHandle` (HMAC) only — never raw `waId`. Detail by handle is audited. No reply / no join to users or listings.
+
+**EC-19a:** `WA_HANDLE_SECRET` required at boot. Rotating it breaks `#whatsapp/<handle>` deep-links only — re-open from the list. Backfill: `pnpm exec tsx src/whatsapp/backfill-wa-handles.ts` from `apps/api`.
 
 ## Architecture
 

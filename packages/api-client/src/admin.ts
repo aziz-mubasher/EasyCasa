@@ -282,13 +282,13 @@ export class EasyCasaAdminApi {
     const qs = q.toString();
     return this.request(`/admin/whatsapp/inbound${qs ? `?${qs}` : ''}`, z.unknown());
   }
-  getWhatsAppInbound(waId: string, params?: { cursor?: string; limit?: number }): Promise<unknown> {
+  getWhatsAppInbound(handle: string, params?: { cursor?: string; limit?: number }): Promise<unknown> {
     const q = new URLSearchParams();
     if (params?.cursor) q.set('cursor', params.cursor);
     if (params?.limit != null) q.set('limit', String(params.limit));
     const qs = q.toString();
     return this.request(
-      `/admin/whatsapp/inbound/${encodeURIComponent(waId)}${qs ? `?${qs}` : ''}`,
+      `/admin/whatsapp/inbound/${encodeURIComponent(handle)}${qs ? `?${qs}` : ''}`,
       z.unknown(),
     );
   }
