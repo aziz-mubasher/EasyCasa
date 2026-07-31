@@ -78,6 +78,8 @@ async function bootOnce(): Promise<IntegrationContext> {
   process.env.WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID || 'int-pnid';
   process.env.WHATSAPP_INBOUND_OPS_EMAIL =
     process.env.WHATSAPP_INBOUND_OPS_EMAIL || 'ops@example.com';
+  process.env.WA_HANDLE_SECRET =
+    process.env.WA_HANDLE_SECRET || 'int-test-wa-handle-secret';
 
   const { resetConfigCache } = await import('../../src/config');
   resetConfigCache();

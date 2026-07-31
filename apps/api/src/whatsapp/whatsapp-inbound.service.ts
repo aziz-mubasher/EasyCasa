@@ -14,6 +14,7 @@ import {
   whatsappInboundForwardFailed,
   whatsappInboundReceived,
 } from '../observability/metrics';
+import { waHandleFor } from './wa-handle';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
 
 const WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -59,6 +60,7 @@ export class WhatsAppInboundService {
         .values({
           providerMessageId: msg.providerMessageId,
           waId: msg.waId,
+          waHandle: waHandleFor(msg.waId, this.config.WA_HANDLE_SECRET),
           phoneNumberId: msg.phoneNumberId,
           messageType: msg.messageType,
           body: msg.body,

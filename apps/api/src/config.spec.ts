@@ -4,13 +4,18 @@ import { loadApiConfig } from './config';
 
 const base = {
   DATABASE_URL: 'postgresql://easycasa:x@localhost:5432/easycasa',
+  WA_HANDLE_SECRET: 'test-wa-handle-secret-xx',
 };
 
 describe('loadApiConfig', () => {
-  it('allows missing OIDC when ALLOW_PROVIDER_STUBS=true EC_TEST_AUTH=true', () => {
-    const cfg = loadApiConfig({ ...base, ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true' });
-    expect(cfg.ALLOW_PROVIDER_STUBS).toBe(true);
-    expect(cfg.OIDC_ISSUER).toBeUndefined();
+  it('requires WA_HANDLE_SECRET at boot (EC-19a, no silent fallback)', () => {
+    expect(() =>
+      loadApiConfig({
+        DATABASE_URL: 'postgresql://easycasa:x@localhost:5432/easycasa',
+        ALLOW_PROVIDER_STUBS: 'true',
+        EC_TEST_AUTH: 'true',
+      }),
+    ).toThrow(/WA_HANDLE_SECRET/);
   });
 
   it('requires OIDC when stubs/test-auth are off', () => {

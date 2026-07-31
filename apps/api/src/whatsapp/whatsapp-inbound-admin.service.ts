@@ -6,11 +6,14 @@ import {
 } from '@nestjs/common';
 import { and, asc, eq, sql, type SQL } from 'drizzle-orm';
 
+import type { ApiConfig } from '../config';
+import { InjectConfig } from '../config/inject-config.decorator';
 import { AdminAuditService } from '../authority/admin-audit.service';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { adminAuditLog, waInboundMessages } from '../db/schema';
 import { maskWaId, redactPreview } from './redact';
+import { waHandleFor } from './wa-handle';
 
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
 const DEFAULT_LIMIT = 25;
@@ -37,6 +40,7 @@ type CursorPayload = { t: string; i: string };
 
 type ThreadRow = {
   wa_id: string;
+  wa_handle: string | null;
   message_count: number | string;
   last_received_at: Date | string;
   last_id: string;
@@ -87,20 +91,22 @@ function asRows<T>(result: unknown): T[] {
 }
 
 /**
- * EC-19 — read-only admin queries over wa_inbound_messages.
- * No joins to users / enquiries / listings.
+ * EC-19 / EC-19a — read-only admin queries over wa_inbound_messages.
+ * List returns opaque waHandle only (never raw waId).
  */
 @Injectable()
 export class WhatsAppInboundAdminService {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly audit: AdminAuditService,
+    @InjectConfig() private readonly config: ApiConfig,
   ) {}
 
   async listThreads(filters: InboundListFilters, now: Date = new Date()) {
     const limit = clampLimit(filters.limit);
     const cursor = filters.cursor ? decodeCursor(filters.cursor) : null;
     const nowIso = now.toISOString();
+    const secret = this.config.WA_HANDLE_SECRET;
 
     const whereParts: SQL[] = [sql`TRUE`];
     if (filters.window === 'open') {
@@ -134,6 +140,7 @@ export class WhatsAppInboundAdminService {
       WITH latest AS (
         SELECT DISTINCT ON (wa_id)
           wa_id,
+          wa_handle,
           id AS last_id,
           received_at AS last_received_at,
           window_expires_at,
@@ -155,6 +162,7 @@ export class WhatsAppInboundAdminService {
       )
       SELECT
         l.wa_id,
+        l.wa_handle,
         c.message_count,
         l.last_received_at,
         l.last_id,
@@ -181,10 +189,12 @@ export class WhatsAppInboundAdminService {
     return {
       items: page.map((r) => {
         const expires = new Date(r.window_expires_at);
+        const waId = String(r.wa_id);
+        // Prefer stored handle; recompute if backfill lag (never return waId).
+        const waHandle = r.wa_handle?.trim() || waHandleFor(waId, secret);
         return {
-          waIdMasked: maskWaId(String(r.wa_id)),
-          /** Opaque key for detail route — not a join to users/enquiries/listings. */
-          waId: String(r.wa_id),
+          waIdMasked: maskWaId(waId),
+          waHandle,
           messageCount: Number(r.message_count),
           lastReceivedAt: new Date(r.last_received_at).toISOString(),
           windowExpiresAt: expires.toISOString(),
@@ -200,14 +210,50 @@ export class WhatsAppInboundAdminService {
   }
 
   /**
-   * Detail reveal — writes audit first; on audit failure the request fails
-   * (no message bodies returned).
+   * Resolve opaque handle → wa_id. Unknown/tampered → 404 (do not echo input).
+   * Does not log the resolution.
    */
-  async listMessagesForWaId(
-    waId: string,
+  async resolveHandle(handle: string): Promise<string> {
+    const trimmed = handle.trim();
+    if (!trimmed) throw new NotFoundException('inbound thread not found');
+
+    const byHandle = await this.db
+      .select({ waId: waInboundMessages.waId })
+      .from(waInboundMessages)
+      .where(eq(waInboundMessages.waHandle, trimmed))
+      .limit(1);
+    if (byHandle[0]?.waId) return byHandle[0].waId;
+
+    // Pre-backfill lag: match computed handle without logging wa_id.
+    const distinct = asRows<{ wa_id: string }>(
+      await this.db.execute(sql`SELECT DISTINCT wa_id FROM wa_inbound_messages`),
+    );
+    const secret = this.config.WA_HANDLE_SECRET;
+    for (const row of distinct) {
+      if (waHandleFor(String(row.wa_id), secret) === trimmed) return String(row.wa_id);
+    }
+    throw new NotFoundException('inbound thread not found');
+  }
+
+  /**
+   * Detail reveal by opaque handle — audit first; on audit failure no bodies.
+   */
+  async listMessagesForHandle(
+    handle: string,
     actorUserId: string,
     filters: InboundDetailFilters,
     now: Date = new Date(),
+  ) {
+    const waId = await this.resolveHandle(handle);
+    return this.listMessagesForWaId(waId, actorUserId, filters, now, handle);
+  }
+
+  private async listMessagesForWaId(
+    waId: string,
+    actorUserId: string,
+    filters: InboundDetailFilters,
+    now: Date,
+    handle: string,
   ) {
     const limit = clampLimit(filters.limit);
     const cursor = filters.cursor ? decodeCursor(filters.cursor) : null;
@@ -235,12 +281,7 @@ export class WhatsAppInboundAdminService {
       .limit(limit + 1);
 
     if (rows.length === 0 && !cursor) {
-      const any = await this.db
-        .select({ id: waInboundMessages.id })
-        .from(waInboundMessages)
-        .where(eq(waInboundMessages.waId, waId))
-        .limit(1);
-      if (!any.length) throw new NotFoundException('inbound thread not found');
+      throw new NotFoundException('inbound thread not found');
     }
 
     const page = rows.slice(0, limit);
@@ -281,6 +322,7 @@ export class WhatsAppInboundAdminService {
           );
 
     return {
+      waHandle: handle,
       waId,
       waIdMasked: maskWaId(waId),
       windowState: page.length ? windowStateAt(latestExpiry, now) : 'closed',

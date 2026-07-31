@@ -80,14 +80,14 @@ export class WhatsAppInboundAdminController {
     });
   }
 
-  @Get(':waId')
+  @Get(':handle')
   async detail(
-    @Param('waId') waId: string,
+    @Param('handle') handle: string,
     @Query() query: DetailInboundQuery,
     @CurrentUser() user: AuthUser,
   ) {
     const actor = await this.users.getOrCreate(user);
-    return this.inboundAdmin.listMessagesForWaId(waId, actor.id, {
+    return this.inboundAdmin.listMessagesForHandle(handle, actor.id, {
       cursor: query.cursor,
       limit: query.limit,
     });

@@ -1,6 +1,6 @@
 import {
   pgTable, pgEnum, uuid, text, integer, numeric, timestamp, jsonb, boolean,
-  doublePrecision, bigint, primaryKey, uniqueIndex, date,
+  doublePrecision, bigint, primaryKey, uniqueIndex, index, date,
 } from 'drizzle-orm/pg-core';
 
 export const listingStatus = pgEnum('listing_status', ['draft', 'published', 'sold', 'archived']);
@@ -500,6 +500,8 @@ export const waInboundMessages = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     providerMessageId: text('provider_message_id').notNull(),
     waId: text('wa_id').notNull(),
+    /** EC-19a — HMAC handle for list/detail routing (nullable until backfill). */
+    waHandle: text('wa_handle'),
     phoneNumberId: text('phone_number_id').notNull(),
     messageType: text('message_type').notNull(),
     body: text('body'),
@@ -514,6 +516,7 @@ export const waInboundMessages = pgTable(
     providerMessageIdKey: uniqueIndex('wa_inbound_messages_provider_message_id_key').on(
       t.providerMessageId,
     ),
+    waHandleIdx: index('wa_inbound_messages_wa_handle_idx').on(t.waHandle),
   }),
 );
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
@@ -7,7 +7,7 @@ import { Badge, Table } from '../components/ui';
 
 const ThreadSchema = z.object({
   waIdMasked: z.string(),
-  waId: z.string(),
+  waHandle: z.string(),
   messageCount: z.number(),
   lastReceivedAt: z.string(),
   windowExpiresAt: z.string(),
@@ -33,6 +33,7 @@ const MessageSchema = z.object({
 });
 
 const DetailSchema = z.object({
+  waHandle: z.string(),
   waId: z.string(),
   waIdMasked: z.string(),
   windowState: z.enum(['open', 'closing_soon', 'closed']),
@@ -70,9 +71,24 @@ function WindowCountdown({
   );
 }
 
+function handleFromHash(): string | null {
+  if (typeof window === 'undefined') return null;
+  const raw = window.location.hash.replace(/^#/, '');
+  const m = /^whatsapp\/([0-9a-f]{32})$/i.exec(raw);
+  return m?.[1] ?? null;
+}
+
 export function WhatsAppInbound() {
   const api = useApi();
-  const [selectedWaId, setSelectedWaId] = useState<string | null>(null);
+  const [selectedHandle, setSelectedHandle] = useState<string | null>(() => handleFromHash());
+
+  useEffect(() => {
+    if (selectedHandle) {
+      window.location.hash = `whatsapp/${selectedHandle}`;
+    } else {
+      window.location.hash = 'whatsapp';
+    }
+  }, [selectedHandle]);
 
   const list = useQuery({
     queryKey: ['wa-inbound'],
@@ -80,11 +96,11 @@ export function WhatsAppInbound() {
   });
 
   const detail = useQuery({
-    queryKey: ['wa-inbound', selectedWaId],
-    enabled: Boolean(selectedWaId),
+    queryKey: ['wa-inbound', selectedHandle],
+    enabled: Boolean(selectedHandle),
     queryFn: async () => {
-      if (!selectedWaId) throw new Error('no waId');
-      return DetailSchema.parse(await api.getWhatsAppInbound(selectedWaId));
+      if (!selectedHandle) throw new Error('no handle');
+      return DetailSchema.parse(await api.getWhatsAppInbound(selectedHandle));
     },
   });
 
@@ -92,14 +108,14 @@ export function WhatsAppInbound() {
   const empty = !list.isLoading && !list.isError && rows.length === 0;
 
   const detailTitle = useMemo(() => {
-    if (!selectedWaId) return null;
+    if (!selectedHandle) return null;
     return detail.data?.waIdMasked ?? '…';
-  }, [selectedWaId, detail.data?.waIdMasked]);
+  }, [selectedHandle, detail.data?.waIdMasked]);
 
-  if (selectedWaId) {
+  if (selectedHandle) {
     return (
       <section>
-        <button type="button" className="btn btn--sm" onClick={() => setSelectedWaId(null)}>
+        <button type="button" className="btn btn--sm" onClick={() => setSelectedHandle(null)}>
           ← Back to inbound
         </button>
         <h1 style={{ marginTop: '1rem' }}>Thread {detailTitle}</h1>
@@ -169,12 +185,12 @@ export function WhatsAppInbound() {
           empty={rows.length === 0}
         >
           {rows.map((r) => (
-            <tr key={r.waId}>
+            <tr key={r.waHandle}>
               <td>
                 <button
                   type="button"
                   className="btn btn--sm"
-                  onClick={() => setSelectedWaId(r.waId)}
+                  onClick={() => setSelectedHandle(r.waHandle)}
                 >
                   <span className="mono">{r.waIdMasked}</span>
                 </button>

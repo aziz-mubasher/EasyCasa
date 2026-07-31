@@ -48,6 +48,11 @@ const Schema = z
     WA_INBOUND_EMAIL_FORWARD: bool(false),
     /** EC-19 — base URL for admin SPA links in inbound alerts. */
     ADMIN_PUBLIC_URL: z.string().default('https://admin.easycasaita.com'),
+    /**
+     * EC-19a — HMAC secret for opaque wa_handle routing keys.
+     * Required at boot (min 16). No silent fallback. Rotation breaks open UI deep-links only.
+     */
+    WA_HANDLE_SECRET: z.string().min(16),
     /** K EC 8.7 Phase C — utility template names (empty → skip that WhatsApp send). */
     WHATSAPP_VIEWING_REMINDER_24H_TEMPLATE: z.string().default(''),
     WHATSAPP_VIEWING_REMINDER_2H_TEMPLATE: z.string().default(''),

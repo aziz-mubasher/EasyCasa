@@ -12,6 +12,7 @@ const TEST_ENV = {
   OIDC_JWKS_URL: 'http://localhost:8080/realms/easycasa/protocol/openid-connect/certs',
   OIDC_AUDIENCE: 'easycasa-api',
   ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true',
+  WA_HANDLE_SECRET: 'test-wa-handle-secret-xx',
   MEILI_URL: 'http://127.0.0.1:7700',
   MEILI_MASTER_KEY: 'test',
   SMTP_URL: '',
