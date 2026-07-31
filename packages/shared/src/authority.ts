@@ -12,7 +12,9 @@ export type Capability =
   | 'professional'
   | 'conductor'
   | 'agency_member'
-  | 'admin';
+  | 'admin'
+  /** EC-19 — read-only inbound WhatsApp viewer (not granted by bare `admin`). */
+  | 'whatsapp:inbound:read';
 
 /** Fine-grained admin personas — never a single omniscient admin. */
 export type AdminRole =
@@ -59,6 +61,15 @@ export function capabilitiesFromRoles(roles: readonly string[]): Capability[] {
     }
     if (r === 'conductor') caps.add('conductor');
     if (r === 'admin' || r.startsWith('admin_')) caps.add('admin');
+    // EC-19 — inbound WhatsApp viewer: support / operations / superadmin only.
+    // Bare `admin` and other admin_* personas do not get this capability.
+    if (
+      r === 'admin_support' ||
+      r === 'admin_operations' ||
+      r === 'admin_superadmin'
+    ) {
+      caps.add('whatsapp:inbound:read');
+    }
   }
   return [...caps];
 }

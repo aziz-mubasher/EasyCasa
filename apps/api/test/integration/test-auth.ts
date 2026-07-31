@@ -5,7 +5,11 @@ import {
   type ExecutionContext,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { UserRole } from '@easycasa/shared';
+import {
+  adminRolesFromRoles,
+  capabilitiesFromRoles,
+  type UserRole,
+} from '@easycasa/shared';
 
 import { IS_PUBLIC } from '../../src/auth/public.decorator';
 import type { AuthUser } from '../../src/auth/auth.types';
@@ -18,7 +22,8 @@ import type { AuthUser } from '../../src/auth/auth.types';
  * so discovery/health routes stay anonymous. No header on a guarded route → 401.
  */
 export type TestPrincipal = Pick<AuthUser, 'sub'> & Partial<Omit<AuthUser, 'sub' | 'roles'>> & {
-  roles?: UserRole[];
+  /** Realm role strings (may include admin_* not in UserRole union). */
+  roles?: Array<UserRole | string>;
 };
 
 @Injectable()
@@ -38,11 +43,15 @@ export class TestAuthGuard implements CanActivate {
     const raw = header(req.headers, 'x-test-user');
     if (raw) {
       const principal = JSON.parse(raw) as TestPrincipal;
+      const roles = (principal.roles ?? []) as UserRole[];
+      const roleStrings = roles.map(String);
       req.user = {
         sub: principal.sub,
         email: principal.email,
         name: principal.name,
-        roles: principal.roles ?? [],
+        roles,
+        capabilities: principal.capabilities ?? capabilitiesFromRoles(roleStrings),
+        adminRoles: principal.adminRoles ?? adminRolesFromRoles(roleStrings),
       };
       return true;
     }

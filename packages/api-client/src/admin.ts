@@ -267,6 +267,32 @@ export class EasyCasaAdminApi {
     );
   }
 
+  /* EC-19 WhatsApp inbound (read-only) */
+  listWhatsAppInbound(params?: {
+    window?: 'open' | 'closed';
+    autoReplied?: boolean;
+    cursor?: string;
+    limit?: number;
+  }): Promise<unknown> {
+    const q = new URLSearchParams();
+    if (params?.window) q.set('window', params.window);
+    if (params?.autoReplied != null) q.set('autoReplied', String(params.autoReplied));
+    if (params?.cursor) q.set('cursor', params.cursor);
+    if (params?.limit != null) q.set('limit', String(params.limit));
+    const qs = q.toString();
+    return this.request(`/admin/whatsapp/inbound${qs ? `?${qs}` : ''}`, z.unknown());
+  }
+  getWhatsAppInbound(waId: string, params?: { cursor?: string; limit?: number }): Promise<unknown> {
+    const q = new URLSearchParams();
+    if (params?.cursor) q.set('cursor', params.cursor);
+    if (params?.limit != null) q.set('limit', String(params.limit));
+    const qs = q.toString();
+    return this.request(
+      `/admin/whatsapp/inbound/${encodeURIComponent(waId)}${qs ? `?${qs}` : ''}`,
+      z.unknown(),
+    );
+  }
+
   /* AML */
   listKycCases(): Promise<KycCase[]> {
     return this.request('/aml/cases', z.array(KycCaseSchema));

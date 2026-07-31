@@ -499,6 +499,75 @@ select {
   max-width: 480px;
 }
 
+/* EC-19 WhatsApp inbound */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.wa-window {
+  font-family: var(--font-mono);
+  color: var(--text);
+}
+
+.wa-window--risk {
+  color: var(--ochre);
+}
+
+.wa-window--closed {
+  color: var(--grey);
+}
+
+.wa-audit-banner {
+  margin: 0.75rem 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--azure);
+  background: rgba(44, 110, 155, 0.15);
+  color: var(--paper);
+  font-family: var(--font-body);
+}
+
+.wa-empty {
+  margin-top: 1.5rem;
+  max-width: 36rem;
+  padding: 1.25rem 1.4rem;
+  border: 1px dashed var(--border);
+  background: var(--surface-2);
+}
+
+.wa-messages {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.wa-message {
+  padding: 0.85rem 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.wa-message__meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.wa-message__body {
+  white-space: pre-wrap;
+  font-family: var(--font-body);
+  color: var(--paper);
+}
+
+.wa-preview {
+  max-width: 28rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @media (max-width: 860px) {
   .shell {
     grid-template-columns: 1fr;

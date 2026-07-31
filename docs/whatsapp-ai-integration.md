@@ -14,7 +14,9 @@ Pilot = **A → B → C**. Do not start D/E until inbound volume justifies it.
 
 **Inbound reuse (2026-07-31):** do **not** share B4A’s webhook receiver (routing, single app secret, controller/PII). Reuse pattern + triage capability only (“build once, deploy twice”). §7 verified in B4A portals tree — see `docs/azm-deliverables/k-ec-whatsapp-inbound-reuse/`.
 
-**EC-17 (minimal inbound):** signature-verified `messages` consumer, thin `wa_inbound_messages` persist, one free-form auto-ack per wa_id / 24h, ops email forward. Not a Support queue (D still held).
+**EC-17 (minimal inbound):** signature-verified `messages` consumer, thin `wa_inbound_messages` persist, one free-form auto-ack per wa_id / 24h. Ops alert is subject-line + admin link by default (`WA_INBOUND_EMAIL_FORWARD=false`); body-bearing mail is legacy opt-in.
+
+**EC-19 (admin viewer):** read-only `GET /admin/whatsapp/inbound` behind `whatsapp:inbound:read`. List previews are pattern-masked; detail reveals are audited. No reply / no join to users or listings.
 
 ## Architecture
 
@@ -34,7 +36,7 @@ NestJS WhatsAppService
 | **A** | `WhatsAppModule`: Cloud client, webhook verify + status ingest stub, template send facade | — | Done (`#64`) |
 | **B** | OTP consumer via shared service — wamid / fallback_reason persistence, runbook | A, EC-12 | Done (`#66`) |
 | **C** | Utility templates + wire `ViewingsReminderScheduler` / viewing + enquiry notifiers | A | This work |
-| **D** | Admin Support queue (`support` role) | EC-14 Part 2 (done) | Deferred |
+| **D** | Admin Support queue (`support` role) | EC-14 Part 2 (done) | **Partial:** EC-19 read-only inbound viewer (`#` TBD). Reply = EC-20. Full queue still deferred |
 | **E** | AI triage → queue drafts (no autonomous send) | A, D | Deferred |
 | **F** | Grounded assistant | E + real conversation data | Deferred |
 

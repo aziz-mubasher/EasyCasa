@@ -42,8 +42,10 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WHATSAPP_OTP_TEMPLATE_LANG / WHATSAPP_GRAPH_VERSION | api | Defaults `it` / `v21.0`. Also used as language for Phase C utility templates. |
 | WHATSAPP_VERIFY_TOKEN | api | Meta webhook `hub.verify_token` for `GET /whatsapp/webhook`. |
 | WHATSAPP_APP_SECRET | api | `X-Hub-Signature-256` on `POST /whatsapp/webhook`. Empty → **403 fail closed** (EC-17). |
-| WHATSAPP_INBOUND_OPS_EMAIL | api | EC-17 ops forward target. Empty → `AGENCY_PUBLIC_EMAIL`. |
+| WHATSAPP_INBOUND_OPS_EMAIL | api | EC-17/19 ops alert target. Empty → `AGENCY_PUBLIC_EMAIL`. |
 | WA_INBOUND_RETENTION_DAYS | api | EC-17 hard-delete window for `wa_inbound_messages` (default `90`). **COUNSEL TO CONFIRM.** |
+| WA_INBOUND_EMAIL_FORWARD | api | EC-19. `true` → legacy body-bearing ops email. Default `false` → subject-line alert + admin link only (no bodies). |
+| ADMIN_PUBLIC_URL | api | EC-19 base URL for inbound alert links (default `https://admin.easycasaita.com`). |
 | WHATSAPP_VIEWING_*_TEMPLATE / WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE | api | K EC 8.7 Phase C utility templates. Empty name → skip that WhatsApp channel (email/in-app still run). |
 | PHONE_OTP_PEPPER | api | SHA-256 pepper for OTP hashes (min 16 chars). |
 | KEYCLOAK_HOSTNAME | keycloak (VPS) | Public hostname (default `auth.easycasaita.com`). |

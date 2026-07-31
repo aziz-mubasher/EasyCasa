@@ -41,6 +41,13 @@ const Schema = z
     WHATSAPP_INBOUND_OPS_EMAIL: z.string().default(''),
     /** EC-17 — days before wa_inbound_messages hard-delete. COUNSEL TO CONFIRM (default 90). */
     WA_INBOUND_RETENTION_DAYS: z.coerce.number().int().positive().default(90),
+    /**
+     * EC-19 — when true, ops email includes full message body (legacy ungoverned copy).
+     * Default false: subject-line alert + admin link only (no bodies).
+     */
+    WA_INBOUND_EMAIL_FORWARD: bool(false),
+    /** EC-19 — base URL for admin SPA links in inbound alerts. */
+    ADMIN_PUBLIC_URL: z.string().default('https://admin.easycasaita.com'),
     /** K EC 8.7 Phase C — utility template names (empty → skip that WhatsApp send). */
     WHATSAPP_VIEWING_REMINDER_24H_TEMPLATE: z.string().default(''),
     WHATSAPP_VIEWING_REMINDER_2H_TEMPLATE: z.string().default(''),
