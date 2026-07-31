@@ -20,7 +20,7 @@ Pilot = **A → B → C**. Do not start D/E until inbound volume justifies it.
 
 **EC-19a:** `WA_HANDLE_SECRET` required at boot (Nest secrets list is now **six** — see `docs/env.md`). Rotating it breaks `#whatsapp/<handle>` deep-links only — re-open from the list; log the date in `docs/env.md`. Backfill: `pnpm exec tsx src/whatsapp/backfill-wa-handles.ts` from `apps/api`.
 
-**Ops:** `docs/runbooks/whatsapp-cloud-ops-preflight.md` · **live inbound smoke (operator, before EC-20):** `docs/runbooks/whatsapp-inbound-smoke.md` — phone ×2, viewer, forge+counter, DSAR. Pass = all five sections.
+**EC-19b:** `users.phone_e164` (Meta wa_id digits, no `+`) via `toWaId()` — DSAR export/erasure match on equality. Italian landline trunk zero preserved. Live smoke §4 still needs a real phone after deploy.
 
 ## Architecture
 

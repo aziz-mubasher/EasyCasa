@@ -130,7 +130,7 @@ Source name: `wa_inbound_messages`
 
 **Check the format before concluding anything.** `wa_id` is E.164 **without** `+`
 (e.g. `393331234567`); `users.phone` may hold `+39 333 1234567` with plus, spaces, or
-other formatting. Matching goes through `phoneMatchVariants` (digits-only + `+digits`).
+other formatting. Matching goes through `users.phone_e164` (EC-19b `toWaId` — Meta digits, no `+`).
 If they do not match, the export returns **zero rows** — which looks exactly like a
 correct export for a subject with no messages. A silent pass here is the failure mode
 that survives to the first real subject request.

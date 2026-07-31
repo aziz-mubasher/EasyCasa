@@ -18,6 +18,11 @@ export const users = pgTable('users', {
   slug: text('slug'),
   role: userRole('role').notNull().default('buyer'),
   phone: text('phone'),
+  /**
+   * EC-19b — Meta wa_id form (E.164 digits, no '+'). Nullable; unparseable stays null.
+   * Indexed for DSAR match against wa_inbound_messages.wa_id. Never expose in API JSON.
+   */
+  phoneE164: text('phone_e164'),
   /** EC-12 — set after WhatsApp/email OTP success. */
   phoneVerifiedAt: timestamp('phone_verified_at', { withTimezone: true }),
   /** EC-13 — identity review success. */
@@ -28,7 +33,9 @@ export const users = pgTable('users', {
   membershipTier: text('membership_tier'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-});
+}, (t) => ({
+  phoneE164Idx: index('users_phone_e164_idx').on(t.phoneE164),
+}));
 
 export const categories = pgTable('categories', {
   id: uuid('id').primaryKey().defaultRandom(),

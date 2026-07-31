@@ -7,9 +7,10 @@ import { WhatsAppInboundAdminController } from './whatsapp-inbound-admin.control
 import { WhatsAppInboundAdminService } from './whatsapp-inbound-admin.service';
 import { WhatsAppInboundService } from './whatsapp-inbound.service';
 import { WhatsAppService } from './whatsapp.service';
+import { WhatsAppUnmatchedSendersGauge } from './whatsapp-unmatched-senders.gauge';
 import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
 
-/** K EC 7.1 Phase A + EC-17 inbound + EC-19 admin viewer. */
+/** K EC 7.1 Phase A + EC-17 inbound + EC-19 admin viewer + EC-19b DSAR match. */
 @Global()
 @Module({
   imports: [AuthorityModule, UsersModule],
@@ -19,6 +20,7 @@ import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
     WhatsAppInboundService,
     WhatsAppInboundAdminService,
     WhatsAppService,
+    WhatsAppUnmatchedSendersGauge,
   ],
   exports: [WhatsAppService],
 })

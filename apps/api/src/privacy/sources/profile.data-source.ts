@@ -51,6 +51,7 @@ export class ProfileDataSource implements PersonalDataSource {
         email: `erased-${subjectId}@anonymized.local`,
         displayName: '[anonymized]',
         phone: null,
+        phoneE164: null,
         avatarUrl: null,
         bio: null,
         updatedAt: new Date(),
