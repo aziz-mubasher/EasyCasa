@@ -22,6 +22,8 @@ function cfg(overrides: Record<string, unknown> = {}) {
     WHATSAPP_VERIFY_TOKEN: 'verify-me',
     WHATSAPP_INBOUND_OPS_EMAIL: 'ops@easycasaita.com',
     AGENCY_PUBLIC_EMAIL: 'info@easycasaita.com',
+    WA_INBOUND_EMAIL_FORWARD: false,
+    ADMIN_PUBLIC_URL: 'https://admin.easycasaita.com',
     ...overrides,
   };
 }
@@ -224,7 +226,54 @@ describe('WhatsAppInboundService process rules', () => {
     await svc.handleAfterPersist(['row-1']);
     expect(cloud.sendText).not.toHaveBeenCalled();
     expect(email.sendText).toHaveBeenCalledOnce();
+    const [, subject, text] = email.sendText.mock.calls[0] as [string, string, string];
+    expect(subject).toBe('1 new inbound WhatsApp message');
+    expect(text).not.toContain('STOP');
+    expect(text).not.toContain('wa_id');
+    expect(text).toContain('admin.easycasaita.com');
     expect(updates.some((u) => u && typeof u === 'object' && 'forwardedAt' in u)).toBe(true);
+  });
+
+  it('WA_INBOUND_EMAIL_FORWARD=true includes message body in ops email', async () => {
+    const row = {
+      id: 'row-fwd',
+      providerMessageId: 'wamid.fwd',
+      waId: '393331112233',
+      phoneNumberId: 'pnid',
+      messageType: 'text',
+      body: 'Secret seeker text',
+      receivedAt: new Date(),
+      windowExpiresAt: new Date(Date.now() + 3600_000),
+      autoRepliedAt: new Date(),
+      forwardedAt: null,
+      forwardError: null,
+      createdAt: new Date(),
+    };
+    const db = {
+      select: vi.fn().mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockResolvedValue([row]),
+          }),
+        }),
+      }),
+      update: vi.fn().mockReturnValue({
+        set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) }),
+      }),
+    };
+    const email = {
+      sendText: vi.fn().mockResolvedValue({ provider: 'smtp', delivered: true }),
+    };
+    const svc = new WhatsAppInboundService(
+      db as never,
+      { sendText: vi.fn() } as never,
+      email as never,
+      cfg({ WA_INBOUND_EMAIL_FORWARD: true }) as never,
+    );
+    await svc.handleAfterPersist(['row-fwd']);
+    const [, , text] = email.sendText.mock.calls[0] as [string, string, string];
+    expect(text).toContain('Secret seeker text');
+    expect(text).toContain('wa_id:');
   });
 
   it('records forward_error when mail fails without throwing', async () => {

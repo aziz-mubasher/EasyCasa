@@ -11,6 +11,7 @@ import { RliMonitor } from './pages/RliMonitor';
 import { DsarQueue } from './pages/DsarQueue';
 import { ListingTakedown } from './pages/ListingTakedown';
 import { IdentityReview } from './pages/IdentityReview';
+import { WhatsAppInbound } from './pages/WhatsAppInbound';
 
 type View =
   | 'credentials'
@@ -18,6 +19,7 @@ type View =
   | 'dsar'
   | 'takedown'
   | 'identity'
+  | 'whatsapp'
   | 'orchestration'
   | 'compliance'
   | 'aml'
@@ -29,6 +31,7 @@ const NAV: { key: View; label: string; hint: string }[] = [
   { key: 'dsar', label: 'DSAR', hint: 'DPO only' },
   { key: 'takedown', label: 'Takedown', hint: 'DSA reports' },
   { key: 'identity', label: 'Identity', hint: 'Manual verify' },
+  { key: 'whatsapp', label: 'WhatsApp', hint: 'Inbound · audited' },
   { key: 'orchestration', label: 'Orchestration', hint: 'Assign tasks' },
   { key: 'compliance', label: 'Compliance', hint: 'Legal basis' },
   { key: 'aml', label: 'AML / KYC', hint: 'Risk cases' },
@@ -41,6 +44,7 @@ const VIEWS: Record<View, React.ReactNode> = {
   dsar: <DsarQueue />,
   takedown: <ListingTakedown />,
   identity: <IdentityReview />,
+  whatsapp: <WhatsAppInbound />,
   orchestration: <Orchestration />,
   compliance: <ComplianceConfig />,
   aml: <AmlCases />,
@@ -134,11 +138,24 @@ export function App() {
     () => NAV.filter((n) => canAccessView(adminRoles, n.key)),
     [adminRoles],
   );
-  const [view, setView] = useState<View>('credentials');
+  const initialView = ((): View => {
+    if (typeof window !== 'undefined' && window.location.hash.replace(/^#/, '') === 'whatsapp') {
+      return 'whatsapp';
+    }
+    return 'credentials';
+  })();
+  const [view, setView] = useState<View>(initialView);
 
   const activeView = allowedNav.some((n) => n.key === view)
     ? view
     : (allowedNav[0]?.key ?? null);
+
+  function go(next: View) {
+    setView(next);
+    if (typeof window !== 'undefined') {
+      window.location.hash = next === 'whatsapp' ? 'whatsapp' : '';
+    }
+  }
 
   return (
     <LoginGate>
@@ -162,7 +179,7 @@ export function App() {
               <button
                 key={n.key}
                 className={`nav-item${activeView === n.key ? ' nav-item--active' : ''}`}
-                onClick={() => setView(n.key)}
+                onClick={() => go(n.key)}
               >
                 <span className="nav-item__label">{n.label}</span>
                 <span className="nav-item__hint">{n.hint}</span>

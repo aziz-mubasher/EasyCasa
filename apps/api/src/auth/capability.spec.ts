@@ -31,6 +31,17 @@ describe('capabilitiesFromRoles (EC-11)', () => {
   it('maps admin → admin capability', () => {
     expect(capabilitiesFromRoles(['admin'])).toContain('admin');
   });
+
+  it('does not grant whatsapp:inbound:read to bare admin', () => {
+    expect(capabilitiesFromRoles(['admin'])).not.toContain('whatsapp:inbound:read');
+  });
+
+  it('grants whatsapp:inbound:read to support / operations / superadmin', () => {
+    expect(capabilitiesFromRoles(['admin_support'])).toContain('whatsapp:inbound:read');
+    expect(capabilitiesFromRoles(['admin_operations'])).toContain('whatsapp:inbound:read');
+    expect(capabilitiesFromRoles(['admin_superadmin'])).toContain('whatsapp:inbound:read');
+    expect(capabilitiesFromRoles(['admin_dpo'])).not.toContain('whatsapp:inbound:read');
+  });
 });
 
 describe('adminRolesFromRoles (EC-14 fail-closed)', () => {

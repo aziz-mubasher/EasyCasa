@@ -145,16 +145,29 @@ export class WhatsAppInboundService {
 
   private async forwardToOps(row: typeof waInboundMessages.$inferSelect): Promise<void> {
     const to = this.config.WHATSAPP_INBOUND_OPS_EMAIL.trim() || this.config.AGENCY_PUBLIC_EMAIL;
-    const subject = `[WhatsApp inbound] ${row.messageType}`;
-    const text = [
-      `Internal id: ${row.id}`,
-      `wa_id: ${row.waId}`,
-      `type: ${row.messageType}`,
-      `received_at: ${row.receivedAt.toISOString()}`,
-      `window_expires_at: ${row.windowExpiresAt.toISOString()}`,
-      '',
-      row.body ?? '(no text body — media or non-text)',
-    ].join('\n');
+    const adminBase = this.config.ADMIN_PUBLIC_URL.replace(/\/$/, '');
+    const adminLink = `${adminBase}/#whatsapp`;
+
+    // EC-19: default off — subject-line alert only (no bodies). Legacy body forward behind flag.
+    const bodyForward = this.config.WA_INBOUND_EMAIL_FORWARD === true;
+    const subject = bodyForward
+      ? `[WhatsApp inbound] ${row.messageType}`
+      : '1 new inbound WhatsApp message';
+    const text = bodyForward
+      ? [
+          `Internal id: ${row.id}`,
+          `wa_id: ${row.waId}`,
+          `type: ${row.messageType}`,
+          `received_at: ${row.receivedAt.toISOString()}`,
+          `window_expires_at: ${row.windowExpiresAt.toISOString()}`,
+          '',
+          row.body ?? '(no text body — media or non-text)',
+        ].join('\n')
+      : [
+          'New inbound WhatsApp message received.',
+          `Open the audited viewer: ${adminLink}`,
+          `(internal id ${row.id} — no message body in this alert)`,
+        ].join('\n');
 
     try {
       const result = await this.email.sendText(to, subject, text);
