@@ -54,9 +54,10 @@ export function canAccessView(roles: readonly AdminRole[], view: string): boolea
 }
 
 export function canAccessCrmView(
-  adminRoles: readonly AdminRole[],
+  _adminRoles: readonly AdminRole[],
   crmRoles: readonly CrmRole[],
 ): boolean {
-  if (crmRoles.length > 0) return true;
-  return canAccessView(adminRoles, 'crm');
+  // API CrmRoleGuard requires a crm-* realm role — do not show the nav on
+  // admin_operations / admin_support alone (that produced a confusing 403).
+  return crmRoles.length > 0;
 }

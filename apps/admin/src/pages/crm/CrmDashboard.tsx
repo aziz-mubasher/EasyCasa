@@ -14,21 +14,39 @@ function mins(n: number | null | undefined): string {
   return `${Math.round(n)} min`;
 }
 
+function statusOf(err: unknown): number | null {
+  if (err && typeof err === 'object' && 'status' in err) {
+    const s = (err as { status: unknown }).status;
+    return typeof s === 'number' ? s : null;
+  }
+  return null;
+}
+
+function crmErrorHint(err: unknown): string {
+  const status = statusOf(err);
+  if (status === 503) {
+    return 'CRM is disabled on the API (CRM_ENABLED=false). Set it true and recreate the api container.';
+  }
+  if (status === 403) {
+    return 'Your token has no crm-* realm role. In Keycloak assign crm-admin (or crm-ops), then sign out and sign in again.';
+  }
+  if (status === 401) {
+    return 'Not signed in — sign in again on the admin portal.';
+  }
+  if (status != null) return `CRM API error ${status}.`;
+  return 'CRM unavailable. Ensure CRM_ENABLED=true and a crm-* realm role on your Keycloak user (then re-login).';
+}
+
 export function CrmDashboard({ onOpenContact }: { onOpenContact: (id: string) => void }) {
   const api = useApi();
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['crm', 'dashboard'],
     queryFn: () => api.crmDashboard(),
   });
 
   if (isLoading) return <p className="muted">Loading CRM dashboard…</p>;
   if (isError || !data) {
-    return (
-      <p className="error">
-        CRM unavailable. Ensure <code className="mono">CRM_ENABLED=true</code> and a{' '}
-        <code className="mono">crm-*</code> realm role.
-      </p>
-    );
+    return <p className="error">{crmErrorHint(error)}</p>;
   }
 
   const m = data.metrics;
