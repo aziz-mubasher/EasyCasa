@@ -546,7 +546,7 @@ export class CrmService {
         b4a: ['referred', 'attestation_active', 'attestation_expired'],
         partner: [...CRM_PARTNER_STAGES],
       },
-      gate: 'Production personal-data processing blocked until informativa covers CRM (§10.5)',
+      gate: 'Production personal-data processing blocked until counsel clears informativa + retention (COUNSEL-REVIEW-PACKAGE §1.6 Q2a); CRM_ENABLED=false',
     };
   }
 
