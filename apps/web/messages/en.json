@@ -586,7 +586,7 @@
       "agencies": "For agencies",
       "banks4all": "Banks4All"
     },
-    "about": "EasyCasa connects sellers and buyers of homes in Italy directly, with no commission from the seller. We verify the identity of who publishes before a listing goes live and show official market values next to every asking price. Services — photos, energy certificate, document checks, assistance — have a fixed price stated before you order. In Italian, English and Spanish.",
+    "aboutLink": "Read about EasyCasa →",
     "agencies": "For agencies",
     "stakeholders": {
       "banks4all": "Banks4All",
@@ -2518,5 +2518,73 @@
       "privacy": "Privacy",
       "terms": "Terms"
     }
+  },
+  "aboutUs": {
+    "meta": {
+      "title": "About us — EasyCasa",
+      "description": "Direct buying and selling in Italy with no seller commission. Identity-verified listings, official OMI market values, and fixed-price services."
+    },
+    "hero": {
+      "kicker": "About us",
+      "title": "Direct buying and selling, with no commission.",
+      "lede": "Selling a home in Italy usually means handing a percentage of its value to an intermediary. EasyCasa was built on a different idea: owners and buyers can deal with each other directly when the platform does the work that actually needs doing."
+    },
+    "how": {
+      "title": "How we do it"
+    },
+    "pillars": [
+      {
+        "num": "01",
+        "title": "Verification before publication",
+        "body": "Every listing is published by an identity-verified person. We check who you're dealing with before a listing goes live, not after something goes wrong."
+      },
+      {
+        "num": "02",
+        "title": "Transparent values",
+        "body": "Next to every asking price we show the official market value range for the zone, drawn from the OMI data of the Agenzia delle Entrate. You see how a price compares to the market before you enquire."
+      },
+      {
+        "num": "03",
+        "title": "Fixed prices, not percentages",
+        "body": "Sellers pay no commission. Professional photos, the energy certificate (APE), document checks, assistance: each service has a fixed price shown before you order."
+      }
+    ],
+    "explore": {
+      "title": "Explore EasyCasa",
+      "cols": [
+        {
+          "title": "For buyers",
+          "links": [
+            { "label": "Search homes", "href": "/search" },
+            { "label": "How it works", "href": "/for-buyers" },
+            { "label": "Market values (OMI)", "href": "/valutazione-gratuita" }
+          ]
+        },
+        {
+          "title": "For sellers",
+          "links": [
+            { "label": "Publish a listing", "href": "/add" },
+            { "label": "Fixed-price services", "href": "/pricing" },
+            { "label": "Pricing", "href": "/pricing" }
+          ]
+        },
+        {
+          "title": "Information",
+          "links": [
+            { "label": "Privacy policy", "href": "/legal/privacy" },
+            { "label": "Terms and conditions", "href": "/legal/terms" },
+            { "label": "Transparency", "href": "/trasparenza" }
+          ]
+        }
+      ]
+    },
+    "contact": {
+      "title": "Contact us",
+      "body": "Questions about a listing, a service or the platform? We reply in Italian, English and Spanish.",
+      "emailLabel": "Email",
+      "formLabel": "Form",
+      "formValue": "Write to us from the site"
+    },
+    "langsNote": "IT · EN · ES — We operate in Italian, English and Spanish."
   }
 }

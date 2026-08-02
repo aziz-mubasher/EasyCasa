@@ -49,7 +49,9 @@ export function Footer() {
             </Link>
             <p className="sf-blurb">{t('blurb')}</p>
             <h2 id="footer-about">{t('columns.about')}</h2>
-            <p className="sf-about-ext">{t('about')}</p>
+            <p className="sf-about-link">
+              <Link href="/about">{t('aboutLink')}</Link>
+            </p>
           </div>
 
           <nav aria-labelledby="footer-sellers">

@@ -1,0 +1,239 @@
+/* About Us — tokens match docs/design/easycasa-about-us.html */
+.au {
+  --au-ink: #14212e;
+  --au-parchment: #f3ede1;
+  --au-azure: #2c6e9b;
+  --au-ochre: #c08a1e;
+  --au-white: #ffffff;
+  --au-ink-60: rgba(20, 33, 46, 0.64);
+  --au-ink-12: rgba(20, 33, 46, 0.12);
+  font-family: var(--font-body), Georgia, serif;
+  background: var(--au-parchment);
+  color: var(--au-ink);
+  line-height: 1.6;
+  font-size: 18px;
+}
+
+.au a {
+  color: var(--au-azure);
+  text-decoration: none;
+}
+
+.au a:hover {
+  text-decoration: underline;
+}
+
+.au-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.au-hero {
+  padding: 56px 0 48px;
+  border-bottom: 1px solid var(--au-ink-12);
+}
+
+.au-kicker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--au-azure);
+  margin-bottom: 16px;
+}
+
+.au-hero h1 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(34px, 5vw, 54px);
+  font-weight: 700;
+  line-height: 1.15;
+  max-width: 18ch;
+  margin: 0;
+}
+
+.au-lede {
+  margin-top: 20px;
+  font-size: 21px;
+  max-width: 58ch;
+  color: var(--au-ink);
+}
+
+.au-section {
+  padding: 56px 0;
+}
+
+.au-section + .au-section {
+  border-top: 1px solid var(--au-ink-12);
+}
+
+.au-section-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 28px;
+}
+
+.au-pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.au-pillar {
+  background: var(--au-white);
+  border: 1px solid var(--au-ink-12);
+  border-radius: 14px;
+  padding: 26px 24px;
+}
+
+.au-pillar .num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--au-ochre);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.au-pillar h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 10px;
+}
+
+.au-pillar p {
+  margin: 0;
+  font-size: 16.5px;
+  color: var(--au-ink-60);
+}
+
+.au-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.au-link-col h3 {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--au-ink-60);
+  margin: 0 0 16px;
+}
+
+.au-link-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.au-link-col li {
+  margin-bottom: 10px;
+}
+
+.au-link-col a {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--au-ink);
+}
+
+.au-link-col a:hover {
+  color: var(--au-azure);
+  text-decoration: none;
+}
+
+.au-link-col a::after {
+  content: ' →';
+  color: var(--au-azure);
+  font-weight: 400;
+}
+
+.au-contact {
+  background: var(--au-ink);
+  color: var(--au-parchment);
+  border-radius: 18px;
+  padding: 44px 40px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.au-contact h2 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+
+.au-contact p {
+  margin: 0;
+  color: rgba(243, 237, 225, 0.78);
+  max-width: 44ch;
+}
+
+.au-contact-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.au-contact-methods a {
+  display: block;
+  background: rgba(243, 237, 225, 0.08);
+  border: 1px solid rgba(243, 237, 225, 0.22);
+  border-radius: 10px;
+  padding: 14px 18px;
+  color: var(--au-parchment);
+  text-decoration: none;
+}
+
+.au-contact-methods a:hover {
+  background: rgba(243, 237, 225, 0.16);
+  text-decoration: none;
+}
+
+.au-contact-methods .label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--au-ochre);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.au-contact-methods .value {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.au-langs {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 14px;
+  color: var(--au-ink-60);
+  padding: 32px 0 48px;
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .au-pillars,
+  .au-links {
+    grid-template-columns: 1fr;
+  }
+
+  .au-contact {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+  }
+}
