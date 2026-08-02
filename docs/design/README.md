@@ -1,5 +1,10 @@
 # Design references
 
+## `easycasa-for-buyers.html`
+
+Canonical **For Buyers** marketing landing — Claude/ops attached HTML, committed as-is.
+Live route: `/{locale}/for-buyers` (`ForBuyersPage` + `for-buyers.css`).
+
 ## `EC_CRM_Admin_Prototype_v1.html`
 
 Canonical K EC 4.1 CRM clickable mockup — **Claude’s attached binary**, committed as-is (UTF-8, no conversion).

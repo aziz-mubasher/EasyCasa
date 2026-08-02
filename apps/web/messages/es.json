@@ -568,6 +568,7 @@
       "rentContract": "Contrato de alquiler y registro RLI"
     },
     "buyers": {
+      "forBuyers": "Para compradores",
       "search": "Buscar casa",
       "viewings": "Reservar una visita",
       "verify": "Verificación del inmueble — títulos y comunidad",
@@ -2336,5 +2337,186 @@
       "EasyCasa no percibe honorarios de Banks4All.",
       "La mediación crediticia la realizan operadores inscritos en los registros obligatorios, no EasyCasa."
     ]
+  },
+  "forBuyers": {
+    "meta": {
+      "title": "Para compradores — EasyCasa · Compra directo. Quédate la comisión.",
+      "description": "Compra directamente a particulares en Italia — cero comisión de comprador, control de precio OMI, visitas estructuradas. Gratis para compradores."
+    },
+    "hero": {
+      "kicker": "Para compradores · Compraventa entre particulares",
+      "title": "La misma casa.",
+      "titleEm": "Quédate la comisión.",
+      "lead": "EasyCasa te conecta directamente con propietarios particulares en toda Italia — con datos oficiales de mercado, contrapartes verificadas y visitas que reservas como una mesa en un restaurante. Sin agencia en medio. Sin honorario a tu cargo. Nunca.",
+      "figure": "≈ €9.150",
+      "figureLabel": "honorario típico a cargo del comprador evitado en una compra de €250.000",
+      "ctaPrimary": "Empieza a buscar — es gratis",
+      "ctaSecondary": "Cómo funciona"
+    },
+    "tags": {
+      "live": "Disponible",
+      "soon": "Próximamente"
+    },
+    "services": {
+      "kicker": "Qué obtienes",
+      "title": "Cuatro servicios que cambian cómo se compra una casa en Italia",
+      "sub": "Todo en esta página es gratis para compradores. EasyCasa nunca te cobra comisión — ese es el punto de la plataforma, no una promoción."
+    },
+    "pillars": [
+      {
+        "idx": "01 / AHORRA",
+        "tag": "live",
+        "title": "Cero comisión de comprador",
+        "body": "Tratas directamente con el propietario. No hay honorario de agencia a tu cargo — el dinero que iría a la intermediación se queda en tu reforma, tus muebles, tu vida.",
+        "fig": "€0",
+        "figNote": "nuestro coste para ti, en cada compra"
+      },
+      {
+        "idx": "02 / SABES",
+        "tag": "live",
+        "title": "Control de precio justo en cada anuncio",
+        "body": "Cada anuncio se compara con los datos oficiales OMI de la Agenzia delle Entrate — más de 157.000 rangos de precio por zona, a nivel nacional. Ves si el precio pedido está dentro, por encima o por debajo de su zona antes incluso de preguntar.",
+        "fig": "OMI H2 2025",
+        "figNote": "el mismo dataset de la administración fiscal",
+        "figEst": true
+      },
+      {
+        "idx": "03 / AVANZAS",
+        "tag": "live",
+        "title": "Contacto directo, visitas estructuradas",
+        "body": "Sin filtros, sin llamadas perdidas. Escribe al propietario, elige un hueco de su disponibilidad real, recibe confirmación — y después ambas partes cuentan cómo fue. Comprar a la velocidad de internet, no a la de la lista de devoluciones de llamada de una agencia.",
+        "fig": "Reserva online",
+        "figNote": "huecos confirmados, no persecuciones telefónicas"
+      },
+      {
+        "idx": "04 / GANA",
+        "tag": "soon",
+        "title": "Verified Buyer Badge",
+        "body": "Consigue una attestación de financiación a través de Banks4All, nuestra empresa hermana del grupo Mundida, y adjúntala a tus consultas. Los propietarios ven una banda de presupuesto verificada junto a tu nombre — y los compradores verificados reciben respuesta primero. Preséntate en serio, negocia mejor.",
+        "fig": "Banks4All",
+        "figNote": "empresa hermana, entidad distinta",
+        "href": "/banks4all"
+      }
+    ],
+    "trust": {
+      "kicker": "Por qué puedes confiar en lo que ves",
+      "title": "Casas reales, propietarios reales",
+      "sub": "Un marketplace sin comisión solo funciona si cada anuncio es real. Por eso los vendedores se ganan su sitio.",
+      "items": [
+        {
+          "title": "Vendedores con identidad verificada",
+          "body": "Los particulares verifican quiénes son antes de publicar. Los propietarios verificados aparecen marcados en cada anuncio."
+        },
+        {
+          "title": "Comprobaciones de propiedad",
+          "body": "Los anuncios llevan identificadores catastrales y la documentación de propiedad se contrasta con la identidad verificada del vendedor."
+        },
+        {
+          "title": "Cribado de anomalías de precio",
+          "body": "Los anuncios muy fuera del rango OMI oficial se señalan y revisan — el precio cebo no sobrevive aquí."
+        },
+        {
+          "title": "Solo particulares, de verdad",
+          "body": "Las agencias que se hacen pasar por particulares se detectan y se eliminan. Cuando escribes a un propietario en EasyCasa, responde el propietario."
+        },
+        {
+          "title": "Responsabilidad tras cada visita",
+          "body": "Después de cada visita, el comprador confirma que la casa coincidía con el anuncio. Quien engaña pierde su insignia — y su sitio en la plataforma."
+        },
+        {
+          "title": "Denuncia en un toque",
+          "body": "¿Algo no encaja? Denúncialo en un toque. Cada denuncia la revisa una persona, no una cola automática."
+        }
+      ]
+    },
+    "how": {
+      "kicker": "Cómo funciona",
+      "title": "De la búsqueda a la visita en cuatro pasos",
+      "steps": [
+        {
+          "title": "Busca",
+          "body": "Explora anuncios de particulares verificados en Italia. Filtra por zona, precio, tipo — sin duplicados, sin anuncios fantasma."
+        },
+        {
+          "title": "Comprueba el precio",
+          "body": "Abre cualquier anuncio y ve dónde queda el precio pedido respecto al rango OMI oficial de su zona. Decide con datos, no a ojímetro."
+        },
+        {
+          "title": "Pregunta directamente",
+          "body": "Escribe al propietario — con tu Verified Buyer Badge adjunto si lo tienes. Tu mensaje llega a quien decide, a nadie más."
+        },
+        {
+          "title": "Reserva tu visita",
+          "body": "Elige un hueco de la disponibilidad real del propietario y recibe confirmación. Visita y luego cuéntanos cómo fue."
+        }
+      ],
+      "privacyStrong": "Tus datos reservan tu visita. Nada más.",
+      "privacyBody": "Tratamos tus datos para conectarte con el propietario y gestionar la visita — no revendemos tu contacto como \"lead\" a agencias, bancos ni a nadie. Todos los detalles en nuestro",
+      "privacyLink": "aviso de privacidad"
+    },
+    "compare": {
+      "kicker": "La diferencia, en una tabla",
+      "title": "Comprar con agencia vs. comprar en EasyCasa",
+      "agency": "Agencia tradicional",
+      "easycasa": "EasyCasa",
+      "rows": [
+        {
+          "label": "Honorario a cargo del comprador en una casa de €250.000",
+          "agency": "≈ €9.150",
+          "easycasa": "€0",
+          "agencyKind": "money-cost",
+          "easycasaKind": "money-zero"
+        },
+        {
+          "label": "Quién responde a tus preguntas",
+          "agency": "El agente",
+          "easycasa": "El propietario",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        },
+        {
+          "label": "Benchmark de precio OMI oficial",
+          "agency": "Rara vez",
+          "easycasa": "En cada anuncio",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        },
+        {
+          "label": "Reserva de visita",
+          "agency": "Persecución telefónica",
+          "easycasa": "Selector de huecos online, confirmado",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        },
+        {
+          "label": "Prueba de que eres un comprador serio",
+          "agency": "Tu palabra",
+          "easycasa": "Verified Buyer Badge (próximamente)",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        },
+        {
+          "label": "Tus datos revendidos como leads",
+          "agency": "A menudo",
+          "easycasa": "Nunca",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        }
+      ],
+      "footnote": "Estimación basada en un honorario habitual del 3% + IVA sobre el precio de compra. La ley italiana no fija un mínimo de comisión; las tarifas son negociables y varían por agencia y zona. El ahorro real depende de la tarifa que habrías aceptado de otro modo."
+    },
+    "final": {
+      "title": "La casa es la misma.",
+      "titleLine2": "La experiencia no.",
+      "body": "Busca miles de anuncios de particulares en Italia. Gratis para compradores — hoy, mañana, siempre.",
+      "cta": "Encuentra tu casa"
+    },
+    "foot": {
+      "mundida": "EasyCasa y Banks4All forman parte del grupo Mundida (P.IVA IT04531990986). Los servicios de financiación de Banks4All los presta una empresa hermana de EasyCasa dentro del mismo grupo. EasyCasa es una plataforma que conecta compradores y vendedores particulares de forma directa y no actúa como intermediario inmobiliario.",
+      "omi": "Los benchmarks de precio derivan del dataset OMI publicado por la Agenzia delle Entrate y son rangos zonales indicativos, no valoraciones de inmuebles individuales.",
+      "copyright": "© 2026 grupo Mundida",
+      "privacy": "Privacidad",
+      "terms": "Términos"
+    }
   }
 }

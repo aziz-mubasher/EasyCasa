@@ -19,6 +19,7 @@ const SELLER_LINKS: InternalItem[] = [
 ];
 
 const BUYER_LINKS: InternalItem[] = [
+  { key: 'forBuyers', href: '/for-buyers' },
   { key: 'search', href: '/search' },
   { key: 'viewings', href: '/viewings' },
   { key: 'verify', href: '/pricing' },

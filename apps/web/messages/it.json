@@ -568,6 +568,7 @@
       "rentContract": "Contratto d'affitto e registrazione RLI"
     },
     "buyers": {
+      "forBuyers": "Per acquirenti",
       "search": "Cerca casa",
       "viewings": "Prenota una visita",
       "verify": "Verifica immobile — visure e condominio",
@@ -2336,5 +2337,186 @@
       "EasyCasa non percepisce compensi da Banks4All.",
       "La mediazione creditizia è svolta da operatori iscritti negli albi obbligatori, non da EasyCasa."
     ]
+  },
+  "forBuyers": {
+    "meta": {
+      "title": "Per acquirenti — EasyCasa · Compra diretto. Tieni la commissione.",
+      "description": "Compra direttamente da privati in Italia — zero commissione acquirente, controllo prezzo OMI, visite strutturate. Gratis per chi compra."
+    },
+    "hero": {
+      "kicker": "Per acquirenti · Compravendita tra privati",
+      "title": "La stessa casa.",
+      "titleEm": "Senza la commissione.",
+      "lead": "EasyCasa ti mette in contatto diretto con proprietari privati in tutta Italia — con dati ufficiali di mercato, controparti verificate e visite che prenoti come un tavolo al ristorante. Niente agenzia in mezzo. Niente provvigione a carico tuo. Mai.",
+      "figure": "≈ €9.150",
+      "figureLabel": "provvigione tipica a carico dell’acquirente evitata su un acquisto da €250.000",
+      "ctaPrimary": "Inizia a cercare — è gratis",
+      "ctaSecondary": "Come funziona"
+    },
+    "tags": {
+      "live": "Disponibile",
+      "soon": "In arrivo"
+    },
+    "services": {
+      "kicker": "Cosa ottieni",
+      "title": "Quattro servizi che cambiano il modo di comprare casa in Italia",
+      "sub": "Tutto in questa pagina è gratis per gli acquirenti. EasyCasa non ti chiede mai una commissione — è il senso della piattaforma, non una promozione."
+    },
+    "pillars": [
+      {
+        "idx": "01 / RISPARMIA",
+        "tag": "live",
+        "title": "Zero commissione acquirente",
+        "body": "Tratti direttamente con il proprietario. Non c’è provvigione a tuo carico — i soldi che andrebbero all’intermediazione restano per la ristrutturazione, i mobili, la tua vita.",
+        "fig": "€0",
+        "figNote": "il nostro costo per te, su ogni acquisto"
+      },
+      {
+        "idx": "02 / SAI",
+        "tag": "live",
+        "title": "Controllo prezzo equo su ogni annuncio",
+        "body": "Ogni annuncio è confrontato con i dati ufficiali OMI dell’Agenzia delle Entrate — oltre 157.000 fasce di prezzo zonali, in tutta Italia. Vedi se il prezzo è in linea, sopra o sotto la zona prima ancora di scrivere.",
+        "fig": "OMI H2 2025",
+        "figNote": "lo stesso dataset dell’amministrazione fiscale",
+        "figEst": true
+      },
+      {
+        "idx": "03 / AGISCI",
+        "tag": "live",
+        "title": "Contatto diretto, visite strutturate",
+        "body": "Niente filtri, niente telefonate a vuoto. Scrivi al proprietario, scegli uno slot dalla sua disponibilità reale, ricevi conferma — e dopo entrambi raccontate com’è andata. Comprare alla velocità di internet, non della lista di richiami dell’agenzia.",
+        "fig": "Prenotazione online",
+        "figNote": "slot confermati, non rincorse al telefono"
+      },
+      {
+        "idx": "04 / VINCI",
+        "tag": "soon",
+        "title": "Verified Buyer Badge",
+        "body": "Ottieni un’attestazione di finanziamento tramite Banks4All, società sorella del gruppo Mundida, e allegala alle tue richieste. I proprietari vedono una fascia di budget verificata accanto al tuo nome — e ai buyer verificati si risponde prima. Presentati serio, negozia meglio.",
+        "fig": "Banks4All",
+        "figNote": "società sorella, soggetto distinto",
+        "href": "/banks4all"
+      }
+    ],
+    "trust": {
+      "kicker": "Perché puoi fidarti di quello che vedi",
+      "title": "Case vere, proprietari veri",
+      "sub": "Un marketplace senza commissione funziona solo se ogni annuncio è reale. Per questo i venditori devono guadagnarsi il posto.",
+      "items": [
+        {
+          "title": "Venditori con identità verificata",
+          "body": "I privati verificano chi sono prima di pubblicare. I proprietari verificati sono segnalati su ogni annuncio."
+        },
+        {
+          "title": "Controlli di proprietà",
+          "body": "Gli annunci portano identificativi catastali e la documentazione di proprietà è confrontata con l’identità verificata del venditore."
+        },
+        {
+          "title": "Screening delle anomalie di prezzo",
+          "body": "Gli annunci molto fuori dalla fascia OMI ufficiale vengono segnalati e rivisti — i prezzi esca non restano."
+        },
+        {
+          "title": "Solo privati, sul serio",
+          "body": "Le agenzie che si fingono privati vengono rilevate e rimosse. Quando scrivi a un proprietario su EasyCasa, risponde il proprietario."
+        },
+        {
+          "title": "Responsabilità dopo ogni visita",
+          "body": "Dopo ogni visita, l’acquirente conferma che la casa corrispondeva all’annuncio. Chi inganna perde il badge — e il posto sulla piattaforma."
+        },
+        {
+          "title": "Segnalazione in un tap",
+          "body": "Qualcosa non torna? Segnalalo in un tap. Ogni segnalazione è rivista da una persona, non da una coda automatica."
+        }
+      ]
+    },
+    "how": {
+      "kicker": "Come funziona",
+      "title": "Dalla ricerca alla visita in quattro passi",
+      "steps": [
+        {
+          "title": "Cerca",
+          "body": "Sfoglia annunci di privati verificati in Italia. Filtra per zona, prezzo, tipologia — niente duplicati, niente annunci fantasma."
+        },
+        {
+          "title": "Controlla il prezzo",
+          "body": "Apri qualsiasi annuncio e vedi dove si colloca il prezzo rispetto alla fascia OMI ufficiale della zona. Decidi con i dati, non a sensazione."
+        },
+        {
+          "title": "Scrivi direttamente",
+          "body": "Contatta il proprietario — con il Verified Buyer Badge allegato se ce l’hai. Il messaggio arriva a chi decide, a nessun altro."
+        },
+        {
+          "title": "Prenota la visita",
+          "body": "Scegli uno slot dalla disponibilità reale del proprietario e ricevi conferma. Visita, poi dicci com’è andata."
+        }
+      ],
+      "privacyStrong": "I tuoi dati servono a prenotare la visita. Nient’altro.",
+      "privacyBody": "Trattiamo i tuoi dati per metterti in contatto con il proprietario e gestire la visita — non rivendiamo i tuoi contatti come “lead” ad agenzie, banche o altri. Tutti i dettagli nella nostra",
+      "privacyLink": "informativa privacy"
+    },
+    "compare": {
+      "kicker": "La differenza, in una tabella",
+      "title": "Comprare in agenzia vs. comprare su EasyCasa",
+      "agency": "Agenzia tradizionale",
+      "easycasa": "EasyCasa",
+      "rows": [
+        {
+          "label": "Provvigione a carico acquirente su casa da €250.000",
+          "agency": "≈ €9.150",
+          "easycasa": "€0",
+          "agencyKind": "money-cost",
+          "easycasaKind": "money-zero"
+        },
+        {
+          "label": "Chi risponde alle tue domande",
+          "agency": "L’agente",
+          "easycasa": "Il proprietario",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        },
+        {
+          "label": "Benchmark prezzo OMI ufficiale",
+          "agency": "Raramente",
+          "easycasa": "Su ogni annuncio",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        },
+        {
+          "label": "Prenotazione visita",
+          "agency": "Rincorse al telefono",
+          "easycasa": "Slot online, confermato",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        },
+        {
+          "label": "Prova che sei un acquirente serio",
+          "agency": "La tua parola",
+          "easycasa": "Verified Buyer Badge (in arrivo)",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        },
+        {
+          "label": "Contatti rivenduti come lead",
+          "agency": "Spesso",
+          "easycasa": "Mai",
+          "agencyKind": "no",
+          "easycasaKind": "yes"
+        }
+      ],
+      "footnote": "Stima basata su una provvigione d’uso del 3% + IVA sul prezzo di acquisto. La legge italiana non fissa un minimo di commissione; le tariffe sono liberamente negoziabili e variano per agenzia e territorio. Il risparmio reale dipende dalla tariffa che avresti altrimenti accettato."
+    },
+    "final": {
+      "title": "La casa è la stessa.",
+      "titleLine2": "L’esperienza no.",
+      "body": "Cerca migliaia di annunci di privati in Italia. Gratis per chi compra — oggi, domani, sempre.",
+      "cta": "Trova la tua casa"
+    },
+    "foot": {
+      "mundida": "EasyCasa e Banks4All fanno parte del gruppo Mundida (P.IVA IT04531990986). I servizi di finanziamento Banks4All sono forniti da una società sorella di EasyCasa nello stesso gruppo. EasyCasa è una piattaforma che collega acquirenti e venditori privati in modo diretto e non svolge attività di mediazione immobiliare.",
+      "omi": "I benchmark di prezzo derivano dal dataset OMI pubblicato dall’Agenzia delle Entrate e sono fasce zonali indicative, non perizie di singoli immobili.",
+      "copyright": "© 2026 gruppo Mundida",
+      "privacy": "Privacy",
+      "terms": "Termini"
+    }
   }
 }
