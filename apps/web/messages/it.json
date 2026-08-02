@@ -586,7 +586,7 @@
       "agencies": "Per le agenzie",
       "banks4all": "Banks4All"
     },
-    "about": "EasyCasa mette in contatto direttamente chi vende e chi compra casa in Italia, senza provvigione dal venditore. Verifichiamo l’identità di chi pubblica prima che l’annuncio sia online e mostriamo i valori di mercato ufficiali accanto a ogni prezzo. I servizi — foto, certificazione energetica, verifica documenti, assistenza — hanno un prezzo fisso, indicato prima dell’ordine. In italiano, inglese e spagnolo.",
+    "aboutLink": "Scopri EasyCasa →",
     "agencies": "Per le agenzie",
     "stakeholders": {
       "banks4all": "Banks4All",
@@ -2518,5 +2518,73 @@
       "privacy": "Privacy",
       "terms": "Termini"
     }
+  },
+  "aboutUs": {
+    "meta": {
+      "title": "Chi siamo — EasyCasa",
+      "description": "Compravendita diretta in Italia senza commissioni dal venditore. Annunci con identità verificata, valori OMI ufficiali e servizi a prezzo fisso."
+    },
+    "hero": {
+      "kicker": "Chi siamo",
+      "title": "Compravendita diretta, senza commissioni.",
+      "lede": "Vendere casa in Italia significa quasi sempre cedere una percentuale del suo valore a un intermediario. EasyCasa nasce da un'idea diversa: proprietari e acquirenti possono trattare direttamente, quando la piattaforma fa il lavoro che serve davvero."
+    },
+    "how": {
+      "title": "Come lo facciamo"
+    },
+    "pillars": [
+      {
+        "num": "01",
+        "title": "Verifica prima della pubblicazione",
+        "body": "Ogni annuncio è pubblicato da una persona con identità verificata. Controlliamo chi hai di fronte prima che l'annuncio vada online, non dopo che qualcosa è andato storto."
+      },
+      {
+        "num": "02",
+        "title": "Valori trasparenti",
+        "body": "Accanto a ogni prezzo mostriamo la fascia di valore di mercato ufficiale della zona, basata sui dati OMI dell'Agenzia delle Entrate. Vedi come il prezzo si colloca rispetto al mercato prima di contattare."
+      },
+      {
+        "num": "03",
+        "title": "Prezzi fissi, non percentuali",
+        "body": "Chi vende non paga commissioni. Foto professionali, certificato energetico (APE), verifica dei documenti, assistenza: ogni servizio ha un prezzo fisso indicato prima dell'ordine."
+      }
+    ],
+    "explore": {
+      "title": "Esplora EasyCasa",
+      "cols": [
+        {
+          "title": "Per chi cerca",
+          "links": [
+            { "label": "Cerca casa", "href": "/search" },
+            { "label": "Come funziona", "href": "/for-buyers" },
+            { "label": "Valori di mercato (OMI)", "href": "/valutazione-gratuita" }
+          ]
+        },
+        {
+          "title": "Per chi vende",
+          "links": [
+            { "label": "Pubblica un annuncio", "href": "/add" },
+            { "label": "Servizi a prezzo fisso", "href": "/pricing" },
+            { "label": "Prezzi", "href": "/pricing" }
+          ]
+        },
+        {
+          "title": "Informazioni",
+          "links": [
+            { "label": "Informativa privacy", "href": "/legal/privacy" },
+            { "label": "Termini e condizioni", "href": "/legal/terms" },
+            { "label": "Trasparenza", "href": "/trasparenza" }
+          ]
+        }
+      ]
+    },
+    "contact": {
+      "title": "Contattaci",
+      "body": "Domande su un annuncio, un servizio o la piattaforma? Rispondiamo in italiano, inglese e spagnolo.",
+      "emailLabel": "Email",
+      "formLabel": "Modulo",
+      "formValue": "Scrivici dal sito"
+    },
+    "langsNote": "IT · EN · ES — Operiamo in italiano, inglese e spagnolo."
   }
 }

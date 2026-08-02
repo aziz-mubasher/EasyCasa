@@ -27,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/pricing',
     '/acquisto-assistito',
     '/for-buyers',
+    '/about',
     '/valutazione-gratuita',
     '/legal/privacy',
     '/legal/terms',

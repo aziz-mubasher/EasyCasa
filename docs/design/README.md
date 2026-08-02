@@ -5,6 +5,11 @@
 Canonical **For Buyers** marketing landing — Claude/ops attached HTML, committed as-is.
 Live route: `/{locale}/for-buyers` (`ForBuyersPage` + `for-buyers.css`).
 
+## `easycasa-about-us.html`
+
+Canonical **About us / Chi siamo** marketing page — Claude/ops attached HTML, committed as-is.
+Live route: `/{locale}/about` (`AboutUsPage` + `about-us.css`). Footer links here instead of inlining the long About copy.
+
 ## `EC_CRM_Admin_Prototype_v1.html`
 
 Canonical K EC 4.1 CRM clickable mockup — **Claude’s attached binary**, committed as-is (UTF-8, no conversion).
