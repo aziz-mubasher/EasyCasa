@@ -1,23 +1,38 @@
-import { adminRolesFromRoles, type AdminRole } from '@easycasa/shared';
+import {
+  adminRolesFromRoles,
+  crmRolesFromRoles,
+  type AdminRole,
+  type CrmRole,
+} from '@easycasa/shared';
 
-/** Decode JWT payload for UI gates only — API still enforces roles. */
-export function adminRolesFromAccessToken(accessToken: string | null): AdminRole[] {
+function realmRolesFromAccessToken(accessToken: string | null): string[] {
   if (!accessToken) return [];
   try {
     const part = accessToken.split('.')[1];
     if (!part) return [];
     const json = atob(part.replace(/-/g, '+').replace(/_/g, '/'));
     const payload = JSON.parse(json) as { realm_access?: { roles?: string[] } };
-    const roles = payload.realm_access?.roles ?? [];
-    return adminRolesFromRoles(roles);
+    return payload.realm_access?.roles ?? [];
   } catch {
     return [];
   }
 }
 
+/** Decode JWT payload for UI gates only — API still enforces roles. */
+export function adminRolesFromAccessToken(accessToken: string | null): AdminRole[] {
+  return adminRolesFromRoles(realmRolesFromAccessToken(accessToken));
+}
+
+export function crmRolesFromAccessToken(accessToken: string | null): CrmRole[] {
+  return crmRolesFromRoles(realmRolesFromAccessToken(accessToken));
+}
+
 export function canAccessView(roles: readonly AdminRole[], view: string): boolean {
   if (roles.includes('superadmin')) return true;
   switch (view) {
+    case 'crm':
+      // CRM nav also shown when any crm-* realm role is present — see App.
+      return roles.includes('operations') || roles.includes('support');
     case 'credentials':
     case 'takedown':
     case 'identity':
@@ -36,4 +51,12 @@ export function canAccessView(roles: readonly AdminRole[], view: string): boolea
     default:
       return false;
   }
+}
+
+export function canAccessCrmView(
+  adminRoles: readonly AdminRole[],
+  crmRoles: readonly CrmRole[],
+): boolean {
+  if (crmRoles.length > 0) return true;
+  return canAccessView(adminRoles, 'crm');
 }

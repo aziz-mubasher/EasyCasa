@@ -163,6 +163,14 @@ const Schema = z
     /** K EC 1.26 — provisional valuation band (stub comparables; not OMI yet). */
     VALUATION_BAND_ENABLED: bool(false),
 
+    /**
+     * K EC 4.1 — internal CRM. Default false in production until informativa
+     * covers relationship-management processing (counsel gate §10.5).
+     */
+    CRM_ENABLED: bool(false),
+    /** Dormant seeker anonymisation window (months). COUNSEL TO CONFIRM. */
+    CRM_DORMANT_RETENTION_MONTHS: z.coerce.number().int().positive().default(24),
+
     /** K EC 1.29 — HMAC pepper for SmartLink daily unique-view hashes (no raw IP stored). */
     SHARE_VIEW_HMAC_SECRET: z.string().min(16).default('dev-smartlink-view-secret-change-me'),
 

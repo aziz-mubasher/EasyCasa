@@ -568,6 +568,203 @@ select {
   white-space: nowrap;
 }
 
+/* ——— K EC 4.1 CRM ——— */
+.crm__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.crm__eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+.crm__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: flex-start;
+}
+
+.crm-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.crm-kpi {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 1rem;
+}
+
+.crm-kpi__label {
+  margin: 0 0 0.35rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.crm-kpi__value {
+  margin: 0;
+  font-size: 1.6rem;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.estimate,
+.crm-kpi__value.estimate {
+  color: var(--ochre);
+}
+
+.crm-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.crm-funnel,
+.crm-tasklist,
+.crm-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.crm-funnel li,
+.crm-tasklist li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.crm-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.crm-tag {
+  display: inline-block;
+  margin-right: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--azure-pale);
+  font-family: var(--font-mono);
+}
+
+.linkish {
+  background: none;
+  border: none;
+  color: var(--azure-pale);
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+}
+
+.linkish:hover {
+  text-decoration: underline;
+}
+
+.crm-360__grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(280px, 1.4fr);
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.crm-panel {
+  border: 1px solid var(--border);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--surface-2);
+}
+
+.crm-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.crm-composer {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.crm-timeline li {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.crm-timeline__type {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.crm-kanban {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(180px, 1fr);
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.crm-kanban__col {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  min-height: 12rem;
+}
+
+.crm-kanban__col h3 {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  font-family: var(--font-display);
+}
+
+.crm-kanban__col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.crm-modal {
+  margin-top: 1rem;
+  border: 1px solid var(--border);
+  padding: 1rem;
+  background: var(--surface);
+  display: grid;
+  gap: 0.5rem;
+  max-width: 28rem;
+}
+
+.crm-banner {
+  border: 1px solid var(--ochre);
+  color: var(--paper);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: rgba(192, 138, 30, 0.12);
+}
+
 @media (max-width: 860px) {
   .shell {
     grid-template-columns: 1fr;
@@ -580,5 +777,10 @@ select {
 
   .content {
     padding: 22px 18px;
+  }
+
+  .crm-split,
+  .crm-360__grid {
+    grid-template-columns: 1fr;
   }
 }

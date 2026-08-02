@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { useAuth } from './auth/AuthProvider';
-import { adminRolesFromAccessToken, canAccessView } from './auth/roles';
+import {
+  adminRolesFromAccessToken,
+  canAccessCrmView,
+  canAccessView,
+  crmRolesFromAccessToken,
+} from './auth/roles';
 import { Orchestration } from './pages/Orchestration';
 import { Credentials } from './pages/Credentials';
 import { ComplianceConfig } from './pages/ComplianceConfig';
@@ -12,6 +17,7 @@ import { DsarQueue } from './pages/DsarQueue';
 import { ListingTakedown } from './pages/ListingTakedown';
 import { IdentityReview } from './pages/IdentityReview';
 import { WhatsAppInbound } from './pages/WhatsAppInbound';
+import { CrmShell } from './pages/crm/CrmShell';
 
 type View =
   | 'credentials'
@@ -23,9 +29,11 @@ type View =
   | 'orchestration'
   | 'compliance'
   | 'aml'
-  | 'rli';
+  | 'rli'
+  | 'crm';
 
 const NAV: { key: View; label: string; hint: string }[] = [
+  { key: 'crm', label: 'CRM', hint: 'Contacts · pipelines' },
   { key: 'credentials', label: 'Credentials', hint: 'Ops · expiring first' },
   { key: 'coverage', label: 'Coverage', hint: 'Ops / support read' },
   { key: 'dsar', label: 'DSAR', hint: 'DPO only' },
@@ -39,6 +47,7 @@ const NAV: { key: View; label: string; hint: string }[] = [
 ];
 
 const VIEWS: Record<View, React.ReactNode> = {
+  crm: <CrmShell />,
   credentials: <Credentials />,
   coverage: <CoverageMatrix />,
   dsar: <DsarQueue />,
@@ -134,14 +143,19 @@ function BuildMarker() {
 export function App() {
   const { isAuthenticated, signOut, accessToken } = useAuth();
   const adminRoles = useMemo(() => adminRolesFromAccessToken(accessToken), [accessToken]);
+  const crmRoles = useMemo(() => crmRolesFromAccessToken(accessToken), [accessToken]);
   const allowedNav = useMemo(
-    () => NAV.filter((n) => canAccessView(adminRoles, n.key)),
-    [adminRoles],
+    () =>
+      NAV.filter((n) =>
+        n.key === 'crm' ? canAccessCrmView(adminRoles, crmRoles) : canAccessView(adminRoles, n.key),
+      ),
+    [adminRoles, crmRoles],
   );
   const initialView = ((): View => {
     if (typeof window !== 'undefined') {
       const h = window.location.hash.replace(/^#/, '');
       if (h === 'whatsapp' || h.startsWith('whatsapp/')) return 'whatsapp';
+      if (h === 'crm') return 'crm';
     }
     return 'credentials';
   })();

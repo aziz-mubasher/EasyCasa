@@ -43,6 +43,7 @@ import { PrivacyModule } from './privacy/privacy.module';
 import { PhoneVerifyModule } from './phone-verify/phone-verify.module';
 import { WhatsAppModule } from './whatsapp/whatsapp.module';
 import { ObservabilityModule } from './observability/observability.module';
+import { CrmModule } from './crm/crm.module';
 import { HealthIndicatorRegistry } from './health/health-indicator.registry';
 import { EmailHealthIndicator } from './health/email.health';
 import { MeiliHealthIndicator } from './health/meili.health';
@@ -107,6 +108,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     PhoneVerifyModule,
     PilotModule,
     DemoModule,
+    CrmModule,
   ],
   controllers: [HealthController, ReadinessController, VersionController],
   providers: [

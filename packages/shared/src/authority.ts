@@ -61,6 +61,8 @@ export function capabilitiesFromRoles(roles: readonly string[]): Capability[] {
     }
     if (r === 'conductor') caps.add('conductor');
     if (r === 'admin' || r.startsWith('admin_')) caps.add('admin');
+    // K EC 4.1 — CRM realm roles grant admin capability (portal + /admin/crm).
+    if (r.startsWith('crm-')) caps.add('admin');
     // EC-19 — inbound WhatsApp viewer: support / operations / superadmin only.
     // Bare `admin` and other admin_* personas do not get this capability.
     if (

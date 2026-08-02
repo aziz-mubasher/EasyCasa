@@ -1,4 +1,4 @@
-import type { AdminRole, Capability, UserRole } from '@easycasa/shared';
+import type { AdminRole, Capability, CrmRole, UserRole } from '@easycasa/shared';
 
 export interface AuthUser {
   sub: string; // OIDC subject
@@ -11,4 +11,6 @@ export interface AuthUser {
   capabilities?: Capability[];
   /** EC-11 admin personas (filled at verify / local-header-auth attach). */
   adminRoles?: AdminRole[];
+  /** K EC 4.1 CRM realm roles (crm-admin / crm-ops / …). */
+  crmRoles?: CrmRole[];
 }

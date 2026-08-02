@@ -3,6 +3,7 @@ import { jwtVerify, type JWTPayload } from 'jose';
 import {
   adminRolesFromRoles,
   capabilitiesFromRoles,
+  crmRolesFromRoles,
   type UserRole,
 } from '@easycasa/shared';
 
@@ -50,6 +51,7 @@ export class JwtVerifier {
       roles,
       capabilities: capabilitiesFromRoles(roles.map(String)),
       adminRoles: adminRolesFromRoles(roles.map(String)),
+      crmRoles: crmRolesFromRoles(roles.map(String)),
     };
   }
 }

@@ -64,6 +64,26 @@
       {
         "name": "admin_superadmin",
         "description": "Admin portal — all admin personas"
+      },
+      {
+        "name": "crm-admin",
+        "description": "K EC 4.1 CRM — full access incl. export/erasure"
+      },
+      {
+        "name": "crm-ops",
+        "description": "K EC 4.1 CRM — read/write except export/erasure"
+      },
+      {
+        "name": "crm-conductor",
+        "description": "K EC 4.1 CRM — contacts linked to assigned viewings only"
+      },
+      {
+        "name": "crm-marketing",
+        "description": "K EC 4.1 CRM — aggregates/lists; phone and free-text notes redacted"
+      },
+      {
+        "name": "crm-readonly",
+        "description": "K EC 4.1 CRM — read-only, no exports"
       }
     ]
   },

@@ -15,7 +15,19 @@ do not build a role-management UI.
 | `admin_superadmin` | `superadmin` | All of the above |
 | `admin` (bare) | _(none)_ | Capability `admin` only — **sees nothing** in the portal |
 
-Fail closed: absence of any `admin_*` role → empty nav / API `403 insufficient admin role`.
+### K EC 4.1 — CRM realm roles (separate from `admin_*`)
+
+| Realm role | Access |
+|---|---|
+| `crm-admin` | Everything incl. erasure requests, exports, assignment |
+| `crm-ops` | Full read/write except erasure & export |
+| `crm-conductor` | Only contacts linked to their assigned viewings |
+| `crm-marketing` | Aggregates + list views; **no** free-text notes, no phone numbers |
+| `crm-readonly` | Read-only, no exports |
+
+CRM roles grant capability `admin` so `/admin/crm` is reachable, but they do **not** grant EC-14 `AdminRole` personas (credentials/DSAR/etc. stay separate). Routes require `CRM_ENABLED=true`.
+
+Fail closed: absence of any `admin_*` role → empty nav / API `403 insufficient admin role` (except CRM nav when a `crm-*` role is present).
 
 ## Assign in Keycloak (production)
 
