@@ -37,8 +37,8 @@ export function CrmDashboard({ onOpenContact }: { onOpenContact: (id: string) =>
     <div className="crm-dash">
       {!data.crmEnabled ? (
         <p className="crm-banner">
-          Feature flag off — API returns 503 until <code className="mono">CRM_ENABLED=true</code>{' '}
-          (counsel gate §1.6 Q2a).
+          Feature flag off — set <code className="mono">CRM_ENABLED=true</code> in the
+          environment (§1.6 Q2a consent applied; production may enable).
         </p>
       ) : null}
       <div className="crm-kpis">
