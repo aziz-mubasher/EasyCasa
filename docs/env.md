@@ -175,8 +175,8 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 ## K EC 4.1 — Internal CRM
 | Variable | Used by | Notes |
 |---|---|---|
-| CRM_ENABLED | api | Default `false`. Production personal-data processing for relationship management is gated until counsel clears Art. 13 informativa + retention (`docs/legal/COUNSEL-REVIEW-PACKAGE.md` §1.6 Q2a). Company controller responsibility is acknowledged in `docs/legal/crm-controller-responsibility.md` but **does not** flip this flag. Merge behind the flag is OK. |
-| CRM_DORMANT_RETENTION_MONTHS | api | Dormant seeker anonymisation window (default `24`). **COUNSEL TO CONFIRM** (same gate as Q2a). |
+| CRM_ENABLED | api | Default `false` (local/CI/demo). §1.6 Q2a **consent applied** 2026-08-02 — production may set `true`. See `docs/legal/crm-controller-responsibility.md`. |
+| CRM_DORMANT_RETENTION_MONTHS | api | Dormant seeker anonymisation window (default `24`). Confirmed for enablement with Q2a consent; counsel may refine later. |
 
 ## EC-15 — Demo environment
 | Variable | Used by | Notes |

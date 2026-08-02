@@ -45,6 +45,6 @@ Fill `[nome]`, `[email]`, `[phone]`, and timing `[X]` weeks before sending.
 3. Classify catalogue `legal_basis` (B6) so mandates can send.
 4. Update badge / consent copy (B1–B2) only after sign-off.
 5. Record decisions in this folder (date + counsel name) — do not treat drafts as approved until then.
-6. After B7 / §1.6 Q2a clears: merge approved CRM informativa into the live privacy
-   policy, then set `CRM_ENABLED=true` only in the environment `.env` (keep repo
-   default `false` until ops deliberately enables).
+6. B7 / §1.6 Q2a **consent applied** 2026-08-02: ops may set `CRM_ENABLED=true`
+   in the production `.env` (repo/code default stays `false`). When counsel returns
+   polished §8 copy, merge into live privacy surfaces and bump `policyVersion`.

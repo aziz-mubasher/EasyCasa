@@ -80,7 +80,7 @@ The controller identity, DPO contact, and retention periods in `docs/legal/priva
 | **Memberships / Stripe** | Stripe customer/subscription IDs, VAT ID | `memberships` | Billing optional | **Not explicit** |
 | **Messaging** | Conversation participants, message bodies | `conversations`, `messages` | Module exists | **Not explicit** |
 | **Partner / leads** | Partner IDs, scores | `leads`, `partner_profiles`, `payouts` | Partner scope | **Not explicit** |
-| **Internal CRM (K EC 4.1)** | Unified contacts (name, email, phone, locale, source, tags, notes); role profiles (seeker/owner/partner stages; B4A Phase A only: attestation status, band max cents, expiry, holder initials); activities; tasks; CRM audit log | `crm.*` (`migration/sql/0043_crm.sql`) | Admin users with `crm-*` roles via `/admin/crm` | Soft-delete + DSAR hard-delete; dormant seekers anonymised after `CRM_DORMANT_RETENTION_MONTHS` (default **24**) | **Not explicit** — **GATE:** `CRM_ENABLED=false` until §1.6 Q2a clears |
+| **Internal CRM (K EC 4.1)** | Unified contacts (name, email, phone, locale, source, tags, notes); role profiles (seeker/owner/partner stages; B4A Phase A only: attestation status, band max cents, expiry, holder initials); activities; tasks; CRM audit log | `crm.*` (`migration/sql/0043_crm.sql`) | Admin users with `crm-*` roles via `/admin/crm` | Soft-delete + DSAR hard-delete; dormant seekers anonymised after `CRM_DORMANT_RETENTION_MONTHS` (default **24**) | **Not explicit in code** — §1.6 Q2a **consent applied** 2026-08-02 (controller); production may set `CRM_ENABLED=true` |
 
 ### D. WordPress ETL (legacy catalogue import)
 
@@ -266,9 +266,9 @@ Described as implemented controls, **not** as adequacy conclusions.
 
 2. **Art. 13 informativa:** are the draft `privacy-policy.md` and on-page `/it/legal/privacy` sufficient **at the moment of Contatta**, given checkboxes link to them and version string says “draft”?
 
-2a. **Internal CRM processing (K EC 4.1) — GATE:** please confirm Art. 13 notice coverage + retention schedule for internal relationship-management processing (unified contacts across seekers/owners/B4A referrals/partners; activities; tasks; CRM audit log). Engineering default: dormant seekers anonymised after **24 months** (`CRM_DORMANT_RETENTION_MONTHS`); feature flag `CRM_ENABLED=false` until this clears. Template wording only — **not** final. B4A fields in CRM remain limited to the four Phase A attestation fields; any expansion is frozen pending the existing cross-controller analysis.
+2a. **Internal CRM processing (K EC 4.1) — GATE:** please confirm Art. 13 notice coverage + retention schedule for internal relationship-management processing (unified contacts across seekers/owners/B4A referrals/partners; activities; tasks; CRM audit log). Engineering default: dormant seekers anonymised after **24 months** (`CRM_DORMANT_RETENTION_MONTHS`). Template wording only — **not** final. B4A fields in CRM remain limited to the four Phase A attestation fields; any expansion is frozen pending the existing cross-controller analysis.
 
-   **Controller responsibility (company, 2026-08-02):** MUNDIDA S.r.l. takes **full legal responsibility** for client personal data processed in the internal CRM once lawfully enabled. See `docs/legal/crm-controller-responsibility.md`. This acknowledgment **does not** clear the gate — engineering keeps `CRM_ENABLED=false` until counsel confirms informativa + retention for this activity. Draft public wording for review: `privacy-policy.md` §8.
+   **Consent applied (2026-08-02):** MUNDIDA S.r.l. (controller) applied consent for this gate — full legal responsibility for CRM client data; engineering defaults for informativa scope + 24-month dormant retention confirmed for enablement. See `docs/legal/crm-controller-responsibility.md`. Production may set `CRM_ENABLED=true`. Final counsel-polished IT/EN/ES copy and any `policyVersion` bump still welcome (`privacy-policy.md` §8).
 
 3. **Dual consent, single version field:** is it correct that `mediation_disclosure` shares the **privacy** `policyVersion` string with no separate mediation document version?
 
@@ -308,7 +308,7 @@ Described as implemented controls, **not** as adequacy conclusions.
 | Production | Web serves these documents; API policy version **`v1-draft`**; consent ledger stores **`v1-draft`** |
 | Cookie policy / banner | **Missing** |
 | Register of processing (Art. 30) | **This package** — engineering draft for counsel, not a signed register |
-| Internal CRM (K EC 4.1) | Schema/API/admin **merged**; **`CRM_ENABLED=false`**; company controller responsibility acknowledged (`crm-controller-responsibility.md`); **awaiting counsel on §1.6 Q2a** |
+| Internal CRM (K EC 4.1) | Schema/API/admin **merged**; §1.6 Q2a **consent applied** 2026-08-02 (`crm-controller-responsibility.md`); code default `CRM_ENABLED=false`; **production may enable** |
 
 ---
 
@@ -359,7 +359,7 @@ The draft seeker-focused policy (`docs/legal/privacy-policy.md` §1) does **not*
 - **AI embeddings** (listing text sent to OpenAI when configured)
 - **Admin email-outbox** inspection by admins
 - **Keycloak** as separate identity store (policy mentions IdP generically but not retention/subprocessors for Keycloak-as-product)
-- **Internal CRM** relationship-management processing (contacts, activities, tasks, audit log) — draft §8 in privacy template; gated off until counsel clears §1.6 Q2a
+- **Internal CRM** relationship-management processing (contacts, activities, tasks, audit log) — draft §8 in privacy template; §1.6 Q2a consent applied 2026-08-02 (enable via `CRM_ENABLED`)
 
 ---
 

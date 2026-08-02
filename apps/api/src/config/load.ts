@@ -164,12 +164,12 @@ const Schema = z
     VALUATION_BAND_ENABLED: bool(false),
 
     /**
-     * K EC 4.1 — internal CRM. Default false until counsel clears Art. 13
-     * informativa + retention (COUNSEL-REVIEW-PACKAGE §1.6 Q2a). Company
-     * controller responsibility acknowledgment does not flip this flag.
+     * K EC 4.1 — internal CRM. Default false for local/CI/demo.
+     * §1.6 Q2a consent applied 2026-08-02 — production may set true
+     * (docs/legal/crm-controller-responsibility.md).
      */
     CRM_ENABLED: bool(false),
-    /** Dormant seeker anonymisation window (months). COUNSEL TO CONFIRM (Q2a). */
+    /** Dormant seeker anonymisation window (months). Default confirmed with Q2a consent. */
     CRM_DORMANT_RETENTION_MONTHS: z.coerce.number().int().positive().default(24),
 
     /** K EC 1.29 — HMAC pepper for SmartLink daily unique-view hashes (no raw IP stored). */

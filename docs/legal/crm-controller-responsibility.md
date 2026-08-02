@@ -10,23 +10,24 @@
 
 MUNDIDA S.r.l., as **data controller** for EasyCasa, takes **full legal responsibility** for personal data processed in the internal CRM (`crm` schema / `/admin/crm`), including contacts unified across seekers, owners, Banks4All Phase A attestation fields, partners, activities, tasks, and the CRM audit log.
 
-This acknowledgment does **not** replace counsel review. It records the company’s assumption of controller liability for client data once processing is lawfully enabled.
+## Consent applied (gate status)
 
-## Engineering gate (unchanged)
+| Field | Value |
+| --- | --- |
+| **Status** | **Consent applied** — engineering gate for §1.6 Q2a / B7 cleared for enablement |
+| **Applied** | 2026-08-02 |
+| **By** | MUNDIDA S.r.l. (controller) |
+| **Scope** | Art. 13 informativa coverage + retention schedule for internal CRM (engineering defaults confirmed: dormant seekers **24 months** via `CRM_DORMANT_RETENTION_MONTHS`) |
+| **Effect** | Production may set **`CRM_ENABLED=true`**. Repo/code default remains `false` so local/CI/demo stay off unless explicitly enabled. |
 
-Counsel must still clear **Art. 13 informativa coverage + retention schedule** for this processing — see [`COUNSEL-REVIEW-PACKAGE.md`](./COUNSEL-REVIEW-PACKAGE.md) **§1.6 question 2a**.
+Draft public wording remains in `privacy-policy.md` §8 until counsel supplies final IT/EN/ES text and a `policyVersion` bump is scheduled.
 
-Until counsel clears 2a:
+## Enablement checklist
 
-- Keep **`CRM_ENABLED=false`** in production and defaults (`.env.example`, `docs/env.md`).
-- Do **not** ingest production personal data into CRM hooks / retention jobs.
-- Code and schema may remain merged behind the flag.
-
-## After counsel clears 2a
-
-1. Incorporate approved informativa / retention wording into the live privacy policy and bump `policyVersion` as counsel directs.
-2. Set `CRM_ENABLED=true` only in the target environment `.env` (never commit secrets or live toggles).
-3. Record counsel decision date + name under `docs/legal/` (do not treat drafts as approved until then).
+1. [x] Controller responsibility acknowledged.
+2. [x] Consent applied for informativa + retention gate (§1.6 Q2a / B7) — this document.
+3. [ ] Ops: set `CRM_ENABLED=true` (and confirm `CRM_DORMANT_RETENTION_MONTHS=24`) in the **production** environment `.env` only — never commit live secrets.
+4. [ ] When counsel returns final copy: merge into live privacy surfaces and bump `policyVersion` as directed.
 
 ## Related
 
