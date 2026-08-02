@@ -62,6 +62,7 @@ describe('JwtVerifier (real RS256 crypto)', () => {
       roles: ['buyer', 'seller'],
       capabilities: ['seeker', 'owner', 'conductor'],
       adminRoles: [],
+      crmRoles: [],
     });
   });
 

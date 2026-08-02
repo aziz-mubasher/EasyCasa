@@ -44,6 +44,7 @@ import { ObservabilityModule } from './observability/observability.module';
 import { PhoneVerifyModule } from './phone-verify/phone-verify.module';
 import { WhatsAppModule } from './whatsapp/whatsapp.module';
 import { DemoModule } from './demo/demo.module';
+import { CrmModule } from './crm/crm.module';
 
 /** Static module imports (Privacy is DynamicModule via forRootProduction). */
 const REQUIRED_STATIC = [
@@ -88,6 +89,7 @@ const REQUIRED_STATIC = [
   PhoneVerifyModule,
   PilotModule,
   DemoModule,
+  CrmModule,
 ] as const;
 
 function isPrivacyForRoot(entry: unknown): boolean {

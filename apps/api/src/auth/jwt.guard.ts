@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import {
   adminRolesFromRoles,
   capabilitiesFromRoles,
+  crmRolesFromRoles,
   type UserRole,
 } from '@easycasa/shared';
 
@@ -111,6 +112,7 @@ function authFromTestHeaders(
     roles,
     capabilities: capabilitiesFromRoles(roles.map(String)),
     adminRoles: adminRolesFromRoles(roles.map(String)),
+    crmRoles: crmRolesFromRoles(roles.map(String)),
   };
 }
 

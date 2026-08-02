@@ -1,5 +1,5 @@
 import {
-  pgTable, pgEnum, uuid, text, integer, numeric, timestamp, jsonb, boolean,
+  pgTable, pgEnum, pgSchema, uuid, text, integer, numeric, timestamp, jsonb, boolean,
   doublePrecision, bigint, primaryKey, uniqueIndex, index, date,
 } from 'drizzle-orm/pg-core';
 
@@ -851,6 +851,126 @@ export const shareLinkViewDedup = pgTable(
   }),
 );
 
+/** K EC 4.1 — internal CRM (PostgreSQL schema `crm`). */
+export const crmPg = pgSchema('crm');
+
+export const crmContacts = crmPg.table('contacts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id'),
+  fullName: text('full_name').notNull(),
+  email: text('email'),
+  phone: text('phone'),
+  locale: text('locale').notNull().default('it'),
+  source: text('source').notNull().default('manual'),
+  ownerAdminId: uuid('owner_admin_id'),
+  tags: text('tags').array().notNull().default([]),
+  notesSummary: text('notes_summary'),
+  /** FK → consent_records (purpose=marketing) for follow-up beyond Art. 6(1)(b). */
+  marketingConsentId: uuid('marketing_consent_id'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+}, (t) => ({
+  emailIdx: index('crm_contacts_email_idx').on(t.email),
+}));
+
+export const crmSeekerProfiles = crmPg.table('seeker_profiles', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  contactId: uuid('contact_id').notNull(),
+  searchIntent: jsonb('search_intent').notNull().default({}),
+  firstEnquiryId: uuid('first_enquiry_id'),
+  stage: text('stage').notNull().default('new_enquiry'),
+  stageChangedAt: timestamp('stage_changed_at', { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+}, (t) => ({
+  stageIdx: index('crm_seeker_stage_idx').on(t.stage),
+}));
+
+export const crmOwnerProfiles = crmPg.table('owner_profiles', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  contactId: uuid('contact_id').notNull(),
+  stage: text('stage').notNull().default('prospect'),
+  listingIds: uuid('listing_ids').array().notNull().default([]),
+  preferredChannel: text('preferred_channel').notNull().default('email'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+}, (t) => ({
+  stageIdx: index('crm_owner_stage_idx').on(t.stage),
+}));
+
+export const crmB4aReferrals = crmPg.table('b4a_referrals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  contactId: uuid('contact_id').notNull(),
+  referredAt: timestamp('referred_at', { withTimezone: true }).notNull().defaultNow(),
+  attestationStatus: text('attestation_status').notNull().default('none'),
+  bandMaxCents: bigint('band_max_cents', { mode: 'number' }),
+  attestationExpiresAt: timestamp('attestation_expires_at', { withTimezone: true }),
+  holderInitials: text('holder_initials'),
+  lastSweepAt: timestamp('last_sweep_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+}, (t) => ({
+  statusIdx: index('crm_b4a_status_idx').on(t.attestationStatus),
+}));
+
+export const crmPartnerProfiles = crmPg.table('partner_profiles', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  contactId: uuid('contact_id').notNull(),
+  partnerType: text('partner_type').notNull().default('other'),
+  stage: text('stage').notNull().default('prospect'),
+  serviceZones: text('service_zones').array().notNull().default([]),
+  vatNumber: text('vat_number'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+}, (t) => ({
+  stageIdx: index('crm_partner_stage_idx').on(t.stage),
+}));
+
+export const crmActivities = crmPg.table('activities', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  contactId: uuid('contact_id').notNull(),
+  type: text('type').notNull(),
+  refTable: text('ref_table'),
+  refId: uuid('ref_id'),
+  body: text('body').notNull().default(''),
+  actorAdminId: uuid('actor_admin_id'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+}, (t) => ({
+  contactCreatedIdx: index('crm_activities_contact_created_idx').on(t.contactId, t.createdAt),
+}));
+
+export const crmTasks = crmPg.table('tasks', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  contactId: uuid('contact_id').notNull(),
+  title: text('title').notNull(),
+  dueAt: timestamp('due_at', { withTimezone: true }),
+  assigneeAdminId: uuid('assignee_admin_id'),
+  status: text('status').notNull().default('open'),
+  completedAt: timestamp('completed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+}, (t) => ({
+  assigneeIdx: index('crm_tasks_assignee_status_due_idx').on(t.assigneeAdminId, t.status, t.dueAt),
+}));
+
+export const crmAuditLog = crmPg.table('audit_log', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  actorAdminId: uuid('actor_admin_id'),
+  action: text('action').notNull(),
+  entityType: text('entity_type').notNull(),
+  entityId: text('entity_id'),
+  detail: jsonb('detail').notNull().default({}),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
 
@@ -868,5 +988,7 @@ export const schema = {
   viewingAvailability, viewings,
   consentRecords,
   shareLinks, shareLinkViewDedup,
+  crmContacts, crmSeekerProfiles, crmOwnerProfiles, crmB4aReferrals, crmPartnerProfiles,
+  crmActivities, crmTasks, crmAuditLog,
 };
 export type Schema = typeof schema;

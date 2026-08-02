@@ -172,6 +172,12 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | BANKS4ALL_ATTESTATION_BASE_URL | api | Origin for B4A-1 `GET /v1/attestations/:token` (e.g. `https://portal.banks4all.eu`). Empty → fail soft. |
 | BANKS4ALL_PARTNER_TOKEN | api | Bearer token matching Banks4All `B4A_PARTNER_TOKEN`. Empty → fail soft. |
 
+## K EC 4.1 — Internal CRM
+| Variable | Used by | Notes |
+|---|---|---|
+| CRM_ENABLED | api | Default `false`. Production personal-data processing for relationship management is gated until the informativa line-item clears counsel (§10.5). Merge behind the flag is OK. |
+| CRM_DORMANT_RETENTION_MONTHS | api | Dormant seeker anonymisation window (default `24`). **COUNSEL TO CONFIRM.** |
+
 ## EC-15 — Demo environment
 | Variable | Used by | Notes |
 |---|---|---|

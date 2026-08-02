@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EasyCasa Admin — CRM (Prototype v1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14212E; --parchment:#F3EDE1; --azure:#2C6E9B; --ochre:#C08A1E;
+  --ink-60:rgba(20,33,46,.6); --ink-30:rgba(20,33,46,.28); --ink-08:rgba(20,33,46,.08);
+  --card:#FBF8F1; --line:rgba(20,33,46,.14);
+  --ok:#3E7A4E; --warn:#A4452F;
+  --disp:'Bricolage Grotesque',sans-serif; --body:'Newsreader',serif; --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--parchment);color:var(--ink);font-size:15px}
+a{color:var(--azure)}
+.app{display:flex;min-height:100vh}
+/* sidebar */
+.side{width:216px;background:var(--ink);color:var(--parchment);padding:22px 0;flex-shrink:0;display:flex;flex-direction:column}
+.logo{font-family:var(--disp);font-weight:700;font-size:19px;padding:0 22px 6px}
+.logo span{color:var(--ochre)}
+.side .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.55;padding:0 22px 22px}
+.nav a{display:block;padding:10px 22px;color:var(--parchment);text-decoration:none;font-family:var(--disp);font-weight:500;font-size:14px;opacity:.72;border-left:3px solid transparent;cursor:pointer}
+.nav a:hover{opacity:1}
+.nav a.on{opacity:1;border-left-color:var(--ochre);background:rgba(243,237,225,.06)}
+.side .foot{margin-top:auto;padding:16px 22px;font-family:var(--mono);font-size:10.5px;opacity:.45}
+/* main */
+.main{flex:1;padding:26px 34px;max-width:1180px}
+h1{font-family:var(--disp);font-weight:700;font-size:24px;margin-bottom:4px}
+.crumb{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-60);margin-bottom:22px}
+.view{display:none}.view.on{display:block}
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.card .k{font-family:var(--disp);font-weight:600;font-size:12.5px;color:var(--ink-60);margin-bottom:8px}
+.card .v{font-family:var(--mono);font-size:26px;font-variant-numeric:tabular-nums}
+.card .v small{font-size:13px;color:var(--ink-60)}
+.card .d{font-size:12.5px;color:var(--ink-60);margin-top:6px}
+.est{color:var(--ochre)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:18px}
+.panel h3{font-family:var(--disp);font-size:14.5px;font-weight:600;margin-bottom:12px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+/* table */
+table{width:100%;border-collapse:collapse}
+th{font-family:var(--disp);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-60);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--ink-08);font-size:14px;vertical-align:middle}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--ink-08)}
+.mono{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums}
+/* badges */
+.b{display:inline-block;font-family:var(--disp);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:99px;margin-right:4px}
+.b.seeker{background:rgba(44,110,155,.14);color:var(--azure)}
+.b.owner{background:rgba(20,33,46,.1);color:var(--ink)}
+.b.b4a{background:rgba(192,138,30,.16);color:var(--ochre)}
+.b.partner{background:rgba(62,122,78,.14);color:var(--ok)}
+.b.stage{background:var(--ink-08);color:var(--ink-60);text-transform:none;letter-spacing:0}
+.b.ok{background:rgba(62,122,78,.14);color:var(--ok)}
+.b.none{background:var(--ink-08);color:var(--ink-60)}
+.b.exp{background:rgba(164,69,47,.12);color:var(--warn)}
+/* filters */
+.bar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.bar input,.bar select{font-family:var(--disp);font-size:13px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.bar input{width:260px}
+.btn{font-family:var(--disp);font-weight:600;font-size:13px;padding:8px 14px;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:var(--parchment);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+/* kanban */
+.tabs{display:flex;gap:6px;margin-bottom:16px}
+.tabs button{font-family:var(--disp);font-weight:600;font-size:13px;padding:8px 14px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--ink-60);cursor:pointer}
+.tabs button.on{background:var(--ink);color:var(--parchment);border-color:var(--ink)}
+.kb{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,1fr);gap:12px;overflow-x:auto}
+.col{background:rgba(20,33,46,.045);border-radius:10px;padding:10px}
+.col h4{font-family:var(--disp);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-60);margin-bottom:10px;display:flex;justify-content:space-between}
+.col h4 .n{font-family:var(--mono)}
+.kcard{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13.5px;cursor:pointer}
+.kcard:hover{border-color:var(--azure)}
+.kcard .who{font-family:var(--disp);font-weight:600;font-size:13.5px}
+.kcard .meta{font-family:var(--mono);font-size:11px;color:var(--ink-60);margin-top:4px}
+.lock{font-family:var(--mono);font-size:11px;color:var(--ink-60);margin-bottom:10px}
+/* contact 360 */
+.head360{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.head360 h1{margin-bottom:2px}
+.field{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--ink-08);font-size:13.5px}
+.field .l{color:var(--ink-60)}
+.tl{list-style:none}
+.tl li{position:relative;padding:0 0 16px 22px;border-left:2px solid var(--line);margin-left:6px}
+.tl li:before{content:'';position:absolute;left:-6px;top:3px;width:10px;height:10px;border-radius:50%;background:var(--azure)}
+.tl li.sys:before{background:var(--ink-30)}
+.tl li.money:before{background:var(--ochre)}
+.tl .t{font-family:var(--mono);font-size:11px;color:var(--ink-60)}
+.tl .w{font-size:13.5px;margin-top:2px}
+.compose{display:flex;gap:8px;margin-top:12px}
+.compose input{flex:1;font-family:var(--body);font-size:13.5px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.task{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--ink-08);font-size:13.5px}
+.task .due{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--ink-60)}
+.task .due.late{color:var(--warn)}
+.note{font-family:var(--mono);font-size:11px;color:var(--ink-60);margin-top:8px}
+.rolematrix td:first-child{font-family:var(--disp);font-weight:600}
+.proto{position:fixed;bottom:12px;right:14px;font-family:var(--mono);font-size:10.5px;color:var(--ink-60);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px 10px}
+@media(max-width:900px){.cards{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="logo">easy<span>casa</span></div>
+    <div class="sub">Admin · CRM</div>
+    <nav class="nav">
+      <a data-v="dash" class="on">Dashboard</a>
+      <a data-v="contacts">Contatti</a>
+      <a data-v="pipe">Pipeline</a>
+      <a data-v="tasks">Attività</a>
+      <a data-v="settings">Impostazioni</a>
+    </nav>
+    <div class="foot">K EC 4.1 · v1 prototype<br>ruolo: crm-admin</div>
+  </aside>
+
+  <main class="main">
+
+  <!-- DASHBOARD -->
+  <section class="view on" id="v-dash">
+    <h1>Dashboard</h1>
+    <div class="crumb">CRM · Panoramica settimanale</div>
+    <div class="cards">
+      <div class="card"><div class="k">Conversione richiesta → visita</div><div class="v">18,4<small>%</small></div><div class="d">ultimi 30 giorni</div></div>
+      <div class="card"><div class="k">Primo contatto (mediana)</div><div class="v">3,2<small>h</small></div><div class="d">obiettivo &lt; 4h</div></div>
+      <div class="card"><div class="k">Visite con esito registrato</div><div class="v">76<small>%</small></div><div class="d">obiettivo 90%</div></div>
+      <div class="card"><div class="k">Referral B4A → attestazione</div><div class="v est">11,0<small>%</small></div><div class="d">stima · sweep notturno</div></div>
+    </div>
+    <div class="split">
+      <div class="panel">
+        <h3>Funnel seeker (30 gg)</h3>
+        <table>
+          <tr><td>Nuove richieste</td><td class="mono" style="text-align:right">142</td></tr>
+          <tr><td>Contattati</td><td class="mono" style="text-align:right">118</td></tr>
+          <tr><td>Visita richiesta</td><td class="mono" style="text-align:right">41</td></tr>
+          <tr><td>Visita confermata</td><td class="mono" style="text-align:right">33</td></tr>
+          <tr><td>Visita svolta</td><td class="mono" style="text-align:right">26</td></tr>
+          <tr><td>Esito positivo</td><td class="mono" style="text-align:right">9</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Le mie attività — oggi</h3>
+        <div class="task"><input type="checkbox"> Richiamare M. Bianchi — esito visita Brescia<span class="due late">ieri</span></div>
+        <div class="task"><input type="checkbox"> Follow-up richiesta #2311 (trilocale Desenzano)<span class="due">oggi 15:00</span></div>
+        <div class="task"><input type="checkbox"> Verifica documenti fotografo — L. Ferri<span class="due">oggi 17:30</span></div>
+        <div class="task"><input type="checkbox" checked> Conferma slot visita — Via Trento 12<span class="due">fatto</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section class="view" id="v-contacts">
+    <h1>Contatti</h1>
+    <div class="crumb">CRM · Tutti gli stakeholder</div>
+    <div class="bar">
+      <input placeholder="Cerca nome, email, telefono…">
+      <select><option>Ruolo: tutti</option><option>Seeker</option><option>Proprietario</option><option>Referral B4A</option><option>Partner</option></select>
+      <select><option>Fase: tutte</option></select>
+      <select><option>Assegnato: tutti</option></select>
+      <button class="btn">+ Nuovo contatto</button>
+    </div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>Nome</th><th>Ruoli</th><th>Fase</th><th>Ultima attività</th><th>Assegnato</th></tr></thead>
+        <tbody>
+          <tr class="click" onclick="go('c360')"><td><strong>Maria Bianchi</strong><div class="mono">m.bianchi@example.it</div></td>
+            <td><span class="b seeker">Seeker</span><span class="b b4a">B4A</span></td>
+            <td><span class="b stage">Visita svolta</span></td>
+            <td class="mono">ieri 18:40</td><td>AZM</td></tr>
+          <tr class="click" onclick="go('c360')"><td><strong>Giorgio De Luca</strong><div class="mono">g.deluca@example.it</div></td>
+            <td><span class="b seeker">Seeker</span></td>
+            <td><span class="b stage">Contattato</span></td>
+            <td class="mono">oggi 09:12</td><td>AZM</td></tr>
+          <tr class="click" onclick="go('c360')"><td><strong>Anna Moretti</strong><div class="mono">a.moretti@example.it</div></td>
+            <td><span class="b owner">Proprietario</span></td>
+            <td><span class="b stage">Annuncio attivo</span></td>
+            <td class="mono">2 gg fa</td><td>—</td></tr>
+          <tr class="click" onclick="go('c360')"><td><strong>Luca Ferri</strong><div class="mono">studio@ferrifoto.it</div></td>
+            <td><span class="b partner">Partner · Fotografo</span></td>
+            <td><span class="b stage">Verifica</span></td>
+            <td class="mono">3 gg fa</td><td>AZM</td></tr>
+          <tr class="click" onclick="go('c360')"><td><strong>Paolo Rinaldi</strong><div class="mono">p.rinaldi@example.it</div></td>
+            <td><span class="b seeker">Seeker</span><span class="b owner">Proprietario</span></td>
+            <td><span class="b stage">Visita richiesta</span></td>
+            <td class="mono">oggi 08:05</td><td>AZM</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">Un contatto = una identità. I ruoli sono profili sovrapposti (decisione n. 2 della specifica).</div>
+  </section>
+
+  <!-- CONTACT 360 -->
+  <section class="view" id="v-c360">
+    <div class="head360">
+      <div>
+        <h1>Maria Bianchi</h1>
+        <div class="crumb" style="margin-bottom:8px">Contatti · Contact-360</div>
+        <span class="b seeker">Seeker</span><span class="b b4a">Referral B4A</span>
+      </div>
+      <button class="btn ghost" onclick="go('contacts')">← Elenco</button>
+    </div>
+    <div class="split">
+      <div>
+        <div class="panel">
+          <h3>Identità</h3>
+          <div class="field"><span class="l">Email</span><span class="mono">m.bianchi@example.it</span></div>
+          <div class="field"><span class="l">Telefono</span><span class="mono">+39 340 000 0000</span></div>
+          <div class="field"><span class="l">Lingua</span><span>IT</span></div>
+          <div class="field"><span class="l">Origine</span><span>Richiesta annuncio #2298</span></div>
+          <div class="field"><span class="l">Assegnato a</span><span>AZM</span></div>
+        </div>
+        <div class="panel">
+          <h3>Profilo seeker</h3>
+          <div class="field"><span class="l">Fase</span><span class="b stage">Visita svolta</span></div>
+          <div class="field"><span class="l">Zone</span><span>Brescia centro · Desenzano</span></div>
+          <div class="field"><span class="l">Budget dichiarato</span><span class="mono est">€ 180.000 – 220.000</span></div>
+          <div class="field"><span class="l">Tipologia</span><span>Trilocale</span></div>
+        </div>
+        <div class="panel">
+          <h3>Attestazione Banks4All</h3>
+          <div class="field"><span class="l">Stato</span><span class="b ok">Attiva</span></div>
+          <div class="field"><span class="l">Fascia massima</span><span class="mono est">≤ € 225.000</span></div>
+          <div class="field"><span class="l">Scadenza</span><span class="mono">2026-10-31</span></div>
+          <div class="field"><span class="l">Iniziali titolare</span><span class="mono">M.B.</span></div>
+          <div class="note">Solo 4 campi (B4A-1) · aggiornato dallo sweep notturno · 2026-08-02 03:14</div>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>Timeline attività</h3>
+          <ul class="tl">
+            <li><span class="t">ieri 18:40 · AZM</span><div class="w">Nota: molto interessata, chiede seconda visita con il marito.</div></li>
+            <li class="money"><span class="t">2026-08-02 03:14 · sistema</span><div class="w">Sweep B4A: attestazione attiva, fascia <span class="mono est">≤ € 225.000</span>.</div></li>
+            <li class="sys"><span class="t">2026-07-30 · sistema</span><div class="w">Visita svolta — Via Trento 12, Brescia. Esito in attesa.</div></li>
+            <li class="sys"><span class="t">2026-07-26 · sistema</span><div class="w">Visita confermata (conductor: L. Gatti).</div></li>
+            <li class="sys"><span class="t">2026-07-22 · sistema</span><div class="w">Richiesta ricevuta — annuncio #2298.</div></li>
+          </ul>
+          <div class="compose"><input placeholder="Registra nota, chiamata o email…"><button class="btn">Salva</button></div>
+        </div>
+        <div class="panel">
+          <h3>Attività aperte</h3>
+          <div class="task"><input type="checkbox"> Registrare esito visita<span class="due late">ieri</span></div>
+          <div class="task"><input type="checkbox"> Proporre 2ª visita (sabato)<span class="due">05 ago</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINES -->
+  <section class="view" id="v-pipe">
+    <h1>Pipeline</h1>
+    <div class="crumb">CRM · Kanban per ruolo</div>
+    <div class="tabs">
+      <button class="on" data-p="seeker">Seeker</button>
+      <button data-p="ownerp">Proprietari</button>
+      <button data-p="b4ap">Referral B4A</button>
+      <button data-p="partnerp">Partner</button>
+    </div>
+
+    <div class="pv" id="p-seeker">
+      <div class="lock">Fasi guidate dagli eventi del flusso visite — override manuale solo con nota obbligatoria.</div>
+      <div class="kb">
+        <div class="col"><h4>Nuova richiesta <span class="n">6</span></h4>
+          <div class="kcard"><div class="who">S. Colombo</div><div class="meta">#2315 · bilocale MI</div></div>
+          <div class="kcard"><div class="who">F. Greco</div><div class="meta">#2314 · villa Garda</div></div></div>
+        <div class="col"><h4>Contattato <span class="n">4</span></h4>
+          <div class="kcard"><div class="who">G. De Luca</div><div class="meta">#2307 · risposta 2,1h</div></div></div>
+        <div class="col"><h4>Visita richiesta <span class="n">3</span></h4>
+          <div class="kcard"><div class="who">P. Rinaldi</div><div class="meta">#2301 · slot da confermare</div></div></div>
+        <div class="col"><h4>Confermata <span class="n">2</span></h4>
+          <div class="kcard"><div class="who">E. Villa</div><div class="meta">04 ago 10:30 · L. Gatti</div></div></div>
+        <div class="col"><h4>Svolta <span class="n">2</span></h4>
+          <div class="kcard" onclick="go('c360')"><div class="who">M. Bianchi</div><div class="meta">esito mancante ⚠</div></div></div>
+        <div class="col"><h4>Esito + <span class="n">1</span></h4>
+          <div class="kcard"><div class="who">R. Sala</div><div class="meta">trattativa avviata</div></div></div>
+      </div>
+    </div>
+
+    <div class="pv" id="p-ownerp" style="display:none">
+      <div class="lock">v1 read-mostly — nessuna meccanica di mandato/provvigione (fuori scope).</div>
+      <div class="kb">
+        <div class="col"><h4>Prospect <span class="n">3</span></h4><div class="kcard"><div class="who">C. Fontana</div><div class="meta">bilocale BS centro</div></div></div>
+        <div class="col"><h4>In dialogo <span class="n">2</span></h4><div class="kcard"><div class="who">D. Marini</div><div class="meta">richiede stima OMI</div></div></div>
+        <div class="col"><h4>Onboarding <span class="n">1</span></h4><div class="kcard"><div class="who">P. Rinaldi</div><div class="meta">foto in programmazione</div></div></div>
+        <div class="col"><h4>Annuncio attivo <span class="n">5</span></h4><div class="kcard"><div class="who">A. Moretti</div><div class="meta">#2288 · 41 visualizzazioni</div></div></div>
+        <div class="col"><h4>In pausa <span class="n">1</span></h4><div class="kcard"><div class="who">T. Riva</div><div class="meta">riprende a settembre</div></div></div>
+      </div>
+    </div>
+
+    <div class="pv" id="p-b4ap" style="display:none">
+      <div class="lock">Sola lettura — derivata interamente dallo sweep notturno B4A (nessuna modifica manuale).</div>
+      <div class="kb">
+        <div class="col"><h4>Referral inviato <span class="n">14</span></h4>
+          <div class="kcard"><div class="who">G. De Luca</div><div class="meta">2026-07-28</div></div>
+          <div class="kcard"><div class="who">E. Villa</div><div class="meta">2026-07-25</div></div></div>
+        <div class="col"><h4>Attestazione attiva <span class="n">3</span></h4>
+          <div class="kcard" onclick="go('c360')"><div class="who">M. Bianchi</div><div class="meta est">≤ € 225.000 · scad. 31/10</div></div></div>
+        <div class="col"><h4>Scaduta <span class="n">1</span></h4>
+          <div class="kcard"><div class="who">N. Barbieri</div><div class="meta">scaduta 2026-07-01</div></div></div>
+      </div>
+    </div>
+
+    <div class="pv" id="p-partnerp" style="display:none">
+      <div class="kb">
+        <div class="col"><h4>Prospect <span class="n">2</span></h4><div class="kcard"><div class="who">Notaio S. Alberti</div><div class="meta">Brescia</div></div></div>
+        <div class="col"><h4>Verifica <span class="n">1</span></h4><div class="kcard"><div class="who">L. Ferri</div><div class="meta">fotografo · docs mancanti</div></div></div>
+        <div class="col"><h4>Attivo <span class="n">4</span></h4><div class="kcard"><div class="who">L. Gatti</div><div class="meta">conductor · zona BS</div></div></div>
+        <div class="col"><h4>Inattivo <span class="n">1</span></h4><div class="kcard"><div class="who">M. Conti</div><div class="meta">agente · non disponibile</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TASKS -->
+  <section class="view" id="v-tasks">
+    <h1>Attività</h1>
+    <div class="crumb">CRM · Le mie + team</div>
+    <div class="panel">
+      <table>
+        <thead><tr><th></th><th>Attività</th><th>Contatto</th><th>Assegnato</th><th>Scadenza</th></tr></thead>
+        <tbody>
+          <tr><td><input type="checkbox"></td><td>Registrare esito visita</td><td>M. Bianchi</td><td>AZM</td><td class="mono" style="color:var(--warn)">ieri</td></tr>
+          <tr><td><input type="checkbox"></td><td>Follow-up richiesta #2311</td><td>G. De Luca</td><td>AZM</td><td class="mono">oggi 15:00</td></tr>
+          <tr><td><input type="checkbox"></td><td>Verifica documenti fotografo</td><td>L. Ferri</td><td>AZM</td><td class="mono">oggi 17:30</td></tr>
+          <tr><td><input type="checkbox"></td><td>Proporre 2ª visita</td><td>M. Bianchi</td><td>AZM</td><td class="mono">05 ago</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-settings">
+    <h1>Impostazioni</h1>
+    <div class="crumb">CRM · Configurazione (sola lettura nel prototipo)</div>
+    <div class="split">
+      <div class="panel">
+        <h3>Matrice ruoli (Keycloak)</h3>
+        <table class="rolematrix">
+          <thead><tr><th>Ruolo</th><th>Accesso</th></tr></thead>
+          <tbody>
+            <tr><td>crm-admin</td><td>Tutto, incl. export DSAR e cancellazione</td></tr>
+            <tr><td>crm-ops</td><td>Lettura/scrittura, no export/cancellazione</td></tr>
+            <tr><td>crm-conductor</td><td>Solo contatti delle proprie visite</td></tr>
+            <tr><td>crm-marketing</td><td>Aggregati · telefono e note oscurati</td></tr>
+            <tr><td>crm-readonly</td><td>Sola lettura</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>GDPR</h3>
+        <div class="field"><span class="l">Retention seeker dormienti</span><span class="mono">24 mesi</span></div>
+        <div class="field"><span class="l">Informativa CRM</span><span class="b exp">In attesa di counsel</span></div>
+        <div class="field"><span class="l">Flag produzione</span><span class="mono">CRM_ENABLED=false</span></div>
+        <div class="note">Gate: nessun dato personale di produzione finché la voce "internal CRM processing" non è coperta dall'informativa approvata (spec §10.5).</div>
+      </div>
+    </div>
+  </section>
+
+  </main>
+</div>
+<div class="proto">EC CRM · prototipo v1 · non funzionale</div>
+<script>
+function go(v){
+  document.querySelectorAll('.view').forEach(s=>s.classList.remove('on'));
+  document.getElementById('v-'+v).classList.add('on');
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===v||(v==='c360'&&a.dataset.v==='contacts')));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>go(a.dataset.v)));
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  document.querySelectorAll('.pv').forEach(p=>p.style.display='none');
+  document.getElementById('p-'+b.dataset.p).style.display='block';
+}));
+</script>
+</body>
+</html>

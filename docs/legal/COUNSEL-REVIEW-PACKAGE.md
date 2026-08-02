@@ -265,6 +265,8 @@ Described as implemented controls, **not** as adequacy conclusions.
 
 2. **Art. 13 informativa:** are the draft `privacy-policy.md` and on-page `/it/legal/privacy` sufficient **at the moment of Contatta**, given checkboxes link to them and version string says “draft”?
 
+2a. **Internal CRM processing (K EC 4.1) — GATE:** please confirm Art. 13 notice coverage + retention schedule for internal relationship-management processing (unified contacts across seekers/owners/B4A referrals/partners; activities; tasks; CRM audit log). Engineering default: dormant seekers anonymised after **24 months** (`CRM_DORMANT_RETENTION_MONTHS`); feature flag `CRM_ENABLED=false` until this clears. Template wording only — **not** final. B4A fields in CRM remain limited to the four Phase A attestation fields; any expansion is frozen pending the existing cross-controller analysis.
+
 3. **Dual consent, single version field:** is it correct that `mediation_disclosure` shares the **privacy** `policyVersion` string with no separate mediation document version?
 
 4. **Lawful basis mapping:** please assign Art. 6 bases for each activity in §1.1 (enquiries, viewings, alerts, AVM leads, ETL legacy data, email, push, AML/KYC when live).

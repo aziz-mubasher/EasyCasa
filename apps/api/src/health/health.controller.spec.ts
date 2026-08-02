@@ -90,6 +90,8 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     DEMO_MODE: false,
     SENTRY_DSN: '',
     VALUATION_BAND_ENABLED: false,
+    CRM_ENABLED: false,
+    CRM_DORMANT_RETENTION_MONTHS: 24,
     SHARE_VIEW_HMAC_SECRET: 'test-smartlink-view-secret',
     AGENCY_PUBLIC_NAME: 'Easy Casa Italy',
     AGENCY_PUBLIC_EMAIL: 'info@easycasaita.com',

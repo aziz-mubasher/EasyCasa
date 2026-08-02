@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EasyCasa CRM — Admin Prototype v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #14212E;
+    --parchment: #F3EDE1;
+    --azure: #2C6E9B;
+    --ochre: #C08A1E;
+    --bg: #0f1822;
+    --surface: #14212E;
+    --border: rgba(243, 237, 225, 0.12);
+    --muted: #9db0be;
+    --font-display: 'Bricolage Grotesque', sans-serif;
+    --font-body: 'Newsreader', Georgia, serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: var(--parchment);
+    background:
+      radial-gradient(1000px 500px at 10% -10%, rgba(44,110,155,.25), transparent 55%),
+      linear-gradient(180deg, #101925, var(--bg) 50%);
+  }
+  .shell { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+  aside { background: var(--surface); border-right: 1px solid var(--border); padding: 1.25rem 1rem; }
+  .brand { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 1.5rem; }
+  .brand span { color: var(--ochre); }
+  nav button {
+    display: block; width: 100%; text-align: left; background: transparent; border: 0;
+    color: var(--muted); padding: .55rem .4rem; font: inherit; cursor: pointer;
+  }
+  nav button.active, nav button:hover { color: var(--parchment); }
+  main { padding: 1.5rem 2rem; }
+  h1 { font-family: var(--font-display); margin: 0 0 .25rem; }
+  .muted { color: var(--muted); }
+  .tabs { display: flex; gap: .4rem; flex-wrap: wrap; margin: 1rem 0 1.25rem; }
+  .tabs button, .btn {
+    border: 1px solid var(--border); background: transparent; color: var(--parchment);
+    padding: .4rem .7rem; cursor: pointer; font-family: var(--font-mono); font-size: .8rem;
+  }
+  .tabs button.active, .btn.primary { background: var(--azure); border-color: var(--azure); }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
+  .kpi { border: 1px solid var(--border); padding: 1rem; background: rgba(20,33,46,.6); }
+  .kpi .v { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.5rem; margin-top: .35rem; }
+  .ochre { color: var(--ochre); }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .kanban { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(160px,1fr); gap: .6rem; overflow-x: auto; }
+  .col { border: 1px solid var(--border); padding: .7rem; min-height: 10rem; background: rgba(20,33,46,.55); }
+  .col h3 { margin: 0 0 .6rem; font-size: .85rem; font-family: var(--font-display); }
+  .card { border: 1px solid var(--border); padding: .5rem; margin-bottom: .4rem; cursor: pointer; }
+  .grid360 { display: grid; grid-template-columns: 1fr 1.3fr; gap: 1rem; }
+  .box { border: 1px solid var(--border); padding: 1rem; margin-bottom: .7rem; }
+  .badge { display: inline-block; font-family: var(--font-mono); font-size: .7rem; border: 1px solid var(--azure); color: #a9c8dc; padding: .1rem .35rem; margin-right: .25rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: .45rem .3rem; border-bottom: 1px solid var(--border); font-size: .95rem; }
+  th { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); }
+  @media (max-width: 800px) {
+    .shell { grid-template-columns: 1fr; }
+    .kpis, .grid360 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand">EasyCasa<span>.</span></div>
+    <nav>
+      <button class="active" data-go="dash">CRM Dashboard</button>
+      <button data-go="contacts">Contacts</button>
+      <button data-go="c360">Contact-360</button>
+      <button data-go="pipe">Pipelines</button>
+      <button data-go="tasks">Tasks</button>
+      <button data-go="settings">Settings</button>
+    </nav>
+    <p class="muted" style="margin-top:2rem;font-size:.75rem;font-family:var(--font-mono)">Prototype v1 · UTF-8 · design reference</p>
+  </aside>
+  <main>
+    <section id="dash" class="panel active">
+      <h1>CRM</h1>
+      <p class="muted">Seekers · owners · B4A · partners — one identity.</p>
+      <div class="kpis" style="margin-top:1rem">
+        <div class="kpi"><div class="muted">Enquiry → viewing</div><div class="v">42%</div></div>
+        <div class="kpi"><div class="muted">Median first response</div><div class="v">18 min</div></div>
+        <div class="kpi"><div class="muted">Viewings with outcome</div><div class="v">67%</div></div>
+        <div class="kpi"><div class="muted">B4A → attestation</div><div class="v ochre">31%</div></div>
+      </div>
+    </section>
+    <section id="contacts" class="panel">
+      <h1>Contacts</h1>
+      <p class="muted">Search · role · stage · owner filters</p>
+      <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Roles</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Mario Rossi</td><td class="mono">mario@example.it</td><td><span class="badge">seeker</span><span class="badge">b4a</span></td><td>enquiry</td></tr>
+          <tr><td>Giulia Bianchi</td><td>giulia@example.it</td><td><span class="badge">owner</span></td><td>manual</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="c360" class="panel">
+      <h1>Mario Rossi</h1>
+      <p class="muted">mario@example.it · <span class="badge">seeker</span><span class="badge">owner</span><span class="badge">b4a</span></p>
+      <div class="grid360" style="margin-top:1rem">
+        <div>
+          <div class="box"><h3>Seeker</h3><p>Stage: viewing_confirmed</p></div>
+          <div class="box"><h3>Owner</h3><p>Stage: prospect · channel email</p></div>
+          <div class="box">
+            <h3>B4A</h3>
+            <p>Status: active</p>
+            <p>Band: <span class="ochre" style="font-family:var(--font-mono);font-variant-numeric:tabular-nums">€325.000</span></p>
+            <p class="muted">Expires 2027-01-27 · Initials M.R.</p>
+            <p class="muted" style="margin-top:.5rem">404 sweep → “Nessuna attestazione”</p>
+          </div>
+        </div>
+        <div class="box">
+          <h3>Timeline</h3>
+          <p class="muted">enquiry_ref · New enquiry</p>
+          <p class="muted">viewing_ref · Viewing confirmed</p>
+          <p class="muted">note · Called about slot</p>
+        </div>
+      </div>
+    </section>
+    <section id="pipe" class="panel">
+      <h1>Pipelines</h1>
+      <div class="tabs">
+        <button class="active">seeker</button><button>owner</button><button>b4a (RO)</button><button>partner</button>
+      </div>
+      <div class="kanban">
+        <div class="col"><h3>new enquiry</h3><div class="card">Anna Verdi</div></div>
+        <div class="col"><h3>contacted</h3></div>
+        <div class="col"><h3>viewing requested</h3><div class="card">Luca Neri</div></div>
+        <div class="col"><h3>viewing confirmed</h3><div class="card">Mario Rossi</div></div>
+        <div class="col"><h3>viewing done</h3></div>
+      </div>
+    </section>
+    <section id="tasks" class="panel">
+      <h1>Tasks</h1>
+      <table>
+        <thead><tr><th>Title</th><th>Due</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Call Mario after viewing</td><td>oggi</td><td>open</td></tr>
+          <tr><td>Send listing pack to Giulia</td><td>domani</td><td>open</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="settings" class="panel">
+      <h1>Settings</h1>
+      <p>Retention: <span style="font-family:var(--font-mono)">24 months</span> (read-only · counsel)</p>
+      <p class="muted">CRM_ENABLED=false by default · Art. 13 gate</p>
+      <p>Roles: crm-admin · crm-ops · crm-conductor · crm-marketing · crm-readonly</p>
+    </section>
+  </main>
+</div>
+<script>
+  const panels = [...document.querySelectorAll('.panel')];
+  const buttons = [...document.querySelectorAll('aside nav button')];
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      panels.forEach((p) => p.classList.remove('active'));
+      document.getElementById(btn.dataset.go).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

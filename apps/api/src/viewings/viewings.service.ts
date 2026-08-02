@@ -9,6 +9,8 @@ import {
 import { PRODUCT_EVENTS, weeklyHours } from '@easycasa/shared';
 
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
+import { crmFireSafe } from '../crm/crm-fire-safe';
+import { CRM_HOOKS, type CrmHooks } from '../crm/domain/ports';
 import { generateSlots } from './domain/slots';
 import { DEFAULT_CONFIG, validateBooking, type SchedulingConfig } from './domain/booking';
 import { nextViewingStatus, ViewingTransitionError } from './domain/ports';
@@ -36,6 +38,7 @@ export class ViewingsService {
     @Inject(VIEWING_LISTING_LOOKUP) private readonly listings: ViewingListingLookup,
     @Inject(VIEWING_NOTIFIER) private readonly notifier: ViewingNotifier,
     @Optional() private readonly analytics?: ProductAnalyticsService,
+    @Optional() @Inject(CRM_HOOKS) private readonly crmHooks?: CrmHooks,
   ) {}
 
   /** Owner / mediator reads weekly availability windows. */
@@ -141,6 +144,21 @@ export class ViewingsService {
       weeklyHours: weeklyHours(windows),
     });
     await this.notifier.notify(conductor.conductorUserId, viewing, 'requested');
+    const hooks = this.crmHooks;
+    await crmFireSafe(
+      'onViewingTransition',
+      hooks
+        ? () =>
+            hooks.onViewingTransition(
+              {
+                viewingId: viewing.id,
+                seekerUserId,
+                enquiryId: viewing.enquiryId,
+              },
+              'viewing_requested',
+            )
+        : undefined,
+    );
     return this.enrich(viewing, seekerUserId);
   }
 
@@ -177,7 +195,41 @@ export class ViewingsService {
     }
     await this.viewings.setStatus(viewingId, status);
     const updated = { ...viewing, status };
-    if (event === 'CONFIRM') await this.notifier.notify(viewing.seekerUserId, updated, 'confirmed');
+    if (event === 'CONFIRM') {
+      await this.notifier.notify(viewing.seekerUserId, updated, 'confirmed');
+      const hooks = this.crmHooks;
+      await crmFireSafe(
+        'onViewingTransition',
+        hooks
+          ? () =>
+              hooks.onViewingTransition(
+                {
+                  viewingId: viewing.id,
+                  seekerUserId: viewing.seekerUserId,
+                  enquiryId: viewing.enquiryId,
+                },
+                'viewing_confirmed',
+              )
+          : undefined,
+      );
+    }
+    if (event === 'COMPLETE') {
+      const hooks = this.crmHooks;
+      await crmFireSafe(
+        'onViewingTransition',
+        hooks
+          ? () =>
+              hooks.onViewingTransition(
+                {
+                  viewingId: viewing.id,
+                  seekerUserId: viewing.seekerUserId,
+                  enquiryId: viewing.enquiryId,
+                },
+                'viewing_done',
+              )
+          : undefined,
+      );
+    }
     if (event === 'CANCEL') {
       const other =
         actorUserId === viewing.seekerUserId ? viewing.conductorUserId : viewing.seekerUserId;

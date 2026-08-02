@@ -308,6 +308,221 @@ export class EasyCasaAdminApi {
   listLeases(): Promise<Lease[]> {
     return this.request('/leases', z.array(LeaseSchema));
   }
+
+  /* K EC 4.1 — Internal CRM */
+  crmDashboard(): Promise<{
+    metrics: {
+      enquiryToViewingRate: number | null;
+      medianFirstResponseMinutes: number | null;
+      viewingOutcomeRecordedRate: number | null;
+      b4aReferralAttestationRate: number | null;
+    };
+    myTasksDueToday: Array<{
+      id: string;
+      contactId: string;
+      title: string;
+      status: string;
+      dueAt: string | null;
+    }>;
+    seekerFunnel: Array<{ stage: string; count: number }>;
+    retentionMonths: number;
+    crmEnabled: boolean;
+  }> {
+    return this.request('/admin/crm/dashboard', z.unknown()) as Promise<{
+      metrics: {
+        enquiryToViewingRate: number | null;
+        medianFirstResponseMinutes: number | null;
+        viewingOutcomeRecordedRate: number | null;
+        b4aReferralAttestationRate: number | null;
+      };
+      myTasksDueToday: Array<{
+        id: string;
+        contactId: string;
+        title: string;
+        status: string;
+        dueAt: string | null;
+      }>;
+      seekerFunnel: Array<{ stage: string; count: number }>;
+      retentionMonths: number;
+      crmEnabled: boolean;
+    }>;
+  }
+
+  crmSettings(): Promise<{
+    retentionMonths: number;
+    crmEnabled: boolean;
+    roleMatrix: Array<{ role: string; access: string }>;
+    pipelines: Record<string, string[]>;
+    gate: string;
+  }> {
+    return this.request('/admin/crm/settings', z.unknown()) as Promise<{
+      retentionMonths: number;
+      crmEnabled: boolean;
+      roleMatrix: Array<{ role: string; access: string }>;
+      pipelines: Record<string, string[]>;
+      gate: string;
+    }>;
+  }
+
+  crmListContacts(params?: {
+    query?: string;
+    role?: string;
+    stage?: string;
+    owner?: string;
+    page?: number;
+  }): Promise<{
+    items: Array<{
+      id: string;
+      fullName: string;
+      email: string | null;
+      phone: string | null;
+      source: string;
+      tags: string[];
+      ownerAdminId: string | null;
+    }>;
+    total: number;
+  }> {
+    const q = new URLSearchParams();
+    if (params?.query) q.set('query', params.query);
+    if (params?.role) q.set('role', params.role);
+    if (params?.stage) q.set('stage', params.stage);
+    if (params?.owner) q.set('owner', params.owner);
+    if (params?.page != null) q.set('page', String(params.page));
+    const qs = q.toString();
+    return this.request(`/admin/crm/contacts${qs ? `?${qs}` : ''}`, z.unknown()) as Promise<{
+      items: Array<{
+        id: string;
+        fullName: string;
+        email: string | null;
+        phone: string | null;
+        source: string;
+        tags: string[];
+        ownerAdminId: string | null;
+      }>;
+      total: number;
+    }>;
+  }
+
+  crmGetContact(id: string): Promise<{
+    contact: {
+      id: string;
+      fullName: string;
+      email: string | null;
+      phone: string | null;
+      tags: string[];
+      notesSummary: string | null;
+      source: string;
+    };
+    seeker: { stage: string; firstEnquiryId: string | null } | null;
+    owner: {
+      stage: string;
+      preferredChannel: string;
+      listingIds: string[];
+    } | null;
+    b4a: {
+      attestationStatus: string;
+      bandMaxCents: number | null;
+      attestationExpiresAt: string | null;
+      holderInitials: string | null;
+    } | null;
+    partner: {
+      partnerType: string;
+      stage: string;
+      serviceZones: string[];
+    } | null;
+    recentActivities: Array<{ id: string; type: string; body: string; createdAt: string }>;
+    openTasks: Array<{ id: string; title: string; dueAt: string | null; status: string }>;
+  }> {
+    return this.request(`/admin/crm/contacts/${encodeURIComponent(id)}`, z.unknown()) as ReturnType<
+      EasyCasaAdminApi['crmGetContact']
+    >;
+  }
+
+  crmAddActivity(
+    id: string,
+    body: { type: 'note' | 'call' | 'email'; body: string },
+  ): Promise<unknown> {
+    return this.request(
+      `/admin/crm/contacts/${encodeURIComponent(id)}/activities`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify(body) },
+    );
+  }
+
+  crmListTasks(params?: {
+    assignee?: string;
+    status?: string;
+    due?: string;
+    page?: number;
+  }): Promise<{
+    items: Array<{
+      id: string;
+      contactId: string;
+      title: string;
+      dueAt: string | null;
+      status: string;
+    }>;
+    total: number;
+  }> {
+    const q = new URLSearchParams();
+    if (params?.assignee) q.set('assignee', params.assignee);
+    if (params?.status) q.set('status', params.status);
+    if (params?.due) q.set('due', params.due);
+    if (params?.page != null) q.set('page', String(params.page));
+    const qs = q.toString();
+    return this.request(`/admin/crm/tasks${qs ? `?${qs}` : ''}`, z.unknown()) as Promise<{
+      items: Array<{
+        id: string;
+        contactId: string;
+        title: string;
+        dueAt: string | null;
+        status: string;
+      }>;
+      total: number;
+    }>;
+  }
+
+  crmPatchTask(
+    id: string,
+    body: { title?: string; status?: string; dueAt?: string | null },
+  ): Promise<unknown> {
+    return this.request(`/admin/crm/tasks/${encodeURIComponent(id)}`, z.unknown(), {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    });
+  }
+
+  crmPipeline(role: string): Promise<{
+    role: string;
+    readOnly: boolean;
+    columns: Array<{
+      stage: string;
+      count: number;
+      cards: Array<{ contactId: string; fullName: string; email: string | null }>;
+    }>;
+  }> {
+    return this.request(`/admin/crm/pipelines/${encodeURIComponent(role)}`, z.unknown()) as Promise<{
+      role: string;
+      readOnly: boolean;
+      columns: Array<{
+        stage: string;
+        count: number;
+        cards: Array<{ contactId: string; fullName: string; email: string | null }>;
+      }>;
+    }>;
+  }
+
+  crmPatchRole(
+    contactId: string,
+    role: string,
+    body: { stage?: string; note?: string },
+  ): Promise<unknown> {
+    return this.request(
+      `/admin/crm/contacts/${encodeURIComponent(contactId)}/roles/${encodeURIComponent(role)}`,
+      z.unknown(),
+      { method: 'PATCH', body: JSON.stringify(body) },
+    );
+  }
 }
 
 export { CredentialTypeSchema, ProfessionalSchema, AssignmentSchema, CandidateSchema, KycCaseSchema, LeaseSchema };
