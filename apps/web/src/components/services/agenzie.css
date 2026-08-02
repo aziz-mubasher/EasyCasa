@@ -1,0 +1,345 @@
+/* Per le Agenzie — scoped under .ag (EasyCasa brand tokens) */
+
+.ag {
+  --ag-ink-70: rgba(20, 33, 46, 0.7);
+  --ag-ink-12: rgba(20, 33, 46, 0.12);
+  --ag-paper-85: rgba(243, 237, 225, 0.85);
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.ag .wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.ag h1,
+.ag h2,
+.ag h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  line-height: 1.15;
+  font-variation-settings: 'wdth' 90;
+}
+
+.ag .hero {
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(3.5rem, 8vw, 4.5rem) 0 clamp(3rem, 7vw, 4rem);
+}
+
+.ag .hero .kicker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+
+.ag .hero h1 {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 700;
+  max-width: 17ch;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.ag .hero .lead {
+  font-size: 1.25rem;
+  max-width: 52ch;
+  color: var(--ag-paper-85);
+  margin-bottom: 2rem;
+}
+
+.ag .hero .lead b {
+  color: var(--paper);
+  font-weight: 600;
+}
+
+.ag .cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.ag .cta {
+  display: inline-block;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  background: var(--ochre);
+  color: var(--ink);
+  padding: 0.875rem 1.75rem;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.ag .cta:hover {
+  filter: brightness(1.05);
+}
+
+.ag .cta.ghost {
+  background: transparent;
+  color: var(--paper);
+  border: 1.5px solid rgba(243, 237, 225, 0.4);
+}
+
+.ag .pill-row {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  margin-top: 2.25rem;
+}
+
+.ag .pill {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  border: 1px solid rgba(243, 237, 225, 0.3);
+  border-radius: 999px;
+  padding: 0.375rem 0.875rem;
+  color: var(--ag-paper-85);
+}
+
+.ag section {
+  padding: clamp(3rem, 6vw, 4rem) 0;
+}
+
+.ag .kicker2 {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--azure);
+  margin-bottom: 0.75rem;
+}
+
+.ag h2 {
+  font-size: clamp(1.625rem, 3.5vw, 2.25rem);
+  margin-bottom: 0.875rem;
+  max-width: 24ch;
+  letter-spacing: -0.02em;
+}
+
+.ag .sub {
+  max-width: 60ch;
+  color: var(--ag-ink-70);
+  margin-bottom: 2.5rem;
+}
+
+.ag .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.ag .benefit {
+  background: #fff;
+  border: 1px solid var(--ag-ink-12);
+  border-radius: 10px;
+  padding: 1.75rem;
+}
+
+.ag .benefit .num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  color: var(--azure);
+  margin-bottom: 0.625rem;
+}
+
+.ag .benefit h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.625rem;
+}
+
+.ag .benefit p {
+  font-size: 1rem;
+  color: var(--ag-ink-70);
+}
+
+.ag .benefit p b {
+  color: var(--ink);
+}
+
+.ag .steps {
+  counter-reset: step;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.ag .step {
+  border-top: 2px solid var(--azure);
+  padding-top: 1rem;
+}
+
+.ag .step::before {
+  counter-increment: step;
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  color: var(--azure);
+  font-size: 0.875rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.ag .step h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.375rem;
+}
+
+.ag .step p {
+  font-size: 0.9375rem;
+  color: var(--ag-ink-70);
+}
+
+.ag .rules {
+  background: #fff;
+  border: 1px solid var(--ag-ink-12);
+  border-radius: 10px;
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.ag .rules ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ag .rules li {
+  padding: 0.75rem 0 0.75rem 2.125rem;
+  position: relative;
+  border-bottom: 1px solid var(--ag-ink-12);
+  font-size: 1rem;
+}
+
+.ag .rules li:last-child {
+  border-bottom: none;
+}
+
+.ag .rules li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  color: var(--azure);
+  font-weight: 500;
+}
+
+.ag .disclose {
+  font-size: 0.8125rem;
+  color: var(--ag-ink-70);
+  border-left: 3px solid var(--ochre);
+  padding-left: 0.875rem;
+  margin-top: 1.75rem;
+  max-width: 66ch;
+}
+
+.ag .honest {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 12px;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.ag .honest .kicker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 0.75rem;
+}
+
+.ag .honest h2 {
+  color: var(--paper);
+}
+
+.ag .honest p {
+  color: var(--ag-paper-85);
+  max-width: 62ch;
+  margin-bottom: 0.875rem;
+}
+
+.ag .honest p:last-child {
+  margin-bottom: 0;
+}
+
+.ag .honest p b {
+  color: var(--paper);
+}
+
+.ag .apply {
+  background: #fff;
+  border: 1px solid var(--ag-ink-12);
+  border-radius: 12px;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  max-width: 640px;
+}
+
+.ag .apply label {
+  display: block;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin: 1.125rem 0 0.375rem;
+}
+
+.ag .apply label:first-of-type {
+  margin-top: 0;
+}
+
+.ag .apply input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--ag-ink-12);
+  border-radius: 6px;
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 1rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.ag .apply input:focus {
+  outline: 2px solid var(--azure);
+  outline-offset: 1px;
+}
+
+.ag .apply .note {
+  font-size: 0.8125rem;
+  color: var(--ag-ink-70);
+  margin-top: 1rem;
+}
+
+.ag .apply .note a {
+  color: var(--azure);
+  text-decoration: underline;
+}
+
+.ag .apply button {
+  margin-top: 1.375rem;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  background: var(--azure);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.875rem 1.75rem;
+  cursor: pointer;
+}
+
+.ag .apply button:hover {
+  filter: brightness(1.06);
+}
+
+.ag .apply .sent {
+  margin-top: 1rem;
+  font-size: 0.9375rem;
+  color: var(--azure);
+}

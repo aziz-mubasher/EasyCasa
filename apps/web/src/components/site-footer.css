@@ -75,6 +75,22 @@
   color: rgba(232, 223, 204, 0.68);
 }
 
+.sf .sf-about-link {
+  margin: 0.85rem 0 0;
+}
+
+.sf .sf-about-link a {
+  color: var(--paper-deep);
+  text-decoration: none;
+  font-size: 0.92rem;
+  border-bottom: 1px solid transparent;
+}
+
+.sf .sf-about-link a:hover {
+  color: var(--paper);
+  border-bottom-color: var(--azure-pale);
+}
+
 .sf .sf-about h2 {
   margin-top: 0.25rem;
 }

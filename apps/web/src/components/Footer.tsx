@@ -57,6 +57,9 @@ export function Footer() {
             <p className="sf-blurb">{t('blurb')}</p>
             <h2 id="footer-about">{t('columns.about')}</h2>
             <p className="sf-about-ext">{t('about')}</p>
+            <p className="sf-about-link">
+              <Link href="/agenzie">{t('agencies')}</Link>
+            </p>
           </div>
 
           <nav aria-labelledby="footer-sellers">
@@ -113,6 +116,7 @@ export function Footer() {
         <div className="sf-legal">
           <p className="sf-entity">{t('entity')}</p>
           <div className="sf-legal-links">
+            <Link href="/agenzie">{t('legal.agencies')}</Link>
             <Link href="/legal/privacy">{t('legal.privacy')}</Link>
             <Link href="/legal/terms">{t('legal.terms')}</Link>
             <Link href="/legal/mediation">{t('legal.mediation')}</Link>

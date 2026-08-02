@@ -587,9 +587,11 @@
       "transparency": "Transparencia",
       "terms": "Términos",
       "myData": "Mis datos",
-      "contacts": "Contactos"
+      "contacts": "Contactos",
+      "agencies": "Para agencias"
     },
-    "about": "EasyCasa pone en contacto directamente a quien vende y compra casa en Italia, sin comisión del vendedor. Verificamos la identidad de quien publica antes de que el anuncio esté online y mostramos los valores de mercado oficiales junto a cada precio. Los servicios — fotos, certificado energético, verificación de documentos, asistencia — tienen un precio fijo, indicado antes del pedido. En italiano, inglés y español."
+    "about": "EasyCasa pone en contacto directamente a quien vende y compra casa en Italia, sin comisión del vendedor. Verificamos la identidad de quien publica antes de que el anuncio esté online y mostramos los valores de mercado oficiales junto a cada precio. Los servicios — fotos, certificado energético, verificación de documentos, asistencia — tienen un precio fijo, indicado antes del pedido. En italiano, inglés y español.",
+    "agencies": "Para agencias"
   },
   "pricing": {
     "title": "Precios à la carte",
@@ -2149,6 +2151,138 @@
       "linkTerms": "Términos",
       "linkPrivacy": "Privacidad",
       "linkContacts": "Contacto"
+    }
+  },
+  "agenzie": {
+    "meta": {
+      "title": "Para agencias — EasyCasa Italia",
+      "description": "Publica gratis durante el piloto EasyCasa: importación automática, compradores con verificación de presupuesto, solo anuncios auténticos."
+    },
+    "hero": {
+      "kicker": "Para agencias inmobiliarias",
+      "title": "Vender casas de forma auténtica. Juntos.",
+      "lead": "EasyCasa es el portal italiano donde cada anuncio está verificado y cada agencia está identificada. Durante el piloto publicar es gratis: sin suscripción, sin renovación automática, sin exclusividad. Tu comisión sigue siendo tuya — nosotros no entramos en la negociación.",
+      "cta": "Presenta tu agencia",
+      "ctaSecondary": "Cómo funciona",
+      "pills": [
+        "€ 0 durante el piloto",
+        "Importación XML automática",
+        "Sin renovación automática",
+        "Sin exclusividad"
+      ]
+    },
+    "benefits": {
+      "kicker": "Por qué EasyCasa",
+      "title": "Seis ventajas concretas, cero costes ocultos",
+      "sub": "Construimos el portal alrededor de los problemas reales de las agencias independientes: costes de portales al alza, leads que hacen perder tiempo, anuncios serios enterrados bajo anuncios fantasma.",
+      "items": [
+        {
+          "num": "01",
+          "title": "Gratis durante el piloto",
+          "body": "Sin canon, sin tramos de anuncios, sin sorpresas en la renovación. Cuando introduzcamos servicios de pago, los socios fundadores mantendrán condiciones reservadas — y lo decimos hoy, por escrito."
+        },
+        {
+          "num": "02",
+          "title": "Sin doble trabajo",
+          "body": "Importamos tus anuncios del feed XML que ya usas en otros portales. Configuración una sola vez, sincronización automática, informe de importación legible tras cada actualización."
+        },
+        {
+          "num": "03",
+          "title": "Compradores con presupuesto verificado",
+          "body": "Las solicitudes pueden llegar con una acreditación de capacidad financiera: estado, franja de presupuesto y validez. Haz visitas solo con quien puede comprar de verdad."
+        },
+        {
+          "num": "04",
+          "title": "Agenda de visitas integrada",
+          "body": "Propuesta de horarios, confirmación y registro del resultado en un solo flujo. Menos llamadas, menos no-show, un historial ordenado por cada inmueble."
+        },
+        {
+          "num": "05",
+          "title": "Solo anuncios auténticos",
+          "body": "Cada agencia está verificada (NIF/IVA y número REA visibles), cada anuncio declara un encargo real, se bloquean duplicados. Tus anuncios no compiten con anuncios fantasma."
+        },
+        {
+          "num": "06",
+          "title": "Tu marca, siempre",
+          "body": "Logo, nombre y contactos de tu agencia en cada anuncio y en una página de agencia dedicada. Los clientes son tuyos: somos el canal, no el intermediario."
+        }
+      ]
+    },
+    "how": {
+      "kicker": "Cómo funciona",
+      "title": "Operativos en pocos días",
+      "steps": [
+        {
+          "title": "Candidatura",
+          "body": "Rellenas el formulario: datos de la agencia, IVA y número REA."
+        },
+        {
+          "title": "Verificación",
+          "body": "Comprobamos el registro y activamos el perfil verificado de tu agencia."
+        },
+        {
+          "title": "Conexión",
+          "body": "Conectas el feed XML de tu gestional — o cargamos nosotros la cartera inicial."
+        },
+        {
+          "title": "Online",
+          "body": "Anuncios publicados con insignia de agencia verificada. Las solicitudes llegan a tu bandeja."
+        }
+      ]
+    },
+    "rules": {
+      "kicker": "El pacto de autenticidad",
+      "title": "Qué pedimos a cambio",
+      "sub": "El valor de EasyCasa — para ti y para los compradores — depende de la calidad de los anuncios. Las reglas son pocas, claras e iguales para todos.",
+      "items": [
+        "Publicas solo inmuebles para los que tienes un encargo real.",
+        "Respondes a las solicitudes en 48 horas.",
+        "Retiras el anuncio en 5 días tras la venta o la revocación del encargo.",
+        "Confirmas la disponibilidad de los anuncios con un clic cada 30 días (automático si usas el feed).",
+        "Gestionas las visitas de clientes EasyCasa en la agenda integrada."
+      ],
+      "disclose": "Los criterios de visibilidad y las reglas de suspensión están documentados y son transparentes: ninguna penalización sin motivación escrita y posibilidad de réplica."
+    },
+    "honest": {
+      "kicker": "Hablemos claro",
+      "title": "Tres cosas que te decimos ya",
+      "items": [
+        {
+          "title": "1 · Somos nuevos.",
+          "body": "El tráfico de compradores crece zona a zona: por eso el piloto es gratis y concentrado geográficamente. Arriesgas un feed XML, no una suscripción."
+        },
+        {
+          "title": "2 · La acreditación financiera es de nuestro grupo.",
+          "body": "La verificación de presupuesto la aporta Banks4All, sociedad del grupo Mundida como EasyCasa. Ningún documento financiero del comprador llega a ti ni a nosotros: solo estado, franja y validez."
+        },
+        {
+          "title": "3 · Un día ganaremos.",
+          "body": "Tras el piloto introduciremos servicios opcionales de pago. Las condiciones para socios fundadores se comunicarán antes, por escrito, sin renovaciones automáticas."
+        }
+      ]
+    },
+    "form": {
+      "kicker": "Programa piloto",
+      "title": "Presenta tu agencia",
+      "sub": "Plazas limitadas para la zona piloto. Te respondemos en 2 días laborables.",
+      "agency": "Nombre de la agencia",
+      "piva": "NIF / IVA",
+      "rea": "Número REA y provincia",
+      "reaPlaceholder": "ej. BS-123456",
+      "email": "Email",
+      "phone": "Teléfono",
+      "gestionale": "Gestional / origen del feed (si lo usas)",
+      "gestionalePlaceholder": "ej. Getrix",
+      "submit": "Enviar candidatura",
+      "sent": "Se abre tu cliente de correo con la candidatura lista. Envía el mensaje para terminar.",
+      "note": "Los datos se tratan para gestionar tu candidatura al piloto (art. 6(1)(b) RGPD). <privacy>Aviso de privacidad</privacy>.",
+      "mailSubject": "Candidatura piloto agencia — {agency}",
+      "mailAgency": "Agencia: {agency}",
+      "mailPiva": "IVA: {piva}",
+      "mailRea": "REA: {rea}",
+      "mailEmail": "Email: {email}",
+      "mailPhone": "Teléfono: {phone}",
+      "mailGestionale": "Gestional / feed: {gestionale}"
     }
   }
 }

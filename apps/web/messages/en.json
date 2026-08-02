@@ -587,9 +587,11 @@
       "transparency": "Transparency",
       "terms": "Terms",
       "myData": "My data",
-      "contacts": "Contacts"
+      "contacts": "Contacts",
+      "agencies": "For agencies"
     },
-    "about": "EasyCasa connects sellers and buyers of homes in Italy directly, with no commission from the seller. We verify the identity of who publishes before a listing goes live and show official market values next to every asking price. Services — photos, energy certificate, document checks, assistance — have a fixed price stated before you order. In Italian, English and Spanish."
+    "about": "EasyCasa connects sellers and buyers of homes in Italy directly, with no commission from the seller. We verify the identity of who publishes before a listing goes live and show official market values next to every asking price. Services — photos, energy certificate, document checks, assistance — have a fixed price stated before you order. In Italian, English and Spanish.",
+    "agencies": "For agencies"
   },
   "pricing": {
     "title": "À la carte pricing",
@@ -2149,6 +2151,138 @@
       "linkTerms": "Terms",
       "linkPrivacy": "Privacy",
       "linkContacts": "Contact"
+    }
+  },
+  "agenzie": {
+    "meta": {
+      "title": "For Agencies — EasyCasa Italia",
+      "description": "List for free during the EasyCasa pilot: automatic import, buyers with budget verification, authentic listings only."
+    },
+    "hero": {
+      "kicker": "For estate agencies",
+      "title": "Sell homes authentically. Together.",
+      "lead": "EasyCasa is the Italian portal where every listing is verified and every agency is identified. During the pilot, publishing is free: no subscription, no auto-renewal, no lock-in. Your commission stays yours — we stay out of the deal.",
+      "cta": "Apply with your agency",
+      "ctaSecondary": "How it works",
+      "pills": [
+        "€0 during the pilot",
+        "Automatic XML import",
+        "No auto-renewal",
+        "Non-exclusive"
+      ]
+    },
+    "benefits": {
+      "kicker": "Why EasyCasa",
+      "title": "Six concrete advantages, zero hidden costs",
+      "sub": "We built the portal around the real problems of independent agencies: rising portal fees, time-wasting leads, serious listings buried under ghost ads.",
+      "items": [
+        {
+          "num": "01",
+          "title": "Free during the pilot",
+          "body": "No retainer, no listing tiers, no renewal surprises. When we introduce paid services, founding partners keep reserved terms — and we say so today, in writing."
+        },
+        {
+          "num": "02",
+          "title": "No double work",
+          "body": "We import your listings from the XML feed you already use for other portals. One-time setup, automatic sync, a readable import report after every update."
+        },
+        {
+          "num": "03",
+          "title": "Buyers with verified budget",
+          "body": "Enquiries can arrive with a financial-capacity attestation: status, budget band and validity. Show homes only to people who can actually buy."
+        },
+        {
+          "num": "04",
+          "title": "Built-in viewing diary",
+          "body": "Propose times, confirm, and record outcomes in one flow. Fewer calls, fewer no-shows, an orderly history for every property."
+        },
+        {
+          "num": "05",
+          "title": "Authentic listings only",
+          "body": "Every agency is verified (VAT and REA number visible), every listing declares a real mandate, duplicates are blocked. Your listings do not compete with ghost ads."
+        },
+        {
+          "num": "06",
+          "title": "Your brand, always",
+          "body": "Your logo, name and contacts on every listing and on a dedicated agency page. Clients are yours: we are the channel, not the middleman."
+        }
+      ]
+    },
+    "how": {
+      "kicker": "How it works",
+      "title": "Live in a few days",
+      "steps": [
+        {
+          "title": "Application",
+          "body": "Fill in the form below: agency details, VAT and REA number."
+        },
+        {
+          "title": "Verification",
+          "body": "We check the registration and activate your verified agency profile."
+        },
+        {
+          "title": "Connection",
+          "body": "Connect your CRM XML feed — or we load the initial portfolio for you."
+        },
+        {
+          "title": "Online",
+          "body": "Listings publish with a verified-agency badge. Enquiries land in your inbox."
+        }
+      ]
+    },
+    "rules": {
+      "kicker": "The authenticity pact",
+      "title": "What we ask in return",
+      "sub": "EasyCasa’s value — for you and for buyers — depends on listing quality. The rules are few, clear and the same for everyone.",
+      "items": [
+        "You publish only properties for which you have a real mandate.",
+        "You reply to enquiries within 48 hours.",
+        "You withdraw a listing within 5 days of sale or mandate revocation.",
+        "You confirm listing availability with one click every 30 days (automatic if you use the feed).",
+        "You manage EasyCasa client viewings in the built-in diary."
+      ],
+      "disclose": "Listing visibility criteria and suspension rules are documented and transparent: no penalty without a written reason and a right of reply."
+    },
+    "honest": {
+      "kicker": "Straight talk",
+      "title": "Three things we tell you upfront",
+      "items": [
+        {
+          "title": "1 · We are new.",
+          "body": "Buyer traffic is growing zone by zone: that is why the pilot is free and geographically focused. You risk an XML feed, not a subscription."
+        },
+        {
+          "title": "2 · Budget attestation is from our group.",
+          "body": "Budget verification is provided by Banks4All, a Mundida group company like EasyCasa. No buyer financial documents reach you or us: only status, band and validity."
+        },
+        {
+          "title": "3 · One day we will earn.",
+          "body": "After the pilot we will introduce optional paid services. Founding-partner terms will be communicated first, in writing, with no auto-renewals."
+        }
+      ]
+    },
+    "form": {
+      "kicker": "Pilot programme",
+      "title": "Apply with your agency",
+      "sub": "Limited places for the pilot area. We get back to you within 2 working days.",
+      "agency": "Agency name",
+      "piva": "VAT number",
+      "rea": "REA number and province",
+      "reaPlaceholder": "e.g. BS-123456",
+      "email": "Email",
+      "phone": "Phone",
+      "gestionale": "CRM / feed source (if any)",
+      "gestionalePlaceholder": "e.g. Getrix",
+      "submit": "Send application",
+      "sent": "Your email client opens with the application ready. Send the message to finish.",
+      "note": "Data is processed to handle your pilot application (GDPR art. 6(1)(b)). <privacy>Privacy notice</privacy>.",
+      "mailSubject": "Agency pilot application — {agency}",
+      "mailAgency": "Agency: {agency}",
+      "mailPiva": "VAT: {piva}",
+      "mailRea": "REA: {rea}",
+      "mailEmail": "Email: {email}",
+      "mailPhone": "Phone: {phone}",
+      "mailGestionale": "CRM / feed: {gestionale}"
     }
   }
 }
