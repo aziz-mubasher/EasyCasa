@@ -39,8 +39,9 @@ NestJS WhatsAppService
 |-------|------|------------|--------|
 | **A** | `WhatsAppModule`: Cloud client, webhook verify + status ingest stub, template send facade | — | Done (`#64`) |
 | **B** | OTP consumer via shared service — wamid / fallback_reason persistence, runbook | A, EC-12 | Done (`#66`) |
-| **C** | Utility templates + wire `ViewingsReminderScheduler` / viewing + enquiry notifiers | A | This work |
-| **D** | Admin Support queue (`support` role) | EC-14 Part 2 (done) | **Partial:** EC-19 read-only inbound viewer (`#` TBD). Reply = EC-20. Full queue still deferred |
+| **C** | Utility templates + wire viewing/enquiry notifiers | A | Done (`#67`) |
+| **EC-16** | Meta template pack (human) + `whatsapp_messages` + no-show metrics | C | This work (`#68`) |
+| **D** | Admin Support queue (`support` role) | EC-14 Part 2 (done) | **Partial:** EC-19 read-only inbound viewer. Reply = EC-20. Full queue still deferred |
 | **E** | AI triage → queue drafts (no autonomous send) | A, D | Deferred |
 | **F** | Grounded assistant | E + real conversation data | Deferred |
 

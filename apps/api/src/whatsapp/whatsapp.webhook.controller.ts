@@ -74,8 +74,8 @@ export class WhatsAppWebhookController {
       throw new BadRequestException('invalid json');
     }
 
+    // EC-16 status rows + EC-17 inbound persist; after-persist is fire-and-forget.
     const newIds = await this.whatsapp.ingestWebhookPayload(payload);
-    // Respond 200 fast; Meta retries on slow handlers.
     if (newIds.length) {
       void this.whatsapp.handleInboundAfterPersist(newIds).catch((err) => {
         this.log.warn(`inbound after-persist failed: ${String(err)}`);

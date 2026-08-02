@@ -6,22 +6,24 @@ import { WhatsAppCloudClient } from './whatsapp-cloud.client';
 import { WhatsAppInboundAdminController } from './whatsapp-inbound-admin.controller';
 import { WhatsAppInboundAdminService } from './whatsapp-inbound-admin.service';
 import { WhatsAppInboundService } from './whatsapp-inbound.service';
+import { WhatsAppMessagesStore } from './whatsapp-messages.store';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppUnmatchedSendersGauge } from './whatsapp-unmatched-senders.gauge';
 import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
 
-/** K EC 7.1 Phase A + EC-17 inbound + EC-19 admin viewer + EC-19b DSAR match. */
+/** K EC 7.1 + EC-16 delivery audit + EC-17 inbound + EC-19 admin viewer + EC-19b DSAR. */
 @Global()
 @Module({
   imports: [AuthorityModule, UsersModule],
   controllers: [WhatsAppWebhookController, WhatsAppInboundAdminController],
   providers: [
     WhatsAppCloudClient,
+    WhatsAppMessagesStore,
     WhatsAppInboundService,
     WhatsAppInboundAdminService,
     WhatsAppService,
     WhatsAppUnmatchedSendersGauge,
   ],
-  exports: [WhatsAppService],
+  exports: [WhatsAppService, WhatsAppMessagesStore],
 })
 export class WhatsAppModule {}

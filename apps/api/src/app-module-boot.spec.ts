@@ -50,6 +50,7 @@ describe('AppModule boot (PersonalDataRegistrar DI)', () => {
       'saved_searches',
       'viewings',
       'wa_inbound_messages',
+      'whatsapp_messages',
     ]);
   });
 });

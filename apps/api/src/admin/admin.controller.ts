@@ -32,6 +32,7 @@ import type { LegalBasis } from '../transactions/domain/types';
 import { toDbLegalBasis, toDomainLegalBasis } from '../transactions/status-map';
 import { InjectConfig } from '../config/inject-config.decorator';
 import type { ApiConfig } from '../config';
+import { WhatsAppMessagesStore } from '../whatsapp/whatsapp-messages.store';
 
 class SetLegalBasisDto {
   @IsIn(['MEDIAZIONE', 'MANDATO_ONEROSO', 'REVIEW_REQUIRED'])
@@ -63,6 +64,7 @@ export class AdminController {
     @Inject(EMAIL_OUTBOX) private readonly outbox: OutboxEmailProvider,
     private readonly retention: RetentionService,
     @InjectConfig() private readonly config: ApiConfig,
+    private readonly whatsappMessages: WhatsAppMessagesStore,
   ) {}
 
   @Get('stats')
@@ -73,6 +75,17 @@ export class AdminController {
       .from(listings)
       .groupBy(listings.status);
     return { listingsByStatus: rows };
+  }
+
+  /**
+   * EC-16 — WhatsApp reminder delivery vs no-show (raw counts; not significance).
+   * Optional `?days=90` (default 90).
+   */
+  @Get('whatsapp/metrics')
+  @RequiresAdminRole('operations', 'support', 'superadmin')
+  async whatsappMetrics(@Query('days') days?: string) {
+    const n = days ? Number(days) : 90;
+    return this.whatsappMessages.measurementSummary(Number.isFinite(n) && n > 0 ? n : 90);
   }
 
   /**

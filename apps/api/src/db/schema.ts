@@ -545,6 +545,21 @@ export const phoneOtpChallenges = pgTable('phone_otp_challenges', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-16 — WhatsApp Cloud send/status (no body content). */
+export const whatsappMessages = pgTable('whatsapp_messages', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  providerMessageId: text('provider_message_id').unique(),
+  templateName: text('template_name').notNull(),
+  locale: text('locale').notNull(),
+  toUserId: uuid('to_user_id'),
+  relatedType: text('related_type'),
+  relatedId: uuid('related_id'),
+  status: text('status').notNull(),
+  failureReason: text('failure_reason'),
+  sentAt: timestamp('sent_at', { withTimezone: true }).notNull().defaultNow(),
+  statusUpdatedAt: timestamp('status_updated_at', { withTimezone: true }),
+});
+
 /** EC-13 — append-only admin portal audit. */
 export const adminAuditLog = pgTable('admin_audit_log', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -845,7 +860,7 @@ export const schema = {
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,
-  authorityAuditLog, phoneOtpChallenges, adminAuditLog,
+  authorityAuditLog, phoneOtpChallenges, whatsappMessages, adminAuditLog,
   dsarAdminRequests, listingReports, identityReviewRequests,
   leases, kycCases,
   paymentIntents, invoices, stripeWebhookEvents,

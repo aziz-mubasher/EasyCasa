@@ -15,6 +15,7 @@ import { ProfileDataSource } from './sources/profile.data-source';
 import { SavedSearchesDataSource } from './sources/saved-searches.data-source';
 import { ViewingsDataSource } from './sources/viewings.data-source';
 import { WaInboundDataSource } from './sources/wa-inbound.data-source';
+import { WhatsAppMessagesDataSource } from './sources/whatsapp-messages.data-source';
 import { DrizzleConsentStore } from './stores/drizzle-consent.store';
 import { DrizzleRetentionSink } from './stores/drizzle-retention.sink';
 
@@ -71,6 +72,7 @@ export class PrivacyModule {
         ProfileDataSource,
         ConsentLedgerDataSource,
         WaInboundDataSource,
+        WhatsAppMessagesDataSource,
         PersonalDataRegistrar,
       ],
     });
