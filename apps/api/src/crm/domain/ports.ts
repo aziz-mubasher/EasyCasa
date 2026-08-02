@@ -12,6 +12,42 @@ import type {
 export const CRM_REPOSITORY = Symbol('CRM_REPOSITORY');
 export const CRM_HOOKS = Symbol('CRM_HOOKS');
 
+/** §8 EnquiryRef — minimal host payload for CRM upsert. */
+export interface CrmEnquiryRef {
+  enquiryId: string;
+  seekerUserId: string;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  fullNameHint: string | null;
+  message: string | null;
+  hasB4a: boolean;
+  b4aBandMaxCents: number | null;
+  b4aExpiresAt: Date | null;
+  b4aHolderInitials: string | null;
+}
+
+/** §8 ViewingRef */
+export interface CrmViewingRef {
+  viewingId: string;
+  seekerUserId: string;
+  enquiryId: string | null;
+}
+
+/** Hook-driven seeker stages (viewing_*); not manually dragged without a note. */
+export type CrmViewingHookStage =
+  | 'viewing_requested'
+  | 'viewing_confirmed'
+  | 'viewing_done';
+
+/** §8 B4aSweepRow — four attestation fields only. */
+export interface CrmB4aSweepRow {
+  seekerUserId: string;
+  status: CrmB4aAttestationStatus;
+  bandMaxCents: number | null;
+  expiresAt: Date | null;
+  holderInitials: string | null;
+}
+
 export interface CrmContact {
   id: string;
   userId: string | null;
@@ -23,6 +59,7 @@ export interface CrmContact {
   ownerAdminId: string | null;
   tags: string[];
   notesSummary: string | null;
+  marketingConsentId: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -96,35 +133,14 @@ export interface CrmContact360 {
   recentActivities: CrmActivity[];
 }
 
-/** Side-effect port invoked from enquiry/viewing/B4A flows (no EventEmitter in repo). */
+/**
+ * §8 CRM_HOOKS — sanctioned integration (no domain EventEmitter).
+ * Implementations must be fire-safe (catch internally); callers also use crmFireSafe.
+ */
 export interface CrmHooks {
-  onEnquiryCreated(input: {
-    enquiryId: string;
-    seekerUserId: string;
-    contactEmail: string | null;
-    contactPhone: string | null;
-    fullNameHint: string | null;
-    message: string | null;
-    hasB4a: boolean;
-    b4aBandMaxCents: number | null;
-    b4aExpiresAt: Date | null;
-    b4aHolderInitials: string | null;
-  }): Promise<void>;
-
-  onViewingLifecycle(input: {
-    viewingId: string;
-    seekerUserId: string;
-    enquiryId: string | null;
-    kind: 'requested' | 'confirmed' | 'completed';
-  }): Promise<void>;
-
-  onB4aSweepRow(input: {
-    seekerUserId: string;
-    status: CrmB4aAttestationStatus;
-    bandMaxCents: number | null;
-    expiresAt: Date | null;
-    holderInitials: string | null;
-  }): Promise<void>;
+  onEnquiryCreated(e: CrmEnquiryRef): Promise<void>;
+  onViewingTransition(v: CrmViewingRef, to: CrmViewingHookStage): Promise<void>;
+  onB4aSweepResult(r: CrmB4aSweepRow): Promise<void>;
 }
 
 export interface CrmRepository {
@@ -138,7 +154,6 @@ export interface CrmRepository {
     ownerAdminId?: string;
     page: number;
     pageSize: number;
-    /** When set, restrict to contacts linked to these viewing seeker user ids (conductor). */
     seekerUserIds?: string[];
   }): Promise<{ items: CrmContact[]; total: number }>;
   createContact(input: {
@@ -151,6 +166,7 @@ export interface CrmRepository {
     ownerAdminId?: string | null;
     tags?: string[];
     notesSummary?: string | null;
+    marketingConsentId?: string | null;
   }): Promise<CrmContact>;
   updateContact(
     id: string,
@@ -163,6 +179,7 @@ export interface CrmRepository {
       tags: string[];
       notesSummary: string | null;
       userId: string | null;
+      marketingConsentId: string | null;
     }>,
   ): Promise<CrmContact>;
   getSeeker(contactId: string): Promise<CrmSeekerProfile | null>;
@@ -265,4 +282,5 @@ export interface CrmRepository {
   listDormantSeekersBefore(cutoff: Date): Promise<Array<{ contactId: string }>>;
   anonymizeContact(contactId: string): Promise<void>;
   listSeekerUserIdsForConductor(conductorUserId: string): Promise<string[]>;
+  findLatestMarketingConsentId(subjectUserId: string): Promise<string | null>;
 }

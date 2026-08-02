@@ -865,6 +865,8 @@ export const crmContacts = crmPg.table('contacts', {
   ownerAdminId: uuid('owner_admin_id'),
   tags: text('tags').array().notNull().default([]),
   notesSummary: text('notes_summary'),
+  /** FK → consent_records (purpose=marketing) for follow-up beyond Art. 6(1)(b). */
+  marketingConsentId: uuid('marketing_consent_id'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   deletedAt: timestamp('deleted_at', { withTimezone: true }),

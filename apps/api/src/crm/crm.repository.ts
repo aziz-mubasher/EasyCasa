@@ -27,6 +27,7 @@ import type {
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import {
+  consentRecords,
   crmActivities,
   crmAuditLog,
   crmB4aReferrals,
@@ -69,6 +70,7 @@ function toContact(r: ContactRow): CrmContact {
     ownerAdminId: r.ownerAdminId,
     tags: r.tags ?? [],
     notesSummary: r.notesSummary,
+    marketingConsentId: r.marketingConsentId ?? null,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
   };
@@ -272,6 +274,7 @@ export class DrizzleCrmRepository implements CrmRepository {
     ownerAdminId?: string | null;
     tags?: string[];
     notesSummary?: string | null;
+    marketingConsentId?: string | null;
   }): Promise<CrmContact> {
     const [row] = await this.db
       .insert(crmContacts)
@@ -285,6 +288,7 @@ export class DrizzleCrmRepository implements CrmRepository {
         ownerAdminId: input.ownerAdminId ?? null,
         tags: input.tags ?? [],
         notesSummary: input.notesSummary ?? null,
+        marketingConsentId: input.marketingConsentId ?? null,
       })
       .returning();
     return toContact(row);
@@ -301,6 +305,7 @@ export class DrizzleCrmRepository implements CrmRepository {
       tags: string[];
       notesSummary: string | null;
       userId: string | null;
+      marketingConsentId: string | null;
     }>,
   ): Promise<CrmContact> {
     const [row] = await this.db
@@ -856,6 +861,7 @@ export class DrizzleCrmRepository implements CrmRepository {
         notesSummary: null,
         tags: [],
         userId: null,
+        marketingConsentId: null,
         updatedAt: new Date(),
         deletedAt: new Date(),
       })
@@ -872,5 +878,21 @@ export class DrizzleCrmRepository implements CrmRepository {
       .from(viewings)
       .where(eq(viewings.conductorUserId, conductorUserId));
     return rows.map((r) => r.seekerUserId);
+  }
+
+  async findLatestMarketingConsentId(subjectUserId: string): Promise<string | null> {
+    const [row] = await this.db
+      .select({ id: consentRecords.id })
+      .from(consentRecords)
+      .where(
+        and(
+          eq(consentRecords.subjectUserId, subjectUserId),
+          eq(consentRecords.purpose, 'marketing'),
+          eq(consentRecords.granted, true),
+        ),
+      )
+      .orderBy(desc(consentRecords.createdAt))
+      .limit(1);
+    return row?.id ?? null;
   }
 }

@@ -9,6 +9,7 @@ import {
 import { PRODUCT_EVENTS, weeklyHours } from '@easycasa/shared';
 
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
+import { crmFireSafe } from '../crm/crm-fire-safe';
 import { CRM_HOOKS, type CrmHooks } from '../crm/domain/ports';
 import { generateSlots } from './domain/slots';
 import { DEFAULT_CONFIG, validateBooking, type SchedulingConfig } from './domain/booking';
@@ -143,12 +144,21 @@ export class ViewingsService {
       weeklyHours: weeklyHours(windows),
     });
     await this.notifier.notify(conductor.conductorUserId, viewing, 'requested');
-    await this.crmHooks?.onViewingLifecycle({
-      viewingId: viewing.id,
-      seekerUserId,
-      enquiryId: viewing.enquiryId,
-      kind: 'requested',
-    });
+    const hooks = this.crmHooks;
+    await crmFireSafe(
+      'onViewingTransition',
+      hooks
+        ? () =>
+            hooks.onViewingTransition(
+              {
+                viewingId: viewing.id,
+                seekerUserId,
+                enquiryId: viewing.enquiryId,
+              },
+              'viewing_requested',
+            )
+        : undefined,
+    );
     return this.enrich(viewing, seekerUserId);
   }
 
@@ -187,20 +197,38 @@ export class ViewingsService {
     const updated = { ...viewing, status };
     if (event === 'CONFIRM') {
       await this.notifier.notify(viewing.seekerUserId, updated, 'confirmed');
-      await this.crmHooks?.onViewingLifecycle({
-        viewingId: viewing.id,
-        seekerUserId: viewing.seekerUserId,
-        enquiryId: viewing.enquiryId,
-        kind: 'confirmed',
-      });
+      const hooks = this.crmHooks;
+      await crmFireSafe(
+        'onViewingTransition',
+        hooks
+          ? () =>
+              hooks.onViewingTransition(
+                {
+                  viewingId: viewing.id,
+                  seekerUserId: viewing.seekerUserId,
+                  enquiryId: viewing.enquiryId,
+                },
+                'viewing_confirmed',
+              )
+          : undefined,
+      );
     }
     if (event === 'COMPLETE') {
-      await this.crmHooks?.onViewingLifecycle({
-        viewingId: viewing.id,
-        seekerUserId: viewing.seekerUserId,
-        enquiryId: viewing.enquiryId,
-        kind: 'completed',
-      });
+      const hooks = this.crmHooks;
+      await crmFireSafe(
+        'onViewingTransition',
+        hooks
+          ? () =>
+              hooks.onViewingTransition(
+                {
+                  viewingId: viewing.id,
+                  seekerUserId: viewing.seekerUserId,
+                  enquiryId: viewing.enquiryId,
+                },
+                'viewing_done',
+              )
+          : undefined,
+      );
     }
     if (event === 'CANCEL') {
       const other =

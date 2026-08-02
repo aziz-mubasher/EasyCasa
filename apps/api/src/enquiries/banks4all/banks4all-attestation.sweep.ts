@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 
+import { crmFireSafe } from '../../crm/crm-fire-safe';
 import { CRM_HOOKS, type CrmHooks } from '../../crm/domain/ports';
 import { BANKS4ALL_PORT, type Banks4AllPort } from './banks4all.port';
 import {
@@ -34,13 +35,20 @@ export class Banks4AllAttestationSweep {
           await this.repo.clearBanks4All(row.id);
           cleared += 1;
           // 404 = "no attestation" — refresh CRM four-field cache, never error state.
-          await this.crmHooks?.onB4aSweepRow({
-            seekerUserId: row.seekerUserId,
-            status: 'none',
-            bandMaxCents: null,
-            expiresAt: null,
-            holderInitials: null,
-          });
+          const hooks = this.crmHooks;
+          await crmFireSafe(
+            'onB4aSweepResult',
+            hooks
+              ? () =>
+                  hooks.onB4aSweepResult({
+                    seekerUserId: row.seekerUserId,
+                    status: 'none',
+                    bandMaxCents: null,
+                    expiresAt: null,
+                    holderInitials: null,
+                  })
+              : undefined,
+          );
         }
         continue;
       }
@@ -55,13 +63,20 @@ export class Banks4AllAttestationSweep {
         ? new Date(outcome.attestation.expiresAt)
         : null;
       const expired = expiresAt != null && expiresAt.getTime() < Date.now();
-      await this.crmHooks?.onB4aSweepRow({
-        seekerUserId: row.seekerUserId,
-        status: expired ? 'expired' : 'active',
-        bandMaxCents: outcome.attestation.bandMaxCents,
-        expiresAt,
-        holderInitials: outcome.attestation.holderInitials ?? null,
-      });
+      const hooks = this.crmHooks;
+      await crmFireSafe(
+        'onB4aSweepResult',
+        hooks
+          ? () =>
+              hooks.onB4aSweepResult({
+                seekerUserId: row.seekerUserId,
+                status: expired ? 'expired' : 'active',
+                bandMaxCents: outcome.attestation.bandMaxCents,
+                expiresAt,
+                holderInitials: outcome.attestation.holderInitials ?? null,
+              })
+          : undefined,
+      );
     }
 
     this.logger.log(

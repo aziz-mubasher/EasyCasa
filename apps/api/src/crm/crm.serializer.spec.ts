@@ -14,6 +14,7 @@ const contact: CrmContact = {
   ownerAdminId: null,
   tags: ['pilot'],
   notesSummary: 'Wants Brescia 3-bed',
+  marketingConsentId: null,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 };

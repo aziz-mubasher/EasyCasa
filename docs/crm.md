@@ -16,13 +16,29 @@ B4A columns on `crm.b4a_referrals` are **only**: `attestation_status`, `band_max
 
 All under `/admin/crm`, require capability `admin` + a `crm-*` realm role. See `docs/admin-roles.md`.
 
-## Domain events
+## Integration — `CRM_HOOKS` (no EventEmitter)
 
-There is **no** Nest `EventEmitter` in this repo. CRM side effects use the `CRM_HOOKS` port, called from:
+Sanctioned pattern (v1.1). Implementations are fire-safe; callers wrap with `crmFireSafe`.
 
-- `EnquiriesService.create` → upsert contact + seeker + activity (+ optional B4A profile)
-- `ViewingsService.book` / `transition(CONFIRM|COMPLETE)` → seeker stage + activity
-- `Banks4AllAttestationSweep` → refresh B4A four fields
+```ts
+interface CrmHooks {
+  onEnquiryCreated(e: CrmEnquiryRef): Promise<void>;
+  onViewingTransition(v: CrmViewingRef, to: CrmViewingHookStage): Promise<void>;
+  onB4aSweepResult(r: CrmB4aSweepRow): Promise<void>;
+}
+```
+
+Call points:
+
+| Host | Method | Hook |
+|---|---|---|
+| `EnquiriesService.create` | after emails | `onEnquiryCreated` |
+| `ViewingsService.book` | after notify requested | `onViewingTransition(..., 'viewing_requested')` |
+| `ViewingsService.transition` CONFIRM | after notify | `onViewingTransition(..., 'viewing_confirmed')` |
+| `ViewingsService.transition` COMPLETE | after status | `onViewingTransition(..., 'viewing_done')` |
+| `Banks4AllAttestationSweep.runOnce` | after clear/refresh | `onB4aSweepResult` |
+
+Marketing follow-up beyond Art. 6(1)(b) links `crm.contacts.marketing_consent_id` → existing `consent_records` (`purpose='marketing'`, `granted=true`). No new consent table.
 
 ## Admin UI
 

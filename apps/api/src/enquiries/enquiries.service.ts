@@ -7,6 +7,7 @@ import {
   Optional,
 } from '@nestjs/common';
 
+import { crmFireSafe } from '../crm/crm-fire-safe';
 import { CRM_HOOKS, type CrmHooks } from '../crm/domain/ports';
 import { EmailService } from '../email/email.service';
 import { assertEnquiryConsents } from '../privacy/enquiry-consent.gate';
@@ -109,25 +110,32 @@ export class EnquiriesService {
     await this.sendEnquiryEmails(enquiry, parties);
 
     const seeker = await this.users.findById(seekerUserId);
-    await this.crmHooks?.onEnquiryCreated({
-      enquiryId: enquiry.id,
-      seekerUserId,
-      contactEmail: enquiry.contactEmail,
-      contactPhone: enquiry.contactPhone,
-      fullNameHint: seeker?.displayName ?? null,
-      message: enquiry.message,
-      hasB4a: enquiry.b4aBandMaxCents != null || enquiry.b4aToken != null,
-      b4aBandMaxCents: enquiry.b4aBandMaxCents,
-      b4aExpiresAt: enquiry.b4aExpiresAt ? new Date(enquiry.b4aExpiresAt) : null,
-      b4aHolderInitials: seeker?.displayName
-        ? seeker.displayName
-            .split(/\s+/)
-            .filter(Boolean)
-            .map((p) => p[0]?.toUpperCase() ?? '')
-            .join('')
-            .slice(0, 4) || null
-        : null,
-    });
+    const hooks = this.crmHooks;
+    await crmFireSafe(
+      'onEnquiryCreated',
+      hooks
+        ? () =>
+            hooks.onEnquiryCreated({
+              enquiryId: enquiry.id,
+              seekerUserId,
+              contactEmail: enquiry.contactEmail,
+              contactPhone: enquiry.contactPhone,
+              fullNameHint: seeker?.displayName ?? null,
+              message: enquiry.message,
+              hasB4a: enquiry.b4aBandMaxCents != null || enquiry.b4aToken != null,
+              b4aBandMaxCents: enquiry.b4aBandMaxCents,
+              b4aExpiresAt: enquiry.b4aExpiresAt ? new Date(enquiry.b4aExpiresAt) : null,
+              b4aHolderInitials: seeker?.displayName
+                ? seeker.displayName
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .map((p) => p[0]?.toUpperCase() ?? '')
+                    .join('')
+                    .slice(0, 4) || null
+                : null,
+            })
+        : undefined,
+    );
 
     const withWarn = b4aWarning ? { ...enquiry, b4aWarning } : enquiry;
     // Seeker create response: keep ephemeral warning; strip token/band from wire.
