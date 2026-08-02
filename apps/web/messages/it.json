@@ -555,7 +555,7 @@
     "columns": {
       "sellers": "Per chi vende",
       "buyers": "Per chi compra",
-      "financing": "Finanziamento",
+      "stakeholders": "Stakeholder",
       "about": "Chi siamo"
     },
     "sellers": {
@@ -575,12 +575,6 @@
       "deed": "Assistenza al rogito",
       "buyAbroad": "Comprare dall'estero"
     },
-    "financing": {
-      "propertyInvestmentPlan": "Property Investment Plan",
-      "verifiedBuyerBadge": "Verified Buyer Badge",
-      "discoveryCall": "Call conoscitiva gratuita",
-      "transparency": "Trasparenza"
-    },
     "legal": {
       "privacy": "Privacy",
       "mediation": "Mediazione",
@@ -588,10 +582,15 @@
       "terms": "Termini",
       "myData": "I miei dati",
       "contacts": "Contatti",
-      "agencies": "Per le agenzie"
+      "agencies": "Per le agenzie",
+      "banks4all": "Banks4All"
     },
     "about": "EasyCasa mette in contatto direttamente chi vende e chi compra casa in Italia, senza provvigione dal venditore. Verifichiamo l’identità di chi pubblica prima che l’annuncio sia online e mostriamo i valori di mercato ufficiali accanto a ogni prezzo. I servizi — foto, certificazione energetica, verifica documenti, assistenza — hanno un prezzo fisso, indicato prima dell’ordine. In italiano, inglese e spagnolo.",
-    "agencies": "Per le agenzie"
+    "agencies": "Per le agenzie",
+    "stakeholders": {
+      "banks4all": "Banks4All",
+      "agencies": "Agenzie immobiliari"
+    }
   },
   "pricing": {
     "title": "Prezzi à la carte",
@@ -2284,5 +2283,58 @@
       "mailPhone": "Telefono: {phone}",
       "mailGestionale": "Gestionale / feed: {gestionale}"
     }
+  },
+  "banks4allHub": {
+    "meta": {
+      "title": "Banks4All — Partner EasyCasa",
+      "description": "Link utili a Banks4All: Property Investment Plan, Verified Buyer Badge, call conoscitiva e trasparenza. Società distinta del gruppo Mundida."
+    },
+    "kicker": "Stakeholder",
+    "title": "Banks4All",
+    "lead": "Banks4All è il partner per la valutazione di sostenibilità della compra. Qui trovi i link principali — senza mescolare i servizi EasyCasa con la mediazione creditizia.",
+    "externalHint": "Si apre su {host} in una nuova scheda",
+    "opensExternal": "Sito Banks4All",
+    "links": {
+      "kicker": "Link utili",
+      "title": "Tutto in un posto",
+      "sub": "Richiesta piano, informazioni, call e pagine di trasparenza — aggiornate dal referral ufficiale EasyCasa.",
+      "items": {
+        "propertyPlanPortal": {
+          "title": "Property Investment Plan — richiesta gratuita",
+          "body": "Avvia la richiesta sul portale Banks4All. Check indipendente, tipicamente entro 12 ore."
+        },
+        "propertyInvestmentPlan": {
+          "title": "Cos’è il Property Investment Plan",
+          "body": "Pagina informativa sul piano di investimento immobiliare e su come funziona il servizio."
+        },
+        "verifiedBuyerBadge": {
+          "title": "Verified Buyer Badge",
+          "body": "Attestazione di capacità finanziaria (stato, fascia, validità) da allegare alle richieste EasyCasa."
+        },
+        "discoveryCall": {
+          "title": "Call conoscitiva gratuita",
+          "body": "Prenota una conversazione introduttiva con Banks4All."
+        },
+        "b4aTransparency": {
+          "title": "Trasparenza Banks4All",
+          "body": "Informativa su come Banks4All comunica servizi, limiti e rapporti."
+        },
+        "easycasaTransparency": {
+          "title": "Trasparenza EasyCasa",
+          "body": "Come EasyCasa dichiara il rapporto con Banks4All e cosa non è obbligatorio per usare il portale."
+        }
+      }
+    },
+    "relation": {
+      "kicker": "Rapporto",
+      "title": "Società distinte, stesso gruppo",
+      "note": "Usare Banks4All non è mai una condizione per usare EasyCasa: non serve per cercare casa, contattare un proprietario o prenotare una visita."
+    },
+    "points": [
+      "Banks4All ed EasyCasa sono società distinte del gruppo Mundida.",
+      "Banks4All non percepisce compensi da EasyCasa, da agenzie o da venditori.",
+      "EasyCasa non percepisce compensi da Banks4All.",
+      "La mediazione creditizia è svolta da operatori iscritti negli albi obbligatori, non da EasyCasa."
+    ]
   }
 }

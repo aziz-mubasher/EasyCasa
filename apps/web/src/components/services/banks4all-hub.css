@@ -1,0 +1,169 @@
+/* Banks4All stakeholder hub — scoped under .b4h */
+
+.b4h {
+  --b4h-ink-70: rgba(20, 33, 46, 0.7);
+  --b4h-ink-12: rgba(20, 33, 46, 0.12);
+  --b4h-paper-85: rgba(243, 237, 225, 0.85);
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.b4h .b4h-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.b4h h1,
+.b4h h2 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-variation-settings: 'wdth' 90;
+}
+
+.b4h-hero {
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(3.5rem, 8vw, 4.5rem) 0 clamp(3rem, 7vw, 4rem);
+}
+
+.b4h-kicker,
+.b4h-kicker2,
+.b4h-kicker-ochre {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.b4h-kicker {
+  color: var(--ochre);
+}
+
+.b4h-kicker2 {
+  color: var(--azure);
+}
+
+.b4h-kicker-ochre {
+  color: var(--ochre);
+}
+
+.b4h-hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  max-width: 16ch;
+  margin-bottom: 1.25rem;
+}
+
+.b4h-lead {
+  font-size: 1.2rem;
+  max-width: 48ch;
+  color: var(--b4h-paper-85);
+  margin: 0;
+}
+
+.b4h-section {
+  padding: clamp(3rem, 6vw, 4rem) 0;
+}
+
+.b4h-section--ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.b4h-section h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 0.75rem;
+  max-width: 22ch;
+}
+
+.b4h-section--ink h2 {
+  color: var(--paper);
+}
+
+.b4h-sub {
+  color: var(--b4h-ink-70);
+  max-width: 52ch;
+  margin: 0 0 2rem;
+}
+
+.b4h-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.b4h-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--b4h-ink-12);
+  border-radius: 10px;
+  padding: 1.25rem 1.35rem;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.b4h-link:hover {
+  border-color: var(--azure);
+  box-shadow: 0 0 0 1px var(--azure);
+}
+
+.b4h-link--primary {
+  border-color: var(--azure);
+  background: rgba(44, 110, 155, 0.06);
+}
+
+.b4h-link-title {
+  display: block;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-bottom: 0.35rem;
+  color: var(--ink);
+}
+
+.b4h-link-body {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--b4h-ink-70);
+}
+
+.b4h-ext {
+  display: inline-block;
+  margin-top: 0.55rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--azure);
+}
+
+.b4h-points {
+  margin: 0 0 1.25rem;
+  padding-left: 1.2rem;
+  max-width: 58ch;
+  color: var(--b4h-paper-85);
+}
+
+.b4h-points li {
+  margin-bottom: 0.65rem;
+}
+
+.b4h-note {
+  margin: 0;
+  max-width: 58ch;
+  font-size: 0.9rem;
+  color: rgba(243, 237, 225, 0.7);
+  border-left: 3px solid var(--ochre);
+  padding-left: 0.875rem;
+}

@@ -555,7 +555,7 @@
     "columns": {
       "sellers": "For sellers",
       "buyers": "For buyers",
-      "financing": "Financing",
+      "stakeholders": "Stakeholders",
       "about": "About us"
     },
     "sellers": {
@@ -575,12 +575,6 @@
       "deed": "Support at the deed",
       "buyAbroad": "Buying from abroad"
     },
-    "financing": {
-      "propertyInvestmentPlan": "Property Investment Plan",
-      "verifiedBuyerBadge": "Verified Buyer Badge",
-      "discoveryCall": "Free discovery call",
-      "transparency": "Transparency"
-    },
     "legal": {
       "privacy": "Privacy",
       "mediation": "Mediation",
@@ -588,10 +582,15 @@
       "terms": "Terms",
       "myData": "My data",
       "contacts": "Contacts",
-      "agencies": "For agencies"
+      "agencies": "For agencies",
+      "banks4all": "Banks4All"
     },
     "about": "EasyCasa connects sellers and buyers of homes in Italy directly, with no commission from the seller. We verify the identity of who publishes before a listing goes live and show official market values next to every asking price. Services — photos, energy certificate, document checks, assistance — have a fixed price stated before you order. In Italian, English and Spanish.",
-    "agencies": "For agencies"
+    "agencies": "For agencies",
+    "stakeholders": {
+      "banks4all": "Banks4All",
+      "agencies": "Property agencies"
+    }
   },
   "pricing": {
     "title": "À la carte pricing",
@@ -2284,5 +2283,58 @@
       "mailPhone": "Phone: {phone}",
       "mailGestionale": "CRM / feed: {gestionale}"
     }
+  },
+  "banks4allHub": {
+    "meta": {
+      "title": "Banks4All — EasyCasa partner",
+      "description": "Key Banks4All links: Property Investment Plan, Verified Buyer Badge, discovery call and transparency. A separate Mundida group company."
+    },
+    "kicker": "Stakeholder",
+    "title": "Banks4All",
+    "lead": "Banks4All is the partner for purchase-affordability assessment. This page collects the main links — without mixing EasyCasa services with credit brokerage.",
+    "externalHint": "Opens on {host} in a new tab",
+    "opensExternal": "Banks4All site",
+    "links": {
+      "kicker": "Useful links",
+      "title": "Everything in one place",
+      "sub": "Plan request, information, discovery call and transparency pages — from the official EasyCasa referral destinations.",
+      "items": {
+        "propertyPlanPortal": {
+          "title": "Property Investment Plan — free request",
+          "body": "Start the request on the Banks4All portal. Independent check, typically within 12 hours."
+        },
+        "propertyInvestmentPlan": {
+          "title": "What the Property Investment Plan is",
+          "body": "Information page on the property investment plan and how the service works."
+        },
+        "verifiedBuyerBadge": {
+          "title": "Verified Buyer Badge",
+          "body": "Financial-capacity attestation (status, band, validity) you can attach to EasyCasa enquiries."
+        },
+        "discoveryCall": {
+          "title": "Free discovery call",
+          "body": "Book an introductory conversation with Banks4All."
+        },
+        "b4aTransparency": {
+          "title": "Banks4All transparency",
+          "body": "How Banks4All explains its services, limits and relationships."
+        },
+        "easycasaTransparency": {
+          "title": "EasyCasa transparency",
+          "body": "How EasyCasa discloses the Banks4All relationship and what is never required to use the portal."
+        }
+      }
+    },
+    "relation": {
+      "kicker": "Relationship",
+      "title": "Separate companies, same group",
+      "note": "Using Banks4All is never a condition for using EasyCasa: it is not required to search, contact an owner or book a viewing."
+    },
+    "points": [
+      "Banks4All and EasyCasa are separate Mundida group companies.",
+      "Banks4All receives no fees from EasyCasa, agencies or sellers.",
+      "EasyCasa receives no fees from Banks4All.",
+      "Credit brokerage is performed by operators on the required registers, not by EasyCasa."
+    ]
   }
 }
