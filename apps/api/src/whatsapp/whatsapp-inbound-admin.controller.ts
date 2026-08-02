@@ -80,6 +80,12 @@ export class WhatsAppInboundAdminController {
     });
   }
 
+  /** EC WhatsApp — inbox totals (no sender PII). Must be registered before `:handle`. */
+  @Get('summary')
+  async summary() {
+    return this.inboundAdmin.inboxSummary();
+  }
+
   @Get(':handle')
   async detail(
     @Param('handle') handle: string,

@@ -102,6 +102,35 @@ export class WhatsAppInboundAdminService {
     @InjectConfig() private readonly config: ApiConfig,
   ) {}
 
+  /** Lightweight inbox stats for the EC WhatsApp shell (no PII). */
+  async inboxSummary(now: Date = new Date()) {
+    const nowIso = now.toISOString();
+    const result = await this.db.execute(sql`
+      SELECT
+        COUNT(*)::int AS message_count,
+        COUNT(DISTINCT wa_id)::int AS thread_count,
+        MAX(received_at) AS last_received_at,
+        COUNT(*) FILTER (WHERE window_expires_at > ${nowIso}::timestamptz)::int AS open_message_count,
+        COUNT(DISTINCT wa_id) FILTER (WHERE window_expires_at > ${nowIso}::timestamptz)::int AS open_thread_count
+      FROM wa_inbound_messages
+    `);
+    const row = asRows<{
+      message_count: number | string;
+      thread_count: number | string;
+      last_received_at: Date | string | null;
+      open_message_count: number | string;
+      open_thread_count: number | string;
+    }>(result)[0];
+    const last = row?.last_received_at ? new Date(row.last_received_at) : null;
+    return {
+      threadCount: Number(row?.thread_count ?? 0),
+      messageCount: Number(row?.message_count ?? 0),
+      openThreadCount: Number(row?.open_thread_count ?? 0),
+      openMessageCount: Number(row?.open_message_count ?? 0),
+      lastReceivedAt: last && !Number.isNaN(last.getTime()) ? last.toISOString() : null,
+    };
+  }
+
   async listThreads(filters: InboundListFilters, now: Date = new Date()) {
     const limit = clampLimit(filters.limit);
     const cursor = filters.cursor ? decodeCursor(filters.cursor) : null;

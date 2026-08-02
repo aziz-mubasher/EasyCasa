@@ -39,7 +39,7 @@ const NAV: { key: View; label: string; hint: string }[] = [
   { key: 'dsar', label: 'DSAR', hint: 'DPO only' },
   { key: 'takedown', label: 'Takedown', hint: 'DSA reports' },
   { key: 'identity', label: 'Identity', hint: 'Manual verify' },
-  { key: 'whatsapp', label: 'WhatsApp', hint: 'Inbound · audited' },
+  { key: 'whatsapp', label: 'EC WhatsApp', hint: 'Inbound · audited' },
   { key: 'orchestration', label: 'Orchestration', hint: 'Assign tasks' },
   { key: 'compliance', label: 'Compliance', hint: 'Legal basis' },
   { key: 'aml', label: 'AML / KYC', hint: 'Risk cases' },

@@ -267,7 +267,7 @@ export class EasyCasaAdminApi {
     );
   }
 
-  /* EC-19 WhatsApp inbound (read-only) */
+  /* EC-19 / EC WhatsApp inbound (read-only) */
   listWhatsAppInbound(params?: {
     window?: 'open' | 'closed';
     autoReplied?: boolean;
@@ -281,6 +281,9 @@ export class EasyCasaAdminApi {
     if (params?.limit != null) q.set('limit', String(params.limit));
     const qs = q.toString();
     return this.request(`/admin/whatsapp/inbound${qs ? `?${qs}` : ''}`, z.unknown());
+  }
+  getWhatsAppInboundSummary(): Promise<unknown> {
+    return this.request('/admin/whatsapp/inbound/summary', z.unknown());
   }
   getWhatsAppInbound(handle: string, params?: { cursor?: string; limit?: number }): Promise<unknown> {
     const q = new URLSearchParams();

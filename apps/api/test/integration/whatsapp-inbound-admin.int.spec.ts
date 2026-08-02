@@ -234,4 +234,33 @@ gate('GET /admin/whatsapp/inbound (EC-19 / EC-19a)', () => {
     expect(res.body.items).toEqual([]);
     expect(res.body.nextCursor).toBeNull();
   });
+
+  it('10. summary has totals and no sender PII', async () => {
+    const openBase = new Date();
+    await seedThread({
+      waId: '393331112233',
+      bodies: ['hello', 'again'],
+      receivedAt: openBase,
+      windowExpiresAt: new Date(openBase.getTime() + 86_400_000),
+    });
+    await seedThread({
+      waId: '393445556677',
+      bodies: ['old'],
+      receivedAt: new Date('2026-06-01T10:00:00.000Z'),
+      windowExpiresAt: new Date('2026-06-02T10:00:00.000Z'),
+    });
+
+    const res = await request(ctx.app.getHttpServer())
+      .get('/admin/whatsapp/inbound/summary')
+      .set(withCap);
+    expect(res.status).toBe(200);
+    expect(res.body.threadCount).toBe(2);
+    expect(res.body.messageCount).toBe(3);
+    expect(res.body.openThreadCount).toBe(1);
+    expect(res.body.lastReceivedAt).toBeTruthy();
+
+    const raw = JSON.stringify(res.body);
+    expect(raw).not.toContain('393331112233');
+    expect(raw).not.toContain('hello');
+  });
 });

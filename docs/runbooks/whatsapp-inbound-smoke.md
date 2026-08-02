@@ -16,6 +16,19 @@ template approval.
 
 Webhook: `https://easycasaita.com/api/whatsapp/webhook`
 
+Admin inbox: `https://admin.easycasaita.com/#whatsapp` (**EC WhatsApp**).
+
+**Meta field subscription (2026-08-02):** the app callback URL was active but
+`fields` had **no `messages`** — inbound POSTs never left Meta. Re-subscribe with
+`object=whatsapp_business_account`, `fields=messages` (plus status/account fields
+as needed), then pin the phone override to the EC callback. Confirm with Graph:
+
+`GET /{app-id}/subscriptions` (app access token) → `fields[].name` includes `messages`.
+
+Phone +39 379 330 6605 / WABA `EasyCasaItalia` may also list **Mundida AI Agent** as
+a subscribed app — phone-level webhook override must stay on the EC URL so inbound
+lands in `wa_inbound_messages`, not only in the Mundida/B4A/SV inbox.
+
 **Pass = all five sections.** Not “the reply arrived”.
 
 ---
