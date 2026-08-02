@@ -156,6 +156,19 @@ regulated activity requiring a separate licence — and flagged where an item
 cannot be performed by MUNDIDA directly and must be brokered to a credentialed
 professional.
 
+**B7. Internal CRM — Art. 13 informativa + retention (enablement consent applied).**
+We have built (and merged) an internal CRM for staff relationship management.
+**Controller consent applied 2026-08-02** (MUNDIDA S.r.l.): full legal
+responsibility for CRM client data; engineering defaults for informativa scope
+and **24-month** dormant retention confirmed so production may set
+`CRM_ENABLED=true`. See
+[`crm-controller-responsibility.md`](./crm-controller-responsibility.md) and
+package §1.6 question 2a.
+
+*Still useful from counsel:* (1) polished Art. 13 wording (draft in
+`privacy-policy.md` §8 — correct freely); (2) any refinement to retention /
+audit-log periods; (3) Art. 6 bases for CRM activities for the formal register.
+
 ---
 
 ## 3. What we would like back, and in what form
@@ -163,10 +176,11 @@ professional.
 1. **A short written opinion on A2 first**, ahead of everything else. It
    determines our pricing and our public positioning, and every other item is
    cheaper to answer once it is settled.
-2. **Drafted text** for A1, A3, B1, B2 — in Italian, with English and Spanish
-   translations we can have checked separately.
+2. **Drafted text** for A1, A3, B1, B2, and B7 (CRM informativa §8) — in Italian,
+   with English and Spanish translations we can have checked separately.
 3. **Drafted agreements** for A2 (incarico) and B3 (intra-group).
-4. **Yes/no with reasoning** for B4, B5, B6.
+4. **Yes/no with reasoning** for B4, B5, B6; for B7 polish §8 wording / Art. 6
+   bases (enablement consent already applied by controller 2026-08-02).
 
 Where an item is uncertain, we would rather have the conservative answer and a
 note on what would make it certain, than an optimistic one. We have no users yet
@@ -177,7 +191,7 @@ today and a great deal after a full launch.
 ## 4. Practical
 
 - **Timing.** A1–A4 gate our opening. We would like those within [X] weeks.
-  B1–B6 can follow.
+  B1–B7 can follow; **B7 enablement consent applied** 2026-08-02 (polish still welcome).
 - **Budget.** Please indicate an estimate before starting, and flag if any item
   needs a specialist (data protection, advertising, or real-estate regulatory).
 - **Contact.** [nome], [email], [phone].

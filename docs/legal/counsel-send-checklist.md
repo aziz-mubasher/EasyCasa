@@ -30,6 +30,7 @@ Fill `[nome]`, `[email]`, `[phone]`, and timing `[X]` weeks before sending.
 | B4 | OMI import docs: `docs/omi-import.md`, `docs/RUNBOOK-omi-vps-load.md` |
 | B5 | Foreign-buyer page: https://easycasaita.com/it/acquisto-assistito · source `apps/web/src/components/services/AcquistoAssistitoPage.tsx` + `apps/web/messages/*/acquistoAssistito` (or equivalent keys) |
 | B6 | Service catalogue: DB enum `legal_basis` = `mediazione` \| `mandato_oneroso` \| `review_required` (`migration/sql/0009_phase10.sql`); seed rows in `migration/sql/0016_phase24.sql` and any admin-edited production rows — **export live `service_catalog_items` before send** |
+| B7 | Internal CRM gate: `docs/crm.md`; company responsibility `docs/legal/crm-controller-responsibility.md`; package §1.6 Q2a + RoPA row in §1.1 C; draft informativa `privacy-policy.md` §8; env `CRM_ENABLED` / `CRM_DORMANT_RETENTION_MONTHS` in `docs/env.md` |
 
 ## Do not send
 
@@ -44,3 +45,6 @@ Fill `[nome]`, `[email]`, `[phone]`, and timing `[X]` weeks before sending.
 3. Classify catalogue `legal_basis` (B6) so mandates can send.
 4. Update badge / consent copy (B1–B2) only after sign-off.
 5. Record decisions in this folder (date + counsel name) — do not treat drafts as approved until then.
+6. B7 / §1.6 Q2a **consent applied** 2026-08-02: ops may set `CRM_ENABLED=true`
+   in the production `.env` (repo/code default stays `false`). When counsel returns
+   polished §8 copy, merge into live privacy surfaces and bump `policyVersion`.

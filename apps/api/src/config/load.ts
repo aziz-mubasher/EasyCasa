@@ -164,11 +164,12 @@ const Schema = z
     VALUATION_BAND_ENABLED: bool(false),
 
     /**
-     * K EC 4.1 — internal CRM. Default false in production until informativa
-     * covers relationship-management processing (counsel gate §10.5).
+     * K EC 4.1 — internal CRM. Default false for local/CI/demo.
+     * §1.6 Q2a consent applied 2026-08-02 — production may set true
+     * (docs/legal/crm-controller-responsibility.md).
      */
     CRM_ENABLED: bool(false),
-    /** Dormant seeker anonymisation window (months). COUNSEL TO CONFIRM. */
+    /** Dormant seeker anonymisation window (months). Default confirmed with Q2a consent. */
     CRM_DORMANT_RETENTION_MONTHS: z.coerce.number().int().positive().default(24),
 
     /** K EC 1.29 — HMAC pepper for SmartLink daily unique-view hashes (no raw IP stored). */

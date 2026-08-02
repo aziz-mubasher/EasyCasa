@@ -45,3 +45,43 @@ personali**.
 
 ## 7. Changes
 Material changes bump the version and are re-consented where required.
+
+## 8. Internal relationship management (CRM) — DRAFT (K EC 4.1)
+
+> **Consent applied (2026-08-02)** by MUNDIDA S.r.l. for Art. 13 coverage + retention
+> defaults (`docs/legal/COUNSEL-REVIEW-PACKAGE.md` §1.6 question 2a;
+> `crm-controller-responsibility.md`). Production may enable via `CRM_ENABLED=true`.
+> Bracketed legal bases and final IT/EN/ES polish remain open for counsel.
+
+When enabled, EasyCasa (controller: MUNDIDA S.r.l.) may process contact and
+pipeline data in an **internal CRM** used only by authorised staff, so we can
+manage enquiries, viewings, and related follow-up across seekers, owners, and
+partners.
+
+- **Data categories:** name, email, phone, locale, source of contact, tags and
+  operational notes; seeker/owner/partner pipeline stage; activity and task
+  records; an append-only CRM audit log. Where a Banks4All affordability
+  attestation is linked, only the Phase A fields are stored: attestation status,
+  indicative maximum band, expiry date, and holder initials — not income,
+  employment, bank, or credit data.
+- **Purposes:** manage the commercial relationship arising from enquiries and
+  viewings; coordinate staff tasks; account for staff access (Art. 5(2)
+  accountability). Marketing follow-up beyond what is necessary for the
+  requested service requires a separate marketing consent already recorded in
+  our consent ledger.
+- **Proposed legal basis:** [counsel to assign — working assumption: Art. 6(1)(b)
+  for pre-contract / contract steps linked to an enquiry or viewing; Art. 6(1)(f)
+  for internal operational coordination and audit where appropriate; Art. 6(1)(a)
+  for optional marketing].
+- **Recipients:** EasyCasa staff with a CRM role only. Not sold. Processors are
+  the same hosting/email/identity stack as the rest of the platform.
+- **Retention:** dormant seeker CRM profiles anonymised after **24 months**
+  without qualifying activity (`CRM_DORMANT_RETENTION_MONTHS`) — confirmed for
+  enablement by controller consent 2026-08-02. Soft-deleted contacts are removed
+  on confirmed erasure / DSAR erase for the linked user. Audit log retained for
+  accountability — [counsel may refine period].
+- **Your rights:** same as §5. CRM rows linked to your account are included in
+  export/erase when the feature is enabled.
+
+**Controller note:** MUNDIDA S.r.l. accepts full legal responsibility as
+controller for CRM personal data (`docs/legal/crm-controller-responsibility.md`).

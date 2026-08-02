@@ -4,7 +4,16 @@ Native CRM inside the EasyCasa admin portal (`apps/admin`) + NestJS module (`app
 
 ## Gate
 
-`CRM_ENABLED=false` by default. Build may merge; **do not** process production personal data for relationship management until counsel clears the informativa line-item in `docs/legal/COUNSEL-REVIEW-PACKAGE.md` §1.6 question 2a.
+**Consent applied 2026-08-02** (MUNDIDA S.r.l., controller) for Art. 13 informativa + retention — see `docs/legal/crm-controller-responsibility.md` and `COUNSEL-REVIEW-PACKAGE.md` §1.6 Q2a.
+
+- Code / `.env.example` default remains **`CRM_ENABLED=false`** (safe for local, CI, demo).
+- **Production may set `CRM_ENABLED=true`** with `CRM_DORMANT_RETENTION_MONTHS=24`.
+
+### Enablement checklist
+
+1. [x] Controller responsibility + consent applied (`docs/legal/crm-controller-responsibility.md`).
+2. [ ] Ops: set `CRM_ENABLED=true` in the production VPS `.env` (do not commit secrets).
+3. [ ] When counsel returns final §8 copy: bump `policyVersion` as directed.
 
 ## Schema
 

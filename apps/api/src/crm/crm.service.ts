@@ -546,7 +546,7 @@ export class CrmService {
         b4a: ['referred', 'attestation_active', 'attestation_expired'],
         partner: [...CRM_PARTNER_STAGES],
       },
-      gate: 'Production personal-data processing blocked until informativa covers CRM (§10.5)',
+      gate: '§1.6 Q2a consent applied 2026-08-02 — set CRM_ENABLED=true in environment to process CRM personal data',
     };
   }
 
