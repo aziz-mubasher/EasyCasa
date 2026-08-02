@@ -15,7 +15,7 @@ const ALL: CrmRole[] = [
 
 function reflectorWith(roles: CrmRole[] | undefined) {
   return {
-    getAllAndOverride: vi.fn((_key: string) => roles),
+    getAllAndOverride: vi.fn(() => roles),
   } as unknown as ConstructorParameters<typeof CrmRoleGuard>[0];
 }
 

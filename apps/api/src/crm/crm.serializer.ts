@@ -25,7 +25,8 @@ export function serializeActivity(activity: CrmActivity, roles: readonly CrmRole
   return activity;
 }
 
-export function serializeTask(task: CrmTask, _roles: readonly CrmRole[]): CrmTask {
+export function serializeTask(task: CrmTask, roles: readonly CrmRole[]): CrmTask {
+  void roles;
   return task;
 }
 

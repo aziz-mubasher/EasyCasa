@@ -176,7 +176,15 @@ export class CrmService {
     actorUserId: string,
     id: string,
     role: CrmRoleKind,
-    body: Record<string, unknown>,
+    body: {
+      stage?: string;
+      searchIntent?: Record<string, unknown>;
+      preferredChannel?: 'email' | 'phone' | 'whatsapp';
+      listingIds?: string[];
+      partnerType?: string;
+      serviceZones?: string[];
+      vatNumber?: string | null;
+    },
   ) {
     this.assertWrite(roles);
     await this.assertConductorAccess(roles, actorUserId, id);
@@ -185,23 +193,22 @@ export class CrmService {
     if (role === 'seeker') {
       return this.repo.upsertSeeker(id, {
         stage: (body.stage as CrmSeekerStage | undefined) ?? 'new_enquiry',
-        searchIntent: (body.searchIntent as Record<string, unknown> | undefined) ?? {},
+        searchIntent: body.searchIntent ?? {},
       });
     }
     if (role === 'owner') {
       return this.repo.upsertOwner(id, {
         stage: (body.stage as CrmOwnerStage | undefined) ?? 'prospect',
-        preferredChannel:
-          (body.preferredChannel as 'email' | 'phone' | 'whatsapp' | undefined) ?? 'email',
-        listingIds: (body.listingIds as string[] | undefined) ?? [],
+        preferredChannel: body.preferredChannel ?? 'email',
+        listingIds: body.listingIds ?? [],
       });
     }
     if (role === 'partner') {
       return this.repo.upsertPartner(id, {
         partnerType: (body.partnerType as CrmPartnerType | undefined) ?? 'other',
         stage: (body.stage as CrmPartnerStage | undefined) ?? 'prospect',
-        serviceZones: (body.serviceZones as string[] | undefined) ?? [],
-        vatNumber: (body.vatNumber as string | null | undefined) ?? null,
+        serviceZones: body.serviceZones ?? [],
+        vatNumber: body.vatNumber ?? null,
       });
     }
     if (role === 'b4a') {
