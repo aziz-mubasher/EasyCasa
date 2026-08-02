@@ -1,0 +1,9 @@
+{
+  "name": "EasyCasa",
+  "install": "corepack enable && pnpm install --frozen-lockfile",
+  "ports": [
+    { "name": "web", "port": 3000 },
+    { "name": "api", "port": 4000 },
+    { "name": "ai", "port": 8000 }
+  ]
+}
