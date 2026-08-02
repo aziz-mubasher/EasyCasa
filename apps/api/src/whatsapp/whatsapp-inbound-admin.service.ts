@@ -1,19 +1,22 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { and, asc, eq, sql, type SQL } from 'drizzle-orm';
+import { and, asc, desc, eq, sql, type SQL } from 'drizzle-orm';
 
 import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
 import { AdminAuditService } from '../authority/admin-audit.service';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { adminAuditLog, waInboundMessages } from '../db/schema';
+import { adminAuditLog, waInboundMessages, waThreadOutbound } from '../db/schema';
 import { maskWaId, redactPreview } from './redact';
 import { waHandleFor } from './wa-handle';
+import { toE164 } from './whatsapp-inbound.service';
+import { WhatsAppCloudClient } from './whatsapp-cloud.client';
 
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
 const DEFAULT_LIMIT = 25;
@@ -47,8 +50,11 @@ type ThreadRow = {
   window_expires_at: Date | string;
   latest_body: string | null;
   latest_message_type: string;
+  latest_contact_name: string | null;
   auto_replied_24h: boolean;
 };
+
+const REPLY_MAX_CHARS = 4096;
 
 export function encodeCursor(receivedAt: Date, id: string): string {
   const payload: CursorPayload = { t: receivedAt.toISOString(), i: id };
@@ -99,6 +105,7 @@ export class WhatsAppInboundAdminService {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly audit: AdminAuditService,
+    private readonly cloud: WhatsAppCloudClient,
     @InjectConfig() private readonly config: ApiConfig,
   ) {}
 
@@ -174,7 +181,8 @@ export class WhatsAppInboundAdminService {
           received_at AS last_received_at,
           window_expires_at,
           body AS latest_body,
-          message_type AS latest_message_type
+          message_type AS latest_message_type,
+          contact_name AS latest_contact_name
         FROM wa_inbound_messages
         ORDER BY wa_id, received_at DESC, id DESC
       ),
@@ -198,6 +206,7 @@ export class WhatsAppInboundAdminService {
         l.window_expires_at,
         l.latest_body,
         l.latest_message_type,
+        l.latest_contact_name,
         COALESCE(c.auto_replied_24h, false) AS auto_replied_24h
       FROM latest l
       JOIN counts c ON c.wa_id = l.wa_id
@@ -224,6 +233,7 @@ export class WhatsAppInboundAdminService {
         return {
           waIdMasked: maskWaId(waId),
           waHandle,
+          contactName: r.latest_contact_name?.trim() || null,
           messageCount: Number(r.message_count),
           lastReceivedAt: new Date(r.last_received_at).toISOString(),
           windowExpiresAt: expires.toISOString(),
@@ -298,11 +308,17 @@ export class WhatsAppInboundAdminService {
     const rows = await this.db
       .select({
         id: waInboundMessages.id,
+        providerMessageId: waInboundMessages.providerMessageId,
+        phoneNumberId: waInboundMessages.phoneNumberId,
         messageType: waInboundMessages.messageType,
         body: waInboundMessages.body,
+        contactName: waInboundMessages.contactName,
         receivedAt: waInboundMessages.receivedAt,
         windowExpiresAt: waInboundMessages.windowExpiresAt,
         autoRepliedAt: waInboundMessages.autoRepliedAt,
+        forwardedAt: waInboundMessages.forwardedAt,
+        forwardError: waInboundMessages.forwardError,
+        createdAt: waInboundMessages.createdAt,
       })
       .from(waInboundMessages)
       .where(and(...conditions))
@@ -319,6 +335,34 @@ export class WhatsAppInboundAdminService {
     const nextCursor =
       hasMore && last ? encodeCursor(last.receivedAt, last.id) : null;
 
+    const outbound = await this.db
+      .select({
+        id: waThreadOutbound.id,
+        providerMessageId: waThreadOutbound.providerMessageId,
+        body: waThreadOutbound.body,
+        source: waThreadOutbound.source,
+        actorUserId: waThreadOutbound.actorUserId,
+        sentAt: waThreadOutbound.sentAt,
+      })
+      .from(waThreadOutbound)
+      .where(eq(waThreadOutbound.waId, waId))
+      .orderBy(asc(waThreadOutbound.sentAt), asc(waThreadOutbound.id));
+
+    const windowRow = await this.db
+      .select({
+        windowExpiresAt: waInboundMessages.windowExpiresAt,
+        contactName: waInboundMessages.contactName,
+      })
+      .from(waInboundMessages)
+      .where(eq(waInboundMessages.waId, waId))
+      .orderBy(desc(waInboundMessages.windowExpiresAt))
+      .limit(1);
+    const latestExpiry = windowRow[0]?.windowExpiresAt ?? new Date(0);
+    const contactName =
+      windowRow[0]?.contactName?.trim() ||
+      page.map((r) => r.contactName?.trim()).find(Boolean) ||
+      null;
+
     let auditId: string;
     try {
       const recorded = await this.audit.record({
@@ -326,7 +370,7 @@ export class WhatsAppInboundAdminService {
         action: 'whatsapp_inbound_reveal',
         resourceType: 'wa_inbound_thread',
         resourceId: waId,
-        reason: `revealed ${page.length} message(s)`,
+        reason: `revealed ${page.length} inbound + ${outbound.length} outbound`,
       });
       auditId = recorded.id;
     } catch {
@@ -342,32 +386,145 @@ export class WhatsAppInboundAdminService {
       throw new InternalServerErrorException('audit write failed — reveal aborted');
     }
 
-    const latestExpiry =
-      page.length === 0
-        ? new Date(0)
-        : page.reduce(
-            (max, r) => (r.windowExpiresAt > max ? r.windowExpiresAt : max),
-            page[0]!.windowExpiresAt,
-          );
+    type TimelineItem = {
+      direction: 'inbound' | 'outbound';
+      id: string;
+      at: string;
+      messageType: string;
+      body: string | null;
+      providerMessageId: string | null;
+      phoneNumberId: string | null;
+      contactName: string | null;
+      windowExpiresAt: string | null;
+      autoRepliedAt: string | null;
+      forwardedAt: string | null;
+      forwardError: string | null;
+      createdAt: string | null;
+      source: 'auto_ack' | 'operator' | null;
+      actorUserId: string | null;
+    };
+
+    const inboundItems: TimelineItem[] = page.map((r) => ({
+      direction: 'inbound' as const,
+      id: r.id,
+      at: r.receivedAt.toISOString(),
+      messageType: r.messageType,
+      body: r.body,
+      providerMessageId: r.providerMessageId,
+      phoneNumberId: r.phoneNumberId,
+      contactName: r.contactName,
+      windowExpiresAt: r.windowExpiresAt.toISOString(),
+      autoRepliedAt: r.autoRepliedAt?.toISOString() ?? null,
+      forwardedAt: r.forwardedAt?.toISOString() ?? null,
+      forwardError: r.forwardError,
+      createdAt: r.createdAt.toISOString(),
+      source: null,
+      actorUserId: null,
+    }));
+
+    const outboundItems: TimelineItem[] = outbound.map((r) => ({
+      direction: 'outbound' as const,
+      id: r.id,
+      at: r.sentAt.toISOString(),
+      messageType: 'text',
+      body: r.body,
+      providerMessageId: r.providerMessageId,
+      phoneNumberId: null,
+      contactName: null,
+      windowExpiresAt: null,
+      autoRepliedAt: null,
+      forwardedAt: null,
+      forwardError: null,
+      createdAt: null,
+      source: r.source === 'operator' ? ('operator' as const) : ('auto_ack' as const),
+      actorUserId: r.actorUserId,
+    }));
+
+    const items = [...inboundItems, ...outboundItems].sort((a, b) => {
+      const dt = a.at.localeCompare(b.at);
+      if (dt !== 0) return dt;
+      return a.id.localeCompare(b.id);
+    });
 
     return {
       waHandle: handle,
       waId,
       waIdMasked: maskWaId(waId),
-      windowState: page.length ? windowStateAt(latestExpiry, now) : 'closed',
-      windowExpiresAt: page.length ? latestExpiry.toISOString() : null,
-      windowRemainingMs: page.length ? remainingMs(latestExpiry, now) : 0,
+      waIdE164: toE164(waId),
+      contactName,
+      canReply: windowStateAt(latestExpiry, now) !== 'closed',
+      windowState: windowStateAt(latestExpiry, now),
+      windowExpiresAt: windowRow[0] ? latestExpiry.toISOString() : null,
+      windowRemainingMs: windowRow[0] ? remainingMs(latestExpiry, now) : 0,
       auditId,
-      messagesRevealed: page.length,
-      items: page.map((r) => ({
-        id: r.id,
-        messageType: r.messageType,
-        body: r.body,
-        receivedAt: r.receivedAt.toISOString(),
-        windowExpiresAt: r.windowExpiresAt.toISOString(),
-        autoRepliedAt: r.autoRepliedAt?.toISOString() ?? null,
-      })),
+      messagesRevealed: page.length + outbound.length,
+      items,
+      /** @deprecated keep for older clients — same as items filtered to inbound */
       nextCursor,
+    };
+  }
+
+  /**
+   * EC-20 — operator free-form reply inside an open customer-service window.
+   */
+  async replyToHandle(
+    handle: string,
+    actorUserId: string,
+    bodyRaw: string,
+    now: Date = new Date(),
+  ) {
+    const body = bodyRaw.trim();
+    if (!body) throw new BadRequestException('message body required');
+    if (body.length > REPLY_MAX_CHARS) {
+      throw new BadRequestException(`message body exceeds ${REPLY_MAX_CHARS} characters`);
+    }
+
+    const waId = await this.resolveHandle(handle);
+    const windowRow = await this.db
+      .select({ windowExpiresAt: waInboundMessages.windowExpiresAt })
+      .from(waInboundMessages)
+      .where(eq(waInboundMessages.waId, waId))
+      .orderBy(desc(waInboundMessages.windowExpiresAt))
+      .limit(1);
+    const expires = windowRow[0]?.windowExpiresAt;
+    if (!expires || windowStateAt(expires, now) === 'closed') {
+      throw new BadRequestException('customer service window is closed — free-form reply not allowed');
+    }
+
+    const send = await this.cloud.sendText(toE164(waId), body);
+    if (!send.ok) {
+      throw new BadRequestException(`whatsapp send failed (${send.reason})`);
+    }
+
+    const sentAt = new Date();
+    const inserted = await this.db
+      .insert(waThreadOutbound)
+      .values({
+        waId,
+        waHandle: handle,
+        providerMessageId: send.messageId,
+        body,
+        source: 'operator',
+        actorUserId,
+        sentAt,
+      })
+      .returning({ id: waThreadOutbound.id });
+
+    await this.audit.record({
+      actorUserId,
+      action: 'whatsapp_inbound_reply',
+      resourceType: 'wa_inbound_thread',
+      resourceId: waId,
+      reason: `operator reply ${inserted[0]?.id ?? 'unknown'}`,
+    });
+
+    return {
+      id: inserted[0]!.id,
+      providerMessageId: send.messageId,
+      sentAt: sentAt.toISOString(),
+      windowExpiresAt: expires.toISOString(),
+      windowState: windowStateAt(expires, now),
+      windowRemainingMs: remainingMs(expires, now),
     };
   }
 }

@@ -1,5 +1,16 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { IsBooleanString, IsIn, IsInt, IsISO8601, IsOptional, IsString, Max, Min } from 'class-validator';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  IsBooleanString,
+  IsIn,
+  IsInt,
+  IsISO8601,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 import { RequiresCapability } from '../auth/capability.decorator';
@@ -54,9 +65,16 @@ class DetailInboundQuery {
   limit?: number;
 }
 
+class ReplyBody {
+  @IsString()
+  @MinLength(1)
+  @MaxLength(4096)
+  body!: string;
+}
+
 /**
- * EC-19 — read-only inbound WhatsApp viewer.
- * Capability `whatsapp:inbound:read` only — not bare `admin`.
+ * EC-19 / EC-20 — EC WhatsApp inbound inbox + windowed operator reply.
+ * Class default: read. Reply handler overrides to `whatsapp:inbound:reply`.
  */
 @Controller('admin/whatsapp/inbound')
 @RequiresCapability('whatsapp:inbound:read')
@@ -97,5 +115,16 @@ export class WhatsAppInboundAdminController {
       cursor: query.cursor,
       limit: query.limit,
     });
+  }
+
+  @Post(':handle/reply')
+  @RequiresCapability('whatsapp:inbound:reply')
+  async reply(
+    @Param('handle') handle: string,
+    @Body() body: ReplyBody,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    return this.inboundAdmin.replyToHandle(handle, actor.id, body.body);
   }
 }

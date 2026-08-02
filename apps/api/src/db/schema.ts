@@ -512,6 +512,8 @@ export const waInboundMessages = pgTable(
     phoneNumberId: text('phone_number_id').notNull(),
     messageType: text('message_type').notNull(),
     body: text('body'),
+    /** Meta contacts[].profile.name when present on the webhook payload. */
+    contactName: text('contact_name'),
     receivedAt: timestamp('received_at', { withTimezone: true }).notNull(),
     windowExpiresAt: timestamp('window_expires_at', { withTimezone: true }).notNull(),
     autoRepliedAt: timestamp('auto_replied_at', { withTimezone: true }),
@@ -524,6 +526,28 @@ export const waInboundMessages = pgTable(
       t.providerMessageId,
     ),
     waHandleIdx: index('wa_inbound_messages_wa_handle_idx').on(t.waHandle),
+  }),
+);
+
+/** EC WhatsApp — outbound free-form bodies shown in the admin thread. */
+export const waThreadOutbound = pgTable(
+  'wa_thread_outbound',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    waId: text('wa_id').notNull(),
+    waHandle: text('wa_handle'),
+    providerMessageId: text('provider_message_id'),
+    body: text('body').notNull(),
+    source: text('source').notNull(),
+    actorUserId: uuid('actor_user_id'),
+    sentAt: timestamp('sent_at', { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    providerMessageIdKey: uniqueIndex('wa_thread_outbound_provider_message_id_key').on(
+      t.providerMessageId,
+    ),
+    waIdSentAtIdx: index('wa_thread_outbound_wa_id_sent_at_idx').on(t.waId, t.sentAt),
   }),
 );
 

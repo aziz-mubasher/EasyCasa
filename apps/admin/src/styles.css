@@ -808,6 +808,86 @@ select {
   background: linear-gradient(180deg, rgba(44, 110, 155, 0.22), rgba(27, 42, 58, 0.9));
 }
 
+.ecwa__bubbles .ecwa__bubble--out {
+  margin-left: auto;
+  border-radius: 14px 2px 14px 14px;
+  background: linear-gradient(180deg, rgba(192, 138, 30, 0.22), rgba(27, 42, 58, 0.92));
+}
+
+.ecwa__thread-name {
+  font-family: var(--font-display);
+  font-weight: 560;
+}
+
+.ecwa__thread-phone {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.ecwa__detail-identity {
+  min-width: 0;
+}
+
+.ecwa__details {
+  margin: 0.55rem 0 0;
+  padding: 0.55rem 0 0;
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 0.25rem;
+}
+
+.ecwa__details-row {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.ecwa__details-row dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--paper);
+}
+
+.ecwa__composer {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 0.45rem;
+}
+
+.ecwa__composer-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--azure-pale);
+}
+
+.ecwa__composer-input {
+  width: 100%;
+  resize: vertical;
+  min-height: 4.5rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+}
+
+.ecwa__composer-input:disabled {
+  opacity: 0.55;
+}
+
+.ecwa__composer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 @media (max-width: 900px) {
   .ecwa__panes {
     grid-template-columns: 1fr;

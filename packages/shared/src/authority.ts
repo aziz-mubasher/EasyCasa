@@ -14,7 +14,9 @@ export type Capability =
   | 'agency_member'
   | 'admin'
   /** EC-19 — read-only inbound WhatsApp viewer (not granted by bare `admin`). */
-  | 'whatsapp:inbound:read';
+  | 'whatsapp:inbound:read'
+  /** EC-20 — operator free-form reply inside an open 24h window. */
+  | 'whatsapp:inbound:reply';
 
 /** Fine-grained admin personas — never a single omniscient admin. */
 export type AdminRole =
@@ -63,14 +65,15 @@ export function capabilitiesFromRoles(roles: readonly string[]): Capability[] {
     if (r === 'admin' || r.startsWith('admin_')) caps.add('admin');
     // K EC 4.1 — CRM realm roles grant admin capability (portal + /admin/crm).
     if (r.startsWith('crm-')) caps.add('admin');
-    // EC-19 — inbound WhatsApp viewer: support / operations / superadmin only.
-    // Bare `admin` and other admin_* personas do not get this capability.
+    // EC-19 / EC-20 — inbound WhatsApp viewer + reply: support / operations / superadmin.
+    // Bare `admin` and other admin_* personas do not get these capabilities.
     if (
       r === 'admin_support' ||
       r === 'admin_operations' ||
       r === 'admin_superadmin'
     ) {
       caps.add('whatsapp:inbound:read');
+      caps.add('whatsapp:inbound:reply');
     }
   }
   return [...caps];

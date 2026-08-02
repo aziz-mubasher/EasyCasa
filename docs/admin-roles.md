@@ -7,8 +7,8 @@ do not build a role-management UI.
 
 | Realm role | AdminRole | Portal access |
 |---|---|---|
-| `admin_support` | `support` | Coverage (read), credentials **redacted**; unredact is audited |
-| `admin_operations` | `operations` | Credentials, coverage, takedown, identity, catalog, orchestration |
+| `admin_support` | `support` | Coverage (read), credentials **redacted**; unredact is audited; **EC WhatsApp** read + reply |
+| `admin_operations` | `operations` | Credentials, coverage, takedown, identity, catalog, orchestration; **EC WhatsApp** read + reply |
 | `admin_finance` | `finance` | Finance surfaces (when present) |
 | `admin_dpo` | `dpo` | DSAR queue, retention purge, email outbox |
 | `admin_aml` | `aml` | AML / KYC cases |

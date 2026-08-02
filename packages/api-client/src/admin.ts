@@ -295,6 +295,13 @@ export class EasyCasaAdminApi {
       z.unknown(),
     );
   }
+  replyWhatsAppInbound(handle: string, body: string): Promise<unknown> {
+    return this.request(
+      `/admin/whatsapp/inbound/${encodeURIComponent(handle)}/reply`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify({ body }) },
+    );
+  }
 
   /* AML */
   listKycCases(): Promise<KycCase[]> {

@@ -57,15 +57,66 @@ function messagePayload(overrides: {
 }
 
 describe('WhatsApp inbound helpers', () => {
-  it('extractInboundMessages parses text and leaves media body null', () => {
+  it('extractInboundMessages parses text, contact name, and media metadata', () => {
     const text = extractInboundMessages(messagePayload({ body: 'hello' }));
     expect(text).toHaveLength(1);
     expect(text[0]!.body).toBe('hello');
     expect(text[0]!.messageType).toBe('text');
+    expect(text[0]!.contactName).toBeNull();
 
-    const media = extractInboundMessages(messagePayload({ type: 'image', id: 'wamid.img' }));
+    const withName = {
+      object: 'whatsapp_business_account',
+      entry: [
+        {
+          changes: [
+            {
+              value: {
+                metadata: { phone_number_id: 'pnid' },
+                contacts: [{ wa_id: '393331112233', profile: { name: 'Mario Rossi' } }],
+                messages: [
+                  {
+                    id: 'wamid.name',
+                    from: '393331112233',
+                    timestamp: '1720000000',
+                    type: 'text',
+                    text: { body: 'ciao' },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const named = extractInboundMessages(withName);
+    expect(named[0]!.contactName).toBe('Mario Rossi');
+
+    const media = extractInboundMessages({
+      object: 'whatsapp_business_account',
+      entry: [
+        {
+          changes: [
+            {
+              value: {
+                metadata: { phone_number_id: 'pnid' },
+                messages: [
+                  {
+                    id: 'wamid.img',
+                    from: '393331112233',
+                    timestamp: '1720000000',
+                    type: 'image',
+                    image: { id: 'media-1', caption: 'facade', mime_type: 'image/jpeg' },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    });
     expect(media[0]!.messageType).toBe('image');
-    expect(media[0]!.body).toBeNull();
+    expect(media[0]!.body).toContain('caption: facade');
+    expect(media[0]!.body).toContain('media_id: media-1');
   });
 
   it('isStopWord matches whole-message tokens only', () => {

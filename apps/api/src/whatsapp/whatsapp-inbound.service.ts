@@ -5,7 +5,7 @@ import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { waInboundMessages } from '../db/schema';
+import { waInboundMessages, waThreadOutbound } from '../db/schema';
 import { EmailService } from '../email/email.service';
 import {
   whatsappAutoReplySent,
@@ -31,6 +31,7 @@ export type ParsedInboundMessage = {
   phoneNumberId: string;
   messageType: string;
   body: string | null;
+  contactName: string | null;
   receivedAt: Date;
   windowExpiresAt: Date;
 };
@@ -64,6 +65,7 @@ export class WhatsAppInboundService {
           phoneNumberId: msg.phoneNumberId,
           messageType: msg.messageType,
           body: msg.body,
+          contactName: msg.contactName,
           receivedAt: msg.receivedAt,
           windowExpiresAt: msg.windowExpiresAt,
         })
@@ -137,10 +139,20 @@ export class WhatsAppInboundService {
       return;
     }
 
+    const sentAt = new Date();
     await this.db
       .update(waInboundMessages)
-      .set({ autoRepliedAt: new Date() })
+      .set({ autoRepliedAt: sentAt })
       .where(eq(waInboundMessages.id, row.id));
+    await this.db.insert(waThreadOutbound).values({
+      waId: row.waId,
+      waHandle: row.waHandle ?? waHandleFor(row.waId, this.config.WA_HANDLE_SECRET),
+      providerMessageId: send.messageId,
+      body: AUTO_REPLY_TEXT,
+      source: 'auto_ack',
+      actorUserId: null,
+      sentAt,
+    });
     whatsappAutoReplySent.inc();
     this.log.log(`auto-reply sent id=${row.id}`);
   }
@@ -217,12 +229,23 @@ export function extractInboundMessages(payload: unknown): ParsedInboundMessage[]
       changes?: Array<{
         value?: {
           metadata?: { phone_number_id?: string };
+          contacts?: Array<{
+            wa_id?: string;
+            profile?: { name?: string };
+          }>;
           messages?: Array<{
             id?: string;
             from?: string;
             timestamp?: string;
             type?: string;
             text?: { body?: string };
+            image?: { caption?: string; id?: string; mime_type?: string };
+            audio?: { id?: string; mime_type?: string };
+            video?: { caption?: string; id?: string; mime_type?: string };
+            document?: { caption?: string; filename?: string; id?: string; mime_type?: string };
+            location?: { latitude?: number; longitude?: number; name?: string; address?: string };
+            interactive?: { type?: string };
+            button?: { text?: string; payload?: string };
           }>;
         };
       }>;
@@ -234,14 +257,19 @@ export function extractInboundMessages(payload: unknown): ParsedInboundMessage[]
     for (const change of entry.changes ?? []) {
       const value = change.value;
       const phoneNumberId = value?.metadata?.phone_number_id?.trim() || 'unknown';
+      const nameByWaId = new Map<string, string>();
+      for (const c of value?.contacts ?? []) {
+        const id = c.wa_id?.trim();
+        const name = c.profile?.name?.trim();
+        if (id && name) nameByWaId.set(id, name);
+      }
       for (const message of value?.messages ?? []) {
         const providerMessageId = message.id?.trim();
         const waId = message.from?.trim();
         if (!providerMessageId || !waId) continue;
 
         const messageType = (message.type || 'unknown').trim() || 'unknown';
-        const isText = messageType === 'text';
-        const body = isText ? (message.text?.body ?? '').trim() || null : null;
+        const body = extractMessageBody(messageType, message);
 
         const tsSec = Number(message.timestamp);
         const receivedAt = Number.isFinite(tsSec) && tsSec > 0 ? new Date(tsSec * 1000) : new Date();
@@ -253,6 +281,7 @@ export function extractInboundMessages(payload: unknown): ParsedInboundMessage[]
           phoneNumberId,
           messageType,
           body,
+          contactName: nameByWaId.get(waId) ?? null,
           receivedAt,
           windowExpiresAt,
         });
@@ -260,4 +289,76 @@ export function extractInboundMessages(payload: unknown): ParsedInboundMessage[]
     }
   }
   return out;
+}
+
+function extractMessageBody(
+  messageType: string,
+  message: {
+    text?: { body?: string };
+    image?: { caption?: string; id?: string; mime_type?: string };
+    audio?: { id?: string; mime_type?: string };
+    video?: { caption?: string; id?: string; mime_type?: string };
+    document?: { caption?: string; filename?: string; id?: string; mime_type?: string };
+    location?: { latitude?: number; longitude?: number; name?: string; address?: string };
+    button?: { text?: string; payload?: string };
+  },
+): string | null {
+  if (messageType === 'text') {
+    return (message.text?.body ?? '').trim() || null;
+  }
+  if (messageType === 'image') {
+    const caption = message.image?.caption?.trim();
+    const mediaId = message.image?.id?.trim();
+    const parts = [
+      caption ? `caption: ${caption}` : null,
+      mediaId ? `media_id: ${mediaId}` : null,
+      message.image?.mime_type ? `mime: ${message.image.mime_type}` : null,
+    ].filter(Boolean);
+    return parts.length ? parts.join(' · ') : null;
+  }
+  if (messageType === 'audio') {
+    const parts = [
+      message.audio?.id ? `media_id: ${message.audio.id}` : null,
+      message.audio?.mime_type ? `mime: ${message.audio.mime_type}` : null,
+    ].filter(Boolean);
+    return parts.length ? parts.join(' · ') : null;
+  }
+  if (messageType === 'video') {
+    const parts = [
+      message.video?.caption?.trim() ? `caption: ${message.video.caption.trim()}` : null,
+      message.video?.id ? `media_id: ${message.video.id}` : null,
+      message.video?.mime_type ? `mime: ${message.video.mime_type}` : null,
+    ].filter(Boolean);
+    return parts.length ? parts.join(' · ') : null;
+  }
+  if (messageType === 'document') {
+    const parts = [
+      message.document?.filename?.trim() ? `file: ${message.document.filename.trim()}` : null,
+      message.document?.caption?.trim() ? `caption: ${message.document.caption.trim()}` : null,
+      message.document?.id ? `media_id: ${message.document.id}` : null,
+      message.document?.mime_type ? `mime: ${message.document.mime_type}` : null,
+    ].filter(Boolean);
+    return parts.length ? parts.join(' · ') : null;
+  }
+  if (messageType === 'location') {
+    const loc = message.location;
+    if (!loc) return null;
+    const parts = [
+      loc.name?.trim() || null,
+      loc.address?.trim() || null,
+      loc.latitude != null && loc.longitude != null
+        ? `${loc.latitude},${loc.longitude}`
+        : null,
+    ].filter(Boolean);
+    return parts.length ? parts.join(' · ') : null;
+  }
+  if (messageType === 'button') {
+    const text = message.button?.text?.trim();
+    const payload = message.button?.payload?.trim();
+    const parts = [text ? `button: ${text}` : null, payload ? `payload: ${payload}` : null].filter(
+      Boolean,
+    );
+    return parts.length ? parts.join(' · ') : null;
+  }
+  return null;
 }

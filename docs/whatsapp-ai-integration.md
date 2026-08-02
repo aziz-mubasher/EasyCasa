@@ -16,7 +16,7 @@ Pilot = **A → B → C**. Do not start D/E until inbound volume justifies it.
 
 **EC-17 (minimal inbound):** signature-verified `messages` consumer, thin `wa_inbound_messages` persist, one free-form auto-ack per wa_id / 24h. Ops alert is subject-line + admin link by default (`WA_INBOUND_EMAIL_FORWARD=false`); body-bearing mail is legacy opt-in.
 
-**EC-19 (admin viewer / EC WhatsApp):** read-only `GET /admin/whatsapp/inbound` (+ `…/summary`) behind `whatsapp:inbound:read`. Admin hash `#whatsapp` is branded **EC WhatsApp** (split-pane inbox; B4A/SV pattern, separate store). List returns opaque `waHandle` (HMAC) only — never raw `waId`. Detail by handle is audited. No reply / no join to users or listings.
+**EC-19 / EC-20 (EC WhatsApp):** `GET /admin/whatsapp/inbound` (+ `…/summary`) behind `whatsapp:inbound:read`; operator reply `POST …/:handle/reply` behind `whatsapp:inbound:reply` (open 24h window only). Admin hash `#whatsapp` is branded **EC WhatsApp**. List returns opaque `waHandle` (HMAC) only — never raw `waId`. Detail reveal is audited and returns full inbound fields + outbound auto-ack/operator bodies (`wa_thread_outbound`). No join to users/listings/CRM yet.
 
 **EC-19a:** `WA_HANDLE_SECRET` required at boot (Nest secrets list is now **six** — see `docs/env.md`). Rotating it breaks `#whatsapp/<handle>` deep-links only — re-open from the list; log the date in `docs/env.md`. Backfill: `pnpm exec tsx src/whatsapp/backfill-wa-handles.ts` from `apps/api`.
 

@@ -36,11 +36,15 @@ describe('capabilitiesFromRoles (EC-11)', () => {
     expect(capabilitiesFromRoles(['admin'])).not.toContain('whatsapp:inbound:read');
   });
 
-  it('grants whatsapp:inbound:read to support / operations / superadmin', () => {
+  it('grants whatsapp:inbound:read/reply to support / operations / superadmin', () => {
     expect(capabilitiesFromRoles(['admin_support'])).toContain('whatsapp:inbound:read');
+    expect(capabilitiesFromRoles(['admin_support'])).toContain('whatsapp:inbound:reply');
     expect(capabilitiesFromRoles(['admin_operations'])).toContain('whatsapp:inbound:read');
+    expect(capabilitiesFromRoles(['admin_operations'])).toContain('whatsapp:inbound:reply');
     expect(capabilitiesFromRoles(['admin_superadmin'])).toContain('whatsapp:inbound:read');
+    expect(capabilitiesFromRoles(['admin_superadmin'])).toContain('whatsapp:inbound:reply');
     expect(capabilitiesFromRoles(['admin_dpo'])).not.toContain('whatsapp:inbound:read');
+    expect(capabilitiesFromRoles(['admin_dpo'])).not.toContain('whatsapp:inbound:reply');
   });
 });
 
