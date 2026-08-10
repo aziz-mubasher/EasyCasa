@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { redirect } from '@/i18n/routing';
 import { AsteAnalisiPage } from '@/components/services/AsteAnalisiPage';
 import { asteAnalysisEnabled } from '@/lib/aste-analysis-config';
 import { routing } from '@/i18n/routing';
@@ -24,8 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AsteAnalisiRoute({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  // Use next/navigation redirect (not next-intl) so SSG bakes a Location header.
+  // next-intl redirect during static generation produced 307 without Location.
   if (!asteAnalysisEnabled()) {
-    redirect({ href: '/aste', locale });
+    redirect(`/${locale}/aste`);
   }
   return <AsteAnalisiPage />;
 }
