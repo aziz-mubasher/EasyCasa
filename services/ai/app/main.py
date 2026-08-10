@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from .routers import admin, assistant, recommend, search, valuation
+from .routers import admin, assistant, aste, recommend, search, valuation
 
 app = FastAPI(title="EasyCasa AI Service", version="0.4.0")
 
@@ -12,6 +12,7 @@ app.include_router(valuation.router)
 app.include_router(recommend.router)
 app.include_router(assistant.router)
 app.include_router(admin.router)
+app.include_router(aste.router)
 
 
 class Health(BaseModel):

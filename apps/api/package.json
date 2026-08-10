@@ -17,7 +17,8 @@
     "demo:seed": "node dist/demo/seed/run-seed.js",
     "demo:reset": "node dist/demo/seed/run-reset.js",
     "omi:import": "node dist/omi/import/run-import.js",
-    "email:diagnostic": "node dist/email/diagnostic/run-email-diagnostic.js"
+    "email:diagnostic": "node dist/email/diagnostic/run-email-diagnostic.js",
+    "aste:eval": "tsx src/aste/aste-eval.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.670.0",

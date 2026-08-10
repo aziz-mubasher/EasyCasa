@@ -300,7 +300,10 @@ export class AsteAnalysisService {
       addressRaw: r.addressRaw,
       comune: r.comune,
       provincia: r.provincia,
+      extraction: r.extraction,
+      semaforo: r.semaforo,
       failureReason: r.failureReason,
+      attempts: r.attempts,
       createdAt: r.createdAt.toISOString(),
       updatedAt: r.updatedAt.toISOString(),
     };
