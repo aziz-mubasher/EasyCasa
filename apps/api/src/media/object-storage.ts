@@ -37,17 +37,21 @@ export function resolveBunnyS3Endpoint(endpoint: string, region: string): string
 
 export function resolveObjectStorage(cfg: ApiConfig): ObjectStorageConfig {
   const origin = cfg.MEDIA_ORIGIN;
+
+  // EC-S-T10: when MEDIA_CDN_ENABLED is false, do not use Bunny even if
+  // MEDIA_ORIGIN=bunny is set (common in prod that already migrated). Fall
+  // back to MinIO so the API can boot; flip MEDIA_CDN_ENABLED=true after
+  // DPA/counsel to re-enable Bunny as the active origin.
+  if (origin === 'bunny' && !cfg.MEDIA_CDN_ENABLED) {
+    return resolveObjectStorage({ ...cfg, MEDIA_ORIGIN: 'minio' });
+  }
+
   const privateBase = (
     cfg.MEDIA_PRIVATE_BASE.trim() ||
     (origin === 'bunny' ? 'https://easycasaita.com/api/media/file' : cfg.MEDIA_PUBLIC_BASE)
   ).replace(/\/$/, '');
 
   if (origin === 'bunny') {
-    if (!cfg.MEDIA_CDN_ENABLED) {
-      throw new Error(
-        'MEDIA_ORIGIN=bunny refused while MEDIA_CDN_ENABLED=false (EC-S-T10 Bunny DPA gate)',
-      );
-    }
     const zone = cfg.BUNNY_STORAGE_ZONE.trim();
     const password = cfg.BUNNY_STORAGE_PASSWORD.trim();
     if (!zone || !password) {

@@ -50,17 +50,20 @@ describe('resolveObjectStorage', () => {
     expect(s.privateBase).toBe('https://easycasaita.com/api/media/file');
   });
 
-  it('refuses Bunny when MEDIA_CDN_ENABLED is false (T10 DPA gate)', () => {
-    expect(() =>
-      resolveObjectStorage(
-        baseCfg({
-          MEDIA_ORIGIN: 'bunny',
-          MEDIA_CDN_ENABLED: false,
-          BUNNY_STORAGE_ZONE: 'easycasaita',
-          BUNNY_STORAGE_PASSWORD: 'x',
-        }),
-      ),
-    ).toThrow(/MEDIA_CDN_ENABLED/);
+  it('falls back to MinIO when MEDIA_ORIGIN=bunny but MEDIA_CDN_ENABLED is false (T10 DPA gate)', () => {
+    const s = resolveObjectStorage(
+      baseCfg({
+        MEDIA_ORIGIN: 'bunny',
+        MEDIA_CDN_ENABLED: false,
+        BUNNY_STORAGE_ZONE: 'easycasaita',
+        BUNNY_STORAGE_PASSWORD: 'x',
+        BUNNY_CDN_BASE: 'https://cdn.easycasaita.com',
+      }),
+    );
+    expect(s.origin).toBe('minio');
+    expect(s.endpoint).toBe('http://minio:9000');
+    expect(s.bucket).toBe('easycasa-media');
+    expect(s.publicBase).toBe('https://easycasaita.com/api/media/file');
   });
 
   it('fails fast when Bunny password missing', () => {
