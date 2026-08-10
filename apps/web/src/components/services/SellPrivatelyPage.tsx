@@ -29,6 +29,8 @@ export function SellPrivatelyPage() {
   const steps = visiblePromiseEntries(ledger.steps);
   const benefits = visiblePromiseEntries(ledger.benefits);
   const faq = t.raw('faq.items') as FaqItem[];
+  const showSavingsFigures = ledger.gates.savingsFigures;
+  const showMediazioneBoundary = ledger.gates.mediazioneBoundaryCopy;
 
   return (
     <div className="sp">
@@ -52,18 +54,23 @@ export function SellPrivatelyPage() {
         <div className="sp-wrap">
           <p className="sp-kicker">{t('savings.kicker')}</p>
           <h2 id="sp-savings-title" className="sp-display">
-            {t('savings.title')}
+            {showSavingsFigures ? t('savings.title') : t('savings.neutralTitle')}
           </h2>
-          <p className="sp-body">
-            {t('savings.bodyBefore')}{' '}
-            <span className="sp-datum sp-est">{t('savings.figure')}</span>
-            {t('savings.bodyAfter')}
-          </p>
-          <SellPrivatelySavingsSlider />
-          <p className="sp-fn">
-            <sup>*</sup> {t('savings.footnote')}
-          </p>
-          <p className="sp-counsel">{t('counselTemplate')}</p>
+          {showSavingsFigures ? (
+            <>
+              <p className="sp-body">
+                {t('savings.bodyBefore')}{' '}
+                <span className="sp-datum sp-est">{t('savings.figure')}</span>
+                {t('savings.bodyAfter')}
+              </p>
+              <SellPrivatelySavingsSlider />
+              <p className="sp-fn">
+                <sup>*</sup> {t('savings.footnote')}
+              </p>
+            </>
+          ) : (
+            <p className="sp-body">{t('savings.neutralBody')}</p>
+          )}
         </div>
       </section>
 
@@ -120,16 +127,17 @@ export function SellPrivatelyPage() {
         </div>
       </section>
 
-      <section className="sp-section sp-not" aria-labelledby="sp-not-title">
-        <div className="sp-wrap">
-          <p className="sp-kicker">{t('not.kicker')}</p>
-          <h2 id="sp-not-title" className="sp-display">
-            {t('not.title')}
-          </h2>
-          <p className="sp-body">{t('not.body')}</p>
-          <p className="sp-counsel">{t('counselTemplate')}</p>
-        </div>
-      </section>
+      {showMediazioneBoundary ? (
+        <section className="sp-section sp-not" aria-labelledby="sp-not-title">
+          <div className="sp-wrap">
+            <p className="sp-kicker">{t('not.kicker')}</p>
+            <h2 id="sp-not-title" className="sp-display">
+              {t('not.title')}
+            </h2>
+            <p className="sp-body">{t('not.body')}</p>
+          </div>
+        </section>
+      ) : null}
 
       <section className="sp-section" aria-labelledby="sp-faq-title">
         <div className="sp-wrap">
