@@ -59,7 +59,7 @@
 
 **Questions for counsel:**
 
-4. Does this wording, combined with the feature set (viewing scheduler, enquiry inbox, OMI data display, buyer financial badges), keep EasyCasa outside mediazione under L. 39/1989 and Cass. definitions of "messa in relazione"? See the boundary matrix in [`T04_mediazione_boundary.md`](./T04_mediazione_boundary.md) — counsel is asked to approve the matrix, not only this copy.
+4. Does this wording, combined with the feature set (viewing scheduler, enquiry inbox, OMI data display, buyer financial badges), keep EasyCasa outside mediazione under L. 39/1989 and Cass. definitions of "messa in relazione"? See the full boundary matrix in [`T04_mediazione_boundary.md`](./T04_mediazione_boundary.md) (rows 1–12 + open questions) — counsel is asked to approve the matrix, not only this copy.
 5. Is an explicit disclaimer required on listing pages themselves, or only on this info page?
 
 **Fallback currently live** (`blocks.mediazioneCopy === "fallback"`):

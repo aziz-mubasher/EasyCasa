@@ -10,7 +10,7 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **T01** | ✅ Built — Next 14 + next-intl; locale URLs via Next rewrites; scoped CSS; IT+EN+ES; live on VPS |
 | **T03** | ✅ Ledger + chips shipped with T01 (`promises.json` + `StatusChip`) |
 | **T31** | ⤵ Rescoped — page i18n done; remaining = wizard + dashboard only |
-| **T02 / T04** | ⛔ Counsel packet ready — `docs/legal/ec-s-t02-counsel-review-packet.md` + `docs/legal/T04_mediazione_boundary.md`. Interim: `blocks.savingsFigures` / `mediazioneCopy` = `fallback` (enforced by `validateLedger`) |
+| **T02 / T04** | ⛔ Counsel review pending — T02 packet + **T04 full boundary matrix** (`docs/legal/T04_mediazione_boundary.md`). Interim: `blocks.savingsFigures` / `mediazioneCopy` = `fallback` |
 | **T03** | ✅ `apps/web/src/lib/promiseLedger` + build-time validation (package handoff not in repo; implemented from integration note) |
 | **T33** | ⚠ Partial — canonical/hreflang/x-default/sitemap OK after verification pack; Lighthouse Perf ≥90 PASS; SEO category FAIL while `NEXT_PUBLIC_DEMO_MODE=true` |
 
@@ -23,7 +23,7 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | T01 | Build “Vendi da privato” page + footer link | P1–P8 as promises | T03 | ✅ |
 | T02 | Counsel: savings figures, zero commission, B4A disclosure, mediazione wording | page deploy gate | — | ⛔ packet ready |
 | T03 | Promise-ledger config + live/coming chip | honesty mechanic | — | ✅ |
-| T04 | Mediazione boundary doc (portal vs mediatore, L. 39/1989) | P8; gate for T20–T29 | counsel | ⛔ matrix template ready |
+| T04 | Mediazione boundary doc (portal vs mediatore, L. 39/1989) | P8; gate for T20–T29 | counsel | ⛔ full matrix ready for counsel |
 | T05 | Seller-data legal memo + informativa extension | P8 | counsel packet | ☐ |
 
 **Phase 0 exit:** page live with P1/P8 `live`, P4/P5 `live` where EC-1/EC-3–7 cover them, else `coming`. *(Met in ledger; counsel gates keep figures/boundary copy off.)*
