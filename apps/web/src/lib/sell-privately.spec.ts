@@ -41,15 +41,15 @@ describe('sell-privately ledger', () => {
     expect(showMediazioneFallback()).toBe(true);
   });
 
-  it('Phase 0 exit: P1/P4/P5/P8 live; P2/P3/P6/P7 coming', () => {
+  it('Phase 0/1 exit: P1/P2/P4/P5/P8 live; P3/P6/P7 coming', () => {
     const byId = Object.fromEntries(
       Object.entries(getSellPrivatelyLedger().promises).map(([id, p]) => [id, p.state]),
     );
     expect(byId.P1).toBe('live');
+    expect(byId.P2).toBe('live');
     expect(byId.P4).toBe('live');
     expect(byId.P5).toBe('live');
     expect(byId.P8).toBe('live');
-    expect(byId.P2).toBe('coming');
     expect(byId.P3).toBe('coming');
     expect(byId.P6).toBe('coming');
     expect(byId.P7).toBe('coming');

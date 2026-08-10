@@ -43,6 +43,11 @@ export function resolveObjectStorage(cfg: ApiConfig): ObjectStorageConfig {
   ).replace(/\/$/, '');
 
   if (origin === 'bunny') {
+    if (!cfg.MEDIA_CDN_ENABLED) {
+      throw new Error(
+        'MEDIA_ORIGIN=bunny refused while MEDIA_CDN_ENABLED=false (EC-S-T10 Bunny DPA gate)',
+      );
+    }
     const zone = cfg.BUNNY_STORAGE_ZONE.trim();
     const password = cfg.BUNNY_STORAGE_PASSWORD.trim();
     if (!zone || !password) {

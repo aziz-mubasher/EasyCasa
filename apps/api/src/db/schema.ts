@@ -133,6 +133,15 @@ export const media = pgTable('media', {
   height: integer('height'),
   alt: text('alt'),
   placeholder: text('placeholder'),
+  /** Content-addressed storage key (T10). */
+  storageKey: text('storage_key'),
+  sha256: text('sha256'),
+  /** Perceptual hashes (T12) — 64-bit stored as bigint. */
+  dhash: bigint('dhash', { mode: 'bigint' }),
+  phash: bigint('phash', { mode: 'bigint' }),
+  dhashBucket: integer('dhash_bucket'),
+  ownerUserId: uuid('owner_user_id'),
+  moderationFlag: text('moderation_flag'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -1070,8 +1079,47 @@ export const crmAuditLog = crmPg.table('audit_log', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+
+/** EC-S-T06 — private seller profile; informativa version is the GDPR gate. */
+export const sellerProfile = pgTable('seller_profile', {
+  userId: uuid('user_id').primaryKey(),
+  displayName: text('display_name').notNull(),
+  phone: text('phone'),
+  informativaVersionAccepted: text('informativa_version_accepted').notNull(),
+  acceptedAt: timestamp('accepted_at', { withTimezone: true }).notNull(),
+  marketingConsent: boolean('marketing_consent').notNull().default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** EC-S-T07 — wizard draft autosave (payload validated by listingWizard machine). */
+export const listingDraft = pgTable('listing_draft', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  sellerId: uuid('seller_id').notNull(),
+  currentStep: text('current_step').notNull(),
+  payload: jsonb('payload').notNull().default({}),
+  status: text('status').notNull().default('draft'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+}, (t) => ({
+  sellerIdx: index('listing_draft_seller_idx').on(t.sellerId),
+}));
+
+/** EC-S-T12 — moderation events from dupdetect / abuse controls. */
+export const moderationEvents = pgTable('moderation_events', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  kind: text('kind').notNull(),
+  listingId: uuid('listing_id'),
+  mediaId: uuid('media_id'),
+  actorUserId: uuid('actor_user_id'),
+  subjectUserId: uuid('subject_user_id'),
+  detail: jsonb('detail').notNull().default({}),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
+  sellerProfile, listingDraft, moderationEvents,
 
   enquiries,
   plans, memberships, featuredPlacements, conversations, messages, notifications,

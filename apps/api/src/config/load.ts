@@ -196,6 +196,30 @@ const Schema = z
     ASTE_PIPELINE_STALE_MS: z.coerce.number().int().positive().default(1_800_000),
 
     /**
+     * EC-S-T06 — seller onboarding / seller_profile routes.
+     * Default false. Enable only after signed T05 Layer 1 + version set.
+     */
+    SELLER_ONBOARDING_ENABLED: bool(false),
+    /**
+     * EC-S-T06 — informativa version id stored on acceptance.
+     * Empty ⇒ API refuses seller_profile inserts (GDPR gate).
+     */
+    INFORMATIVA_SELLER_VERSION: z.string().default(''),
+    /**
+     * EC-S-T10 — Bunny CDN publish path. Keep false until T05 Bunny DPA executed.
+     * When false, MEDIA_ORIGIN=bunny is also refused for new listing uploads (MinIO only).
+     */
+    MEDIA_CDN_ENABLED: bool(false),
+    /**
+     * EC-S-T12 — perceptual duplicate enforcement.
+     * false = flag-only (log moderation event, allow upload); true = block DUPLICATE.
+     */
+    IMAGE_DUPDETECT_ENFORCE: bool(false),
+    /** Runtime Nominatim base for T08 address resolve (reuse migration geocoder). */
+    NOMINATIM_URL: z.string().default('https://nominatim.openstreetmap.org/search'),
+    GEOCODER_USER_AGENT: z.string().default('EasyCasaAPI/1.0 (ops@easycasaita.com)'),
+
+    /**
      * K EC 4.1 — internal CRM. Default false for local/CI/demo.
      * §1.6 Q2a consent applied 2026-08-02 — production may set true
      * (docs/legal/crm-controller-responsibility.md).

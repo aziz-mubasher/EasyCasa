@@ -22,6 +22,25 @@ export function propertyTypeFromOmiCodTip(codTip: number, descrTipologia: string
   return null;
 }
 
+/** Reverse map for T09 band lookup — pick a representative Cod_Tip. */
+export function mapPropertyTypeToCodTip(propertyType: string): number {
+  switch (propertyType) {
+    case 'villa':
+    case 'house':
+      return 1;
+    case 'commercial':
+    case 'garage':
+      return 5;
+    case 'land':
+      return 14;
+    case 'room':
+      return 20;
+    case 'apartment':
+    default:
+      return 20;
+  }
+}
+
 /** OMI stato conservativo / commercial position codes we persist on import. */
 export function normalizeOmiStato(raw: string, codTip: number): string {
   const s = raw.trim().toUpperCase();

@@ -32,8 +32,16 @@ import {
   resolveObjectStorage,
   type ObjectStorageConfig,
 } from './object-storage';
+import {
+  fetchPerceptualHashes,
+  findDuplicateMedia,
+  recordModerationEvent,
+  sha256Hex,
+} from './dupdetect.client';
+import { buildGlobalContentAddressedMediaKey } from './media-keys';
 
 const MAX_LISTING_IMAGE_EDGE_PX = 2560;
+const MAX_LISTING_IMAGE_BYTES = 25 * 1024 * 1024;
 const LISTING_OUTPUT_MIME = 'image/webp' as const;
 const LISTING_QUARANTINE_SUBPATH = 'quarantine';
 
@@ -127,7 +135,7 @@ export function assertSafeMediaKey(key: string): void {
     key.includes('..') ||
     key.startsWith('/') ||
     key.includes('\\') ||
-    !/^(listings|users)\//.test(key)
+    !/^(listings|users|media)\//.test(key)
   ) {
     throw new NotFoundException('media not found');
   }
@@ -228,8 +236,12 @@ export class MediaService {
     body: Buffer,
     contentType: string,
     alt?: string,
+    ownerUserId?: string,
   ) {
     if (!body.length) throw new BadRequestException('empty file');
+    if (body.length > MAX_LISTING_IMAGE_BYTES) {
+      throw new BadRequestException('image exceeds 25MB limit');
+    }
     const detectedMime = sniffListingImageMime(body);
     if (!ALLOWED_LISTING_INPUT_MIMES.has(detectedMime)) {
       throw new BadRequestException(
@@ -237,11 +249,37 @@ export class MediaService {
       );
     }
 
-    // Process → immutable key
+    // Process → immutable key (EXIF stripped by sharp re-encode)
     const { webp, width, height } = await transcodeListingImageToWebp(body);
-    const { key } = buildContentAddressedListingImageKey({ listingId, webpBytes: webp });
+    const digest = sha256Hex(webp);
+    // Prefer global content-addressed key; keep listing-scoped alias for legacy paths.
+    const key = buildGlobalContentAddressedMediaKey(digest);
 
-    // Cacheable immutable master at the edge
+    const hashes = await fetchPerceptualHashes(apiConfig, webp);
+    if (hashes) {
+      const match = await findDuplicateMedia(this.db, hashes, ownerUserId ?? null);
+      if (match?.kind === 'DUPLICATE') {
+        await recordModerationEvent(this.db, {
+          kind: 'IMAGE_DUPLICATE',
+          listingId,
+          mediaId: match.mediaId,
+          actorUserId: ownerUserId ?? null,
+          detail: { matchListingId: match.listingId, enforce: apiConfig.IMAGE_DUPDETECT_ENFORCE },
+        });
+        if (apiConfig.IMAGE_DUPDETECT_ENFORCE) {
+          throw new BadRequestException('duplicate image blocked');
+        }
+      } else if (match?.kind === 'NEAR_DUPLICATE') {
+        await recordModerationEvent(this.db, {
+          kind: 'IMAGE_NEAR_DUPLICATE',
+          listingId,
+          mediaId: match.mediaId,
+          actorUserId: ownerUserId ?? null,
+          detail: { matchListingId: match.listingId },
+        });
+      }
+    }
+
     await this.putObject(
       key,
       webp,
@@ -249,7 +287,21 @@ export class MediaService {
       'public, max-age=31536000, immutable',
     );
 
-    return this.insertMediaRow({ listingId, key, alt, width, height });
+    return this.insertMediaRow({
+      listingId,
+      key,
+      alt,
+      width,
+      height,
+      sha256: digest,
+      ownerUserId: ownerUserId ?? null,
+      dhash: hashes?.dhash ?? null,
+      phash: hashes?.phash ?? null,
+      dhashBucket: hashes?.dhashBucket ?? null,
+      moderationFlag: hashes
+        ? undefined
+        : undefined,
+    });
   }
 
   /** Stream an object for the public `/media/file/*` proxy. */
@@ -340,6 +392,12 @@ export class MediaService {
     alt?: string;
     width?: number | null;
     height?: number | null;
+    sha256?: string | null;
+    ownerUserId?: string | null;
+    dhash?: bigint | null;
+    phash?: bigint | null;
+    dhashBucket?: number | null;
+    moderationFlag?: string | null;
   }) {
     assertSafeMediaKey(params.key);
     const url = this.publicUrlForKey(params.key);
@@ -352,10 +410,17 @@ export class MediaService {
       .values({
         listingId: params.listingId,
         url,
+        storageKey: params.key,
         position: pos[0]?.n ?? 0,
         alt: params.alt,
         width: params.width ?? null,
         height: params.height ?? null,
+        sha256: params.sha256 ?? null,
+        ownerUserId: params.ownerUserId ?? null,
+        dhash: params.dhash ?? null,
+        phash: params.phash ?? null,
+        dhashBucket: params.dhashBucket ?? null,
+        moderationFlag: params.moderationFlag ?? null,
       })
       .returning();
     return rows[0];
