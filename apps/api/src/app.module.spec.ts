@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { AlertsModule } from './alerts/alerts.module';
 import { AmlModule } from './aml/aml.module';
 import { AssignmentsModule } from './assignments/assignments.module';
+import { AsteModule } from './aste/aste.module';
 import { AvmModule } from './avm/avm.module';
 import { BillingModule } from './billing/billing.module';
 import { ConfigModule } from './config/config.module';
@@ -82,6 +83,7 @@ const REQUIRED_STATIC = [
   SavedSearchesModule,
   AlertsModule,
   EnquiriesModule,
+  AsteModule,
   AvmModule,
   ViewingsModule,
   ShareLinksModule,
