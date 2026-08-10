@@ -1,10 +1,5 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Inject,
-} from '@nestjs/common';
-import { and, desc, eq, gte, sql } from 'drizzle-orm';
+import { Controller, Get, Query, Inject } from '@nestjs/common';
+import { desc, sql } from 'drizzle-orm';
 
 import { RequiresCapability } from '../auth/capability.decorator';
 import { Roles } from '../auth/roles.decorator';
