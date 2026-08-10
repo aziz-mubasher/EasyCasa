@@ -11,7 +11,7 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **T03** | ✅ Ledger + chips shipped with T01 (`promises.json` + `StatusChip`) |
 | **T31** | ⤵ Rescoped — page i18n done; remaining = wizard + dashboard only |
 | **T02 / T04** | ⛔ Counsel review pending — T02 packet + **T04 full boundary matrix** (`docs/legal/T04_mediazione_boundary.md`). Interim: `blocks.savingsFigures` / `mediazioneCopy` = `fallback` |
-| **T03** | ✅ `apps/web/src/lib/promiseLedger` + build-time validation (package handoff not in repo; implemented from integration note) |
+| **T05** | ⛔ Seller-data memo ready — `docs/legal/ec-s-t05-seller-data-memo.md` (gates T06/T10/T14/T25); Layer 1 + version before collection |
 | **T33** | ⚠ Partial — canonical/hreflang/x-default/sitemap OK after verification pack; Lighthouse Perf ≥90 PASS; SEO category FAIL while `NEXT_PUBLIC_DEMO_MODE=true` |
 
 **Rule:** the page may promise only what the ledger marks `live`. Flip a flag only when its tasks pass validation gates.
@@ -24,7 +24,7 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | T02 | Counsel: savings figures, zero commission, B4A disclosure, mediazione wording | page deploy gate | — | ⛔ packet ready |
 | T03 | Promise-ledger config + live/coming chip | honesty mechanic | — | ✅ |
 | T04 | Mediazione boundary doc (portal vs mediatore, L. 39/1989) | P8; gate for T20–T29 | counsel | ⛔ full matrix ready for counsel |
-| T05 | Seller-data legal memo + informativa extension | P8 | counsel packet | ☐ |
+| T05 | Seller-data legal memo + informativa extension | P8 | counsel packet | ⛔ memo ready for counsel/DPO |
 
 **Phase 0 exit:** page live with P1/P8 `live`, P4/P5 `live` where EC-1/EC-3–7 cover them, else `coming`. *(Met in ledger; counsel gates keep figures/boundary copy off.)*
 
