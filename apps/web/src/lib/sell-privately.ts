@@ -1,4 +1,4 @@
-import ledger from '@/config/sell-privately/promises.json';
+import ledger from '../config/sell-privately/promises.json';
 
 export type PromiseStatus = 'live' | 'coming' | 'hidden';
 

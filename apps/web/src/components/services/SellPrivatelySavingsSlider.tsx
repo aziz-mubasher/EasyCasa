@@ -2,7 +2,6 @@
 
 import { useId, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
 import { estimateAgencySavingEur } from '@/lib/sell-privately';
 import './sell-privately.css';
 
