@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-10",
+  "notes": "Flip status to live when the matching roadmap task ships. Never claim availability in copy alone.",
+  "benefits": [
+    { "id": "P1", "status": "live", "roadmap": null },
+    { "id": "P2", "status": "coming", "roadmap": "OMI zone guidance on publish" },
+    { "id": "P3", "status": "coming", "roadmap": "Verified Owner badge" },
+    { "id": "P4", "status": "live", "roadmap": "EC-1" },
+    { "id": "P5", "status": "live", "roadmap": "EC-3–7" },
+    { "id": "P6", "status": "coming", "roadmap": "Document checklist" },
+    { "id": "P7", "status": "coming", "roadmap": "Seller dashboard" },
+    { "id": "P8", "status": "live", "roadmap": null }
+  ],
+  "steps": [
+    { "id": "list", "status": "coming", "roadmap": "Listing wizard + address prefill" },
+    { "id": "price", "status": "coming", "roadmap": "OMI ranges at pricing" },
+    { "id": "verify", "status": "coming", "roadmap": "Visura upload → Verified Owner" },
+    { "id": "buyers", "status": "live", "roadmap": "EC-1" },
+    { "id": "viewings", "status": "live", "roadmap": "EC-3–7; seller-as-conductor T21 pending" }
+  ]
+}

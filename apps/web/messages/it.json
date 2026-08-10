@@ -559,6 +559,7 @@
       "about": "Chi siamo"
     },
     "sellers": {
+      "sellPrivately": "Vendi da privato",
       "valutazioneGratuita": "Valutazione gratuita",
       "add": "Pubblica un annuncio",
       "photo": "Servizio fotografico e virtual tour",
@@ -2555,25 +2556,52 @@
         {
           "title": "Per chi cerca",
           "links": [
-            { "label": "Cerca casa", "href": "/search" },
-            { "label": "Come funziona", "href": "/for-buyers" },
-            { "label": "Valori di mercato (OMI)", "href": "/valutazione-gratuita" }
+            {
+              "label": "Cerca casa",
+              "href": "/search"
+            },
+            {
+              "label": "Come funziona",
+              "href": "/for-buyers"
+            },
+            {
+              "label": "Valori di mercato (OMI)",
+              "href": "/valutazione-gratuita"
+            }
           ]
         },
         {
           "title": "Per chi vende",
           "links": [
-            { "label": "Pubblica un annuncio", "href": "/add" },
-            { "label": "Servizi a prezzo fisso", "href": "/pricing" },
-            { "label": "Prezzi", "href": "/pricing" }
+            {
+              "label": "Pubblica un annuncio",
+              "href": "/add"
+            },
+            {
+              "label": "Servizi a prezzo fisso",
+              "href": "/pricing"
+            },
+            {
+              "label": "Prezzi",
+              "href": "/pricing"
+            }
           ]
         },
         {
           "title": "Informazioni",
           "links": [
-            { "label": "Informativa privacy", "href": "/legal/privacy" },
-            { "label": "Termini e condizioni", "href": "/legal/terms" },
-            { "label": "Trasparenza", "href": "/trasparenza" }
+            {
+              "label": "Informativa privacy",
+              "href": "/legal/privacy"
+            },
+            {
+              "label": "Termini e condizioni",
+              "href": "/legal/terms"
+            },
+            {
+              "label": "Trasparenza",
+              "href": "/trasparenza"
+            }
           ]
         }
       ]
@@ -2586,5 +2614,163 @@
       "formValue": "Scrivici dal sito"
     },
     "langsNote": "IT · EN · ES — Operiamo in italiano, inglese e spagnolo."
+  },
+  "sellPrivately": {
+    "meta": {
+      "title": "Vendere casa da privato senza agenzia | EasyCasa",
+      "description": "Pubblica il tuo immobile su EasyCasa gratis — senza provvigione, senza esclusiva, senza incarico. Gli strumenti del privato: acquirenti verificati, agenda visite e contesto di mercato onesto.",
+      "keywords": [
+        "vendere casa da privato",
+        "vendere casa senza agenzia",
+        "quanto costa vendere casa con agenzia",
+        "annuncio privato immobiliare"
+      ]
+    },
+    "schema": {
+      "serviceName": "Vendere da privato su EasyCasa",
+      "serviceType": "Portale di annunci immobiliari tra privati",
+      "offerDescription": "Annuncio privato gratuito — nessuna provvigione sul prezzo di vendita"
+    },
+    "counselTemplate": "Modello in revisione legale — testo non definitivo (T02 / T04)",
+    "tags": {
+      "live": "Attivo",
+      "coming": "In arrivo"
+    },
+    "hero": {
+      "title": "Vendi casa da solo — senza venderti a sconto.",
+      "lead": "EasyCasa dà ai privati gli strumenti di un'agenzia, senza la provvigione. Niente costi, niente esclusiva, niente incarico. Solo un annuncio vero, visto da acquirenti veri.",
+      "ctaPrimary": "Crea il tuo annuncio gratis",
+      "ctaSecondary": "Come funziona ↓"
+    },
+    "savings": {
+      "kicker": "Il risparmio",
+      "title": "Quanto chiedono di solito le agenzie — e quanto resta a te.",
+      "bodyBefore": "In Italia le agenzie chiedono di consuetudine circa il 3% + IVA per parte. Su una vendita da €250.000 sono",
+      "figure": "€7.500–€9.150",
+      "bodyAfter": ". Su EasyCasa annuncio, richieste e strumenti per le visite sono gratis — quei soldi restano tuoi.",
+      "footnote": "La legge italiana non fissa un minimo di provvigione; le tariffe d'uso variano per provincia (rif. AGCM provv. 13035/2004).",
+      "sliderLabel": "Prezzo di vendita (stima)",
+      "sliderResultBefore": "Stima della provvigione d'uso sul tuo lato:",
+      "sliderResultAfter": "."
+    },
+    "how": {
+      "kicker": "Come funziona",
+      "title": "Cinque passi dall'annuncio alle visite",
+      "steps": {
+        "list": {
+          "title": "Pubblica in pochi minuti",
+          "body": "Wizard guidato: inserisci l'indirizzo e precompiliamo il contesto di mercato."
+        },
+        "price": {
+          "title": "Prezza con dati reali",
+          "body": "Fasce OMI ufficiali per la tua zona esatta, così il prezzo richiesto poggia su evidenze, non su intuizioni."
+        },
+        "verify": {
+          "title": "Dimostra che è genuino",
+          "body": "Carica la visura e ottieni il badge Proprietario verificato di cui gli acquirenti si fidano."
+        },
+        "buyers": {
+          "title": "Incontra acquirenti seri",
+          "body": "Le richieste possono portare un badge finanziario Acquirente verificato di Banks4All (gruppo Mundida), così sai chi è concreto prima di aprire la porta."
+        },
+        "viewings": {
+          "title": "Gestisci le visite da professionista",
+          "body": "Agenda integrata: pubblichi gli slot, confermi le richieste, niente telefonate a vuoto."
+        }
+      }
+    },
+    "benefits": {
+      "kicker": "Cosa ottieni",
+      "title": "Promesse che manteniamo — e quelle ancora in arrivo",
+      "sub": "Ogni riquadro riflette il registro prodotto. Ciò che è in arrivo è etichettato con onestà: nulla è presentato come disponibile prima che esista.",
+      "items": {
+        "P1": {
+          "title": "Zero provvigione",
+          "body": "Gratis pubblicare. Gratis vendere. Guadagniamo da servizi opzionali, mai dalla tua vendita."
+        },
+        "P2": {
+          "title": "Guida prezzi OMI",
+          "body": "Dati ufficiali di mercato per la tua zona — vedi dove si colloca il prezzo prima di pubblicare."
+        },
+        "P3": {
+          "title": "Badge Proprietario verificato",
+          "body": "Mostra agli acquirenti che l'annuncio è reale, tuo e documentato."
+        },
+        "P4": {
+          "title": "Acquirenti verificati",
+          "body": "Badge finanziari sulle richieste — meno tempo perso, meno assenze."
+        },
+        "P5": {
+          "title": "Agenda visite",
+          "body": "Il tuo calendario, i tuoi slot, visite confermate — anche in modalità open house."
+        },
+        "P6": {
+          "title": "Checklist documenti",
+          "body": "APE, planimetria, visura — ti diciamo cosa serve e li teniamo organizzati e privati."
+        },
+        "P7": {
+          "title": "Dashboard venditore",
+          "body": "Visualizzazioni, salvataggi, tasso di richieste e come si muove il tuo prezzo nel tempo."
+        },
+        "P8": {
+          "title": "Restate voi al comando",
+          "body": "Niente esclusiva, niente mandato, contatto diretto con gli acquirenti, dati protetti dal GDPR."
+        }
+      }
+    },
+    "not": {
+      "kicker": "Fiducia con onestà",
+      "title": "Cosa EasyCasa non è",
+      "body": "Siamo un portale, non un'agenzia immobiliare. Non trattiamo per te, non gestiamo le offerte e non prendiamo una percentuale. Le decisioni — e i risparmi — restano tuoi."
+    },
+    "faq": {
+      "kicker": "FAQ",
+      "title": "Domande di chi vende da privato",
+      "items": [
+        {
+          "q": "È davvero gratis?",
+          "a": "Annuncio, richieste e strumenti per le visite sono gratis. EasyCasa guadagna da servizi opzionali a pagamento che scegli tu — mai una percentuale sul prezzo di vendita."
+        },
+        {
+          "q": "Quali documenti mi servono?",
+          "a": "Di solito APE, planimetria e visura. Una checklist sulla piattaforma indicherà cosa serve nel tuo caso e terrà i caricamenti privati."
+        },
+        {
+          "q": "Come funziona il Proprietario verificato?",
+          "a": "Quando sarà disponibile, carichi la documentazione di proprietà (es. visura). Dopo i controlli, l'annuncio può mostrare il badge Proprietario verificato."
+        },
+        {
+          "q": "Chi vede i miei documenti?",
+          "a": "Solo la moderazione — mai il pubblico. I documenti usati per la verifica del proprietario non compaiono sulla pagina annuncio."
+        },
+        {
+          "q": "Cos'è il badge Acquirente verificato e chi lo fornisce?",
+          "a": "È un badge di sostenibilità finanziaria che gli acquirenti possono allegare alle richieste. Lo fornisce Banks4All, società del gruppo Mundida insieme a EasyCasa — non un terzo indipendente."
+        },
+        {
+          "q": "Posso pubblicare anche con un'agenzia?",
+          "a": "Sì. Non c'è esclusiva né mandato obbligatorio per pubblicare su EasyCasa."
+        },
+        {
+          "q": "Come sono protetti i miei dati?",
+          "a": "Trattiamo i dati per gestire l'annuncio e metterti in contatto con acquirenti genuini, nel rispetto del GDPR. Dettagli nell'informativa privacy. La versione è indicata nel footer di questa pagina."
+        }
+      ]
+    },
+    "final": {
+      "title": "Quando sei pronto.",
+      "body": "Crea un annuncio gratis. Niente costi, niente esclusiva, niente incarico.",
+      "cta": "Crea il tuo annuncio gratis"
+    },
+    "foot": {
+      "legal": "EasyCasa è gestita da MUNDIDA S.r.l. (P.IVA IT04531990986). EasyCasa e Banks4All fanno parte del gruppo Mundida.",
+      "privacyBefore": "Informativa privacy:",
+      "privacyLink": "informativa",
+      "privacyAfter": " (versione {version}).",
+      "privacyVersion": "1.0-draft",
+      "copyright": "© 2026 gruppo Mundida",
+      "myData": "I miei dati",
+      "mediation": "Mediazione"
+    }
   }
 }
