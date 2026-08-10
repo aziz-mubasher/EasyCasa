@@ -13,7 +13,7 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **T02 / T04** | ⛔ Counsel review pending — T02 packet + **T04 full boundary matrix** (`docs/legal/T04_mediazione_boundary.md`). Interim: `blocks.savingsFigures.state` / `mediazioneCopy.state` = `fallback` |
 | **T05** | ⛔ Seller-data memo ready — `docs/legal/ec-s-t05-seller-data-memo.md` (gates T06/T10/T14/T25); Layer 1 + version before collection |
 | **T06–T12** | ✅ Engineering foundation live (`329e963`) — see `docs/ec-s-phase1.md`; flags off; P2 live |
-| **T14–T19** | ⏭ Not started — pre-brief `docs/audits/EC-S-phase2-feedback.md` |
+| **T14–T19** | ✅ Engineering live (flags off) — see `docs/ec-s-phase2.md`; completion `docs/audits/EC-S-phase2-completion-feedback.md`; pre-brief `docs/audits/EC-S-phase2-feedback.md` |
 | **T33** | ⚠ Partial — canonical/hreflang/x-default/sitemap OK after verification pack; Lighthouse Perf ≥90 PASS; SEO category FAIL while `NEXT_PUBLIC_DEMO_MODE=true` |
 
 **Rule:** the page may promise only what the ledger marks `live`. Flip a flag only when its tasks pass validation gates.
@@ -55,7 +55,9 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | T18 | Document checklist engine | P6 | T10 |
 | T19 | Abuse controls | P3 | T12 |
 
-**Pre-brief feedback (for Claude):** `docs/audits/EC-S-phase2-feedback.md` — repo inventory + gates before T14 kickoff.
+**Pre-brief feedback (for Claude):** `docs/audits/EC-S-phase2-feedback.md` — repo inventory + gates before T14 kickoff.  
+**Completion feedback (for Claude):** `docs/audits/EC-S-phase2-completion-feedback.md` — what shipped, deviations, deploy notes, next brief inputs.  
+**Phase 2 exit (engineering):** code + migrations on `main`; `VERIFIED_OWNER_ENABLED` / `SELLER_CHECKLIST_ENABLED` remain **false** until counsel; P3/P6 ledger flips still gated.
 
 ## Phase 3 — Seller dashboard → P4 seller-side, P5, P7
 
