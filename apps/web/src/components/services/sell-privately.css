@@ -308,15 +308,16 @@
 }
 
 .sp-chip--live {
-  background: var(--sp-azure-08);
-  color: var(--sp-azure);
-  border: 1px solid rgba(44, 110, 155, 0.28);
+  background: #d6e6f0;
+  color: #163a56;
+  border: 1px solid rgba(22, 58, 86, 0.28);
 }
 
 .sp-chip--coming {
-  background: rgba(192, 138, 30, 0.08);
-  color: var(--sp-ochre);
-  border: 1px solid rgba(192, 138, 30, 0.28);
+  background: #f3e6c8;
+  /* ≥4.5:1 on chip fill / parchment (WCAG AA) */
+  color: #6b4a0c;
+  border: 1px solid rgba(107, 74, 12, 0.35);
 }
 
 .sp-benefits {

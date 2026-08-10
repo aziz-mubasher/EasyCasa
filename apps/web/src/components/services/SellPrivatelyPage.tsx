@@ -5,6 +5,10 @@ import { Link } from '@/i18n/routing';
 import {
   getSellPrivatelyLedger,
   type PromiseEntry,
+  showMediazioneBoundary,
+  showMediazioneFallback,
+  showSavingsFallback,
+  showSavingsFigures,
   visiblePromiseEntries,
 } from '@/lib/sell-privately';
 import { SellPrivatelySavingsSlider } from './SellPrivatelySavingsSlider';
@@ -17,10 +21,17 @@ function StatusChip({ status, liveLabel, comingLabel }: {
   liveLabel: string;
   comingLabel: string;
 }) {
-  if (status === 'live') {
-    return <span className="sp-chip sp-chip--live">{liveLabel}</span>;
-  }
-  return <span className="sp-chip sp-chip--coming">{comingLabel}</span>;
+  const label = status === 'live' ? liveLabel : comingLabel;
+  const kind = status === 'live' ? 'live' : 'coming';
+  return (
+    <span
+      className={`sp-chip sp-chip--${kind}`}
+      role="status"
+      aria-label={label}
+    >
+      {label}
+    </span>
+  );
 }
 
 export function SellPrivatelyPage() {
@@ -29,8 +40,10 @@ export function SellPrivatelyPage() {
   const steps = visiblePromiseEntries(ledger.steps);
   const benefits = visiblePromiseEntries(ledger.benefits);
   const faq = t.raw('faq.items') as FaqItem[];
-  const showSavingsFigures = ledger.gates.savingsFigures;
-  const showMediazioneBoundary = ledger.gates.mediazioneBoundaryCopy;
+  const figuresLive = showSavingsFigures(ledger);
+  const figuresFallback = showSavingsFallback(ledger);
+  const mediazioneLive = showMediazioneBoundary(ledger);
+  const mediazioneFallback = showMediazioneFallback(ledger);
 
   return (
     <div className="sp">
@@ -50,29 +63,31 @@ export function SellPrivatelyPage() {
         </div>
       </header>
 
-      <section className="sp-section sp-savings" aria-labelledby="sp-savings-title">
-        <div className="sp-wrap">
-          <p className="sp-kicker">{t('savings.kicker')}</p>
-          <h2 id="sp-savings-title" className="sp-display">
-            {showSavingsFigures ? t('savings.title') : t('savings.neutralTitle')}
-          </h2>
-          {showSavingsFigures ? (
-            <>
-              <p className="sp-body">
-                {t('savings.bodyBefore')}{' '}
-                <span className="sp-datum sp-est">{t('savings.figure')}</span>
-                {t('savings.bodyAfter')}
-              </p>
-              <SellPrivatelySavingsSlider />
-              <p className="sp-fn">
-                <sup>*</sup> {t('savings.footnote')}
-              </p>
-            </>
-          ) : (
-            <p className="sp-body">{t('savings.neutralBody')}</p>
-          )}
-        </div>
-      </section>
+      {figuresLive || figuresFallback ? (
+        <section className="sp-section sp-savings" aria-labelledby="sp-savings-title">
+          <div className="sp-wrap">
+            <p className="sp-kicker">{t('savings.kicker')}</p>
+            <h2 id="sp-savings-title" className="sp-display">
+              {figuresLive ? t('savings.title') : t('savings.neutralTitle')}
+            </h2>
+            {figuresLive ? (
+              <>
+                <p className="sp-body">
+                  {t('savings.bodyBefore')}{' '}
+                  <span className="sp-datum sp-est">{t('savings.figure')}</span>
+                  {t('savings.bodyAfter')}
+                </p>
+                <SellPrivatelySavingsSlider />
+                <p className="sp-fn">
+                  <sup>*</sup> {t('savings.footnote')}
+                </p>
+              </>
+            ) : (
+              <p className="sp-body">{t('savings.neutralBody')}</p>
+            )}
+          </div>
+        </section>
+      ) : null}
 
       <section id="how" className="sp-section" aria-labelledby="sp-how-title">
         <div className="sp-wrap">
@@ -127,7 +142,7 @@ export function SellPrivatelyPage() {
         </div>
       </section>
 
-      {showMediazioneBoundary ? (
+      {mediazioneLive ? (
         <section className="sp-section sp-not" aria-labelledby="sp-not-title">
           <div className="sp-wrap">
             <p className="sp-kicker">{t('not.kicker')}</p>
@@ -135,6 +150,16 @@ export function SellPrivatelyPage() {
               {t('not.title')}
             </h2>
             <p className="sp-body">{t('not.body')}</p>
+          </div>
+        </section>
+      ) : mediazioneFallback ? (
+        <section className="sp-section sp-not sp-not--fallback" aria-labelledby="sp-not-title">
+          <div className="sp-wrap">
+            <p className="sp-kicker">{t('not.kicker')}</p>
+            <h2 id="sp-not-title" className="sp-display">
+              {t('not.fallbackTitle')}
+            </h2>
+            <p className="sp-body">{t('not.fallbackBody')}</p>
           </div>
         </section>
       ) : null}

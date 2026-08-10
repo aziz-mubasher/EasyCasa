@@ -1,0 +1,116 @@
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Vendere da privato su EasyCasa",
+    "description": "Pubblica il tuo immobile su EasyCasa gratis — senza provvigione, senza esclusiva, senza incarico. Gli strumenti del privato: acquirenti verificati, agenda visite e contesto di mercato onesto.",
+    "url": "https://easycasaita.com/it/vendi-da-privato",
+    "serviceType": "Portale di annunci immobiliari tra privati",
+    "provider": {
+      "@type": "Organization",
+      "name": "EasyCasa",
+      "legalName": "MUNDIDA S.r.l.",
+      "url": "https://easycasaita.com",
+      "taxID": "IT04531990986"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "Italy"
+    },
+    "availableLanguage": [
+      "it",
+      "en",
+      "es"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "description": "Annuncio privato gratuito — nessuna provvigione sul prezzo di vendita"
+    },
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "Zero provvigione",
+        "value": "Gratis pubblicare. Gratis vendere. Guadagniamo da servizi opzionali, mai dalla tua vendita."
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Acquirenti verificati",
+        "value": "Badge finanziari sulle richieste — meno tempo perso, meno assenze."
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Agenda visite",
+        "value": "Il tuo calendario, i tuoi slot, visite confermate — anche in modalità open house."
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Restate voi al comando",
+        "value": "Niente esclusiva, niente mandato, contatto diretto con gli acquirenti, dati protetti dal GDPR."
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "È davvero gratis?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Annuncio, richieste e strumenti per le visite sono gratis. EasyCasa guadagna da servizi opzionali a pagamento che scegli tu — mai una percentuale sul prezzo di vendita."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quali documenti mi servono?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Di solito APE, planimetria e visura. Una checklist sulla piattaforma indicherà cosa serve nel tuo caso e terrà i caricamenti privati."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Come funziona il Proprietario verificato?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Quando sarà disponibile, carichi la documentazione di proprietà (es. visura). Dopo i controlli, l'annuncio può mostrare il badge Proprietario verificato."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Chi vede i miei documenti?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Solo la moderazione — mai il pubblico. I documenti usati per la verifica del proprietario non compaiono sulla pagina annuncio."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Cos'è il badge Acquirente verificato e chi lo fornisce?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "È un badge di sostenibilità finanziaria che gli acquirenti possono allegare alle richieste. Lo fornisce Banks4All, società del gruppo Mundida insieme a EasyCasa — non un terzo indipendente."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Posso pubblicare anche con un'agenzia?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sì. Non c'è esclusiva né mandato obbligatorio per pubblicare su EasyCasa."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Come sono protetti i miei dati?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Trattiamo i dati per gestire l'annuncio e metterti in contatto con acquirenti genuini, nel rispetto del GDPR. Dettagli nell'informativa privacy. La versione è indicata nel footer di questa pagina."
+        }
+      }
+    ]
+  }
+]

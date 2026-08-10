@@ -1,6 +1,12 @@
+import { createRequire } from 'node:module';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { validateLedger } from './scripts/validate-promise-ledger.mjs';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+const require = createRequire(import.meta.url);
+
+// Build-time ledger validation (EC-S-T03) — malformed / un-counseled live blocks fail the build.
+validateLedger(require('./src/config/sell-privately/promises.json'));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -10,11 +16,19 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/es/vender-como-particular',
+        destination: '/es/vender-entre-particulares',
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
-    // Localized public URLs for Sell Privately (filesystem route: vendi-da-privato).
     return [
       { source: '/en/sell-privately', destination: '/en/vendi-da-privato' },
-      { source: '/es/vender-como-particular', destination: '/es/vendi-da-privato' },
+      { source: '/es/vender-entre-particulares', destination: '/es/vendi-da-privato' },
     ];
   },
 };

@@ -1,10 +1,10 @@
 {
-  "version": 2,
+  "version": 3,
   "updatedAt": "2026-08-10",
-  "notes": "Flip benefit/step status to live when roadmap tasks pass validation. Counsel gates stay false until T02/T04 sign-off — do not expose € savings figures or mediazione-boundary copy while false.",
-  "gates": {
-    "savingsFigures": false,
-    "mediazioneBoundaryCopy": false
+  "notes": "Flip benefit/step status to live when roadmap tasks pass validation. Counsel blocks stay fallback|hidden until T02/T04 — never live un-counseled.",
+  "blocks": {
+    "savingsFigures": "fallback",
+    "mediazioneCopy": "fallback"
   },
   "benefits": [
     { "id": "P1", "status": "live", "roadmap": "T01; sustained by T26–T27" },
