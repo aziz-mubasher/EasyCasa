@@ -26,7 +26,8 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | T04 | Mediazione boundary doc (portal vs mediatore, L. 39/1989) | P8; gate for T20–T29 | counsel | ⛔ full matrix ready for counsel |
 | T05 | Seller-data legal memo + informativa extension | P8 | counsel packet | ⛔ memo ready for counsel/DPO |
 
-**Phase 0 exit:** page live with P1/P8 `live`, P4/P5 `live` where EC-1/EC-3–7 cover them, else `coming`. *(Met in ledger; counsel gates keep figures/boundary copy off.)*
+**Phase 0 exit:** page live with P1/P8 `live`, P4/P5 `live` where EC-1/EC-3–7 cover them, else `coming`. *(Met in ledger; counsel gates keep figures/boundary copy off.)*  
+**Completion feedback (for Claude):** `docs/audits/EC-S-phase0-completion-feedback.md`
 
 ## Phase 1 — Listing creation & genuineness → P2, P6, parts of P3
 
