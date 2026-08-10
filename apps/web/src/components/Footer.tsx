@@ -1,14 +1,15 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { isListingLandingPath } from '@/lib/listing-landing';
 import { isMarketingServicePath } from '@/lib/marketing-service';
+import { sellPrivatelyPath } from '@/lib/sell-privately';
 import './site-footer.css';
 
 type InternalItem = { key: string; href: string };
 
-const SELLER_LINKS: InternalItem[] = [
+const SELLER_LINKS_REST: InternalItem[] = [
   { key: 'valutazioneGratuita', href: '/valutazione-gratuita' },
   { key: 'add', href: '/add' },
   { key: 'photo', href: '/pricing' },
@@ -35,7 +36,12 @@ const STAKEHOLDER_LINKS: InternalItem[] = [
 
 export function Footer() {
   const t = useTranslations('footer');
+  const locale = useLocale();
   const pathname = usePathname();
+  const sellerLinks: InternalItem[] = [
+    { key: 'sellPrivately', href: sellPrivatelyPath(locale) },
+    ...SELLER_LINKS_REST,
+  ];
 
   if (isListingLandingPath(pathname) || isMarketingServicePath(pathname)) return null;
 
@@ -57,7 +63,7 @@ export function Footer() {
           <nav aria-labelledby="footer-sellers">
             <h2 id="footer-sellers">{t('columns.sellers')}</h2>
             <ul>
-              {SELLER_LINKS.map((item) => (
+              {sellerLinks.map((item) => (
                 <li key={item.key}>
                   <Link href={item.href}>{t(`sellers.${item.key}`)}</Link>
                 </li>

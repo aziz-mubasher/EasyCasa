@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { sellPrivatelyPath } from '@/lib/sell-privately';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://easycasaita.com';
 const API = process.env.API_URL ?? 'http://api:4000';
@@ -29,6 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/for-buyers',
     '/about',
     '/valutazione-gratuita',
+    '/vendi-da-privato',
     '/legal/privacy',
     '/legal/terms',
     '/legal/mediation',
@@ -40,15 +42,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const staticEntries: MetadataRoute.Sitemap = LOCALES.flatMap((loc) =>
-    staticPaths.map((p) => ({
-      url: `${SITE}/${loc}${p}`,
-      lastModified: now,
-      changeFrequency: p === '' ? 'daily' : 'weekly',
-      priority: p === '' ? 1 : 0.7,
-      alternates: {
-        languages: Object.fromEntries(LOCALES.map((l) => [l, `${SITE}/${l}${p}`])),
-      },
-    })),
+    staticPaths.map((p) => {
+      const pathFor = (l: (typeof LOCALES)[number]) =>
+        p === '/vendi-da-privato' ? sellPrivatelyPath(l) : p;
+      return {
+        url: `${SITE}/${loc}${pathFor(loc)}`,
+        lastModified: now,
+        changeFrequency: p === '' ? 'daily' : 'weekly',
+        priority: p === '' ? 1 : p === '/vendi-da-privato' ? 0.8 : 0.7,
+        alternates: {
+          languages: Object.fromEntries(LOCALES.map((l) => [l, `${SITE}/${l}${pathFor(l)}`])),
+        },
+      };
+    }),
   );
 
   const listings = await fetchListings();

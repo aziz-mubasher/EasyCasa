@@ -24,6 +24,12 @@ describe('isMarketingServicePath', () => {
     expect(isMarketingServicePath('/aste/guida/')).toBe(true);
   });
 
+  it('matches sell-privately landing (localized paths)', () => {
+    expect(isMarketingServicePath('/vendi-da-privato')).toBe(true);
+    expect(isMarketingServicePath('/sell-privately')).toBe(true);
+    expect(isMarketingServicePath('/vender-como-particular')).toBe(true);
+  });
+
   it('does not treat valutazione-gratuita as marketing chrome', () => {
     expect(isMarketingServicePath('/valutazione-gratuita')).toBe(false);
   });
