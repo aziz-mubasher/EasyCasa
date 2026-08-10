@@ -1,26 +1,59 @@
 {
-  "version": 3,
+  "$schema": "./promises.schema.json",
+  "version": 1,
   "updatedAt": "2026-08-10",
-  "notes": "Flip benefit/step status to live when roadmap tasks pass validation. Counsel blocks stay fallback|hidden until T02/T04 — never live un-counseled.",
-  "blocks": {
-    "savingsFigures": "fallback",
-    "mediazioneCopy": "fallback"
+  "promises": {
+    "P1": {
+      "state": "live",
+      "tasks": ["T01"],
+      "note": "Zero commission — true at launch; sustained by T26-T27"
+    },
+    "P2": {
+      "state": "coming",
+      "tasks": ["T08", "T09"],
+      "note": "OMI price guidance"
+    },
+    "P3": {
+      "state": "coming",
+      "tasks": ["T14", "T15", "T16", "T17"],
+      "note": "Verified Owner / genuine listings"
+    },
+    "P4": {
+      "state": "live",
+      "tasks": ["EC-1"],
+      "note": "Verified buyers — buyer-side live; seller inbox after T20"
+    },
+    "P5": {
+      "state": "live",
+      "tasks": ["EC-3", "EC-4", "EC-5", "EC-6", "EC-7"],
+      "note": "Viewing scheduler — core live; seller-conducted after T21"
+    },
+    "P6": {
+      "state": "coming",
+      "tasks": ["T18"],
+      "note": "Document checklist"
+    },
+    "P7": {
+      "state": "coming",
+      "tasks": ["T23"],
+      "note": "Seller dashboard analytics"
+    },
+    "P8": {
+      "state": "live",
+      "tasks": ["T05", "T06"],
+      "note": "Control & data protection — informativa gate applies"
+    }
   },
-  "benefits": [
-    { "id": "P1", "status": "live", "roadmap": "T01; sustained by T26–T27" },
-    { "id": "P2", "status": "coming", "roadmap": "T08 + T09" },
-    { "id": "P3", "status": "coming", "roadmap": "T14 + T15 + T16 + T17" },
-    { "id": "P4", "status": "live", "roadmap": "EC-1 buyer-side; seller inbox T20" },
-    { "id": "P5", "status": "live", "roadmap": "EC-3–7 core; seller-conductor T21" },
-    { "id": "P6", "status": "coming", "roadmap": "T18 (+T17)" },
-    { "id": "P7", "status": "coming", "roadmap": "T23 (+T24)" },
-    { "id": "P8", "status": "live", "roadmap": "T01 baseline; T05+T06+T25+T30 deepen" }
-  ],
-  "steps": [
-    { "id": "list", "status": "coming", "roadmap": "T07 + T13" },
-    { "id": "price", "status": "coming", "roadmap": "T08 + T09" },
-    { "id": "verify", "status": "coming", "roadmap": "T14–T16" },
-    { "id": "buyers", "status": "live", "roadmap": "EC-1" },
-    { "id": "viewings", "status": "live", "roadmap": "EC-3–7; seller-as-conductor T21 pending" }
-  ]
+  "blocks": {
+    "savingsFigures": {
+      "state": "fallback",
+      "gate": "T02",
+      "note": "No public EUR figures until counsel sign-off (T02). fallback = qualitative copy only."
+    },
+    "mediazioneCopy": {
+      "state": "fallback",
+      "gate": "T04",
+      "note": "'Portal, not agent' block renders counsel-template-neutral variant until T04 sign-off."
+    }
+  }
 }

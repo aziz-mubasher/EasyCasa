@@ -3,10 +3,9 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { SellPrivatelyPage } from '@/components/services/SellPrivatelyPage';
 import { routing } from '@/i18n/routing';
 import {
-  getSellPrivatelyLedger,
+  getSellPrivatelyBenefits,
   sellPrivatelyAbsoluteUrl,
   sellPrivatelyLanguageAlternates,
-  visiblePromiseEntries,
 } from '@/lib/sell-privately';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -46,8 +45,7 @@ export default async function SellPrivatelyRoute({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'sellPrivately' });
   const pageUrl = sellPrivatelyAbsoluteUrl(locale, SITE);
   const faq = t.raw('faq.items') as Array<{ q: string; a: string }>;
-  const ledger = getSellPrivatelyLedger();
-  const liveBenefits = visiblePromiseEntries(ledger.benefits).filter((b) => b.status === 'live');
+  const liveBenefits = getSellPrivatelyBenefits().filter((b) => b.status === 'live');
 
   const serviceLd = {
     '@context': 'https://schema.org',

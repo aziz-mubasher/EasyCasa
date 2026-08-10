@@ -10,7 +10,7 @@
 **Ledger:** `apps/web/src/config/sell-privately/promises.json`  
 **Guard:** `apps/web/src/lib/promiseLedger/` — `validateLedger` (build + vitest) refuses `blocks.*.live` until this packet is signed off and the guard is intentionally updated.
 
-**Interim rule in force:** `blocks.savingsFigures` and `blocks.mediazioneCopy` are `"fallback"` — no EUR comparison figures and no “portal, not agent” claim render publicly until counsel clears the claims below.
+**Interim rule in force:** `blocks.savingsFigures.state` and `blocks.mediazioneCopy.state` are `"fallback"` — no EUR comparison figures and no “portal, not agent” claim render publicly until counsel clears the claims below.
 
 > **Engineering note — gate vocabulary:** runtime states are `live` | `fallback` | `hidden` (not `full`). Deliverable C should say which blocks may flip to **`live`**.
 
@@ -23,7 +23,7 @@
 > "Le agenzie in Italia applicano abitualmente circa il 3% + IVA per parte. Su una vendita di €250.000 sono **€7.500–€9.150**. Su EasyCasa, annuncio, richieste e strumenti di visita sono gratuiti."  
 > Nota: "La legge italiana non stabilisce una provvigione minima; le tariffe d'uso variano per provincia (rif. AGCM provv. 13035/2004)."
 
-(Stored under `sellPrivately.savings.*` in `apps/web/messages/{it,en,es}.json`; rendered only when `blocks.savingsFigures === "live"`.)
+(Stored under `sellPrivately.savings.*` in `apps/web/messages/{it,en,es}.json`; rendered only when `blocks.savingsFigures.state === "live"`.)
 
 **Questions for counsel:**
 
@@ -31,7 +31,7 @@
 2. Is "gratuito" permissible given planned optional paid services (featured listings, premium tier)? Proposed mitigation: "L'annuncio è gratuito. Offriamo servizi opzionali a pagamento, mai una percentuale sulla vendita."
 3. Any AGCM exposure in the implied claim that agency commission is avoidable in all cases (e.g., where a seller has an existing exclusivity mandate)?
 
-**Fallback currently live** (`blocks.savingsFigures === "fallback"`):
+**Fallback currently live** (`blocks.savingsFigures.state === "fallback"`):
 
 | Locale | Title | Body |
 |--------|-------|------|
@@ -55,14 +55,14 @@
 
 > "Siamo un portale, non un'agenzia immobiliare. Non trattiamo per te, non gestiamo offerte e non prendiamo percentuali. Le decisioni — e i risparmi — restano tuoi."
 
-(`sellPrivately.not.title` / `not.body`; rendered only when `blocks.mediazioneCopy === "live"`.)
+(`sellPrivately.not.title` / `not.body`; rendered only when `blocks.mediazioneCopy.state === "live"`.)
 
 **Questions for counsel:**
 
 4. Does this wording, combined with the feature set (viewing scheduler, enquiry inbox, OMI data display, buyer financial badges), keep EasyCasa outside mediazione under L. 39/1989 and Cass. definitions of "messa in relazione"? See the full boundary matrix in [`T04_mediazione_boundary.md`](./T04_mediazione_boundary.md) (rows 1–12 + open questions) — counsel is asked to approve the matrix, not only this copy.
 5. Is an explicit disclaimer required on listing pages themselves, or only on this info page?
 
-**Fallback currently live** (`blocks.mediazioneCopy === "fallback"`):
+**Fallback currently live** (`blocks.mediazioneCopy.state === "fallback"`):
 
 | Locale | Title | Body |
 |--------|-------|------|
@@ -156,7 +156,7 @@ Step/benefit P3 and how-step `verify` are ledger-`coming` → UI chip **"In arri
 
 Upon sign-off, flipping a block to `live` requires **both**:
 
-1. Edit `apps/web/src/config/sell-privately/promises.json` (`blocks.savingsFigures` and/or `blocks.mediazioneCopy` → `"live"`).
+1. Edit `apps/web/src/config/sell-privately/promises.json` (`blocks.savingsFigures.state` and/or `blocks.mediazioneCopy.state` → `"live"`).
 2. Update the interim guard in `apps/web/src/lib/promiseLedger/promiseLedger.test.ts` **and** the matching rule in `apps/web/src/lib/promiseLedger/index.ts` / `apps/web/scripts/validate-promise-ledger.mjs` (`enforceCounselInterim`), otherwise CI/build fails.
 
 Record the counsel sign-off date in the PR that flips the flags.

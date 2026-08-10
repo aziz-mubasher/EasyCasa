@@ -10,7 +10,7 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **T01** | ✅ Built — Next 14 + next-intl; locale URLs via Next rewrites; scoped CSS; IT+EN+ES; live on VPS |
 | **T03** | ✅ Ledger + chips shipped with T01 (`promises.json` + `StatusChip`) |
 | **T31** | ⤵ Rescoped — page i18n done; remaining = wizard + dashboard only |
-| **T02 / T04** | ⛔ Counsel review pending — T02 packet + **T04 full boundary matrix** (`docs/legal/T04_mediazione_boundary.md`). Interim: `blocks.savingsFigures` / `mediazioneCopy` = `fallback` |
+| **T02 / T04** | ⛔ Counsel review pending — T02 packet + **T04 full boundary matrix** (`docs/legal/T04_mediazione_boundary.md`). Interim: `blocks.savingsFigures.state` / `mediazioneCopy.state` = `fallback` |
 | **T05** | ⛔ Seller-data memo ready — `docs/legal/ec-s-t05-seller-data-memo.md` (gates T06/T10/T14/T25); Layer 1 + version before collection |
 | **T33** | ⚠ Partial — canonical/hreflang/x-default/sitemap OK after verification pack; Lighthouse Perf ≥90 PASS; SEO category FAIL while `NEXT_PUBLIC_DEMO_MODE=true` |
 

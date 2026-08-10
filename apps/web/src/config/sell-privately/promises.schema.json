@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://easycasaita.com/schemas/sell-privately-promises.json",
+  "title": "EasyCasa Sell Privately promise ledger (EC-S-T03)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "updatedAt", "promises", "blocks"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "updatedAt": { "type": "string", "minLength": 1 },
+    "promises": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"],
+      "properties": {
+        "P1": { "$ref": "#/$defs/promise" },
+        "P2": { "$ref": "#/$defs/promise" },
+        "P3": { "$ref": "#/$defs/promise" },
+        "P4": { "$ref": "#/$defs/promise" },
+        "P5": { "$ref": "#/$defs/promise" },
+        "P6": { "$ref": "#/$defs/promise" },
+        "P7": { "$ref": "#/$defs/promise" },
+        "P8": { "$ref": "#/$defs/promise" }
+      }
+    },
+    "blocks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["savingsFigures", "mediazioneCopy"],
+      "properties": {
+        "savingsFigures": { "$ref": "#/$defs/counselBlock" },
+        "mediazioneCopy": { "$ref": "#/$defs/counselBlock" }
+      }
+    }
+  },
+  "$defs": {
+    "promiseState": {
+      "type": "string",
+      "enum": ["live", "coming", "hidden"]
+    },
+    "blockState": {
+      "type": "string",
+      "enum": ["live", "fallback", "hidden"]
+    },
+    "promise": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "tasks"],
+      "properties": {
+        "state": { "$ref": "#/$defs/promiseState" },
+        "tasks": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "counselBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "gate"],
+      "properties": {
+        "state": { "$ref": "#/$defs/blockState" },
+        "gate": { "type": "string", "minLength": 1 },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

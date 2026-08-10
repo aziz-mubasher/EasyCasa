@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   estimateAgencySavingEur,
+  getSellPrivatelyBenefits,
   getSellPrivatelyLedger,
+  getSellPrivatelySteps,
   sellPrivatelyAbsoluteUrl,
   sellPrivatelyLanguageAlternates,
   sellPrivatelyPath,
@@ -12,19 +14,28 @@ import {
 } from './sell-privately';
 
 describe('sell-privately ledger', () => {
-  it('loads benefits and steps with only live|coming|hidden statuses', () => {
+  it('loads nested promises and derived how-it-works steps', () => {
     const ledger = getSellPrivatelyLedger();
-    expect(ledger.benefits.length).toBe(8);
-    expect(ledger.steps.length).toBe(5);
-    for (const entry of [...ledger.benefits, ...ledger.steps]) {
+    expect(Object.keys(ledger.promises)).toHaveLength(8);
+    expect(getSellPrivatelyBenefits(ledger)).toHaveLength(8);
+    expect(getSellPrivatelySteps(ledger).map((s) => s.id)).toEqual([
+      'list',
+      'price',
+      'verify',
+      'buyers',
+      'viewings',
+    ]);
+    for (const entry of [...getSellPrivatelyBenefits(ledger), ...getSellPrivatelySteps(ledger)]) {
       expect(['live', 'coming', 'hidden']).toContain(entry.status);
     }
   });
 
   it('keeps counsel blocks on fallback until T02/T04 sign-off (interim rule)', () => {
     const { blocks } = getSellPrivatelyLedger();
-    expect(blocks.savingsFigures).toBe('fallback');
-    expect(blocks.mediazioneCopy).toBe('fallback');
+    expect(blocks.savingsFigures.state).toBe('fallback');
+    expect(blocks.mediazioneCopy.state).toBe('fallback');
+    expect(blocks.savingsFigures.gate).toBe('T02');
+    expect(blocks.mediazioneCopy.gate).toBe('T04');
     expect(showSavingsFigures()).toBe(false);
     expect(showSavingsFallback()).toBe(true);
     expect(showMediazioneFallback()).toBe(true);
@@ -32,7 +43,7 @@ describe('sell-privately ledger', () => {
 
   it('Phase 0 exit: P1/P4/P5/P8 live; P2/P3/P6/P7 coming', () => {
     const byId = Object.fromEntries(
-      getSellPrivatelyLedger().benefits.map((b) => [b.id, b.status]),
+      Object.entries(getSellPrivatelyLedger().promises).map(([id, p]) => [id, p.state]),
     );
     expect(byId.P1).toBe('live');
     expect(byId.P4).toBe('live');
@@ -47,9 +58,9 @@ describe('sell-privately ledger', () => {
   it('omits hidden entries from visible lists', () => {
     expect(
       visiblePromiseEntries([
-        { id: 'a', status: 'live', roadmap: null },
-        { id: 'b', status: 'coming', roadmap: null },
-        { id: 'c', status: 'hidden', roadmap: null },
+        { id: 'a', status: 'live', tasks: [] },
+        { id: 'b', status: 'coming', tasks: [] },
+        { id: 'c', status: 'hidden', tasks: [] },
       ]).map((e) => e.id),
     ).toEqual(['a', 'b']);
   });

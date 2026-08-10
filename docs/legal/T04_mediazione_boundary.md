@@ -4,7 +4,7 @@
 **Entity:** Mundida S.r.l. / Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Purpose:** Define, feature by feature, what EasyCasa may do for private sellers without becoming a *mediatore* under L. 39/1989 (as amended by L. 57/2001; agente immobiliare requirements, REA registration, *provvigione* entitlement under artt. 1754–1755 c.c.). Once approved, this matrix is the **acceptance criterion for tasks T20–T29** and all Phase S5 work.
 
-**Paired packet:** Claim 2 in [`ec-s-t02-counsel-review-packet.md`](./ec-s-t02-counsel-review-packet.md) (copy gate `blocks.mediazioneCopy`).  
+**Paired packet:** Claim 2 in [`ec-s-t02-counsel-review-packet.md`](./ec-s-t02-counsel-review-packet.md) (copy gate `blocks.mediazioneCopy.state`).  
 **Existing tension:** [`mediation-disclosure.md`](./mediation-disclosure.md) still templates EasyCasa as a licensed mediator — counsel must reconcile with this matrix before either document is treated as final.
 
 ---
@@ -63,7 +63,7 @@
 4. **Payment rule:** no fee anywhere in the product may be computed as a percentage of, or contingent on, a sale (row 8). Catalogue `legal_basis` / Stripe amounts must stay flat or otherwise success-independent unless a separate licensed *mediazione* path is opened.
 5. Any feature idea touching rows **10–12** requires a written counsel opinion before a task brief is created.
 
-Until this document is counsel-approved, Sell Privately **Claim 2** copy stays on ledger `blocks.mediazioneCopy = "fallback"` (see T02 packet).
+Until this document is counsel-approved, Sell Privately **Claim 2** copy stays on ledger `blocks.mediazioneCopy.state = "fallback"` (see T02 packet).
 
 ---
 
@@ -84,7 +84,7 @@ Until this document is counsel-approved, Sell Privately **Claim 2** copy stays o
 | Counsel name / firm | |
 | Date | |
 | Matrix approved as binding internal policy | ☐ yes ☐ yes with amendments attached |
-| May flip `blocks.mediazioneCopy` → `live` (T02 Claim 2) | ☐ yes ☐ no |
+| May flip `blocks.mediazioneCopy.state` → `live` (T02 Claim 2) | ☐ yes ☐ no |
 | Listing-page disclaimer required (Q3) | ☐ yes ☐ no — text: _______________ |
 | Rows 10–12 stay prohibited pending S5 opinion | ☐ confirmed |
 

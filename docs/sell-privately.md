@@ -6,14 +6,18 @@
 
 ## Promise ledger (T03)
 
-`apps/web/src/config/sell-privately/promises.json` validated by `apps/web/src/lib/promiseLedger`  
+`apps/web/src/config/sell-privately/promises.json` (+ `promises.schema.json`)  
+validated by `apps/web/src/lib/promiseLedger`  
 (`validateLedger` also runs at Next config load — malformed / un-counseled `live` blocks fail the build).
 
 | Field | Values |
 |-------|--------|
-| benefit/step `status` | `live` \| `coming` \| `hidden` |
-| `blocks.savingsFigures` | `live` \| `fallback` \| `hidden` |
-| `blocks.mediazioneCopy` | `live` \| `fallback` \| `hidden` |
+| `promises.P*.state` | `live` \| `coming` \| `hidden` |
+| `promises.P*.tasks` | roadmap task ids (e.g. `T01`, `EC-1`) |
+| `blocks.*.state` | `live` \| `fallback` \| `hidden` |
+| `blocks.*.gate` | counsel task (`T02` / `T04`) |
+
+How-it-works step chips are **derived** in `getSellPrivatelySteps()` (list→coming; price→P2; verify→P3; buyers→P4; viewings→P5) — not separate ledger rows.
 
 **Interim (T02/T04):** both blocks must be `fallback` or `hidden` — never `live` until counsel (enforced in `validateLedger`).
 
