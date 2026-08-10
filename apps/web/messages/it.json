@@ -2651,7 +2651,9 @@
       "footnote": "La legge italiana non fissa un minimo di provvigione; le tariffe d'uso variano per provincia (rif. AGCM provv. 13035/2004).",
       "sliderLabel": "Prezzo di vendita (stima)",
       "sliderResultBefore": "Stima della provvigione d'uso sul tuo lato:",
-      "sliderResultAfter": "."
+      "sliderResultAfter": ".",
+      "neutralTitle": "Pubblica gratis. Tieni ciò che ricavi dalla vendita.",
+      "neutralBody": "Su EasyCasa annuncio, richieste e strumenti per le visite sono gratis per chi vende da privato. I servizi opzionali hanno un prezzo separato — mai una percentuale sul prezzo di vendita."
     },
     "how": {
       "kicker": "Come funziona",

@@ -8,9 +8,17 @@ export type PromiseEntry = {
   roadmap: string | null;
 };
 
+export type SellPrivatelyGates = {
+  /** When false (T02 pending): no € savings figures, slider, or AGCM footnote. */
+  savingsFigures: boolean;
+  /** When false (T04 pending): hide portal-vs-mediatore block. */
+  mediazioneBoundaryCopy: boolean;
+};
+
 export type SellPrivatelyLedger = {
   version: number;
   updatedAt: string;
+  gates: SellPrivatelyGates;
   benefits: PromiseEntry[];
   steps: PromiseEntry[];
 };
@@ -56,7 +64,10 @@ export function sellPrivatelyLanguageAlternates(
   };
 }
 
-/** Agency-side customary fee: 3% net, or 3% + 22% IVA. Counsel-gate T02. */
+/**
+ * Agency-side customary fee estimate — **counsel-gate T02**.
+ * Do not call from public UI while `gates.savingsFigures` is false.
+ */
 export function estimateAgencySavingEur(salePriceEur: number): {
   net: number;
   withIva: number;

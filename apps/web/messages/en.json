@@ -2651,7 +2651,9 @@
       "footnote": "Italian law sets no minimum commission; customary rates vary by province (rif. AGCM provv. 13035/2004).",
       "sliderLabel": "Sale price (estimate)",
       "sliderResultBefore": "Estimated customary agency fee on your side:",
-      "sliderResultAfter": "."
+      "sliderResultAfter": ".",
+      "neutralTitle": "List free. Keep what you earn from the sale.",
+      "neutralBody": "On EasyCasa, listing, enquiries and viewing tools are free for private sellers. Optional services are priced separately — never as a percentage of your sale price."
     },
     "how": {
       "kicker": "How it works",
