@@ -2925,5 +2925,63 @@
     "close": "EasyCasa is building Analisi Aste: upload the documents, receive the analysis in your language.",
     "disclaimer": "EasyCasa provides document analysis for information purposes only. It does not provide legal advice, technical advice, or statutory appraisals.",
     "counselMark": "COUNSEL REVIEW PENDING"
+  },
+  "asteAnalisi": {
+    "meta": {
+      "title": "Auction analysis (preview) | EasyCasa",
+      "description": "Upload auction documents — internal surface under development."
+    },
+    "badge": "Internal preview",
+    "title": "Auction analysis — document upload",
+    "lead": "Test surface: upload the perizia and sale notice. Automated analysis is not live yet.",
+    "loading": "Loading…",
+    "create": {
+      "title": "New analysis",
+      "sub": "Create a draft linked to your account.",
+      "register": "Language register",
+      "registerFirst": "First-time buyer",
+      "registerInvestor": "Investor",
+      "signIn": "Sign in to start",
+      "submit": "Create draft"
+    },
+    "status": {
+      "title": "Status",
+      "label": "Status",
+      "draft": "draft",
+      "uploaded": "uploaded",
+      "processing": "processing",
+      "ready": "ready",
+      "failed": "failed",
+      "preparing": "In preparation — the service is under development."
+    },
+    "upload": {
+      "title": "Upload documents",
+      "sub": "PDF, JPEG or PNG · max 50 MB · max 20 files.",
+      "docType": "Document type",
+      "files": "Files",
+      "hint": "You can select multiple files; the same type applies to all in this upload.",
+      "submit": "Upload",
+      "types": {
+        "perizia": "Expert report (perizia)",
+        "avviso": "Sale notice",
+        "ordinanza": "Court order",
+        "planimetria": "Floor plan",
+        "altro": "Other"
+      }
+    },
+    "docs": {
+      "title": "Uploaded documents",
+      "empty": "No documents yet."
+    },
+    "actions": {
+      "submit": "Submit for analysis",
+      "delete": "Delete everything"
+    },
+    "errors": {
+      "create": "Could not create the analysis.",
+      "upload": "Upload failed. Check format and size.",
+      "submit": "Submit failed. At least one document is required.",
+      "delete": "Delete failed."
+    }
   }
 }

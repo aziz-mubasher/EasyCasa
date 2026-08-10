@@ -9,6 +9,10 @@ export const PRODUCT_EVENTS = {
   ASTE_PAGE_VIEW: 'aste.page_view',
   ASTE_SIGNUP_SUBMITTED: 'aste.signup_submitted',
   ASTE_GUIDE_OPENED: 'aste.guide_opened',
+  ASTE_ANALYSIS_CREATED: 'aste.analysis_created',
+  ASTE_DOCUMENT_UPLOADED: 'aste.document_uploaded',
+  ASTE_ANALYSIS_SUBMITTED: 'aste.analysis_submitted',
+  ASTE_ANALYSIS_DELETED: 'aste.analysis_deleted',
 } as const;
 
 export type ProductEventName = (typeof PRODUCT_EVENTS)[keyof typeof PRODUCT_EVENTS];

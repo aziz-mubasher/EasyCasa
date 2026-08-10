@@ -825,6 +825,63 @@ export const asteLeads = pgTable('aste_leads', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-22 — user-owned auction analysis (dark behind ASTE_ANALYSIS_ENABLED). */
+export const asteAnalyses = pgTable('aste_analyses', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull(),
+  status: text('status').notNull().default('draft'),
+  language: text('language').notNull(),
+  register: text('register').notNull(),
+  tribunale: text('tribunale'),
+  rge: text('rge'),
+  lotto: text('lotto'),
+  dataAsta: date('data_asta'),
+  termineOfferte: timestamp('termine_offerte', { withTimezone: true }),
+  addressRaw: text('address_raw'),
+  comune: text('comune'),
+  provincia: text('provincia'),
+  extraction: jsonb('extraction'),
+  semaforo: jsonb('semaforo'),
+  omiCheck: jsonb('omi_check'),
+  failureReason: text('failure_reason'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const asteDocuments = pgTable('aste_documents', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  analysisId: uuid('analysis_id').notNull(),
+  minioKey: text('minio_key').notNull(),
+  originalFilename: text('original_filename').notNull(),
+  docType: text('doc_type').notNull(),
+  mime: text('mime').notNull(),
+  sizeBytes: integer('size_bytes').notNull(),
+  pageCount: integer('page_count'),
+  ocrStatus: text('ocr_status').notNull().default('pending'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Schema only in EC-22 — embedding dim 1536 matches listings; populated by EC-23. */
+export const asteDocChunks = pgTable('aste_doc_chunks', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  documentId: uuid('document_id').notNull(),
+  page: integer('page').notNull(),
+  chunkIndex: integer('chunk_index').notNull(),
+  text: text('text').notNull(),
+  /** Stored as pgvector(1536); not written in EC-22. */
+  embedding: text('embedding'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const asteGlossary = pgTable('aste_glossary', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  termKey: text('term_key').notNull(),
+  language: text('language').notNull(),
+  register: text('register').notNull(),
+  definition: text('definition').notNull(),
+  counselReviewed: boolean('counsel_reviewed').notNull().default(false),
+});
+
 // ---------------- Phase 29 — Viewings & scheduling ----------------
 export const viewingAvailability = pgTable('viewing_availability', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -1023,6 +1080,7 @@ export const schema = {
   leases, kycCases,
   paymentIntents, invoices, stripeWebhookEvents,
   omiQuotes, valuationRequests, asteLeads,
+  asteAnalyses, asteDocuments, asteDocChunks, asteGlossary,
   viewingAvailability, viewings,
   consentRecords,
   shareLinks, shareLinkViewDedup,
