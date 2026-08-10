@@ -12,7 +12,7 @@ Also see: `docs/env.md` · Grafana dashboard **EasyCasa — Aste** · alerts gro
 
 ### Migrations (must be applied on VPS)
 
-Ledger on `main` at EC-26 ship (highest **0051**; no EC-26 table):
+Ledger for **Aste** on `main` at EC-26 ship (Aste highest **0051**; no EC-26 table). Later unrelated migrations (e.g. ECS Phase 2 **0052+**) may exist — verify full ledger on VPS before enable:
 
 | # | File | Purpose |
 |---|---|---|
