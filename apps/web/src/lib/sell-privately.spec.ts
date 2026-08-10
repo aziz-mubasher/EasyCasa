@@ -5,6 +5,9 @@ import {
   sellPrivatelyAbsoluteUrl,
   sellPrivatelyLanguageAlternates,
   sellPrivatelyPath,
+  showMediazioneFallback,
+  showSavingsFallback,
+  showSavingsFigures,
   visiblePromiseEntries,
 } from './sell-privately';
 
@@ -18,10 +21,13 @@ describe('sell-privately ledger', () => {
     }
   });
 
-  it('keeps counsel gates off until T02/T04 sign-off (interim rule)', () => {
-    const { gates } = getSellPrivatelyLedger();
-    expect(gates.savingsFigures).toBe(false);
-    expect(gates.mediazioneBoundaryCopy).toBe(false);
+  it('keeps counsel blocks on fallback until T02/T04 sign-off (interim rule)', () => {
+    const { blocks } = getSellPrivatelyLedger();
+    expect(blocks.savingsFigures).toBe('fallback');
+    expect(blocks.mediazioneCopy).toBe('fallback');
+    expect(showSavingsFigures()).toBe(false);
+    expect(showSavingsFallback()).toBe(true);
+    expect(showMediazioneFallback()).toBe(true);
   });
 
   it('Phase 0 exit: P1/P4/P5/P8 live; P2/P3/P6/P7 coming', () => {
@@ -48,15 +54,16 @@ describe('sell-privately ledger', () => {
     ).toEqual(['a', 'b']);
   });
 
-  it('localizes public paths and absolute alternates (T33 rewrite check)', () => {
+  it('localizes public paths and absolute alternates incl. x-default (T33)', () => {
     expect(sellPrivatelyPath('it')).toBe('/vendi-da-privato');
     expect(sellPrivatelyPath('en')).toBe('/sell-privately');
-    expect(sellPrivatelyPath('es')).toBe('/vender-como-particular');
+    expect(sellPrivatelyPath('es')).toBe('/vender-entre-particulares');
     expect(sellPrivatelyAbsoluteUrl('en')).toBe('https://easycasaita.com/en/sell-privately');
     expect(sellPrivatelyLanguageAlternates()).toEqual({
       it: 'https://easycasaita.com/it/vendi-da-privato',
       en: 'https://easycasaita.com/en/sell-privately',
-      es: 'https://easycasaita.com/es/vender-como-particular',
+      es: 'https://easycasaita.com/es/vender-entre-particulares',
+      'x-default': 'https://easycasaita.com/it/vendi-da-privato',
     });
   });
 

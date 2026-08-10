@@ -2722,7 +2722,9 @@
     "not": {
       "kicker": "Trust through honesty",
       "title": "What EasyCasa is not",
-      "body": "We are a portal, not an estate agent. We don't negotiate for you, don't handle offers, and don't take a percentage. Decisions — and savings — stay yours."
+      "body": "We are a portal, not an estate agent. We don't negotiate for you, don't handle offers, and don't take a percentage. Decisions — and savings — stay yours.",
+      "fallbackTitle": "Clear roles, clear documents",
+      "fallbackBody": "EasyCasa publishes the rules that apply to listings, optional services, and your data in the terms and privacy notice. Legal classifications are confirmed with counsel before we publish definitive wording here."
     },
     "faq": {
       "kicker": "FAQ",

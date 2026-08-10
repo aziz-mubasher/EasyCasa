@@ -27,6 +27,7 @@ describe('isMarketingServicePath', () => {
   it('matches sell-privately landing (localized paths)', () => {
     expect(isMarketingServicePath('/vendi-da-privato')).toBe(true);
     expect(isMarketingServicePath('/sell-privately')).toBe(true);
+    expect(isMarketingServicePath('/vender-entre-particulares')).toBe(true);
     expect(isMarketingServicePath('/vender-como-particular')).toBe(true);
   });
 

@@ -10,8 +10,9 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **T01** | ✅ Built — Next 14 + next-intl; locale URLs via Next rewrites; scoped CSS; IT+EN+ES; live on VPS |
 | **T03** | ✅ Ledger + chips shipped with T01 (`promises.json` + `StatusChip`) |
 | **T31** | ⤵ Rescoped — page i18n done; remaining = wizard + dashboard only |
-| **T02 / T04** | ⛔ Human gate — counsel pending. **Interim:** `gates.savingsFigures=false`, `gates.mediazioneBoundaryCopy=false` |
-| **T33** | ⚠ Partial — FAQPage/Service + localized canonical/hreflang/sitemap verified; Lighthouse ≥90 still open |
+| **T02 / T04** | ⛔ Human gate — counsel pending. **Interim:** `blocks.savingsFigures` / `mediazioneCopy` = `fallback` (enforced by `validateLedger`) |
+| **T03** | ✅ `apps/web/src/lib/promiseLedger` + build-time validation (package handoff not in repo; implemented from integration note) |
+| **T33** | ⚠ Partial — canonical/hreflang/x-default/sitemap OK after verification pack; Lighthouse Perf ≥90 PASS; SEO category FAIL while `NEXT_PUBLIC_DEMO_MODE=true` |
 
 **Rule:** the page may promise only what the ledger marks `live`. Flip a flag only when its tasks pass validation gates.
 

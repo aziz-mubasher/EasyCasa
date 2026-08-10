@@ -2722,7 +2722,9 @@
     "not": {
       "kicker": "Fiducia con onestà",
       "title": "Cosa EasyCasa non è",
-      "body": "Siamo un portale, non un'agenzia immobiliare. Non trattiamo per te, non gestiamo le offerte e non prendiamo una percentuale. Le decisioni — e i risparmi — restano tuoi."
+      "body": "Siamo un portale, non un'agenzia immobiliare. Non trattiamo per te, non gestiamo le offerte e non prendiamo una percentuale. Le decisioni — e i risparmi — restano tuoi.",
+      "fallbackTitle": "Ruoli chiari, documenti chiari",
+      "fallbackBody": "EasyCasa pubblica nelle condizioni e nell’informativa le regole su annunci, servizi opzionali e dati. Le qualificazioni giuridiche definitive le confermiamo con il legale prima di scriverle qui."
     },
     "faq": {
       "kicker": "FAQ",
