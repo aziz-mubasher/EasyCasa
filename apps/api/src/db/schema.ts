@@ -852,6 +852,10 @@ export const asteAnalyses = pgTable('aste_analyses', {
   extraction: jsonb('extraction'),
   semaforo: jsonb('semaforo'),
   omiCheck: jsonb('omi_check'),
+  /** EC-24 — optional buyer profile for buyer_readiness. */
+  buyerProfile: jsonb('buyer_profile'),
+  /** EC-24 — cached free-text translations by lang → path → string. */
+  translations: jsonb('translations'),
   failureReason: text('failure_reason'),
   /** EC-23 — pipeline claim/retry count (max 2 then failed). */
   attempts: integer('attempts').notNull().default(0),

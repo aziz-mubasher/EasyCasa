@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
+import { OmiModule } from '../omi/omi.module';
 import { AsteAnalysesDataSource } from '../privacy/sources/aste-analyses.data-source';
 import { UsersModule } from '../users/users.module';
 import { AsteAnalysisController } from './aste-analysis.controller';
@@ -9,18 +10,22 @@ import { AsteAnalysisService } from './aste-analysis.service';
 import { AsteAiClient } from './aste-ai.client';
 import { AsteController } from './aste.controller';
 import { AsteDocsRetentionScheduler } from './aste-docs-retention.scheduler';
+import { AsteOmiCheckService } from './aste-omi-check.service';
 import { AstePipelineScheduler } from './aste-pipeline.scheduler';
 import { AstePipelineService } from './aste-pipeline.service';
 import { AstePrivacyBoot } from './aste-privacy-boot';
+import { AsteReportService } from './aste-report.service';
 import { AsteService } from './aste.service';
 import { AsteStorage } from './aste-storage';
 
 @Module({
-  imports: [UsersModule],
+  imports: [UsersModule, OmiModule],
   controllers: [AsteController, AsteAnalysisController],
   providers: [
     AsteService,
     AsteAnalysisService,
+    AsteReportService,
+    AsteOmiCheckService,
     AsteStorage,
     AsteAiClient,
     AstePipelineService,
@@ -31,6 +36,6 @@ import { AsteStorage } from './aste-storage';
     AstePrivacyBoot,
     ProductAnalyticsService,
   ],
-  exports: [AsteService, AsteAnalysisService, AstePipelineService],
+  exports: [AsteService, AsteAnalysisService, AstePipelineService, AsteReportService],
 })
 export class AsteModule {}

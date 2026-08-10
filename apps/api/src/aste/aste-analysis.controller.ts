@@ -4,14 +4,16 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Throttle } from '@nestjs/throttler';
-import { IsIn } from 'class-validator';
+import { IsIn, IsOptional } from 'class-validator';
 
 import { RequiresAuth } from '../auth/capability.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -19,11 +21,13 @@ import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 import { AsteAnalysisEnabledGuard } from './aste-analysis.guard';
 import { AsteAnalysisService } from './aste-analysis.service';
+import { AsteReportService } from './aste-report.service';
 import {
   ASTE_DOC_TYPES,
   CreateAsteAnalysisDto,
   type AsteDocType,
 } from './dto/create-aste-analysis.dto';
+import { PatchAsteAnalysisDto } from './dto/patch-aste-analysis.dto';
 
 const MAX_BYTES = 50 * 1024 * 1024;
 
@@ -32,12 +36,23 @@ class DocTypeBody {
   docType!: AsteDocType;
 }
 
+class ReportQuery {
+  @IsOptional()
+  @IsIn(['it', 'en', 'es'])
+  lang?: 'it' | 'en' | 'es';
+
+  @IsOptional()
+  @IsIn(['1', 'true', 'yes'])
+  printed?: string;
+}
+
 @Controller('aste/analyses')
 @RequiresAuth()
 @UseGuards(AsteAnalysisEnabledGuard)
 export class AsteAnalysisController {
   constructor(
     private readonly service: AsteAnalysisService,
+    private readonly reports: AsteReportService,
     private readonly users: UsersService,
   ) {}
 
@@ -57,10 +72,40 @@ export class AsteAnalysisController {
     return this.service.list(me.id);
   }
 
+  @Get(':id/report')
+  async report(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Query() query: ReportQuery,
+  ) {
+    const me = await this.users.getOrCreate(user);
+    const lang = query.lang ?? 'it';
+    const trackPrint = query.printed === '1' || query.printed === 'true' || query.printed === 'yes';
+    return this.reports.getReport(me.id, id, { lang, trackPrint });
+  }
+
   @Get(':id')
   async one(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     const me = await this.users.getOrCreate(user);
     return this.service.get(me.id, id);
+  }
+
+  @Patch(':id')
+  async patch(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: PatchAsteAnalysisDto,
+  ) {
+    const me = await this.users.getOrCreate(user);
+    return this.reports.patchAnalysis(me.id, id, {
+      register: dto.register,
+      residency: dto.residency,
+      purpose: dto.purpose,
+      has_cf: dto.has_cf,
+      has_pec_firma: dto.has_pec_firma,
+      financing_needed: dto.financing_needed,
+      skip_buyer_profile: dto.skip_buyer_profile,
+    });
   }
 
   @Throttle({ default: { limit: 30, ttl: 60_000 } })

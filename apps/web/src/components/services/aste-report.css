@@ -1,0 +1,350 @@
+.ar {
+  --ar-ink: #14212e;
+  --ar-paper: #f3ede1;
+  --ar-azure: #2c6e9b;
+  --ar-muted: rgba(20, 33, 46, 0.72);
+  --ar-ok: #1f6b4a;
+  --ar-verify: #8a5a12;
+  --ar-critical: #8b2e2e;
+  --ar-unknown: #5a6570;
+  color: var(--ar-ink);
+  background:
+    radial-gradient(ellipse 65% 35% at 100% 0%, rgba(44, 110, 155, 0.12), transparent 55%),
+    linear-gradient(180deg, #ebe4d6 0%, var(--ar-paper) 40%);
+  font-family: var(--font-body), Georgia, serif;
+  min-height: 70vh;
+}
+
+.ar-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.ar-hero {
+  background: linear-gradient(165deg, #0f1822, #14212e 55%, #1a3044);
+  color: var(--ar-paper);
+  padding: clamp(2rem, 5vw, 3rem) 0;
+}
+
+.ar-brand {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 0 0 0.65rem;
+}
+
+.ar-badge {
+  display: inline-block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid rgba(169, 200, 220, 0.4);
+  padding: 0.28rem 0.5rem;
+  border-radius: 4px;
+  color: #a9c8dc;
+  margin: 0 0 0.85rem;
+}
+
+.ar-hero h1 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.45rem, 3vw, 1.95rem);
+  margin: 0 0 0.65rem;
+  letter-spacing: -0.02em;
+}
+
+.ar-lead {
+  margin: 0;
+  color: rgba(243, 237, 225, 0.85);
+  max-width: 52ch;
+}
+
+.ar-body {
+  padding: 1.75rem 0 3rem;
+}
+
+.ar-disclaimer {
+  font-size: 0.88rem;
+  border-left: 3px solid var(--ar-azure);
+  padding: 0.65rem 0.85rem;
+  background: rgba(44, 110, 155, 0.08);
+  margin: 0 0 1.25rem;
+}
+
+.ar-notice {
+  background: rgba(138, 90, 18, 0.12);
+  padding: 0.7rem 0.9rem;
+  margin: 0 0 1rem;
+}
+
+.ar-error {
+  color: var(--ar-critical);
+}
+
+.ar-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: end;
+  margin-bottom: 1.25rem;
+}
+
+.ar-field-inline label,
+.ar-field label {
+  display: block;
+  font-size: 0.82rem;
+  margin-bottom: 0.25rem;
+}
+
+.ar-field select,
+.ar-field-inline select {
+  min-width: 12rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid rgba(20, 33, 46, 0.25);
+  background: #fff;
+  color: inherit;
+}
+
+.ar-section {
+  margin: 0 0 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(20, 33, 46, 0.12);
+}
+
+.ar-section h2 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.2rem;
+  margin: 0 0 0.75rem;
+}
+
+.ar-section h3 {
+  font-size: 1rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.ar-dl {
+  display: grid;
+  gap: 0.55rem 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin: 0;
+}
+
+.ar-dl dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ar-muted);
+}
+
+.ar-dl dd {
+  margin: 0.15rem 0 0;
+}
+
+.ar-docs {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.ar-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+.ar-semaforo {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.ar-sem-item {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr auto;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.45rem 0.55rem;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.ar-sem-icon {
+  font-weight: 700;
+  text-align: center;
+}
+
+.ar-sem-item--ok .ar-sem-icon { color: var(--ar-ok); }
+.ar-sem-item--verify .ar-sem-icon { color: var(--ar-verify); }
+.ar-sem-item--critical .ar-sem-icon { color: var(--ar-critical); }
+.ar-sem-item--unknown .ar-sem-icon { color: var(--ar-unknown); }
+
+.ar-aggregate {
+  font-size: 0.92rem;
+  color: var(--ar-muted);
+}
+
+.ar-figures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.ar-figures li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 0.75rem;
+  align-items: baseline;
+}
+
+.ar-cite {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--ar-azure);
+}
+
+.ar-bilingual {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.ar-bilingual__tr {
+  font-size: 0.92em;
+  color: var(--ar-muted);
+}
+
+.ar-term {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+.ar-omi-bar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 0.35rem;
+}
+
+.ar-omi-svg {
+  width: 100%;
+  height: auto;
+  color: var(--ar-azure);
+  margin-bottom: 0.75rem;
+}
+
+.ar-attr {
+  font-size: 0.8rem;
+  color: var(--ar-muted);
+}
+
+.ar-warn {
+  font-size: 0.85rem;
+  color: var(--ar-verify);
+}
+
+.ar-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.ar-card {
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.55);
+  border-left: 3px solid var(--ar-verify);
+}
+
+.ar-card--critical {
+  border-left-color: var(--ar-critical);
+}
+
+.ar-card-level {
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
+.ar-card-prob,
+.ar-card-action {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+}
+
+.ar-card-action {
+  color: var(--ar-azure);
+}
+
+.ar-btn {
+  appearance: none;
+  border: none;
+  background: var(--ar-ink);
+  color: var(--ar-paper);
+  padding: 0.55rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ar-btn--ghost {
+  background: transparent;
+  color: var(--ar-ink);
+  border: 1px solid rgba(20, 33, 46, 0.35);
+}
+
+.ar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+.ar-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.ar-checklist ul {
+  margin: 0.4rem 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.ar-chip {
+  display: inline-block;
+  width: 1.2rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.ar-counsel {
+  font-size: 0.78rem;
+  color: var(--ar-muted);
+}
+
+@media print {
+  .ar {
+    background: #fff;
+    color: #000;
+  }
+  .ar-hero {
+    background: none;
+    color: #000;
+    padding: 0 0 0.75rem;
+    border-bottom: 1px solid #ccc;
+  }
+  .no-print,
+  .no-print-hide .ar-badge {
+    display: none !important;
+  }
+  .ar-section {
+    break-inside: avoid;
+  }
+  .ar-disclaimer {
+    border-color: #000;
+    background: none;
+  }
+}

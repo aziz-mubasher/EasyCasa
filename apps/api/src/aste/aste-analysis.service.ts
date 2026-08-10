@@ -302,6 +302,8 @@ export class AsteAnalysisService {
       provincia: r.provincia,
       extraction: r.extraction,
       semaforo: r.semaforo,
+      omiCheck: r.omiCheck,
+      buyerProfile: r.buyerProfile,
       failureReason: r.failureReason,
       attempts: r.attempts,
       createdAt: r.createdAt.toISOString(),

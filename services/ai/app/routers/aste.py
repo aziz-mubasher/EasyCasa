@@ -5,9 +5,17 @@ import logging
 from fastapi import APIRouter, Depends, File, Header, HTTPException, UploadFile
 
 from ..providers.embeddings import get_embedder
-from ..schemas_aste import EmbedRequest, EmbedResponse, ExtractRequest, OcrResponse
+from ..schemas_aste import (
+    EmbedRequest,
+    EmbedResponse,
+    ExtractRequest,
+    OcrResponse,
+    TranslateRequest,
+    TranslateResponse,
+)
 from ..services.aste_extract import run_extract
 from ..services.aste_ocr import run_ocr
+from ..services.aste_translate import run_translate
 from ..settings import Settings, get_settings
 
 log = logging.getLogger("aste.router")
@@ -58,3 +66,18 @@ def aste_embed(body: EmbedRequest) -> EmbedResponse:
         if len(v) != dim:
             raise HTTPException(status_code=500, detail="embed_dim_mismatch")
     return EmbedResponse(embeddings=vectors, dim=dim)
+
+
+@router.post(
+    "/translate",
+    response_model=TranslateResponse,
+    dependencies=[Depends(require_internal)],
+)
+def aste_translate(body: TranslateRequest) -> TranslateResponse:
+    try:
+        translations = run_translate(body)
+        return TranslateResponse(translations=translations)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc

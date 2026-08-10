@@ -2976,13 +2976,155 @@
     },
     "actions": {
       "submit": "Invia per l’analisi",
-      "delete": "Elimina tutto"
+      "delete": "Elimina tutto",
+      "openReport": "Apri report"
     },
     "errors": {
       "create": "Creazione non riuscita.",
       "upload": "Caricamento non riuscito. Controlla formato e dimensione.",
       "submit": "Invio non riuscito. Serve almeno un documento.",
       "delete": "Eliminazione non riuscita."
+    }
+  },
+  "asteReport": {
+    "meta": {
+      "title": "Report Analisi Aste | EasyCasa",
+      "description": "Report informativo dell’analisi documenti d’asta."
+    },
+    "badge": "Anteprima interna",
+    "title": "Report Analisi Aste",
+    "lead": "Sintesi documentale citata, semaforo e confronto OMI — a scopo informativo.",
+    "loading": "Caricamento report…",
+    "print": "Stampa / Salva come PDF",
+    "counselMark": "COUNSEL REVIEW PENDING",
+    "disclaimer": "EasyCasa fornisce analisi documentali a scopo informativo. Non fornisce consulenza legale, tecnica o perizie ai sensi di legge.",
+    "esNotice": "Report in spagnolo in arrivo — contenuto del report in italiano.",
+    "notFound": "non rilevato nei documenti",
+    "notFoundEmpty": "Nessun campo segnalato come non rilevato.",
+    "notFoundGuidance": "verificare direttamente sui documenti originali",
+    "register": {
+      "label": "Registro",
+      "first_buyer": "Prima casa",
+      "investor": "Investitore"
+    },
+    "buyerForm": {
+      "title": "Profilo acquirente",
+      "sub": "Opzionale — serve a calcolare la prontezza all’acquisto. Puoi saltare.",
+      "residency": "Residenza",
+      "purpose": "Finalità",
+      "has_cf": "Hai un codice fiscale?",
+      "has_pec": "Hai PEC e firma digitale?",
+      "financing": "Serve un finanziamento?",
+      "unknown": "Non so",
+      "yes": "Sì",
+      "no": "No",
+      "it_resident": "Residente in Italia",
+      "eu_nonresident": "UE non residente",
+      "non_eu": "Extra-UE",
+      "prima_casa": "Prima casa",
+      "investimento": "Investimento",
+      "save": "Salva profilo",
+      "skip": "Salta per ora"
+    },
+    "buyerChecklist": {
+      "title": "Checklist prontezza acquirente",
+      "items": {
+        "cf_required_non_eu": "Codice fiscale obbligatorio — ottenibile in consolato o presso l’Agenzia delle Entrate",
+        "cf_status_unknown_non_eu": "Verificare il possesso del codice fiscale (extra-UE)",
+        "cf_recommended_eu": "Codice fiscale consigliato anche per acquirenti UE non residenti",
+        "pec_firma_required_telematica": "Per asta telematica servono PEC e firma digitale — verificare prima dell’offerta",
+        "pec_firma_status_unknown": "Stato PEC/firma digitale non indicato — verificare",
+        "financing_timeline": "Il finanziamento deve rispettare i termini del tribunale, non quelli della banca — allineare i tempi prima di offrire",
+        "non_eu_eligibility_counsel": "Acquirente extra-UE: verificare eleggibilità e adempimenti con un professionista",
+        "buyer_ready": "Nessun ostacolo evidente dal profilo dichiarato"
+      }
+    },
+    "sections": {
+      "procedure": "Procedura",
+      "documents": "Documenti",
+      "semaforo": "Semaforo",
+      "economics": "Economia",
+      "giuridica": "Giuridica",
+      "urbanistica": "Urbanistica / Catastale",
+      "condizioni": "Condizioni",
+      "spese": "Spese",
+      "omi": "Confronto OMI",
+      "scenari": "Nota scenari",
+      "criticita": "Criticità",
+      "notFound": "Non rilevato"
+    },
+    "fields": {
+      "tribunale": "Tribunale",
+      "lotto": "Lotto",
+      "data_asta": "Data asta",
+      "termine_offerte": "Termine offerte",
+      "days_left": "giorni",
+      "address": "Indirizzo",
+      "diritto": "Diritto venduto",
+      "urb": "Conformità urbanistica",
+      "cat": "Conformità catastale",
+      "catasto": "Dati catastali"
+    },
+    "econ": {
+      "valore_stima": "Valore di stima",
+      "prezzo_base": "Prezzo base",
+      "offerta_minima": "Offerta minima",
+      "cauzione_pct": "Cauzione",
+      "rilancio_minimo": "Rilancio minimo",
+      "superficie_commerciale_mq": "Superficie commerciale"
+    },
+    "semaforo": {
+      "aggregate": "Sintesi: {ok} ok · {verify} da verificare · {critical} critici · {unknown} sconosciuti",
+      "levels": {
+        "ok": "ok",
+        "verify": "verificare",
+        "critical": "critico",
+        "unknown": "sconosciuto"
+      },
+      "dims": {
+        "vincoli_gravami": "Vincoli / gravami",
+        "occupazione": "Occupazione",
+        "conformita_urbanistica": "Conformità urbanistica",
+        "conformita_catastale": "Conformità catastale",
+        "condizione_immobile": "Condizione immobile",
+        "spese_condominiali": "Spese condominiali",
+        "rischio_asta": "Rischio asta / documenti",
+        "buyer_readiness": "Prontenza acquirente"
+      }
+    },
+    "omi": {
+      "unavailable": "Confronto non disponibile",
+      "unit": "Unità fascia",
+      "units": {
+        "total_eur": "€ totali (× superficie)",
+        "eur_per_mq": "€/mq soltanto"
+      },
+      "sconto": "Sconto reale vs OMI mid",
+      "method": "Metodo / confidenza",
+      "period": "Periodo OMI",
+      "attribution": "Fonte: OMI — Agenzia delle Entrate"
+    },
+    "scenari": {
+      "prima_casa": "Nota statica (prima casa): verifica termini di offerta, cauzione e tempi di finanziamento prima di impegnarti. Questa nota non è consulenza.",
+      "investimento": "Nota statica (investimento): valuta sconto vs OMI, costi di messa a reddito e vincoli opponibili. Questa nota non è consulenza."
+    },
+    "criticita": {
+      "empty": "Nessuna criticità segnalata dal semaforo.",
+      "noSnippet": "Nessun estratto testuale associato — verificare sui documenti.",
+      "actions": {
+        "action_vincoli": "Fare esaminare vincoli e formalità da un professionista prima dell’offerta.",
+        "action_occupazione": "Verificare stato di occupazione e opponibilità verso terzi.",
+        "action_urbanistica": "Verificare conformità urbanistica e sanabilità di eventuali difformità.",
+        "action_catastale": "Allineare planimetria e dati catastali con lo stato di fatto.",
+        "action_condizione": "Ispezionare lo stato manutentivo e stimare lavori con un tecnico.",
+        "action_spese": "Quantificare oneri e arretrati condominiali a carico dell’aggiudicatario.",
+        "action_rischio": "Integrare la documentazione mancante (perizia/avviso/economici) prima di offrire.",
+        "action_buyer": "Completare gli adempimenti del profilo acquirente evidenziati in checklist."
+      }
+    },
+    "errors": {
+      "load": "Impossibile caricare il report (non trovato, non pronto o non autorizzato).",
+      "profile": "Salvataggio profilo non riuscito."
     }
   }
 }

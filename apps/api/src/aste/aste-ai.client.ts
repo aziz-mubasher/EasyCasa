@@ -85,6 +85,21 @@ export class AsteAiClient {
     return res.embeddings;
   }
 
+  /** EC-24 — literal translation of free-text snippets (cached by Nest). */
+  async translate(input: { texts: string[]; target_lang: string }): Promise<string[]> {
+    if (input.texts.length === 0) return [];
+    const res = (await this.fetchJson('/aste/translate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-EC-Internal': this.token(),
+      },
+      body: JSON.stringify(input),
+      timeoutMs: this.config.ASTE_TRANSLATE_TIMEOUT_MS,
+    })) as { translations: string[] };
+    return res.translations;
+  }
+
   private async fetchJson(
     path: string,
     opts: {

@@ -1,4 +1,4 @@
-/** Client helpers for EC-22 aste analysis API (flag-gated on server). */
+/** Client helpers for EC-22/24 aste analysis + report API (flag-gated on server). */
 
 import { createAuthedFetch, apiUrl } from '@/auth/authedFetch';
 
@@ -8,6 +8,10 @@ export type AsteAnalysis = {
   language: string;
   register: string;
   documents?: AsteDocument[];
+  extraction?: unknown;
+  semaforo?: Record<string, string> | null;
+  omiCheck?: unknown;
+  buyerProfile?: AsteBuyerProfile | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -22,6 +26,84 @@ export type AsteDocument = {
 };
 
 export type DocType = 'perizia' | 'avviso' | 'ordinanza' | 'planimetria' | 'altro';
+
+export type AsteBuyerProfile = {
+  residency: 'it_resident' | 'eu_nonresident' | 'non_eu' | null;
+  purpose: 'prima_casa' | 'investimento' | null;
+  has_cf: boolean | null;
+  has_pec_firma: boolean | null;
+  financing_needed: boolean | null;
+};
+
+export type AsteReport = {
+  id: string;
+  status: string;
+  register: string;
+  tribunale: string | null;
+  rge: string | null;
+  lotto: string | null;
+  dataAsta: string | null;
+  termineOfferte: string | null;
+  addressRaw: string | null;
+  comune: string | null;
+  provincia: string | null;
+  extraction: {
+    schema_version: 1;
+    procedura: Record<string, unknown>;
+    economics: Record<string, { value: number; source: { file: string; page: number } } | null>;
+    immobile: Record<string, unknown>;
+    giuridica: Record<string, unknown>;
+    urbanistica: Record<string, unknown>;
+    condizioni: Record<string, unknown>;
+    spese: Record<string, unknown>;
+    meta: {
+      documents: Array<{ file: string; doc_type: string; pages: number; ocr_pages: number }>;
+      not_found: string[];
+      warnings: string[];
+      schema_version: 1;
+    };
+  };
+  semaforo: Record<string, string>;
+  omiCheck: {
+    available: boolean;
+    method: 'zone' | 'comune' | null;
+    confidence: string | null;
+    omi_range: { min: number; max: number; mid: number } | null;
+    omi_range_unit: 'total_eur' | 'eur_per_mq' | null;
+    omi_eur_mq: { min: number; max: number; mid: number } | null;
+    sconto_reale_pct: number | null;
+    prezzo_base_vs_omi_pct: number | null;
+    valore_stima_vs_omi_pct: number | null;
+    attribution: string;
+    warnings: string[];
+    period: string | null;
+  } | null;
+  buyerProfile: AsteBuyerProfile | null;
+  buyerReadiness: {
+    level: string;
+    checklist: Array<{ key: string; level: string }>;
+    profile_skipped: boolean;
+  };
+  buyerProfileSkipped: boolean;
+  translations: Record<string, string>;
+  reportContentLang: 'it' | 'en';
+  esContentFallback: boolean;
+  criticita: Array<{
+    dimension: string;
+    level: string;
+    action_key: string;
+    problema_it: string[];
+  }>;
+  documents: Array<{
+    id: string;
+    originalFilename: string;
+    docType: string;
+    pageCount: number | null;
+  }>;
+  filenameById: Record<string, string>;
+  glossary: Array<{ termKey: string; definition: string; counselReviewed: boolean }>;
+  translateCalls?: number;
+};
 
 type TokenGetter = () => Promise<string | null>;
 
@@ -95,4 +177,46 @@ export async function deleteAnalysis(getAccessToken: TokenGetter, id: string): P
   const fetchAuth = client(getAccessToken);
   const res = await fetchAuth(apiUrl(`/aste/analyses/${id}`), { method: 'DELETE' });
   if (!res.ok) throw new Error(`delete failed: ${res.status}`);
+}
+
+export async function getReport(
+  getAccessToken: TokenGetter,
+  id: string,
+  lang: 'it' | 'en' | 'es',
+  opts?: { printed?: boolean },
+): Promise<AsteReport> {
+  const fetchAuth = client(getAccessToken);
+  const q = new URLSearchParams({ lang });
+  if (opts?.printed) q.set('printed', '1');
+  const res = await fetchAuth(apiUrl(`/aste/analyses/${id}/report?${q}`), { cache: 'no-store' });
+  if (!res.ok) throw new Error(`report failed: ${res.status}`);
+  return (await res.json()) as AsteReport;
+}
+
+export async function patchAnalysis(
+  getAccessToken: TokenGetter,
+  id: string,
+  body: Partial<AsteBuyerProfile> & {
+    register?: 'investor' | 'first_buyer';
+    skip_buyer_profile?: boolean;
+  },
+): Promise<{
+  register: string;
+  buyerProfile: AsteBuyerProfile | null;
+  buyerReadiness: AsteReport['buyerReadiness'];
+  semaforo: Record<string, string>;
+}> {
+  const fetchAuth = client(getAccessToken);
+  const res = await fetchAuth(apiUrl(`/aste/analyses/${id}`), {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`patch failed: ${res.status}`);
+  return (await res.json()) as {
+    register: string;
+    buyerProfile: AsteBuyerProfile | null;
+    buyerReadiness: AsteReport['buyerReadiness'];
+    semaforo: Record<string, string>;
+  };
 }

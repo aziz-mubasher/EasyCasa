@@ -16,6 +16,11 @@ export const PRODUCT_EVENTS = {
   ASTE_ANALYSIS_PROCESSING_STARTED: 'aste.analysis_processing_started',
   ASTE_ANALYSIS_READY: 'aste.analysis_ready',
   ASTE_ANALYSIS_FAILED: 'aste.analysis_failed',
+  /** EC-24 — report surface (no document text in props). */
+  ASTE_REPORT_VIEWED: 'aste.report_viewed',
+  ASTE_BUYER_PROFILE_COMPLETED: 'aste.buyer_profile_completed',
+  ASTE_REPORT_PRINTED: 'aste.report_printed',
+  ASTE_OMI_CHECK_COMPUTED: 'aste.omi_check_computed',
 } as const;
 
 export type ProductEventName = (typeof PRODUCT_EVENTS)[keyof typeof PRODUCT_EVENTS];

@@ -2976,13 +2976,155 @@
     },
     "actions": {
       "submit": "Enviar para análisis",
-      "delete": "Eliminar todo"
+      "delete": "Eliminar todo",
+      "openReport": "Abrir informe"
     },
     "errors": {
       "create": "No se pudo crear el análisis.",
       "upload": "Error al subir. Revisa formato y tamaño.",
       "submit": "Error al enviar. Hace falta al menos un documento.",
       "delete": "Error al eliminar."
+    }
+  },
+  "asteReport": {
+    "meta": {
+      "title": "Informe análisis subastas | EasyCasa",
+      "description": "Informe informativo del análisis documental de subasta."
+    },
+    "badge": "Vista previa interna",
+    "title": "Informe análisis subastas",
+    "lead": "Resumen documental citado, semáforo y comparación OMI — solo informativo.",
+    "loading": "Cargando informe…",
+    "print": "Imprimir / Guardar como PDF",
+    "counselMark": "COUNSEL REVIEW PENDING",
+    "disclaimer": "EasyCasa provides document analysis for informational purposes. It does not provide legal or technical advice, or appraisals under law.",
+    "esNotice": "Informe en español próximamente — contenido del informe en italiano.",
+    "notFound": "not found in the documents",
+    "notFoundEmpty": "No fields flagged as not found.",
+    "notFoundGuidance": "verify directly in the original documents",
+    "register": {
+      "label": "Registro",
+      "first_buyer": "Primera vivienda",
+      "investor": "Inversor"
+    },
+    "buyerForm": {
+      "title": "Buyer profile",
+      "sub": "Optional — used to compute buyer readiness. You can skip.",
+      "residency": "Residency",
+      "purpose": "Purpose",
+      "has_cf": "Do you have an Italian tax code (codice fiscale)?",
+      "has_pec": "Do you have PEC and a digital signature?",
+      "financing": "Do you need financing?",
+      "unknown": "Not sure",
+      "yes": "Yes",
+      "no": "No",
+      "it_resident": "Italian resident",
+      "eu_nonresident": "EU non-resident",
+      "non_eu": "Non-EU",
+      "prima_casa": "First home",
+      "investimento": "Investment",
+      "save": "Save profile",
+      "skip": "Skip for now"
+    },
+    "buyerChecklist": {
+      "title": "Buyer readiness checklist",
+      "items": {
+        "cf_required_non_eu": "Codice fiscale required — obtainable at a consulate or Agenzia delle Entrate",
+        "cf_status_unknown_non_eu": "Confirm whether you hold a codice fiscale (non-EU)",
+        "cf_recommended_eu": "Codice fiscale is recommended for EU non-residents too",
+        "pec_firma_required_telematica": "Telematic auctions require PEC and a digital signature — arrange before bidding",
+        "pec_firma_status_unknown": "PEC/digital signature status unknown — verify",
+        "financing_timeline": "Financing must follow the court timeline, not the bank’s — align before offering",
+        "non_eu_eligibility_counsel": "Non-EU buyer: confirm eligibility and formalities with a professional",
+        "buyer_ready": "No obvious blockers from the stated profile"
+      }
+    },
+    "sections": {
+      "procedure": "Procedimiento",
+      "documents": "Documentos",
+      "semaforo": "Semáforo",
+      "economics": "Economía",
+      "giuridica": "Jurídica",
+      "urbanistica": "Urbanística / Catastro",
+      "condizioni": "Condiciones",
+      "spese": "Gastos",
+      "omi": "Comparación OMI",
+      "scenari": "Nota de escenarios",
+      "criticita": "Criticidades",
+      "notFound": "No detectado"
+    },
+    "fields": {
+      "tribunale": "Court",
+      "lotto": "Lot",
+      "data_asta": "Auction date",
+      "termine_offerte": "Offer deadline",
+      "days_left": "days left",
+      "address": "Address",
+      "diritto": "Right sold",
+      "urb": "Planning compliance",
+      "cat": "Cadastral compliance",
+      "catasto": "Cadastral refs"
+    },
+    "econ": {
+      "valore_stima": "Appraisal value",
+      "prezzo_base": "Base price",
+      "offerta_minima": "Minimum offer",
+      "cauzione_pct": "Deposit",
+      "rilancio_minimo": "Minimum raise",
+      "superficie_commerciale_mq": "Commercial floor area"
+    },
+    "semaforo": {
+      "aggregate": "Summary: {ok} ok · {verify} verify · {critical} critical · {unknown} unknown",
+      "levels": {
+        "ok": "ok",
+        "verify": "verify",
+        "critical": "critical",
+        "unknown": "unknown"
+      },
+      "dims": {
+        "vincoli_gravami": "Encumbrances",
+        "occupazione": "Occupation",
+        "conformita_urbanistica": "Planning compliance",
+        "conformita_catastale": "Cadastral compliance",
+        "condizione_immobile": "Property condition",
+        "spese_condominiali": "Condo arrears",
+        "rischio_asta": "Auction / document risk",
+        "buyer_readiness": "Buyer readiness"
+      }
+    },
+    "omi": {
+      "unavailable": "Comparison not available",
+      "unit": "Band unit",
+      "units": {
+        "total_eur": "Total € (× floor area)",
+        "eur_per_mq": "€/sqm only"
+      },
+      "sconto": "Real discount vs OMI mid",
+      "method": "Method / confidence",
+      "period": "OMI period",
+      "attribution": "Source: OMI — Agenzia delle Entrate"
+    },
+    "scenari": {
+      "prima_casa": "Static note (first home): check offer deadlines, deposit and financing timing before committing. This is not advice.",
+      "investimento": "Static note (investment): weigh OMI discount, income-ready costs and enforceable encumbrances. This is not advice."
+    },
+    "criticita": {
+      "empty": "No issues flagged by the status lights.",
+      "noSnippet": "No linked text excerpt — verify in the documents.",
+      "actions": {
+        "action_vincoli": "Have encumbrances and filings reviewed by a professional before offering.",
+        "action_occupazione": "Verify occupation status and enforceability against third parties.",
+        "action_urbanistica": "Check planning compliance and whether irregularities can be regularised.",
+        "action_catastale": "Align floor plans and cadastral data with the as-built state.",
+        "action_condizione": "Inspect condition and estimate works with a technician.",
+        "action_spese": "Quantify buyer-borne charges and condo arrears.",
+        "action_rischio": "Fill missing documents (appraisal/notice/economics) before offering.",
+        "action_buyer": "Complete the buyer-profile items listed in the checklist."
+      }
+    },
+    "errors": {
+      "load": "Could not load the report (not found, not ready, or not authorised).",
+      "profile": "Could not save the buyer profile."
     }
   }
 }
