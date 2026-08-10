@@ -2925,5 +2925,63 @@
     "close": "EasyCasa sta costruendo Analisi Aste: carichi i documenti, ricevi l’analisi nella tua lingua.",
     "disclaimer": "EasyCasa fornisce analisi documentali a scopo informativo. Non fornisce consulenza legale, tecnica o perizie ai sensi di legge.",
     "counselMark": "COUNSEL REVIEW PENDING"
+  },
+  "asteAnalisi": {
+    "meta": {
+      "title": "Analisi Aste (anteprima) | EasyCasa",
+      "description": "Carica documenti d’asta — superficie interna in sviluppo."
+    },
+    "badge": "Anteprima interna",
+    "title": "Analisi Aste — caricamento documenti",
+    "lead": "Superficie di prova: carica perizia e avviso. L’analisi automatica non è ancora attiva.",
+    "loading": "Caricamento…",
+    "create": {
+      "title": "Nuova analisi",
+      "sub": "Crea una bozza collegata al tuo account.",
+      "register": "Registro linguistico",
+      "registerFirst": "Prima casa",
+      "registerInvestor": "Investitore",
+      "signIn": "Accedi per iniziare",
+      "submit": "Crea bozza"
+    },
+    "status": {
+      "title": "Stato",
+      "label": "Stato",
+      "draft": "bozza",
+      "uploaded": "caricato",
+      "processing": "in elaborazione",
+      "ready": "pronto",
+      "failed": "errore",
+      "preparing": "In preparazione — il servizio è in fase di sviluppo."
+    },
+    "upload": {
+      "title": "Carica documenti",
+      "sub": "PDF, JPEG o PNG · max 50 MB · max 20 file.",
+      "docType": "Tipo documento",
+      "files": "File",
+      "hint": "Puoi selezionare più file; lo stesso tipo verrà applicato a tutti in questo invio.",
+      "submit": "Carica",
+      "types": {
+        "perizia": "Perizia",
+        "avviso": "Avviso di vendita",
+        "ordinanza": "Ordinanza",
+        "planimetria": "Planimetria",
+        "altro": "Altro"
+      }
+    },
+    "docs": {
+      "title": "Documenti caricati",
+      "empty": "Nessun documento ancora."
+    },
+    "actions": {
+      "submit": "Invia per l’analisi",
+      "delete": "Elimina tutto"
+    },
+    "errors": {
+      "create": "Creazione non riuscita.",
+      "upload": "Caricamento non riuscito. Controlla formato e dimensione.",
+      "submit": "Invio non riuscito. Serve almeno un documento.",
+      "delete": "Eliminazione non riuscita."
+    }
   }
 }

@@ -2925,5 +2925,63 @@
     "close": "EasyCasa está construyendo Analisi Aste: subes los documentos y recibes el análisis en tu idioma.",
     "disclaimer": "EasyCasa proporciona análisis documentales con fines informativos. No proporciona asesoramiento legal, técnico ni peritajes con efectos legales.",
     "counselMark": "COUNSEL REVIEW PENDING"
+  },
+  "asteAnalisi": {
+    "meta": {
+      "title": "Análisis de subastas (vista previa) | EasyCasa",
+      "description": "Sube documentos de subasta — superficie interna en desarrollo."
+    },
+    "badge": "Vista previa interna",
+    "title": "Análisis de subastas — carga de documentos",
+    "lead": "Superficie de prueba: sube la perizia y el aviso. El análisis automático aún no está activo.",
+    "loading": "Cargando…",
+    "create": {
+      "title": "Nuevo análisis",
+      "sub": "Crea un borrador vinculado a tu cuenta.",
+      "register": "Registro lingüístico",
+      "registerFirst": "Primera vivienda",
+      "registerInvestor": "Inversor",
+      "signIn": "Inicia sesión para empezar",
+      "submit": "Crear borrador"
+    },
+    "status": {
+      "title": "Estado",
+      "label": "Estado",
+      "draft": "borrador",
+      "uploaded": "cargado",
+      "processing": "en proceso",
+      "ready": "listo",
+      "failed": "error",
+      "preparing": "En preparación — el servicio está en desarrollo."
+    },
+    "upload": {
+      "title": "Subir documentos",
+      "sub": "PDF, JPEG o PNG · máx. 50 MB · máx. 20 archivos.",
+      "docType": "Tipo de documento",
+      "files": "Archivos",
+      "hint": "Puedes seleccionar varios; el mismo tipo se aplica a todos en este envío.",
+      "submit": "Subir",
+      "types": {
+        "perizia": "Pericia",
+        "avviso": "Aviso de venta",
+        "ordinanza": "Auto",
+        "planimetria": "Plano",
+        "altro": "Otro"
+      }
+    },
+    "docs": {
+      "title": "Documentos subidos",
+      "empty": "Aún no hay documentos."
+    },
+    "actions": {
+      "submit": "Enviar para análisis",
+      "delete": "Eliminar todo"
+    },
+    "errors": {
+      "create": "No se pudo crear el análisis.",
+      "upload": "Error al subir. Revisa formato y tamaño.",
+      "submit": "Error al enviar. Hace falta al menos un documento.",
+      "delete": "Error al eliminar."
+    }
   }
 }

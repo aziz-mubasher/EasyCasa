@@ -90,6 +90,8 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     DEMO_MODE: false,
     SENTRY_DSN: '',
     VALUATION_BAND_ENABLED: false,
+    ASTE_ANALYSIS_ENABLED: false,
+    ASTE_DOCS_RETENTION_DAYS: 365,
     CRM_ENABLED: false,
     CRM_DORMANT_RETENTION_MONTHS: 24,
     SHARE_VIEW_HMAC_SECRET: 'test-smartlink-view-secret',

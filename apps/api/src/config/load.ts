@@ -164,6 +164,17 @@ const Schema = z
     VALUATION_BAND_ENABLED: bool(false),
 
     /**
+     * EC-22 — Analisi Aste analysis/upload surface. Default false (dark).
+     * When false, analysis endpoints return 404.
+     */
+    ASTE_ANALYSIS_ENABLED: bool(false),
+    /**
+     * EC-22 — days before submitted/failed aste analyses (and MinIO objects) are purged.
+     * Default 365 — COUNSEL PENDING (LGL-1).
+     */
+    ASTE_DOCS_RETENTION_DAYS: z.coerce.number().int().positive().default(365),
+
+    /**
      * K EC 4.1 — internal CRM. Default false for local/CI/demo.
      * §1.6 Q2a consent applied 2026-08-02 — production may set true
      * (docs/legal/crm-controller-responsibility.md).

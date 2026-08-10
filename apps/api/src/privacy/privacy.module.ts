@@ -48,13 +48,22 @@ export class PrivacyModule {
       imports: options.imports ?? [],
       controllers: [DataSubjectController],
       providers: [
+        // Always register so exporting PersonalDataRegistry is valid for Nest
+        // (consolidation stubs that omit it still get a registry for CRM/Aste boots).
+        PersonalDataRegistry,
         DsarService,
         ErasureService,
         ConsentService,
         RetentionService,
         ...options.providers,
       ],
-      exports: [DsarService, ErasureService, ConsentService, RetentionService],
+      exports: [
+        DsarService,
+        ErasureService,
+        ConsentService,
+        RetentionService,
+        PersonalDataRegistry,
+      ],
     };
   }
 
@@ -66,7 +75,7 @@ export class PrivacyModule {
         { provide: CONSENT_STORE, useClass: DrizzleConsentStore },
         { provide: RETENTION_SINK, useClass: DrizzleRetentionSink },
         RetentionScheduler,
-        PersonalDataRegistry,
+        // PersonalDataRegistry comes from forRoot base providers (do not duplicate).
         EnquiriesDataSource,
         ViewingsDataSource,
         SavedSearchesDataSource,

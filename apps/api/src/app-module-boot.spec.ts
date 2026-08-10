@@ -44,8 +44,10 @@ describe('AppModule boot (PersonalDataRegistrar DI)', () => {
   it('boots and registers all personal-data sources', () => {
     expect(app).toBeDefined();
     expect(app.get(PersonalDataRegistry).all().map((s) => s.source).sort()).toEqual([
+      'aste_analyses',
       'aste_leads',
       'consent',
+      'crm',
       'enquiries',
       'profile',
       'saved_searches',

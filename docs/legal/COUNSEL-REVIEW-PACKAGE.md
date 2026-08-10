@@ -61,6 +61,7 @@ The controller identity, DPO contact, and retention periods in `docs/legal/priva
 | --- | --- | --- | --- | --- |
 | **Free AVM estimate** | Comune, provincia, geo coordinates, property attributes, estimate JSON; optional `contactEmail`; optional `userId` (see bug note) | `valuation_requests` | Public `POST /avm/estimate` @ 10 req/min; logs lead only if email or user present | **No consent gate** | **Not explicit** |
 | **Aste guide / waitlist (EC-21)** | Email; preferred guide language (IT/EN/ES); optional province of interest; optional buyer type (`prima_casa` / `investimento` / `curiosita`); consent flag (must be true); UI locale; unguessable `guide_token` | `aste_leads` (`migration/sql/0046_aste_leads.sql`) | Public `POST /aste/leads` @ 10 req/min; guide link on success + Brevo/SMTP email; `GET /aste/guide/:token` validates access | Consent checkbox on `/[locale]/aste` (copy marked **COUNSEL REVIEW PENDING**); privacy policy link | **Not explicit** — counsel to assign Art. 6; DSAR wired by matching account email (anonymous-only leads need ops SQL — see Appendix C) |
+| **Aste analysis docs (EC-22)** | User UUID; analysis metadata (language, register, optional procedure fields); uploaded filenames, doc types, mime, sizes; MinIO object keys under `users/{id}/aste/…` | `aste_analyses`, `aste_documents`, `aste_doc_chunks` (schema only until EC-23), `aste_glossary` | Auth’d `/aste/analyses*` behind `ASTE_ANALYSIS_ENABLED` (default off → 404); dark UI `/aste/analisi` | Account auth; owner-only | **Not explicit** — retention default **365** days (`ASTE_DOCS_RETENTION_DAYS`) **COUNSEL PENDING (LGL-1)**; DSAR exports metadata + filenames (not binaries); erasure cascades rows + MinIO |
 | **OMI cache** | Aggregated market bands by comune/provincia/type | `omi_quotes` | No direct personal data | N/A |
 | **Search / browse** | Query params, IP at edge | Meilisearch index of listing fields; API logs may include request IDs | Map tiles fetched from OpenFreeMap (browser → third party) | **Not explicit** |
 | **SmartLink view tracking** | Aggregate view counters on `share_links`; per-visitor **HMAC-SHA256 hashes** in `share_link_visitor_hashes` (no raw IP, no cookie storage server-side); anonymous `ec_sl_vid` cookie set in browser | Public `GET /share/:token` (payload) + `POST /share/:token/view` with visitor token from cookie (`ShareViewRecorder.tsx`) | `share_links`, `share_link_visitor_hashes` | Link owner (agent) sees aggregate stats via `GET /me/share-links` | Visitor hash rows: **engineering default 90 days** then purge (aggregates retained); counsel to confirm | **Not explicit** — DPO review (K EC 1.29) |
@@ -160,8 +161,9 @@ Endpoints (`apps/api/src/privacy/data-subject.controller.ts`):
 5. `consent` — full ledger for subject  
 6. `wa_inbound` / `whatsapp_messages` — when registered  
 7. `aste_leads` — rows whose email matches the subject’s account email (EC-21)
+8. `aste_analyses` — user-owned analyses + document metadata (EC-22; binaries via MinIO erasure, not export)
 
-**Not exported** though they may hold personal data: `notifications`, `messages`, `conversations`, `valuation_requests`, `devices` (devices deleted on erase but omitted from export), `kyc_cases`, orders/mandates, payment data, email outbox, Keycloak account; **aste_leads with no matching user account** (anonymous waitlist — ops SQL / email-based admin request until a generic email-keyed DSAR exists).
+**Not exported** though they may hold personal data: `notifications`, `messages`, `conversations`, `valuation_requests`, `devices` (devices deleted on erase but omitted from export), `kyc_cases`, orders/mandates, payment data, email outbox, Keycloak account; **aste_leads with no matching user account** (anonymous waitlist — ops SQL / email-based admin request until a generic email-keyed DSAR exists); **aste document binary content** (retrievable by the user via the dark UI when flag on — not included in JSON export).
 
 Format: JSON object `{ subjectId, generatedAt, sections[] }` — **not** a standardized portability format (CSV, etc.).
 
@@ -177,6 +179,7 @@ Format: JSON object `{ subjectId, generatedAt, sections[] }` — **not** a stand
 | Profile | Delete favourites & devices; anonymize user email/name/phone/avatar/bio; **user UUID row kept** |
 | Consent ledger | **All rows retained** — `erased: 0`, legal hold note |
 | Aste leads (`aste_leads`) | Anonymize email + clear province/buyer_type + rotate `guide_token` when email matches account |
+| Aste analyses (`aste_analyses`) | Cascade-delete analyses/documents/chunks + MinIO objects for subject user_id |
 
 Response: `{ fullyErased: boolean, outcomes[] }`.
 

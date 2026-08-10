@@ -17,11 +17,13 @@ describe('isMarketingServicePath', () => {
     expect(isMarketingServicePath('/about/')).toBe(true);
   });
 
-  it('matches aste landing and guide', () => {
+  it('matches aste landing, guide, and dark analisi route', () => {
     expect(isMarketingServicePath('/aste')).toBe(true);
     expect(isMarketingServicePath('/aste/')).toBe(true);
     expect(isMarketingServicePath('/aste/guida')).toBe(true);
     expect(isMarketingServicePath('/aste/guida/')).toBe(true);
+    expect(isMarketingServicePath('/aste/analisi')).toBe(true);
+    expect(isMarketingServicePath('/aste/analisi/')).toBe(true);
   });
 
   it('matches sell-privately landing (localized paths)', () => {
