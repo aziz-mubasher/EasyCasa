@@ -54,6 +54,8 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | T18 | Document checklist engine | P6 | T10 |
 | T19 | Abuse controls | P3 | T12 |
 
+**Pre-brief feedback (for Claude):** `docs/audits/EC-S-phase2-feedback.md` — repo inventory + gates before T14 kickoff.
+
 ## Phase 3 — Seller dashboard → P4 seller-side, P5, P7
 
 | # | Task | Fulfils | Depends |
