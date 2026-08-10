@@ -3,11 +3,14 @@ import { Module } from '@nestjs/common';
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
 import { OmiModule } from '../omi/omi.module';
 import { AsteAnalysesDataSource } from '../privacy/sources/aste-analyses.data-source';
+import { AsteChatMessagesDataSource } from '../privacy/sources/aste-chat-messages.data-source';
 import { UsersModule } from '../users/users.module';
 import { AsteAnalysisController } from './aste-analysis.controller';
 import { AsteAnalysisEnabledGuard } from './aste-analysis.guard';
 import { AsteAnalysisService } from './aste-analysis.service';
 import { AsteAiClient } from './aste-ai.client';
+import { AsteChatRetrievalService } from './aste-chat-retrieval.service';
+import { AsteChatService } from './aste-chat.service';
 import { AsteController } from './aste.controller';
 import { AsteDocsRetentionScheduler } from './aste-docs-retention.scheduler';
 import { AsteOmiCheckService } from './aste-omi-check.service';
@@ -25,6 +28,8 @@ import { AsteStorage } from './aste-storage';
     AsteService,
     AsteAnalysisService,
     AsteReportService,
+    AsteChatService,
+    AsteChatRetrievalService,
     AsteOmiCheckService,
     AsteStorage,
     AsteAiClient,
@@ -33,9 +38,16 @@ import { AsteStorage } from './aste-storage';
     AsteAnalysisEnabledGuard,
     AsteDocsRetentionScheduler,
     AsteAnalysesDataSource,
+    AsteChatMessagesDataSource,
     AstePrivacyBoot,
     ProductAnalyticsService,
   ],
-  exports: [AsteService, AsteAnalysisService, AstePipelineService, AsteReportService],
+  exports: [
+    AsteService,
+    AsteAnalysisService,
+    AstePipelineService,
+    AsteReportService,
+    AsteChatService,
+  ],
 })
 export class AsteModule {}

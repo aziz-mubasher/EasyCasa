@@ -61,6 +61,35 @@ class TranslateResponse(BaseModel):
     translations: list[str]
 
 
+class ChatChunkIn(BaseModel):
+    document_id: str
+    page: int
+    text: str
+
+
+class ChatGlossaryIn(BaseModel):
+    term_key: str
+    definition: str
+
+
+class ChatAnswerRequest(BaseModel):
+    question: str
+    answer_lang: str = "it"
+    chunks: list[ChatChunkIn] = Field(default_factory=list)
+    glossary: list[ChatGlossaryIn] = Field(default_factory=list)
+
+
+class ChatCitation(BaseModel):
+    document_id: str
+    page: int
+
+
+class ChatAnswerResponse(BaseModel):
+    answer: str
+    citations: list[ChatCitation] = Field(default_factory=list)
+    refused: bool = False
+
+
 # Loose extraction envelope — LLM output validated/normalized in service.
 ExtractionV1 = dict[str, Any]
 

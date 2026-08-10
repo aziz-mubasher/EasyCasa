@@ -192,6 +192,12 @@ const Schema = z
     ASTE_EMBED_TIMEOUT_MS: z.coerce.number().int().positive().default(120_000),
     /** EC-24 — translate HTTP timeout ms (default 2 min). */
     ASTE_TRANSLATE_TIMEOUT_MS: z.coerce.number().int().positive().default(120_000),
+    /** EC-25 — grounded chat answer HTTP timeout ms (default 2 min). */
+    ASTE_CHAT_TIMEOUT_MS: z.coerce.number().int().positive().default(120_000),
+    /** EC-25 — max user questions per analysis per UTC day. */
+    ASTE_CHAT_Q_PER_ANALYSIS_DAY: z.coerce.number().int().positive().default(20),
+    /** EC-25 — max user questions per user per UTC day. */
+    ASTE_CHAT_Q_PER_USER_DAY: z.coerce.number().int().positive().default(60),
     /** EC-23 — max pipeline attempts before failed (default 2). */
     ASTE_PIPELINE_MAX_ATTEMPTS: z.coerce.number().int().positive().default(2),
     /** EC-23 — stale processing reclaim after this many ms (default 30 min). */

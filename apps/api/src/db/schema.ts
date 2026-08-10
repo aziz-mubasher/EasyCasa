@@ -899,6 +899,17 @@ export const asteGlossary = pgTable('aste_glossary', {
   counselReviewed: boolean('counsel_reviewed').notNull().default(false),
 });
 
+/** EC-25 — grounded Q&A messages (user + assistant) per analysis. */
+export const asteChatMessages = pgTable('aste_chat_messages', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  analysisId: uuid('analysis_id').notNull(),
+  role: text('role').notNull(),
+  content: text('content').notNull(),
+  lang: text('lang').notNull(),
+  citations: jsonb('citations'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 // ---------------- Phase 29 — Viewings & scheduling ----------------
 export const viewingAvailability = pgTable('viewing_availability', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -1136,7 +1147,7 @@ export const schema = {
   leases, kycCases,
   paymentIntents, invoices, stripeWebhookEvents,
   omiQuotes, valuationRequests, asteLeads,
-  asteAnalyses, asteDocuments, asteDocChunks, asteGlossary,
+  asteAnalyses, asteDocuments, asteDocChunks, asteGlossary, asteChatMessages,
   viewingAvailability, viewings,
   consentRecords,
   shareLinks, shareLinkViewDedup,

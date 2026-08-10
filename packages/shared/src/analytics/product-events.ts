@@ -21,6 +21,9 @@ export const PRODUCT_EVENTS = {
   ASTE_BUYER_PROFILE_COMPLETED: 'aste.buyer_profile_completed',
   ASTE_REPORT_PRINTED: 'aste.report_printed',
   ASTE_OMI_CHECK_COMPUTED: 'aste.omi_check_computed',
+  /** EC-25 — chat (category only; never question/answer text). */
+  ASTE_CHAT_QUESTION_ASKED: 'aste.chat_question_asked',
+  ASTE_CHAT_RATE_LIMITED: 'aste.chat_rate_limited',
 } as const;
 
 export type ProductEventName = (typeof PRODUCT_EVENTS)[keyof typeof PRODUCT_EVENTS];

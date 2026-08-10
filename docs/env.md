@@ -93,6 +93,9 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | ASTE_EXTRACT_TIMEOUT_MS | api | EC-23 — extract HTTP timeout (default `300000`). |
 | ASTE_EMBED_TIMEOUT_MS | api | EC-23 — embed HTTP timeout (default `120000`). |
 | ASTE_TRANSLATE_TIMEOUT_MS | api | EC-24 — translate HTTP timeout (default `120000`). |
+| ASTE_CHAT_TIMEOUT_MS | api | EC-25 — chat answer HTTP timeout (default `120000`). |
+| ASTE_CHAT_Q_PER_ANALYSIS_DAY | api | EC-25 — max user questions per analysis per UTC day (default `20`). |
+| ASTE_CHAT_Q_PER_USER_DAY | api | EC-25 — max user questions per user per UTC day (default `60`). |
 | ASTE_PIPELINE_MAX_ATTEMPTS | api | EC-23 — max claim attempts before `failed` (default `2`). |
 | ASTE_PIPELINE_STALE_MS | api | EC-23 — reclaim `processing` older than this (default `1800000` = 30 min). |
 | SHARE_VIEW_HMAC_SECRET | api | Pepper for SmartLink daily unique-view SHA-256 hashes (min 16 chars). **No raw IP or visitor id stored** — see `docs/smartlink-view-tracking.md`. |

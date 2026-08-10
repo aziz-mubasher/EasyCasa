@@ -9,6 +9,7 @@ import {
   type AsteBuyerProfile,
   type AsteReport,
 } from '@/lib/aste-analysis-api';
+import { AsteReportChat } from '@/components/services/AsteReportChat';
 import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 import './aste-report.css';
 
@@ -755,6 +756,8 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
             )}
           </ul>
         </section>
+
+        <AsteReportChat analysisId={analysisId} />
 
         <p className="ar-disclaimer" role="note">
           <strong>{t('counselMark')}</strong> — {t('disclaimer')}

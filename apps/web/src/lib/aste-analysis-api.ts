@@ -220,3 +220,52 @@ export async function patchAnalysis(
     semaforo: Record<string, string>;
   };
 }
+
+export type ChatCitation = { document_id: string; page: number };
+
+export type ChatMessage = {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  lang: string;
+  citations: ChatCitation[] | null;
+  refused?: boolean;
+  createdAt: string;
+};
+
+export async function getChatHistory(
+  getAccessToken: TokenGetter,
+  id: string,
+): Promise<{ messages: ChatMessage[]; filenameById: Record<string, string> }> {
+  const fetchAuth = client(getAccessToken);
+  const res = await fetchAuth(apiUrl(`/aste/analyses/${id}/chat`), { cache: 'no-store' });
+  if (!res.ok) throw new Error(`chat history failed: ${res.status}`);
+  return (await res.json()) as { messages: ChatMessage[]; filenameById: Record<string, string> };
+}
+
+export async function askChat(
+  getAccessToken: TokenGetter,
+  id: string,
+  input: { question: string; lang: 'it' | 'en' },
+): Promise<{
+  userMessage: ChatMessage;
+  assistantMessage: ChatMessage;
+  filenameById: Record<string, string>;
+}> {
+  const fetchAuth = client(getAccessToken);
+  const res = await fetchAuth(apiUrl(`/aste/analyses/${id}/chat`), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  if (res.status === 429) {
+    const body = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(body.message || 'rate_limited');
+  }
+  if (!res.ok) throw new Error(`chat ask failed: ${res.status}`);
+  return (await res.json()) as {
+    userMessage: ChatMessage;
+    assistantMessage: ChatMessage;
+    filenameById: Record<string, string>;
+  };
+}
