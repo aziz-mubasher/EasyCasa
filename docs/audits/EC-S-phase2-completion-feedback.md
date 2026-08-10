@@ -2,7 +2,9 @@
 
 **Date:** 2026-08-10  
 **Scope:** Private Seller Track Phase 2 (T14.0 → T19 stage 1) merged to `main` and deployed to VPS with counsel-gated flags **off**.  
-**Deploy SHA (target):** tip of `main` after Phase 2 stack + this feedback commit.
+**Phase 2 code merge:** `ebafa63` (T18/T17/T19.1 tip).  
+**Feedback on `main`:** `42c921c` (docs-only; VPS tree pulled).  
+**API image at verify:** `cc2f230` (aste admin landed on `main` after Phase 2; still contains Phase 2).
 
 Companion pre-brief (what Claude needed before writing Phase 2): [`EC-S-phase2-feedback.md`](./EC-S-phase2-feedback.md). Spec: [`docs/ec-s-phase2.md`](../ec-s-phase2.md). Roadmap: [`docs/ec-s-roadmap.md`](../ec-s-roadmap.md).
 
@@ -127,13 +129,15 @@ Dispatch order followed: T14.0 → T14 (flag off) → T15 ∥ T16 → T18 → T1
 
 ---
 
-## 7. DEPLOY NOTES (ops)
+## 7. DEPLOY NOTES (ops) — done 2026-08-10
 
-Expected VPS steps for this completion:
+On `/opt/easycasa-ita`:
 
-1. `git fetch && git pull --ff-only origin main` on `/opt/easycasa-ita`.
-2. Apply `0052` then `0053` via compose `db` + `psql`.
-3. Ensure `.env` contains (all off / defaults):
+1. Pulled Phase 2 tip (`ebafa63`); later docs tip `42c921c`.
+2. Applied `0052` then `0053` via  
+   `docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml --env-file .env exec -T db psql …`  
+   Tables present: `verified_owner_case`, `seller_doc_checklist`.
+3. Appended to `.env` (all off / defaults):
 
 ```bash
 VERIFIED_OWNER_ENABLED=false
@@ -143,8 +147,8 @@ SELLER_MAX_ACTIVE_LISTINGS=5
 SELLER_MAX_UPLOADS_PER_DAY=20
 ```
 
-4. Rebuild/recreate **api**, **admin**, **web** with `GIT_SHA` / `BUILD_TIME`.
-5. Smoke: `/api/version` = tip SHA; site/AI 200; VO/checklist routes **404** while flags off; `users/…/docs` still authZ’d.
+4. Rebuilt/recreated **api**, **admin**, **web** (`--no-cache`, `GIT_SHA`/`BUILD_TIME`).
+5. Smoke: site/AI **200**; `/seller/vo` + `/seller/checklist` **404** (flags off); private `users/…/docs` **401** unauthenticated; public missing media key **404**.
 
 ---
 
