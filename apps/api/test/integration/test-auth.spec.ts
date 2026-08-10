@@ -42,6 +42,9 @@ describe('TestAuthGuard', () => {
       email: 'u1@example.it',
       name: undefined,
       roles: [],
+      // Empty roles still derive default seeker capability (EC-11).
+      capabilities: ['seeker'],
+      adminRoles: [],
     });
   });
 
