@@ -36,15 +36,15 @@ export function resolveBunnyS3Endpoint(endpoint: string, region: string): string
 }
 
 export function resolveObjectStorage(cfg: ApiConfig): ObjectStorageConfig {
-  const origin = cfg.MEDIA_ORIGIN;
-
   // EC-S-T10: when MEDIA_CDN_ENABLED is false, do not use Bunny even if
   // MEDIA_ORIGIN=bunny is set (common in prod that already migrated). Fall
   // back to MinIO so the API can boot; flip MEDIA_CDN_ENABLED=true after
   // DPA/counsel to re-enable Bunny as the active origin.
-  if (origin === 'bunny' && !cfg.MEDIA_CDN_ENABLED) {
-    return resolveObjectStorage({ ...cfg, MEDIA_ORIGIN: 'minio' });
-  }
+  //
+  // Do not `{ ...cfg }` — callers may pass the `apiConfig` Proxy whose own
+  // keys are empty; spreading would drop all resolved env values.
+  const origin: 'minio' | 'bunny' =
+    cfg.MEDIA_ORIGIN === 'bunny' && !cfg.MEDIA_CDN_ENABLED ? 'minio' : cfg.MEDIA_ORIGIN;
 
   const privateBase = (
     cfg.MEDIA_PRIVATE_BASE.trim() ||

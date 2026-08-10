@@ -66,6 +66,23 @@ describe('resolveObjectStorage', () => {
     expect(s.publicBase).toBe('https://easycasaita.com/api/media/file');
   });
 
+  it('falls back via apiConfig-like Proxy without spreading empty ownKeys', () => {
+    const real = baseCfg({
+      MEDIA_ORIGIN: 'bunny',
+      MEDIA_CDN_ENABLED: false,
+      BUNNY_STORAGE_ZONE: 'easycasaita',
+      BUNNY_STORAGE_PASSWORD: 'x',
+    });
+    const proxied = new Proxy({} as ApiConfig, {
+      get(_t, prop) {
+        return real[prop as keyof ApiConfig];
+      },
+    });
+    const s = resolveObjectStorage(proxied);
+    expect(s.origin).toBe('minio');
+    expect(s.bucket).toBe('easycasa-media');
+  });
+
   it('fails fast when Bunny password missing', () => {
     expect(() =>
       resolveObjectStorage(
