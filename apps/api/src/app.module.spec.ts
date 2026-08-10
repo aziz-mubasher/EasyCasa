@@ -49,6 +49,7 @@ import { CrmModule } from './crm/crm.module';
 import { ListingDraftsModule } from './listing-drafts/listing-drafts.module';
 import { OmiModule } from './omi/omi.module';
 import { SellerModule } from './seller/seller.module';
+import { VerifiedOwnerModule } from './verified-owner/verified-owner.module';
 
 /** Static module imports (Privacy is DynamicModule via forRootProduction). */
 const REQUIRED_STATIC = [
@@ -95,6 +96,7 @@ const REQUIRED_STATIC = [
   ListingDraftsModule,
   OmiModule,
   SellerModule,
+  VerifiedOwnerModule,
   PilotModule,
   DemoModule,
   CrmModule,

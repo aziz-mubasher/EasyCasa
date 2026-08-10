@@ -52,6 +52,7 @@ describe('AppModule boot (PersonalDataRegistrar DI)', () => {
       'enquiries',
       'profile',
       'saved_searches',
+      'verified_owner',
       'viewings',
       'wa_inbound_messages',
       'whatsapp_messages',
