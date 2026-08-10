@@ -12,7 +12,8 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **T31** | ⤵ Rescoped — page i18n done; remaining = wizard + dashboard only |
 | **T02 / T04** | ⛔ Counsel review pending — T02 packet + **T04 full boundary matrix** (`docs/legal/T04_mediazione_boundary.md`). Interim: `blocks.savingsFigures.state` / `mediazioneCopy.state` = `fallback` |
 | **T05** | ⛔ Seller-data memo ready — `docs/legal/ec-s-t05-seller-data-memo.md` (gates T06/T10/T14/T25); Layer 1 + version before collection |
-| **T06–T12** | 🟡 Engineering foundation — see `docs/ec-s-phase1.md` (onboarding flag-gated; P2 live after T09) |
+| **T06–T12** | ✅ Engineering foundation live (`329e963`) — see `docs/ec-s-phase1.md`; flags off; P2 live |
+| **T14–T19** | ⏭ Not started — pre-brief `docs/audits/EC-S-phase2-feedback.md` |
 | **T33** | ⚠ Partial — canonical/hreflang/x-default/sitemap OK after verification pack; Lighthouse Perf ≥90 PASS; SEO category FAIL while `NEXT_PUBLIC_DEMO_MODE=true` |
 
 **Rule:** the page may promise only what the ledger marks `live`. Flip a flag only when its tasks pass validation gates.
