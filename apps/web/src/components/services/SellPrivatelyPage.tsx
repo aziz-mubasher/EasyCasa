@@ -3,13 +3,14 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import {
+  getSellPrivatelyBenefits,
   getSellPrivatelyLedger,
+  getSellPrivatelySteps,
   type PromiseEntry,
   showMediazioneBoundary,
   showMediazioneFallback,
   showSavingsFallback,
   showSavingsFigures,
-  visiblePromiseEntries,
 } from '@/lib/sell-privately';
 import { SellPrivatelySavingsSlider } from './SellPrivatelySavingsSlider';
 import './sell-privately.css';
@@ -37,8 +38,8 @@ function StatusChip({ status, liveLabel, comingLabel }: {
 export function SellPrivatelyPage() {
   const t = useTranslations('sellPrivately');
   const ledger = getSellPrivatelyLedger();
-  const steps = visiblePromiseEntries(ledger.steps);
-  const benefits = visiblePromiseEntries(ledger.benefits);
+  const steps = getSellPrivatelySteps(ledger);
+  const benefits = getSellPrivatelyBenefits(ledger);
   const faq = t.raw('faq.items') as FaqItem[];
   const figuresLive = showSavingsFigures(ledger);
   const figuresFallback = showSavingsFallback(ledger);

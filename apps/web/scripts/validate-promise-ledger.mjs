@@ -5,8 +5,11 @@
 
 const PROMISE_STATUSES = new Set(['live', 'coming', 'hidden']);
 const BLOCK_STATES = new Set(['live', 'fallback', 'hidden']);
-const REQUIRED_BENEFITS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'];
-const REQUIRED_STEPS = ['list', 'price', 'verify', 'buyers', 'viewings'];
+const REQUIRED_PROMISES = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'];
+const REQUIRED_BLOCK_GATES = {
+  savingsFigures: 'T02',
+  mediazioneCopy: 'T04',
+};
 
 export class LedgerValidationError extends Error {
   constructor(message) {
@@ -32,46 +35,38 @@ export function validateLedger(raw, opts = {}) {
   if (typeof raw.updatedAt !== 'string' || !raw.updatedAt) {
     throw new LedgerValidationError('updatedAt: non-empty string required');
   }
+  if (!isRecord(raw.promises)) throw new LedgerValidationError('promises: object required');
   if (!isRecord(raw.blocks)) throw new LedgerValidationError('blocks: object required');
-  if (!BLOCK_STATES.has(raw.blocks.savingsFigures)) {
-    throw new LedgerValidationError('blocks.savingsFigures: invalid state');
-  }
-  if (!BLOCK_STATES.has(raw.blocks.mediazioneCopy)) {
-    throw new LedgerValidationError('blocks.mediazioneCopy: invalid state');
-  }
-  if (!Array.isArray(raw.benefits) || !Array.isArray(raw.steps)) {
-    throw new LedgerValidationError('benefits/steps: arrays required');
-  }
 
-  for (const [i, b] of raw.benefits.entries()) {
-    if (!isRecord(b) || typeof b.id !== 'string' || !PROMISE_STATUSES.has(b.status)) {
-      throw new LedgerValidationError(`benefits[${i}]: invalid entry`);
+  for (const id of REQUIRED_PROMISES) {
+    const p = raw.promises[id];
+    if (!isRecord(p) || !PROMISE_STATUSES.has(p.state)) {
+      throw new LedgerValidationError(`promises.${id}: invalid entry`);
     }
-  }
-  for (const [i, s] of raw.steps.entries()) {
-    if (!isRecord(s) || typeof s.id !== 'string' || !PROMISE_STATUSES.has(s.status)) {
-      throw new LedgerValidationError(`steps[${i}]: invalid entry`);
+    if (!Array.isArray(p.tasks) || p.tasks.length === 0 || p.tasks.some((t) => typeof t !== 'string' || !t)) {
+      throw new LedgerValidationError(`promises.${id}.tasks: non-empty string array required`);
     }
   }
 
-  const benefitIds = new Set(raw.benefits.map((b) => b.id));
-  for (const id of REQUIRED_BENEFITS) {
-    if (!benefitIds.has(id)) throw new LedgerValidationError(`benefits: missing ${id}`);
-  }
-  const stepIds = new Set(raw.steps.map((s) => s.id));
-  for (const id of REQUIRED_STEPS) {
-    if (!stepIds.has(id)) throw new LedgerValidationError(`steps: missing ${id}`);
+  for (const [key, expectedGate] of Object.entries(REQUIRED_BLOCK_GATES)) {
+    const block = raw.blocks[key];
+    if (!isRecord(block) || !BLOCK_STATES.has(block.state)) {
+      throw new LedgerValidationError(`blocks.${key}.state: invalid`);
+    }
+    if (typeof block.gate !== 'string' || block.gate !== expectedGate) {
+      throw new LedgerValidationError(`blocks.${key}.gate: expected ${expectedGate}`);
+    }
   }
 
   if (enforceCounselInterim) {
-    if (raw.blocks.savingsFigures === 'live') {
+    if (raw.blocks.savingsFigures.state === 'live') {
       throw new LedgerValidationError(
-        'blocks.savingsFigures must not be live until T02 counsel sign-off (interim rule)',
+        'blocks.savingsFigures.state must not be live until T02 counsel sign-off (interim rule)',
       );
     }
-    if (raw.blocks.mediazioneCopy === 'live') {
+    if (raw.blocks.mediazioneCopy.state === 'live') {
       throw new LedgerValidationError(
-        'blocks.mediazioneCopy must not be live until T04 counsel sign-off (interim rule)',
+        'blocks.mediazioneCopy.state must not be live until T04 counsel sign-off (interim rule)',
       );
     }
   }

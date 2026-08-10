@@ -1,6 +1,6 @@
 /**
  * Promise ledger — honesty mechanic for Sell Privately (EC-S-T03).
- * Statuses drive UI chips; counsel block states gate legal-adjacent copy.
+ * Nested schema: promises.P* + counsel blocks with state/gate/note.
  */
 
 export type PromiseStatus = 'live' | 'coming' | 'hidden';
@@ -8,32 +8,62 @@ export type PromiseStatus = 'live' | 'coming' | 'hidden';
 /** Counsel-gated page blocks (T02 / T04). */
 export type BlockState = 'live' | 'fallback' | 'hidden';
 
-export type PromiseEntry = {
-  id: string;
-  status: PromiseStatus;
-  roadmap: string | null;
+export const REQUIRED_PROMISE_IDS = [
+  'P1',
+  'P2',
+  'P3',
+  'P4',
+  'P5',
+  'P6',
+  'P7',
+  'P8',
+] as const;
+
+export type PromiseId = (typeof REQUIRED_PROMISE_IDS)[number];
+
+export type PromiseRecord = {
+  state: PromiseStatus;
+  tasks: string[];
+  note?: string;
+};
+
+export type CounselBlock = {
+  state: BlockState;
+  gate: string;
+  note?: string;
 };
 
 export type CounselBlocks = {
   /** € savings figures + AGCM footnote + slider. */
-  savingsFigures: BlockState;
+  savingsFigures: CounselBlock;
   /** “What EasyCasa is not” / mediazione boundary copy. */
-  mediazioneCopy: BlockState;
+  mediazioneCopy: CounselBlock;
 };
 
 export type PromiseLedger = {
   version: number;
   updatedAt: string;
-  notes?: string;
+  $schema?: string;
+  promises: Record<PromiseId, PromiseRecord>;
   blocks: CounselBlocks;
-  benefits: PromiseEntry[];
-  steps: PromiseEntry[];
+};
+
+/** Flat UI row derived from a promise (or how-it-works step binding). */
+export type PromiseEntry = {
+  id: string;
+  status: PromiseStatus;
+  tasks: string[];
+  note?: string;
 };
 
 const PROMISE_STATUSES: readonly PromiseStatus[] = ['live', 'coming', 'hidden'];
 const BLOCK_STATES: readonly BlockState[] = ['live', 'fallback', 'hidden'];
-const REQUIRED_BENEFIT_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'] as const;
-const REQUIRED_STEP_IDS = ['list', 'price', 'verify', 'buyers', 'viewings'] as const;
+
+/** Expected counsel gates — wrong gate ids fail validation. */
+const REQUIRED_BLOCK_GATES = {
+  savingsFigures: 'T02',
+  mediazioneCopy: 'T04',
+} as const;
 
 export class LedgerValidationError extends Error {
   constructor(message: string) {
@@ -48,7 +78,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function assertStatus(value: unknown, path: string): asserts value is PromiseStatus {
   if (typeof value !== 'string' || !PROMISE_STATUSES.includes(value as PromiseStatus)) {
-    throw new LedgerValidationError(`${path}: status must be one of ${PROMISE_STATUSES.join('|')}`);
+    throw new LedgerValidationError(`${path}: state must be one of ${PROMISE_STATUSES.join('|')}`);
   }
 }
 
@@ -58,19 +88,43 @@ function assertBlockState(value: unknown, path: string): asserts value is BlockS
   }
 }
 
-function parseEntry(raw: unknown, path: string): PromiseEntry {
+function parsePromise(raw: unknown, path: string): PromiseRecord {
   if (!isRecord(raw)) throw new LedgerValidationError(`${path}: expected object`);
-  if (typeof raw.id !== 'string' || raw.id.length === 0) {
-    throw new LedgerValidationError(`${path}.id: non-empty string required`);
+  assertStatus(raw.state, `${path}.state`);
+  if (!Array.isArray(raw.tasks) || raw.tasks.length === 0) {
+    throw new LedgerValidationError(`${path}.tasks: non-empty string array required`);
   }
-  assertStatus(raw.status, `${path}.status`);
-  if (raw.roadmap !== null && typeof raw.roadmap !== 'string') {
-    throw new LedgerValidationError(`${path}.roadmap: string | null required`);
+  for (const [i, task] of raw.tasks.entries()) {
+    if (typeof task !== 'string' || task.length === 0) {
+      throw new LedgerValidationError(`${path}.tasks[${i}]: non-empty string required`);
+    }
+  }
+  if (raw.note !== undefined && typeof raw.note !== 'string') {
+    throw new LedgerValidationError(`${path}.note: string required when present`);
   }
   return {
-    id: raw.id,
-    status: raw.status,
-    roadmap: raw.roadmap === undefined ? null : (raw.roadmap as string | null),
+    state: raw.state,
+    tasks: raw.tasks as string[],
+    note: typeof raw.note === 'string' ? raw.note : undefined,
+  };
+}
+
+function parseCounselBlock(raw: unknown, path: string, expectedGate: string): CounselBlock {
+  if (!isRecord(raw)) throw new LedgerValidationError(`${path}: expected object`);
+  assertBlockState(raw.state, `${path}.state`);
+  if (typeof raw.gate !== 'string' || raw.gate.length === 0) {
+    throw new LedgerValidationError(`${path}.gate: non-empty string required`);
+  }
+  if (raw.gate !== expectedGate) {
+    throw new LedgerValidationError(`${path}.gate: expected ${expectedGate}, got ${raw.gate}`);
+  }
+  if (raw.note !== undefined && typeof raw.note !== 'string') {
+    throw new LedgerValidationError(`${path}.note: string required when present`);
+  }
+  return {
+    state: raw.state,
+    gate: raw.gate,
+    note: typeof raw.note === 'string' ? raw.note : undefined,
   };
 }
 
@@ -79,7 +133,10 @@ function parseEntry(raw: unknown, path: string): PromiseEntry {
  * Enforces T02/T04 interim: savingsFigures and mediazioneCopy must not be `live`
  * until counsel flips them (CI guard — do not weaken).
  */
-export function validateLedger(raw: unknown, opts?: { enforceCounselInterim?: boolean }): PromiseLedger {
+export function validateLedger(
+  raw: unknown,
+  opts?: { enforceCounselInterim?: boolean },
+): PromiseLedger {
   const enforceCounselInterim = opts?.enforceCounselInterim ?? true;
   if (!isRecord(raw)) throw new LedgerValidationError('ledger: expected object');
   if (typeof raw.version !== 'number' || !Number.isFinite(raw.version)) {
@@ -88,34 +145,39 @@ export function validateLedger(raw: unknown, opts?: { enforceCounselInterim?: bo
   if (typeof raw.updatedAt !== 'string' || raw.updatedAt.length === 0) {
     throw new LedgerValidationError('updatedAt: non-empty string required');
   }
+  if (!isRecord(raw.promises)) throw new LedgerValidationError('promises: object required');
   if (!isRecord(raw.blocks)) throw new LedgerValidationError('blocks: object required');
-  assertBlockState(raw.blocks.savingsFigures, 'blocks.savingsFigures');
-  assertBlockState(raw.blocks.mediazioneCopy, 'blocks.mediazioneCopy');
 
-  if (!Array.isArray(raw.benefits)) throw new LedgerValidationError('benefits: array required');
-  if (!Array.isArray(raw.steps)) throw new LedgerValidationError('steps: array required');
-
-  const benefits = raw.benefits.map((b, i) => parseEntry(b, `benefits[${i}]`));
-  const steps = raw.steps.map((s, i) => parseEntry(s, `steps[${i}]`));
-
-  const benefitIds = new Set(benefits.map((b) => b.id));
-  for (const id of REQUIRED_BENEFIT_IDS) {
-    if (!benefitIds.has(id)) throw new LedgerValidationError(`benefits: missing required id ${id}`);
+  const promises = {} as Record<PromiseId, PromiseRecord>;
+  for (const id of REQUIRED_PROMISE_IDS) {
+    if (!(id in raw.promises)) {
+      throw new LedgerValidationError(`promises: missing required id ${id}`);
+    }
+    promises[id] = parsePromise(raw.promises[id], `promises.${id}`);
   }
-  const stepIds = new Set(steps.map((s) => s.id));
-  for (const id of REQUIRED_STEP_IDS) {
-    if (!stepIds.has(id)) throw new LedgerValidationError(`steps: missing required id ${id}`);
-  }
+
+  const blocks: CounselBlocks = {
+    savingsFigures: parseCounselBlock(
+      raw.blocks.savingsFigures,
+      'blocks.savingsFigures',
+      REQUIRED_BLOCK_GATES.savingsFigures,
+    ),
+    mediazioneCopy: parseCounselBlock(
+      raw.blocks.mediazioneCopy,
+      'blocks.mediazioneCopy',
+      REQUIRED_BLOCK_GATES.mediazioneCopy,
+    ),
+  };
 
   if (enforceCounselInterim) {
-    if (raw.blocks.savingsFigures === 'live') {
+    if (blocks.savingsFigures.state === 'live') {
       throw new LedgerValidationError(
-        'blocks.savingsFigures must not be live until T02 counsel sign-off (interim rule)',
+        'blocks.savingsFigures.state must not be live until T02 counsel sign-off (interim rule)',
       );
     }
-    if (raw.blocks.mediazioneCopy === 'live') {
+    if (blocks.mediazioneCopy.state === 'live') {
       throw new LedgerValidationError(
-        'blocks.mediazioneCopy must not be live until T04 counsel sign-off (interim rule)',
+        'blocks.mediazioneCopy.state must not be live until T04 counsel sign-off (interim rule)',
       );
     }
   }
@@ -123,28 +185,37 @@ export function validateLedger(raw: unknown, opts?: { enforceCounselInterim?: bo
   return {
     version: raw.version,
     updatedAt: raw.updatedAt,
-    notes: typeof raw.notes === 'string' ? raw.notes : undefined,
-    blocks: {
-      savingsFigures: raw.blocks.savingsFigures,
-      mediazioneCopy: raw.blocks.mediazioneCopy,
-    },
-    benefits,
-    steps,
+    $schema: typeof raw.$schema === 'string' ? raw.$schema : undefined,
+    promises,
+    blocks,
   };
+}
+
+/** Ordered P1–P8 entries for UI chips / FAQ filters. */
+export function promiseEntries(ledger: PromiseLedger): PromiseEntry[] {
+  return REQUIRED_PROMISE_IDS.map((id) => {
+    const p = ledger.promises[id];
+    return {
+      id,
+      status: p.state,
+      tasks: p.tasks,
+      note: p.note,
+    };
+  });
 }
 
 export function visiblePromiseEntries(entries: PromiseEntry[]): PromiseEntry[] {
   return entries.filter((e) => e.status !== 'hidden');
 }
 
-export function isBlockLive(state: BlockState): boolean {
-  return state === 'live';
+export function isBlockLive(block: CounselBlock | BlockState): boolean {
+  return (typeof block === 'string' ? block : block.state) === 'live';
 }
 
-export function isBlockFallback(state: BlockState): boolean {
-  return state === 'fallback';
+export function isBlockFallback(block: CounselBlock | BlockState): boolean {
+  return (typeof block === 'string' ? block : block.state) === 'fallback';
 }
 
-export function isBlockHidden(state: BlockState): boolean {
-  return state === 'hidden';
+export function isBlockHidden(block: CounselBlock | BlockState): boolean {
+  return (typeof block === 'string' ? block : block.state) === 'hidden';
 }
