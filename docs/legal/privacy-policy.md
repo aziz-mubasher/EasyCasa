@@ -85,3 +85,27 @@ partners.
 
 **Controller note:** MUNDIDA S.r.l. accepts full legal responsibility as
 controller for CRM personal data (`docs/legal/crm-controller-responsibility.md`).
+
+## 9. Private sellers (listings, verification, tools) — DRAFT (EC-S-T05)
+
+> **Counsel/DPO review pending.** Full memo: `docs/legal/ec-s-t05-seller-data-memo.md`.
+> No new seller collection UI may ship until Layer 1 is approved and versioned (T30).
+
+When you create or manage a private listing, we process identity and property data
+to publish the listing, verify authenticity where offered, and provide selling
+tools (scheduler, enquiries, analytics on your own listing).
+
+- **Data categories:** account identity; property identifiers (address, cadastral
+  refs, OMI zone); verification documents (visura, atto, APE, planimetria) stored
+  in a **private** bucket — never shown on the public listing; photos/media after
+  EXIF strip; aggregated listing metrics; messages with buyers (retention TBD);
+  Stripe ids if you buy optional services.
+- **Purposes / bases (proposed):** publication and tools — Art. 6(1)(b); fraud
+  prevention / verification / moderation — Art. 6(1)(b) and 6(1)(f) (LIA TBD);
+  seller marketing — Art. 6(1)(a) only if separately consented.
+- **Recipients:** you; buyers for public listing fields and enquiries you accept;
+  Banks4All (Mundida group) only for buyer-badge provenance when a seeker shares
+  an attestation; staff moderators on least privilege; processors (hosting,
+  Stripe, email, planned Bunny.net CDN under DPA).
+- **Retention:** see memo §1 table — counsel to confirm.
+- **Your rights:** same as §5, including portability of listing data you provided.
