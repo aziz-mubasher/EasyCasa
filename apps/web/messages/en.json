@@ -3125,6 +3125,34 @@
     "errors": {
       "load": "Could not load the report (not found, not ready, or not authorised).",
       "profile": "Could not save the buyer profile."
+    },
+    "chat": {
+      "title": "Ask the documents",
+      "lead": "Answers only from your uploaded documents, with page citations.",
+      "esDisabled": "Chat is available in Italian and English.",
+      "topicsLabel": "Suggested topics",
+      "topics": {
+        "occupazione": "What is the occupation status?",
+        "difformita": "Are there planning or cadastral irregularities?",
+        "spese": "What condo arrears or buyer costs appear?",
+        "vincoli": "What encumbrances or filings appear?",
+        "partecipare": "How do I take part according to the documents?"
+      },
+      "empty": "No questions yet.",
+      "you": "You",
+      "assistant": "Assistant",
+      "stateRefused": "refused",
+      "stateNotFound": "not in documents",
+      "inputLabel": "Your question",
+      "placeholder": "e.g. Can I visit the property?",
+      "send": "Send",
+      "sending": "Sending…",
+      "liveAnswer": "New answer available",
+      "counselMark": "COUNSEL REVIEW PENDING",
+      "disclaimer": "EasyCasa provides document analysis for informational purposes. It does not provide legal or technical advice, or appraisals under law.",
+      "errors": {
+        "ask": "Could not send the question. Try again."
+      }
     }
   }
 }

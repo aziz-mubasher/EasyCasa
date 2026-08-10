@@ -21,12 +21,14 @@ import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 import { AsteAnalysisEnabledGuard } from './aste-analysis.guard';
 import { AsteAnalysisService } from './aste-analysis.service';
+import { AsteChatService } from './aste-chat.service';
 import { AsteReportService } from './aste-report.service';
 import {
   ASTE_DOC_TYPES,
   CreateAsteAnalysisDto,
   type AsteDocType,
 } from './dto/create-aste-analysis.dto';
+import { AsteChatAskDto } from './dto/aste-chat.dto';
 import { PatchAsteAnalysisDto } from './dto/patch-aste-analysis.dto';
 
 const MAX_BYTES = 50 * 1024 * 1024;
@@ -53,6 +55,7 @@ export class AsteAnalysisController {
   constructor(
     private readonly service: AsteAnalysisService,
     private readonly reports: AsteReportService,
+    private readonly chat: AsteChatService,
     private readonly users: UsersService,
   ) {}
 
@@ -82,6 +85,23 @@ export class AsteAnalysisController {
     const lang = query.lang ?? 'it';
     const trackPrint = query.printed === '1' || query.printed === 'true' || query.printed === 'yes';
     return this.reports.getReport(me.id, id, { lang, trackPrint });
+  }
+
+  @Get(':id/chat')
+  async chatHistory(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    const me = await this.users.getOrCreate(user);
+    return this.chat.history(me.id, id);
+  }
+
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
+  @Post(':id/chat')
+  async chatAsk(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: AsteChatAskDto,
+  ) {
+    const me = await this.users.getOrCreate(user);
+    return this.chat.ask(me.id, id, { question: dto.question, lang: dto.lang });
   }
 
   @Get(':id')

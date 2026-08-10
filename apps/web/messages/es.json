@@ -3125,6 +3125,34 @@
     "errors": {
       "load": "Could not load the report (not found, not ready, or not authorised).",
       "profile": "Could not save the buyer profile."
+    },
+    "chat": {
+      "title": "Preguntas sobre los documentos",
+      "lead": "Respuestas solo a partir de los documentos cargados, con citas de página.",
+      "esDisabled": "Chat disponible en italiano e inglés.",
+      "topicsLabel": "Temas sugeridos",
+      "topics": {
+        "occupazione": "What is the occupation status?",
+        "difformita": "Are there planning or cadastral irregularities?",
+        "spese": "What condo arrears or buyer costs appear?",
+        "vincoli": "What encumbrances or filings appear?",
+        "partecipare": "How do I take part according to the documents?"
+      },
+      "empty": "Aún no hay preguntas.",
+      "you": "Tú",
+      "assistant": "Asistente",
+      "stateRefused": "rechazada",
+      "stateNotFound": "no en los documentos",
+      "inputLabel": "Tu pregunta",
+      "placeholder": "p. ej. ¿Puedo visitar el inmueble?",
+      "send": "Enviar",
+      "sending": "Enviando…",
+      "liveAnswer": "Nueva respuesta disponible",
+      "counselMark": "COUNSEL REVIEW PENDING",
+      "disclaimer": "EasyCasa provides document analysis for informational purposes. It does not provide legal or technical advice, or appraisals under law.",
+      "errors": {
+        "ask": "No se pudo enviar la pregunta. Inténtalo de nuevo."
+      }
     }
   }
 }

@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     ASTE_EXTRACT_HTTP_TIMEOUT: float = 180.0
     # EC-24 — translate HTTP timeout (seconds).
     ASTE_TRANSLATE_HTTP_TIMEOUT: float = 120.0
+    # EC-25 — chat answer HTTP timeout (seconds).
+    ASTE_CHAT_HTTP_TIMEOUT: float = 120.0
 
 
 @lru_cache

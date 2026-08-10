@@ -6,6 +6,8 @@ from fastapi import APIRouter, Depends, File, Header, HTTPException, UploadFile
 
 from ..providers.embeddings import get_embedder
 from ..schemas_aste import (
+    ChatAnswerRequest,
+    ChatAnswerResponse,
     EmbedRequest,
     EmbedResponse,
     ExtractRequest,
@@ -13,6 +15,7 @@ from ..schemas_aste import (
     TranslateRequest,
     TranslateResponse,
 )
+from ..services.aste_chat import run_chat
 from ..services.aste_extract import run_extract
 from ..services.aste_ocr import run_ocr
 from ..services.aste_translate import run_translate
@@ -81,3 +84,17 @@ def aste_translate(body: TranslateRequest) -> TranslateResponse:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.post(
+    "/chat",
+    response_model=ChatAnswerResponse,
+    dependencies=[Depends(require_internal)],
+)
+def aste_chat(body: ChatAnswerRequest) -> ChatAnswerResponse:
+    try:
+        return run_chat(body)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc

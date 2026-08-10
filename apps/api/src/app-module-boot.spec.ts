@@ -45,6 +45,7 @@ describe('AppModule boot (PersonalDataRegistrar DI)', () => {
     expect(app).toBeDefined();
     expect(app.get(PersonalDataRegistry).all().map((s) => s.source).sort()).toEqual([
       'aste_analyses',
+      'aste_chat_messages',
       'aste_leads',
       'consent',
       'crm',

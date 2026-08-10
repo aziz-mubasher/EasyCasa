@@ -3125,6 +3125,34 @@
     "errors": {
       "load": "Impossibile caricare il report (non trovato, non pronto o non autorizzato).",
       "profile": "Salvataggio profilo non riuscito."
+    },
+    "chat": {
+      "title": "Domande sui documenti",
+      "lead": "Risposte solo dai documenti caricati, con citazioni di pagina.",
+      "esDisabled": "Chat disponibile in italiano e inglese.",
+      "topicsLabel": "Argomenti suggeriti",
+      "topics": {
+        "occupazione": "Qual è lo stato di occupazione?",
+        "difformita": "Ci sono difformità urbanistiche o catastali?",
+        "spese": "Quali spese condominiali o oneri risultano?",
+        "vincoli": "Quali vincoli o formalità risultano?",
+        "partecipare": "Come si partecipa all’asta secondo i documenti?"
+      },
+      "empty": "Nessuna domanda ancora.",
+      "you": "Tu",
+      "assistant": "Assistente",
+      "stateRefused": "rifiutata",
+      "stateNotFound": "non nei documenti",
+      "inputLabel": "La tua domanda",
+      "placeholder": "Es. Posso visitare l’immobile?",
+      "send": "Invia",
+      "sending": "Invio…",
+      "liveAnswer": "Nuova risposta disponibile",
+      "counselMark": "COUNSEL REVIEW PENDING",
+      "disclaimer": "EasyCasa fornisce analisi documentali a scopo informativo. Non fornisce consulenza legale, tecnica o perizie ai sensi di legge.",
+      "errors": {
+        "ask": "Domanda non riuscita. Riprova."
+      }
     }
   }
 }

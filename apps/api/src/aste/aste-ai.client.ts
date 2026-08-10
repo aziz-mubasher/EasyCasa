@@ -100,6 +100,32 @@ export class AsteAiClient {
     return res.translations;
   }
 
+  /** EC-25 — grounded answer from retrieved chunks (stateless AI). */
+  async chatAnswer(input: {
+    question: string;
+    answer_lang: string;
+    chunks: Array<{ document_id: string; page: number; text: string }>;
+    glossary: Array<{ term_key: string; definition: string }>;
+  }): Promise<{
+    answer: string;
+    citations: Array<{ document_id: string; page: number }>;
+    refused: boolean;
+  }> {
+    return (await this.fetchJson('/aste/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-EC-Internal': this.token(),
+      },
+      body: JSON.stringify(input),
+      timeoutMs: this.config.ASTE_CHAT_TIMEOUT_MS,
+    })) as {
+      answer: string;
+      citations: Array<{ document_id: string; page: number }>;
+      refused: boolean;
+    };
+  }
+
   private async fetchJson(
     path: string,
     opts: {
