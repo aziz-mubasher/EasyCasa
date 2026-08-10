@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     AI_INTERNAL_TOKEN: str = ""
     # Longer HTTP timeout for LLM extract calls (seconds).
     ASTE_EXTRACT_HTTP_TIMEOUT: float = 180.0
+    # EC-24 — translate HTTP timeout (seconds).
+    ASTE_TRANSLATE_HTTP_TIMEOUT: float = 120.0
 
 
 @lru_cache

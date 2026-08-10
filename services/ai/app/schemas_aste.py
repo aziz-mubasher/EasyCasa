@@ -52,6 +52,15 @@ class EmbedResponse(BaseModel):
     dim: int
 
 
+class TranslateRequest(BaseModel):
+    texts: list[str] = Field(default_factory=list)
+    target_lang: str = "en"
+
+
+class TranslateResponse(BaseModel):
+    translations: list[str]
+
+
 # Loose extraction envelope — LLM output validated/normalized in service.
 ExtractionV1 = dict[str, Any]
 

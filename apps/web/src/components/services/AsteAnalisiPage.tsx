@@ -2,6 +2,7 @@
 
 import { useId, useState, type FormEvent } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { useAuth } from '@/auth/AuthProvider';
 import {
   createAnalysis,
@@ -219,6 +220,11 @@ export function AsteAnalisiPage() {
                 >
                   {t('actions.submit')}
                 </button>
+              ) : null}
+              {analysis.status === 'ready' ? (
+                <Link className="aa-btn" href={`/aste/analisi/${analysis.id}/report`}>
+                  {t('actions.openReport')}
+                </Link>
               ) : null}
               <button
                 className="aa-btn aa-btn--ghost"
