@@ -1,0 +1,153 @@
+{
+  "uid": "easycasa-aste",
+  "title": "EasyCasa — Aste",
+  "tags": ["easycasa", "aste"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-24h", "to": "now" },
+  "templating": { "list": [] },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Analyses by status",
+      "gridPos": { "h": 5, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "aste_analyses_by_status_count",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Uploaded backlog",
+      "gridPos": { "h": 5, "w": 4, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "aste_uploaded_backlog_count", "refId": "A" }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Max processing age",
+      "gridPos": { "h": 5, "w": 4, "x": 16, "y": 0 },
+      "targets": [
+        { "expr": "aste_processing_max_age_seconds_age", "refId": "A" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Waitlist signups",
+      "gridPos": { "h": 5, "w": 4, "x": 20, "y": 0 },
+      "targets": [
+        { "expr": "aste_leads_total_count", "refId": "A" }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Pipeline throughput (ready / failed)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+      "targets": [
+        {
+          "expr": "sum(rate(aste_pipeline_ready_total[5m]))",
+          "legendFormat": "ready/s",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(aste_pipeline_failed_total[5m]))",
+          "legendFormat": "failed/s",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Failure rate by stage",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+      "targets": [
+        {
+          "expr": "sum by (stage) (rate(aste_pipeline_failures_total[5m]))",
+          "legendFormat": "{{stage}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Stage duration p50 / p95",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 13 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le, stage) (rate(aste_pipeline_stage_duration_seconds_bucket[5m])))",
+          "legendFormat": "p50 {{stage}}",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, stage) (rate(aste_pipeline_stage_duration_seconds_bucket[5m])))",
+          "legendFormat": "p95 {{stage}}",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "OCR page ratio (ocr_used)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 13 },
+      "targets": [
+        {
+          "expr": "sum by (ocr_used) (rate(aste_ocr_pages_total[5m]))",
+          "legendFormat": "ocr_used={{ocr_used}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Nest /aste* request rate by status",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 21 },
+      "targets": [
+        {
+          "expr": "sum by (status) (rate(http_requests_total{job=\"api\",route=~\"/aste.*\"}[5m]))",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "Waitlist by language (gauge)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 21 },
+      "targets": [
+        {
+          "expr": "aste_leads_by_language_count",
+          "legendFormat": "{{language}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "text",
+      "title": "Metric gaps (EC-26)",
+      "gridPos": { "h": 4, "w": 24, "x": 0, "y": 29 },
+      "options": {
+        "mode": "markdown",
+        "content": "No Prometheus series for translate/chat/token usage or retrieval legs (`vector_hits` / `lexical_hits` are **log-only**). AI FastAPI has no `/metrics`. Chat rate-limits appear as Nest 429 on chat routes + `ASTE_CHAT_RATE_LIMITED` product events. See `docs/runbooks/aste-enable.md`."
+      }
+    }
+  ]
+}

@@ -53,6 +53,10 @@ services:
     restart: unless-stopped
     environment:
       DATA_SOURCE_NAME: ${PG_EXPORTER_DSN:?set PG_EXPORTER_DSN}
+    command:
+      - '--extend.query-path=/etc/postgres_exporter/queries.yaml'
+    volumes:
+      - ./prometheus/postgres-aste.queries.yml:/etc/postgres_exporter/queries.yaml:ro
     networks: [monitoring, app]
 
   redis-exporter:
