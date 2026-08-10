@@ -85,7 +85,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | NEXT_PUBLIC_VALUATION_BAND_ENABLED | web (build) | Show the provisional market valuation band on listing detail and add-listing price step. Must match API `VALUATION_BAND_ENABLED`. Rebuild web after changing. |
 | VALUATION_BAND_ENABLED | api | Serve `GET /listings/:slug/valuation-band` and `POST /avm/band`. Uses OMI cache when populated, else stub comparables. Default `false`. |
 | NEXT_PUBLIC_ASTE_ANALYSIS_ENABLED | web (build) | EC-22 — show dark `/[locale]/aste/analisi` upload UI. Must match API `ASTE_ANALYSIS_ENABLED`. Default `false` (redirects to `/aste`). |
-| ASTE_ANALYSIS_ENABLED | api | EC-22 — authenticated `/aste/analyses*` endpoints. Default `false` → **404**. |
+| ASTE_ANALYSIS_ENABLED | api | EC-22 — authenticated `/aste/analyses*` endpoints. Default `false` → **404**. EC-26 admin `/admin/aste*` is **not** gated by this flag. |
 | ASTE_DOCS_RETENTION_DAYS | api | EC-22 — purge aged submitted/failed analyses + MinIO objects (default `365`). **COUNSEL PENDING (LGL-1)**. |
 | AI_INTERNAL_TOKEN | api + ai | EC-23 — shared secret for AI `/aste/*` (`X-EC-Internal`). Empty → Nest cannot call; AI rejects. |
 | ASTE_PIPELINE_POLL_MS | api | EC-23 — worker poll interval (default `10000`). |
