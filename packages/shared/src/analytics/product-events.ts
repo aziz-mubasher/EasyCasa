@@ -1,4 +1,4 @@
-/** Product analytics event names for EC-5 viewing funnel instrumentation. */
+/** Product analytics event names — viewing funnel + Aste lead magnet (EC-21). */
 export const PRODUCT_EVENTS = {
   LISTING_AVAILABILITY_SET: 'listing.availability_set',
   LISTING_AVAILABILITY_SKIPPED: 'listing.availability_skipped',
@@ -6,6 +6,9 @@ export const PRODUCT_EVENTS = {
   VIEWING_PICKER_VIEWED: 'viewing.picker_viewed',
   VIEWING_PICKER_EMPTY: 'viewing.picker_empty',
   VIEWING_REQUESTED: 'viewing.requested',
+  ASTE_PAGE_VIEW: 'aste.page_view',
+  ASTE_SIGNUP_SUBMITTED: 'aste.signup_submitted',
+  ASTE_GUIDE_OPENED: 'aste.guide_opened',
 } as const;
 
 export type ProductEventName = (typeof PRODUCT_EVENTS)[keyof typeof PRODUCT_EVENTS];

@@ -811,6 +811,20 @@ export const valuationRequests = pgTable('valuation_requests', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-21 — Analisi Aste waitlist + guide lead magnet. */
+export const asteLeads = pgTable('aste_leads', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').notNull(),
+  language: text('language').notNull(),
+  province: text('province'),
+  buyerType: text('buyer_type'),
+  consent: boolean('consent').notNull(),
+  locale: text('locale').notNull(),
+  guideToken: text('guide_token').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 // ---------------- Phase 29 — Viewings & scheduling ----------------
 export const viewingAvailability = pgTable('viewing_availability', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -1008,7 +1022,7 @@ export const schema = {
   dsarAdminRequests, listingReports, identityReviewRequests,
   leases, kycCases,
   paymentIntents, invoices, stripeWebhookEvents,
-  omiQuotes, valuationRequests,
+  omiQuotes, valuationRequests, asteLeads,
   viewingAvailability, viewings,
   consentRecords,
   shareLinks, shareLinkViewDedup,

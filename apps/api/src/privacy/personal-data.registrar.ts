@@ -3,6 +3,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { DsarService } from './dsar.service';
 import { ErasureService } from './erasure.service';
 import { PersonalDataRegistry } from './personal-data.registry';
+import { AsteLeadsDataSource } from './sources/aste-leads.data-source';
 import { ConsentLedgerDataSource } from './sources/consent-ledger.data-source';
 import { EnquiriesDataSource } from './sources/enquiries.data-source';
 import { ProfileDataSource } from './sources/profile.data-source';
@@ -24,6 +25,7 @@ export class PersonalDataRegistrar implements OnModuleInit {
     @Inject(WaInboundDataSource) private readonly waInbound: WaInboundDataSource,
     @Inject(WhatsAppMessagesDataSource)
     private readonly whatsappMessages: WhatsAppMessagesDataSource,
+    @Inject(AsteLeadsDataSource) private readonly asteLeads: AsteLeadsDataSource,
     @Inject(DsarService) private readonly dsar: DsarService,
     @Inject(ErasureService) private readonly erasure: ErasureService,
   ) {}
@@ -37,6 +39,7 @@ export class PersonalDataRegistrar implements OnModuleInit {
       this.consent,
       this.waInbound,
       this.whatsappMessages,
+      this.asteLeads,
     ]) {
       this.registry.register(s);
     }

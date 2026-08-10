@@ -2555,25 +2555,52 @@
         {
           "title": "Per chi cerca",
           "links": [
-            { "label": "Cerca casa", "href": "/search" },
-            { "label": "Come funziona", "href": "/for-buyers" },
-            { "label": "Valori di mercato (OMI)", "href": "/valutazione-gratuita" }
+            {
+              "label": "Cerca casa",
+              "href": "/search"
+            },
+            {
+              "label": "Come funziona",
+              "href": "/for-buyers"
+            },
+            {
+              "label": "Valori di mercato (OMI)",
+              "href": "/valutazione-gratuita"
+            }
           ]
         },
         {
           "title": "Per chi vende",
           "links": [
-            { "label": "Pubblica un annuncio", "href": "/add" },
-            { "label": "Servizi a prezzo fisso", "href": "/pricing" },
-            { "label": "Prezzi", "href": "/pricing" }
+            {
+              "label": "Pubblica un annuncio",
+              "href": "/add"
+            },
+            {
+              "label": "Servizi a prezzo fisso",
+              "href": "/pricing"
+            },
+            {
+              "label": "Prezzi",
+              "href": "/pricing"
+            }
           ]
         },
         {
           "title": "Informazioni",
           "links": [
-            { "label": "Informativa privacy", "href": "/legal/privacy" },
-            { "label": "Termini e condizioni", "href": "/legal/terms" },
-            { "label": "Trasparenza", "href": "/trasparenza" }
+            {
+              "label": "Informativa privacy",
+              "href": "/legal/privacy"
+            },
+            {
+              "label": "Termini e condizioni",
+              "href": "/legal/terms"
+            },
+            {
+              "label": "Trasparenza",
+              "href": "/trasparenza"
+            }
           ]
         }
       ]
@@ -2586,5 +2613,155 @@
       "formValue": "Scrivici dal sito"
     },
     "langsNote": "IT · EN · ES — Operiamo in italiano, inglese e spagnolo."
+  },
+  "aste": {
+    "meta": {
+      "title": "Analisi Aste — Guida gratuita | EasyCasa",
+      "description": "Comprare all’asta in Italia, capendo davvero cosa stai comprando. Scarica la guida gratuita e iscriviti all’accesso anticipato ad Analisi Aste."
+    },
+    "hero": {
+      "title": "Comprare all’asta in Italia, capendo davvero cosa stai comprando.",
+      "sub": "Le aste giudiziarie nascondono opportunità — e trappole scritte in 100 pagine di italiano giuridico. Stiamo costruendo lo strumento che le rende leggibili. Nella tua lingua.",
+      "cta": "Scarica la guida gratuita"
+    },
+    "problem": {
+      "kicker": "Il problema",
+      "title": "Perché le aste sono difficili da leggere",
+      "sub": "Tre ostacoli ricorrenti per chi valuta un immobile all’asta.",
+      "cards": [
+        {
+          "title": "La perizia",
+          "body": "La perizia del CTU è il documento più importante dell’asta — e il meno leggibile."
+        },
+        {
+          "title": "I costi nascosti",
+          "body": "Occupazione, difformità edilizie, spese condominiali arretrate: i costi veri non sono nel prezzo base."
+        },
+        {
+          "title": "Le scadenze",
+          "body": "Cauzione, termini, saldo prezzo: le scadenze di un’asta sono perentorie. Un errore formale esclude l’offerta."
+        }
+      ]
+    },
+    "coming": {
+      "badge": "In arrivo",
+      "title": "In arrivo: Analisi Aste di EasyCasa",
+      "body": "Carichi perizia e avviso di vendita, ricevi un’analisi strutturata nella tua lingua: criticità con riferimento a pagina e documento, semaforo di rischio, confronto del prezzo base con i valori OMI di zona. Iscriviti per l’accesso anticipato.",
+      "semaforoTitle": "Motivo semaforo di rischio (illustrazione)",
+      "semaforoCaption": "Semaforo di rischio — illustrazione"
+    },
+    "signup": {
+      "kicker": "Guida gratuita",
+      "title": "La Guida alle Aste — 10 controlli essenziali",
+      "sub": "Gratis con l’iscrizione. Ricevi il link subito e per email. Entri anche in lista per l’accesso anticipato ad Analisi Aste."
+    },
+    "form": {
+      "email": "Email",
+      "language": "Lingua della guida",
+      "langIt": "Italiano",
+      "langEn": "English",
+      "langEs": "Español",
+      "province": "Provincia di interesse (opzionale)",
+      "provinceNone": "— Non specificata —",
+      "buyerType": "Tipo di interesse (opzionale)",
+      "buyerNone": "— Non specificato —",
+      "buyerPrima": "Prima casa",
+      "buyerInvest": "Investimento",
+      "buyerCuriosity": "Solo curiosità",
+      "consentBefore": "Acconsento al trattamento dei miei dati (email e preferenze indicate) per ricevere la guida e aggiornamenti sul servizio Analisi Aste, secondo l’",
+      "privacyLink": "informativa privacy",
+      "consentAfter": ". Posso annullare l’iscrizione in ogni momento.",
+      "counselMark": "COUNSEL REVIEW PENDING",
+      "submit": "Scarica la guida gratuita",
+      "submitting": "Invio in corso…",
+      "success": "Grazie. La guida è pronta — aprila qui sotto. Ti abbiamo anche inviato il link via email.",
+      "openGuide": "Apri la guida",
+      "emailNote": "Controlla anche la casella di posta (e lo spam) per il link.",
+      "errors": {
+        "email": "Inserisci un indirizzo email valido.",
+        "consent": "È necessario acconsentire per continuare.",
+        "submit": "Invio non riuscito. Riprova tra poco."
+      }
+    },
+    "faq": {
+      "kicker": "Domande",
+      "title": "FAQ",
+      "items": [
+        {
+          "q": "La guida è davvero gratuita?",
+          "a": "Sì. Serve solo l’email. Puoi annullare l’iscrizione in ogni momento."
+        },
+        {
+          "q": "Quando sarà disponibile l’analisi?",
+          "a": "È in sviluppo. Chi si iscrive riceve l’accesso anticipato."
+        },
+        {
+          "q": "L’analisi sostituirà un tecnico o un avvocato?",
+          "a": "No: solo analisi documentale informativa; la verifica professionale resta sempre consigliata (COUNSEL REVIEW PENDING)."
+        },
+        {
+          "q": "In quali lingue?",
+          "a": "Italiano e inglese al lancio; altre lingue in base alla domanda."
+        }
+      ]
+    },
+    "disclaimer": "EasyCasa fornisce analisi documentali a scopo informativo. Non fornisce consulenza legale, tecnica o perizie ai sensi di legge.",
+    "counselMark": "COUNSEL REVIEW PENDING"
+  },
+  "asteGuida": {
+    "meta": {
+      "title": "La Guida alle Aste Immobiliari — EasyCasa",
+      "description": "10 controlli essenziali prima di fare un’offerta all’asta giudiziaria."
+    },
+    "kicker": "Guida EasyCasa",
+    "title": "La Guida alle Aste Immobiliari — 10 controlli essenziali prima di fare un’offerta",
+    "intro": "Le aste giudiziarie seguono regole precise. Chi compra bene non è più fortunato: controlla le cose giuste, nell’ordine giusto. Questa guida elenca i 10 controlli essenziali — pensata anche per chi non è cresciuto con il sistema italiano.",
+    "printHint": "Suggerimento: usa Stampa del browser per salvare un PDF.",
+    "checks": [
+      {
+        "title": "Dove cercare",
+        "body": "Il punto di partenza ufficiale è pvp.giustizia.it, il Portale delle Vendite Pubbliche. Lì trovi gli avvisi di vendita pubblicati dai tribunali. Molti tribunali hanno anche portali di vendita dedicati: consultali in parallelo. La consultazione è gratuita. Concentrati sulle zone che conosci già — conoscere il quartiere riduce il rischio di sorprese su prezzi, logistica e rivendita."
+      },
+      {
+        "title": "La perizia del CTU",
+        "body": "La perizia del CTU (consulente tecnico d’ufficio) è il documento centrale. Non fermarti alla prima pagina o al sunto: leggi tutto. Contiene lo stato dell’immobile, la provenienza, le eventuali irregolarità edilizie e catastali, e spesso indicazioni su occupazione e spese. È lungo e in italiano giuridico — ed è proprio lì che nascono gli errori di valutazione."
+      },
+      {
+        "title": "Stato di occupazione",
+        "body": "Libero, occupato dal debitore, oppure locato con contratto opponibile: sono tre acquisti diversi. Il tempo per entrare in possesso è un costo reale (affitto alternativo, lavori rimandati, rendimento). Verifica nella perizia e nell’avviso cosa risulta e cosa resta da liberare dopo l’aggiudicazione."
+      },
+      {
+        "title": "Difformità e abusi",
+        "body": "Controlla difformità edilizie e catastali, se sono sanabili e a quale costo. Influiscono su mutuo, assicurabilità e rivendita. Una sanatoria possibile non è gratis: mettila nel budget prima di alzare la mano."
+      },
+      {
+        "title": "Ipoteche e pignoramenti",
+        "body": "Di regola, le iscrizioni e i pignoramenti iscritti vengono cancellati con il decreto di trasferimento: non li “erediti” come in una compravendita ordinaria. Restano eccezioni da verificare nella perizia e nell’ordinanza. Non assumere: leggi la sezione dedicata e, in dubbio, fati assistere."
+      },
+      {
+        "title": "Spese condominiali",
+        "body": "L’aggiudicatario può dover corrispondere le spese dell’anno in corso e di quello precedente (art. 63 disp. att. c.c.). Chiedi all’organizzatore della vendita la dichiarazione dell’amministratore con la cifra. Non è un dettaglio: può spostare di migliaia di euro il costo reale."
+      },
+      {
+        "title": "Costi totali e margine",
+        "body": "Il prezzo di aggiudicazione non è il totale. Aggiungi imposte, spese di cancellazione, tecnico/notaio, ristrutturazione e il costo del tempo di attesa. Fissa un massimo prima dell’asta e non superarlo — l’emozione del rilancio è il modo più rapido per bruciare il margine."
+      },
+      {
+        "title": "Requisiti per partecipare",
+        "body": "Servono codice fiscale, documenti d’identità, e di solito una cauzione (spesso il 10% del prezzo base). Per le aste telematiche servono PEC e firma digitale. Se non sei residente, puoi ottenerli: pianifica 2–4 settimane di anticipo. Senza pezzi pronti, l’offerta non parte."
+      },
+      {
+        "title": "Il giorno dell’asta",
+        "body": "Conosci offerta minima rispetto al prezzo base, rilancio minimo e termini. Le scadenze sono perentorie: un difetto formale esclude l’offerta. Arriva con i documenti già controllati; non improvvisare in aula o sulla piattaforma."
+      },
+      {
+        "title": "Dopo l’aggiudicazione",
+        "body": "Il saldo prezzo va versato nei termini previsti: perderli fa decadere la cauzione. Seguono decreto di trasferimento e voltura. Se usi un finanziamento, deve seguire i tempi del tribunale, non quelli della banca: allinea la pratica prima di offrire."
+      }
+    ],
+    "closeTitle": "EasyCasa e Analisi Aste",
+    "close": "EasyCasa sta costruendo Analisi Aste: carichi i documenti, ricevi l’analisi nella tua lingua.",
+    "disclaimer": "EasyCasa fornisce analisi documentali a scopo informativo. Non fornisce consulenza legale, tecnica o perizie ai sensi di legge.",
+    "counselMark": "COUNSEL REVIEW PENDING"
   }
 }

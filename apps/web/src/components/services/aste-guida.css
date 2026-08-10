@@ -1,0 +1,158 @@
+/* Print-friendly Aste guide — doubles as PDF via browser print */
+
+.guida {
+  --g-ink: #14212e;
+  --g-paper: #f3ede1;
+  --g-azure: #2c6e9b;
+  --g-muted: rgba(20, 33, 46, 0.72);
+  color: var(--g-ink);
+  background: var(--g-paper);
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.guida-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.guida-header {
+  background: linear-gradient(165deg, #0f1822, #14212e 60%, #1a3044);
+  color: var(--g-paper);
+  padding: clamp(2.5rem, 6vw, 3.5rem) 0;
+}
+
+.guida-brand {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.guida-kicker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7fb2d6;
+  margin: 0 0 0.75rem;
+}
+
+.guida-header h1 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  max-width: 24ch;
+}
+
+.guida-intro {
+  color: rgba(243, 237, 225, 0.88);
+  margin: 0 0 1rem;
+  max-width: 58ch;
+}
+
+.guida-print-hint {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: rgba(243, 237, 225, 0.55);
+  margin: 0;
+}
+
+.guida-body {
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+.guida-check {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(20, 33, 46, 0.12);
+  break-inside: avoid;
+}
+
+.guida-num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--g-azure);
+  margin: 0 0 0.35rem;
+}
+
+.guida-check h2 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.25rem;
+  margin: 0 0 0.65rem;
+  letter-spacing: -0.015em;
+}
+
+.guida-check p {
+  margin: 0;
+  color: var(--g-muted);
+}
+
+.guida-close {
+  padding: 2rem 0 1rem;
+}
+
+.guida-close h2 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.2rem;
+  margin: 0 0 0.65rem;
+}
+
+.guida-foot {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(20, 33, 46, 0.12);
+  font-size: 0.9rem;
+  color: var(--g-muted);
+}
+
+.guida-counsel {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  margin-top: 0.5rem;
+}
+
+@media print {
+  .guida {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  .guida-header {
+    background: none;
+    color: #000;
+    padding: 0 0 1rem;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .guida-brand,
+  .guida-kicker,
+  .guida-intro,
+  .guida-print-hint {
+    color: #000;
+  }
+
+  .guida-print-hint {
+    display: none;
+  }
+
+  .guida-check {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .guida-num {
+    color: #333;
+  }
+
+  .guida-check p,
+  .guida-foot {
+    color: #222;
+  }
+}

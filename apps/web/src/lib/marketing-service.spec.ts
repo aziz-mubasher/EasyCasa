@@ -17,6 +17,13 @@ describe('isMarketingServicePath', () => {
     expect(isMarketingServicePath('/about/')).toBe(true);
   });
 
+  it('matches aste landing and guide', () => {
+    expect(isMarketingServicePath('/aste')).toBe(true);
+    expect(isMarketingServicePath('/aste/')).toBe(true);
+    expect(isMarketingServicePath('/aste/guida')).toBe(true);
+    expect(isMarketingServicePath('/aste/guida/')).toBe(true);
+  });
+
   it('does not treat valutazione-gratuita as marketing chrome', () => {
     expect(isMarketingServicePath('/valutazione-gratuita')).toBe(false);
   });
@@ -27,6 +34,7 @@ describe('isMarketingServicePath', () => {
     expect(isMarketingServicePath('/acquisto-assistito/extra')).toBe(false);
     expect(isMarketingServicePath('/for-buyers/extra')).toBe(false);
     expect(isMarketingServicePath('/about/extra')).toBe(false);
+    expect(isMarketingServicePath('/aste/extra')).toBe(false);
     expect(isMarketingServicePath(null)).toBe(false);
   });
 });

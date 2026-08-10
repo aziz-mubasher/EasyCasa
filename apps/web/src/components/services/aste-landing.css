@@ -1,0 +1,332 @@
+/* Aste landing — ink / paper / azure, display + body fonts from layout */
+
+.aste {
+  --aste-ink: #14212e;
+  --aste-paper: #f3ede1;
+  --aste-azure: #2c6e9b;
+  --aste-ochre: #c08a1e;
+  --aste-ink-70: rgba(20, 33, 46, 0.72);
+  --aste-ink-12: rgba(20, 33, 46, 0.12);
+  --aste-paper-85: rgba(243, 237, 225, 0.85);
+  color: var(--aste-ink);
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 0%, rgba(44, 110, 155, 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 20%, rgba(192, 138, 30, 0.08), transparent 50%),
+    var(--aste-paper);
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.aste .aste-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.aste h1,
+.aste h2,
+.aste h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  font-variation-settings: 'wdth' 90;
+}
+
+.aste-hero {
+  background:
+    linear-gradient(160deg, rgba(44, 110, 155, 0.22), transparent 45%),
+    linear-gradient(20deg, #0f1822 0%, var(--aste-ink) 55%, #1a3044 100%);
+  color: var(--aste-paper);
+  padding: clamp(3.5rem, 9vw, 5.5rem) 0 clamp(3rem, 8vw, 4.5rem);
+}
+
+.aste-brand {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.35rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.25rem;
+  color: var(--aste-paper);
+}
+
+.aste-hero h1 {
+  font-size: clamp(1.85rem, 4.6vw, 3rem);
+  font-weight: 700;
+  max-width: 22ch;
+  margin: 0 0 1.25rem;
+}
+
+.aste-lead {
+  font-size: 1.2rem;
+  max-width: 48ch;
+  color: var(--aste-paper-85);
+  margin: 0 0 2rem;
+}
+
+.aste-cta {
+  display: inline-block;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: var(--aste-ochre);
+  color: var(--aste-ink);
+  padding: 0.875rem 1.75rem;
+  border-radius: 6px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.aste-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.aste-cta:focus-visible {
+  outline: 3px solid var(--aste-azure);
+  outline-offset: 3px;
+}
+
+.aste-section {
+  padding: clamp(3rem, 7vw, 4.5rem) 0;
+}
+
+.aste-kicker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--aste-azure);
+  margin: 0 0 0.75rem;
+}
+
+.aste-section h2 {
+  font-size: clamp(1.6rem, 3.2vw, 2.15rem);
+  margin: 0 0 0.75rem;
+  max-width: 28ch;
+}
+
+.aste-sub {
+  color: var(--aste-ink-70);
+  max-width: 58ch;
+  margin: 0 0 2rem;
+}
+
+.aste-problems {
+  display: grid;
+  gap: 1.75rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .aste-problems {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+.aste-problem h3 {
+  font-size: 1.15rem;
+  margin: 0 0 0.6rem;
+}
+
+.aste-problem p {
+  margin: 0;
+  color: var(--aste-ink-70);
+}
+
+.aste-coming {
+  background: linear-gradient(180deg, rgba(44, 110, 155, 0.08), transparent 70%);
+}
+
+.aste-coming-grid {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (min-width: 800px) {
+  .aste-coming-grid {
+    grid-template-columns: 1.4fr 0.6fr;
+  }
+}
+
+.aste-badge {
+  display: inline-block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--aste-azure);
+  border: 1px solid rgba(44, 110, 155, 0.35);
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+  margin: 0 0 1rem;
+}
+
+.aste-semaforo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  animation: aste-fade-up 0.7s ease both;
+}
+
+.aste-semaforo svg {
+  filter: drop-shadow(0 10px 24px rgba(20, 33, 46, 0.18));
+}
+
+.aste-semaforo-caption {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--aste-ink-70);
+  text-align: center;
+  margin: 0;
+}
+
+.aste-signup {
+  background: rgba(20, 33, 46, 0.03);
+}
+
+.aste-signup-inner {
+  max-width: 640px;
+}
+
+.aste-form {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.aste-field label {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.aste-field input,
+.aste-field select {
+  width: 100%;
+  font: inherit;
+  color: var(--aste-ink);
+  background: var(--aste-paper);
+  border: 1px solid var(--aste-ink-12);
+  border-radius: 6px;
+  padding: 0.7rem 0.85rem;
+}
+
+.aste-field input:focus-visible,
+.aste-field select:focus-visible {
+  outline: 3px solid rgba(44, 110, 155, 0.45);
+  outline-offset: 1px;
+}
+
+.aste-field-error {
+  color: #8b2e22;
+  font-size: 0.9rem;
+  margin: 0.35rem 0 0;
+}
+
+.aste-consent {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.aste-consent input {
+  margin-top: 0.35rem;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.aste-inline-link {
+  color: var(--aste-azure);
+  text-decoration: underline;
+}
+
+.aste-counsel {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--aste-ink-70);
+  margin: 0.4rem 0 0;
+}
+
+.aste-submit {
+  justify-self: start;
+  margin-top: 0.5rem;
+}
+
+.aste-submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.aste-success {
+  animation: aste-fade-up 0.45s ease both;
+}
+
+.aste-success-note {
+  margin-top: 1rem;
+  color: var(--aste-ink-70);
+}
+
+.aste-faq {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 720px;
+}
+
+.aste-faq-item {
+  border-bottom: 1px solid var(--aste-ink-12);
+  padding: 0.75rem 0;
+}
+
+.aste-faq-item summary {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.aste-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.aste-faq-item p {
+  margin: 0.65rem 0 0;
+  color: var(--aste-ink-70);
+}
+
+.aste-foot {
+  padding: 2rem 0 3rem;
+  border-top: 1px solid var(--aste-ink-12);
+  font-size: 0.9rem;
+  color: var(--aste-ink-70);
+}
+
+@keyframes aste-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aste-cta,
+  .aste-semaforo,
+  .aste-success {
+    transition: none;
+    animation: none;
+  }
+}
