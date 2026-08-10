@@ -81,6 +81,23 @@ function formatWhen(iso: string | null | undefined): string {
   return iso.replace('T', ' ').slice(0, 19);
 }
 
+function statusBadgeVariant(
+  status: string,
+): 'green' | 'amber' | 'red' | 'grey' | 'blue' {
+  switch (status) {
+    case 'ready':
+      return 'green';
+    case 'failed':
+      return 'red';
+    case 'processing':
+      return 'amber';
+    case 'uploaded':
+      return 'blue';
+    default:
+      return 'grey';
+  }
+}
+
 export function AsteAdmin() {
   const api = useApi();
   const qc = useQueryClient();
@@ -298,7 +315,7 @@ export function AsteAdmin() {
                       onClick={() => setSelectedId(row.id)}
                     >
                       <td>
-                        <Badge>{row.status}</Badge>
+                        <Badge variant={statusBadgeVariant(row.status)}>{row.status}</Badge>
                       </td>
                       <td className="mono">{row.userRef}</td>
                       <td className="tabular-nums">{row.attempts}</td>
@@ -342,7 +359,7 @@ export function AsteAdmin() {
                     {detail.data.id}
                   </h2>
                   <p>
-                    <Badge>{detail.data.status}</Badge> · attempts {detail.data.attempts} · user{' '}
+                    <Badge variant={statusBadgeVariant(detail.data.status)}>{detail.data.status}</Badge> · attempts {detail.data.attempts} · user{' '}
                     <span className="mono">{detail.data.userRef}</span>
                   </p>
                   <p className="muted">
