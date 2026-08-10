@@ -33,6 +33,9 @@ export class AsteAnalysesDataSource implements PersonalDataSource {
         register: asteAnalyses.register,
         comune: asteAnalyses.comune,
         provincia: asteAnalyses.provincia,
+        extraction: asteAnalyses.extraction,
+        semaforo: asteAnalyses.semaforo,
+        failureReason: asteAnalyses.failureReason,
         createdAt: asteAnalyses.createdAt,
       })
       .from(asteAnalyses)
@@ -58,6 +61,11 @@ export class AsteAnalysesDataSource implements PersonalDataSource {
         register: r.register,
         comune: r.comune,
         provincia: r.provincia,
+        // EC-23 — extraction/semaforo are structured fields (no binaries; no person-name schema fields).
+        hasExtraction: r.extraction != null,
+        semaforo: r.semaforo,
+        failureReason: r.failureReason,
+        extraction: r.extraction,
         createdAt: r.createdAt.toISOString(),
         documents: docs.map((d) => ({
           id: d.id,

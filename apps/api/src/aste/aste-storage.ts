@@ -1,14 +1,24 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 
 import type { ApiConfig } from '../config';
 import { APP_CONFIG } from '../config/config.module';
 import { resolveObjectStorage } from '../media/object-storage';
-import { bunnyHttpDelete, bunnyHttpPut, resolveBunnyHttpBase } from '../media/bunny-http-storage';
+import {
+  bunnyHttpDelete,
+  bunnyHttpGet,
+  bunnyHttpPut,
+  resolveBunnyHttpBase,
+} from '../media/bunny-http-storage';
 import { safeBasename } from '../uploads/domain/keys';
 
 /**
- * EC-22 — private aste document storage under `users/{userId}/aste/...`
+ * EC-22/23 — private aste document storage under `users/{userId}/aste/...`
  * in the existing MinIO/Bunny bucket (no separate bucket).
  */
 @Injectable()
@@ -66,6 +76,30 @@ export class AsteStorage {
         CacheControl: 'private, no-store',
       }),
     );
+  }
+
+  /** EC-23 — load object bytes for OCR streaming to AI. */
+  async getObject(key: string): Promise<{ body: Buffer; contentType: string }> {
+    if (!key.startsWith('users/') || key.includes('..')) {
+      throw new Error('invalid aste storage key');
+    }
+    const storage = this.storage();
+    const bunny = this.bunnyHttp(storage);
+    if (bunny) {
+      return bunnyHttpGet(bunny, key);
+    }
+    const out = await this.s3(storage).send(
+      new GetObjectCommand({
+        Bucket: storage.bucket,
+        Key: key,
+      }),
+    );
+    if (!out.Body) throw new Error('aste object empty');
+    const bytes = await out.Body.transformToByteArray();
+    return {
+      body: Buffer.from(bytes),
+      contentType: out.ContentType ?? 'application/octet-stream',
+    };
   }
 
   async deleteObject(key: string): Promise<void> {
