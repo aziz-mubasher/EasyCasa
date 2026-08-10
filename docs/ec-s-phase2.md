@@ -20,10 +20,9 @@ Aste already used `0050` / `0051`. Phase 2 VO/checklist:
 | T14.0 Private-doc authZ | ✅ | `/media/file` — `users/*/docs` owner/admin only |
 | T14 VO FSM + upload | 🟡 | `@easycasa/shared` machine + Nest `/seller/vo/*`; flag off |
 | T16 Name match | 🟡 | Folded into T14 submit (advisory) |
-| T15 Admin queue | ✅ | `/admin/vo/*` + `vo_moderation` capability; admin VoModeration page |
-| T18 Seller checklist | ⏭ | Not fascicolo |
-| T17 Trust signals | ⏭ | After T14 (+T18) |
-| T19 Abuse stage 1 | ⏭ | After T12 calibration / LIA for stage 2 |
+| T18 Seller checklist | ✅ | SQL 0053 `seller_doc_checklist`; `/seller/checklist/*`; flag off |
+| T17 Trust signals | ✅ | `ListingSummary.trust` + ListingCard chips; daysOnMarket from publishedAt∥createdAt |
+| T19 Abuse stage 1 | 🟡 | `moderation_flag` set on dup events; rate-limit env knobs |
 
 ## Env
 

@@ -38,6 +38,13 @@ export interface ListingSummary {
   coverUrl: string | null;
   /** Listing photos for search-card carousels (cover first). */
   imageUrls?: string[];
+  /** EC-S-T17 — optional trust signals (absent when not computed). */
+  trust?: {
+    verifiedOwner: boolean;
+    docScore?: { have: number; total: number };
+    listedByOwner: boolean;
+    daysOnMarket: number;
+  };
 }
 
 export interface Paginated<T> {

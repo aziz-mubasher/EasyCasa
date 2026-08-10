@@ -6,6 +6,8 @@ import { listings, media } from '../db/schema';
 import type { QueryListingDto } from './dto/query-listing.dto';
 import { offset } from '../common/pagination';
 import type { ListingSummary, Paginated } from '@easycasa/shared';
+import { buildListingTrust } from './listing-trust';
+import { SELLER_CHECKLIST_TYPE_CODES } from '@easycasa/shared';
 
 @Injectable()
 export class ListingsRepository {
@@ -124,6 +126,20 @@ export class ListingsRepository {
            WHERE m.listing_id = listings.id AND m.type IN ('image','floorplan')),
           '{}'::text[]
         )`,
+        voState: sql<string | null>`(
+          SELECT voc.state FROM verified_owner_case voc
+          WHERE voc.listing_id = listings.id
+          ORDER BY voc.updated_at DESC LIMIT 1
+        )`,
+        docCompleteness: sql<number | null>`(
+          SELECT sdc.completeness FROM seller_doc_checklist sdc
+          WHERE sdc.listing_id = listings.id LIMIT 1
+        )`,
+        hasSellerProfile: sql<boolean>`EXISTS (
+          SELECT 1 FROM seller_profile sp WHERE sp.user_id = listings.owner_user_id
+        )`,
+        publishedAt: listings.publishedAt,
+        createdAt: listings.createdAt,
       })
       .from(listings)
       .where(where)
@@ -131,16 +147,37 @@ export class ListingsRepository {
       .limit(q.pageSize)
       .offset(offset({ page: q.page, pageSize: q.pageSize }));
 
-    const items: ListingSummary[] = rows.map((r) => ({
-      id: r.id, slug: r.slug ?? r.id, title: r.title,
-      price: r.price == null ? null : Number(r.price),
-      currency: r.currency, transactionType: r.transactionType,
-      bedrooms: r.bedrooms, bathrooms: r.bathrooms,
-      sizeSqm: r.sizeSqm == null ? null : Number(r.sizeSqm),
-      city: r.city, latitude: r.latitude, longitude: r.longitude,
-      status: r.status, coverUrl: r.coverUrl ?? null,
-      imageUrls: r.imageUrls ?? [],
-    }));
+    const checklistTotal = SELLER_CHECKLIST_TYPE_CODES.length;
+    const items: ListingSummary[] = rows.map((r) => {
+      const completeness = r.docCompleteness == null ? null : Number(r.docCompleteness);
+      const docHave =
+        completeness == null ? null : Math.round((completeness / 100) * checklistTotal);
+      return {
+        id: r.id,
+        slug: r.slug ?? r.id,
+        title: r.title,
+        price: r.price == null ? null : Number(r.price),
+        currency: r.currency,
+        transactionType: r.transactionType,
+        bedrooms: r.bedrooms,
+        bathrooms: r.bathrooms,
+        sizeSqm: r.sizeSqm == null ? null : Number(r.sizeSqm),
+        city: r.city,
+        latitude: r.latitude,
+        longitude: r.longitude,
+        status: r.status,
+        coverUrl: r.coverUrl ?? null,
+        imageUrls: r.imageUrls ?? [],
+        trust: buildListingTrust({
+          voState: r.voState,
+          docHave,
+          docTotal: completeness == null ? null : checklistTotal,
+          hasSellerProfile: Boolean(r.hasSellerProfile),
+          publishedAt: r.publishedAt,
+          createdAt: r.createdAt,
+        }),
+      };
+    });
 
     return { items, total, page: q.page, pageSize: q.pageSize };
   }

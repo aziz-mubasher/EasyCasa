@@ -256,9 +256,11 @@ export class MediaService {
     const key = buildGlobalContentAddressedMediaKey(digest);
 
     const hashes = await fetchPerceptualHashes(apiConfig, webp);
+    let moderationFlag: string | null = null;
     if (hashes) {
       const match = await findDuplicateMedia(this.db, hashes, ownerUserId ?? null);
       if (match?.kind === 'DUPLICATE') {
+        moderationFlag = 'IMAGE_DUPLICATE';
         await recordModerationEvent(this.db, {
           kind: 'IMAGE_DUPLICATE',
           listingId,
@@ -270,6 +272,7 @@ export class MediaService {
           throw new BadRequestException('duplicate image blocked');
         }
       } else if (match?.kind === 'NEAR_DUPLICATE') {
+        moderationFlag = 'IMAGE_NEAR_DUPLICATE';
         await recordModerationEvent(this.db, {
           kind: 'IMAGE_NEAR_DUPLICATE',
           listingId,
@@ -298,9 +301,7 @@ export class MediaService {
       dhash: hashes?.dhash ?? null,
       phash: hashes?.phash ?? null,
       dhashBucket: hashes?.dhashBucket ?? null,
-      moderationFlag: hashes
-        ? undefined
-        : undefined,
+      moderationFlag,
     });
   }
 

@@ -112,8 +112,11 @@ export function ListingCard({ l }: { l: ListingSummary }) {
         ) : (
           <div className="h-full w-full grid place-items-center text-muted data text-xs">EasyCasa</div>
         )}
-        <div className="absolute top-3 left-3">
+        <div className="absolute top-3 left-3 flex flex-col gap-1">
           <Badge tone={rent ? 'pine' : 'ink'}>{rent ? 'rent' : 'sale'}</Badge>
+          {l.trust?.verifiedOwner ? (
+            <Badge tone="azure">Proprietario Verificato</Badge>
+          ) : null}
         </div>
       </div>
       <div className="p-4">
@@ -123,6 +126,17 @@ export function ListingCard({ l }: { l: ListingSummary }) {
         </div>
         <h3 className="font-display font-medium mt-0.5 line-clamp-1">{l.title}</h3>
         <p className="text-muted text-sm">{l.city ?? '—'}</p>
+        {l.trust ? (
+          <div className="data text-xs text-muted mt-2 flex flex-wrap gap-2">
+            {l.trust.listedByOwner ? <span>Vendita diretta dal proprietario</span> : null}
+            {l.trust.docScore ? (
+              <span>
+                Documentazione {l.trust.docScore.have}/{l.trust.docScore.total}
+              </span>
+            ) : null}
+            <span>{l.trust.daysOnMarket} gg</span>
+          </div>
+        ) : null}
         <div className="data text-xs text-muted mt-2 flex gap-3">
           {l.bedrooms != null && <span>{l.bedrooms} cam</span>}
           {l.bathrooms != null && <span>{l.bathrooms} bg</span>}

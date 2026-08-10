@@ -1155,9 +1155,22 @@ export const verifiedOwnerCase = pgTable('verified_owner_case', {
   stateIdx: index('idx_vo_case_state').on(t.state),
 }));
 
+/** EC-S-T18 — private-seller checklist (P6); not fascicolo document_assets. */
+export const sellerDocChecklist = pgTable('seller_doc_checklist', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id').notNull(),
+  sellerUserId: uuid('seller_user_id').notNull(),
+  items: jsonb('items').notNull().default([]),
+  completeness: integer('completeness').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+}, (t) => ({
+  listingUniq: uniqueIndex('seller_doc_checklist_listing_uidx').on(t.listingId),
+}));
+
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
-  sellerProfile, listingDraft, moderationEvents, verifiedOwnerCase,
+  sellerProfile, listingDraft, moderationEvents, verifiedOwnerCase, sellerDocChecklist,
 
   enquiries,
   plans, memberships, featuredPlacements, conversations, messages, notifications,

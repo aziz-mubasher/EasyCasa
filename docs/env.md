@@ -226,3 +226,4 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 |---|---|---|
 | VERIFIED_OWNER_ENABLED | api | Default `false`. Enable after T05 Layer 1 + §6.3. VO routes 404 when off. |
 | VERIFIED_OWNER_VALIDITY_MONTHS | api | Default `12`. Sets `expires_at` on VERIFY (T05 retention window). |
+| SELLER_CHECKLIST_ENABLED | api | Default `false`. T18 private-seller checklist (P6); not fascicolo. |

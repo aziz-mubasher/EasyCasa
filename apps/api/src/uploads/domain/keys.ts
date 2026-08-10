@@ -49,6 +49,18 @@ export function buildVoDocKey(
   return `users/${user}/docs/vo/${c}/${id}-${safeBasename(filename)}`;
 }
 
+/** EC-S-T18 — checklist docs under users/{id}/docs/checklist/{listingId}/… */
+export function buildChecklistDocKey(
+  userId: string,
+  listingId: string,
+  filename: string,
+  id: string,
+): string {
+  const user = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+  const listing = listingId.replace(/[^a-zA-Z0-9_-]/g, '');
+  return `users/${user}/docs/checklist/${listing}/${id}-${safeBasename(filename)}`;
+}
+
 /** Assert a key is a VO private doc for this user (path-shape only). */
 export function isVoDocKeyForUser(key: string, userId: string): boolean {
   const user = userId.replace(/[^a-zA-Z0-9_-]/g, '');

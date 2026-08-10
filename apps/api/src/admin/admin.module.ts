@@ -9,6 +9,7 @@ import { AdminDsarController } from './admin-dsar.controller';
 import { AdminIdentityReviewsController } from './admin-identity-reviews.controller';
 import { AdminListingReportsController } from './admin-listing-reports.controller';
 import { AdminVoModerationController } from './admin-vo-moderation.controller';
+import { AdminAbuseController } from './admin-abuse.controller';
 
 /** Privacy services come from global PrivacyModule.forRoot (Phase 39.1). */
 @Module({
@@ -19,6 +20,7 @@ import { AdminVoModerationController } from './admin-vo-moderation.controller';
     AdminListingReportsController,
     AdminIdentityReviewsController,
     AdminVoModerationController,
+    AdminAbuseController,
   ],
 })
 export class AdminModule {}
