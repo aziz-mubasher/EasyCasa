@@ -17,6 +17,13 @@ describe('isMarketingServicePath', () => {
     expect(isMarketingServicePath('/about/')).toBe(true);
   });
 
+  it('matches aste landing and guide', () => {
+    expect(isMarketingServicePath('/aste')).toBe(true);
+    expect(isMarketingServicePath('/aste/')).toBe(true);
+    expect(isMarketingServicePath('/aste/guida')).toBe(true);
+    expect(isMarketingServicePath('/aste/guida/')).toBe(true);
+  });
+
   it('matches sell-privately landing (localized paths)', () => {
     expect(isMarketingServicePath('/vendi-da-privato')).toBe(true);
     expect(isMarketingServicePath('/sell-privately')).toBe(true);
@@ -33,6 +40,7 @@ describe('isMarketingServicePath', () => {
     expect(isMarketingServicePath('/acquisto-assistito/extra')).toBe(false);
     expect(isMarketingServicePath('/for-buyers/extra')).toBe(false);
     expect(isMarketingServicePath('/about/extra')).toBe(false);
+    expect(isMarketingServicePath('/aste/extra')).toBe(false);
     expect(isMarketingServicePath(null)).toBe(false);
   });
 });

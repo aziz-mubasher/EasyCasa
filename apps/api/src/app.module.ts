@@ -34,6 +34,7 @@ import { InvoicingModule } from './invoicing/invoicing.module';
 import { SavedSearchesModule } from './saved-searches/saved-searches.module';
 import { AlertsModule } from './alerts/alerts.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
+import { AsteModule } from './aste/aste.module';
 import { AvmModule } from './avm/avm.module';
 import { ViewingsModule } from './viewings/viewings.module';
 import { ShareLinksModule } from './share-links/share-links.module';
@@ -101,6 +102,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     InvoicingModule,
     // funnel / valuation / viewings (P24–29) + pilot seed (P37)
     EnquiriesModule,
+    AsteModule,
     AvmModule,
     ViewingsModule,
     ShareLinksModule,

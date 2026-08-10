@@ -9,6 +9,7 @@ import { PersonalDataRegistrar } from './personal-data.registrar';
 import { PersonalDataRegistry } from './personal-data.registry';
 import { RETENTION_SINK, RetentionService } from './retention.service';
 import { RetentionScheduler } from './retention.scheduler';
+import { AsteLeadsDataSource } from './sources/aste-leads.data-source';
 import { ConsentLedgerDataSource } from './sources/consent-ledger.data-source';
 import { EnquiriesDataSource } from './sources/enquiries.data-source';
 import { ProfileDataSource } from './sources/profile.data-source';
@@ -73,6 +74,7 @@ export class PrivacyModule {
         ConsentLedgerDataSource,
         WaInboundDataSource,
         WhatsAppMessagesDataSource,
+        AsteLeadsDataSource,
         PersonalDataRegistrar,
       ],
     });

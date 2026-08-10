@@ -100,4 +100,12 @@ export class EmailService {
       html: `<p>EasyCasa email diagnostic test sent at <strong>${now}</strong>.</p><p>If you received this, SMTP transport is working.</p>`,
     });
   }
+
+  /** EC-21 — Aste guide link after lead signup (best-effort). */
+  asteGuideDelivery(
+    to: string,
+    p: { guideUrl: string; language: t.Locale },
+  ): Promise<EmailResult> {
+    return this.dispatch(to, t.asteGuideDelivery(p, p.language));
+  }
 }

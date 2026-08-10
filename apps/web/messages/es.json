@@ -559,7 +559,6 @@
       "about": "Quiénes somos"
     },
     "sellers": {
-      "sellPrivately": "Vender como particular",
       "valutazioneGratuita": "Valoración gratuita",
       "add": "Publicar un anuncio",
       "photo": "Servicio fotográfico y tour virtual",
@@ -2772,5 +2771,155 @@
       "myData": "Mis datos",
       "mediation": "Mediación"
     }
+  },
+  "aste": {
+    "meta": {
+      "title": "Analisi Aste — Guía gratuita | EasyCasa",
+      "description": "Comprar en subasta en Italia entendiendo de verdad qué compras. Descarga la guía gratuita y únete al acceso anticipado a Analisi Aste."
+    },
+    "hero": {
+      "title": "Comprar en subasta en Italia — y entender de verdad qué estás comprando.",
+      "sub": "Las subastas judiciales esconden oportunidades — y trampas escritas en 100 páginas de italiano jurídico. Estamos construyendo la herramienta que las hace legibles. En tu idioma.",
+      "cta": "Descarga la guía gratuita"
+    },
+    "problem": {
+      "kicker": "El problema",
+      "title": "Por qué las subastas son difíciles de leer",
+      "sub": "Tres obstáculos recurrentes al valorar un inmueble en subasta.",
+      "cards": [
+        {
+          "title": "La perizia",
+          "body": "El informe del perito judicial (perizia del CTU) es el documento más importante de la subasta — y el menos legible."
+        },
+        {
+          "title": "Costes ocultos",
+          "body": "Ocupación, irregularidades edilicias, cuotas de comunidad atrasadas: los costes reales no están en el precio base."
+        },
+        {
+          "title": "Plazos estrictos",
+          "body": "Depósito, plazos, saldo del precio: los términos de una subasta son perentorios. Un error formal excluye la oferta."
+        }
+      ]
+    },
+    "coming": {
+      "badge": "Próximamente",
+      "title": "Próximamente: Analisi Aste de EasyCasa",
+      "body": "Subes la perizia y el aviso de venta, recibes un análisis estructurado en tu idioma: criticidades con referencia a página y documento, semáforo de riesgo, y comparación del precio base con los valores OMI de la zona. Inscríbete para el acceso anticipado.",
+      "semaforoTitle": "Motivo de semáforo de riesgo (ilustración)",
+      "semaforoCaption": "Semáforo de riesgo — ilustración"
+    },
+    "signup": {
+      "kicker": "Guía gratuita",
+      "title": "La Guía de Subastas — 10 controles esenciales",
+      "sub": "Gratis al registrarte. Recibe el enlace al instante y por email. También entras en la lista de acceso anticipado a Analisi Aste."
+    },
+    "form": {
+      "email": "Email",
+      "language": "Idioma de la guía",
+      "langIt": "Italiano",
+      "langEn": "English",
+      "langEs": "Español",
+      "province": "Provincia de interés (opcional)",
+      "provinceNone": "— No especificada —",
+      "buyerType": "Tipo de interés (opcional)",
+      "buyerNone": "— No especificado —",
+      "buyerPrima": "Primera vivienda",
+      "buyerInvest": "Inversión",
+      "buyerCuriosity": "Solo curiosidad",
+      "consentBefore": "Consiento el tratamiento de mis datos (email y preferencias indicadas) para recibir la guía y actualizaciones sobre el servicio Analisi Aste, según la ",
+      "privacyLink": "política de privacidad",
+      "consentAfter": ". Puedo darme de baja en cualquier momento.",
+      "counselMark": "COUNSEL REVIEW PENDING",
+      "submit": "Descarga la guía gratuita",
+      "submitting": "Enviando…",
+      "success": "Gracias. La guía está lista — ábrela abajo. También te hemos enviado el enlace por email.",
+      "openGuide": "Abrir la guía",
+      "emailNote": "Revisa también tu bandeja de entrada (y el spam) para el enlace.",
+      "errors": {
+        "email": "Introduce un email válido.",
+        "consent": "Es necesario consentir para continuar.",
+        "submit": "El envío ha fallado. Inténtalo de nuevo en breve."
+      }
+    },
+    "faq": {
+      "kicker": "Preguntas",
+      "title": "FAQ",
+      "items": [
+        {
+          "q": "¿La guía es realmente gratuita?",
+          "a": "Sí. Solo hace falta el email. Puedes darte de baja en cualquier momento."
+        },
+        {
+          "q": "¿Cuándo estará disponible el análisis?",
+          "a": "Está en desarrollo; quienes se inscriben reciben acceso anticipado."
+        },
+        {
+          "q": "¿El análisis sustituirá a un técnico o a un abogado?",
+          "a": "No: solo análisis documental informativo; siempre se recomienda la verificación profesional (COUNSEL REVIEW PENDING)."
+        },
+        {
+          "q": "¿En qué idiomas?",
+          "a": "Italiano e inglés en el lanzamiento; más idiomas según la demanda."
+        }
+      ]
+    },
+    "disclaimer": "EasyCasa proporciona análisis documentales con fines informativos. No proporciona asesoramiento legal, técnico ni peritajes con efectos legales.",
+    "counselMark": "COUNSEL REVIEW PENDING"
+  },
+  "asteGuida": {
+    "meta": {
+      "title": "La Guía de Subastas Inmobiliarias — EasyCasa",
+      "description": "10 controles esenciales antes de hacer una oferta en una subasta judicial italiana."
+    },
+    "kicker": "Guía EasyCasa",
+    "title": "La Guía de Subastas Inmobiliarias — 10 controles esenciales antes de ofertar",
+    "intro": "Las subastas judiciales siguen reglas precisas. Quien compra bien no tiene más suerte: controla las cosas correctas, en el orden correcto. Esta guía enumera los 10 controles esenciales — pensada también para quien no creció con el sistema italiano.",
+    "printHint": "Consejo: usa Imprimir del navegador para guardar un PDF.",
+    "checks": [
+      {
+        "title": "Dónde buscar",
+        "body": "El punto de partida oficial es pvp.giustizia.it, el portal público de ventas. Muchos tribunales tienen también portales propios: consúltalos en paralelo. La consulta es gratuita. Concéntrate en zonas que ya conoces: conocer el barrio reduce sorpresas de precio, logística y reventa."
+      },
+      {
+        "title": "La perizia del CTU",
+        "body": "La perizia del CTU (consulente tecnico d’ufficio — perito técnico designado por el tribunal) es el documento central. Léela entera, no solo la primera página. Contiene el estado del inmueble, la procedencia, irregularidades edilicias y catastrales, y a menudo ocupación y gastos. Es larga y está en italiano jurídico — ahí empiezan los errores de valoración."
+      },
+      {
+        "title": "Estado de ocupación",
+        "body": "Libre, ocupado por el deudor, o arrendado con contrato oponible: son tres compras distintas. El tiempo hasta la posesión es un coste real. Verifica en la perizia y en el aviso qué figura y qué queda por liberar tras la adjudicación."
+      },
+      {
+        "title": "Irregularidades y abusos",
+        "body": "Comprueba difformità y abusi: si son saneables y a qué coste. Afectan a la hipoteca, al seguro y a la reventa. Una regularización posible no es gratis: inclúyela en el presupuesto antes de pujar."
+      },
+      {
+        "title": "Hipotecas y embargos",
+        "body": "Por regla general, hipotecas (ipoteche) y embargos (pignoramenti) inscritos se cancelan con el decreto de transferencia (decreto di trasferimento): no los heredas como en una compraventa ordinaria. Revisa excepciones en la perizia. No asumas: lee la sección y pide ayuda si hay dudas."
+      },
+      {
+        "title": "Cuotas de comunidad",
+        "body": "El adjudicatario puede deber las cuotas del año en curso y del anterior (art. 63 disp. att. c.c.). Pide al organizador de la venta la declaración del administrador con la cifra. No es un detalle: puede mover miles de euros el coste real."
+      },
+      {
+        "title": "Coste total y margen",
+        "body": "El precio de adjudicación no es el total. Suma impuestos, gastos de cancelación, técnico/notario, reforma y el coste del tiempo de espera. Fija un máximo antes de la subasta y no lo superes."
+      },
+      {
+        "title": "Requisitos para participar",
+        "body": "Hacen falta codice fiscale (código fiscal italiano), documentos de identidad y, normalmente, una cauzione (depósito — a menudo el 10% del precio base). En subastas telemáticas también PEC (email certificado) y firma digitale (firma digital). Quienes no residen pueden obtenerlo todo: planifica 2–4 semanas. Sin ellos listos, la oferta no arranca."
+      },
+      {
+        "title": "El día de la subasta",
+        "body": "Conoce la oferta mínima frente al precio base, el rilancio mínimo y los plazos. Los plazos son perentorios: un defecto formal excluye la oferta. Llega con los documentos ya revisados."
+      },
+      {
+        "title": "Después de ganar",
+        "body": "El saldo del precio (saldo prezzo) debe pagarse en plazo: perderlo hace decaer el depósito. Siguen el decreto di trasferimento y la voltura. Si necesitas financiación, debe seguir los plazos del tribunal, no los del banco."
+      }
+    ],
+    "closeTitle": "EasyCasa y Analisi Aste",
+    "close": "EasyCasa está construyendo Analisi Aste: subes los documentos y recibes el análisis en tu idioma.",
+    "disclaimer": "EasyCasa proporciona análisis documentales con fines informativos. No proporciona asesoramiento legal, técnico ni peritajes con efectos legales.",
+    "counselMark": "COUNSEL REVIEW PENDING"
   }
 }

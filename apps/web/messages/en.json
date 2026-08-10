@@ -559,7 +559,6 @@
       "about": "About us"
     },
     "sellers": {
-      "sellPrivately": "Sell privately",
       "valutazioneGratuita": "Free valuation",
       "add": "List a property",
       "photo": "Photography and virtual tour",
@@ -2772,5 +2771,155 @@
       "myData": "My data",
       "mediation": "Mediation"
     }
+  },
+  "aste": {
+    "meta": {
+      "title": "Auction Analysis — Free guide | EasyCasa",
+      "description": "Buying at auction in Italy — and actually understanding what you’re buying. Get the free guide and join early access for Analisi Aste."
+    },
+    "hero": {
+      "title": "Buying at auction in Italy — and actually understanding what you’re buying.",
+      "sub": "Italian judicial auctions hide real opportunities — and traps buried in 100 pages of legal Italian. We’re building the tool that makes them readable. In your language.",
+      "cta": "Get the free guide"
+    },
+    "problem": {
+      "kicker": "The problem",
+      "title": "Why auctions are hard to read",
+      "sub": "Three recurring obstacles when evaluating an auction property.",
+      "cards": [
+        {
+          "title": "The expert report",
+          "body": "The court expert’s report (perizia) is the most important document in the auction — and the least readable."
+        },
+        {
+          "title": "Hidden costs",
+          "body": "Occupancy, building irregularities, unpaid condominium fees: the real costs are not in the starting price."
+        },
+        {
+          "title": "Hard deadlines",
+          "body": "Deposit, deadlines, balance payment: auction terms are strict. A formal mistake excludes your bid."
+        }
+      ]
+    },
+    "coming": {
+      "badge": "Coming soon",
+      "title": "Coming soon: EasyCasa Auction Analysis",
+      "body": "Upload the perizia and sale notice, get a structured analysis in your language: issues cited by page and document, a risk traffic-light, and the starting price compared against official OMI zone values. Sign up for early access.",
+      "semaforoTitle": "Risk traffic-light motif (illustration)",
+      "semaforoCaption": "Risk traffic-light — illustration"
+    },
+    "signup": {
+      "kicker": "Free guide",
+      "title": "The Auction Guide — 10 essential checks",
+      "sub": "Free on signup. Get the link on screen and by email. You’re also added to the early-access list for Analisi Aste."
+    },
+    "form": {
+      "email": "Email",
+      "language": "Guide language",
+      "langIt": "Italiano",
+      "langEn": "English",
+      "langEs": "Español",
+      "province": "Province of interest (optional)",
+      "provinceNone": "— Not specified —",
+      "buyerType": "Buyer type (optional)",
+      "buyerNone": "— Not specified —",
+      "buyerPrima": "First home",
+      "buyerInvest": "Investment",
+      "buyerCuriosity": "Just curious",
+      "consentBefore": "I consent to the processing of my data (email and preferences indicated) to receive the guide and updates about the Analisi Aste service, according to the ",
+      "privacyLink": "privacy notice",
+      "consentAfter": ". I can unsubscribe at any time.",
+      "counselMark": "COUNSEL REVIEW PENDING",
+      "submit": "Get the free guide",
+      "submitting": "Submitting…",
+      "success": "Thanks. Your guide is ready — open it below. We’ve also emailed you the link.",
+      "openGuide": "Open the guide",
+      "emailNote": "Check your inbox (and spam) for the link as well.",
+      "errors": {
+        "email": "Enter a valid email address.",
+        "consent": "Consent is required to continue.",
+        "submit": "Submission failed. Please try again shortly."
+      }
+    },
+    "faq": {
+      "kicker": "Questions",
+      "title": "FAQ",
+      "items": [
+        {
+          "q": "Is the guide really free?",
+          "a": "Yes. Email only — unsubscribe anytime."
+        },
+        {
+          "q": "When will the analysis be available?",
+          "a": "It’s in development; subscribers get early access."
+        },
+        {
+          "q": "Will the analysis replace a surveyor or lawyer?",
+          "a": "No: informational document analysis only; professional verification is always recommended (COUNSEL REVIEW PENDING)."
+        },
+        {
+          "q": "Which languages?",
+          "a": "Italian and English at launch; more based on demand."
+        }
+      ]
+    },
+    "disclaimer": "EasyCasa provides document analysis for information purposes only. It does not provide legal advice, technical advice, or statutory appraisals.",
+    "counselMark": "COUNSEL REVIEW PENDING"
+  },
+  "asteGuida": {
+    "meta": {
+      "title": "The Italian Property Auction Guide — EasyCasa",
+      "description": "10 essential checks before you bid at an Italian judicial auction."
+    },
+    "kicker": "EasyCasa guide",
+    "title": "The Italian Property Auction Guide — 10 essential checks before you bid",
+    "intro": "Italian judicial auctions follow precise rules. Successful buyers aren’t luckier — they check the right things in the right order. This guide lists the 10 essential checks, written also for those who didn’t grow up inside the Italian system.",
+    "printHint": "Tip: use your browser’s Print dialog to save a PDF.",
+    "checks": [
+      {
+        "title": "Where to find auctions",
+        "body": "Start with pvp.giustizia.it — the official public sales portal (Portale delle Vendite Pubbliche). Tribunal-specific sale portals are also worth checking. Consulting them is free. Focus on areas you already know: local knowledge reduces surprises on price, logistics, and resale."
+      },
+      {
+        "title": "The court expert’s report",
+        "body": "The perizia written by the CTU (consulente tecnico d’ufficio — the court-appointed technical expert) is the core document. Read all of it, not just the first page. It covers condition, provenance, building and cadastral irregularities, and often occupancy and costs. It is long and written in legal Italian — which is exactly where valuation mistakes start."
+      },
+      {
+        "title": "Occupancy",
+        "body": "Vacant (libero), occupied by the debtor, or occupied by a tenant with an opposable lease: three different purchases. Time-to-possession is a real cost (temporary housing, delayed works, yield). Check what the perizia and sale notice say, and what remains to be cleared after you win."
+      },
+      {
+        "title": "Building & cadastral irregularities",
+        "body": "Check difformità and abusi: whether they can be regularised (sanabilità) and at what cost. They affect mortgage eligibility, insurance, and resale. A fixable issue is not free — budget it before you raise your bid."
+      },
+      {
+        "title": "Mortgages & seizures",
+        "body": "As a rule, registered mortgages (ipoteche) and seizures (pignoramenti) are cancelled by the transfer decree (decreto di trasferimento) — you do not inherit them as in an ordinary sale. Check the perizia for exceptions. Do not assume: read the relevant section and get help if unclear."
+      },
+      {
+        "title": "Condominium arrears",
+        "body": "The buyer can owe condominium fees for the current year and the previous year (art. 63 disp. att. c.c.). Ask the sale organiser for the administrator’s statement with the figure. It is not a detail — it can move the real cost by thousands of euros."
+      },
+      {
+        "title": "True total cost",
+        "body": "The hammer price (aggiudicazione) is not the total. Add taxes, cancellation fees, technical/notary costs, renovation, and waiting time. Set your maximum before the auction and never exceed it — bidding emotion is the fastest way to erase your margin."
+      },
+      {
+        "title": "What you need to bid",
+        "body": "You need a codice fiscale (Italian tax code), ID documents, and usually a cauzione (deposit — often 10% of the starting price). For telematic auctions you also need a PEC email (certified email) and a firma digitale (digital signature). Non-residents can obtain all of these — plan 2–4 weeks ahead. Without them ready, your bid cannot proceed."
+      },
+      {
+        "title": "Auction day",
+        "body": "Know the minimum offer versus the starting price (prezzo base), the minimum raise (rilancio minimo), and the deadlines. Deadlines are strict (perentori): a formal defect excludes the bid. Arrive with documents already checked; do not improvise in the room or on the platform."
+      },
+      {
+        "title": "After winning",
+        "body": "Pay the balance (saldo prezzo) within the term — missing it forfeits the deposit. Then comes the decreto di trasferimento and voltura (ownership update). If you need financing, it must follow the court’s timeline, not the bank’s: align the loan before you bid."
+      }
+    ],
+    "closeTitle": "EasyCasa and Analisi Aste",
+    "close": "EasyCasa is building Analisi Aste: upload the documents, receive the analysis in your language.",
+    "disclaimer": "EasyCasa provides document analysis for information purposes only. It does not provide legal advice, technical advice, or statutory appraisals.",
+    "counselMark": "COUNSEL REVIEW PENDING"
   }
 }
