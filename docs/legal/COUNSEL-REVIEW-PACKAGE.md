@@ -23,6 +23,8 @@ This package describes **what the system actually does today**, as inferred from
 | **Counsel send checklist** (attachments map) | `docs/legal/counsel-send-checklist.md` | No |
 | Privacy policy template | `docs/legal/privacy-policy.md` | Yes — web route `/it/legal/privacy` shows version **v1-draft** |
 | Mediation disclosure template | `docs/legal/mediation-disclosure.md` | Yes — web route `/it/legal/mediation` (linked from Contatta flow) |
+| **EC-S-T02** Sell Privately claims | `docs/legal/ec-s-t02-counsel-review-packet.md` | No — counsel packet; page live with ledger fallbacks |
+| **EC-S-T04** Mediazione boundary matrix | `docs/legal/T04_mediazione_boundary.md` | No — counsel template |
 
 **How this package relates to the instruction letter:** the letter asks counsel for
 decisions and drafted text (A1–A4, B1–B6). **This package** answers “what does the
