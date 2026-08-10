@@ -13,6 +13,9 @@ export const PRODUCT_EVENTS = {
   ASTE_DOCUMENT_UPLOADED: 'aste.document_uploaded',
   ASTE_ANALYSIS_SUBMITTED: 'aste.analysis_submitted',
   ASTE_ANALYSIS_DELETED: 'aste.analysis_deleted',
+  ASTE_ANALYSIS_PROCESSING_STARTED: 'aste.analysis_processing_started',
+  ASTE_ANALYSIS_READY: 'aste.analysis_ready',
+  ASTE_ANALYSIS_FAILED: 'aste.analysis_failed',
 } as const;
 
 export type ProductEventName = (typeof PRODUCT_EVENTS)[keyof typeof PRODUCT_EVENTS];

@@ -844,6 +844,10 @@ export const asteAnalyses = pgTable('aste_analyses', {
   semaforo: jsonb('semaforo'),
   omiCheck: jsonb('omi_check'),
   failureReason: text('failure_reason'),
+  /** EC-23 — pipeline claim/retry count (max 2 then failed). */
+  attempts: integer('attempts').notNull().default(0),
+  /** EC-23 — when status entered processing (stale recovery). */
+  processingStartedAt: timestamp('processing_started_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

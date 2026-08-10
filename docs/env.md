@@ -87,6 +87,13 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | NEXT_PUBLIC_ASTE_ANALYSIS_ENABLED | web (build) | EC-22 — show dark `/[locale]/aste/analisi` upload UI. Must match API `ASTE_ANALYSIS_ENABLED`. Default `false` (redirects to `/aste`). |
 | ASTE_ANALYSIS_ENABLED | api | EC-22 — authenticated `/aste/analyses*` endpoints. Default `false` → **404**. |
 | ASTE_DOCS_RETENTION_DAYS | api | EC-22 — purge aged submitted/failed analyses + MinIO objects (default `365`). **COUNSEL PENDING (LGL-1)**. |
+| AI_INTERNAL_TOKEN | api + ai | EC-23 — shared secret for AI `/aste/*` (`X-EC-Internal`). Empty → Nest cannot call; AI rejects. |
+| ASTE_PIPELINE_POLL_MS | api | EC-23 — worker poll interval (default `10000`). |
+| ASTE_OCR_TIMEOUT_MS | api | EC-23 — per-doc OCR HTTP timeout (default `600000` = 10 min). |
+| ASTE_EXTRACT_TIMEOUT_MS | api | EC-23 — extract HTTP timeout (default `300000`). |
+| ASTE_EMBED_TIMEOUT_MS | api | EC-23 — embed HTTP timeout (default `120000`). |
+| ASTE_PIPELINE_MAX_ATTEMPTS | api | EC-23 — max claim attempts before `failed` (default `2`). |
+| ASTE_PIPELINE_STALE_MS | api | EC-23 — reclaim `processing` older than this (default `1800000` = 30 min). |
 | SHARE_VIEW_HMAC_SECRET | api | Pepper for SmartLink daily unique-view SHA-256 hashes (min 16 chars). **No raw IP or visitor id stored** — see `docs/smartlink-view-tracking.md`. |
 | AGENCY_PUBLIC_NAME / AGENCY_PUBLIC_EMAIL / AGENCY_PUBLIC_PHONE | api | Public agency block on SmartLink pages. |
 | VITE_OIDC_ISSUER / VITE_OIDC_CLIENT_ID | admin (build) | Admin SPA PKCE (`easycasa-admin`). Required — there is no client-side auth bypass. |

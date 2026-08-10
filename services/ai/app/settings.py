@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     AI_RATE_LIMIT_PER_MIN: int = 30
     REDIS_URL: str = "redis://redis:6379"
 
+    # EC-23 — shared secret for /aste/* (Nest sends X-EC-Internal). Empty → all /aste reject.
+    AI_INTERNAL_TOKEN: str = ""
+    # Longer HTTP timeout for LLM extract calls (seconds).
+    ASTE_EXTRACT_HTTP_TIMEOUT: float = 180.0
+
 
 @lru_cache
 def get_settings() -> Settings:

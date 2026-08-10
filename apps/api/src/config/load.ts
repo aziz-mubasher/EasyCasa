@@ -173,6 +173,27 @@ const Schema = z
      * Default 365 — COUNSEL PENDING (LGL-1).
      */
     ASTE_DOCS_RETENTION_DAYS: z.coerce.number().int().positive().default(365),
+    /**
+     * EC-23 — internal AI service base (compose network). Used by aste pipeline only.
+     * Empty → pipeline fails when claiming work (flag must stay off until configured).
+     */
+    AI_URL: z.string().default('http://ai:8000'),
+    /**
+     * EC-23 — shared secret for AI `/aste/*` routes (X-EC-Internal). Empty rejects calls.
+     */
+    AI_INTERNAL_TOKEN: z.string().default(''),
+    /** EC-23 — pipeline poll interval ms (default 10s). */
+    ASTE_PIPELINE_POLL_MS: z.coerce.number().int().positive().default(10_000),
+    /** EC-23 — per-document OCR HTTP timeout ms (default 10 min). */
+    ASTE_OCR_TIMEOUT_MS: z.coerce.number().int().positive().default(600_000),
+    /** EC-23 — extract HTTP timeout ms (default 5 min). */
+    ASTE_EXTRACT_TIMEOUT_MS: z.coerce.number().int().positive().default(300_000),
+    /** EC-23 — embed HTTP timeout ms (default 2 min). */
+    ASTE_EMBED_TIMEOUT_MS: z.coerce.number().int().positive().default(120_000),
+    /** EC-23 — max pipeline attempts before failed (default 2). */
+    ASTE_PIPELINE_MAX_ATTEMPTS: z.coerce.number().int().positive().default(2),
+    /** EC-23 — stale processing reclaim after this many ms (default 30 min). */
+    ASTE_PIPELINE_STALE_MS: z.coerce.number().int().positive().default(1_800_000),
 
     /**
      * K EC 4.1 — internal CRM. Default false for local/CI/demo.
