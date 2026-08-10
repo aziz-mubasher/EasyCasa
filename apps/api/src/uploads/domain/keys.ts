@@ -36,3 +36,21 @@ export function buildObjectKey(userId: string, filename: string, id: string): st
   const user = userId.replace(/[^a-zA-Z0-9_-]/g, '');
   return `users/${user}/docs/${id}-${safeBasename(filename)}`;
 }
+
+/** EC-S-T14 — Verified Owner docs under users/{id}/docs/vo/{caseId}/… */
+export function buildVoDocKey(
+  userId: string,
+  caseId: string,
+  filename: string,
+  id: string,
+): string {
+  const user = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+  const c = caseId.replace(/[^a-zA-Z0-9_-]/g, '');
+  return `users/${user}/docs/vo/${c}/${id}-${safeBasename(filename)}`;
+}
+
+/** Assert a key is a VO private doc for this user (path-shape only). */
+export function isVoDocKeyForUser(key: string, userId: string): boolean {
+  const user = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+  return key.startsWith(`users/${user}/docs/vo/`) && !key.includes('..');
+}

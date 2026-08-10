@@ -9,3 +9,4 @@ export * from './italy-geo';
 export * from './viewings';
 export * from './analytics';
 export * from './listing-wizard';
+export * from './verified-owner';

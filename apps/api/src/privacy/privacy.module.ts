@@ -1,6 +1,7 @@
 import { DynamicModule, Module, type Provider } from '@nestjs/common';
 
 import { UsersModule } from '../users/users.module';
+import { VerifiedOwnerModule } from '../verified-owner/verified-owner.module';
 import { CONSENT_STORE, ConsentService } from './consent.service';
 import { DataSubjectController } from './data-subject.controller';
 import { DsarService } from './dsar.service';
@@ -70,7 +71,7 @@ export class PrivacyModule {
   /** Production wiring — Drizzle stores + PersonalDataRegistry plug-ins. */
   static forRootProduction(): DynamicModule {
     return PrivacyModule.forRoot({
-      imports: [UsersModule],
+      imports: [UsersModule, VerifiedOwnerModule],
       providers: [
         { provide: CONSENT_STORE, useClass: DrizzleConsentStore },
         { provide: RETENTION_SINK, useClass: DrizzleRetentionSink },
@@ -84,6 +85,7 @@ export class PrivacyModule {
         WaInboundDataSource,
         WhatsAppMessagesDataSource,
         AsteLeadsDataSource,
+        // VerifiedOwnerDataSource provided by VerifiedOwnerModule (imported).
         PersonalDataRegistrar,
       ],
     });

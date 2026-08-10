@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildObjectKey, isAllowedContentType, safeBasename } from './keys';
+import { buildObjectKey, buildVoDocKey, isAllowedContentType, isVoDocKeyForUser, safeBasename } from './keys';
 
 describe('upload keys', () => {
   it('content-type allowlist', () => {
@@ -30,5 +30,12 @@ describe('upload keys', () => {
     expect(key).toBe('users/user_abc/docs/id123-root.key');
     expect(key.startsWith('users/user_abc/docs/')).toBe(true);
     expect(key.includes('..')).toBe(false);
+  });
+
+  it('buildVoDocKey nests under users/{id}/docs/vo/{caseId}/', () => {
+    const key = buildVoDocKey('user_abc', 'case-1', 'visura.pdf', 'id9');
+    expect(key).toBe('users/user_abc/docs/vo/case-1/id9-visura.pdf');
+    expect(isVoDocKeyForUser(key, 'user_abc')).toBe(true);
+    expect(isVoDocKeyForUser(key, 'other')).toBe(false);
   });
 });

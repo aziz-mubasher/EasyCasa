@@ -108,6 +108,8 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     INFORMATIVA_SELLER_VERSION: '',
     MEDIA_CDN_ENABLED: false,
     IMAGE_DUPDETECT_ENFORCE: false,
+    VERIFIED_OWNER_ENABLED: false,
+    VERIFIED_OWNER_VALIDITY_MONTHS: 12,
     NOMINATIM_URL: 'https://nominatim.openstreetmap.org/search',
     GEOCODER_USER_AGENT: 'EasyCasaAPI/1.0 (test)',
     CRM_ENABLED: false,

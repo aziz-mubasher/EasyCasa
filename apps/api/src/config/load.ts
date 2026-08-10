@@ -223,6 +223,13 @@ const Schema = z
      * false = flag-only (log moderation event, allow upload); true = block DUPLICATE.
      */
     IMAGE_DUPDETECT_ENFORCE: bool(false),
+    /**
+     * EC-S-T14 — Verified Owner routes.
+     * Default false. Enable only after T05 Layer 1 + §6.3 counsel boxes.
+     */
+    VERIFIED_OWNER_ENABLED: bool(false),
+    /** Validity window (months) after VERIFY before system EXPIRE. Default 12 (T05 memo). */
+    VERIFIED_OWNER_VALIDITY_MONTHS: z.coerce.number().int().positive().default(12),
     /** Runtime Nominatim base for T08 address resolve (reuse migration geocoder). */
     NOMINATIM_URL: z.string().default('https://nominatim.openstreetmap.org/search'),
     GEOCODER_USER_AGENT: z.string().default('EasyCasaAPI/1.0 (ops@easycasaita.com)'),

@@ -11,6 +11,7 @@ import { SavedSearchesDataSource } from './sources/saved-searches.data-source';
 import { ViewingsDataSource } from './sources/viewings.data-source';
 import { WaInboundDataSource } from './sources/wa-inbound.data-source';
 import { WhatsAppMessagesDataSource } from './sources/whatsapp-messages.data-source';
+import { VerifiedOwnerDataSource } from '../verified-owner/verified-owner.data-source';
 
 /** Registers all PersonalDataSource implementations into the registry at boot. */
 @Injectable()
@@ -26,6 +27,7 @@ export class PersonalDataRegistrar implements OnModuleInit {
     @Inject(WhatsAppMessagesDataSource)
     private readonly whatsappMessages: WhatsAppMessagesDataSource,
     @Inject(AsteLeadsDataSource) private readonly asteLeads: AsteLeadsDataSource,
+    @Inject(VerifiedOwnerDataSource) private readonly verifiedOwner: VerifiedOwnerDataSource,
     @Inject(DsarService) private readonly dsar: DsarService,
     @Inject(ErasureService) private readonly erasure: ErasureService,
   ) {}
@@ -40,6 +42,7 @@ export class PersonalDataRegistrar implements OnModuleInit {
       this.waInbound,
       this.whatsappMessages,
       this.asteLeads,
+      this.verifiedOwner,
     ]) {
       this.registry.register(s);
     }

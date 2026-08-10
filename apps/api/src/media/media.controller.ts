@@ -75,7 +75,7 @@ export class MediaController {
   }
 
   /**
-   * Read proxy — listing masters remain public; `users/*/docs/*` require
+   * Read proxy — listing masters remain public; users/{id}/docs require
    * owner or admin (EC-S-T14.0). Soft-deny unknown shapes as 404.
    */
   @Public()

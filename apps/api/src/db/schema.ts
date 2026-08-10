@@ -1132,9 +1132,32 @@ export const moderationEvents = pgTable('moderation_events', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-S-T14 — Verified Owner case (state machine in @easycasa/shared). */
+export const verifiedOwnerCase = pgTable('verified_owner_case', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  sellerUserId: uuid('seller_user_id').notNull(),
+  listingId: uuid('listing_id').notNull(),
+  state: text('state').notNull().default('submitted'),
+  docKeys: jsonb('doc_keys').notNull().default([]),
+  nameMatchVerdict: text('name_match_verdict'),
+  nameMatchScore: numeric('name_match_score', { precision: 4, scale: 3 }),
+  decidedBy: uuid('decided_by'),
+  decisionReason: text('decision_reason'),
+  verifiedAt: timestamp('verified_at', { withTimezone: true }),
+  expiresAt: timestamp('expires_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+}, (t) => ({
+  sellerListingUniq: uniqueIndex('verified_owner_case_seller_listing_uidx').on(
+    t.sellerUserId,
+    t.listingId,
+  ),
+  stateIdx: index('idx_vo_case_state').on(t.state),
+}));
+
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
-  sellerProfile, listingDraft, moderationEvents,
+  sellerProfile, listingDraft, moderationEvents, verifiedOwnerCase,
 
   enquiries,
   plans, memberships, featuredPlacements, conversations, messages, notifications,

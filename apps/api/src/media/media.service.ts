@@ -451,4 +451,52 @@ export class MediaService {
       key,
     };
   }
+
+  /**
+   * EC-S-T14 — put a private VO/checklist doc (MinIO only; never Bunny).
+   * Caller supplies a key under `users/{id}/docs/…`.
+   */
+  async putPrivateUserDoc(key: string, body: Buffer, contentType: string): Promise<void> {
+    assertSafeMediaKey(key);
+    if (!key.startsWith('users/')) {
+      throw new BadRequestException('private docs must use users/ prefix');
+    }
+    if (this.bunnyHttp || this.storage.origin === 'bunny') {
+      throw new BadRequestException(
+        'Private user docs require MinIO (MEDIA_CDN_ENABLED=false or MEDIA_ORIGIN=minio)',
+      );
+    }
+    await this.putObject(key, body, contentType, 'private, no-store');
+  }
+
+  /** Best-effort delete for erasure / VO resubmit cleanup. */
+  async deletePrivateUserDoc(key: string): Promise<void> {
+    assertSafeMediaKey(key);
+    if (!key.startsWith('users/')) return;
+    try {
+      await this.deleteObject(key);
+    } catch {
+      // ignore missing
+    }
+  }
+}
+
+/** EC-S-T14 — magic-byte sniff for VO docs (pdf/jpeg/png). */
+export function sniffVoDocMime(input: Buffer): 'application/pdf' | 'image/jpeg' | 'image/png' {
+  if (input.length >= 4 && input[0] === 0x25 && input[1] === 0x50 && input[2] === 0x44 && input[3] === 0x46) {
+    return 'application/pdf';
+  }
+  if (input.length >= 3 && input[0] === 0xff && input[1] === 0xd8 && input[2] === 0xff) {
+    return 'image/jpeg';
+  }
+  if (
+    input.length >= 8 &&
+    input[0] === 0x89 &&
+    input[1] === 0x50 &&
+    input[2] === 0x4e &&
+    input[3] === 0x47
+  ) {
+    return 'image/png';
+  }
+  throw new BadRequestException('VO document must be PDF, JPEG, or PNG');
 }
