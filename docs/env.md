@@ -207,3 +207,12 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 |---|---|---|
 | VITE_API_BASE_URL | admin (build) | API base for the SPA (e.g. `https://easycasaita.com/api`). |
 | VITE_OIDC_ISSUER / VITE_OIDC_CLIENT_ID | admin (build) | Required PKCE. Do **not** set any client auth bypass variable — absent, not false. |
+
+## EC-S Phase 1 — seller listing (T06–T12)
+| Variable | Used by | Notes |
+|---|---|---|
+| SELLER_ONBOARDING_ENABLED | api | Default `false`. Enable only after signed T05 Layer 1. Routes 404 when off. |
+| INFORMATIVA_SELLER_VERSION | api | Version id stored on `seller_profile`. Empty ⇒ refuse onboarding insert. |
+| MEDIA_CDN_ENABLED | api | Default `false` until Bunny DPA (T05). `MEDIA_ORIGIN=bunny` refused while false. |
+| IMAGE_DUPDETECT_ENFORCE | api | Default `false` (flag-only week). When true, DUPLICATE uploads are blocked. |
+| NOMINATIM_URL / GEOCODER_USER_AGENT | api | Runtime geocode for `POST /omi/resolve` (T08). |

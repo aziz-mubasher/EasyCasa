@@ -5,43 +5,68 @@
   "promises": {
     "P1": {
       "state": "live",
-      "tasks": ["T01"],
-      "note": "Zero commission — true at launch; sustained by T26-T27"
+      "tasks": [
+        "T01"
+      ],
+      "note": "Zero commission \u2014 true at launch; sustained by T26-T27"
     },
     "P2": {
-      "state": "coming",
-      "tasks": ["T08", "T09"],
-      "note": "OMI price guidance"
+      "state": "live",
+      "tasks": [
+        "T08",
+        "T09"
+      ],
+      "note": "OMI price guidance \u2014 live after T08+T09"
     },
     "P3": {
       "state": "coming",
-      "tasks": ["T14", "T15", "T16", "T17"],
+      "tasks": [
+        "T14",
+        "T15",
+        "T16",
+        "T17"
+      ],
       "note": "Verified Owner / genuine listings"
     },
     "P4": {
       "state": "live",
-      "tasks": ["EC-1"],
-      "note": "Verified buyers — buyer-side live; seller inbox after T20"
+      "tasks": [
+        "EC-1"
+      ],
+      "note": "Verified buyers \u2014 buyer-side live; seller inbox after T20"
     },
     "P5": {
       "state": "live",
-      "tasks": ["EC-3", "EC-4", "EC-5", "EC-6", "EC-7"],
-      "note": "Viewing scheduler — core live; seller-conducted after T21"
+      "tasks": [
+        "EC-3",
+        "EC-4",
+        "EC-5",
+        "EC-6",
+        "EC-7"
+      ],
+      "note": "Viewing scheduler \u2014 core live; seller-conducted after T21"
     },
     "P6": {
       "state": "coming",
-      "tasks": ["T18"],
+      "tasks": [
+        "T18"
+      ],
       "note": "Document checklist"
     },
     "P7": {
       "state": "coming",
-      "tasks": ["T23"],
+      "tasks": [
+        "T23"
+      ],
       "note": "Seller dashboard analytics"
     },
     "P8": {
       "state": "live",
-      "tasks": ["T05", "T06"],
-      "note": "Control & data protection — informativa gate applies"
+      "tasks": [
+        "T05",
+        "T06"
+      ],
+      "note": "Control & data protection \u2014 informativa gate applies"
     }
   },
   "blocks": {

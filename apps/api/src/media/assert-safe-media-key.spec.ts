@@ -3,9 +3,10 @@ import { describe, expect, it } from 'vitest';
 import { assertSafeMediaKey } from './media.service';
 
 describe('assertSafeMediaKey', () => {
-  it('allows listing and user keys', () => {
+  it('allows listing, user, and global media keys', () => {
     expect(() => assertSafeMediaKey('listings/abc/1.jpg')).not.toThrow();
     expect(() => assertSafeMediaKey('users/u1/docs/x.pdf')).not.toThrow();
+    expect(() => assertSafeMediaKey('media/aa/' + 'a'.repeat(64) + '.webp')).not.toThrow();
   });
 
   it('rejects traversal and unknown prefixes', () => {

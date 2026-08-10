@@ -38,6 +38,9 @@ import { AsteModule } from './aste/aste.module';
 import { AvmModule } from './avm/avm.module';
 import { ViewingsModule } from './viewings/viewings.module';
 import { ShareLinksModule } from './share-links/share-links.module';
+import { ListingDraftsModule } from './listing-drafts/listing-drafts.module';
+import { OmiModule } from './omi/omi.module';
+import { SellerModule } from './seller/seller.module';
 import { PilotModule } from './pilot/pilot.module';
 import { DemoModule } from './demo/demo.module';
 import { PrivacyModule } from './privacy/privacy.module';
@@ -108,6 +111,9 @@ import { RedisHealthIndicator } from './health/redis.health';
     ShareLinksModule,
     WhatsAppModule,
     PhoneVerifyModule,
+    ListingDraftsModule,
+    OmiModule,
+    SellerModule,
     PilotModule,
     DemoModule,
     CrmModule,

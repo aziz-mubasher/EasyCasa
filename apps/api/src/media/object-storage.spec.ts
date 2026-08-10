@@ -35,6 +35,7 @@ describe('resolveObjectStorage', () => {
     const s = resolveObjectStorage(
       baseCfg({
         MEDIA_ORIGIN: 'bunny',
+        MEDIA_CDN_ENABLED: true,
         BUNNY_STORAGE_ZONE: 'easycasaita',
         BUNNY_STORAGE_PASSWORD: 'rotated-password',
         BUNNY_CDN_BASE: 'https://cdn.easycasaita.com',
@@ -49,11 +50,25 @@ describe('resolveObjectStorage', () => {
     expect(s.privateBase).toBe('https://easycasaita.com/api/media/file');
   });
 
+  it('refuses Bunny when MEDIA_CDN_ENABLED is false (T10 DPA gate)', () => {
+    expect(() =>
+      resolveObjectStorage(
+        baseCfg({
+          MEDIA_ORIGIN: 'bunny',
+          MEDIA_CDN_ENABLED: false,
+          BUNNY_STORAGE_ZONE: 'easycasaita',
+          BUNNY_STORAGE_PASSWORD: 'x',
+        }),
+      ),
+    ).toThrow(/MEDIA_CDN_ENABLED/);
+  });
+
   it('fails fast when Bunny password missing', () => {
     expect(() =>
       resolveObjectStorage(
         baseCfg({
           MEDIA_ORIGIN: 'bunny',
+          MEDIA_CDN_ENABLED: true,
           BUNNY_STORAGE_ZONE: 'easycasaita',
           BUNNY_STORAGE_PASSWORD: '',
         }),
@@ -67,6 +82,7 @@ describe('publicUrlForStorageKey', () => {
     const s = resolveObjectStorage(
       baseCfg({
         MEDIA_ORIGIN: 'bunny',
+        MEDIA_CDN_ENABLED: true,
         BUNNY_STORAGE_ZONE: 'easycasaita',
         BUNNY_STORAGE_PASSWORD: 'x',
         BUNNY_CDN_BASE: 'https://cdn.easycasaita.com',
