@@ -85,3 +85,66 @@ groups:
         annotations:
           summary: "Backup drill reported failure"
           description: "The last backup/restore drill failed a step (dump/restic/restore/verify)."
+
+  # EC-26 — Aste pipeline / ops. Thresholds: edit this file (no code change).
+  # Tunables documented in docs/runbooks/aste-enable.md.
+  - name: aste
+    rules:
+      # Failure rate among terminal outcomes >20% over 1h.
+      - alert: AsteAnalysisFailureRateHigh
+        expr: |
+          (
+            sum(rate(aste_pipeline_failed_total[1h]))
+            /
+            clamp_min(
+              sum(rate(aste_pipeline_failed_total[1h]))
+                + sum(rate(aste_pipeline_ready_total[1h])),
+              1e-9
+            )
+          ) > 0.20
+        for: 15m
+        labels: { severity: warning }
+        annotations:
+          summary: "Aste analysis failure rate >20% (1h)"
+          description: "Terminal failed/(ready+failed) rate exceeded 20% for 15m. Check admin #aste Failures and api logs."
+
+      # Any analysis stuck in processing >45 min (postgres-exporter custom query).
+      - alert: AsteAnalysisStuckProcessing
+        expr: aste_processing_max_age_seconds_age > 2700
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "Aste analysis stuck processing >45m"
+          description: "Max processing age exceeded 2700s. Re-run from admin #aste or inspect worker."
+
+      # Nest /aste* HTTP 5xx rate >10% over 15m (AI service has no Prometheus — Nest routes only).
+      - alert: AsteAiEndpoint5xxHigh
+        expr: |
+          (
+            sum(rate(http_requests_total{job="api",route=~"/aste.*",status=~"5.."}[15m]))
+            /
+            clamp_min(
+              sum(rate(http_requests_total{job="api",route=~"/aste.*"}[15m])),
+              1e-9
+            )
+          ) > 0.10
+        for: 10m
+        labels: { severity: critical }
+        annotations:
+          summary: "Aste Nest /aste* 5xx rate >10% (15m)"
+          description: "User-facing Aste API errors elevated. AI internal /aste/* is not scraped — check api+ai logs."
+
+      # Worker not ticking: uploaded backlog >0 and no terminal pipeline outcomes for 30m.
+      - alert: AsteWorkerNotClaiming
+        expr: |
+          aste_uploaded_backlog_count > 0
+          and
+          (
+            increase(aste_pipeline_ready_total[30m])
+            + increase(aste_pipeline_failed_total[30m])
+          ) == 0
+        for: 10m
+        labels: { severity: critical }
+        annotations:
+          summary: "Aste worker not claiming (backlog with no terminal outcomes 30m)"
+          description: "uploaded backlog >0 but ready+failed counters flat for 30m. Check ASTE_ANALYSIS_ENABLED, api scheduler, AI_INTERNAL_TOKEN."

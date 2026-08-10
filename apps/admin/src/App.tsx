@@ -18,6 +18,7 @@ import { ListingTakedown } from './pages/ListingTakedown';
 import { IdentityReview } from './pages/IdentityReview';
 import { VoModeration } from './pages/VoModeration';
 import { WhatsAppInbound } from './pages/WhatsAppInbound';
+import { AsteAdmin } from './pages/AsteAdmin';
 import { CrmShell } from './pages/crm/CrmShell';
 
 type View =
@@ -28,6 +29,7 @@ type View =
   | 'identity'
   | 'vo'
   | 'whatsapp'
+  | 'aste'
   | 'orchestration'
   | 'compliance'
   | 'aml'
@@ -43,6 +45,7 @@ const NAV: { key: View; label: string; hint: string }[] = [
   { key: 'identity', label: 'Identity', hint: 'Manual verify' },
   { key: 'vo', label: 'Verified Owner', hint: 'VO moderation' },
   { key: 'whatsapp', label: 'EC WhatsApp', hint: 'Inbound · audited' },
+  { key: 'aste', label: 'Aste', hint: 'Analyses · waitlist' },
   { key: 'orchestration', label: 'Orchestration', hint: 'Assign tasks' },
   { key: 'compliance', label: 'Compliance', hint: 'Legal basis' },
   { key: 'aml', label: 'AML / KYC', hint: 'Risk cases' },
@@ -58,6 +61,7 @@ const VIEWS: Record<View, React.ReactNode> = {
   identity: <IdentityReview />,
   vo: <VoModeration />,
   whatsapp: <WhatsAppInbound />,
+  aste: <AsteAdmin />,
   orchestration: <Orchestration />,
   compliance: <ComplianceConfig />,
   aml: <AmlCases />,
@@ -159,6 +163,7 @@ export function App() {
     if (typeof window !== 'undefined') {
       const h = window.location.hash.replace(/^#/, '');
       if (h === 'whatsapp' || h.startsWith('whatsapp/')) return 'whatsapp';
+      if (h === 'aste' || h.startsWith('aste/')) return 'aste';
       if (h === 'crm') return 'crm';
     }
     return 'credentials';
@@ -175,6 +180,9 @@ export function App() {
       if (next === 'whatsapp') {
         const cur = window.location.hash.replace(/^#/, '');
         if (!cur.startsWith('whatsapp')) window.location.hash = 'whatsapp';
+      } else if (next === 'aste') {
+        const cur = window.location.hash.replace(/^#/, '');
+        if (!cur.startsWith('aste')) window.location.hash = 'aste';
       } else {
         window.location.hash = '';
       }

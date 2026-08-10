@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
+import { AuthorityModule } from '../authority/authority.module';
 import { OmiModule } from '../omi/omi.module';
 import { AsteAnalysesDataSource } from '../privacy/sources/aste-analyses.data-source';
 import { AsteChatMessagesDataSource } from '../privacy/sources/aste-chat-messages.data-source';
 import { UsersModule } from '../users/users.module';
+import { AsteAdminController } from './aste-admin.controller';
+import { AsteAdminService } from './aste-admin.service';
 import { AsteAnalysisController } from './aste-analysis.controller';
 import { AsteAnalysisEnabledGuard } from './aste-analysis.guard';
 import { AsteAnalysisService } from './aste-analysis.service';
@@ -22,11 +25,12 @@ import { AsteService } from './aste.service';
 import { AsteStorage } from './aste-storage';
 
 @Module({
-  imports: [UsersModule, OmiModule],
-  controllers: [AsteController, AsteAnalysisController],
+  imports: [UsersModule, OmiModule, AuthorityModule],
+  controllers: [AsteController, AsteAnalysisController, AsteAdminController],
   providers: [
     AsteService,
     AsteAnalysisService,
+    AsteAdminService,
     AsteReportService,
     AsteChatService,
     AsteChatRetrievalService,

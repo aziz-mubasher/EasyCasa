@@ -328,6 +328,51 @@ export class EasyCasaAdminApi {
     );
   }
 
+  /* EC-26 — Aste ops admin */
+  listAsteAnalyses(params?: {
+    status?: string;
+    failuresOnly?: boolean;
+    staleMinutes?: number;
+    cursor?: string;
+    limit?: number;
+  }): Promise<unknown> {
+    const q = new URLSearchParams();
+    if (params?.status) q.set('status', params.status);
+    if (params?.failuresOnly) q.set('failuresOnly', 'true');
+    if (params?.staleMinutes != null) q.set('staleMinutes', String(params.staleMinutes));
+    if (params?.cursor) q.set('cursor', params.cursor);
+    if (params?.limit != null) q.set('limit', String(params.limit));
+    const qs = q.toString();
+    return this.request(`/admin/aste/analyses${qs ? `?${qs}` : ''}`, z.unknown());
+  }
+  getAsteAnalysis(id: string): Promise<unknown> {
+    return this.request(`/admin/aste/analyses/${encodeURIComponent(id)}`, z.unknown());
+  }
+  revealAsteIdentity(id: string, reason?: string): Promise<unknown> {
+    return this.request(
+      `/admin/aste/analyses/${encodeURIComponent(id)}/reveal-identity`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify({ reason }) },
+    );
+  }
+  revealAsteFilenames(id: string, reason?: string): Promise<unknown> {
+    return this.request(
+      `/admin/aste/analyses/${encodeURIComponent(id)}/reveal-filenames`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify({ reason }) },
+    );
+  }
+  rerunAsteAnalysis(id: string): Promise<unknown> {
+    return this.request(
+      `/admin/aste/analyses/${encodeURIComponent(id)}/rerun`,
+      z.unknown(),
+      { method: 'POST', body: '{}' },
+    );
+  }
+  getAsteWaitlistStats(): Promise<unknown> {
+    return this.request('/admin/aste/waitlist/stats', z.unknown());
+  }
+
   /* AML */
   listKycCases(): Promise<KycCase[]> {
     return this.request('/aml/cases', z.array(KycCaseSchema));

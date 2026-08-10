@@ -1,0 +1,61 @@
+# EC-26 — Aste ops gauges for Grafana / Alertmanager (aggregates only, no PII).
+# Loaded by postgres-exporter via --extend.query-path.
+
+aste_analyses_by_status:
+  query: |
+    SELECT status, COUNT(*)::float AS count
+    FROM aste_analyses
+    GROUP BY status
+  metrics:
+    - status:
+        usage: "LABEL"
+        description: "aste_analyses.status"
+    - count:
+        usage: "GAUGE"
+        description: "Count of aste analyses by status"
+
+aste_processing_max_age_seconds:
+  query: |
+    SELECT COALESCE(
+      EXTRACT(EPOCH FROM (now() - MIN(processing_started_at)))::float,
+      0
+    ) AS age
+    FROM aste_analyses
+    WHERE status = 'processing'
+      AND processing_started_at IS NOT NULL
+  metrics:
+    - age:
+        usage: "GAUGE"
+        description: "Max age in seconds of analyses stuck in processing"
+
+aste_uploaded_backlog:
+  query: |
+    SELECT COUNT(*)::float AS count
+    FROM aste_analyses
+    WHERE status = 'uploaded'
+  metrics:
+    - count:
+        usage: "GAUGE"
+        description: "Analyses waiting in uploaded (worker backlog)"
+
+aste_leads_total:
+  query: |
+    SELECT COUNT(*)::float AS count
+    FROM aste_leads
+  metrics:
+    - count:
+        usage: "GAUGE"
+        description: "G1 waitlist signup total (count only)"
+
+aste_leads_by_language:
+  query: |
+    SELECT language, COUNT(*)::float AS count
+    FROM aste_leads
+    GROUP BY language
+  metrics:
+    - language:
+        usage: "LABEL"
+        description: "aste_leads.language"
+    - count:
+        usage: "GAUGE"
+        description: "Waitlist signups by language"
