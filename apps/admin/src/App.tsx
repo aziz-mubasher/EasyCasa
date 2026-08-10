@@ -16,6 +16,7 @@ import { RliMonitor } from './pages/RliMonitor';
 import { DsarQueue } from './pages/DsarQueue';
 import { ListingTakedown } from './pages/ListingTakedown';
 import { IdentityReview } from './pages/IdentityReview';
+import { VoModeration } from './pages/VoModeration';
 import { WhatsAppInbound } from './pages/WhatsAppInbound';
 import { CrmShell } from './pages/crm/CrmShell';
 
@@ -25,6 +26,7 @@ type View =
   | 'dsar'
   | 'takedown'
   | 'identity'
+  | 'vo'
   | 'whatsapp'
   | 'orchestration'
   | 'compliance'
@@ -39,6 +41,7 @@ const NAV: { key: View; label: string; hint: string }[] = [
   { key: 'dsar', label: 'DSAR', hint: 'DPO only' },
   { key: 'takedown', label: 'Takedown', hint: 'DSA reports' },
   { key: 'identity', label: 'Identity', hint: 'Manual verify' },
+  { key: 'vo', label: 'Verified Owner', hint: 'VO moderation' },
   { key: 'whatsapp', label: 'EC WhatsApp', hint: 'Inbound · audited' },
   { key: 'orchestration', label: 'Orchestration', hint: 'Assign tasks' },
   { key: 'compliance', label: 'Compliance', hint: 'Legal basis' },
@@ -53,6 +56,7 @@ const VIEWS: Record<View, React.ReactNode> = {
   dsar: <DsarQueue />,
   takedown: <ListingTakedown />,
   identity: <IdentityReview />,
+  vo: <VoModeration />,
   whatsapp: <WhatsAppInbound />,
   orchestration: <Orchestration />,
   compliance: <ComplianceConfig />,

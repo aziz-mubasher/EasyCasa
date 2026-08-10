@@ -230,6 +230,31 @@ export class EasyCasaAdminApi {
     });
   }
 
+  /* EC-S-T15 Verified Owner queue */
+  listVoQueue(state?: 'submitted' | 'in_review'): Promise<unknown[]> {
+    const q = state ? `?state=${encodeURIComponent(state)}` : '';
+    return this.request(`/admin/vo/queue${q}`, z.array(z.unknown()));
+  }
+  getVoCase(id: string): Promise<unknown> {
+    return this.request(`/admin/vo/${encodeURIComponent(id)}`, z.unknown());
+  }
+  claimVoCase(id: string): Promise<unknown> {
+    return this.request(`/admin/vo/${encodeURIComponent(id)}/claim`, z.unknown(), {
+      method: 'POST',
+    });
+  }
+  verifyVoCase(id: string): Promise<unknown> {
+    return this.request(`/admin/vo/${encodeURIComponent(id)}/verify`, z.unknown(), {
+      method: 'POST',
+    });
+  }
+  rejectVoCase(id: string, reason: string): Promise<unknown> {
+    return this.request(`/admin/vo/${encodeURIComponent(id)}/reject`, z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  }
+
   /* Compliance config */
   listCatalog(): Promise<AdminCatalogItem[]> {
     return this.request('/admin/catalog', z.array(AdminCatalogItemSchema));

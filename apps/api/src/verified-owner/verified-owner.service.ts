@@ -251,13 +251,48 @@ export class VerifiedOwnerService {
 
   async listQueue(states: Array<'submitted' | 'in_review'>, limit = 50, offset = 0) {
     const rows = await this.db
-      .select()
+      .select({
+        case: verifiedOwnerCase,
+        sellerDisplayName: sellerProfile.displayName,
+      })
       .from(verifiedOwnerCase)
+      .leftJoin(sellerProfile, eq(sellerProfile.userId, verifiedOwnerCase.sellerUserId))
       .where(inArray(verifiedOwnerCase.state, states))
       .orderBy(asc(verifiedOwnerCase.createdAt))
       .limit(limit)
       .offset(offset);
-    return rows.map((r) => this.toView(r));
+    return rows.map((r) => ({
+      ...this.toView(r.case),
+      sellerUserId: r.case.sellerUserId,
+      sellerDisplayName: r.sellerDisplayName ?? null,
+    }));
+  }
+
+  async getCaseDetail(caseId: string) {
+    const rows = await this.db
+      .select({
+        case: verifiedOwnerCase,
+        sellerDisplayName: sellerProfile.displayName,
+        sellerPhone: sellerProfile.phone,
+      })
+      .from(verifiedOwnerCase)
+      .leftJoin(sellerProfile, eq(sellerProfile.userId, verifiedOwnerCase.sellerUserId))
+      .where(eq(verifiedOwnerCase.id, caseId))
+      .limit(1);
+    const row = rows[0];
+    if (!row) throw new NotFoundException('VO case not found');
+    return {
+      ...this.toView(row.case),
+      sellerUserId: row.case.sellerUserId,
+      sellerDisplayName: row.sellerDisplayName ?? null,
+      sellerPhone: row.sellerPhone ?? null,
+      help:
+        row.case.nameMatchVerdict === 'company'
+          ? 'Richiede verifica manuale — intestatario societario (T05 §6.3: co-intestatari / terzi).'
+          : row.case.nameMatchVerdict === 'partial'
+            ? 'Match parziale — verificare manualmente (cognomi composti / coniugio).'
+            : null,
+    };
   }
 
   /** Nightly EXPIRE for verified cases past expires_at (DST-safe via UTC Date). */

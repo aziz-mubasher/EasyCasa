@@ -36,6 +36,7 @@ export function canAccessView(roles: readonly AdminRole[], view: string): boolea
     case 'credentials':
     case 'takedown':
     case 'identity':
+    case 'vo':
     case 'orchestration':
     case 'compliance':
     case 'rli':

@@ -16,7 +16,9 @@ export type Capability =
   /** EC-19 — read-only inbound WhatsApp viewer (not granted by bare `admin`). */
   | 'whatsapp:inbound:read'
   /** EC-20 — operator free-form reply inside an open 24h window. */
-  | 'whatsapp:inbound:reply';
+  | 'whatsapp:inbound:reply'
+  /** EC-S-T15 — Verified Owner moderation queue (not AML). */
+  | 'vo_moderation';
 
 /** Fine-grained admin personas — never a single omniscient admin. */
 export type AdminRole =
@@ -74,6 +76,10 @@ export function capabilitiesFromRoles(roles: readonly string[]): Capability[] {
     ) {
       caps.add('whatsapp:inbound:read');
       caps.add('whatsapp:inbound:reply');
+    }
+    // EC-S-T15 — VO moderation: operations + superadmin (not aml).
+    if (r === 'admin_operations' || r === 'admin_superadmin') {
+      caps.add('vo_moderation');
     }
   }
   return [...caps];
