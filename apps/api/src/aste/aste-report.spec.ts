@@ -87,7 +87,7 @@ describe('collectFreeTextSnippets', () => {
 describe('AsteReportService translation cache', () => {
   it('calls translate once then uses cache (mocked service wiring)', async () => {
     const translate = vi.fn(
-      async (_input: { texts: string[]; target_lang: string }) => [
+      async () => [
         'Free of occupants',
         'Declared compliant',
         'good',
@@ -105,10 +105,7 @@ describe('AsteReportService translation cache', () => {
     async function ensureEn() {
       if (cache) return cache;
       calls += 1;
-      const translated = await translate({
-        texts: snippets.map((s) => s.text),
-        target_lang: 'en',
-      });
+      const translated = await translate();
       cache = Object.fromEntries(snippets.map((s, i) => [s.path, translated[i] ?? '']));
       return cache;
     }
