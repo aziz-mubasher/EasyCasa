@@ -86,7 +86,18 @@ describe('collectFreeTextSnippets', () => {
 
 describe('AsteReportService translation cache', () => {
   it('calls translate once then uses cache (mocked service wiring)', async () => {
-    const translate = vi.fn(async () => ['Free of occupants', 'Declared compliant', 'good', 'ordinary', 'Transfer costs', 'Check mortgage formalities', 'spese.condominiali_arretrate', 'Apartment']);
+    const translate = vi.fn(
+      async (_input: { texts: string[]; target_lang: string }) => [
+        'Free of occupants',
+        'Declared compliant',
+        'good',
+        'ordinary',
+        'Transfer costs',
+        'Check mortgage formalities',
+        'spese.condominiali_arretrate',
+        'Apartment',
+      ],
+    );
     // Simulate Nest cache logic
     const snippets = collectFreeTextSnippets(readyExtraction());
     let cache: Record<string, string> | null = null;
