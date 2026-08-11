@@ -274,6 +274,7 @@ const Schema = z
      * Checkout for plan key `seller_premium` is refused while off.
      */
     SELLER_PREMIUM_ENABLED: bool(false),
+    /**
      * EC-S-T26 — listing boost (flat-fee featured). Default false.
      * When off: checkout/UI hidden; existing active boosts still ranked + labelled.
      */
@@ -281,6 +282,7 @@ const Schema = z
     /** Optional Stripe Price IDs for fixed 7d/30d boost products (flat fee). */
     STRIPE_PRICE_BOOST_7D: z.string().default(''),
     STRIPE_PRICE_BOOST_30D: z.string().default(''),
+    /**
      * EC-S-T28/T29 — neutral partner directory (notai/geometri/APE/photographers).
      * Default false. Monetised referral variants wait for G3 row 9.
      */
