@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 
 export function Badge({
   children,
@@ -7,7 +7,7 @@ export function Badge({
 }: {
   children: ReactNode;
   tone?: 'ink' | 'pine' | 'azure';
-} & React.HTMLAttributes<HTMLSpanElement>) {
+} & HTMLAttributes<HTMLSpanElement>) {
   const bg = tone === 'pine' ? 'bg-pine' : tone === 'azure' ? 'bg-azure' : 'bg-ink';
   return (
     <span
