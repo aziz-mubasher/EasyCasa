@@ -580,7 +580,15 @@
     "inlineBeforeLink": "Non sai ancora quanto puoi permetterti?",
     "inlineLink": "Piano gratis su Banks4All",
     "footerLink": "Check finanziario gratis (Banks4All)",
-    "externalHint": "Si apre su {host} in una nuova scheda"
+    "externalHint": "Si apre su {host} in una nuova scheda",
+    "aste": {
+      "title": "Finanziabilità e scadenze d’asta",
+      "leadIn": {
+        "financing_need": "Le aste hanno scadenze rigide: cauzione subito, saldo prezzo entro il termine fissato dal tribunale. Un piano di fattibilità finanziaria prima dell’offerta evita di perdere la cauzione.",
+        "readiness_financing": "Le aste hanno scadenze rigide: cauzione subito, saldo prezzo entro il termine fissato dal tribunale. Un piano di fattibilità finanziaria prima dell’offerta evita di perdere la cauzione.",
+        "mutuabilita": "Le criticità rilevate (difformità o stato di occupazione) possono incidere sulla finanziabilità dell’immobile. Verifica la fattibilità prima di offrire."
+      }
+    }
   },
   "footer": {
     "externalHint": "Si apre su {host} in una nuova scheda",

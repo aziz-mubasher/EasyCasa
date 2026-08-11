@@ -24,6 +24,12 @@ export const PRODUCT_EVENTS = {
   /** EC-25 — chat (category only; never question/answer text). */
   ASTE_CHAT_QUESTION_ASKED: 'aste.chat_question_asked',
   ASTE_CHAT_RATE_LIMITED: 'aste.chat_rate_limited',
+  /**
+   * EC-28 — Banks4All financing lane on aste reports (Phase A).
+   * Props: trigger, locale, optional provincia — never analysis/user/RGE/address ids.
+   */
+  ASTE_FINANCING_BLOCK_SHOWN: 'aste_financing_block_shown',
+  ASTE_FINANCING_CTA_CLICKED: 'aste_financing_cta_clicked',
 } as const;
 
 export type ProductEventName = (typeof PRODUCT_EVENTS)[keyof typeof PRODUCT_EVENTS];

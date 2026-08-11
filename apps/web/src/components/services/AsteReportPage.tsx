@@ -12,6 +12,11 @@ import {
   type AsteReport,
 } from '@/lib/aste-analysis-api';
 import { AsteReportChat } from '@/components/services/AsteReportChat';
+import { AffordThisHomeReferralBlock } from '@/components/financing/AffordThisHomeReferralBlock';
+import {
+  asteFinancingPlacement,
+  resolveAsteFinancingTrigger,
+} from '@/lib/aste-financing-trigger';
 import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 import './aste-report.css';
 
@@ -251,6 +256,27 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
   const purpose = report.buyerProfile?.purpose ?? 'investimento';
   const procTipo = ex.procedura.tipo;
   const procNumero = ex.procedura.numero || ex.procedura.rge || report.rge;
+
+  const financingTrigger = resolveAsteFinancingTrigger({
+    buyerProfile: report.buyerProfile,
+    buyerReadiness: report.buyerReadiness,
+    extraction: ex,
+    fullReportContext: true,
+    reprocessRequired: false,
+  });
+  const financingPlacement = financingTrigger
+    ? asteFinancingPlacement(financingTrigger)
+    : null;
+  const financingBlock =
+    financingTrigger != null ? (
+      <AffordThisHomeReferralBlock
+        variant="aste"
+        leadInKey={financingTrigger}
+        reportContext="full"
+        provincia={ex.immobili[0]?.provincia ?? report.provincia}
+        className="ar-financing-block"
+      />
+    ) : null;
 
   return (
     <div className="ar">
@@ -525,6 +551,7 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
               </ul>
             </div>
           ) : null}
+          {financingPlacement === 'buyer_readiness' ? financingBlock : null}
         </section>
 
         <section className="ar-section" aria-labelledby={`${id}-econ`}>
@@ -818,6 +845,7 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
               ))}
             </ul>
           )}
+          {financingPlacement === 'after_criticita' ? financingBlock : null}
         </section>
 
         <section className="ar-section" aria-labelledby={`${id}-nf`}>
