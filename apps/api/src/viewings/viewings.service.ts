@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Inject,
@@ -12,7 +13,16 @@ import { ProductAnalyticsService } from '../analytics/product-analytics.service'
 import { crmFireSafe } from '../crm/crm-fire-safe';
 import { CRM_HOOKS, type CrmHooks } from '../crm/domain/ports';
 import { generateSlots } from './domain/slots';
-import { DEFAULT_CONFIG, validateBooking, type SchedulingConfig } from './domain/booking';
+import {
+  DEFAULT_CONFIG,
+  VIEWING_CAPACITY_FULL_CODE,
+  blockingSlotsFromOccupancy,
+  canConfirmAgainstCapacity,
+  validateBooking,
+  windowCapacity,
+  windowForSlot,
+  type SchedulingConfig,
+} from './domain/booking';
 import { nextViewingStatus, ViewingTransitionError } from './domain/ports';
 import type {
   AvailabilityRepository,
@@ -86,10 +96,12 @@ export class ViewingsService {
   async slots(listingIdOrSlug: string, fromMs: number, toMs: number): Promise<Slot[]> {
     const meta = await this.listings.getConductor(listingIdOrSlug);
     if (!meta) throw new NotFoundException(`Listing ${listingIdOrSlug} not found`);
-    const [windows, existing] = await Promise.all([
+    const tz = meta.timezone || DEFAULT_LISTING_TIMEZONE;
+    const [windows, occupancy] = await Promise.all([
       this.availability.getWindows(meta.listingId),
-      this.viewings.activeSlots(meta.listingId),
+      this.viewings.activeOccupancy(meta.listingId),
     ]);
+    const existing = blockingSlotsFromOccupancy(windows, occupancy, tz, this.cfg.slotMinutes);
     return generateSlots(windows, {
       fromMs,
       toMs,
@@ -98,7 +110,7 @@ export class ViewingsService {
       existing,
       nowMs: Date.now(),
       minLeadMinutes: this.cfg.minLeadMinutes,
-      timeZone: meta.timezone || DEFAULT_LISTING_TIMEZONE,
+      timeZone: tz,
     });
   }
 
@@ -115,10 +127,12 @@ export class ViewingsService {
       startMs: input.startMs,
       endMs: input.startMs + this.cfg.slotMinutes * 60_000,
     };
-    const [windows, existing] = await Promise.all([
+    const tz = conductor.timezone || DEFAULT_LISTING_TIMEZONE;
+    const [windows, occupancy] = await Promise.all([
       this.availability.getWindows(conductor.listingId),
-      this.viewings.activeSlots(conductor.listingId),
+      this.viewings.activeOccupancy(conductor.listingId),
     ]);
+    const existing = blockingSlotsFromOccupancy(windows, occupancy, tz, this.cfg.slotMinutes);
 
     const decision = validateBooking(
       request,
@@ -126,7 +140,7 @@ export class ViewingsService {
       existing,
       this.cfg,
       Date.now(),
-      conductor.timezone || DEFAULT_LISTING_TIMEZONE,
+      tz,
     );
     if (!decision.ok) throw new ConflictException(decision.reason);
 
@@ -184,6 +198,10 @@ export class ViewingsService {
     const isSeeker = viewing.seekerUserId === actorUserId;
     if (!isConductor && !(isSeeker && event === 'CANCEL')) {
       throw new ForbiddenException('Not permitted');
+    }
+
+    if (event === 'CONFIRM') {
+      await this.assertConfirmCapacity(viewing);
     }
 
     let status;
@@ -267,17 +285,19 @@ export class ViewingsService {
       startMs,
       endMs: startMs + this.cfg.slotMinutes * 60_000,
     };
-    const [windows, existing] = await Promise.all([
+    const tz = meta.timezone || DEFAULT_LISTING_TIMEZONE;
+    const [windows, occupancy] = await Promise.all([
       this.availability.getWindows(viewing.listingId),
-      this.viewings.activeSlots(viewing.listingId, viewing.id),
+      this.viewings.activeOccupancy(viewing.listingId, viewing.id),
     ]);
+    const existing = blockingSlotsFromOccupancy(windows, occupancy, tz, this.cfg.slotMinutes);
     const decision = validateBooking(
       request,
       windows,
       existing,
       this.cfg,
       Date.now(),
-      meta.timezone || DEFAULT_LISTING_TIMEZONE,
+      tz,
     );
     if (!decision.ok) throw new ConflictException(decision.reason);
 
@@ -285,6 +305,25 @@ export class ViewingsService {
     const other = isSeeker ? viewing.conductorUserId : viewing.seekerUserId;
     await this.notifier.notify(other, updated, 'requested');
     return this.enrich(updated, actorUserId, { conductor: isConductor });
+  }
+
+  private async assertConfirmCapacity(viewing: Viewing): Promise<void> {
+    const meta = await this.listings.getConductor(viewing.listingId);
+    const tz = meta?.timezone || DEFAULT_LISTING_TIMEZONE;
+    const windows = await this.availability.getWindows(viewing.listingId);
+    const slot: Slot = { startMs: viewing.startMs, endMs: viewing.endMs };
+    const capacity = windowCapacity(windowForSlot(slot, windows, tz));
+    const confirmed = await this.viewings.countConfirmedAt(
+      viewing.listingId,
+      viewing.startMs,
+      viewing.id,
+    );
+    if (!canConfirmAgainstCapacity(confirmed, capacity)) {
+      throw new BadRequestException({
+        message: 'This viewing slot is at capacity',
+        code: VIEWING_CAPACITY_FULL_CODE,
+      });
+    }
   }
 
   private async enrich(

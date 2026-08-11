@@ -1134,6 +1134,9 @@
     "confirming": "Confirming…",
     "declineCta": "Decline",
     "errorConfirm": "Could not confirm. Try again.",
+    "errors": {
+      "capacityFull": "This viewing slot is full. No more confirmations can be accepted."
+    },
     "b4aTitle": "Affordability assessed · Banks4All",
     "b4aRange": "indicative range up to {band} · valid to {expires}",
     "b4aDisclaimer": "Independent affordability assessment. Not a credit offer, approval or commitment by any lender.",

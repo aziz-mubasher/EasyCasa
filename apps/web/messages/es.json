@@ -1134,6 +1134,9 @@
     "confirming": "Confirmando…",
     "declineCta": "Rechazar",
     "errorConfirm": "No se pudo confirmar. Inténtalo de nuevo.",
+    "errors": {
+      "capacityFull": "Este horario de visita está completo. No se pueden aceptar más confirmaciones."
+    },
     "b4aTitle": "Asequibilidad evaluada · Banks4All",
     "b4aRange": "rango indicativo hasta {band} · válido hasta {expires}",
     "b4aDisclaimer": "Evaluación independiente de asequibilidad. No es una oferta de crédito, aprobación ni compromiso de ningún prestamista.",

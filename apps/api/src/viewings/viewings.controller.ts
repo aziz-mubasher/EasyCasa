@@ -32,6 +32,8 @@ export class WindowDto {
   @IsInt() @Min(0) @Max(6) weekday!: number;
   @IsInt() @Min(0) @Max(1440) startMinutes!: number;
   @IsInt() @Min(0) @Max(1440) endMinutes!: number;
+  /** EC-S T22 — max CONFIRMED per concrete slot (default 1). */
+  @IsOptional() @IsInt() @Min(1) @Max(100) capacity?: number;
 }
 
 export class SetAvailabilityDto {

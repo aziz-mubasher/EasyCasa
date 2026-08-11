@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_CONFIG, validateBooking, withinAnyWindow } from './booking';
+import {
+  DEFAULT_CONFIG,
+  blockingSlotsFromOccupancy,
+  canConfirmAgainstCapacity,
+  isSlotAtCapacity,
+  validateBooking,
+  windowCapacity,
+  withinAnyWindow,
+} from './booking';
 import { overlaps } from './intervals';
 import { nextViewingStatus, ViewingTransitionError } from './ports';
 import { generateSlots } from './slots';
@@ -230,3 +238,71 @@ describe('viewing lifecycle', () => {
     expect(() => nextViewingStatus('CANCELLED', 'RESCHEDULE')).toThrow(ViewingTransitionError);
   });
 });
+
+describe('open-house capacity (T22)', () => {
+  const start = nextSaturday9Rome();
+  const end = start + 45 * MIN;
+  const openHouse: AvailabilityWindow = { ...satWindow, capacity: 5 };
+
+  it('canConfirmAgainstCapacity: capacity=1 regression (2nd confirm refused)', () => {
+    expect(canConfirmAgainstCapacity(0, 1)).toBe(true);
+    expect(canConfirmAgainstCapacity(1, 1)).toBe(false);
+    expect(windowCapacity(undefined)).toBe(1);
+    expect(windowCapacity({ ...satWindow })).toBe(1);
+  });
+
+  it('canConfirmAgainstCapacity: 6th confirm on capacity=5 refused', () => {
+    expect(canConfirmAgainstCapacity(0, 5)).toBe(true);
+    expect(canConfirmAgainstCapacity(4, 5)).toBe(true);
+    expect(canConfirmAgainstCapacity(5, 5)).toBe(false);
+  });
+
+  it('isSlotAtCapacity: capacity=1 treats REQUESTED as occupying (agent parity)', () => {
+    expect(isSlotAtCapacity(0, 0, 1)).toBe(false);
+    expect(isSlotAtCapacity(0, 1, 1)).toBe(true);
+    expect(isSlotAtCapacity(1, 0, 1)).toBe(true);
+  });
+
+  it('isSlotAtCapacity: capacity>1 counts CONFIRMED only (REQUESTED unbounded)', () => {
+    expect(isSlotAtCapacity(0, 20, 5)).toBe(false);
+    expect(isSlotAtCapacity(4, 20, 5)).toBe(false);
+    expect(isSlotAtCapacity(5, 0, 5)).toBe(true);
+  });
+
+  it('blockingSlotsFromOccupancy: capacity=1 blocks on any active booking', () => {
+    const blocking = blockingSlotsFromOccupancy(
+      [satWindow],
+      [{ startMs: start, endMs: end, status: 'REQUESTED' }],
+      TZ,
+    );
+    expect(blocking).toEqual([{ startMs: start, endMs: end }]);
+    expect(
+      validateBooking(validReqFor(start), [satWindow], blocking, DEFAULT_CONFIG, NOW, TZ).ok,
+    ).toBe(false);
+  });
+
+  it('blockingSlotsFromOccupancy: open house allows more REQUESTED until confirmed full', () => {
+    const requests = Array.from({ length: 8 }, () => ({
+      startMs: start,
+      endMs: end,
+      status: 'REQUESTED' as const,
+    }));
+    const blockingOpen = blockingSlotsFromOccupancy([openHouse], requests, TZ);
+    expect(blockingOpen).toEqual([]);
+    expect(
+      validateBooking(validReqFor(start), [openHouse], blockingOpen, DEFAULT_CONFIG, NOW, TZ).ok,
+    ).toBe(true);
+
+    const fiveConfirmed = Array.from({ length: 5 }, () => ({
+      startMs: start,
+      endMs: end,
+      status: 'CONFIRMED' as const,
+    }));
+    const blockingFull = blockingSlotsFromOccupancy([openHouse], fiveConfirmed, TZ);
+    expect(blockingFull).toEqual([{ startMs: start, endMs: end }]);
+  });
+});
+
+function validReqFor(startMs: number): Slot {
+  return { startMs, endMs: startMs + 45 * MIN };
+}

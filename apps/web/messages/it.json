@@ -1134,6 +1134,9 @@
     "confirming": "Conferma…",
     "declineCta": "Rifiuta",
     "errorConfirm": "Conferma non riuscita. Riprova.",
+    "errors": {
+      "capacityFull": "Questo slot di visita è al completo. Non è possibile accettare altre conferme."
+    },
     "b4aTitle": "Affordabilità valutata · Banks4All",
     "b4aRange": "fascia indicativa fino a {band} · valida fino al {expires}",
     "b4aDisclaimer": "Valutazione indipendente di affordability. Non è un’offerta di credito, un’approvazione o un impegno di alcun finanziatore.",
