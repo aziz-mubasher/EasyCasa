@@ -1,14 +1,14 @@
 import { createTranslator, type AbstractIntlMessages } from 'next-intl';
 import { describe, expect, it } from 'vitest';
 
-import en from '../../messages/en.json';
-import es from '../../messages/es.json';
-import it from '../../messages/it.json';
+import enMessages from '../../messages/en.json';
+import esMessages from '../../messages/es.json';
+import itMessages from '../../messages/it.json';
 
 const LOCALES = {
-  it: it as AbstractIntlMessages,
-  en: en as AbstractIntlMessages,
-  es: es as AbstractIntlMessages,
+  it: itMessages as AbstractIntlMessages,
+  en: enMessages as AbstractIntlMessages,
+  es: esMessages as AbstractIntlMessages,
 } as const;
 
 const KEYS = [
@@ -64,7 +64,11 @@ describe('trustChips i18n (EC-S soft-launch PR-B)', () => {
   });
 
   it('docsScore interpolates have/total', () => {
-    const t = createTranslator({ locale: 'it', messages: LOCALES.it, namespace: 'trustChips' });
+    const t = createTranslator({
+      locale: 'it',
+      messages: LOCALES.it,
+      namespace: 'trustChips',
+    });
     expect(t('docsScore', { have: 2, total: 5 })).toBe('Documentazione 2/5');
   });
 });

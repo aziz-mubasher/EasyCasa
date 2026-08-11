@@ -1,9 +1,19 @@
 import type { ReactNode } from 'react';
 
-export function Badge({ children, tone = 'ink' }: { children: ReactNode; tone?: 'ink' | 'pine' | 'azure' }) {
+export function Badge({
+  children,
+  tone = 'ink',
+  ...rest
+}: {
+  children: ReactNode;
+  tone?: 'ink' | 'pine' | 'azure';
+} & React.HTMLAttributes<HTMLSpanElement>) {
   const bg = tone === 'pine' ? 'bg-pine' : tone === 'azure' ? 'bg-azure' : 'bg-ink';
   return (
-    <span className={`data ${bg} text-paper text-[0.68rem] px-2 py-0.5 rounded-full uppercase tracking-wide`}>
+    <span
+      {...rest}
+      className={`data ${bg} text-paper text-[0.68rem] px-2 py-0.5 rounded-full uppercase tracking-wide`}
+    >
       {children}
     </span>
   );
