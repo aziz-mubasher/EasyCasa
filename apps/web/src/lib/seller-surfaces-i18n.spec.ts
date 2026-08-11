@@ -16,7 +16,7 @@ const LOCALES = {
 } as const;
 
 const WIZARD_KEYS = [
-  'title',
+  'signInTitle',
   'onboardingRequired',
   'createFailed',
   'saveFailed',
