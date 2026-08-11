@@ -2,8 +2,10 @@
 
 **Date:** 2026-08-11  
 **Scope:** Pre-Phase-3 engineering close — PR-C (T13 publish), PR-A (T19.1 hard 429 quota), PR-B (trust-chip i18n).  
-**Merged to `main` tip:** `bee87ea` (B) atop `1f32340` (A) atop `fe6a3cf` (C).  
+**Merged to `main` tip:** `d56f36c` (build fix) atop soft-launch stack `bee87ea` / `1f32340` / `fe6a3cf`.  
 **T19.2:** still **HOLD** (LIA) — not started.
+
+**Deploy note:** first VPS `api` image build failed on `ListingStatus` missing `unpublished` + duplicate `status` in search select — fixed in `d56f36c` before successful rebuild.
 
 Companion: Phase 2 completion [`EC-S-phase2-completion-feedback.md`](./EC-S-phase2-completion-feedback.md). Specs: `docs/ec-s-phase1.md`, `docs/ec-s-phase2.md`, roadmap `docs/ec-s-roadmap.md`.
 
