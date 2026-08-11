@@ -8,6 +8,8 @@
     "typecheck": "pnpm --filter @easycasa/shared build && pnpm -r --if-present typecheck",
     "test": "pnpm --filter @easycasa/shared build && pnpm -r --if-present test",
     "check:omi-copy": "bash scripts/check-omi-price-copy.sh",
+    "check:seller-analytics-copy": "bash scripts/check-seller-analytics-copy.sh",
+    "check:counsel-copy": "bash scripts/check-counsel-copy.sh",
     "build": "pnpm --filter @easycasa/shared build && pnpm -r --if-present build",
     "format": "prettier --write .",
     "demo:seed": "pnpm --filter @easycasa/api demo:seed",

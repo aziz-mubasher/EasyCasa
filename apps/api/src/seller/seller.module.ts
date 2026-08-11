@@ -9,6 +9,6 @@ import { SellerService } from './seller.service';
   imports: [UsersModule],
   controllers: [SellerController],
   providers: [SellerService, SellerOnboardingEnabledGuard],
-  exports: [SellerService],
+  exports: [SellerService, SellerOnboardingEnabledGuard],
 })
 export class SellerModule {}

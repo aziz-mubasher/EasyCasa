@@ -161,7 +161,10 @@ export const favorites = pgTable(
     listingId: uuid('listing_id').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => ({ pk: primaryKey({ columns: [t.userId, t.listingId] }) }),
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.listingId] }),
+    listingCreatedIdx: index('favorites_listing_created_idx').on(t.listingId, t.createdAt),
+  }),
 );
 
 export const savedSearches = pgTable('saved_searches', {
@@ -191,27 +194,52 @@ export const alertLogs = pgTable(
 );
 
 /** Seeker interest on a listing → qualify → convert to Phase 10 order (Phase 24). */
-export const enquiries = pgTable('enquiries', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  listingId: uuid('listing_id').notNull(),
-  seekerUserId: uuid('seeker_user_id').notNull(),
-  ownerUserId: uuid('owner_user_id').notNull(),
-  mediatorUserId: uuid('mediator_user_id'),
-  intent: text('intent').notNull(),
-  status: text('status').notNull().default('NEW'),
-  message: text('message').notNull(),
-  contactEmail: text('contact_email'),
-  contactPhone: text('contact_phone'),
-  contactWhatsappAvailable: boolean('contact_whatsapp_available').notNull().default(false),
-  orderId: uuid('order_id'),
-  /** Banks4All tracking token (EC-1). Never store response bodies. */
-  b4aToken: text('b4a_token'),
-  b4aBandMaxCents: integer('b4a_band_max_cents'),
-  b4aExpiresAt: date('b4a_expires_at', { mode: 'string' }),
-  b4aCheckedAt: timestamp('b4a_checked_at', { withTimezone: true }),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-});
+export const enquiries = pgTable(
+  'enquiries',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    listingId: uuid('listing_id').notNull(),
+    seekerUserId: uuid('seeker_user_id').notNull(),
+    ownerUserId: uuid('owner_user_id').notNull(),
+    mediatorUserId: uuid('mediator_user_id'),
+    intent: text('intent').notNull(),
+    status: text('status').notNull().default('NEW'),
+    message: text('message').notNull(),
+    contactEmail: text('contact_email'),
+    contactPhone: text('contact_phone'),
+    contactWhatsappAvailable: boolean('contact_whatsapp_available').notNull().default(false),
+    orderId: uuid('order_id'),
+    /** Banks4All tracking token (EC-1). Never store response bodies. */
+    b4aToken: text('b4a_token'),
+    b4aBandMaxCents: integer('b4a_band_max_cents'),
+    b4aExpiresAt: date('b4a_expires_at', { mode: 'string' }),
+    b4aCheckedAt: timestamp('b4a_checked_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    listingCreatedIdx: index('enquiries_listing_created_idx').on(t.listingId, t.createdAt),
+  }),
+);
+
+/**
+ * EC-S-T23 — day-bucketed listing analytics (aggregates non-personal).
+ * Raw visitor events (if added later) retain 14m per T05; this table has no visitor ids.
+ */
+export const listingAnalyticsDaily = pgTable(
+  'listing_analytics_daily',
+  {
+    listingId: uuid('listing_id').notNull(),
+    day: date('day', { mode: 'string' }).notNull(),
+    views: integer('views').notNull().default(0),
+    saves: integer('saves').notNull().default(0),
+    enquiries: integer('enquiries').notNull().default(0),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.listingId, t.day] }),
+    dayIdx: index('listing_analytics_daily_day_idx').on(t.day),
+  }),
+);
 
 
 // ---------------- Phase 5 ----------------
@@ -1180,6 +1208,7 @@ export const sellerDocChecklist = pgTable('seller_doc_checklist', {
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
   sellerProfile, listingDraft, moderationEvents, verifiedOwnerCase, sellerDocChecklist,
+  listingAnalyticsDaily,
 
   enquiries,
   plans, memberships, featuredPlacements, conversations, messages, notifications,

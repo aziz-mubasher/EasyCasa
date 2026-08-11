@@ -31,6 +31,9 @@ import { resolveListingPropertyType } from '../avm/domain/normalize-property-typ
 import type { ValuationBandResponse } from '../avm/domain/valuation-band';
 import { UsersService } from '../users/users.service';
 import { listingToPublishRecord } from './listing-trust';
+import { DRIZZLE } from '../db/db.module';
+import type { Db } from '../db/drizzle';
+import { recordListingView } from '../seller-analytics/seller-analytics.service';
 
 function slugify(title: string): string {
   return title.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '')
@@ -62,6 +65,7 @@ export class ListingsService {
     private readonly alerts: AlertsService,
     private readonly valuationBand: ValuationBandService,
     private readonly users: UsersService,
+    @Inject(DRIZZLE) private readonly db: Db,
   ) {}
 
   /** Public-safe publisher contact for listing pages (no email / OIDC slug). */
@@ -91,6 +95,8 @@ export class ListingsService {
   async getDetail(idOrSlug: string): Promise<ListingDetail> {
     const raw = await this.read.getRaw(idOrSlug);
     if (!raw) throw new NotFoundException(`Listing ${idOrSlug} not found`);
+    // EC-S-T23 — fail-soft catalogue view increment (never breaks detail).
+    void recordListingView(this.db, raw.id);
     return buildListingDetail(raw);
   }
 
@@ -115,6 +121,8 @@ export class ListingsService {
     }
     const l = await this.repo.findBySlug(slug);
     if (!l) throw new NotFoundException('listing not found');
+    // EC-S-T23 — fail-soft catalogue view increment (never breaks detail).
+    void recordListingView(this.db, l.id);
     const media = await this.repo.listMedia(l.id);
     const imageUrls = media
       .filter((m) => m.type === 'image' || m.type === 'floorplan')
