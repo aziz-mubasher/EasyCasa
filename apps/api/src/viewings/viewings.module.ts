@@ -17,6 +17,7 @@ import { EmailService } from '../email/email.service';
 import { isExpiresOnOrAfterRomeToday } from '../enquiries/banks4all/rome-date';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsService } from '../notifications/notifications.service';
+import { SellerModule } from '../seller/seller.module';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
@@ -37,6 +38,9 @@ import type { AvailabilityWindow, Slot, Viewing, ViewingStatus } from './domain/
 import { DEFAULT_LISTING_TIMEZONE } from './domain/zoned-time';
 import { buildViewingIcs, viewingIcsUid } from './ics';
 import { ViewingsController } from './viewings.controller';
+import { SellerViewingsController } from './seller-viewings.controller';
+import { SellerViewingsEnabledGuard } from './seller-viewings.guard';
+import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { ViewingsReminderScheduler } from './viewings-reminder.scheduler';
 import {
   AVAILABILITY_REPOSITORY,
@@ -84,6 +88,7 @@ export class DrizzleAvailabilityRepository implements AvailabilityRepository {
         weekday: viewingAvailability.weekday,
         startMinutes: viewingAvailability.startMinutes,
         endMinutes: viewingAvailability.endMinutes,
+        capacity: viewingAvailability.capacity,
       })
       .from(viewingAvailability)
       .where(eq(viewingAvailability.listingId, listingId));
@@ -91,6 +96,7 @@ export class DrizzleAvailabilityRepository implements AvailabilityRepository {
       weekday: r.weekday,
       startMinutes: r.startMinutes,
       endMinutes: r.endMinutes,
+      capacity: r.capacity ?? 1,
     }));
   }
 
@@ -104,6 +110,7 @@ export class DrizzleAvailabilityRepository implements AvailabilityRepository {
           weekday: w.weekday,
           startMinutes: w.startMinutes,
           endMinutes: w.endMinutes,
+          capacity: w.capacity != null && w.capacity >= 1 ? Math.floor(w.capacity) : 1,
         })),
       );
     });
@@ -114,9 +121,16 @@ export class DrizzleAvailabilityRepository implements AvailabilityRepository {
 export class DrizzleViewingRepository implements ViewingRepository {
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
-  async activeSlots(listingId: string, excludeViewingId?: string): Promise<Slot[]> {
+  async activeOccupancy(
+    listingId: string,
+    excludeViewingId?: string,
+  ): Promise<Array<{ startMs: number; endMs: number; status: 'REQUESTED' | 'CONFIRMED' }>> {
     const rows = await this.db
-      .select({ startAt: viewings.startAt, endAt: viewings.endAt })
+      .select({
+        startAt: viewings.startAt,
+        endAt: viewings.endAt,
+        status: viewings.status,
+      })
       .from(viewings)
       .where(
         and(
@@ -125,7 +139,35 @@ export class DrizzleViewingRepository implements ViewingRepository {
           excludeViewingId ? ne(viewings.id, excludeViewingId) : undefined,
         ),
       );
-    return rows.map((r) => ({ startMs: r.startAt.getTime(), endMs: r.endAt.getTime() }));
+    return rows.map((r) => ({
+      startMs: r.startAt.getTime(),
+      endMs: r.endAt.getTime(),
+      status: r.status as 'REQUESTED' | 'CONFIRMED',
+    }));
+  }
+
+  async activeSlots(listingId: string, excludeViewingId?: string): Promise<Slot[]> {
+    const rows = await this.activeOccupancy(listingId, excludeViewingId);
+    return rows.map((r) => ({ startMs: r.startMs, endMs: r.endMs }));
+  }
+
+  async countConfirmedAt(
+    listingId: string,
+    startMs: number,
+    excludeViewingId?: string,
+  ): Promise<number> {
+    const rows = await this.db
+      .select({ id: viewings.id })
+      .from(viewings)
+      .where(
+        and(
+          eq(viewings.listingId, listingId),
+          eq(viewings.startAt, new Date(startMs)),
+          eq(viewings.status, 'CONFIRMED'),
+          excludeViewingId ? ne(viewings.id, excludeViewingId) : undefined,
+        ),
+      );
+    return rows.length;
   }
 
   async create(input: {
@@ -569,12 +611,14 @@ export class DefaultViewingNotifier implements ViewingNotifier {
 }
 
 @Module({
-  imports: [UsersModule, NotificationsModule],
-  controllers: [ViewingsController],
+  imports: [UsersModule, NotificationsModule, SellerModule],
+  controllers: [ViewingsController, SellerViewingsController],
   providers: [
     ViewingsService,
     ViewingsReminderScheduler,
     ProductAnalyticsService,
+    SellerOnboardingEnabledGuard,
+    SellerViewingsEnabledGuard,
     { provide: AVAILABILITY_REPOSITORY, useClass: DrizzleAvailabilityRepository },
     { provide: VIEWING_REPOSITORY, useClass: DrizzleViewingRepository },
     { provide: VIEWING_LISTING_LOOKUP, useClass: DrizzleViewingListingLookup },

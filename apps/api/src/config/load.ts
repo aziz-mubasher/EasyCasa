@@ -252,10 +252,17 @@ const Schema = z
      */
     SELLER_CHECKLIST_ENABLED: bool(false),
     /**
+    /**
      * EC-S-T20 — seller enquiry inbox.
      * Default false until G1 (onboarding) + counsel gates for seller dashboard.
      */
     SELLER_INBOX_ENABLED: bool(false),
+    /**
+     * EC-S-T21/T22 — seller-conducted viewings + open-house capacity.
+     * Default false. Seller `/seller/...` viewing routes 404 when off.
+     * Existing public/agent viewing routes are unaffected.
+     */
+    SELLER_VIEWINGS_ENABLED: bool(false),
     /** Runtime Nominatim base for T08 address resolve (reuse migration geocoder). */
     NOMINATIM_URL: z.string().default('https://nominatim.openstreetmap.org/search'),
     GEOCODER_USER_AGENT: z.string().default('EasyCasaAPI/1.0 (ops@easycasaita.com)'),

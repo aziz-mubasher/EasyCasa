@@ -1154,6 +1154,9 @@
     "confirming": "Confirmando…",
     "declineCta": "Rechazar",
     "errorConfirm": "No se pudo confirmar. Inténtalo de nuevo.",
+    "errors": {
+      "capacityFull": "Este horario de visita está completo. No se pueden aceptar más confirmaciones."
+    },
     "b4aTitle": "Asequibilidad evaluada · Banks4All",
     "b4aRange": "rango indicativo hasta {band} · válido hasta {expires}",
     "b4aDisclaimer": "Evaluación independiente de asequibilidad. No es una oferta de crédito, aprobación ni compromiso de ningún prestamista.",
@@ -1162,13 +1165,14 @@
   "availability": {
     "timezoneNote": "Horarios en hora italiana.",
     "skipConsequence": "Sin disponibilidad, los visitantes no podrán reservar una visita — solo podrán escribirte.",
+    "capacityLabel": "Aforo",
     "dayOff": "No disponible",
     "weeklyHours": "{hours} horas por semana",
     "windowCount": "{count} ventanas",
     "previewTitle": "Vista previa de franjas (lo que ven los visitantes)",
     "previewEmpty": "No hay franjas — selecciona al menos una ventana horaria.",
     "editTitle": "Disponibilidad de visitas",
-    "editSubtitle": "Edita las franjas semanales en las que se puede reservar.",
+    "editSubtitle": "Edita las franjas en las que los visitantes pueden reservar. Aforo > 1 activa el modo open house.",
     "save": "Guardar disponibilidad",
     "saving": "Guardando…",
     "saved": "Disponibilidad actualizada.",

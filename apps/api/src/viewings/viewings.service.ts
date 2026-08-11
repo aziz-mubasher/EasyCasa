@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Inject,
@@ -12,7 +13,16 @@ import { ProductAnalyticsService } from '../analytics/product-analytics.service'
 import { crmFireSafe } from '../crm/crm-fire-safe';
 import { CRM_HOOKS, type CrmHooks } from '../crm/domain/ports';
 import { generateSlots } from './domain/slots';
-import { DEFAULT_CONFIG, validateBooking, type SchedulingConfig } from './domain/booking';
+import {
+  DEFAULT_CONFIG,
+  VIEWING_CAPACITY_FULL_CODE,
+  blockingSlotsFromOccupancy,
+  canConfirmAgainstCapacity,
+  validateBooking,
+  windowCapacity,
+  windowForSlot,
+  type SchedulingConfig,
+} from './domain/booking';
 import { nextViewingStatus, ViewingTransitionError } from './domain/ports';
 import type {
   AvailabilityRepository,
@@ -86,10 +96,12 @@ export class ViewingsService {
   async slots(listingIdOrSlug: string, fromMs: number, toMs: number): Promise<Slot[]> {
     const meta = await this.listings.getConductor(listingIdOrSlug);
     if (!meta) throw new NotFoundException(`Listing ${listingIdOrSlug} not found`);
-    const [windows, existing] = await Promise.all([
+    const tz = meta.timezone || DEFAULT_LISTING_TIMEZONE;
+    const [windows, occupancy] = await Promise.all([
       this.availability.getWindows(meta.listingId),
-      this.viewings.activeSlots(meta.listingId),
+      this.viewings.activeOccupancy(meta.listingId),
     ]);
+    const existing = blockingSlotsFromOccupancy(windows, occupancy, tz, this.cfg.slotMinutes);
     return generateSlots(windows, {
       fromMs,
       toMs,
@@ -98,7 +110,7 @@ export class ViewingsService {
       existing,
       nowMs: Date.now(),
       minLeadMinutes: this.cfg.minLeadMinutes,
-      timeZone: meta.timezone || DEFAULT_LISTING_TIMEZONE,
+      timeZone: tz,
     });
   }
 
@@ -115,10 +127,12 @@ export class ViewingsService {
       startMs: input.startMs,
       endMs: input.startMs + this.cfg.slotMinutes * 60_000,
     };
-    const [windows, existing] = await Promise.all([
+    const tz = conductor.timezone || DEFAULT_LISTING_TIMEZONE;
+    const [windows, occupancy] = await Promise.all([
       this.availability.getWindows(conductor.listingId),
-      this.viewings.activeSlots(conductor.listingId),
+      this.viewings.activeOccupancy(conductor.listingId),
     ]);
+    const existing = blockingSlotsFromOccupancy(windows, occupancy, tz, this.cfg.slotMinutes);
 
     const decision = validateBooking(
       request,
@@ -126,7 +140,7 @@ export class ViewingsService {
       existing,
       this.cfg,
       Date.now(),
-      conductor.timezone || DEFAULT_LISTING_TIMEZONE,
+      tz,
     );
     if (!decision.ok) throw new ConflictException(decision.reason);
 
@@ -174,6 +188,71 @@ export class ViewingsService {
 
   /** Confirm / cancel / complete / no-show. Seeker may cancel; conductor may do all. */
   async transition(actorUserId: string, viewingId: string, event: ViewingEvent): Promise<Viewing> {
+    return this.transitionInternal(actorUserId, viewingId, event, { mode: 'conductor' });
+  }
+
+  /**
+   * EC-S-T21 — seller lifecycle on own listings (seller_profile checked by controller).
+   * Authorizes via listing ownership, not conductorUserId equality.
+   */
+  async sellerTransition(
+    actorUserId: string,
+    viewingId: string,
+    event: ViewingEvent,
+  ): Promise<Viewing> {
+    await this.assertSellerOwnsViewing(actorUserId, viewingId);
+    return this.transitionInternal(actorUserId, viewingId, event, { mode: 'sellerOwner' });
+  }
+
+  /** EC-S-T21 — seller reschedule on own listing. */
+  async sellerReschedule(
+    actorUserId: string,
+    viewingId: string,
+    startMs: number,
+  ): Promise<Viewing> {
+    const viewing = await this.assertSellerOwnsViewing(actorUserId, viewingId);
+    if (viewing.conductorUserId === actorUserId) {
+      return this.reschedule(actorUserId, viewingId, startMs);
+    }
+    return this.rescheduleAsOwner(actorUserId, viewing, startMs);
+  }
+
+  private async rescheduleAsOwner(
+    actorUserId: string,
+    viewing: Viewing,
+    startMs: number,
+  ): Promise<Viewing> {
+    try {
+      nextViewingStatus(viewing.status, 'RESCHEDULE');
+    } catch (err) {
+      if (err instanceof ViewingTransitionError) throw new ConflictException(err.message);
+      throw err;
+    }
+    const meta = await this.listings.getConductor(viewing.listingId);
+    if (!meta) throw new NotFoundException('Listing not found');
+    const request: Slot = {
+      startMs,
+      endMs: startMs + this.cfg.slotMinutes * 60_000,
+    };
+    const tz = meta.timezone || DEFAULT_LISTING_TIMEZONE;
+    const [windows, occupancy] = await Promise.all([
+      this.availability.getWindows(viewing.listingId),
+      this.viewings.activeOccupancy(viewing.listingId, viewing.id),
+    ]);
+    const existing = blockingSlotsFromOccupancy(windows, occupancy, tz, this.cfg.slotMinutes);
+    const decision = validateBooking(request, windows, existing, this.cfg, Date.now(), tz);
+    if (!decision.ok) throw new ConflictException(decision.reason);
+    const updated = await this.viewings.reschedule(viewing.id, request.startMs, request.endMs);
+    await this.notifier.notify(viewing.seekerUserId, updated, 'requested');
+    return this.enrich(updated, actorUserId, { conductor: true });
+  }
+
+  private async transitionInternal(
+    actorUserId: string,
+    viewingId: string,
+    event: ViewingEvent,
+    opts: { mode: 'conductor' | 'sellerOwner' },
+  ): Promise<Viewing> {
     if (event === 'RESCHEDULE') {
       throw new ConflictException('Use POST /viewings/:id/reschedule with startMs');
     }
@@ -182,8 +261,14 @@ export class ViewingsService {
 
     const isConductor = viewing.conductorUserId === actorUserId;
     const isSeeker = viewing.seekerUserId === actorUserId;
-    if (!isConductor && !(isSeeker && event === 'CANCEL')) {
+    const authorized =
+      opts.mode === 'sellerOwner' || isConductor || (isSeeker && event === 'CANCEL');
+    if (!authorized) {
       throw new ForbiddenException('Not permitted');
+    }
+
+    if (event === 'CONFIRM') {
+      await this.assertConfirmCapacity(viewing);
     }
 
     let status;
@@ -235,7 +320,9 @@ export class ViewingsService {
         actorUserId === viewing.seekerUserId ? viewing.conductorUserId : viewing.seekerUserId;
       await this.notifier.notify(other, updated, 'cancelled');
     }
-    return this.enrich(updated, actorUserId, { conductor: isConductor });
+    return this.enrich(updated, actorUserId, {
+      conductor: isConductor || opts.mode === 'sellerOwner',
+    });
   }
 
   /**
@@ -267,17 +354,19 @@ export class ViewingsService {
       startMs,
       endMs: startMs + this.cfg.slotMinutes * 60_000,
     };
-    const [windows, existing] = await Promise.all([
+    const tz = meta.timezone || DEFAULT_LISTING_TIMEZONE;
+    const [windows, occupancy] = await Promise.all([
       this.availability.getWindows(viewing.listingId),
-      this.viewings.activeSlots(viewing.listingId, viewing.id),
+      this.viewings.activeOccupancy(viewing.listingId, viewing.id),
     ]);
+    const existing = blockingSlotsFromOccupancy(windows, occupancy, tz, this.cfg.slotMinutes);
     const decision = validateBooking(
       request,
       windows,
       existing,
       this.cfg,
       Date.now(),
-      meta.timezone || DEFAULT_LISTING_TIMEZONE,
+      tz,
     );
     if (!decision.ok) throw new ConflictException(decision.reason);
 
@@ -285,6 +374,25 @@ export class ViewingsService {
     const other = isSeeker ? viewing.conductorUserId : viewing.seekerUserId;
     await this.notifier.notify(other, updated, 'requested');
     return this.enrich(updated, actorUserId, { conductor: isConductor });
+  }
+
+  private async assertConfirmCapacity(viewing: Viewing): Promise<void> {
+    const meta = await this.listings.getConductor(viewing.listingId);
+    const tz = meta?.timezone || DEFAULT_LISTING_TIMEZONE;
+    const windows = await this.availability.getWindows(viewing.listingId);
+    const slot: Slot = { startMs: viewing.startMs, endMs: viewing.endMs };
+    const capacity = windowCapacity(windowForSlot(slot, windows, tz));
+    const confirmed = await this.viewings.countConfirmedAt(
+      viewing.listingId,
+      viewing.startMs,
+      viewing.id,
+    );
+    if (!canConfirmAgainstCapacity(confirmed, capacity)) {
+      throw new BadRequestException({
+        message: 'This viewing slot is at capacity',
+        code: VIEWING_CAPACITY_FULL_CODE,
+      });
+    }
   }
 
   private async enrich(
@@ -317,5 +425,32 @@ export class ViewingsService {
       throw new ForbiddenException('Not your listing');
     }
     return c;
+  }
+
+  /**
+   * EC-S-T21 — seller routes: listing ownership only (not mediator-as-conductor).
+   * Caller must separately require a seller_profile row.
+   */
+  async assertSellerOwner(
+    actorUserId: string,
+    listingIdOrSlug: string,
+  ): Promise<{ listingId: string; conductorUserId: string; ownerUserId: string }> {
+    const c = await this.listings.getConductor(listingIdOrSlug);
+    if (!c) throw new NotFoundException(`Listing ${listingIdOrSlug} not found`);
+    if (c.ownerUserId !== actorUserId) {
+      throw new ForbiddenException('Not your listing');
+    }
+    return c;
+  }
+
+  /** EC-S-T21 — seller must own the listing behind a viewing action. */
+  async assertSellerOwnsViewing(
+    actorUserId: string,
+    viewingId: string,
+  ): Promise<Viewing> {
+    const viewing = await this.viewings.get(viewingId);
+    if (!viewing) throw new NotFoundException(`Viewing ${viewingId} not found`);
+    await this.assertSellerOwner(actorUserId, viewing.listingId);
+    return viewing;
   }
 }

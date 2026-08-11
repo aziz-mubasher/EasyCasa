@@ -234,3 +234,8 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | Variable | Used by | Notes |
 |---|---|---|
 | SELLER_INBOX_ENABLED | api | Default `false`. Seller enquiry inbox (`/seller/enquiries`) returns 404 when off. Enable after G1. |
+
+## EC-S Phase 3 — seller viewings (T21–T22)
+| Variable | Used by | Notes |
+|---|---|---|
+| SELLER_VIEWINGS_ENABLED | api | Default `false`. Seller-conducted viewings + open-house capacity routes (`/seller/...`) return 404 when off. Public/agent viewing routes unchanged. |

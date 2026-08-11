@@ -933,6 +933,8 @@ export const viewingAvailability = pgTable('viewing_availability', {
   weekday: integer('weekday').notNull(),
   startMinutes: integer('start_minutes').notNull(),
   endMinutes: integer('end_minutes').notNull(),
+  /** EC-S T22 — max CONFIRMED viewings per concrete slot (default 1). */
+  capacity: integer('capacity').notNull().default(1),
 });
 
 export const viewings = pgTable('viewings', {

@@ -1154,6 +1154,9 @@
     "confirming": "Conferma…",
     "declineCta": "Rifiuta",
     "errorConfirm": "Conferma non riuscita. Riprova.",
+    "errors": {
+      "capacityFull": "Questo slot di visita è al completo. Non è possibile accettare altre conferme."
+    },
     "b4aTitle": "Affordabilità valutata · Banks4All",
     "b4aRange": "fascia indicativa fino a {band} · valida fino al {expires}",
     "b4aDisclaimer": "Valutazione indipendente di affordability. Non è un’offerta di credito, un’approvazione o un impegno di alcun finanziatore.",
@@ -1162,13 +1165,14 @@
   "availability": {
     "timezoneNote": "Orari in ora italiana.",
     "skipConsequence": "Senza disponibilità i visitatori non potranno prenotare una visita — potranno solo scriverti.",
+    "capacityLabel": "Capienza",
     "dayOff": "Non disponibile",
     "weeklyHours": "{hours} ore a settimana",
     "windowCount": "{count} finestre",
     "previewTitle": "Anteprima slot (come li vedono i visitatori)",
     "previewEmpty": "Nessuno slot generato — seleziona almeno una fascia oraria.",
     "editTitle": "Disponibilità visite",
-    "editSubtitle": "Modifica le fasce orarie in cui i visitatori possono prenotare.",
+    "editSubtitle": "Modifica le fasce orarie in cui i visitatori possono prenotare. Capienza > 1 abilita la modalità open house.",
     "save": "Salva disponibilità",
     "saving": "Salvataggio…",
     "saved": "Disponibilità aggiornata.",

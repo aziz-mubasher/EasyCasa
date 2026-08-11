@@ -29,8 +29,23 @@ export interface AvailabilityRepository {
 }
 
 export interface ViewingRepository {
-  /** Active (non-cancelled) viewings for a listing, as slots, for conflict checks. */
+  /**
+   * Active (REQUESTED|CONFIRMED) viewings for a listing — used for capacity
+   * occupancy (T22). Prefer {@link activeOccupancy} over treating every row
+   * as a hard conflict.
+   */
+  activeOccupancy(
+    listingId: string,
+    excludeViewingId?: string,
+  ): Promise<Array<{ startMs: number; endMs: number; status: 'REQUESTED' | 'CONFIRMED' }>>;
+  /** @deprecated Prefer activeOccupancy + blockingSlotsFromOccupancy (T22). */
   activeSlots(listingId: string, excludeViewingId?: string): Promise<Slot[]>;
+  /** Count CONFIRMED viewings at the same listing + start instant. */
+  countConfirmedAt(
+    listingId: string,
+    startMs: number,
+    excludeViewingId?: string,
+  ): Promise<number>;
   create(input: {
     listingId: string;
     seekerUserId: string;

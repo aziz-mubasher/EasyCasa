@@ -1154,6 +1154,9 @@
     "confirming": "Confirming…",
     "declineCta": "Decline",
     "errorConfirm": "Could not confirm. Try again.",
+    "errors": {
+      "capacityFull": "This viewing slot is full. No more confirmations can be accepted."
+    },
     "b4aTitle": "Affordability assessed · Banks4All",
     "b4aRange": "indicative range up to {band} · valid to {expires}",
     "b4aDisclaimer": "Independent affordability assessment. Not a credit offer, approval or commitment by any lender.",
@@ -1162,13 +1165,14 @@
   "availability": {
     "timezoneNote": "Times in Italian local time.",
     "skipConsequence": "Without availability, visitors won’t be able to book a viewing — they can only write to you.",
+    "capacityLabel": "Capacity",
     "dayOff": "Unavailable",
     "weeklyHours": "{hours} hours per week",
     "windowCount": "{count} windows",
     "previewTitle": "Slot preview (what visitors will see)",
     "previewEmpty": "No slots generated — select at least one time window.",
     "editTitle": "Viewing availability",
-    "editSubtitle": "Edit the weekly windows when visitors can book.",
+    "editSubtitle": "Edit the time windows visitors can book. Capacity > 1 enables open-house mode.",
     "save": "Save availability",
     "saving": "Saving…",
     "saved": "Availability updated.",
