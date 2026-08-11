@@ -3368,5 +3368,17 @@
     "credentials": "Credenciales",
     "contact": "Contacto",
     "proMediaNote": "Fotos y tours virtuales usan el pipeline multimedia estándar (EXIF, hash, dup-detect) — sin endpoint de subida exclusivo para profesionales."
+  },
+  "consentUpdate": {
+    "bannerText": "Hemos actualizado la información de privacidad (versión {version}). Los cambios son menores y no requieren ninguna acción.",
+    "bannerLink": "Ver los cambios",
+    "bannerDismiss": "Cerrar",
+    "interstitialTitle": "Información de privacidad actualizada",
+    "interstitialBody": "La información de privacidad se ha actualizado a la versión {version} con cambios sustanciales. Para seguir usando las herramientas de venta es necesario leerla y aceptarla.",
+    "interstitialReadLink": "Leer la información completa",
+    "interstitialAccept": "He leído y acepto",
+    "interstitialLater": "Ahora no",
+    "interstitialLaterNote": "Podrás seguir consultando tus datos, pero las funciones de venta quedan en pausa hasta que aceptes.",
+    "errorIntegrity": "Ha habido un problema con la versión de la información de privacidad. Nuestro equipo ha sido avisado; inténtalo más tarde."
   }
 }

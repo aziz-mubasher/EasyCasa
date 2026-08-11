@@ -3368,5 +3368,17 @@
     "credentials": "Credentials",
     "contact": "Contact",
     "proMediaNote": "Photo and virtual-tour assets still use the standard media pipeline (EXIF strip, content-addressed, dup-hash) — no pro-only upload endpoint."
+  },
+  "consentUpdate": {
+    "bannerText": "We have updated the privacy notice (version {version}). The changes are minor and require no action.",
+    "bannerLink": "See what changed",
+    "bannerDismiss": "Dismiss",
+    "interstitialTitle": "Privacy notice updated",
+    "interstitialBody": "The privacy notice has been updated to version {version} with substantial changes. To continue using the selling tools you need to review and accept it.",
+    "interstitialReadLink": "Read the full notice",
+    "interstitialAccept": "I have read and accept",
+    "interstitialLater": "Not now",
+    "interstitialLaterNote": "You can still view your data, but selling features stay paused until you accept.",
+    "errorIntegrity": "There was a problem with the privacy notice version. Our team has been notified; please try again later."
   }
 }

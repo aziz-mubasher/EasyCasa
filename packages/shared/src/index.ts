@@ -20,3 +20,5 @@ export * from './partner-directory';
 export * from './enquiry-inbox';
 export * from './nudges';
 export * from './consent-versions';
+/** EC-S-T33 HOLD — builders only; do not wire Next until G7 (DEMO_MODE unset). */
+export * from './structured-data';
