@@ -1,6 +1,6 @@
 # EC-S Phase 4 — completion R&D feedback (for Claude)
 
-**As of merge tip on `main` after PR-1 + T30 + T27 + T26 + T28/T29 + T31.** Flags remain **off**. T32 not started (consolidation after this merge). T33 HOLD until G7 / `NEXT_PUBLIC_DEMO_MODE` unset. No G-gate or monetisation flag flips.
+**As of merge tip `508e973` on `main` after PR-1 + T30 + T27 + T26 + T28/T29 + T31 (+ load.ts JSDoc fix).** Flags remain **off**. T32 not started (consolidation after this merge). T33 HOLD until G7 / `NEXT_PUBLIC_DEMO_MODE` unset. No G-gate or monetisation flag flips. VPS `/api/version` matches tip; migrations **0060–0063** applied.
 
 ## Merged PRs
 
