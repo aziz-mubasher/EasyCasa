@@ -45,7 +45,7 @@ Expect `0046`…`0051` present (and peers).
 
 - [ ] **EXTERNAL** — LGL-1 counsel addendum / glossary review items as required before public claims.
 - [ ] **EXTERNAL** — retention (`ASTE_DOCS_RETENTION_DAYS`) counsel confirmation if still pending.
-- [ ] Product: G1 waitlist volume gate accepted (read `#aste` → Waitlist tab — counts only).
+- [ ] Product: G1 waitlist volume gate accepted (read `#aste` → Waitlist tab — counts only). Full G1 checklist (eval + counsel send + waitlist): `docs/runbooks/aste-g1-gate.md`.
 
 ---
 
