@@ -33,7 +33,8 @@ export function parseAnalyticsWindow(raw: string | undefined | null): SellerAnal
 
 /**
  * Clamp a requested window to the seller's entitlement max (days).
- * Free default 30; premium 365 — never expand beyond entitlement.
+ * Free stays at the pre-T27 max of 90 (7d/30d/90d); premium 365 — never
+ * expand beyond entitlement.
  */
 export function clampAnalyticsWindow(
   requested: SellerAnalyticsWindow,

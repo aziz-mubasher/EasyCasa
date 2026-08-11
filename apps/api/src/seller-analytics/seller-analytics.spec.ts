@@ -3,6 +3,8 @@ import { NotFoundException } from '@nestjs/common';
 
 import {
   buildSellerListingAnalytics,
+  clampAnalyticsWindow,
+  DEFAULT_ENTITLEMENTS,
   enquiryRate,
   parseAnalyticsWindow,
   windowDayCount,
@@ -71,6 +73,26 @@ describe('seller analytics aggregation (EC-S-T23)', () => {
     expect(windowDayCount('7d')).toBe(7);
     expect(windowDayCount('30d')).toBe(30);
     expect(windowDayCount('90d')).toBe(90);
+  });
+
+  it('parses the T27 365d window (premium only — clamped for free below)', () => {
+    expect(parseAnalyticsWindow('365d')).toBe('365d');
+    expect(windowDayCount('365d')).toBe(365);
+  });
+
+  it('T27 regression: free-tier entitlement (30/off-flag default) keeps the pre-T27 90d ceiling', () => {
+    expect(DEFAULT_ENTITLEMENTS.free.analyticsWindowDays).toBe(90);
+    expect(clampAnalyticsWindow('90d', DEFAULT_ENTITLEMENTS.free.analyticsWindowDays)).toBe('90d');
+  });
+
+  it('clampAnalyticsWindow: premium (365) passes 90d/365d through; free (90) truncates 365d to 90d', () => {
+    expect(clampAnalyticsWindow('365d', DEFAULT_ENTITLEMENTS.premium.analyticsWindowDays)).toBe(
+      '365d',
+    );
+    expect(clampAnalyticsWindow('365d', DEFAULT_ENTITLEMENTS.free.analyticsWindowDays)).toBe(
+      '90d',
+    );
+    expect(clampAnalyticsWindow('7d', DEFAULT_ENTITLEMENTS.free.analyticsWindowDays)).toBe('7d');
   });
 });
 

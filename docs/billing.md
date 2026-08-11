@@ -6,6 +6,13 @@ Stripe handles PCI. The **Customer Portal** manages upgrades/cancellations. Webh
 **signature-verified** using the raw request body (`rawBody: true` in `main.ts`).
 
 ### Subscriptions (memberships)
+- **T27 note:** the billing rail already supported subscriptions before T27 —
+  `createSubscriptionCheckout` has always used `mode: 'subscription'`, and the
+  webhook already handled `checkout.session.completed` +
+  `customer.subscription.updated|deleted` into `memberships`. T27 reuses this
+  rail unchanged; it does not extend Stripe integration, it only adds a
+  parallel `seller_subscription` row (see below) and the `seller_premium`
+  plan definition.
 - `GET /billing/plans` (public) — plan catalogue (seeded: free/basic/pro/agency + T27 `seller_premium`).
 - `POST /billing/checkout` `{ planKey }` → `{ url }` — subscription Checkout with
   `automatic_tax` and `tax_id_collection` (collects **P.Iva/VAT** for EU invoicing).

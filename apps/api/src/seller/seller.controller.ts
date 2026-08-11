@@ -1,4 +1,12 @@
-import { Body, Controller, Get, NotFoundException, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  NotFoundException,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator';
 
 import { Roles } from '../auth/roles.decorator';
@@ -6,7 +14,6 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { APP_CONFIG } from '../config/config.module';
 import type { ApiConfig } from '../config/load';
-import { Inject } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { SellerQuotaService } from '../seller-quota/seller-quota.service';
 import { SellerOnboardingEnabledGuard } from './seller-onboarding.guard';

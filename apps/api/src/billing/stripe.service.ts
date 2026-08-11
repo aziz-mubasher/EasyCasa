@@ -209,14 +209,18 @@ export class StripeService {
     } else {
       await this.db.insert(memberships).values(values);
     }
-    await this.upsertSellerSubscription({
-      userId,
-      status: mapStripeSubscriptionStatus(sub.status),
-      currentPeriodEnd: periodEnd,
-      cancelAtPeriodEnd: Boolean(sub.cancel_at_period_end),
-      stripeSubscriptionId: subscriptionId,
-      stripeCustomerId: customerId,
-    });
+    // Only the seller_premium plan feeds seller entitlements — other plans
+    // (basic/pro/agency) must never grant premium-seller quota/priority.
+    if (planKey === SELLER_PREMIUM_PLAN_KEY) {
+      await this.upsertSellerSubscription({
+        userId,
+        status: mapStripeSubscriptionStatus(sub.status),
+        currentPeriodEnd: periodEnd,
+        cancelAtPeriodEnd: Boolean(sub.cancel_at_period_end),
+        stripeSubscriptionId: subscriptionId,
+        stripeCustomerId: customerId,
+      });
+    }
   }
 
   private async syncSubscription(sub: Stripe.Subscription, deleted: boolean) {
@@ -246,6 +250,10 @@ export class StripeService {
       this.logger.warn(`seller_subscription sync skipped — no user for ${sub.id}`);
       return;
     }
+
+    // Metadata is copied onto the Subscription at creation (subscription_data.metadata)
+    // and persists across its lifecycle, including cancellation — safe to gate on here.
+    if (sub.metadata?.planKey !== SELLER_PREMIUM_PLAN_KEY) return;
 
     const status: SubscriptionStatus = deleted
       ? 'canceled'

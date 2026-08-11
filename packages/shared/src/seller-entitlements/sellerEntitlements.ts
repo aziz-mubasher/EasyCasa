@@ -47,7 +47,9 @@ export const DEFAULT_ENTITLEMENTS: EntitlementConfig = {
   free: {
     maxActiveListings: 5,
     maxUploadsPerDay: 20,
-    analyticsWindowDays: 30,
+    // Pre-T27 max window was 90d (parseAnalyticsWindow); keep byte-identical
+    // for free sellers / flag-off so this constant must not regress that cap.
+    analyticsWindowDays: 90,
     priorityModeration: false,
   },
   premium: {
