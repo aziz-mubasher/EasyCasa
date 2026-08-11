@@ -8,6 +8,7 @@ import {
 import { and, desc, eq, gte, lte, sql, sum } from 'drizzle-orm';
 import {
   buildSellerListingAnalytics,
+  clampAnalyticsWindow,
   daysOnMarket,
   parseAnalyticsWindow,
   utcDayString,
@@ -30,6 +31,7 @@ import {
   OmiBandService,
   positionAskingOnBand,
 } from '../omi/omi-band.service';
+import { SellerQuotaService } from '../seller-quota/seller-quota.service';
 
 function asNumber(v: string | number | null | undefined): number | null {
   if (v == null) return null;
@@ -88,6 +90,7 @@ export class SellerAnalyticsService {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly omiBand: OmiBandService,
+    private readonly quota: SellerQuotaService,
   ) {}
 
   async assertOwner(actorUserId: string, listingId: string) {
@@ -125,7 +128,9 @@ export class SellerAnalyticsService {
     now = new Date(),
   ): Promise<SellerListingAnalytics> {
     const listing = await this.assertOwner(actorUserId, listingId);
-    const window = parseAnalyticsWindow(windowRaw);
+    const { entitlements } = await this.quota.resolveEntitlements(actorUserId, now);
+    const requested = parseAnalyticsWindow(windowRaw);
+    const window = clampAnalyticsWindow(requested, entitlements.analyticsWindowDays);
     const days = windowDayCount(window);
     const endDay = utcDayString(now);
     const start = windowStartDate(endDay, days);

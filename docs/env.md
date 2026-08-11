@@ -244,3 +244,4 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | Variable | Used by | Notes |
 |---|---|---|
 | SELLER_ANALYTICS_ENABLED | api | Default `false`. T23 seller listing analytics **and** T24 nudges (shared flag). Also requires `SELLER_ONBOARDING_ENABLED`. Routes 404 when either flag is off. |
+| SELLER_PREMIUM_ENABLED | api | Default `false`. T27 premium seller tier. When off, quota uses env floor only (ignores `seller_subscription`). Plan key `seller_premium` checkout refused. Entitlements always read the local webhook row — never live Stripe (staleness ≈ webhook SLA). |

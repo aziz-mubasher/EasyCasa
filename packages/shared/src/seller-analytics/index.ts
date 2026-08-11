@@ -3,7 +3,7 @@
  * Observations for the seller dashboard; no advice / recommendation verbs.
  */
 
-export type SellerAnalyticsWindow = '7d' | '30d' | '90d';
+export type SellerAnalyticsWindow = '7d' | '30d' | '90d' | '365d';
 
 export type SellerListingAnalytics = {
   views: number;
@@ -27,13 +27,30 @@ export type SellerListingAnalytics = {
 };
 
 export function parseAnalyticsWindow(raw: string | undefined | null): SellerAnalyticsWindow {
-  if (raw === '7d' || raw === '90d') return raw;
+  if (raw === '7d' || raw === '90d' || raw === '365d') return raw;
   return '30d';
+}
+
+/**
+ * Clamp a requested window to the seller's entitlement max (days).
+ * Free default 30; premium 365 — never expand beyond entitlement.
+ */
+export function clampAnalyticsWindow(
+  requested: SellerAnalyticsWindow,
+  maxDays: number,
+): SellerAnalyticsWindow {
+  const days = windowDayCount(requested);
+  if (days <= maxDays) return requested;
+  if (maxDays >= 365) return '365d';
+  if (maxDays >= 90) return '90d';
+  if (maxDays >= 30) return '30d';
+  return '7d';
 }
 
 export function windowDayCount(window: SellerAnalyticsWindow): number {
   if (window === '7d') return 7;
   if (window === '90d') return 90;
+  if (window === '365d') return 365;
   return 30;
 }
 

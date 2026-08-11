@@ -8,17 +8,22 @@ import {
 import { and, count, eq, sql } from 'drizzle-orm';
 import {
   DEFAULT_QUOTA,
+  entitlementsFor,
   evaluateListingQuota,
   evaluateUploadQuota,
   localDayKey,
+  quotaConfigFor,
+  resolveTier,
   type QuotaConfig,
+  type SellerSubscription,
+  type SubscriptionStatus,
 } from '@easycasa/shared';
 
 import { APP_CONFIG } from '../config/config.module';
 import type { ApiConfig } from '../config/load';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { listings, media } from '../db/schema';
+import { listings, media, sellerSubscription } from '../db/schema';
 import type { AuthUser } from '../auth/auth.types';
 
 const QUOTA_MESSAGES = {
@@ -108,6 +113,10 @@ export function isQuotaExempt(user: AuthUser): boolean {
   return false;
 }
 
+function isSubscriptionStatus(raw: string): raw is SubscriptionStatus {
+  return raw === 'active' || raw === 'past_due' || raw === 'canceled';
+}
+
 @Injectable()
 export class SellerQuotaService {
   private readonly logger = new Logger(SellerQuotaService.name);
@@ -117,8 +126,58 @@ export class SellerQuotaService {
     @Inject(APP_CONFIG) private readonly config: ApiConfig,
   ) {}
 
+  /** Env floor only — byte-identical for free users / flag-off. */
   quotaConfig(): QuotaConfig {
     return resolveQuotaConfig(this.config, this.logger);
+  }
+
+  async loadSellerSubscription(userId: string): Promise<SellerSubscription | null> {
+    const rows = await this.db
+      .select({
+        status: sellerSubscription.status,
+        currentPeriodEnd: sellerSubscription.currentPeriodEnd,
+        cancelAtPeriodEnd: sellerSubscription.cancelAtPeriodEnd,
+      })
+      .from(sellerSubscription)
+      .where(eq(sellerSubscription.userId, userId))
+      .limit(1);
+    const row = rows[0];
+    if (!row || !isSubscriptionStatus(row.status)) return null;
+    return {
+      status: row.status,
+      currentPeriodEnd: row.currentPeriodEnd,
+      cancelAtPeriodEnd: row.cancelAtPeriodEnd,
+    };
+  }
+
+  /**
+   * Effective quota for the 429 path. When SELLER_PREMIUM_ENABLED is false,
+   * returns the env floor unchanged (regression vs pre-T27).
+   */
+  async effectiveQuotaConfig(ownerUserId: string, now = new Date()): Promise<QuotaConfig> {
+    const base = this.quotaConfig();
+    if (!this.config.SELLER_PREMIUM_ENABLED) return base;
+    const sub = await this.loadSellerSubscription(ownerUserId);
+    const tier = resolveTier(sub, now);
+    return quotaConfigFor(tier, base);
+  }
+
+  async resolveEntitlements(ownerUserId: string, now = new Date()) {
+    const base = this.quotaConfig();
+    if (!this.config.SELLER_PREMIUM_ENABLED) {
+      return {
+        tier: 'free' as const,
+        entitlements: entitlementsFor('free'),
+        quota: base,
+      };
+    }
+    const sub = await this.loadSellerSubscription(ownerUserId);
+    const tier = resolveTier(sub, now);
+    return {
+      tier,
+      entitlements: entitlementsFor(tier),
+      quota: quotaConfigFor(tier, base),
+    };
   }
 
   /**
@@ -126,7 +185,7 @@ export class SellerQuotaService {
    * SQL date match + shared localDayKey filter so bucketing cannot drift.
    */
   async uploadTimesToday(ownerUserId: string, now = new Date()): Promise<Date[]> {
-    const cfg = this.quotaConfig();
+    const cfg = await this.effectiveQuotaConfig(ownerUserId, now);
     const day = localDayKey(now, cfg.timeZone);
     const rows = await this.db
       .select({ createdAt: media.createdAt })
@@ -147,7 +206,7 @@ export class SellerQuotaService {
     now = new Date(),
   ): Promise<void> {
     if (isQuotaExempt(user)) return;
-    const cfg = this.quotaConfig();
+    const cfg = await this.effectiveQuotaConfig(ownerUserId, now);
     const prior = await this.uploadTimesToday(ownerUserId, now);
     const decision = evaluateUploadQuota(now, prior, cfg);
     if (decision.allowed) return;
@@ -172,7 +231,7 @@ export class SellerQuotaService {
     acceptLanguage?: string,
   ): Promise<void> {
     if (isQuotaExempt(user)) return;
-    const cfg = this.quotaConfig();
+    const cfg = await this.effectiveQuotaConfig(ownerUserId);
     const active = await this.countActiveListings(ownerUserId);
     const decision = evaluateListingQuota(active, cfg);
     if (decision.allowed) return;

@@ -272,6 +272,21 @@ export const memberships = pgTable('memberships', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/**
+ * EC-S-T27 — webhook-maintained seller subscription for entitlements.
+ * Authority for resolveTier / quotaConfigFor — never read Stripe live.
+ */
+export const sellerSubscription = pgTable('seller_subscription', {
+  userId: uuid('user_id').primaryKey(),
+  status: text('status').notNull(),
+  currentPeriodEnd: timestamp('current_period_end', { withTimezone: true }).notNull(),
+  cancelAtPeriodEnd: boolean('cancel_at_period_end').notNull().default(false),
+  stripeSubscriptionId: text('stripe_subscription_id'),
+  stripeCustomerId: text('stripe_customer_id'),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const featuredPlacements = pgTable('featured_placements', {
   id: uuid('id').primaryKey().defaultRandom(),
   listingId: uuid('listing_id').notNull(),
@@ -1248,7 +1263,7 @@ export const schema = {
   listingNudges,
 
   enquiries,
-  plans, memberships, featuredPlacements, conversations, messages, notifications,
+  plans, memberships, sellerSubscription, featuredPlacements, conversations, messages, notifications,
   devices, partnerProfiles, leads, payouts,
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,

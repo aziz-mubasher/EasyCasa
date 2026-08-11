@@ -14,5 +14,6 @@ export * from './seller-checklist';
 export * from './seller-analytics';
 export * from './publish-lifecycle';
 export * from './upload-quota';
+export * from './seller-entitlements';
 export * from './enquiry-inbox';
 export * from './nudges';
