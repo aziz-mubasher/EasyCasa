@@ -162,6 +162,8 @@ export class DemoScenarioSeeder {
         b4aBandMaxCents: 32_500_000,
         b4aExpiresAt: '2027-12-31',
         b4aCheckedAt: new Date('2026-07-01T10:00:00Z'),
+        b4aHolderInitials: 'MR',
+        b4aStatus: 'valid',
       })
       .returning({ id: enquiries.id });
 
@@ -180,6 +182,8 @@ export class DemoScenarioSeeder {
       b4aBandMaxCents: null,
       b4aExpiresAt: null,
       b4aCheckedAt: null,
+      b4aHolderInitials: null,
+      b4aStatus: null,
     });
 
     // SC6 — expired badge (silent)
@@ -197,6 +201,8 @@ export class DemoScenarioSeeder {
       b4aBandMaxCents: 32_500_000,
       b4aExpiresAt: '2025-01-01',
       b4aCheckedAt: new Date('2025-01-02T10:00:00Z'),
+      b4aHolderInitials: 'EX',
+      b4aStatus: 'valid',
     });
 
     // SC7 — confirmed viewing (mutual address reveal)

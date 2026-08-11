@@ -31,6 +31,10 @@ export interface Enquiry {
   /** Inclusive YYYY-MM-DD. */
   b4aExpiresAt: string | null;
   b4aCheckedAt: string | null;
+  /** EC-S-T20 — attestation holder initials for inbox badge (row 6). */
+  b4aHolderInitials: string | null;
+  /** EC-S-T20 — stored attestation status; expiry still computed at read. */
+  b4aStatus: 'valid' | 'revoked' | null;
   /**
    * Ephemeral create-response only — why attestation was not attached.
    * Never persisted; omit from list endpoints.

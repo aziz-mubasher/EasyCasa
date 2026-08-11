@@ -5,6 +5,10 @@ export interface Banks4AllAttestationFields {
   b4aBandMaxCents: number | null;
   b4aExpiresAt: string | null;
   b4aCheckedAt: Date | null;
+  /** EC-S-T20 — stored for inbox four-field display. */
+  b4aHolderInitials?: string | null;
+  /** EC-S-T20 — `valid` | `revoked`; expiry still computed at read. */
+  b4aStatus?: 'valid' | 'revoked' | null;
 }
 
 export interface EnquiryRepository {
@@ -22,6 +26,8 @@ export interface EnquiryRepository {
     b4aBandMaxCents?: number | null;
     b4aExpiresAt?: string | null;
     b4aCheckedAt?: Date | null;
+    b4aHolderInitials?: string | null;
+    b4aStatus?: 'valid' | 'revoked' | null;
   }): Promise<Enquiry>;
   get(id: string): Promise<Enquiry | null>;
   listForSeeker(seekerUserId: string): Promise<Enquiry[]>;

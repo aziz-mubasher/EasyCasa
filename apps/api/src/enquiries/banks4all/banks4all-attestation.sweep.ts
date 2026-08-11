@@ -57,6 +57,8 @@ export class Banks4AllAttestationSweep {
         b4aBandMaxCents: outcome.attestation.bandMaxCents,
         b4aExpiresAt: outcome.attestation.expiresAt,
         b4aCheckedAt: new Date(),
+        b4aHolderInitials: outcome.attestation.holderInitials,
+        b4aStatus: 'valid',
       });
       refreshed += 1;
       const expiresAt = outcome.attestation.expiresAt

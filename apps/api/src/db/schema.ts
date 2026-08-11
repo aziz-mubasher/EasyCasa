@@ -209,6 +209,11 @@ export const enquiries = pgTable('enquiries', {
   b4aBandMaxCents: integer('b4a_band_max_cents'),
   b4aExpiresAt: date('b4a_expires_at', { mode: 'string' }),
   b4aCheckedAt: timestamp('b4a_checked_at', { withTimezone: true }),
+  /** EC-S-T20 — four-field attestation display (T04 row 6). */
+  b4aHolderInitials: text('b4a_holder_initials'),
+  b4aStatus: text('b4a_status'),
+  /** EC-S-T20 — seller inbox read marker. */
+  readAt: timestamp('read_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

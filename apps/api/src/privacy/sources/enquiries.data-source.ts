@@ -75,6 +75,8 @@ export class EnquiriesDataSource implements PersonalDataSource {
           b4aBandMaxCents: null,
           b4aExpiresAt: null,
           b4aCheckedAt: null,
+          b4aHolderInitials: null,
+          b4aStatus: null,
           updatedAt: new Date(),
         })
         .where(inArray(enquiries.id, erasable))
@@ -100,6 +102,8 @@ export class EnquiriesDataSource implements PersonalDataSource {
         b4aBandMaxCents: null,
         b4aExpiresAt: null,
         b4aCheckedAt: null,
+        b4aHolderInitials: null,
+        b4aStatus: null,
         updatedAt: new Date(),
       })
       .where(and(eq(enquiries.seekerUserId, subjectId), isNotNull(enquiries.b4aToken)))
