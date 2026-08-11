@@ -1,0 +1,121 @@
+/* EC-S-T23 — seller listing analytics panel (KPI cards + CSS sparkline). */
+
+.sa-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sa-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sa-title {
+  font-family: var(--font-display, var(--font-sans));
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ink, #1a1a1a);
+  margin: 0;
+}
+
+.sa-lead {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted, #5c5c5c);
+  max-width: 36rem;
+}
+
+.sa-muted {
+  color: var(--muted, #5c5c5c);
+  font-size: 0.9rem;
+}
+
+.sa-btn {
+  align-self: flex-start;
+  background: var(--azure, #1a6faa);
+  color: #fff;
+  border: 0;
+  border-radius: 0.35rem;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+}
+
+.sa-window {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.sa-window__label {
+  color: var(--muted, #5c5c5c);
+}
+
+.sa-window__select {
+  font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--line, #d8d4cc);
+  background: transparent;
+  padding: 0.35rem 0.5rem;
+}
+
+.sa-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.sa-kpi {
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--line, #d8d4cc);
+}
+
+.sa-kpi__label {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted, #5c5c5c);
+}
+
+.sa-kpi__value {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--ink, #1a1a1a);
+}
+
+.sa-series {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sa-spark {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 3.5rem;
+  width: 100%;
+}
+
+.sa-spark__bar {
+  flex: 1 1 0;
+  min-width: 2px;
+  background: var(--azure, #1a6faa);
+  opacity: 0.75;
+}
+
+.sa-omi {
+  margin: 0;
+  font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+  font-variant-numeric: tabular-nums;
+  color: var(--ec-ochre, #c08a1e);
+  font-size: 0.95rem;
+}

@@ -115,6 +115,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     SELLER_CHECKLIST_ENABLED: false,
     SELLER_INBOX_ENABLED: false,
     SELLER_VIEWINGS_ENABLED: false,
+    SELLER_ANALYTICS_ENABLED: false,
     NOMINATIM_URL: 'https://nominatim.openstreetmap.org/search',
     GEOCODER_USER_AGENT: 'EasyCasaAPI/1.0 (test)',
     CRM_ENABLED: false,

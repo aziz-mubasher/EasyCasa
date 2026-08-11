@@ -52,6 +52,7 @@ import { SellerModule } from './seller/seller.module';
 import { VerifiedOwnerModule } from './verified-owner/verified-owner.module';
 import { SellerChecklistModule } from './seller-checklist/seller-checklist.module';
 import { SellerInboxModule } from './seller-inbox/seller-inbox.module';
+import { SellerAnalyticsModule } from './seller-analytics/seller-analytics.module';
 
 /** Static module imports (Privacy is DynamicModule via forRootProduction). */
 const REQUIRED_STATIC = [
@@ -101,6 +102,7 @@ const REQUIRED_STATIC = [
   VerifiedOwnerModule,
   SellerChecklistModule,
   SellerInboxModule,
+  SellerAnalyticsModule,
   PilotModule,
   DemoModule,
   CrmModule,

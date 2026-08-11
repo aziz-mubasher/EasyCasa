@@ -11,6 +11,7 @@ export * from './analytics';
 export * from './listing-wizard';
 export * from './verified-owner';
 export * from './seller-checklist';
+export * from './seller-analytics';
 export * from './publish-lifecycle';
 export * from './upload-quota';
 export * from './enquiry-inbox';

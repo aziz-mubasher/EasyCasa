@@ -3266,5 +3266,29 @@
       "description": "Descripción",
       "acceptedTerms": "Confirmo ser el propietario / titular y aceptar las condiciones."
     }
+  },
+  "sellerAnalytics": {
+    "eyebrow": "Vendedor",
+    "title": "Actividad del anuncio",
+    "lead": "Conteos agregados del período seleccionado. Solo observaciones sobre los datos disponibles, sin indicaciones de qué hacer.",
+    "windowLabel": "Período",
+    "window": {
+      "7d": "7 días",
+      "30d": "30 días",
+      "90d": "90 días"
+    },
+    "views": "Visualizaciones",
+    "saves": "Guardados",
+    "enquiries": "Consultas",
+    "enquiryRate": "Tasa de consultas",
+    "daysOnMarket": "Días en el mercado",
+    "viewsSeries": "Visualizaciones por día",
+    "priceVsOmi": "Posición respecto al punto medio OMI de zona: {pct}",
+    "priceVsOmiAbsent": "La franja OMI no está disponible para este anuncio.",
+    "signIn": "Inicia sesión para ver la actividad del anuncio.",
+    "signInCta": "Iniciar sesión",
+    "loading": "Cargando…",
+    "unavailable": "Estadísticas no disponibles.",
+    "error": "No se pudieron cargar las estadísticas."
   }
 }

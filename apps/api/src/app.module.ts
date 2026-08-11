@@ -44,6 +44,7 @@ import { SellerModule } from './seller/seller.module';
 import { VerifiedOwnerModule } from './verified-owner/verified-owner.module';
 import { SellerChecklistModule } from './seller-checklist/seller-checklist.module';
 import { SellerInboxModule } from './seller-inbox/seller-inbox.module';
+import { SellerAnalyticsModule } from './seller-analytics/seller-analytics.module';
 import { PilotModule } from './pilot/pilot.module';
 import { DemoModule } from './demo/demo.module';
 import { PrivacyModule } from './privacy/privacy.module';
@@ -120,6 +121,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     VerifiedOwnerModule,
     SellerChecklistModule,
     SellerInboxModule,
+    SellerAnalyticsModule,
     PilotModule,
     DemoModule,
     CrmModule,

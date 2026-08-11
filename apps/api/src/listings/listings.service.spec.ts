@@ -50,6 +50,7 @@ function makeService(repo: ListingsRepository) {
     alertsMock as never,
     valuationBandMock as never,
     usersMock as never,
+    {} as never, // DRIZZLE — view recording fail-soft; unused in unit tests
   );
 }
 

@@ -3266,5 +3266,29 @@
       "description": "Description",
       "acceptedTerms": "I confirm I am the owner / entitled party and accept the terms."
     }
+  },
+  "sellerAnalytics": {
+    "eyebrow": "Seller",
+    "title": "Listing activity",
+    "lead": "Aggregated counts for the selected period. Observations on available data only — not guidance on what to do.",
+    "windowLabel": "Period",
+    "window": {
+      "7d": "7 days",
+      "30d": "30 days",
+      "90d": "90 days"
+    },
+    "views": "Views",
+    "saves": "Saves",
+    "enquiries": "Enquiries",
+    "enquiryRate": "Enquiry rate",
+    "daysOnMarket": "Days on market",
+    "viewsSeries": "Views by day",
+    "priceVsOmi": "Position vs zone OMI midpoint: {pct}",
+    "priceVsOmiAbsent": "OMI band is not available for this listing.",
+    "signIn": "Sign in to see listing activity.",
+    "signInCta": "Sign in",
+    "loading": "Loading…",
+    "unavailable": "Statistics are unavailable.",
+    "error": "Could not load statistics."
   }
 }

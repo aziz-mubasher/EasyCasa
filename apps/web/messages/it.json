@@ -3266,5 +3266,29 @@
       "description": "Descrizione",
       "acceptedTerms": "Confermo di essere il proprietario / avente diritto e di accettare le condizioni."
     }
+  },
+  "sellerAnalytics": {
+    "eyebrow": "Venditore",
+    "title": "Andamento dell'annuncio",
+    "lead": "Conteggi aggregati sul periodo selezionato. Sono osservazioni sui dati disponibili, non indicazioni su cosa fare.",
+    "windowLabel": "Periodo",
+    "window": {
+      "7d": "7 giorni",
+      "30d": "30 giorni",
+      "90d": "90 giorni"
+    },
+    "views": "Visualizzazioni",
+    "saves": "Salvataggi",
+    "enquiries": "Richieste",
+    "enquiryRate": "Tasso richieste",
+    "daysOnMarket": "Giorni in vendita",
+    "viewsSeries": "Visualizzazioni per giorno",
+    "priceVsOmi": "Posizione rispetto al punto medio OMI di zona: {pct}",
+    "priceVsOmiAbsent": "Fascia OMI non disponibile per questo annuncio.",
+    "signIn": "Accedi per vedere i dati dell'annuncio.",
+    "signInCta": "Accedi",
+    "loading": "Caricamento…",
+    "unavailable": "Statistiche non disponibili.",
+    "error": "Impossibile caricare le statistiche."
   }
 }

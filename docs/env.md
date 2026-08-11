@@ -239,3 +239,8 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | Variable | Used by | Notes |
 |---|---|---|
 | SELLER_VIEWINGS_ENABLED | api | Default `false`. Seller-conducted viewings + open-house capacity routes (`/seller/...`) return 404 when off. Public/agent viewing routes unchanged. |
+
+## EC-S Phase 3 — seller analytics (T23/T24)
+| Variable | Used by | Notes |
+|---|---|---|
+| SELLER_ANALYTICS_ENABLED | api | Default `false`. T23 seller listing analytics (`GET /seller/listings/:id/analytics`). Also requires `SELLER_ONBOARDING_ENABLED`. Routes 404 when either flag is off. |

@@ -252,7 +252,6 @@ const Schema = z
      */
     SELLER_CHECKLIST_ENABLED: bool(false),
     /**
-    /**
      * EC-S-T20 — seller enquiry inbox.
      * Default false until G1 (onboarding) + counsel gates for seller dashboard.
      */
@@ -263,6 +262,12 @@ const Schema = z
      * Existing public/agent viewing routes are unaffected.
      */
     SELLER_VIEWINGS_ENABLED: bool(false),
+    /**
+     * EC-S-T23 — seller listing analytics (own-listing aggregates).
+     * Default false. Routes 404 unless SELLER_ONBOARDING_ENABLED is also on.
+     * T24 nudges share this flag.
+     */
+    SELLER_ANALYTICS_ENABLED: bool(false),
     /** Runtime Nominatim base for T08 address resolve (reuse migration geocoder). */
     NOMINATIM_URL: z.string().default('https://nominatim.openstreetmap.org/search'),
     GEOCODER_USER_AGENT: z.string().default('EasyCasaAPI/1.0 (ops@easycasaita.com)'),
