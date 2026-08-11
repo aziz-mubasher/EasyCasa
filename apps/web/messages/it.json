@@ -266,6 +266,14 @@
     "save": "Salva",
     "saved": "Salvato"
   },
+  "trustChips": {
+    "verifiedOwner": "Proprietario Verificato",
+    "verifiedOwnerAria": "Proprietà con proprietario verificato",
+    "docsScore": "Documentazione {have}/{total}",
+    "docsScoreAria": "Documenti pronti: {have} su {total}",
+    "listedByOwner": "In vendita diretta dal proprietario",
+    "daysOnMarket": "In vendita da {days, plural, =0 {oggi} one {# giorno} other {# giorni}}"
+  },
   "listingDetail": {
     "forSale": "In vendita",
     "forRent": "In affitto",

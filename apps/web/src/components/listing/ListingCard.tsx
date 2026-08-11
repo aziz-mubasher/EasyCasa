@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, type MouseEvent } from 'react';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { Badge } from '@/components/ui/Badge';
 import { euro, area } from '@/lib/format';
@@ -26,6 +27,8 @@ function Chevron({ dir }: { dir: 'left' | 'right' }) {
 }
 
 export function ListingCard({ l }: { l: ListingSummary }) {
+  const t = useTranslations('trustChips');
+  const tListing = useTranslations('listing');
   const rent = l.transactionType === 'rent';
   const urls = imageUrlsFor(l);
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -115,26 +118,30 @@ export function ListingCard({ l }: { l: ListingSummary }) {
         <div className="absolute top-3 left-3 flex flex-col gap-1">
           <Badge tone={rent ? 'pine' : 'ink'}>{rent ? 'rent' : 'sale'}</Badge>
           {l.trust?.verifiedOwner ? (
-            <Badge tone="azure">Proprietario Verificato</Badge>
+            <Badge tone="azure" aria-label={t('verifiedOwnerAria')}>
+              {t('verifiedOwner')}
+            </Badge>
           ) : null}
         </div>
       </div>
       <div className="p-4">
         <div className="data text-lg font-medium">
           {euro(l.price)}
-          {rent && <span className="text-muted text-sm">/mese</span>}
+          {rent && <span className="text-muted text-sm">{tListing('perMonth')}</span>}
         </div>
         <h3 className="font-display font-medium mt-0.5 line-clamp-1">{l.title}</h3>
         <p className="text-muted text-sm">{l.city ?? '—'}</p>
         {l.trust ? (
           <div className="data text-xs text-muted mt-2 flex flex-wrap gap-2">
-            {l.trust.listedByOwner ? <span>Vendita diretta dal proprietario</span> : null}
+            {l.trust.listedByOwner ? <span>{t('listedByOwner')}</span> : null}
             {l.trust.docScore ? (
-              <span>
-                Documentazione {l.trust.docScore.have}/{l.trust.docScore.total}
+              <span aria-label={t('docsScoreAria', l.trust.docScore)}>
+                {t('docsScore', l.trust.docScore)}
               </span>
             ) : null}
-            {l.trust.showDaysOnMarket ? <span>{l.trust.daysOnMarket} gg</span> : null}
+            {l.trust.showDaysOnMarket ? (
+              <span>{t('daysOnMarket', { days: l.trust.daysOnMarket })}</span>
+            ) : null}
           </div>
         ) : null}
         <div className="data text-xs text-muted mt-2 flex gap-3">
