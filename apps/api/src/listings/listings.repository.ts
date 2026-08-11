@@ -138,7 +138,6 @@ export class ListingsRepository {
         hasSellerProfile: sql<boolean>`EXISTS (
           SELECT 1 FROM seller_profile sp WHERE sp.user_id = listings.owner_user_id
         )`,
-        status: listings.status,
         publishedAt: listings.publishedAt,
         firstPublishedAt: listings.firstPublishedAt,
         unpublishedAt: listings.unpublishedAt,

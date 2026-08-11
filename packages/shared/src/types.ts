@@ -3,7 +3,7 @@
 export type PropertyCategory =
   | 'residential' | 'renovatable' | 'nib' | 'commercial' | 'auction' | 'rooms';
 
-export type ListingStatus = 'draft' | 'published' | 'sold' | 'archived';
+export type ListingStatus = 'draft' | 'published' | 'unpublished' | 'sold' | 'archived';
 /** @deprecated Prefer TransactionTypeSlug from taxonomy.ts (includes auction / bare_ownership) */
 export type TransactionType = 'sale' | 'rent' | 'auction' | 'bare_ownership';
 export type UserRole =
