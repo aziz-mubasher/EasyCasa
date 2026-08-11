@@ -1,192 +1,117 @@
-/** EC-S-T24 — nudgeRules from @easycasa/shared (shared package has no vitest). */
+/** EC-S-T24 — nudge rule tests: thresholds, missing-data safety, cooldowns, codes-only output. */
 
-import { describe, expect, it } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
-  DEFAULT_NUDGE_CONFIG,
   evaluateNudges,
-  isNudgeCode,
-  NUDGE_CODES,
-  type NudgeHistoryEntry,
-  type NudgeMetrics,
+  DEFAULT_NUDGE_CONFIG,
+  type ListingMetrics,
+  type NudgeCode,
 } from '@easycasa/shared';
 
-const NOW = new Date('2026-08-11T12:00:00.000Z');
+const NOW = new Date('2026-08-11T12:00:00Z');
+const NO_HISTORY = new Map<NudgeCode, Date>();
 
-function metrics(partial: Partial<NudgeMetrics>): NudgeMetrics {
-  return {
-    views: null,
-    enquiryRate: null,
-    daysOnMarket: null,
-    priceVsOmiBandPct: null,
-    ...partial,
-  };
-}
+const quiet: ListingMetrics = { daysOnMarket: 10, views30d: 100, enquiries30d: 3 };
 
-describe('evaluateNudges — thresholds', () => {
-  it('LOW_ENQUIRY_RATE fires below threshold with enough views', () => {
-    const codes = evaluateNudges(
-      metrics({ views: 100, enquiryRate: 0.01 }),
-      [],
-      NOW,
-    );
-    expect(codes).toContain('LOW_ENQUIRY_RATE');
+describe('rule thresholds', () => {
+  it('healthy listing produces no nudges', () => {
+    expect(evaluateNudges(quiet, NO_HISTORY, NOW)).toEqual([]);
   });
 
-  it('LOW_ENQUIRY_RATE does not fire at/above threshold', () => {
-    expect(
-      evaluateNudges(metrics({ views: 100, enquiryRate: 0.02 }), [], NOW),
-    ).not.toContain('LOW_ENQUIRY_RATE');
-    expect(
-      evaluateNudges(metrics({ views: 100, enquiryRate: 0.05 }), [], NOW),
-    ).not.toContain('LOW_ENQUIRY_RATE');
+  it('LOW_ENQUIRY_RATE requires the view floor', () => {
+    const m = { ...quiet, views30d: 199, enquiries30d: 0 };
+    expect(evaluateNudges(m, NO_HISTORY, NOW)).toEqual([]); // below floor: no judgment on thin data
+    const m2 = { ...quiet, views30d: 400, enquiries30d: 2 }; // 0.5%
+    expect(evaluateNudges(m2, NO_HISTORY, NOW)).toEqual([
+      { code: 'LOW_ENQUIRY_RATE', data: { views: 400, enquiries: 2 } },
+    ]);
   });
 
-  it('LOW_ENQUIRY_RATE requires minViewsForEnquiryRate', () => {
-    expect(
-      evaluateNudges(metrics({ views: 49, enquiryRate: 0 }), [], NOW),
-    ).not.toContain('LOW_ENQUIRY_RATE');
-    expect(
-      evaluateNudges(metrics({ views: 50, enquiryRate: 0 }), [], NOW),
-    ).toContain('LOW_ENQUIRY_RATE');
+  it('band nudges fire both directions at ±20 and round pct', () => {
+    expect(evaluateNudges({ ...quiet, priceVsOmiBandPct: 23.6 }, NO_HISTORY, NOW)).toEqual([
+      { code: 'ABOVE_OMI_BAND', data: { pct: 24 } },
+    ]);
+    expect(evaluateNudges({ ...quiet, priceVsOmiBandPct: -25.2 }, NO_HISTORY, NOW)).toEqual([
+      { code: 'BELOW_OMI_BAND', data: { pct: 25 } },
+    ]);
+    expect(evaluateNudges({ ...quiet, priceVsOmiBandPct: 19.9 }, NO_HISTORY, NOW)).toEqual([]);
   });
 
-  it('ABOVE_OMI_BAND / BELOW_OMI_BAND use ±omiBandDeviationPct (T09-aligned 20)', () => {
-    expect(DEFAULT_NUDGE_CONFIG.omiBandDeviationPct).toBe(20);
+  it('no OMI data ⇒ no band nudge (never guesses)', () => {
+    expect(evaluateNudges({ ...quiet, priceVsOmiBandPct: undefined }, NO_HISTORY, NOW)).toEqual([]);
+  });
+
+  it('LONG_ON_MARKET vs zone median × factor; silent without zone data', () => {
+    const m = { ...quiet, daysOnMarket: 90, zoneMedianDaysOnMarket: 60 };
+    expect(evaluateNudges(m, NO_HISTORY, NOW)).toEqual([
+      { code: 'LONG_ON_MARKET', data: { days: 90, zoneMedian: 60 } },
+    ]);
     expect(
-      evaluateNudges(metrics({ priceVsOmiBandPct: 20.1 }), [], NOW),
-    ).toEqual(['ABOVE_OMI_BAND']);
-    expect(
-      evaluateNudges(metrics({ priceVsOmiBandPct: 20 }), [], NOW),
+      evaluateNudges({ ...quiet, daysOnMarket: 89, zoneMedianDaysOnMarket: 60 }, NO_HISTORY, NOW),
     ).toEqual([]);
     expect(
-      evaluateNudges(metrics({ priceVsOmiBandPct: -20.1 }), [], NOW),
-    ).toEqual(['BELOW_OMI_BAND']);
-    expect(
-      evaluateNudges(metrics({ priceVsOmiBandPct: -20 }), [], NOW),
-    ).toEqual([]);
-    expect(
-      evaluateNudges(metrics({ priceVsOmiBandPct: 5 }), [], NOW),
-    ).toEqual([]);
-  });
-
-  it('LONG_ON_MARKET fires at longOnMarketDays', () => {
-    expect(
-      evaluateNudges(metrics({ daysOnMarket: 59 }), [], NOW),
+      evaluateNudges({ ...quiet, daysOnMarket: 500 }, NO_HISTORY, NOW).map((n) => n.code),
     ).not.toContain('LONG_ON_MARKET');
-    expect(
-      evaluateNudges(metrics({ daysOnMarket: 60 }), [], NOW),
-    ).toContain('LONG_ON_MARKET');
   });
 
-  it('STALE_NO_VIEWS requires zero views and staleNoViewsDays on market', () => {
+  it('STALE_NO_VIEWS needs both age and low views', () => {
+    expect(evaluateNudges({ daysOnMarket: 30, views30d: 10, enquiries30d: 0 }, NO_HISTORY, NOW)).toEqual(
+      [{ code: 'STALE_NO_VIEWS', data: { days: 30, views: 10 } }],
+    );
     expect(
-      evaluateNudges(metrics({ views: 0, daysOnMarket: 6 }), [], NOW),
-    ).not.toContain('STALE_NO_VIEWS');
-    expect(
-      evaluateNudges(metrics({ views: 0, daysOnMarket: 7 }), [], NOW),
-    ).toContain('STALE_NO_VIEWS');
-    expect(
-      evaluateNudges(metrics({ views: 1, daysOnMarket: 30 }), [], NOW),
-    ).not.toContain('STALE_NO_VIEWS');
+      evaluateNudges({ daysOnMarket: 30, views30d: 80, enquiries30d: 0 }, NO_HISTORY, NOW),
+    ).toEqual([]);
   });
 });
 
-describe('evaluateNudges — missing-data safety', () => {
-  it('skips OMI codes when priceVsOmiBandPct is null', () => {
-    expect(
-      evaluateNudges(metrics({ priceVsOmiBandPct: null, daysOnMarket: 90 }), [], NOW),
-    ).not.toEqual(expect.arrayContaining(['ABOVE_OMI_BAND', 'BELOW_OMI_BAND']));
+describe('cooldown', () => {
+  const m: ListingMetrics = { ...quiet, priceVsOmiBandPct: 30 };
+
+  it('suppresses a recently shown code', () => {
+    const history = new Map<NudgeCode, Date>([
+      ['ABOVE_OMI_BAND', new Date('2026-08-01T12:00:00Z')],
+    ]); // 10d ago
+    expect(evaluateNudges(m, history, NOW)).toEqual([]);
   });
 
-  it('skips view-dependent codes when views/enquiryRate unknown', () => {
-    const codes = evaluateNudges(
-      metrics({ views: null, enquiryRate: null, daysOnMarket: 90 }),
-      [],
-      NOW,
-    );
-    expect(codes).not.toContain('LOW_ENQUIRY_RATE');
-    expect(codes).not.toContain('STALE_NO_VIEWS');
-    expect(codes).toContain('LONG_ON_MARKET');
+  it('re-emits after cooldownDays', () => {
+    const history = new Map<NudgeCode, Date>([
+      ['ABOVE_OMI_BAND', new Date('2026-07-25T12:00:00Z')],
+    ]); // 17d ago
+    expect(evaluateNudges(m, history, NOW).map((n) => n.code)).toEqual(['ABOVE_OMI_BAND']);
   });
 
-  it('skips LONG_ON_MARKET / STALE when daysOnMarket is null', () => {
-    const codes = evaluateNudges(
-      metrics({ views: 0, daysOnMarket: null }),
-      [],
-      NOW,
-    );
-    expect(codes).not.toContain('LONG_ON_MARKET');
-    expect(codes).not.toContain('STALE_NO_VIEWS');
-  });
-});
-
-describe('evaluateNudges — cooldowns', () => {
-  it('suppresses a code emitted inside cooldownDays', () => {
-    const history: NudgeHistoryEntry[] = [
-      {
-        code: 'ABOVE_OMI_BAND',
-        emittedAt: new Date('2026-08-01T12:00:00.000Z'), // 10 days ago
-      },
-    ];
-    expect(
-      evaluateNudges(metrics({ priceVsOmiBandPct: 35 }), history, NOW),
-    ).not.toContain('ABOVE_OMI_BAND');
-  });
-
-  it('allows re-emit after cooldownDays', () => {
-    const history: NudgeHistoryEntry[] = [
-      {
-        code: 'ABOVE_OMI_BAND',
-        emittedAt: new Date('2026-07-20T12:00:00.000Z'), // 22 days ago
-      },
-    ];
-    expect(
-      evaluateNudges(metrics({ priceVsOmiBandPct: 35 }), history, NOW),
-    ).toContain('ABOVE_OMI_BAND');
-  });
-
-  it('cooldown is per-code (other codes still fire)', () => {
-    const history: NudgeHistoryEntry[] = [
-      {
-        code: 'LONG_ON_MARKET',
-        emittedAt: new Date('2026-08-05T12:00:00.000Z'),
-      },
-    ];
-    const codes = evaluateNudges(
-      metrics({ priceVsOmiBandPct: 40, daysOnMarket: 90 }),
-      history,
-      NOW,
-    );
-    expect(codes).toContain('ABOVE_OMI_BAND');
-    expect(codes).not.toContain('LONG_ON_MARKET');
-  });
-});
-
-describe('evaluateNudges — codes-only', () => {
-  it('returns only known NudgeCode values in NUDGE_CODES order', () => {
-    const codes = evaluateNudges(
-      metrics({
-        views: 0,
-        enquiryRate: 0,
-        daysOnMarket: 90,
-        priceVsOmiBandPct: 40,
-      }),
-      [],
-      NOW,
-    );
-    expect(codes.every(isNudgeCode)).toBe(true);
-    expect(codes).toEqual([
-      'ABOVE_OMI_BAND',
-      'LONG_ON_MARKET',
-      'STALE_NO_VIEWS',
+  it('cooldown is per-code, not global', () => {
+    const both: ListingMetrics = {
+      daysOnMarket: 30,
+      views30d: 10,
+      enquiries30d: 0,
+      priceVsOmiBandPct: 30,
+    };
+    const history = new Map<NudgeCode, Date>([
+      ['ABOVE_OMI_BAND', new Date('2026-08-10T12:00:00Z')],
     ]);
-    // LOW_ENQUIRY skipped: views < minViewsForEnquiryRate
-    expect(NUDGE_CODES).toEqual([
-      'LOW_ENQUIRY_RATE',
-      'ABOVE_OMI_BAND',
-      'BELOW_OMI_BAND',
-      'LONG_ON_MARKET',
-      'STALE_NO_VIEWS',
-    ]);
+    expect(evaluateNudges(both, history, NOW).map((n) => n.code)).toEqual(['STALE_NO_VIEWS']);
+  });
+});
+
+describe('row-3 structural compliance', () => {
+  it('output contains codes and numbers only — no strings anywhere in data', () => {
+    const noisy: ListingMetrics = {
+      daysOnMarket: 120,
+      views30d: 1000,
+      enquiries30d: 1,
+      priceVsOmiBandPct: 35,
+      zoneMedianDaysOnMarket: 40,
+    };
+    const nudges = evaluateNudges(noisy, NO_HISTORY, NOW);
+    expect(nudges.length).toBeGreaterThan(0);
+    for (const n of nudges) {
+      for (const v of Object.values(n.data)) expect(typeof v).toBe('number');
+    }
+  });
+
+  it('config defaults align with the T09 chip threshold (20%)', () => {
+    expect(DEFAULT_NUDGE_CONFIG.bandDeviationPct).toBe(20);
   });
 });

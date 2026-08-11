@@ -8,12 +8,13 @@ import {
 import { and, desc, eq, gte, isNull, sql } from 'drizzle-orm';
 import {
   DEFAULT_NUDGE_CONFIG,
+  daysOnMarket,
   evaluateNudges,
   isNudgeCode,
+  type ListingMetrics,
+  type Nudge,
   type NudgeCode,
-  type NudgeHistoryEntry,
-  type NudgeMetrics,
-  daysOnMarket,
+  type NudgeHistory,
 } from '@easycasa/shared';
 
 import { DRIZZLE } from '../db/db.module';
@@ -76,9 +77,7 @@ export class SellerNudgesService {
     return row;
   }
 
-  /**
-   * Active (non-dismissed) nudges for the seller UI — latest emission per code.
-   */
+  /** Active (non-dismissed) nudges — latest emission per code, with numeric payload. */
   async listActive(actorUserId: string, listingId: string) {
     await this.assertOwner(actorUserId, listingId);
     const rows = await this.db
@@ -86,6 +85,7 @@ export class SellerNudgesService {
         code: listingNudges.code,
         emittedAt: listingNudges.emittedAt,
         dismissedAt: listingNudges.dismissedAt,
+        payload: listingNudges.payload,
       })
       .from(listingNudges)
       .where(
@@ -94,12 +94,21 @@ export class SellerNudgesService {
       .orderBy(desc(listingNudges.emittedAt));
 
     const seen = new Set<string>();
-    const items: Array<{ code: NudgeCode; emittedAt: string }> = [];
+    const items: Array<{ code: NudgeCode; emittedAt: string; data: Record<string, number> }> =
+      [];
     for (const r of rows) {
       if (!isNudgeCode(r.code)) continue;
       if (seen.has(r.code)) continue;
       seen.add(r.code);
-      items.push({ code: r.code, emittedAt: r.emittedAt.toISOString() });
+      const data =
+        r.payload && typeof r.payload === 'object' && !Array.isArray(r.payload)
+          ? Object.fromEntries(
+              Object.entries(r.payload as Record<string, unknown>).filter(
+                (e): e is [string, number] => typeof e[1] === 'number',
+              ),
+            )
+          : {};
+      items.push({ code: r.code, emittedAt: r.emittedAt.toISOString(), data });
     }
     return { items };
   }
@@ -122,7 +131,6 @@ export class SellerNudgesService {
       .returning({ code: listingNudges.code });
 
     if (updated.length === 0) {
-      // Idempotent dismiss: already dismissed or never emitted → 404 only if never emitted.
       const any = await this.db
         .select({ code: listingNudges.code })
         .from(listingNudges)
@@ -135,8 +143,8 @@ export class SellerNudgesService {
     return { ok: true as const, code: codeRaw };
   }
 
-  /** History window for cool-down evaluation (includes dismissed rows). */
-  async loadHistory(listingId: string, now = new Date()): Promise<NudgeHistoryEntry[]> {
+  /** Latest emission per code for cooldown (includes dismissed). */
+  async loadHistory(listingId: string, now = new Date()): Promise<NudgeHistory> {
     const since = new Date(
       now.getTime() - DEFAULT_NUDGE_CONFIG.cooldownDays * 86_400_000,
     );
@@ -148,21 +156,23 @@ export class SellerNudgesService {
       .from(listingNudges)
       .where(
         and(eq(listingNudges.listingId, listingId), gte(listingNudges.emittedAt, since)),
-      );
-    const out: NudgeHistoryEntry[] = [];
+      )
+      .orderBy(desc(listingNudges.emittedAt));
+
+    const m = new Map<NudgeCode, Date>();
     for (const r of rows) {
       if (!isNudgeCode(r.code)) continue;
-      out.push({ code: r.code, emittedAt: r.emittedAt });
+      if (!m.has(r.code)) m.set(r.code, r.emittedAt);
     }
-    return out;
+    return m;
   }
 
   /**
-   * Build metrics without requiring the unfinished T23 HTTP endpoint.
-   * Views come from `listing_analytics_daily` when T23 migration is present;
-   * otherwise views stay null (missing-data safety skips view-based codes).
+   * Metrics for evaluateNudges. Views from `listing_analytics_daily` when T23
+   * migration is present; otherwise 0 (missing table → fail-soft skip view codes
+   * only when we cannot read — treat as 0 views after successful empty sum).
    */
-  async loadMetrics(listingId: string, now = new Date()): Promise<NudgeMetrics> {
+  async loadMetrics(listingId: string, now = new Date()): Promise<ListingMetrics | null> {
     const rows = await this.db
       .select({
         status: listings.status,
@@ -179,17 +189,11 @@ export class SellerNudgesService {
       .where(eq(listings.id, listingId))
       .limit(1);
     const listing = rows[0];
-    if (!listing) {
-      return {
-        views: null,
-        enquiryRate: null,
-        daysOnMarket: null,
-        priceVsOmiBandPct: null,
-      };
-    }
+    if (!listing) return null;
 
     const rec = listingToPublishRecord(listing);
     const dom = daysOnMarket(rec, now);
+    if (dom == null) return null;
 
     const windowDays = 30;
     const since = new Date(now.getTime() - windowDays * 86_400_000);
@@ -199,32 +203,29 @@ export class SellerNudgesService {
       .where(and(eq(enquiries.listingId, listingId), gte(enquiries.createdAt, since)));
     const enquiryCount = Number(enquiryRows[0]?.total ?? 0);
 
-    const views = await this.sumViewsFailSoft(listingId, windowDays, now);
-    const enquiryRate =
-      views == null ? null : views > 0 ? enquiryCount / views : enquiryCount > 0 ? 1 : 0;
-
+    const views = (await this.sumViewsFailSoft(listingId, windowDays, now)) ?? 0;
     const pricePct = await this.resolvePriceVsOmi(listing);
 
-    return {
-      views,
-      enquiryRate,
+    const metrics: ListingMetrics = {
       daysOnMarket: dom,
-      priceVsOmiBandPct: pricePct,
+      views30d: views,
+      enquiries30d: enquiryCount,
     };
+    if (pricePct != null) metrics.priceVsOmiBandPct = pricePct;
+    // zoneMedianDaysOnMarket omitted until a zone median source exists (T23).
+    return metrics;
   }
 
-  /**
-   * Emit codes for one listing. Idempotent same UTC day: no duplicate
-   * (listing_id, code) on the same calendar day.
-   */
+  /** Emit codes for one listing. Idempotent same UTC day. */
   async evaluateAndPersist(listingId: string, now = new Date()): Promise<NudgeCode[]> {
     const metrics = await this.loadMetrics(listingId, now);
+    if (!metrics) return [];
     const history = await this.loadHistory(listingId, now);
-    const codes = evaluateNudges(metrics, history, now);
+    const nudges = evaluateNudges(metrics, history, now);
     const emitted: NudgeCode[] = [];
-    for (const code of codes) {
-      const inserted = await this.emitIfNewToday(listingId, code, now);
-      if (inserted) emitted.push(code);
+    for (const n of nudges) {
+      const inserted = await this.emitIfNewToday(listingId, n, now);
+      if (inserted) emitted.push(n.code);
     }
     return emitted;
   }
@@ -239,7 +240,7 @@ export class SellerNudgesService {
 
   private async emitIfNewToday(
     listingId: string,
-    code: NudgeCode,
+    nudge: Nudge,
     now: Date,
   ): Promise<boolean> {
     const day = utcDayString(now);
@@ -250,7 +251,7 @@ export class SellerNudgesService {
       .where(
         and(
           eq(listingNudges.listingId, listingId),
-          eq(listingNudges.code, code),
+          eq(listingNudges.code, nudge.code),
           gte(listingNudges.emittedAt, dayStart),
         ),
       )
@@ -259,8 +260,9 @@ export class SellerNudgesService {
 
     await this.db.insert(listingNudges).values({
       listingId,
-      code,
+      code: nudge.code,
       emittedAt: now,
+      payload: nudge.data,
     });
     return true;
   }
@@ -270,7 +272,6 @@ export class SellerNudgesService {
     windowDays: number,
     now: Date,
   ): Promise<number | null> {
-    // T23 table `listing_analytics_daily` — absent until 0057 lands.
     try {
       const endDay = utcDayString(now);
       const end = new Date(`${endDay}T00:00:00.000Z`);

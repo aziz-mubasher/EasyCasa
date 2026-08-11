@@ -2,7 +2,7 @@
 
 /**
  * EC-S-T24 — dismissible seller nudge cards (observation-only copy).
- * No seller dashboard shell on main yet; mount when analytics UI lands.
+ * Numeric interpolation only; no CTA / advice verbs in i18n.
  */
 
 import { useTranslations } from 'next-intl';
@@ -11,6 +11,7 @@ import { NUDGE_CODES, isNudgeCode, type NudgeCode } from '@easycasa/shared';
 export type SellerNudgeItem = {
   code: NudgeCode;
   emittedAt: string;
+  data: Record<string, number>;
 };
 
 type Props = {
@@ -29,7 +30,7 @@ export function SellerNudgeCards({ items, onDismiss, dismissingCode }: Props) {
       <ul>
         {items.map((item) => (
           <li key={item.code} data-nudge-code={item.code}>
-            <p>{t(item.code)}</p>
+            <p>{t(item.code, item.data)}</p>
             {onDismiss ? (
               <button
                 type="button"
@@ -48,14 +49,17 @@ export function SellerNudgeCards({ items, onDismiss, dismissingCode }: Props) {
 
 /** Filter API payload to known codes (defensive). */
 export function filterNudgeItems(
-  raw: Array<{ code: string; emittedAt: string }>,
+  raw: Array<{ code: string; emittedAt: string; data?: Record<string, number> }>,
 ): SellerNudgeItem[] {
   const out: SellerNudgeItem[] = [];
   for (const row of raw) {
     if (!isNudgeCode(row.code)) continue;
-    out.push({ code: row.code, emittedAt: row.emittedAt });
+    out.push({
+      code: row.code,
+      emittedAt: row.emittedAt,
+      data: row.data ?? {},
+    });
   }
-  // Stable display order matches NUDGE_CODES
   out.sort((a, b) => NUDGE_CODES.indexOf(a.code) - NUDGE_CODES.indexOf(b.code));
   return out;
 }

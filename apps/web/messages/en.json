@@ -3170,12 +3170,12 @@
     }
   },
   "nudges": {
-    "LOW_ENQUIRY_RATE": "The enquiry rate relative to views is low compared with listings that see similar traffic.",
-    "ABOVE_OMI_BAND": "The asking price is above the local OMI band.",
-    "BELOW_OMI_BAND": "The asking price is below the local OMI band.",
-    "LONG_ON_MARKET": "This listing has been online for more than sixty days.",
-    "STALE_NO_VIEWS": "No recent views on this listing.",
+    "title": "Listing observations",
     "dismiss": "Dismiss",
-    "title": "Listing observations"
+    "LOW_ENQUIRY_RATE": "{views} views and {enquiries} enquiries in the last 30 days",
+    "ABOVE_OMI_BAND": "The price is {pct}% above the local OMI band",
+    "BELOW_OMI_BAND": "The price is {pct}% below the local OMI band",
+    "LONG_ON_MARKET": "On the market for {days} days; zone median {zoneMedian}",
+    "STALE_NO_VIEWS": "{views} views in {days} days since publish"
   }
 }

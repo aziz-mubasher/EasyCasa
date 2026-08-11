@@ -5,6 +5,7 @@ export {
   isNudgeCode,
   type NudgeCode,
   type NudgeConfig,
-  type NudgeHistoryEntry,
-  type NudgeMetrics,
+  type Nudge,
+  type NudgeHistory,
+  type ListingMetrics,
 } from './nudgeRules';

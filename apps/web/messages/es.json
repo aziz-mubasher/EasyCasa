@@ -3170,12 +3170,12 @@
     }
   },
   "nudges": {
-    "LOW_ENQUIRY_RATE": "La tasa de consultas respecto a las visitas es baja frente a anuncios con tráfico similar.",
-    "ABOVE_OMI_BAND": "El precio pedido está por encima de la franja OMI de la zona.",
-    "BELOW_OMI_BAND": "El precio pedido está por debajo de la franja OMI de la zona.",
-    "LONG_ON_MARKET": "El anuncio lleva más de sesenta días publicado.",
-    "STALE_NO_VIEWS": "No hay visitas recientes en este anuncio.",
+    "title": "Observaciones del anuncio",
     "dismiss": "Ocultar",
-    "title": "Observaciones del anuncio"
+    "LOW_ENQUIRY_RATE": "{views} visitas y {enquiries} consultas en los últimos 30 días",
+    "ABOVE_OMI_BAND": "El precio está un {pct}% por encima de la franja OMI de la zona",
+    "BELOW_OMI_BAND": "El precio está un {pct}% por debajo de la franja OMI de la zona",
+    "LONG_ON_MARKET": "En venta desde hace {days} días; mediana de zona {zoneMedian}",
+    "STALE_NO_VIEWS": "{views} visitas en {days} días de publicación"
   }
 }

@@ -1186,6 +1186,8 @@ export const listingNudges = pgTable(
     code: text('code').notNull(),
     emittedAt: timestamp('emitted_at', { withTimezone: true }).notNull().defaultNow(),
     dismissedAt: timestamp('dismissed_at', { withTimezone: true }),
+    /** Numeric i18n interpolation only (T24). */
+    payload: jsonb('payload').$type<Record<string, number>>().notNull().default({}),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.listingId, t.code, t.emittedAt] }),

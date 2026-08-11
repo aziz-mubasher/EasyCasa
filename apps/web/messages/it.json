@@ -3170,12 +3170,12 @@
     }
   },
   "nudges": {
-    "LOW_ENQUIRY_RATE": "Il tasso di richieste rispetto alle visualizzazioni è basso rispetto agli annunci con traffico simile.",
-    "ABOVE_OMI_BAND": "Il prezzo richiesto è oltre la fascia OMI di zona.",
-    "BELOW_OMI_BAND": "Il prezzo richiesto è sotto la fascia OMI di zona.",
-    "LONG_ON_MARKET": "L’annuncio è online da più di sessanta giorni.",
-    "STALE_NO_VIEWS": "Nessuna visualizzazione recente sull’annuncio.",
+    "title": "Osservazioni sull'annuncio",
     "dismiss": "Nascondi",
-    "title": "Osservazioni sull’annuncio"
+    "LOW_ENQUIRY_RATE": "{views} visualizzazioni e {enquiries} richieste negli ultimi 30 giorni",
+    "ABOVE_OMI_BAND": "Il prezzo è {pct}% sopra la fascia OMI di zona",
+    "BELOW_OMI_BAND": "Il prezzo è {pct}% sotto la fascia OMI di zona",
+    "LONG_ON_MARKET": "In vendita da {days} giorni; mediana di zona {zoneMedian}",
+    "STALE_NO_VIEWS": "{views} visualizzazioni in {days} giorni di pubblicazione"
   }
 }

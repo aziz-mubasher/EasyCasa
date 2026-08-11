@@ -3,12 +3,14 @@
 --
 -- `listing_nudges` IS the cooldown ledger: one row per emission.
 -- Optional `dismissed_at` for seller dismissible UI (does not delete history).
+-- `payload` stores numeric i18n interpolation only (never prose).
 
 CREATE TABLE IF NOT EXISTS listing_nudges (
   listing_id uuid NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
   code text NOT NULL,
   emitted_at timestamptz NOT NULL DEFAULT now(),
   dismissed_at timestamptz,
+  payload jsonb NOT NULL DEFAULT '{}'::jsonb,
   PRIMARY KEY (listing_id, code, emitted_at)
 );
 
@@ -19,4 +21,4 @@ CREATE INDEX IF NOT EXISTS listing_nudges_listing_code_idx
   ON listing_nudges (listing_id, code, emitted_at DESC);
 
 COMMENT ON TABLE listing_nudges IS
-  'EC-S-T24 nudge emission history (cooldown + dismiss). Codes only; copy in i18n.';
+  'EC-S-T24 nudge emission history (cooldown + dismiss). Codes + numeric payload; copy in i18n.';
