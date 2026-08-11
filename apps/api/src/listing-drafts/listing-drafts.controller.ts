@@ -14,6 +14,7 @@ import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
+import { SellerConsentGuard } from '../seller/seller-consent.guard';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { SellerQuotaService } from '../seller-quota/seller-quota.service';
 import { ListingDraftsService } from './listing-drafts.service';
@@ -28,7 +29,7 @@ class NavigateDto {
  * Submit materializes listing + publish (first_published_at sticky).
  */
 @Controller('listing-drafts')
-@UseGuards(SellerOnboardingEnabledGuard)
+@UseGuards(SellerOnboardingEnabledGuard, SellerConsentGuard)
 export class ListingDraftsController {
   constructor(
     private readonly drafts: ListingDraftsService,

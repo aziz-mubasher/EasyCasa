@@ -4,12 +4,13 @@ import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
+import { SellerConsentGuard } from '../seller/seller-consent.guard';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { SellerNudgesEnabledGuard } from './seller-nudges.guard';
 import { SellerNudgesService } from './seller-nudges.service';
 
 @Controller('seller/listings/:listingId/nudges')
-@UseGuards(SellerOnboardingEnabledGuard, SellerNudgesEnabledGuard)
+@UseGuards(SellerOnboardingEnabledGuard, SellerConsentGuard, SellerNudgesEnabledGuard)
 export class SellerNudgesController {
   constructor(
     private readonly nudges: SellerNudgesService,

@@ -10,18 +10,17 @@ import { SearchModule } from '../search/search.module';
 import { DbModule } from '../db/db.module';
 import { AlertsModule } from '../alerts/alerts.module';
 import { AvmModule } from '../avm/avm.module';
-import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { SellerQuotaModule } from '../seller-quota/seller-quota.module';
+import { SellerModule } from '../seller/seller.module';
 
 @Module({
-  imports: [UsersModule, SearchModule, DbModule, AlertsModule, AvmModule, SellerQuotaModule],
+  imports: [UsersModule, SearchModule, DbModule, AlertsModule, AvmModule, SellerQuotaModule, SellerModule],
   controllers: [ListingsController, SellerListingsController],
   providers: [
     ListingsService,
     ListingsRepository,
     DrizzleListingReadRepository,
     { provide: LISTING_READ, useExisting: DrizzleListingReadRepository },
-    SellerOnboardingEnabledGuard,
   ],
   exports: [ListingsService, ListingsRepository],
 })

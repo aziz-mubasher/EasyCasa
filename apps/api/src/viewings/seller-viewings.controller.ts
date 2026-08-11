@@ -15,6 +15,7 @@ import type { AuthUser } from '../auth/auth.types';
 import {
   viewingForConductor,
 } from '../authority/serializers/viewing.serializer';
+import { SellerConsentGuard } from '../seller/seller-consent.guard';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { SellerService } from '../seller/seller.service';
 import { UsersService } from '../users/users.service';
@@ -29,7 +30,7 @@ import { ViewingsService } from './viewings.service';
  * ownership of the viewing's listing (lifecycle).
  */
 @Controller('seller')
-@UseGuards(SellerOnboardingEnabledGuard, SellerViewingsEnabledGuard)
+@UseGuards(SellerOnboardingEnabledGuard, SellerConsentGuard, SellerViewingsEnabledGuard)
 @Roles('seller')
 export class SellerViewingsController {
   constructor(

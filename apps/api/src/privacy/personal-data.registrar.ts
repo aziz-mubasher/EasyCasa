@@ -4,6 +4,7 @@ import { DsarService } from './dsar.service';
 import { ErasureService } from './erasure.service';
 import { PersonalDataRegistry } from './personal-data.registry';
 import { AsteLeadsDataSource } from './sources/aste-leads.data-source';
+import { ConsentAcceptanceLogDataSource } from './sources/consent-acceptance-log.data-source';
 import { ConsentLedgerDataSource } from './sources/consent-ledger.data-source';
 import { EnquiriesDataSource } from './sources/enquiries.data-source';
 import { ProfileDataSource } from './sources/profile.data-source';
@@ -23,6 +24,8 @@ export class PersonalDataRegistrar implements OnModuleInit {
     @Inject(SavedSearchesDataSource) private readonly savedSearches: SavedSearchesDataSource,
     @Inject(ProfileDataSource) private readonly profile: ProfileDataSource,
     @Inject(ConsentLedgerDataSource) private readonly consent: ConsentLedgerDataSource,
+    @Inject(ConsentAcceptanceLogDataSource)
+    private readonly consentAcceptanceLog: ConsentAcceptanceLogDataSource,
     @Inject(WaInboundDataSource) private readonly waInbound: WaInboundDataSource,
     @Inject(WhatsAppMessagesDataSource)
     private readonly whatsappMessages: WhatsAppMessagesDataSource,
@@ -39,6 +42,7 @@ export class PersonalDataRegistrar implements OnModuleInit {
       this.savedSearches,
       this.profile,
       this.consent,
+      this.consentAcceptanceLog,
       this.waInbound,
       this.whatsappMessages,
       this.asteLeads,
