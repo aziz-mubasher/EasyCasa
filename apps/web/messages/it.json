@@ -3307,5 +3307,10 @@
     "BELOW_OMI_BAND": "Il prezzo è {pct}% sotto la fascia OMI di zona",
     "LONG_ON_MARKET": "In vendita da {days} giorni; mediana di zona {zoneMedian}",
     "STALE_NO_VIEWS": "{views} visualizzazioni in {days} giorni di pubblicazione"
+  },
+  "listingBoost": {
+    "inEvidenza": "In evidenza",
+    "inEvidenzaAria": "Annuncio in evidenza a pagamento",
+    "directoryNote": "Contenuto pubblicitario — posizionamento a pagamento"
   }
 }

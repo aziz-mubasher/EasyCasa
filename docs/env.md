@@ -249,3 +249,10 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | Variable | Used by | Notes |
 |---|---|---|
 | SELLER_PREMIUM_ENABLED | api | Default `false`. T27 premium seller tier (subscriptions → entitlements/quota raises + VO queue priority). When off, quota uses env floor only (ignores `seller_subscription`); `GET /seller/entitlements` 404s; checkout for plan key `seller_premium` is refused (404). Entitlements always read the local webhook-maintained `seller_subscription` row — never live Stripe (staleness ≈ webhook SLA). Reuses the existing Stripe subscription rail unchanged (see `docs/billing.md`) — no rail extension was needed. |
+
+## EC-S Phase 4 — listing boost (T26)
+| Variable | Used by | Notes |
+|---|---|---|
+| LISTING_BOOST_ENABLED | api | Default `false`. T26 listing boost checkout/UI. When off, purchase paths 404; **existing active boosts still ranked + labelled**. |
+| STRIPE_PRICE_BOOST_7D | api | Optional Stripe Price ID for fixed 7-day boost (flat fee). Empty → Checkout `price_data` with fixed cents from shared `BOOST_FLAT_PRICE_CENTS`. |
+| STRIPE_PRICE_BOOST_30D | api | Optional Stripe Price ID for fixed 30-day boost (flat fee). |

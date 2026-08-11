@@ -87,7 +87,7 @@ export class SearchService implements OnModuleInit {
         'energyClass',
         'features',
       ],
-      sortableAttributes: ['price', 'publishedAt'],
+      sortableAttributes: ['price', 'publishedAt', 'boostWeight'],
     });
     await getMeili().waitForTask(task.taskUid);
   }
@@ -95,6 +95,23 @@ export class SearchService implements OnModuleInit {
   async indexListing(doc: ListingDoc): Promise<void> {
     const task = await this.index.addDocuments([doc], { primaryKey: 'id' });
     await getMeili().waitForTask(task.taskUid);
+  }
+
+  /** Partial Meili update after boost activate/cancel/expire (no full reindex). */
+  async patchBoost(listingId: string, boostWeight: number, boosted: boolean): Promise<void> {
+    try {
+      const task = await this.index.updateDocuments(
+        [{ id: listingId, boostWeight, boosted }],
+        { primaryKey: 'id' },
+      );
+      await getMeili().waitForTask(task.taskUid);
+    } catch (err) {
+      // Fail-soft: ranking may lag until next full index.
+      Logger.warn(
+        `meili boost patch failed listing=${listingId}: ${err instanceof Error ? err.message : String(err)}`,
+        'SearchService',
+      );
+    }
   }
 
   async indexBatch(docs: ListingDoc[]): Promise<void> {
@@ -147,14 +164,20 @@ export class SearchService implements OnModuleInit {
 
     const res = await this.index.search(p.q ?? '', {
       filter: filters,
-      sort: p.sort ? [p.sort] : ['publishedAt:desc'],
+      sort: p.sort ? [p.sort] : ['boostWeight:desc', 'publishedAt:desc'],
       limit: pageSize,
       offset: (page - 1) * pageSize,
       facets: [...FACET_FIELDS],
     });
 
     return {
-      items: res.hits,
+      items: res.hits.map((h) => {
+        const doc = h as ListingDoc;
+        return {
+          ...doc,
+          boosted: Boolean(doc.boosted) || (doc.boostWeight ?? 0) > 0,
+        };
+      }),
       total: res.estimatedTotalHits ?? res.hits.length,
       page,
       pageSize,

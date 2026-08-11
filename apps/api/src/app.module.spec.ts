@@ -16,6 +16,7 @@ import { EmailModule } from './email/email.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
 import { FascicoloModule } from './fascicolo/fascicolo.module';
 import { FeaturedModule } from './featured/featured.module';
+import { ListingBoostModule } from './listing-boost/listing-boost.module';
 import { InvoicingModule } from './invoicing/invoicing.module';
 import { ListingsModule } from './listings/listings.module';
 import { ImportsModule } from './imports/imports.module';
@@ -76,6 +77,7 @@ const REQUIRED_STATIC = [
   MessagingModule,
   BillingModule,
   FeaturedModule,
+  ListingBoostModule,
   ServiceCatalogModule,
   PropertiesModule,
   FascicoloModule,

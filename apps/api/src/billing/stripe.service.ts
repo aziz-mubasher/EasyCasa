@@ -1,7 +1,12 @@
 import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import Stripe from 'stripe';
 import { eq } from 'drizzle-orm';
-import type { SubscriptionStatus } from '@easycasa/shared';
+import {
+  boostFlatPriceCents,
+  isBoostDurationDays,
+  type BoostDurationDays,
+  type SubscriptionStatus,
+} from '@easycasa/shared';
 
 import { apiConfig } from '../config';
 import { APP_CONFIG } from '../config/config.module';
@@ -13,8 +18,9 @@ import {
   memberships,
   sellerSubscription,
   featuredPlacements,
-  listings,
 } from '../db/schema';
+import { ListingBoostService } from '../listing-boost/listing-boost.service';
+import { SearchService } from '../search/search.service';
 
 const SELLER_PREMIUM_PLAN_KEY = 'seller_premium';
 
@@ -39,6 +45,8 @@ export class StripeService {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
     @Inject(APP_CONFIG) private readonly config: ApiConfig,
+    private readonly boosts: ListingBoostService,
+    private readonly search: SearchService,
   ) {}
 
   private stripe(): Stripe {
@@ -84,24 +92,43 @@ export class StripeService {
     return session.url ?? '';
   }
 
-  /** One-time payment to feature a listing for N days. */
+  /**
+   * EC-S-T26 — flat-fee boost checkout for 7 or 30 days only.
+   * Uses Stripe Price IDs when configured; otherwise fixed price_data unit_amount.
+   */
   async createFeaturedCheckout(listingId: string, days: number): Promise<string> {
-    const priceCents = days * 200; // €2/day — configure per market
-    const session = await this.stripe().checkout.sessions.create({
-      mode: 'payment',
-      line_items: [
-        {
+    if (!isBoostDurationDays(days)) {
+      throw new BadRequestException('boost duration must be 7 or 30 days');
+    }
+    const duration = days as BoostDurationDays;
+    const unitAmount = boostFlatPriceCents(duration);
+    const priceId =
+      duration === 7
+        ? this.config.STRIPE_PRICE_BOOST_7D.trim()
+        : this.config.STRIPE_PRICE_BOOST_30D.trim();
+
+    const lineItem = priceId
+      ? { price: priceId, quantity: 1 as const }
+      : {
           price_data: {
             currency: apiConfig.CURRENCY,
-            unit_amount: priceCents,
-            product_data: { name: `Featured listing (${days} days)` },
+            unit_amount: unitAmount,
+            product_data: { name: `Listing boost (${duration} days)` },
           },
-          quantity: 1,
-        },
-      ],
+          quantity: 1 as const,
+        };
+
+    const session = await this.stripe().checkout.sessions.create({
+      mode: 'payment',
+      line_items: [lineItem],
       success_url: apiConfig.BILLING_SUCCESS_URL,
       cancel_url: apiConfig.BILLING_CANCEL_URL,
-      metadata: { listingId, days: String(days), kind: 'featured' },
+      metadata: {
+        listingId,
+        days: String(duration),
+        kind: 'featured',
+        flatFeeCents: String(unitAmount),
+      },
     });
     return session.url ?? '';
   }
@@ -167,8 +194,22 @@ export class StripeService {
           await this.activateFeatured(
             s.metadata.listingId,
             Number(s.metadata.days ?? 7),
-            s.payment_intent as string,
+            (s.payment_intent as string) || s.id,
           );
+        }
+        break;
+      }
+      case 'charge.refunded': {
+        const charge = event.data.object;
+        const pi =
+          typeof charge.payment_intent === 'string'
+            ? charge.payment_intent
+            : charge.payment_intent?.id;
+        if (pi) {
+          const listingIds = await this.boosts.cancelByPaymentRef(pi);
+          for (const id of listingIds) {
+            await this.search.patchBoost(id, 0, false);
+          }
         }
         break;
       }
@@ -302,13 +343,24 @@ export class StripeService {
   }
 
   private async activateFeatured(listingId: string, days: number, paymentId: string) {
-    const endsAt = new Date(Date.now() + days * 86_400_000);
-    await this.db
-      .insert(featuredPlacements)
-      .values({ listingId, kind: 'featured', endsAt, stripePaymentId: paymentId });
-    await this.db
-      .update(listings)
-      .set({ featuredUntil: endsAt })
-      .where(eq(listings.id, listingId));
+    if (!listingId) {
+      this.logger.warn('featured activate skipped — missing listingId');
+      return;
+    }
+    const duration = isBoostDurationDays(days) ? days : 7;
+    const endsAt = new Date(Date.now() + duration * 86_400_000);
+    await this.db.insert(featuredPlacements).values({
+      listingId,
+      kind: 'featured',
+      endsAt,
+      stripePaymentId: paymentId,
+    });
+    await this.boosts.activateFromPayment({
+      listingId,
+      days: duration,
+      paymentRef: paymentId,
+    });
+    const weight = await this.boosts.boostWeightForListing(listingId);
+    await this.search.patchBoost(listingId, weight, weight > 0);
   }
 }

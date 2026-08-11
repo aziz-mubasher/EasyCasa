@@ -23,7 +23,11 @@ export async function openPortal(token: string): Promise<string> {
   return ((await res.json()) as { url: string }).url;
 }
 
-export async function featureListing(token: string, listingId: string, days: number): Promise<string> {
+export async function featureListing(
+  token: string,
+  listingId: string,
+  days: 7 | 30,
+): Promise<string> {
   const res = await authedPost('/featured/checkout', token, { listingId, days });
   if (!res.ok) throw new Error(`feature failed: ${res.status}`);
   return ((await res.json()) as { url: string }).url;

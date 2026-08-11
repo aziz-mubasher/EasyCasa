@@ -15,6 +15,7 @@ export * from './seller-analytics';
 export * from './publish-lifecycle';
 export * from './upload-quota';
 export * from './seller-entitlements';
+export * from './listing-boost';
 export * from './enquiry-inbox';
 export * from './nudges';
 export * from './consent-versions';

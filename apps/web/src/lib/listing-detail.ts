@@ -41,6 +41,8 @@ export interface ParsedListingDetail {
   latitude: number | null;
   longitude: number | null;
   photoUrls: string[];
+  /** EC-S-T26 — commercial boost (DSA label); not a trust signal. */
+  boosted?: boolean;
   agent: {
     displayName: string | null;
     phone: string | null;
@@ -129,6 +131,7 @@ export function parseListingDetail(raw: Record<string, unknown>, slugFallback: s
     latitude: num(raw.latitude),
     longitude: num(raw.longitude),
     photoUrls: photoUrlsFromListing(raw),
+    boosted: raw.boosted === true,
     agent: parseAgent(raw.agent),
   };
 }

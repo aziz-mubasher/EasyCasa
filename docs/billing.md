@@ -27,8 +27,10 @@ Stripe handles PCI. The **Customer Portal** manages upgrades/cancellations. Webh
   raises to apply; plan prices are flat-fee fixed EUR (not listing-contingent).
 
 ### Featured listings (one-time)
-- `POST /featured/checkout` `{ listingId, days }` → `{ url }` — one-time payment; the
-  webhook creates a `featured_placements` row and sets `listings.featured_until`.
+- `POST /featured/checkout` `{ listingId, days }` → `{ url }` — **T26:** `days` must be **7 or 30**; flat-fee EUR (`BOOST_FLAT_PRICE_CENTS` / optional Stripe Price IDs). Gated by `LISTING_BOOST_ENABLED`.
+- Webhook creates `listing_boost` (+ legacy `featured_placements`) and patches Meili `boostWeight`.
+- Refund (`charge.refunded`) cancels the boost and clears ranking weight.
+- Unpublish pauses remaining time; republish resumes. Flag off hides purchase UI but still honours active boosts.
 
 ## Messaging (with spam controls)
 - `POST /conversations` `{ listingId, message }` — starts a thread, rejects spam

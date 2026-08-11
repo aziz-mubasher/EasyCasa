@@ -12,9 +12,19 @@ import { AlertsModule } from '../alerts/alerts.module';
 import { AvmModule } from '../avm/avm.module';
 import { SellerQuotaModule } from '../seller-quota/seller-quota.module';
 import { SellerModule } from '../seller/seller.module';
+import { ListingBoostModule } from '../listing-boost/listing-boost.module';
 
 @Module({
-  imports: [UsersModule, SearchModule, DbModule, AlertsModule, AvmModule, SellerQuotaModule, SellerModule],
+  imports: [
+    UsersModule,
+    SearchModule,
+    DbModule,
+    AlertsModule,
+    AvmModule,
+    SellerQuotaModule,
+    SellerModule,
+    ListingBoostModule,
+  ],
   controllers: [ListingsController, SellerListingsController],
   providers: [
     ListingsService,

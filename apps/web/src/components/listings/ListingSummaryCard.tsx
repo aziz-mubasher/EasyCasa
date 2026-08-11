@@ -91,10 +91,19 @@ export async function ListingSummaryCard({
 }) {
   const t = await getTranslations('listingDetail');
   const tf = await getTranslations('search.filters');
+  const tBoost = await getTranslations('listingBoost');
   const rows = await summaryFactRows(listing, locale);
   return (
     <div className="rounded-xl2 border border-line bg-paper p-5 sm:p-6 shadow-sm space-y-5 h-full lg:sticky lg:top-28">
       <div>
+        {listing.boosted ? (
+          <p
+            className="mb-2 inline-block rounded-sm bg-slate-700 px-2 py-0.5 text-[0.68rem] uppercase tracking-wide text-paper"
+            data-testid="boost-label-detail"
+          >
+            {tBoost('inEvidenza')}
+          </p>
+        ) : null}
         <h1 className="font-display text-xl sm:text-2xl font-semibold text-ink leading-snug">
           {listing.title}
         </h1>

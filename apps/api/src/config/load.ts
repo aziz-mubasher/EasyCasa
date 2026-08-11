@@ -274,6 +274,13 @@ const Schema = z
      * Checkout for plan key `seller_premium` is refused while off.
      */
     SELLER_PREMIUM_ENABLED: bool(false),
+     * EC-S-T26 — listing boost (flat-fee featured). Default false.
+     * When off: checkout/UI hidden; existing active boosts still ranked + labelled.
+     */
+    LISTING_BOOST_ENABLED: bool(false),
+    /** Optional Stripe Price IDs for fixed 7d/30d boost products (flat fee). */
+    STRIPE_PRICE_BOOST_7D: z.string().default(''),
+    STRIPE_PRICE_BOOST_30D: z.string().default(''),
     /** Runtime Nominatim base for T08 address resolve (reuse migration geocoder). */
     NOMINATIM_URL: z.string().default('https://nominatim.openstreetmap.org/search'),
     GEOCODER_USER_AGENT: z.string().default('EasyCasaAPI/1.0 (ops@easycasaita.com)'),
