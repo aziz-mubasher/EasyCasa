@@ -1,21 +1,146 @@
 #!/usr/bin/env tsx
 /**
- * EC-23 operator eval — run full Nest pipeline against a directory of REAL perizie.
+ * EC-23 / G1 operator eval — run full Nest pipeline against a directory of REAL perizie.
  * Keep real court documents OUT of git. Cloud agent does NOT run this.
  *
- * Usage: pnpm --filter @easycasa/api aste:eval /path/to/perizie
+ * Usage:
+ *   pnpm --filter @easycasa/api aste:eval /path/to/perizie
+ *   pnpm --filter @easycasa/api aste:eval /path/to/perizie --lotto 4
+ *   EC_ASTE_EVAL_LOTTO=H EVAL_LIVE=1 pnpm --filter @easycasa/api aste:eval /path/to/Ex7
  *
- * Expects env: DATABASE_URL, ASTE_ANALYSIS_ENABLED=true, AI_URL, AI_INTERNAL_TOKEN,
- * S3/MinIO credentials, and a logged-in test path is NOT used — this script inserts
- * draft→upload→submit rows directly for a synthetic user id if EC_ASTE_EVAL_USER is set.
+ * Env (EVAL_LIVE=1):
+ *   DATABASE_URL, ASTE_ANALYSIS_ENABLED=true, AI_URL, AI_INTERNAL_TOKEN,
+ *   S3/MinIO credentials, CHAT_PROVIDER=openai + OPENAI_API_KEY on the AI service,
+ *   optional EC_ASTE_EVAL_USER, EC_ASTE_EVAL_LOTTO, ASTE_EVAL_TIMEOUT_MS.
+ *
+ * Multi-lot dossiers (post EC-23b): pass --lotto / EC_ASTE_EVAL_LOTTO or create fails
+ * with lotto_selection_required after extract.
+ *
+ * Score against AZM Drive: EC_Aste_GoldenSet_GroundTruth_v1.md (not in git).
+ * See docs/runbooks/aste-g1-gate.md for the G1 pass bar and minimum dossier set.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
+function parseArgs(argv: string[]): { dir: string | undefined; lotto: string | null } {
+  let dir: string | undefined;
+  let lotto: string | null = process.env.EC_ASTE_EVAL_LOTTO?.trim() || null;
+  for (let i = 2; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '--lotto' || a === '-l') {
+      lotto = (argv[++i] ?? '').trim() || null;
+      continue;
+    }
+    if (a.startsWith('--lotto=')) {
+      lotto = a.slice('--lotto='.length).trim() || null;
+      continue;
+    }
+    if (!a.startsWith('-') && !dir) {
+      dir = a;
+    }
+  }
+  return { dir, lotto };
+}
+
+function scoreExtraction(extraction: Record<string, unknown>): void {
+  const economics = (extraction.economics ?? {}) as Record<string, unknown>;
+  const procedura = (extraction.procedura ?? {}) as Record<string, unknown>;
+  const giuridica = (extraction.giuridica ?? {}) as {
+    stato_occupazione?: { stato?: string | null; dettaglio?: string | null };
+  };
+  const urbanistica = (extraction.urbanistica ?? {}) as {
+    conformita_urbanistica?: { stato?: string | null; dettaglio?: string | null };
+    conformita_catastale?: { stato?: string | null; dettaglio?: string | null };
+    difformita?: unknown[];
+  };
+  const meta = (extraction.meta ?? {}) as {
+    not_found?: string[];
+    warnings?: string[];
+    lotti_trovati?: string[];
+  };
+
+  const sourced = (v: unknown): { hit: boolean; value: string; page: string } => {
+    if (v == null) return { hit: false, value: '', page: '' };
+    if (typeof v === 'object' && v !== null && 'value' in v) {
+      const o = v as { value?: unknown; source?: { page?: unknown } };
+      return {
+        hit: o.value != null,
+        value: o.value == null ? '' : String(o.value),
+        page: o.source?.page == null ? '' : String(o.source.page),
+      };
+    }
+    return { hit: true, value: String(v), page: '' };
+  };
+
+  const cauzioneScore = (): { hit: boolean; value: string; page: string } => {
+    const c = economics.cauzione;
+    if (c == null || typeof c !== 'object') return { hit: false, value: '', page: '' };
+    const o = c as {
+      importo?: number | null;
+      pct?: number | null;
+      source?: { page?: unknown };
+    };
+    const hit = o.importo != null || o.pct != null;
+    const parts = [
+      o.importo != null ? `€${o.importo}` : null,
+      o.pct != null ? `${o.pct}%` : null,
+    ].filter(Boolean);
+    return {
+      hit,
+      value: parts.join(' / '),
+      page: o.source?.page == null ? '' : String(o.source.page),
+    };
+  };
+
+  const rows: Array<[string, ReturnType<typeof sourced>, string]> = [
+    ['economics.valore_stima', sourced(economics.valore_stima), ''],
+    [
+      'economics.prezzo_base',
+      sourced(economics.prezzo_base),
+      'Ex2: avviso not ordinanza',
+    ],
+    ['economics.offerta_minima', sourced(economics.offerta_minima), ''],
+    ['economics.cauzione', cauzioneScore(), ''],
+    ['economics.rilancio_minimo', sourced(economics.rilancio_minimo), ''],
+    ['procedura.tipo', sourced(procedura.tipo), ''],
+    ['procedura.numero', sourced(procedura.numero), ''],
+    ['procedura.tribunale', sourced(procedura.tribunale), ''],
+  ];
+
+  console.log('field\thit\tvalue\tpage\tnotes');
+  for (const [field, s, notes] of rows) {
+    console.log(`${field}\t${s.hit ? 'hit' : 'miss'}\t${s.value}\t${s.page}\t${notes}`);
+  }
+
+  const occ = giuridica.stato_occupazione;
+  const occStatus = occ?.stato?.trim() || '';
+  const occDet = occ?.dettaglio?.trim() || '';
+  console.log(
+    `giuridica.stato_occupazione\t${occStatus ? 'hit' : 'miss'}\t${[occStatus, occDet].filter(Boolean).join(' — ')}\t\t`,
+  );
+
+  const cu = urbanistica.conformita_urbanistica?.stato?.trim() || '';
+  const cc = urbanistica.conformita_catastale?.stato?.trim() || '';
+  const difn = Array.isArray(urbanistica.difformita) ? urbanistica.difformita.length : 0;
+  console.log(
+    `urbanistica.conformita\t${cu || cc ? 'hit' : 'miss'}\turb=${cu}|cat=${cc}|difformita=${difn}\t\tlotto H must NOT be marked non-conform`,
+  );
+
+  console.log(`meta.lotti_trovati\thit\t${(meta.lotti_trovati ?? []).join('|')}\t\t`);
+  console.log(
+    `meta.not_found\t-\t${(meta.not_found ?? []).join(',')}\t\tmisses must land here — no invented values`,
+  );
+  if (meta.warnings?.length) {
+    console.log(`meta.warnings\t-\t${meta.warnings.join(' | ')}\t\t`);
+  }
+}
+
 async function main() {
-  const dir = process.argv[2];
+  const { dir, lotto } = parseArgs(process.argv);
   if (!dir) {
-    console.error('Usage: pnpm --filter @easycasa/api aste:eval <dir>');
+    console.error(
+      'Usage: pnpm --filter @easycasa/api aste:eval <dir> [--lotto <label>]',
+    );
     process.exit(2);
   }
   const abs = path.resolve(dir);
@@ -29,6 +154,7 @@ async function main() {
     JSON.stringify({
       event: 'aste.eval_start',
       fileCount: files.length,
+      lottoLabel: lotto,
       note: 'Operator must have API+AI+DB+MinIO running with ASTE_ANALYSIS_ENABLED=true',
     }),
   );
@@ -44,23 +170,24 @@ async function main() {
     console.log(
       [
         '',
-        'Field hit/miss table (fill after live run):',
-        'field\thit\tmiss\tnotes',
-        'economics.valore_stima\t\t\t',
-        'economics.prezzo_base\t\t\t',
-        'economics.offerta_minima\t\t\t',
-        'economics.cauzione\t\t\t',
-        'economics.rilancio_minimo\t\t\t',
-        'economics.superficie_commerciale_mq\t\t\t',
-        'procedura.tipo\t\t\t',
-        'procedura.numero\t\t\t',
-        'procedura.tribunale\t\t\t',
-        'procedura.rge\t\t\t',
-        'immobili[0].comune\t\t\t',
-        'meta.lotti_trovati\t\t\t',
-        'person_names_absent\t\t\tmust be hit',
+        `lottoLabel: ${lotto ?? '(none — required for multi-lot dossiers)'}`,
+        '',
+        'Field hit/miss table (fill after live run / GT score):',
+        'field\thit\tvalue\tpage\tnotes',
+        'economics.valore_stima\t\t\t\t',
+        'economics.prezzo_base\t\t\t\tEx2: avviso €36.039/€64.906 not ordinanza',
+        'economics.offerta_minima\t\t\t\t',
+        'economics.cauzione\t\t\t\t',
+        'economics.rilancio_minimo\t\t\t\t',
+        'occupazione\t\t\t\t',
+        'conformita\t\t\t\tlotto H not non-conform',
+        'procedura.tipo\t\t\t\t',
+        'meta.lotti_trovati\t\t\t\t',
+        'person_names_absent\t\t\t\tmust be hit',
+        'invented_values\t\t\t\tmust be zero (misses → not_found)',
         '',
         'Set EVAL_LIVE=1 with running stack to execute AstePipelineService against uploads.',
+        'See docs/runbooks/aste-g1-gate.md',
       ].join('\n'),
     );
     return;
@@ -89,7 +216,11 @@ async function main() {
     roles: ['buyer'],
   } as never);
 
-  const created = await analyses.create(me.id, { language: 'it', register: 'investor' });
+  const created = await analyses.create(me.id, {
+    language: 'it',
+    register: 'investor',
+    lottoLabel: lotto,
+  });
   for (const f of files.slice(0, 20)) {
     const buf = readFileSync(path.join(abs, f));
     const mime = f.toLowerCase().endsWith('.pdf')
@@ -119,16 +250,20 @@ async function main() {
   }
 
   const final = await analyses.get(me.id, created.id);
+  console.log(
+    JSON.stringify({
+      event: 'aste.eval_done',
+      analysisId: created.id,
+      status: final.status,
+      lottoLabel: lotto,
+      failureReason: (final as { failureReason?: string | null }).failureReason ?? null,
+    }),
+  );
   const extraction = (final as { extraction?: Record<string, unknown> }).extraction;
-  console.log(JSON.stringify({ event: 'aste.eval_done', analysisId: created.id, status: final.status }));
   if (extraction) {
-    const economics = (extraction.economics ?? {}) as Record<string, unknown>;
-    for (const k of Object.keys(economics)) {
-      const hit = economics[k] != null;
-      console.log(`${k}\t${hit ? 'hit' : 'miss'}`);
-    }
-    const meta = (extraction.meta ?? {}) as { not_found?: string[] };
-    console.log('not_found\t' + (meta.not_found ?? []).join(','));
+    scoreExtraction(extraction);
+  } else {
+    console.log('No extraction on final row — check failureReason / logs.');
   }
   await app.close();
 }
