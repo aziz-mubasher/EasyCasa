@@ -19,12 +19,18 @@ import {
 
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { listingDraft, sellerProfile } from '../db/schema';
+import { listingDraft, media, sellerProfile } from '../db/schema';
+import { ListingsService } from '../listings/listings.service';
+import type { AuthUser } from '../auth/auth.types';
+import { draftPayloadToCreateDto } from './draft-to-listing';
 
-/** EC-S-T07 — listing draft autosave (payload validated by listingWizard machine). */
+/** EC-S-T07 + PR-W — listing draft autosave + submit → create → publish. */
 @Injectable()
 export class ListingDraftsService {
-  constructor(@Inject(DRIZZLE) private readonly db: Db) {}
+  constructor(
+    @Inject(DRIZZLE) private readonly db: Db,
+    private readonly listings: ListingsService,
+  ) {}
 
   private async requireSeller(userId: string): Promise<void> {
     const rows = await this.db
@@ -110,16 +116,56 @@ export class ListingDraftsService {
     return this.patch(userId, draftId, moved);
   }
 
-  async submit(userId: string, draftId: string) {
+  /**
+   * PR-W: mark draft submitted → create listing → attach photo URLs → publish
+   * (sticky first_published_at via ListingsService.publish).
+   * Listing-create quota (429) applies via ListingsService.create path when
+   * called from HTTP; here create is internal — quota is enforced by the
+   * seller publish controller / optional pre-check. Callers that go through
+   * POST /listing-drafts/:id/submit should also pass through listing quota
+   * at the controller (assertListingCreateAllowed).
+   */
+  async submit(userId: string, draftId: string, user: AuthUser) {
     const row = await this.get(userId, draftId);
+    if (row.status !== 'draft') {
+      throw new BadRequestException('draft already submitted');
+    }
     const draft = deserializeDraft(row.payload);
     if (!canSubmit(draft)) {
       throw new UnprocessableEntityException('draft not ready to submit');
     }
+
+    const dto = draftPayloadToCreateDto(draft);
+    const created = await this.listings.create(dto, userId);
+
+    const urls = (draft.photoUrls ?? []).filter((u) => typeof u === 'string' && u.trim());
+    for (let i = 0; i < urls.length; i += 1) {
+      await this.db.insert(media).values({
+        listingId: created.id,
+        url: urls[i]!.trim(),
+        type: 'image',
+        position: i,
+        ownerUserId: userId,
+      });
+    }
+
+    const published = await this.listings.publish(created.id, user, userId);
+
     await this.db
       .update(listingDraft)
-      .set({ status: 'submitted', updatedAt: new Date() })
+      .set({
+        status: 'submitted',
+        updatedAt: new Date(),
+      })
       .where(and(eq(listingDraft.id, draftId), eq(listingDraft.sellerId, userId)));
-    return { id: draftId, status: 'submitted' as const, draft };
+
+    return {
+      id: draftId,
+      status: 'submitted' as const,
+      listingId: created.id,
+      firstPublishedAt: published?.firstPublishedAt ?? null,
+      publishedAt: published?.publishedAt ?? null,
+      draft,
+    };
   }
 }

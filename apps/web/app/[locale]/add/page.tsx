@@ -28,9 +28,11 @@ import { SmartLinkManager } from '@/components/smartlink/SmartLinkManager';
 import { AvailabilityWindowsEditor } from '@/components/viewings/AvailabilityWindowsEditor';
 import { useAuth } from '@/auth/AuthProvider';
 import { useCanImportCasafari } from '@/auth/useCanImportCasafari';
+import { useListingPublishRoute } from '@/auth/useListingPublishRoute';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { useViewingsApi } from '@/lib/viewings-api';
+
 
 const TOTAL = 6;
 const ENERGY_CLASSES = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
@@ -116,8 +118,10 @@ export default function AddListingPage() {
   const t = useTranslations('add');
   const tf = useTranslations('search.filters');
   const locale = useLocale();
+  const router = useRouter();
   const { getAccessToken, isAuthenticated, ready, signIn } = useAuth();
   const { canImport: canImportCasafari } = useCanImportCasafari();
+  const { ready: routeReady, useSellerWizard } = useListingPublishRoute();
   const authedFetch = useMemo(() => createAuthedFetch(getAccessToken), [getAccessToken]);
 
   const [step, setStep] = useState(1);
@@ -130,6 +134,12 @@ export default function AddListingPage() {
   const [submitting, setSubmitting] = useState(false);
   const viewingsApi = useViewingsApi();
   const [createdId, setCreatedId] = useState<string | null>(null);
+
+  /** PR-W — private sellers → T07 wizard; agents keep this form. */
+  useEffect(() => {
+    if (!routeReady || !ready || !isAuthenticated) return;
+    if (useSellerWizard) router.replace('/seller/list');
+  }, [routeReady, ready, isAuthenticated, useSellerWizard, router]);
 
   const comuni = useMemo(
     () => (form.province ? comuniForProvince(form.province) : []),

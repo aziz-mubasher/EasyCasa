@@ -3200,5 +3200,47 @@
         "ask": "Could not send the question. Try again."
       }
     }
+  },
+  "sellerWizard": {
+    "signInTitle": "Sign in to list",
+    "signIn": "Sign in",
+    "onboardingRequired": "Complete seller onboarding to continue.",
+    "createFailed": "Could not start the draft.",
+    "saveFailed": "Save failed.",
+    "navFailed": "Navigation failed.",
+    "notReady": "Complete every step before publishing.",
+    "quotaExceeded": "You have reached the active listing limit.",
+    "submitFailed": "Publish failed.",
+    "publishedTitle": "Listing published",
+    "publishedBody": "First-published date has been recorded.",
+    "viewListing": "View listing",
+    "stepOf": "Step {n} of {total}",
+    "back": "Back",
+    "next": "Next",
+    "publish": "Publish",
+    "steps": {
+      "basics": "Type & title",
+      "address": "Address",
+      "details": "Details",
+      "price": "Price",
+      "photos": "Photos",
+      "description": "Description",
+      "review": "Review"
+    },
+    "fields": {
+      "propertyType": "Property type",
+      "title": "Title",
+      "address": "Address",
+      "city": "City",
+      "province": "Province",
+      "postalCode": "Postal code",
+      "sqm": "Sqm",
+      "rooms": "Rooms",
+      "bathrooms": "Baths",
+      "price": "Price (€)",
+      "photoUrls": "Photo URLs (one per line, min. 3)",
+      "description": "Description",
+      "acceptedTerms": "I confirm I am the owner / entitled party and accept the terms."
+    }
   }
 }
