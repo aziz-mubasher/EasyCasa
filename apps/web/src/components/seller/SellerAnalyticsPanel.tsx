@@ -2,10 +2,15 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import type { SellerListingAnalytics } from '@easycasa/shared';
+import type { NudgeCode, SellerListingAnalytics } from '@easycasa/shared';
 
 import { useAuth } from '@/auth/AuthProvider';
 import { createAuthedFetch } from '@/auth/authedFetch';
+import {
+  filterNudgeItems,
+  SellerNudgeCards,
+  type SellerNudgeItem,
+} from '@/components/seller/SellerNudgeCards';
 
 import './seller-analytics.css';
 
@@ -56,6 +61,8 @@ export function SellerAnalyticsPanel({ listingId, window: win = '30d' }: Props) 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [windowKey, setWindowKey] = useState<'7d' | '30d' | '90d'>(win);
+  const [nudges, setNudges] = useState<SellerNudgeItem[]>([]);
+  const [dismissingCode, setDismissingCode] = useState<NudgeCode | null>(null);
 
   useEffect(() => {
     if (!ready) return;
@@ -68,23 +75,40 @@ export function SellerAnalyticsPanel({ listingId, window: win = '30d' }: Props) 
     setError(null);
     void (async () => {
       try {
-        const res = await authedFetch(
-          `${API}/seller/listings/${encodeURIComponent(listingId)}/analytics?window=${windowKey}`,
-          { headers: { Accept: 'application/json' } },
-        );
+        const [analyticsRes, nudgesRes] = await Promise.all([
+          authedFetch(
+            `${API}/seller/listings/${encodeURIComponent(listingId)}/analytics?window=${windowKey}`,
+            { headers: { Accept: 'application/json' } },
+          ),
+          authedFetch(
+            `${API}/seller/listings/${encodeURIComponent(listingId)}/nudges`,
+            { headers: { Accept: 'application/json' } },
+          ),
+        ]);
         if (cancelled) return;
-        if (res.status === 404) {
+        if (analyticsRes.status === 404) {
           setError('unavailable');
           setData(null);
+          setNudges([]);
           return;
         }
-        if (!res.ok) {
+        if (!analyticsRes.ok) {
           setError('load');
           setData(null);
+          setNudges([]);
           return;
         }
-        const json = (await res.json()) as SellerListingAnalytics;
+        const json = (await analyticsRes.json()) as SellerListingAnalytics;
         setData(json);
+        // Nudges share the analytics flag surface; 404/off → empty cards (fail-soft).
+        if (nudgesRes.ok) {
+          const body = (await nudgesRes.json()) as {
+            items?: Array<{ code: string; emittedAt: string; data?: Record<string, number> }>;
+          };
+          setNudges(filterNudgeItems(body.items ?? []));
+        } else {
+          setNudges([]);
+        }
       } catch {
         if (!cancelled) setError('load');
       } finally {
@@ -95,6 +119,21 @@ export function SellerAnalyticsPanel({ listingId, window: win = '30d' }: Props) 
       cancelled = true;
     };
   }, [ready, isAuthenticated, authedFetch, listingId, windowKey]);
+
+  async function dismissNudge(code: NudgeCode) {
+    setDismissingCode(code);
+    try {
+      const res = await authedFetch(
+        `${API}/seller/listings/${encodeURIComponent(listingId)}/nudges/${encodeURIComponent(code)}/dismiss`,
+        { method: 'PATCH', headers: { Accept: 'application/json' } },
+      );
+      if (res.ok) {
+        setNudges((prev) => prev.filter((n) => n.code !== code));
+      }
+    } finally {
+      setDismissingCode(null);
+    }
+  }
 
   if (ready && !isAuthenticated) {
     return (
@@ -159,6 +198,12 @@ export function SellerAnalyticsPanel({ listingId, window: win = '30d' }: Props) 
           </select>
         </label>
       </header>
+
+      <SellerNudgeCards
+        items={nudges}
+        onDismiss={dismissNudge}
+        dismissingCode={dismissingCode}
+      />
 
       <div className="sa-kpis">
         <article className="sa-kpi">

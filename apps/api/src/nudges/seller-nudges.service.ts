@@ -2,7 +2,6 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { and, desc, eq, gte, isNull, sql } from 'drizzle-orm';
@@ -25,8 +24,7 @@ import {
   OmiBandService,
   positionAskingOnBand,
 } from '../omi/omi-band.service';
-
-const log = new Logger('SellerNudges');
+import { SellerAnalyticsService } from '../seller-analytics/seller-analytics.service';
 
 function asNumber(v: string | number | null | undefined): number | null {
   if (v == null) return null;
@@ -49,6 +47,7 @@ export class SellerNudgesService {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly omiBand: OmiBandService,
+    private readonly analytics: SellerAnalyticsService,
   ) {}
 
   async assertOwner(actorUserId: string, listingId: string) {
@@ -203,7 +202,9 @@ export class SellerNudgesService {
       .where(and(eq(enquiries.listingId, listingId), gte(enquiries.createdAt, since)));
     const enquiryCount = Number(enquiryRows[0]?.total ?? 0);
 
-    const views = (await this.sumViewsFailSoft(listingId, windowDays, now)) ?? 0;
+    // Views MUST come from T23 rollups via SellerAnalyticsService (no direct SQL).
+    const views =
+      (await this.analytics.sumViewsInWindowFailSoft(listingId, windowDays, now)) ?? 0;
     const pricePct = await this.resolvePriceVsOmi(listing);
 
     const metrics: ListingMetrics = {
@@ -265,38 +266,6 @@ export class SellerNudgesService {
       payload: nudge.data,
     });
     return true;
-  }
-
-  private async sumViewsFailSoft(
-    listingId: string,
-    windowDays: number,
-    now: Date,
-  ): Promise<number | null> {
-    try {
-      const endDay = utcDayString(now);
-      const end = new Date(`${endDay}T00:00:00.000Z`);
-      const start = new Date(end);
-      start.setUTCDate(start.getUTCDate() - (windowDays - 1));
-      const startDay = utcDayString(start);
-      const result = await this.db.execute(sql`
-        SELECT COALESCE(SUM(views), 0)::int AS total
-        FROM listing_analytics_daily
-        WHERE listing_id = ${listingId}::uuid
-          AND day >= ${startDay}::date
-          AND day <= ${endDay}::date
-      `);
-      const row = (result as unknown as { rows: Array<{ total: number | string }> })
-        .rows[0];
-      if (!row) return 0;
-      return Number(row.total ?? 0);
-    } catch (err) {
-      log.debug(
-        `views unavailable for ${listingId} (T23 table?): ${
-          err instanceof Error ? err.message : String(err)
-        }`,
-      );
-      return null;
-    }
   }
 
   private async resolvePriceVsOmi(listing: {

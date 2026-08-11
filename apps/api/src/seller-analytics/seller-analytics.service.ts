@@ -154,6 +154,44 @@ export class SellerAnalyticsService {
     });
   }
 
+  /**
+   * Sum views from T23 `listing_analytics_daily` rollups for an inclusive
+   * UTC window ending on `now`'s calendar day. Used by the seller dashboard
+   * and by T24 nudges (inject this — do not re-query the rollup table).
+   */
+  async sumViewsInWindow(
+    listingId: string,
+    windowDays: number,
+    now = new Date(),
+  ): Promise<number> {
+    const endDay = utcDayString(now);
+    const start = windowStartDate(endDay, windowDays);
+    const startDay = utcDayString(start);
+    return this.sumViews(listingId, startDay, endDay);
+  }
+
+  /**
+   * Fail-soft variant for background jobs: missing table / transient DB errors
+   * return null so callers can skip view-dependent rules without aborting.
+   */
+  async sumViewsInWindowFailSoft(
+    listingId: string,
+    windowDays: number,
+    now = new Date(),
+  ): Promise<number | null> {
+    try {
+      return await this.sumViewsInWindow(listingId, windowDays, now);
+    } catch (err) {
+      Logger.debug(
+        `views unavailable for ${listingId} (T23 table?): ${
+          err instanceof Error ? err.message : String(err)
+        }`,
+        'SellerAnalytics',
+      );
+      return null;
+    }
+  }
+
   private async sumViews(
     listingId: string,
     startDay: string,

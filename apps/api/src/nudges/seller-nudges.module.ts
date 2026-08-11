@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { OmiModule } from '../omi/omi.module';
+import { SellerAnalyticsModule } from '../seller-analytics/seller-analytics.module';
 import { UsersModule } from '../users/users.module';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { SellerNudgesController } from './seller-nudges.controller';
@@ -9,7 +10,7 @@ import { SellerNudgesScheduler } from './seller-nudges.scheduler';
 import { SellerNudgesService } from './seller-nudges.service';
 
 @Module({
-  imports: [UsersModule, OmiModule],
+  imports: [UsersModule, OmiModule, SellerAnalyticsModule],
   controllers: [SellerNudgesController],
   providers: [
     SellerNudgesService,
