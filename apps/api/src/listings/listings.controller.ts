@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Get, Param, Patch, Post, Query,
+  Body, Controller, Get, Headers, Param, Patch, Post, Query,
 } from '@nestjs/common';
 import { ListingsService } from './listings.service';
 import { CreateListingDto } from './dto/create-listing.dto';
@@ -10,12 +10,14 @@ import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
+import { SellerQuotaService } from '../seller-quota/seller-quota.service';
 
 @Controller('listings')
 export class ListingsController {
   constructor(
     private readonly listings: ListingsService,
     private readonly users: UsersService,
+    private readonly quota: SellerQuotaService,
   ) {}
 
   @Public()
@@ -53,8 +55,13 @@ export class ListingsController {
 
   @Roles('seller', 'agent', 'partner', 'pro_marketer')
   @Post()
-  async create(@Body() dto: CreateListingDto, @CurrentUser() user: AuthUser) {
+  async create(
+    @Body() dto: CreateListingDto,
+    @CurrentUser() user: AuthUser,
+    @Headers('accept-language') acceptLanguage?: string,
+  ) {
     const me = await this.users.getOrCreate(user);
+    await this.quota.assertListingCreateAllowed(me.id, user, acceptLanguage);
     return this.listings.create(dto, me.id);
   }
 

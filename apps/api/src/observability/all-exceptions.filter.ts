@@ -12,6 +12,7 @@ import { ERROR_REPORTER, type ErrorReporter } from './error-reporter';
 
 type JsonResponder = {
   status: (code: number) => { json: (body: unknown) => void };
+  setHeader?: (name: string, value: string) => void;
 };
 
 /**
@@ -40,14 +41,26 @@ export class AllExceptionsFilter implements ExceptionFilter {
       this.logger.error(`${req.method} ${req.url} → ${status}: ${String(exception)}`);
     }
 
-    const errorBody =
+    const payload =
       typeof message === 'string'
-        ? message
-        : ((message as { message?: unknown }).message ?? message);
+        ? { message }
+        : (message as { message?: unknown; code?: string; retryAfterSeconds?: number });
+
+    const retryAfter =
+      typeof payload.retryAfterSeconds === 'number' && payload.retryAfterSeconds > 0
+        ? Math.ceil(payload.retryAfterSeconds)
+        : undefined;
+    if (retryAfter != null && typeof res.setHeader === 'function') {
+      res.setHeader('Retry-After', String(retryAfter));
+    }
+
+    const errorBody = payload.message ?? message;
 
     res.status(status).json({
       statusCode: status,
       error: errorBody,
+      ...(payload.code ? { code: payload.code } : {}),
+      ...(retryAfter != null ? { retryAfterSeconds: retryAfter } : {}),
       requestId: req.id,
       timestamp: new Date().toISOString(),
     });

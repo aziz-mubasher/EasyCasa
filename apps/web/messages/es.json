@@ -3,6 +3,12 @@
     "name": "EasyCasa",
     "tagline": "Compra, vende y alquila — paga solo por los servicios que usas, con una agencia regulada."
   },
+  "errors": {
+    "quota": {
+      "uploadsPerDay": "Has alcanzado el límite de subidas de hoy. Inténtalo de nuevo después de medianoche (hora de Roma).",
+      "activeListings": "Has alcanzado el número máximo de anuncios activos."
+    }
+  },
   "nav": {
     "search": "Buscar",
     "add": "Publicar inmueble",

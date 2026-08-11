@@ -334,7 +334,7 @@ export class MediaService {
   }
 
   /** After a successful upload, record the media row at the next position. */
-  async confirm(listingId: string, key: string, alt?: string) {
+  async confirm(listingId: string, key: string, alt?: string, ownerUserId?: string) {
     assertSafeMediaKey(key);
 
     if (isQuarantineKey(listingId, key)) {
@@ -371,7 +371,14 @@ export class MediaService {
         // Delete quarantine object to avoid leaking unprocessed originals
         await this.deleteObject(key);
 
-        return this.insertMediaRow({ listingId, key: finalKey, alt, width, height });
+        return this.insertMediaRow({
+          listingId,
+          key: finalKey,
+          alt,
+          width,
+          height,
+          ownerUserId: ownerUserId ?? null,
+        });
       } catch (err) {
         // Best-effort cleanup quarantine; ignore purge errors but fail the request.
         try {
@@ -384,7 +391,7 @@ export class MediaService {
     }
 
     // Already an immutable key: just record it.
-    return this.insertMediaRow({ listingId, key, alt });
+    return this.insertMediaRow({ listingId, key, alt, ownerUserId: ownerUserId ?? null });
   }
 
   private async insertMediaRow(params: {

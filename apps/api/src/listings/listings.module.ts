@@ -11,9 +11,10 @@ import { DbModule } from '../db/db.module';
 import { AlertsModule } from '../alerts/alerts.module';
 import { AvmModule } from '../avm/avm.module';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
+import { SellerQuotaModule } from '../seller-quota/seller-quota.module';
 
 @Module({
-  imports: [UsersModule, SearchModule, DbModule, AlertsModule, AvmModule],
+  imports: [UsersModule, SearchModule, DbModule, AlertsModule, AvmModule, SellerQuotaModule],
   controllers: [ListingsController, SellerListingsController],
   providers: [
     ListingsService,

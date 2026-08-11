@@ -2,6 +2,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  Headers,
   NotFoundException,
   Req,
   Res,
@@ -19,9 +20,11 @@ import { PresignDto, ConfirmMediaDto } from './dto/presign.dto';
 import { Roles } from '../auth/roles.decorator';
 import { Public } from '../auth/public.decorator';
 import { OptionalUser } from '../auth/optional-user.decorator';
+import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 import { classifyMediaFileKey } from './media-file-access';
+import { SellerQuotaService } from '../seller-quota/seller-quota.service';
 
 const MAX_IMAGE_BYTES = 12 * 1024 * 1024;
 
@@ -31,16 +34,29 @@ export class MediaController {
   constructor(
     private readonly media: MediaService,
     private readonly users: UsersService,
+    private readonly quota: SellerQuotaService,
   ) {}
 
   @Post('presign')
-  presign(@Body() dto: PresignDto) {
+  async presign(
+    @Body() dto: PresignDto,
+    @CurrentUser() user: AuthUser,
+    @Headers('accept-language') acceptLanguage?: string,
+  ) {
+    const me = await this.users.getOrCreate(user);
+    await this.quota.assertUploadAllowed(me.id, user, acceptLanguage);
     return this.media.presign(dto.listingId, dto.contentType);
   }
 
   @Post('confirm')
-  confirm(@Body() dto: ConfirmMediaDto) {
-    return this.media.confirm(dto.listingId, dto.key, dto.alt);
+  async confirm(
+    @Body() dto: ConfirmMediaDto,
+    @CurrentUser() user: AuthUser,
+    @Headers('accept-language') acceptLanguage?: string,
+  ) {
+    const me = await this.users.getOrCreate(user);
+    await this.quota.assertUploadAllowed(me.id, user, acceptLanguage);
+    return this.media.confirm(dto.listingId, dto.key, dto.alt, me.id);
   }
 
   /**
@@ -53,7 +69,7 @@ export class MediaController {
       limits: { fileSize: MAX_IMAGE_BYTES },
     }),
   )
-  upload(
+  async upload(
     @UploadedFile()
     file:
       | {
@@ -63,14 +79,19 @@ export class MediaController {
         }
       | undefined,
     @Body('listingId') listingId: string | undefined,
+    @CurrentUser() user: AuthUser,
+    @Headers('accept-language') acceptLanguage?: string,
   ) {
     if (!listingId?.trim()) throw new BadRequestException('listingId required');
     if (!file?.buffer?.length) throw new BadRequestException('file required');
+    const me = await this.users.getOrCreate(user);
+    await this.quota.assertUploadAllowed(me.id, user, acceptLanguage);
     return this.media.uploadListingImage(
       listingId.trim(),
       file.buffer,
       file.mimetype || 'application/octet-stream',
       file.originalname,
+      me.id,
     );
   }
 
