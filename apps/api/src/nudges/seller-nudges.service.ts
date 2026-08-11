@@ -284,7 +284,8 @@ export class SellerNudgesService {
           AND day >= ${startDay}::date
           AND day <= ${endDay}::date
       `);
-      const row = (result as { rows: Array<{ total: number | string }> }).rows[0];
+      const row = (result as unknown as { rows: Array<{ total: number | string }> })
+        .rows[0];
       if (!row) return 0;
       return Number(row.total ?? 0);
     } catch (err) {
