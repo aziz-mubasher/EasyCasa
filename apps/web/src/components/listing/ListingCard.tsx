@@ -134,7 +134,7 @@ export function ListingCard({ l }: { l: ListingSummary }) {
                 Documentazione {l.trust.docScore.have}/{l.trust.docScore.total}
               </span>
             ) : null}
-            <span>{l.trust.daysOnMarket} gg</span>
+            {l.trust.showDaysOnMarket ? <span>{l.trust.daysOnMarket} gg</span> : null}
           </div>
         ) : null}
         <div className="data text-xs text-muted mt-2 flex gap-3">

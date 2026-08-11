@@ -1,5 +1,20 @@
-import { ForbiddenException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { deriveLegacyCategorySlug, normalizeProvinceSlug, primaryTransactionType, type TransactionTypeSlug } from '@easycasa/shared';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  applyPublish,
+  applyUnpublish,
+  deriveLegacyCategorySlug,
+  normalizeProvinceSlug,
+  primaryTransactionType,
+  PublishTransitionError,
+  type TransactionTypeSlug,
+} from '@easycasa/shared';
 import { ListingsRepository } from './listings.repository';
 import { SearchService } from '../search/search.service';
 import { AlertsService } from '../alerts/alerts.service';
@@ -15,6 +30,7 @@ import { ValuationBandService } from '../avm/valuation-band.service';
 import { resolveListingPropertyType } from '../avm/domain/normalize-property-type';
 import type { ValuationBandResponse } from '../avm/domain/valuation-band';
 import { UsersService } from '../users/users.service';
+import { listingToPublishRecord } from './listing-trust';
 
 function slugify(title: string): string {
   return title.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '')
@@ -278,9 +294,15 @@ export class ListingsService {
     return updated;
   }
 
-  async publish(id: string, user: AuthUser, ownerId: string | null) {
-    const existing = await this.repo.findById(id);
-    if (!existing) throw new NotFoundException('listing not found');
+  private assertListingOwner(
+    existing: {
+      agentId: string | null;
+      ownerUserId: string | null;
+      mediatorUserId: string | null;
+    },
+    user: AuthUser,
+    ownerId: string | null,
+  ): void {
     if (
       !user.roles.includes('admin') &&
       existing.agentId !== ownerId &&
@@ -289,88 +311,152 @@ export class ListingsService {
     ) {
       throw new ForbiddenException('not your listing');
     }
-    const published = await this.repo.update(id, { status: 'published', publishedAt: new Date() });
-    if (published) {
-      const financingOptions = published.financingOptions ?? [];
-      const derivedCategory = deriveLegacyCategorySlug({
-        transactionType: published.transactionType ?? undefined,
-        assetClass: (published.assetClass ?? undefined) as 'residential' | undefined,
-        propertyType: (published.propertyType ?? undefined) as 'apartment' | undefined,
-        condition: (published.condition ?? undefined) as 'good' | undefined,
-        financingOptions: financingOptions as never,
-      });
-      // Photos are uploaded before publish; index cover + gallery for search cards.
-      const mediaRows = await this.repo.listMedia(published.id);
-      const imageUrls = mediaRows
-        .filter((m) => m.type === 'image' || m.type === 'floorplan')
-        .map((m) => m.url);
-      const coverUrl = imageUrls[0] ?? null;
-      await this.searchIndex.indexListing({
-        id: published.id,
-        slug: published.slug ?? published.id,
-        title: published.title,
-        description: published.description,
-        city: published.city,
-        provinceSlug: normalizeProvinceSlug(published.province),
-        regionSlug: null,
-        categorySlug: derivedCategory,
-        transactionType: published.transactionType,
-        transactionTypes:
-          (published.transactionTypes as string[] | null)?.length
-            ? (published.transactionTypes as string[])
-            : published.transactionType
-              ? [published.transactionType]
-              : [],
-        assetClass: published.assetClass ?? null,
-        propertyType: published.propertyType ?? null,
-        condition: published.condition ?? null,
-        financingOptions,
-        leaseType: published.leaseType ?? null,
-        sellerType: published.sellerType ?? null,
-        price: published.price == null ? null : Number(published.price),
-        bedrooms: published.bedrooms,
-        bathrooms: published.bathrooms,
-        rooms: published.rooms ?? published.bedrooms,
-        sizeSqm: published.sizeSqm == null ? null : Number(published.sizeSqm),
-        surfaceSqm: published.surfaceSqm == null ? null : Number(published.surfaceSqm),
-        yearBuilt: published.yearBuilt ?? null,
-        yearRenovated: published.yearRenovated ?? null,
-        energyClass: published.energyClass ?? null,
-        features: published.features ?? [],
-        coverUrl,
-        imageUrls,
-        status: 'published',
-        _geo:
-          published.latitude != null && published.longitude != null
-            ? { lat: published.latitude, lng: published.longitude }
-            : undefined,
-        publishedAt: published.publishedAt ? published.publishedAt.getTime() : Date.now(),
-      });
+  }
 
-      const pin = listingRowToPin({
-        id: published.id,
-        title: published.title,
-        latitude: published.latitude,
-        longitude: published.longitude,
-        price: published.price,
-        transactionType: published.transactionType,
-        bedrooms: published.bedrooms,
-        rooms: published.rooms,
-        sizeSqm: published.sizeSqm,
-        energyClass: published.energyClass,
-        propertyType: published.propertyType,
-        thumbnailUrl: coverUrl,
-      });
-      if (pin) {
-        try {
-          await this.alerts.onListingPublished(pin);
-        } catch (err) {
-          this.logger.warn(
-            `alerts on publish failed listing=${published.id}: ${err instanceof Error ? err.message : String(err)}`,
-          );
-        }
+  async publish(id: string, user: AuthUser, ownerId: string | null) {
+    const existing = await this.repo.findById(id);
+    if (!existing) throw new NotFoundException('listing not found');
+    this.assertListingOwner(existing, user, ownerId);
+    if (existing.status === 'sold' || existing.status === 'archived') {
+      throw new BadRequestException(`cannot publish listing in status "${existing.status}"`);
+    }
+
+    const now = new Date();
+    let next;
+    try {
+      next = applyPublish(listingToPublishRecord(existing), now);
+    } catch (err) {
+      if (err instanceof PublishTransitionError) {
+        throw new BadRequestException(err.message);
       }
+      throw err;
+    }
+
+    // firstPublishedAt: set only when null — never overwrite (DB trigger + app guard).
+    const published = await this.repo.update(id, {
+      status: 'published',
+      publishedAt: next.lastPublishedAt ?? now,
+      firstPublishedAt: existing.firstPublishedAt ?? next.firstPublishedAt ?? now,
+      unpublishedAt: null,
+    });
+    if (published) {
+      await this.indexPublishedListing(published);
     }
     return published;
+  }
+
+  /** EC-S-T13 — unpublish: status unpublished, remove from Meili, preserve firstPublishedAt. */
+  async unpublish(id: string, user: AuthUser, ownerId: string | null) {
+    const existing = await this.repo.findById(id);
+    if (!existing) throw new NotFoundException('listing not found');
+    this.assertListingOwner(existing, user, ownerId);
+
+    const now = new Date();
+    let next;
+    try {
+      next = applyUnpublish(listingToPublishRecord(existing), now);
+    } catch (err) {
+      if (err instanceof PublishTransitionError) {
+        throw new BadRequestException(err.message);
+      }
+      throw err;
+    }
+
+    const unpublished = await this.repo.update(id, {
+      status: 'unpublished',
+      unpublishedAt: next.unpublishedAt ?? now,
+      // firstPublishedAt intentionally omitted — must not be rewritten
+    });
+    if (unpublished) {
+      try {
+        await this.searchIndex.remove(unpublished.id);
+      } catch (err) {
+        this.logger.warn(
+          `meili remove on unpublish failed listing=${unpublished.id}: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+    }
+    return unpublished;
+  }
+
+  private async indexPublishedListing(published: NonNullable<Awaited<ReturnType<ListingsRepository['update']>>>) {
+    const financingOptions = published.financingOptions ?? [];
+    const derivedCategory = deriveLegacyCategorySlug({
+      transactionType: published.transactionType ?? undefined,
+      assetClass: (published.assetClass ?? undefined) as 'residential' | undefined,
+      propertyType: (published.propertyType ?? undefined) as 'apartment' | undefined,
+      condition: (published.condition ?? undefined) as 'good' | undefined,
+      financingOptions: financingOptions as never,
+    });
+    const mediaRows = await this.repo.listMedia(published.id);
+    const imageUrls = mediaRows
+      .filter((m) => m.type === 'image' || m.type === 'floorplan')
+      .map((m) => m.url);
+    const coverUrl = imageUrls[0] ?? null;
+    await this.searchIndex.indexListing({
+      id: published.id,
+      slug: published.slug ?? published.id,
+      title: published.title,
+      description: published.description,
+      city: published.city,
+      provinceSlug: normalizeProvinceSlug(published.province),
+      regionSlug: null,
+      categorySlug: derivedCategory,
+      transactionType: published.transactionType,
+      transactionTypes:
+        (published.transactionTypes as string[] | null)?.length
+          ? (published.transactionTypes as string[])
+          : published.transactionType
+            ? [published.transactionType]
+            : [],
+      assetClass: published.assetClass ?? null,
+      propertyType: published.propertyType ?? null,
+      condition: published.condition ?? null,
+      financingOptions,
+      leaseType: published.leaseType ?? null,
+      sellerType: published.sellerType ?? null,
+      price: published.price == null ? null : Number(published.price),
+      bedrooms: published.bedrooms,
+      bathrooms: published.bathrooms,
+      rooms: published.rooms ?? published.bedrooms,
+      sizeSqm: published.sizeSqm == null ? null : Number(published.sizeSqm),
+      surfaceSqm: published.surfaceSqm == null ? null : Number(published.surfaceSqm),
+      yearBuilt: published.yearBuilt ?? null,
+      yearRenovated: published.yearRenovated ?? null,
+      energyClass: published.energyClass ?? null,
+      features: published.features ?? [],
+      coverUrl,
+      imageUrls,
+      status: 'published',
+      _geo:
+        published.latitude != null && published.longitude != null
+          ? { lat: published.latitude, lng: published.longitude }
+          : undefined,
+      publishedAt: published.publishedAt ? published.publishedAt.getTime() : Date.now(),
+    });
+
+    const pin = listingRowToPin({
+      id: published.id,
+      title: published.title,
+      latitude: published.latitude,
+      longitude: published.longitude,
+      price: published.price,
+      transactionType: published.transactionType,
+      bedrooms: published.bedrooms,
+      rooms: published.rooms,
+      sizeSqm: published.sizeSqm,
+      energyClass: published.energyClass,
+      propertyType: published.propertyType,
+      thumbnailUrl: coverUrl,
+    });
+    if (pin) {
+      try {
+        await this.alerts.onListingPublished(pin);
+      } catch (err) {
+        this.logger.warn(
+          `alerts on publish failed listing=${published.id}: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+    }
   }
 }

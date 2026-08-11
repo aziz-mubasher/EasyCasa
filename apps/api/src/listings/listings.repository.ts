@@ -138,7 +138,10 @@ export class ListingsRepository {
         hasSellerProfile: sql<boolean>`EXISTS (
           SELECT 1 FROM seller_profile sp WHERE sp.user_id = listings.owner_user_id
         )`,
+        status: listings.status,
         publishedAt: listings.publishedAt,
+        firstPublishedAt: listings.firstPublishedAt,
+        unpublishedAt: listings.unpublishedAt,
         createdAt: listings.createdAt,
       })
       .from(listings)
@@ -173,7 +176,10 @@ export class ListingsRepository {
           docHave,
           docTotal: completeness == null ? null : checklistTotal,
           hasSellerProfile: Boolean(r.hasSellerProfile),
+          status: r.status,
+          firstPublishedAt: r.firstPublishedAt,
           publishedAt: r.publishedAt,
+          unpublishedAt: r.unpublishedAt,
           createdAt: r.createdAt,
         }),
       };

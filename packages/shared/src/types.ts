@@ -44,6 +44,8 @@ export interface ListingSummary {
     docScore?: { have: number; total: number };
     listedByOwner: boolean;
     daysOnMarket: number;
+    /** False when unpublished/draft — ListingCard must not show market-time chip. */
+    showDaysOnMarket: boolean;
   };
 }
 

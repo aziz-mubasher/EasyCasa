@@ -107,7 +107,16 @@ describe('ListingsService', () => {
 
   it('indexes coverUrl from first image media on publish', async () => {
     vi.mocked(searchMock.indexListing).mockClear();
-    const findById = vi.fn().mockResolvedValue({ id: 'l1', agentId: 'me' });
+    const findById = vi.fn().mockResolvedValue({
+      id: 'l1',
+      agentId: 'me',
+      ownerUserId: 'me',
+      mediatorUserId: null,
+      status: 'draft',
+      firstPublishedAt: null,
+      publishedAt: null,
+      unpublishedAt: null,
+    });
     const listMedia = vi.fn().mockResolvedValue([
       { type: 'video', url: 'https://example.com/v.mp4' },
       { type: 'image', url: 'https://example.com/cover.jpg' },
@@ -135,17 +144,104 @@ describe('ListingsService', () => {
       latitude: null,
       longitude: null,
       publishedAt: new Date('2026-01-01T00:00:00Z'),
+      firstPublishedAt: new Date('2026-01-01T00:00:00Z'),
     });
     const svc = makeService(makeRepo({ findById, update, listMedia }));
     const user: AuthUser = { sub: 'u', roles: ['seller'] };
 
     await svc.publish('l1', user, 'me');
 
+    expect(update).toHaveBeenCalledWith(
+      'l1',
+      expect.objectContaining({
+        status: 'published',
+        firstPublishedAt: expect.any(Date),
+      }),
+    );
     expect(searchMock.indexListing).toHaveBeenCalledWith(
       expect.objectContaining({
         coverUrl: 'https://example.com/cover.jpg',
         imageUrls: ['https://example.com/cover.jpg'],
       }),
     );
+  });
+
+  it('INVARIANT: unpublish → republish preserves firstPublishedAt and removes from search', async () => {
+    vi.mocked(searchMock.indexListing).mockClear();
+    vi.mocked(searchMock.remove).mockClear();
+    const first = new Date('2026-05-01T09:00:00Z');
+    const findById = vi
+      .fn()
+      .mockResolvedValueOnce({
+        id: 'l1',
+        agentId: 'me',
+        ownerUserId: 'me',
+        mediatorUserId: null,
+        status: 'published',
+        firstPublishedAt: first,
+        publishedAt: first,
+        unpublishedAt: null,
+      })
+      .mockResolvedValueOnce({
+        id: 'l1',
+        agentId: 'me',
+        ownerUserId: 'me',
+        mediatorUserId: null,
+        status: 'unpublished',
+        firstPublishedAt: first,
+        publishedAt: first,
+        unpublishedAt: new Date('2026-06-01T09:00:00Z'),
+      });
+    const update = vi
+      .fn()
+      .mockResolvedValueOnce({
+        id: 'l1',
+        status: 'unpublished',
+        firstPublishedAt: first,
+        unpublishedAt: new Date('2026-06-01T09:00:00Z'),
+      })
+      .mockResolvedValueOnce({
+        id: 'l1',
+        slug: 'l1',
+        title: 'Flat',
+        description: null,
+        city: 'Milano',
+        province: 'MI',
+        transactionType: 'sale',
+        assetClass: null,
+        propertyType: null,
+        condition: null,
+        financingOptions: [],
+        leaseType: null,
+        sellerType: 'private',
+        price: null,
+        bedrooms: null,
+        bathrooms: null,
+        rooms: null,
+        sizeSqm: null,
+        surfaceSqm: null,
+        yearBuilt: null,
+        yearRenovated: null,
+        energyClass: null,
+        features: [],
+        latitude: null,
+        longitude: null,
+        publishedAt: new Date('2026-08-01T09:00:00Z'),
+        firstPublishedAt: first,
+      });
+    const listMedia = vi.fn().mockResolvedValue([]);
+    const svc = makeService(makeRepo({ findById, update, listMedia }));
+    const user: AuthUser = { sub: 'u', roles: ['seller'] };
+
+    await svc.unpublish('l1', user, 'me');
+    expect(searchMock.remove).toHaveBeenCalledWith('l1');
+    expect(update.mock.calls[0][1]).toEqual(
+      expect.objectContaining({ status: 'unpublished' }),
+    );
+    expect(update.mock.calls[0][1]).not.toHaveProperty('firstPublishedAt');
+
+    await svc.publish('l1', user, 'me');
+    expect(update.mock.calls[1][1].firstPublishedAt).toEqual(first);
+    expect(searchMock.indexListing).toHaveBeenCalled();
   });
 });

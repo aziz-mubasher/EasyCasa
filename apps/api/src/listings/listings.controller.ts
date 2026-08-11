@@ -75,4 +75,11 @@ export class ListingsController {
     const me = await this.users.getOrCreate(user);
     return this.listings.publish(id, user, me.id);
   }
+
+  @Roles('seller', 'agent', 'partner', 'pro_marketer')
+  @Post(':id/unpublish')
+  async unpublish(@Param('id') id: string, @CurrentUser() user: AuthUser) {
+    const me = await this.users.getOrCreate(user);
+    return this.listings.unpublish(id, user, me.id);
+  }
 }

@@ -3,7 +3,13 @@ import {
   doublePrecision, bigint, primaryKey, uniqueIndex, index, date,
 } from 'drizzle-orm/pg-core';
 
-export const listingStatus = pgEnum('listing_status', ['draft', 'published', 'sold', 'archived']);
+export const listingStatus = pgEnum('listing_status', [
+  'draft',
+  'published',
+  'unpublished',
+  'sold',
+  'archived',
+]);
 export const transactionType = pgEnum('transaction_type', ['sale', 'rent', 'auction', 'bare_ownership']);
 export const userRole = pgEnum('user_role', [
   'buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin', 'professional',
@@ -118,6 +124,9 @@ export const listings = pgTable('listings', {
   featuredUntil: timestamp('featured_until', { withTimezone: true }),
   source: text('source').notNull().default('native'),
   publishedAt: timestamp('published_at', { withTimezone: true }),
+  /** First ever publish — immutable once set (EC-S-T13 relist invariant). */
+  firstPublishedAt: timestamp('first_published_at', { withTimezone: true }),
+  unpublishedAt: timestamp('unpublished_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
