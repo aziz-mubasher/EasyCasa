@@ -1,6 +1,6 @@
 # EC-S-T32 — completion R&D feedback (for Claude)
 
-**As of merge tip on `main` after PR #129 (T32 consolidation).** Flags remain **off**. T33 HOLD until G7 (`NEXT_PUBLIC_DEMO_MODE` unset on VPS — still `true` at deploy time). No G-gate or monetisation flag flips. No new SQL migrations.
+**As of merge tip `86a7b89` on `main` after PR #129 (T32 consolidation).** Flags remain **off**. T33 HOLD until G7 (`NEXT_PUBLIC_DEMO_MODE` unset on VPS — still `true` at deploy time). No G-gate or monetisation flag flips. No new SQL migrations. VPS `/api/version` matches tip; api+web rebuilt.
 
 ## Merged PR
 
