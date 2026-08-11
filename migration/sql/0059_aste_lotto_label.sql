@@ -1,5 +1,6 @@
 -- EC-23b: user-selected lot label for multi-lot dossiers (schema v2 lot scoping).
--- Confirmed free on origin/main immediately before add (highest was 0054_ecs_t13_publish_lifecycle.sql).
+-- Renumbered from 0055 → 0059 after ECS concurrently shipped 0055_ecs_t20_enquiry_inbox.sql on main.
+-- Column already applied on VPS as 0055_aste; IF NOT EXISTS keeps re-apply safe.
 
 ALTER TABLE aste_analyses
   ADD COLUMN IF NOT EXISTS lotto_label text;
