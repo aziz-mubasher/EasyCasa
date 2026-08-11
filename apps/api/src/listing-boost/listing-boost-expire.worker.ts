@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 
 import { ListingBoostService } from './listing-boost.service';
 import { SearchService } from '../search/search.service';

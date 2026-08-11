@@ -1,4 +1,6 @@
 import {
+  BOOST_WEIGHT_ACTIVE,
+  clampBoostWeight,
   deriveLegacyCategorySlug,
   isConditionSlug,
   isPropertyTypeSlug,
@@ -51,6 +53,16 @@ async function run(): Promise<void> {
      WHERE l.status = 'published'
   `);
 
+  // EC-S-T26 — active boosts drive the bounded ranking weight + DSA label.
+  const { rows: boostRows } = await pool.query<{ listing_id: string }>(`
+    SELECT DISTINCT listing_id
+      FROM listing_boost
+     WHERE status = 'active'
+       AND starts_at <= now()
+       AND ends_at > now()
+  `);
+  const boostedIds = new Set(boostRows.map((b) => b.listing_id));
+
   const docs: ListingDoc[] = rows.map((r) => {
     const assetClass = (r.asset_class as AssetClassSlug | null) ?? null;
     const propertyType = isPropertyTypeSlug(r.property_type ?? '')
@@ -100,6 +112,8 @@ async function run(): Promise<void> {
         ? { lat: r.latitude, lng: r.longitude }
         : undefined,
       publishedAt: r.published_at ? r.published_at.getTime() : null,
+      boostWeight: boostedIds.has(r.id) ? clampBoostWeight(BOOST_WEIGHT_ACTIVE) : 0,
+      boosted: boostedIds.has(r.id),
     };
   });
 
