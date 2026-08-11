@@ -224,11 +224,21 @@ const Schema = z
      */
     IMAGE_DUPDETECT_ENFORCE: bool(false),
     /**
-     * EC-S-T19 — rate limits for unverified sellers (manual abuse tooling).
-     * Soft limits; 429 when exceeded. Not boot-throwing.
+     * EC-S-T19 — rate limits for unverified sellers (hard 429).
+     * Soft-parse: invalid/missing → defaults (no boot-throw). Art. 6(1)(b) — not LIA-gated.
      */
-    SELLER_MAX_ACTIVE_LISTINGS: z.coerce.number().int().positive().default(5),
-    SELLER_MAX_UPLOADS_PER_DAY: z.coerce.number().int().positive().default(20),
+    SELLER_MAX_ACTIVE_LISTINGS: z.preprocess((v) => {
+      if (v === undefined || v === null || v === '') return 5;
+      const n = Number(v);
+      if (!Number.isFinite(n) || !Number.isInteger(n) || n <= 0) return 5;
+      return n;
+    }, z.number().int().positive().default(5)),
+    SELLER_MAX_UPLOADS_PER_DAY: z.preprocess((v) => {
+      if (v === undefined || v === null || v === '') return 20;
+      const n = Number(v);
+      if (!Number.isFinite(n) || !Number.isInteger(n) || n <= 0) return 20;
+      return n;
+    }, z.number().int().positive().default(20)),
     /**
      * EC-S-T14 — Verified Owner routes.
      * Default false. Enable only after T05 Layer 1 + §6.3 counsel boxes.

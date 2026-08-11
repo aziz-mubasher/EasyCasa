@@ -9,9 +9,10 @@ import { SearchModule } from '../search/search.module';
 import { DbModule } from '../db/db.module';
 import { AlertsModule } from '../alerts/alerts.module';
 import { AvmModule } from '../avm/avm.module';
+import { SellerQuotaModule } from '../seller-quota/seller-quota.module';
 
 @Module({
-  imports: [UsersModule, SearchModule, DbModule, AlertsModule, AvmModule],
+  imports: [UsersModule, SearchModule, DbModule, AlertsModule, AvmModule, SellerQuotaModule],
   controllers: [ListingsController],
   providers: [
     ListingsService,

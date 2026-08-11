@@ -3,6 +3,12 @@
     "name": "EasyCasa",
     "tagline": "Compra, vendi e affitta — paghi solo i servizi che usi, con un'agenzia regolare."
   },
+  "errors": {
+    "quota": {
+      "uploadsPerDay": "Hai raggiunto il limite di caricamenti per oggi. Riprova dopo la mezzanotte (ora di Roma).",
+      "activeListings": "Hai raggiunto il numero massimo di annunci attivi."
+    }
+  },
   "nav": {
     "search": "Cerca",
     "add": "Pubblica annuncio",

@@ -3,6 +3,12 @@
     "name": "EasyCasa",
     "tagline": "Buy, sell, and rent — pay only for the services you use, from a licensed agency."
   },
+  "errors": {
+    "quota": {
+      "uploadsPerDay": "You have reached today’s upload limit. Try again after midnight (Rome time).",
+      "activeListings": "You have reached the maximum number of active listings."
+    }
+  },
   "nav": {
     "search": "Search",
     "add": "List a property",

@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, INestApplication, Module } from '@nestjs/common';
+import { BadRequestException, Controller, Get, HttpException, HttpStatus, INestApplication, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
@@ -23,6 +23,17 @@ class XController {
   @Get('server')
   server() {
     throw new Error('kaboom');
+  }
+  @Get('quota')
+  quota() {
+    throw new HttpException(
+      {
+        message: 'upload limit',
+        code: 'errors.quota.uploadsPerDay',
+        retryAfterSeconds: 120,
+      },
+      HttpStatus.TOO_MANY_REQUESTS,
+    );
   }
 }
 
@@ -59,5 +70,16 @@ describe('AllExceptionsFilter', () => {
     expect(res.status).toBe(500);
     expect(JSON.stringify(res.body)).not.toContain('kaboom');
     expect(captured).toHaveLength(1);
+  });
+
+  it('429: sets Retry-After and exposes quota code', async () => {
+    const res = await request(app.getHttpServer()).get('/x/quota');
+    expect(res.status).toBe(429);
+    expect(res.headers['retry-after']).toBe('120');
+    expect(res.body).toMatchObject({
+      statusCode: 429,
+      code: 'errors.quota.uploadsPerDay',
+      retryAfterSeconds: 120,
+    });
   });
 });

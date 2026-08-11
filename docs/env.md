@@ -219,6 +219,8 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | INFORMATIVA_SELLER_VERSION | api | Version id stored on `seller_profile`. Empty ⇒ refuse onboarding insert. |
 | MEDIA_CDN_ENABLED | api | Default `false` until Bunny DPA (T05). `MEDIA_ORIGIN=bunny` refused while false. |
 | IMAGE_DUPDETECT_ENFORCE | api | Default `false` (flag-only week). When true, DUPLICATE uploads are blocked. |
+| SELLER_MAX_ACTIVE_LISTINGS | api | Default `5`. Hard 429 on listing create when seller has this many **published** listings. Art. 6(1)(b) — not LIA-gated. Soft-parse invalid → default. |
+| SELLER_MAX_UPLOADS_PER_DAY | api | Default `20`. Hard 429 on media upload/confirm/presign per Europe/Rome calendar day. Soft-parse invalid → default. |
 | NOMINATIM_URL / GEOCODER_USER_AGENT | api | Runtime geocode for `POST /omi/resolve` (T08). |
 
 ## EC-S Phase 2 — Verified Owner (T14–T16)
