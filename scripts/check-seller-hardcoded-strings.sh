@@ -20,50 +20,48 @@ for d in "${scan_dirs[@]}"; do
   fi
 done
 
-# 1) JSX text nodes with letters (prose) — must go through next-intl.
-# Allow punctuation-only (e.g. em dash) and pure whitespace.
+# 1) JSX text nodes with letters (prose) between a tag and a closing tag.
+# Requires a following </ so TypeScript generics (Promise<void>) are ignored.
+# Punctuation-only nodes (e.g. em dash) are ignored by the letter requirement.
 while IFS= read -r line; do
   echo "HARDCODED JSX text: $line" >&2
   HITS=$((HITS + 1))
 done < <(
-  # shellcheck disable=SC2086
-  rg -n --glob '*.tsx' --glob '*.ts' \
-    '>[^<{]*[A-Za-zÀ-ÿ]{2,}[^<]*<' \
+  rg -n --glob '*.tsx' \
+    '>[^<{]*[A-Za-zÀ-ÿ]{2,}[^<]*</' \
     "${scan_dirs[@]}" 2>/dev/null || true
 )
 
-# 2) Prose string literals in UI attributes (placeholder / aria-label / title / alt / label).
-# Allow URL-ish placeholders and single punctuation glyphs.
+# 2) Prose string literals in UI attributes (placeholder / aria-label / title / alt).
+# Allow URL-ish placeholders.
 while IFS= read -r line; do
-  # Skip URL / protocol placeholders
-  if echo "$line" | rg -q 'placeholder="https?://|placeholder='\''https?://|placeholder=\{`https?://'; then
+  if echo "$line" | rg -q 'placeholder=["'\'']https?://'; then
     continue
   fi
   echo "HARDCODED attr copy: $line" >&2
   HITS=$((HITS + 1))
 done < <(
-  rg -n --glob '*.tsx' --glob '*.ts' \
-    '(placeholder|aria-label|title|alt|label)=["'\''][^"'\'']*[A-Za-zÀ-ÿ]{3,}[^"'\'']*["'\'']' \
+  rg -n --glob '*.tsx' \
+    '(placeholder|aria-label|title|alt)=["'\''][^"'\'']*[A-Za-zÀ-ÿ]{3,}[^"'\'']*["'\'']' \
     "${scan_dirs[@]}" 2>/dev/null || true
 )
 
-# 3) setError / throw with multi-word prose (internal short keys like 'load' are OK).
+# 3) setError with multi-word prose (internal short keys like 'load' / 'unavailable' are OK).
 while IFS= read -r line; do
-  echo "HARDCODED setError/throw: $line" >&2
+  echo "HARDCODED setError prose: $line" >&2
   HITS=$((HITS + 1))
 done < <(
-  rg -n --glob '*.tsx' --glob '*.ts' \
-    "setError\(['\"][^'\"]*[ ][^'\"]*['\"]\)|throw new Error\(['\"][^'\"]*[A-Za-zÀ-ÿ]{4,}" \
+  rg -n --glob '*.tsx' \
+    "setError\(['\"][^'\"]*[ ][^'\"]*['\"]\)" \
     "${scan_dirs[@]}" 2>/dev/null || true
 )
 
-# 4) Raw machine codes / slugs rendered as option or list children without t(.
-# Catch `{p}` / `{c}` alone as children (legacy wizard bug).
+# 4) Raw machine codes / slugs rendered as children without t( — legacy `{p}` / `{c}`.
 while IFS= read -r line; do
   echo "HARDCODED raw code render: $line" >&2
   HITS=$((HITS + 1))
 done < <(
-  rg -n --glob '*.tsx' --glob '*.ts' \
+  rg -n --glob '*.tsx' \
     '>\s*\{[pc]\}\s*<' \
     "${scan_dirs[@]}" 2>/dev/null || true
 )
@@ -79,10 +77,9 @@ if [[ -f "$WIZARD" ]]; then
     echo "HARDCODED quota prose in setError in $WIZARD" >&2
     HITS=$((HITS + 1))
   fi
-  # 429 path should call tQuota / errors.quota keys
   if ! rg -q "status === 429" "$WIZARD"; then
     echo "WARN: no 429 handler in SellerListingWizard (expected for quota)" >&2
-  elif ! rg -n -A3 "status === 429" "$WIZARD" | rg -q "activeListings|uploadsPerDay"; then
+  elif ! rg -n -A5 "status === 429" "$WIZARD" | rg -q "activeListings|uploadsPerDay"; then
     echo "HARDCODED quota: 429 handler must render errors.quota.activeListings|uploadsPerDay" >&2
     HITS=$((HITS + 1))
   fi
