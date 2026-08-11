@@ -23,18 +23,21 @@ const CATEGORIES = [
   'virtual_tour',
 ] as const;
 
+const EMPTY_FORM = {
+  category: 'notaio',
+  name: '',
+  province: '',
+  credentials: '',
+  contact: '',
+  active: true,
+};
+
 export function PartnerDirectoryAdmin() {
   const api = useApi();
   const qc = useQueryClient();
   const [err, setErr] = useState<string | null>(null);
-  const [form, setForm] = useState({
-    category: 'notaio',
-    name: '',
-    province: '',
-    credentials: '',
-    contact: '',
-    active: true,
-  });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [form, setForm] = useState(EMPTY_FORM);
 
   const list = useQuery({
     queryKey: ['partner-directory'],
@@ -42,17 +45,24 @@ export function PartnerDirectoryAdmin() {
       z.array(RowSchema).parse(await api.listPartnerDirectory()),
   });
 
+  function resetForm() {
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+  }
+
   const create = useMutation({
     mutationFn: () => api.createPartnerDirectory(form),
     onSuccess: () => {
-      setForm({
-        category: 'notaio',
-        name: '',
-        province: '',
-        credentials: '',
-        contact: '',
-        active: true,
-      });
+      resetForm();
+      void qc.invalidateQueries({ queryKey: ['partner-directory'] });
+    },
+    onError: (e: Error) => setErr(e.message),
+  });
+
+  const update = useMutation({
+    mutationFn: (id: string) => api.updatePartnerDirectory(id, form),
+    onSuccess: () => {
+      resetForm();
       void qc.invalidateQueries({ queryKey: ['partner-directory'] });
     },
     onError: (e: Error) => setErr(e.message),
@@ -60,7 +70,10 @@ export function PartnerDirectoryAdmin() {
 
   const remove = useMutation({
     mutationFn: (id: string) => api.deletePartnerDirectory(id),
-    onSuccess: () => void qc.invalidateQueries({ queryKey: ['partner-directory'] }),
+    onSuccess: () => {
+      if (editingId) resetForm();
+      void qc.invalidateQueries({ queryKey: ['partner-directory'] });
+    },
     onError: (e: Error) => setErr(e.message),
   });
 
@@ -87,7 +100,8 @@ export function PartnerDirectoryAdmin() {
         onSubmit={(e) => {
           e.preventDefault();
           setErr(null);
-          create.mutate();
+          if (editingId) update.mutate(editingId);
+          else create.mutate();
         }}
       >
         <label>
@@ -134,9 +148,28 @@ export function PartnerDirectoryAdmin() {
             required
           />
         </label>
-        <button type="submit" className="btn" disabled={create.isPending}>
-          Add
-        </button>
+        <label>
+          <input
+            type="checkbox"
+            checked={form.active}
+            onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))}
+          />{' '}
+          Active
+        </label>
+        <div className="stack stack--row">
+          <button
+            type="submit"
+            className="btn"
+            disabled={create.isPending || update.isPending}
+          >
+            {editingId ? 'Save changes' : 'Add'}
+          </button>
+          {editingId ? (
+            <button type="button" className="btn btn--ghost" onClick={resetForm}>
+              Cancel
+            </button>
+          ) : null}
+        </div>
       </form>
 
       <Table
@@ -151,14 +184,34 @@ export function PartnerDirectoryAdmin() {
             <td className="mono">{r.contact}</td>
             <td>{r.active ? 'yes' : 'no'}</td>
             <td>
-              <button
-                type="button"
-                className="btn btn--sm"
-                disabled={remove.isPending}
-                onClick={() => remove.mutate(r.id)}
-              >
-                Delete
-              </button>
+              <div className="stack stack--row">
+                <button
+                  type="button"
+                  className="btn btn--sm"
+                  onClick={() => {
+                    setErr(null);
+                    setEditingId(r.id);
+                    setForm({
+                      category: r.category,
+                      name: r.name,
+                      province: r.province,
+                      credentials: r.credentials ?? '',
+                      contact: r.contact,
+                      active: r.active,
+                    });
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn--sm"
+                  disabled={remove.isPending}
+                  onClick={() => remove.mutate(r.id)}
+                >
+                  Delete
+                </button>
+              </div>
             </td>
           </tr>
         ))}

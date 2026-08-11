@@ -37,7 +37,7 @@ describe('PartnerDirectoryEnabledGuard', () => {
     const guard = new PartnerDirectoryEnabledGuard({
       PARTNER_DIRECTORY_ENABLED: false,
     } as ApiConfig);
-    expect(() => guard.canActivate({} as never)).toThrow(/not available/);
+    expect(() => guard.canActivate()).toThrow(/not available/);
   });
 });
 

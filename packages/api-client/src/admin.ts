@@ -272,6 +272,23 @@ export class EasyCasaAdminApi {
       body: JSON.stringify(body),
     });
   }
+  updatePartnerDirectory(
+    id: string,
+    body: {
+      category: string;
+      name: string;
+      province: string;
+      credentials?: string;
+      contact: string;
+      active?: boolean;
+    },
+  ): Promise<unknown> {
+    return this.request(
+      `/admin/partner-directory/${encodeURIComponent(id)}`,
+      z.unknown(),
+      { method: 'PATCH', body: JSON.stringify(body) },
+    );
+  }
   deletePartnerDirectory(id: string): Promise<unknown> {
     return this.request(
       `/admin/partner-directory/${encodeURIComponent(id)}`,
