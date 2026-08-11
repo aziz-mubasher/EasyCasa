@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  ASTE_REPORT_BANKS4ALL_UTM,
   BANKS4ALL_PORTAL_ORIGIN,
   BANKS4ALL_SITE_ORIGIN,
   DEFAULT_BANKS4ALL_REFERRAL_ENTRY,
@@ -33,5 +34,35 @@ describe('getBanks4AllReferralUrl', () => {
     expect(getBanks4AllReferralUrl('en', 'transparency')).toBe(
       `${BANKS4ALL_SITE_ORIGIN}/en/transparency`,
     );
+  });
+
+  it('EC-28 aste UTM: locale path + campaign params, no identifiers', () => {
+    const href = getBanks4AllReferralUrl('it', 'propertyPlanPortal', ASTE_REPORT_BANKS4ALL_UTM);
+    const u = new URL(href);
+    expect(u.origin).toBe(BANKS4ALL_PORTAL_ORIGIN);
+    expect(u.pathname).toBe('/it/property-plan');
+    expect(u.searchParams.get('utm_source')).toBe('easycasa');
+    expect(u.searchParams.get('utm_medium')).toBe('aste_report');
+    expect(u.searchParams.get('utm_campaign')).toBe('aste');
+    // ABSENCE of any analysis / user / property identifiers
+    for (const forbidden of [
+      'analysis',
+      'analysis_id',
+      'analysisId',
+      'user',
+      'user_id',
+      'userId',
+      'rge',
+      'address',
+      'indirizzo',
+      'lotto',
+    ]) {
+      expect(u.searchParams.has(forbidden)).toBe(false);
+      expect(href.toLowerCase()).not.toContain(`${forbidden}=`);
+    }
+  });
+
+  it('listing default still has no query string', () => {
+    expect(getBanks4AllReferralUrl('en').includes('?')).toBe(false);
   });
 });

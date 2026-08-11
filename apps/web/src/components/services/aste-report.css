@@ -326,6 +326,10 @@
   list-style: none;
 }
 
+.ar-financing-block {
+  margin-top: 1.25rem;
+}
+
 .ar-chip {
   display: inline-block;
   width: 1.2rem;

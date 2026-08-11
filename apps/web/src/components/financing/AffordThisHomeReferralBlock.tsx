@@ -1,15 +1,25 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { getBanks4AllReferralUrl } from '@/lib/banks4all-referral';
+import {
+  ASTE_REPORT_BANKS4ALL_UTM,
+  getBanks4AllReferralUrl,
+} from '@/lib/banks4all-referral';
+import type { AsteFinancingTrigger } from '@/lib/aste-financing-trigger';
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 
 const externalRel = 'noopener noreferrer';
 
-function AffordabilityIllustration() {
+function AffordabilityIllustration({ compact }: { compact?: boolean }) {
   return (
     <svg
       viewBox="0 0 120 96"
-      className="h-24 w-[7.5rem] shrink-0 text-azure"
+      className={
+        compact
+          ? 'h-16 w-20 shrink-0 text-azure'
+          : 'h-24 w-[7.5rem] shrink-0 text-azure'
+      }
       aria-hidden="true"
       focusable="false"
     >
@@ -19,7 +29,16 @@ function AffordabilityIllustration() {
           <stop offset="100%" stopColor="currentColor" stopOpacity="0.06" />
         </linearGradient>
       </defs>
-      <rect x="8" y="52" width="72" height="36" rx="4" fill="url(#afford-home-fill)" stroke="currentColor" strokeWidth="1.5" />
+      <rect
+        x="8"
+        y="52"
+        width="72"
+        height="36"
+        rx="4"
+        fill="url(#afford-home-fill)"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
       <path
         d="M12 52 L44 28 L76 52"
         fill="none"
@@ -28,7 +47,15 @@ function AffordabilityIllustration() {
         strokeLinejoin="round"
       />
       <rect x="36" y="64" width="16" height="24" rx="1" fill="currentColor" fillOpacity="0.25" />
-      <circle cx="92" cy="36" r="22" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeWidth="1.5" />
+      <circle
+        cx="92"
+        cy="36"
+        r="22"
+        fill="currentColor"
+        fillOpacity="0.12"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
       <path
         d="M84 36 L89 41 L100 28"
         fill="none"
@@ -50,48 +77,140 @@ function AffordabilityIllustration() {
   );
 }
 
-type Props = {
+export type AffordThisHomeReferralBlockProps = {
   className?: string;
+  /**
+   * `listing` — existing under-gallery block (default).
+   * `aste` — compact financing lane on full aste reports (EC-28).
+   */
+  variant?: 'listing' | 'aste';
+  /** Required for aste variant — selects lead-in copy. */
+  leadInKey?: AsteFinancingTrigger;
+  /**
+   * EC-27 teaser gate: aste block only renders when context is `full`.
+   * Listing variant ignores this.
+   */
+  reportContext?: 'full' | 'teaser';
+  /** Provincia from extraction for internal attribution only (never outbound). */
+  provincia?: string | null;
 };
 
 /** Prominent under-gallery referral — free Banks4All Property Investment Plan (Phase A, no PII). */
-export function AffordThisHomeReferralBlock({ className = '' }: Props) {
+export function AffordThisHomeReferralBlock({
+  className = '',
+  variant = 'listing',
+  leadInKey,
+  reportContext,
+  provincia = null,
+}: AffordThisHomeReferralBlockProps) {
   const locale = useLocale();
   const t = useTranslations('banks4AllReferral');
-  const portalHref = getBanks4AllReferralUrl(locale, 'propertyPlanPortal');
-  const infoHref = getBanks4AllReferralUrl(locale, 'propertyInvestmentPlan');
+  const shownRef = useRef(false);
+
+  const isAste = variant === 'aste';
+  const asteActive = isAste && reportContext === 'full' && Boolean(leadInKey);
+
+  const utm = asteActive ? ASTE_REPORT_BANKS4ALL_UTM : undefined;
+  const portalHref = getBanks4AllReferralUrl(locale, 'propertyPlanPortal', utm);
+  const infoHref = getBanks4AllReferralUrl(locale, 'propertyInvestmentPlan', utm);
   const portalHostLabel = t('externalHint', { host: 'portal.banks4all.eu' });
   const infoHostLabel = t('externalHint', { host: 'banks4all.eu' });
-  const headingId = 'afford-this-home-referral-heading';
+  const headingId = asteActive
+    ? 'aste-financing-referral-heading'
+    : 'afford-this-home-referral-heading';
+
+  useEffect(() => {
+    if (!asteActive || !leadInKey || shownRef.current) return;
+    shownRef.current = true;
+    trackProduct(PRODUCT_EVENTS.ASTE_FINANCING_BLOCK_SHOWN, {
+      trigger: leadInKey,
+      locale,
+      provincia: provincia ?? undefined,
+    });
+  }, [asteActive, leadInKey, locale, provincia]);
+
+  if (isAste && !asteActive) {
+    return null;
+  }
+
+  function onPrimaryClick() {
+    if (!asteActive || !leadInKey) return;
+    trackProduct(PRODUCT_EVENTS.ASTE_FINANCING_CTA_CLICKED, {
+      trigger: leadInKey,
+      locale,
+      provincia: provincia ?? undefined,
+      entry: 'propertyPlanPortal',
+    });
+  }
+
+  function onSecondaryClick() {
+    if (!asteActive || !leadInKey) return;
+    trackProduct(PRODUCT_EVENTS.ASTE_FINANCING_CTA_CLICKED, {
+      trigger: leadInKey,
+      locale,
+      provincia: provincia ?? undefined,
+      entry: 'propertyInvestmentPlan',
+    });
+  }
+
+  const leadIn =
+    asteActive && leadInKey
+      ? t(`aste.leadIn.${leadInKey}` as 'aste.leadIn.financing_need')
+      : null;
 
   return (
     <aside
-      className={`relative overflow-hidden rounded-xl2 border border-line bg-gradient-to-br from-paper via-paper to-azure/10 p-5 sm:p-6 shadow-sm ${className}`.trim()}
+      className={
+        asteActive
+          ? `ar-financing relative overflow-hidden rounded-xl2 border border-line bg-gradient-to-br from-paper via-paper to-azure/10 p-4 sm:p-5 shadow-sm min-h-[8.5rem] ${className}`.trim()
+          : `relative overflow-hidden rounded-xl2 border border-line bg-gradient-to-br from-paper via-paper to-azure/10 p-5 sm:p-6 shadow-sm ${className}`.trim()
+      }
       aria-labelledby={headingId}
+      data-aste-financing-trigger={asteActive ? leadInKey : undefined}
     >
       <div
         className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-azure/8 blur-2xl"
         aria-hidden="true"
       />
-      <div className="relative flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
-        <div className="hidden sm:flex sm:items-center sm:justify-center sm:rounded-xl sm:bg-sand/50 sm:p-3">
-          <AffordabilityIllustration />
-        </div>
+      <div
+        className={
+          asteActive
+            ? 'relative flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4'
+            : 'relative flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6'
+        }
+      >
+        {asteActive ? (
+          <div className="hidden sm:flex sm:items-center sm:justify-center sm:rounded-xl sm:bg-sand/50 sm:p-2">
+            <AffordabilityIllustration compact />
+          </div>
+        ) : (
+          <div className="hidden sm:flex sm:items-center sm:justify-center sm:rounded-xl sm:bg-sand/50 sm:p-3">
+            <AffordabilityIllustration />
+          </div>
+        )}
         <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex rounded-full border border-pine/30 bg-pine/10 px-2.5 py-0.5 text-xs font-medium text-pine">
               {t('heroFreeBadge')}
             </span>
           </div>
-          <h2 id={headingId} className="font-display text-lg sm:text-xl font-semibold text-ink leading-snug">
-            {t('heroTitle')}
+          <h2
+            id={headingId}
+            className={
+              asteActive
+                ? 'font-display text-base sm:text-lg font-semibold text-ink leading-snug'
+                : 'font-display text-lg sm:text-xl font-semibold text-ink leading-snug'
+            }
+          >
+            {asteActive ? t('aste.title') : t('heroTitle')}
           </h2>
-          <p className="text-sm text-muted leading-relaxed">{t('heroBody')}</p>
+          {leadIn ? <p className="text-sm text-muted leading-relaxed">{leadIn}</p> : null}
+          {!asteActive ? <p className="text-sm text-muted leading-relaxed">{t('heroBody')}</p> : null}
           <p className="text-xs text-muted leading-relaxed">{t('heroTrustLine')}</p>
-          {t('heroAvailabilityLine') ? (
+          {!asteActive && t('heroAvailabilityLine') ? (
             <p className="text-xs text-muted leading-relaxed">{t('heroAvailabilityLine')}</p>
           ) : null}
-          {t('heroNewcomerNote') ? (
+          {!asteActive && t('heroNewcomerNote') ? (
             <p className="text-xs text-muted leading-relaxed">{t('heroNewcomerNote')}</p>
           ) : null}
           <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap sm:items-center">
@@ -99,8 +218,10 @@ export function AffordThisHomeReferralBlock({ className = '' }: Props) {
               href={portalHref}
               target="_blank"
               rel={externalRel}
+              onClick={onPrimaryClick}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-azure px-5 py-2.5 text-sm font-medium text-paper font-[var(--font-display)] transition hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-azure"
               aria-label={`${t('heroPrimaryCta')} — ${portalHostLabel}`}
+              data-testid="aste-financing-primary-cta"
             >
               {t('heroPrimaryCta')}
               <span aria-hidden="true">↗</span>
@@ -109,16 +230,20 @@ export function AffordThisHomeReferralBlock({ className = '' }: Props) {
               href={infoHref}
               target="_blank"
               rel={externalRel}
+              onClick={onSecondaryClick}
               className="text-sm font-medium text-azure underline decoration-line underline-offset-2 hover:decoration-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-azure rounded-sm"
               aria-label={`${t('heroSecondaryCta')} — ${infoHostLabel}`}
+              data-testid="aste-financing-secondary-cta"
             >
               {t('heroSecondaryCta')}
             </a>
           </div>
         </div>
-        <div className="flex justify-center sm:hidden" aria-hidden="true">
-          <AffordabilityIllustration />
-        </div>
+        {!asteActive ? (
+          <div className="flex justify-center sm:hidden" aria-hidden="true">
+            <AffordabilityIllustration />
+          </div>
+        ) : null}
       </div>
     </aside>
   );

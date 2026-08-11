@@ -580,7 +580,15 @@
     "inlineBeforeLink": "Not sure what you can afford yet?",
     "inlineLink": "Get a free Banks4All plan",
     "footerLink": "Free financing check (Banks4All)",
-    "externalHint": "Opens on {host} in a new tab"
+    "externalHint": "Opens on {host} in a new tab",
+    "aste": {
+      "title": "Financing and auction deadlines",
+      "leadIn": {
+        "financing_need": "Auctions have hard deadlines: deposit up front, balance within the court's term. A financing feasibility plan before you bid protects your deposit.",
+        "readiness_financing": "Auctions have hard deadlines: deposit up front, balance within the court's term. A financing feasibility plan before you bid protects your deposit.",
+        "mutuabilita": "The issues flagged (non-conformities or occupancy) can affect whether the property is financeable. Check feasibility before you bid."
+      }
+    }
   },
   "footer": {
     "externalHint": "Opens on {host} in a new tab",

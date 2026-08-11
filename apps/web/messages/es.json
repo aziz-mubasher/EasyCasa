@@ -580,7 +580,15 @@
     "inlineBeforeLink": "¿Aún no sabes qué puedes permitirte?",
     "inlineLink": "Plan gratis en Banks4All",
     "footerLink": "Check financiero gratis (Banks4All)",
-    "externalHint": "Se abre en {host} en una pestaña nueva"
+    "externalHint": "Se abre en {host} en una pestaña nueva",
+    "aste": {
+      "title": "Financiación y plazos de subasta",
+      "leadIn": {
+        "financing_need": "Las subastas tienen plazos rígidos: fianza al momento, saldo del precio en el término del tribunal. Un plan de viabilidad financiera antes de ofertar evita perder la fianza.",
+        "readiness_financing": "Las subastas tienen plazos rígidos: fianza al momento, saldo del precio en el término del tribunal. Un plan de viabilidad financiera antes de ofertar evita perder la fianza.",
+        "mutuabilita": "Las criticidades detectadas (disconformidades o estado de ocupación) pueden afectar la financiabilidad del inmueble. Verifica la viabilidad antes de ofertar."
+      }
+    }
   },
   "footer": {
     "externalHint": "Se abre en {host} en una pestaña nueva",
