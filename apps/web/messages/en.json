@@ -1152,7 +1152,7 @@
     "previewTitle": "Slot preview (what visitors will see)",
     "previewEmpty": "No slots generated — select at least one time window.",
     "editTitle": "Viewing availability",
-    "editSubtitle": "Edit the weekly windows when visitors can book.",
+    "editSubtitle": "Edit the time windows visitors can book. Capacity > 1 enables open-house mode.",
     "save": "Save availability",
     "saving": "Saving…",
     "saved": "Availability updated.",

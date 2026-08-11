@@ -1152,7 +1152,7 @@
     "previewTitle": "Vista previa de franjas (lo que ven los visitantes)",
     "previewEmpty": "No hay franjas — selecciona al menos una ventana horaria.",
     "editTitle": "Disponibilidad de visitas",
-    "editSubtitle": "Edita las franjas semanales en las que se puede reservar.",
+    "editSubtitle": "Edita las franjas en las que los visitantes pueden reservar. Aforo > 1 activa el modo open house.",
     "save": "Guardar disponibilidad",
     "saving": "Guardando…",
     "saved": "Disponibilidad actualizada.",

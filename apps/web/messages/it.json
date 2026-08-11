@@ -1152,7 +1152,7 @@
     "previewTitle": "Anteprima slot (come li vedono i visitatori)",
     "previewEmpty": "Nessuno slot generato — seleziona almeno una fascia oraria.",
     "editTitle": "Disponibilità visite",
-    "editSubtitle": "Modifica le fasce orarie in cui i visitatori possono prenotare.",
+    "editSubtitle": "Modifica le fasce orarie in cui i visitatori possono prenotare. Capienza > 1 abilita la modalità open house.",
     "save": "Salva disponibilità",
     "saving": "Salvataggio…",
     "saved": "Disponibilità aggiornata.",
