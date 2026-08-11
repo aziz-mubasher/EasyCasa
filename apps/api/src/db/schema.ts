@@ -367,6 +367,19 @@ export const partnerProfiles = pgTable('partner_profiles', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-S-T28/T29 — curated informational partner directory (no fees / tracking). */
+export const partnerDirectory = pgTable('partner_directory', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  category: text('category').notNull(),
+  name: text('name').notNull(),
+  province: text('province').notNull(),
+  credentials: text('credentials'),
+  contact: text('contact').notNull(),
+  active: boolean('active').notNull().default(true),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const leads = pgTable('leads', {
   id: uuid('id').primaryKey().defaultRandom(),
   listingId: uuid('listing_id'),
@@ -1291,7 +1304,7 @@ export const schema = {
 
   enquiries,
   plans, memberships, sellerSubscription, featuredPlacements, listingBoost, conversations, messages, notifications,
-  devices, partnerProfiles, leads, payouts,
+  devices, partnerProfiles, partnerDirectory, leads, payouts,
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,

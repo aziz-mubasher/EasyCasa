@@ -256,3 +256,8 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | LISTING_BOOST_ENABLED | api | Default `false`. T26 listing boost checkout/UI. When off, purchase paths 404; **existing active boosts still ranked + labelled**. |
 | STRIPE_PRICE_BOOST_7D | api | Optional Stripe Price ID for fixed 7-day boost (flat fee). Empty → Checkout `price_data` with fixed cents from shared `BOOST_FLAT_PRICE_CENTS`. |
 | STRIPE_PRICE_BOOST_30D | api | Optional Stripe Price ID for fixed 30-day boost (flat fee). |
+
+## EC-S Phase 4 — partner directory (T28/T29)
+| Variable | Used by | Notes |
+|---|---|---|
+| PARTNER_DIRECTORY_ENABLED | api | Default `false`. T28/T29 neutral partner directory. Monetised referral variants **wait for G3 row 9** — do not enable fee flows. |

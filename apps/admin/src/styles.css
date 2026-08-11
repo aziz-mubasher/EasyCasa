@@ -356,6 +356,23 @@ h1 {
   border-color: rgba(181, 74, 58, 0.45);
 }
 
+.btn--ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stack--row {
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
 select {
   background: var(--surface-2);
   color: var(--text);

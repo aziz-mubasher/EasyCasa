@@ -3312,5 +3312,21 @@
     "inEvidenza": "In evidenza",
     "inEvidenzaAria": "Annuncio in evidenza a pagamento",
     "directoryNote": "Contenuto pubblicitario — posizionamento a pagamento"
+  },
+  "partnerDirectory": {
+    "title": "Elenco professionisti",
+    "informationalLabel": "Elenco informativo — nessuna commissione",
+    "lead": "Professionisti selezionati per provincia. Contatti diretti; EasyCasa non intermedia e non riceve commissioni.",
+    "empty": "Nessun professionista in elenco per questi filtri.",
+    "categories": {
+      "notaio": "Notaio",
+      "geometra": "Geometra",
+      "ape_certifier": "Certificatore APE",
+      "photographer": "Fotografo",
+      "virtual_tour": "Virtual tour"
+    },
+    "credentials": "Credenziali",
+    "contact": "Contatto",
+    "proMediaNote": "Materiale fotografico e tour virtuali passano dalla pipeline media standard (EXIF strip, content-addressed, dup-hash) — nessun upload dedicato per professionisti."
   }
 }

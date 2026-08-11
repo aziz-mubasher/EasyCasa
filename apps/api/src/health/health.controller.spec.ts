@@ -120,6 +120,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     LISTING_BOOST_ENABLED: false,
     STRIPE_PRICE_BOOST_7D: '',
     STRIPE_PRICE_BOOST_30D: '',
+    PARTNER_DIRECTORY_ENABLED: false,
     NOMINATIM_URL: 'https://nominatim.openstreetmap.org/search',
     GEOCODER_USER_AGENT: 'EasyCasaAPI/1.0 (test)',
     CRM_ENABLED: false,

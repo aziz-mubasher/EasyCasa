@@ -3312,5 +3312,21 @@
     "inEvidenza": "Featured",
     "inEvidenzaAria": "Paid featured listing",
     "directoryNote": "Advertisement — paid placement"
+  },
+  "partnerDirectory": {
+    "title": "Professional directory",
+    "informationalLabel": "Informational list — no commission",
+    "lead": "Curated professionals by province. Direct contact; EasyCasa does not intermediate and takes no commission.",
+    "empty": "No professionals listed for these filters.",
+    "categories": {
+      "notaio": "Notary",
+      "geometra": "Surveyor",
+      "ape_certifier": "APE certifier",
+      "photographer": "Photographer",
+      "virtual_tour": "Virtual tour"
+    },
+    "credentials": "Credentials",
+    "contact": "Contact",
+    "proMediaNote": "Photo and virtual-tour assets still use the standard media pipeline (EXIF strip, content-addressed, dup-hash) — no pro-only upload endpoint."
   }
 }

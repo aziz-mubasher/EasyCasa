@@ -18,7 +18,9 @@ export type Capability =
   /** EC-20 — operator free-form reply inside an open 24h window. */
   | 'whatsapp:inbound:reply'
   /** EC-S-T15 — Verified Owner moderation queue (not AML). */
-  | 'vo_moderation';
+  | 'vo_moderation'
+  /** EC-S-T28 — curated partner directory admin CRUD. */
+  | 'partner_directory';
 
 /** Fine-grained admin personas — never a single omniscient admin. */
 export type AdminRole =
@@ -80,6 +82,7 @@ export function capabilitiesFromRoles(roles: readonly string[]): Capability[] {
     // EC-S-T15 — VO moderation: operations + superadmin (not aml).
     if (r === 'admin_operations' || r === 'admin_superadmin') {
       caps.add('vo_moderation');
+      caps.add('partner_directory');
     }
   }
   return [...caps];
