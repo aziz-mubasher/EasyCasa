@@ -18,6 +18,7 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **T19.1 quota** | ✅ Hard 429 live (Art. 6(1)(b) — **not** LIA-gated); soft-launch feedback above |
 | **T19.2** | ⛔ HOLD until LIA signs — dup-enforce + suspend UX |
 | **Trust chips i18n** | ✅ IT/EN/ES ICU plurals (blocks P3 flip rebuild) |
+| **T33** | ⚠ Partial — canonical/hreflang/x-default/sitemap OK after verification pack; Lighthouse Perf ≥90 PASS; SEO category FAIL while `NEXT_PUBLIC_DEMO_MODE=true` |
 
 **Rule:** the page may promise only what the ledger marks `live`. Flip a flag only when its tasks pass validation gates.
 
