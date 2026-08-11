@@ -3290,5 +3290,14 @@
     "loading": "Loading…",
     "unavailable": "Statistics are unavailable.",
     "error": "Could not load statistics."
+  },
+  "nudges": {
+    "title": "Listing observations",
+    "dismiss": "Dismiss",
+    "LOW_ENQUIRY_RATE": "{views} views and {enquiries} enquiries in the last 30 days",
+    "ABOVE_OMI_BAND": "The price is {pct}% above the local OMI band",
+    "BELOW_OMI_BAND": "The price is {pct}% below the local OMI band",
+    "LONG_ON_MARKET": "On the market for {days} days; zone median {zoneMedian}",
+    "STALE_NO_VIEWS": "{views} views in {days} days since publish"
   }
 }

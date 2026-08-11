@@ -3290,5 +3290,14 @@
     "loading": "Cargando…",
     "unavailable": "Estadísticas no disponibles.",
     "error": "No se pudieron cargar las estadísticas."
+  },
+  "nudges": {
+    "title": "Observaciones del anuncio",
+    "dismiss": "Ocultar",
+    "LOW_ENQUIRY_RATE": "{views} visitas y {enquiries} consultas en los últimos 30 días",
+    "ABOVE_OMI_BAND": "El precio está un {pct}% por encima de la franja OMI de la zona",
+    "BELOW_OMI_BAND": "El precio está un {pct}% por debajo de la franja OMI de la zona",
+    "LONG_ON_MARKET": "En venta desde hace {days} días; mediana de zona {zoneMedian}",
+    "STALE_NO_VIEWS": "{views} visitas en {days} días de publicación"
   }
 }

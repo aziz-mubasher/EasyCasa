@@ -243,4 +243,4 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 ## EC-S Phase 3 — seller analytics (T23/T24)
 | Variable | Used by | Notes |
 |---|---|---|
-| SELLER_ANALYTICS_ENABLED | api | Default `false`. T23 seller listing analytics (`GET /seller/listings/:id/analytics`). Also requires `SELLER_ONBOARDING_ENABLED`. Routes 404 when either flag is off. |
+| SELLER_ANALYTICS_ENABLED | api | Default `false`. T23 seller listing analytics **and** T24 nudges (shared flag). Also requires `SELLER_ONBOARDING_ENABLED`. Routes 404 when either flag is off. |

@@ -6,6 +6,7 @@ import esMessages from '../../messages/es.json';
 import itMessages from '../../messages/it.json';
 
 const LOCALES = {
+  // JSON message trees include arrays; cast via unknown for next-intl's index type.
   it: itMessages as unknown as AbstractIntlMessages,
   en: enMessages as unknown as AbstractIntlMessages,
   es: esMessages as unknown as AbstractIntlMessages,

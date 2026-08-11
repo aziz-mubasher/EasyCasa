@@ -3290,5 +3290,14 @@
     "loading": "Caricamento…",
     "unavailable": "Statistiche non disponibili.",
     "error": "Impossibile caricare le statistiche."
+  },
+  "nudges": {
+    "title": "Osservazioni sull'annuncio",
+    "dismiss": "Nascondi",
+    "LOW_ENQUIRY_RATE": "{views} visualizzazioni e {enquiries} richieste negli ultimi 30 giorni",
+    "ABOVE_OMI_BAND": "Il prezzo è {pct}% sopra la fascia OMI di zona",
+    "BELOW_OMI_BAND": "Il prezzo è {pct}% sotto la fascia OMI di zona",
+    "LONG_ON_MARKET": "In vendita da {days} giorni; mediana di zona {zoneMedian}",
+    "STALE_NO_VIEWS": "{views} visualizzazioni in {days} giorni di pubblicazione"
   }
 }
