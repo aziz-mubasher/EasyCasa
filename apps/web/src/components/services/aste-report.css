@@ -60,6 +60,19 @@
   max-width: 52ch;
 }
 
+.ar-lotto-badge {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: rgba(243, 237, 225, 0.92);
+}
+
+.ar-warnings ul,
+.ar-immobili {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
 .ar-body {
   padding: 1.75rem 0 3rem;
 }

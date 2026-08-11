@@ -2959,6 +2959,16 @@
       "signIn": "Inicia sesión para empezar",
       "submit": "Crear borrador"
     },
+    "lotto": {
+      "title": "Lote a analizar",
+      "label": "Lote",
+      "placeholder": "ej. 1, 4, H, unico",
+      "hint": "Si el expediente tiene varios lotes, indica cuál analizar. Déjalo vacío si hay un solo lote.",
+      "editSub": "Puedes corregir el lote sin volver a subir los documentos.",
+      "save": "Guardar lote",
+      "found": "Lotes encontrados en los documentos: {labels}",
+      "needSelect": "Hay que indicar el lote: los documentos listan varios lotes."
+    },
     "status": {
       "title": "Estado",
       "label": "Estado",
@@ -2967,6 +2977,8 @@
       "processing": "en proceso",
       "ready": "listo",
       "failed": "error",
+      "failedDetail": "El análisis falló. Corrige el lote si hace falta e inténtalo de nuevo.",
+      "failureReason": "Motivo",
       "preparing": "En preparación — el servicio está en desarrollo."
     },
     "upload": {
@@ -2990,6 +3002,7 @@
     },
     "actions": {
       "submit": "Enviar para análisis",
+      "resubmit": "Reintentar análisis",
       "delete": "Eliminar todo",
       "openReport": "Abrir informe"
     },
@@ -2997,6 +3010,8 @@
       "create": "No se pudo crear el análisis.",
       "upload": "Error al subir. Revisa formato y tamaño.",
       "submit": "Error al enviar. Hace falta al menos un documento.",
+      "resubmit": "El reintento falló.",
+      "lotto": "No se pudo guardar el lote.",
       "delete": "Error al eliminar."
     }
   },
@@ -3065,27 +3080,43 @@
       "omi": "Comparación OMI",
       "scenari": "Nota de escenarios",
       "criticita": "Criticidades",
-      "notFound": "No detectado"
+      "notFound": "No detectado",
+      "warnings": "Avisos de extracción",
+      "immobili": "Unidades inmobiliarias"
     },
     "fields": {
-      "tribunale": "Court",
-      "lotto": "Lot",
-      "data_asta": "Auction date",
-      "termine_offerte": "Offer deadline",
-      "days_left": "days left",
-      "address": "Address",
-      "diritto": "Right sold",
-      "urb": "Planning compliance",
-      "cat": "Cadastral compliance",
-      "catasto": "Cadastral refs"
+      "tribunale": "Tribunal",
+      "procTipo": "Tipo de procedimiento",
+      "lotto": "Lote",
+      "data_asta": "Fecha de subasta",
+      "termine_offerte": "Plazo de ofertas",
+      "days_left": "días",
+      "address": "Dirección",
+      "diritto": "Derecho vendido",
+      "urb": "Conformidad urbanística",
+      "cat": "Conformidad catastral",
+      "catasto": "Datos catastrales",
+      "unit": "Unidad"
+    },
+    "procTipo": {
+      "rge": "Ejecución inmobiliaria (R.G.E.)",
+      "lg": "Liquidación judicial (L.G.)",
+      "ei": "Ejecución inmobiliaria (E.I.)",
+      "fall": "Concurso / quiebra",
+      "altro": "Otro"
+    },
+    "cauzioneBase": {
+      "prezzo_base": "del precio base",
+      "prezzo_offerto": "del precio ofrecido"
     },
     "econ": {
-      "valore_stima": "Appraisal value",
-      "prezzo_base": "Base price",
-      "offerta_minima": "Minimum offer",
-      "cauzione_pct": "Deposit",
-      "rilancio_minimo": "Minimum raise",
-      "superficie_commerciale_mq": "Commercial floor area"
+      "valore_stima": "Valor de tasación",
+      "prezzo_base": "Precio base",
+      "offerta_minima": "Oferta mínima",
+      "cauzione": "Fianza",
+      "cauzione_pct": "Fianza",
+      "rilancio_minimo": "Puja mínima",
+      "superficie_commerciale_mq": "Superficie comercial"
     },
     "semaforo": {
       "aggregate": "Summary: {ok} ok · {verify} verify · {critical} critical · {unknown} unknown",
@@ -3137,8 +3168,9 @@
       }
     },
     "errors": {
-      "load": "Could not load the report (not found, not ready, or not authorised).",
-      "profile": "Could not save the buyer profile."
+      "load": "No se pudo cargar el informe (no encontrado, no listo o no autorizado).",
+      "reprocess": "Esquema de extracción obsoleto — reprocesa el análisis desde la carga de documentos.",
+      "profile": "No se pudo guardar el perfil del comprador."
     },
     "chat": {
       "title": "Preguntas sobre los documentos",

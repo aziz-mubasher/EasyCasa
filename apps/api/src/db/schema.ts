@@ -853,6 +853,8 @@ export const asteAnalyses = pgTable('aste_analyses', {
   tribunale: text('tribunale'),
   rge: text('rge'),
   lotto: text('lotto'),
+  /** EC-23b — user-selected lot label (NULL = unico). */
+  lottoLabel: text('lotto_label'),
   dataAsta: date('data_asta'),
   termineOfferte: timestamp('termine_offerte', { withTimezone: true }),
   addressRaw: text('address_raw'),

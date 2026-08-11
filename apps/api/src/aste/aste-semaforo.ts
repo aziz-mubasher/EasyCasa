@@ -1,4 +1,5 @@
-import type { AsteExtractionV1, AsteSemaforo, SemaforoLevel } from './extraction-schema';
+import type { AsteExtractionV2, AsteSemaforo, SemaforoLevel } from './extraction-schema';
+import { cauzionePctValue } from './extraction-schema';
 
 /**
  * EC-23 — deterministic semaforo from extraction JSON (not LLM-judged).
@@ -13,18 +14,18 @@ const VERIFY_VINCULO_TYPES = [
   'uso_civico',
 ] as const;
 
-function hasVerifyVincolo(ex: AsteExtractionV1): boolean {
+function hasVerifyVincolo(ex: AsteExtractionV2): boolean {
   return ex.giuridica.vincoli.some((v) => {
     const hay = `${v.tipo} ${v.descrizione}`.toLowerCase();
     return VERIFY_VINCULO_TYPES.some((t) => hay.includes(t));
   });
 }
 
-function hasCriticalFormalita(ex: AsteExtractionV1): boolean {
+function hasCriticalFormalita(ex: AsteExtractionV2): boolean {
   return ex.giuridica.formalita.some((f) => f.cancellabile_con_decreto === false);
 }
 
-function vincoliGravami(ex: AsteExtractionV1): SemaforoLevel {
+function vincoliGravami(ex: AsteExtractionV2): SemaforoLevel {
   if (hasCriticalFormalita(ex)) return 'critical';
   if (ex.giuridica.vincoli.length === 0 && ex.giuridica.formalita.length === 0) {
     if (ex.meta.not_found.some((n) => /vincol|formalit/i.test(n))) return 'unknown';
@@ -35,7 +36,7 @@ function vincoliGravami(ex: AsteExtractionV1): SemaforoLevel {
   return 'unknown';
 }
 
-function occupazione(ex: AsteExtractionV1): SemaforoLevel {
+function occupazione(ex: AsteExtractionV2): SemaforoLevel {
   const stato = (ex.giuridica.stato_occupazione.stato ?? '').toLowerCase();
   const det = (ex.giuridica.stato_occupazione.dettaglio ?? '').toLowerCase();
   const opp = (ex.giuridica.stato_occupazione.opponibilita ?? '').toLowerCase();
@@ -49,7 +50,7 @@ function occupazione(ex: AsteExtractionV1): SemaforoLevel {
 
 function conformita(
   block: { stato: string | null; dettaglio: string | null },
-  difformita: AsteExtractionV1['urbanistica']['difformita'],
+  difformita: AsteExtractionV2['urbanistica']['difformita'],
   kind: 'urb' | 'cat',
 ): SemaforoLevel {
   const stato = (block.stato ?? '').toLowerCase();
@@ -72,7 +73,7 @@ function conformita(
   return 'verify';
 }
 
-function condizioneImmobile(ex: AsteExtractionV1): SemaforoLevel {
+function condizioneImmobile(ex: AsteExtractionV2): SemaforoLevel {
   const stato = (ex.condizioni.stato_manutentivo ?? '').toLowerCase();
   const impianti = (ex.condizioni.impianti ?? '').toLowerCase();
   const blob = `${stato} ${impianti}`;
@@ -85,7 +86,7 @@ function condizioneImmobile(ex: AsteExtractionV1): SemaforoLevel {
   return 'verify';
 }
 
-function speseCondominiali(ex: AsteExtractionV1): SemaforoLevel {
+function speseCondominiali(ex: AsteExtractionV2): SemaforoLevel {
   const arrears = ex.spese.condominiali_arretrate;
   const base = ex.economics.prezzo_base?.value;
   if (!arrears) {
@@ -98,29 +99,26 @@ function speseCondominiali(ex: AsteExtractionV1): SemaforoLevel {
   return 'ok';
 }
 
-const ECONOMICS_KEYS = [
-  'valore_stima',
-  'prezzo_base',
-  'offerta_minima',
-  'cauzione_pct',
-  'rilancio_minimo',
-  'superficie_commerciale_mq',
-] as const;
-
-function rischioAsta(ex: AsteExtractionV1): SemaforoLevel {
+function rischioAsta(ex: AsteExtractionV2): SemaforoLevel {
   const docs = ex.meta.documents ?? [];
   const types = new Set(docs.map((d) => d.doc_type));
   if (!types.has('perizia') || !types.has('avviso')) return 'critical';
-  const missingEconomics = ECONOMICS_KEYS.filter((k) => ex.economics[k] == null);
+  const missing: string[] = [];
+  if (ex.economics.valore_stima == null) missing.push('valore_stima');
+  if (ex.economics.prezzo_base == null) missing.push('prezzo_base');
+  if (ex.economics.offerta_minima == null) missing.push('offerta_minima');
+  if (cauzionePctValue(ex) == null) missing.push('cauzione');
+  if (ex.economics.rilancio_minimo == null) missing.push('rilancio_minimo');
+  if (ex.economics.superficie_commerciale_mq == null) missing.push('superficie_commerciale_mq');
   const notFoundEcon = ex.meta.not_found.filter((n) =>
-    ECONOMICS_KEYS.some((k) => n.toLowerCase().includes(k) || n.toLowerCase().includes('economic')),
+    /valore_stima|prezzo_base|offerta_minima|cauzione|rilancio|superficie|economic/i.test(n),
   );
-  if (missingEconomics.length > 0 || notFoundEcon.length > 0) return 'verify';
+  if (missing.length > 0 || notFoundEcon.length > 0) return 'verify';
   return 'ok';
 }
 
 /** Pure mapper — unit-test the §5.3 rule table here. */
-export function computeSemaforo(extraction: AsteExtractionV1): AsteSemaforo {
+export function computeSemaforo(extraction: AsteExtractionV2): AsteSemaforo {
   return {
     vincoli_gravami: vincoliGravami(extraction),
     occupazione: occupazione(extraction),

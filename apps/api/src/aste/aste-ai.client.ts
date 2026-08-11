@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import type { ApiConfig } from '../config';
 import { APP_CONFIG } from '../config/config.module';
-import type { AsteExtractionV1 } from './extraction-schema';
+import type { AsteExtraction } from './extraction-schema';
 
 export type OcrPage = { page: number; text: string; ocr_used: boolean };
 
@@ -59,7 +59,8 @@ export class AsteAiClient {
   async extract(input: {
     language: string;
     documents: ExtractDocumentInput[];
-  }): Promise<AsteExtractionV1> {
+    lotto_label?: string | null;
+  }): Promise<AsteExtraction> {
     return (await this.fetchJson('/aste/extract', {
       method: 'POST',
       headers: {
@@ -68,7 +69,7 @@ export class AsteAiClient {
       },
       body: JSON.stringify(input),
       timeoutMs: this.config.ASTE_EXTRACT_TIMEOUT_MS,
-    })) as AsteExtractionV1;
+    })) as AsteExtraction;
   }
 
   async embed(texts: string[]): Promise<number[][]> {
@@ -106,6 +107,7 @@ export class AsteAiClient {
     answer_lang: string;
     chunks: Array<{ document_id: string; page: number; text: string }>;
     glossary: Array<{ term_key: string; definition: string }>;
+    lotto_label?: string | null;
   }): Promise<{
     answer: string;
     citations: Array<{ document_id: string; page: number }>;

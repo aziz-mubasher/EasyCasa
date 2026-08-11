@@ -35,6 +35,7 @@ export function failureReasonCategory(reason: string | null | undefined): string
   if (r.includes('embed')) return 'embed';
   if (r.includes('no_documents') || r.includes('no_document')) return 'no_documents';
   if (r.includes('timeout') || r.includes('timed_out')) return 'timeout';
+  if (r.includes('lotto')) return 'lotto';
   if (r.includes('ai') || r.includes('openai') || r.includes('translate')) return 'ai';
   // Prefer first snake_case token as category when unknown.
   const token = r.split(/[^a-z0-9_]+/)[0];

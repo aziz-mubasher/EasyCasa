@@ -31,6 +31,8 @@ class ExtractDocumentIn(BaseModel):
 class ExtractRequest(BaseModel):
     language: str = "it"
     documents: list[ExtractDocumentIn]
+    # EC-23b — user lot selector; null = unico / only lot.
+    lotto_label: str | None = None
 
 
 class SourceRef(BaseModel):
@@ -77,6 +79,8 @@ class ChatAnswerRequest(BaseModel):
     answer_lang: str = "it"
     chunks: list[ChatChunkIn] = Field(default_factory=list)
     glossary: list[ChatGlossaryIn] = Field(default_factory=list)
+    # EC-23b — analysis lot scope (null = unico).
+    lotto_label: str | None = None
 
 
 class ChatCitation(BaseModel):

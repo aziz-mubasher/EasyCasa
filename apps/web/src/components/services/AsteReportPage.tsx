@@ -4,9 +4,11 @@ import { useEffect, useId, useState, type FormEvent } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useAuth } from '@/auth/AuthProvider';
 import {
+  AsteApiError,
   getReport,
   patchAnalysis,
   type AsteBuyerProfile,
+  type AsteImmobileUnit,
   type AsteReport,
 } from '@/lib/aste-analysis-api';
 import { AsteReportChat } from '@/components/services/AsteReportChat';
@@ -28,10 +30,13 @@ const ECON_KEYS = [
   'valore_stima',
   'prezzo_base',
   'offerta_minima',
-  'cauzione_pct',
   'rilancio_minimo',
   'superficie_commerciale_mq',
 ] as const;
+
+function primaryImmobile(units: AsteImmobileUnit[]): AsteImmobileUnit | null {
+  return units[0] ?? null;
+}
 
 function levelIcon(level: string): string {
   switch (level) {
@@ -133,8 +138,12 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
         language: locale,
         register: row.register,
       });
-    } catch {
-      setError(t('errors.load'));
+    } catch (err) {
+      if (err instanceof AsteApiError && err.code === 'ASTE_REPROCESS_REQUIRED') {
+        setError(t('errors.reprocess'));
+      } else {
+        setError(t('errors.load'));
+      }
       setReport(null);
     } finally {
       setBusy(false);
@@ -225,6 +234,9 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
   if (!report) return null;
 
   const ex = report.extraction;
+  const imm = primaryImmobile(ex.immobili);
+  const lottoDisplay =
+    report.lottoLabel || ex.meta.lotto?.label || (ex.procedura.lotto as string) || report.lotto;
   const filename = (fileId: string) => report.filenameById[fileId] ?? fileId;
   const counts = SEMAFORO_DIMS.reduce(
     (acc, d) => {
@@ -237,6 +249,8 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
 
   const omi = report.omiCheck;
   const purpose = report.buyerProfile?.purpose ?? 'investimento';
+  const procTipo = ex.procedura.tipo;
+  const procNumero = ex.procedura.numero || ex.procedura.rge || report.rge;
 
   return (
     <div className="ar">
@@ -246,6 +260,11 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
           <p className="ar-badge">{t('badge')}</p>
           <h1>{t('title')}</h1>
           <p className="ar-lead">{t('lead')}</p>
+          {lottoDisplay ? (
+            <p className="ar-lotto-badge" aria-label={t('fields.lotto')}>
+              {t('fields.lotto')}: <strong>{lottoDisplay}</strong>
+            </p>
+          ) : null}
         </div>
       </header>
 
@@ -264,6 +283,17 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
           <p className="ar-error" role="alert">
             {error}
           </p>
+        ) : null}
+
+        {ex.meta.warnings?.length ? (
+          <section className="ar-section ar-warnings" aria-labelledby={`${id}-warn`}>
+            <h2 id={`${id}-warn`}>{t('sections.warnings')}</h2>
+            <ul>
+              {ex.meta.warnings.map((w) => (
+                <li key={w}>{w}</li>
+              ))}
+            </ul>
+          </section>
         ) : null}
 
         <div className="ar-toolbar no-print">
@@ -397,14 +427,22 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
               <dd>{(ex.procedura.tribunale as string) || report.tribunale || '—'}</dd>
             </div>
             <div>
+              <dt>{t('fields.procTipo')}</dt>
+              <dd>
+                {procTipo
+                  ? t(`procTipo.${procTipo}` as 'procTipo.rge')
+                  : '—'}
+              </dd>
+            </div>
+            <div>
               <dt>
                 <GlossaryTip termKey="rge" glossary={report.glossary} counselLabel={t('counselMark')} />
               </dt>
-              <dd>{(ex.procedura.rge as string) || report.rge || '—'}</dd>
+              <dd>{procNumero || '—'}</dd>
             </div>
             <div>
               <dt>{t('fields.lotto')}</dt>
-              <dd>{(ex.procedura.lotto as string) || report.lotto || '—'}</dd>
+              <dd>{lottoDisplay || '—'}</dd>
             </div>
             <div>
               <dt>{t('fields.data_asta')}</dt>
@@ -433,9 +471,9 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
             <div>
               <dt>{t('fields.address')}</dt>
               <dd>
-                {(ex.immobile.indirizzo as string) || report.addressRaw || '—'}
-                {ex.immobile.comune ? `, ${String(ex.immobile.comune)}` : ''}
-                {ex.immobile.provincia ? ` (${String(ex.immobile.provincia)})` : ''}
+                {imm?.indirizzo || report.addressRaw || '—'}
+                {imm?.comune ? `, ${imm.comune}` : ''}
+                {imm?.provincia ? ` (${imm.provincia})` : ''}
               </dd>
             </div>
           </dl>
@@ -505,11 +543,9 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
                               ? 'prezzo_base'
                               : key === 'offerta_minima'
                                 ? 'offerta_minima'
-                                : key === 'cauzione_pct'
-                                  ? 'cauzione'
-                                  : key === 'rilancio_minimo'
-                                    ? 'rilancio_minimo'
-                                    : key
+                                : key === 'rilancio_minimo'
+                                  ? 'rilancio_minimo'
+                                  : key
                           }
                           glossary={report.glossary}
                           counselLabel={t('counselMark')}
@@ -523,11 +559,9 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
                 );
               }
               const label =
-                key === 'cauzione_pct'
-                  ? `${fig.value}%`
-                  : key === 'superficie_commerciale_mq'
-                    ? `${fig.value} mq`
-                    : formatMoney(fig.value, locale);
+                key === 'superficie_commerciale_mq'
+                  ? `${fig.value} mq`
+                  : formatMoney(fig.value, locale);
               return (
                 <li key={key}>
                   <strong>{t(`econ.${key}`)}</strong>
@@ -538,6 +572,40 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
                 </li>
               );
             })}
+            <li>
+              <strong>
+                {report.register === 'first_buyer' ? (
+                  <GlossaryTip
+                    termKey="cauzione"
+                    glossary={report.glossary}
+                    counselLabel={t('counselMark')}
+                  />
+                ) : (
+                  t('econ.cauzione')
+                )}
+              </strong>
+              {ex.economics.cauzione?.pct != null ? (
+                <>
+                  <span>
+                    {ex.economics.cauzione.pct}%
+                    {ex.economics.cauzione.base
+                      ? ` (${t(`cauzioneBase.${ex.economics.cauzione.base}`)})`
+                      : ''}
+                    {ex.economics.cauzione.importo != null
+                      ? ` · ${formatMoney(ex.economics.cauzione.importo, locale)}`
+                      : ''}
+                  </span>
+                  {ex.economics.cauzione.source ? (
+                    <span className="ar-cite">
+                      {filename(ex.economics.cauzione.source.file)}, p.{' '}
+                      {ex.economics.cauzione.source.page}
+                    </span>
+                  ) : null}
+                </>
+              ) : (
+                <span>{t('notFound')}</span>
+              )}
+            </li>
           </ul>
         </section>
 
@@ -586,11 +654,27 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
             <strong>{t('fields.cat')}</strong>:{' '}
             {(ex.urbanistica.conformita_catastale as { stato?: string })?.stato || '—'}
           </p>
-          <p>
-            <strong>{t('fields.catasto')}</strong>: {String(ex.immobile.categoria_catastale || '—')} /{' '}
-            {String(ex.immobile.foglio || '—')}-{String(ex.immobile.particella || '—')}/
-            {String(ex.immobile.subalterno || '—')}
-          </p>
+          <h3>{t('sections.immobili')}</h3>
+          {!ex.immobili.length ? (
+            <p>{t('notFound')}</p>
+          ) : (
+            <ul className="ar-immobili">
+              {ex.immobili.map((unit, idx) => (
+                <li key={`${unit.foglio ?? 'x'}-${unit.particella ?? 'x'}-${unit.subalterno ?? idx}`}>
+                  <strong>
+                    {unit.tipologia || t('fields.unit')}
+                    {unit.note_valore ? ` — ${unit.note_valore}` : ''}
+                  </strong>
+                  <span>
+                    {' '}
+                    {t('fields.catasto')}: {String(unit.categoria_catastale || '—')} /{' '}
+                    {String(unit.foglio || '—')}-{String(unit.particella || '—')}/
+                    {String(unit.subalterno || '—')}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
 
         <section className="ar-section" aria-labelledby={`${id}-cond`}>

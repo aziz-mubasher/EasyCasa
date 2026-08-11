@@ -59,10 +59,15 @@ export class AsteAnalysisService {
 
   async create(
     userId: string,
-    input: { language?: 'it' | 'en' | 'es'; register?: 'investor' | 'first_buyer' },
+    input: {
+      language?: 'it' | 'en' | 'es';
+      register?: 'investor' | 'first_buyer';
+      lottoLabel?: string | null;
+    },
   ) {
     const language = input.language ?? 'it';
     const register = input.register ?? 'investor';
+    const lottoLabel = input.lottoLabel?.trim() || null;
     const [row] = await this.db
       .insert(asteAnalyses)
       .values({
@@ -70,6 +75,7 @@ export class AsteAnalysisService {
         status: 'draft',
         language,
         register,
+        lottoLabel,
       })
       .returning();
     this.analytics.track(PRODUCT_EVENTS.ASTE_ANALYSIS_CREATED, {
@@ -202,6 +208,60 @@ export class AsteAnalysisService {
     return this.toAnalysisDto(updated!);
   }
 
+  /**
+   * EC-23b — set/correct lotto_label on draft or failed (no re-upload).
+   */
+  async patchLottoLabel(userId: string, analysisId: string, lottoLabel: string | null) {
+    const analysis = await this.requireOwned(userId, analysisId);
+    if (analysis.status !== 'draft' && analysis.status !== 'failed') {
+      throw new BadRequestException('lottoLabel can only be set while draft or failed');
+    }
+    const label = lottoLabel == null || lottoLabel.trim() === '' ? null : lottoLabel.trim();
+    const [updated] = await this.db
+      .update(asteAnalyses)
+      .set({ lottoLabel: label, updatedAt: new Date() })
+      .where(eq(asteAnalyses.id, analysisId))
+      .returning();
+    return this.toAnalysisDto(updated!);
+  }
+
+  /**
+   * EC-23b — resubmit failed analysis (docs retained) after correcting lotto_label.
+   */
+  async resubmit(userId: string, analysisId: string) {
+    const analysis = await this.requireOwned(userId, analysisId);
+    if (analysis.status !== 'failed') {
+      throw new BadRequestException('only failed analyses can be resubmitted');
+    }
+    const docs = await this.db
+      .select({ id: asteDocuments.id })
+      .from(asteDocuments)
+      .where(eq(asteDocuments.analysisId, analysisId))
+      .limit(1);
+    if (!docs.length) {
+      throw new BadRequestException('at least one document is required');
+    }
+
+    const [updated] = await this.db
+      .update(asteAnalyses)
+      .set({
+        status: 'uploaded',
+        attempts: 0,
+        failureReason: null,
+        processingStartedAt: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(asteAnalyses.id, analysisId))
+      .returning();
+
+    this.analytics.track(PRODUCT_EVENTS.ASTE_ANALYSIS_SUBMITTED, {
+      language: analysis.language,
+      register: analysis.register,
+    });
+    this.log.log(JSON.stringify({ event: 'aste.analysis_resubmitted', analysisId }));
+    return this.toAnalysisDto(updated!);
+  }
+
   async remove(userId: string, analysisId: string) {
     const analysis = await this.requireOwned(userId, analysisId);
     const docs = await this.db
@@ -295,6 +355,7 @@ export class AsteAnalysisService {
       tribunale: r.tribunale,
       rge: r.rge,
       lotto: r.lotto,
+      lottoLabel: r.lottoLabel,
       dataAsta: r.dataAsta,
       termineOfferte: r.termineOfferte?.toISOString() ?? null,
       addressRaw: r.addressRaw,

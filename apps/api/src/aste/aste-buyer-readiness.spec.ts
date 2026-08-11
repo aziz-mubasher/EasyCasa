@@ -5,12 +5,14 @@ import {
   emptyBuyerProfile,
   isBuyerProfileSkipped,
 } from './aste-buyer-readiness';
-import type { AsteExtractionV1 } from './extraction-schema';
+import type { AsteExtractionV2 } from './extraction-schema';
 
-function baseEx(modalita: AsteExtractionV1['procedura']['modalita'] = 'telematica'): AsteExtractionV1 {
+function baseEx(modalita: AsteExtractionV2['procedura']['modalita'] = 'telematica'): AsteExtractionV2 {
   return {
-    schema_version: 1,
+    schema_version: 2,
     procedura: {
+      tipo: 'rge',
+      numero: '1/2024',
       tribunale: 'Milano',
       rge: '1/2024',
       lotto: '1',
@@ -23,11 +25,12 @@ function baseEx(modalita: AsteExtractionV1['procedura']['modalita'] = 'telematic
       valore_stima: null,
       prezzo_base: null,
       offerta_minima: null,
-      cauzione_pct: null,
+      cauzione: null,
       rilancio_minimo: null,
       superficie_commerciale_mq: null,
     },
-    immobile: {
+    immobili: [{
+
       tipologia: null,
       piano: null,
       vani: null,
@@ -40,7 +43,8 @@ function baseEx(modalita: AsteExtractionV1['procedura']['modalita'] = 'telematic
       indirizzo: null,
       comune: null,
       provincia: null,
-    },
+      note_valore: null,
+    }],
     giuridica: {
       diritto_venduto: null,
       stato_occupazione: { stato: null, dettaglio: null, opponibilita: null },
@@ -54,7 +58,10 @@ function baseEx(modalita: AsteExtractionV1['procedura']['modalita'] = 'telematic
     },
     condizioni: { stato_manutentivo: null, impianti: null, lavori_stimati: null },
     spese: { condominiali_arretrate: null, oneri_acquirente: [] },
-    meta: { documents: [], not_found: [], warnings: [], schema_version: 1 },
+    meta: { documents: [], not_found: [], warnings: [], schema_version: 2,
+      lotto: null,
+      lotti_trovati: [],
+    },
   };
 }
 

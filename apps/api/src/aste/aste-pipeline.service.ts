@@ -11,6 +11,12 @@ import { asteAnalyses, asteDocChunks, asteDocuments } from '../db/schema';
 import { AsteAiClient } from './aste-ai.client';
 import { chunkPageTexts } from './aste-chunk';
 import {
+  applyPrezzoBasePrecedence,
+  assertLotScope,
+  AsteLotScopeError,
+  isLotScopeFailureReason,
+} from './aste-extract-guards';
+import {
   asteOcrPages,
   astePipelineFailed,
   astePipelineFailures,
@@ -19,13 +25,14 @@ import {
 } from './aste-pipeline.metrics';
 import { computeSemaforo } from './aste-semaforo';
 import { AsteStorage } from './aste-storage';
-import type { AsteExtractionV1 } from './extraction-schema';
+import { primaryImmobile, type AsteExtraction } from './extraction-schema';
 
 type ClaimedRow = {
   id: string;
   user_id: string;
   language: string;
   attempts: number;
+  lotto_label: string | null;
 };
 
 /**
@@ -117,7 +124,7 @@ export class AstePipelineService {
         LIMIT 1
       ) AS pick
       WHERE a.id = pick.id
-      RETURNING a.id, a.user_id, a.language, a.attempts
+      RETURNING a.id, a.user_id, a.language, a.attempts, a.lotto_label
     `);
     const rows = (result.rows ?? []) as ClaimedRow[];
     return rows[0] ?? null;
@@ -201,25 +208,25 @@ export class AstePipelineService {
         }
       }
 
-      let extraction: AsteExtractionV1;
+      let extraction: AsteExtraction;
       {
         const stageTimer = astePipelineStageDuration.startTimer({ stage: 'extract' });
         try {
           extraction = await this.ai.extract({
             language: claimed.language,
+            lotto_label: claimed.lotto_label,
             documents: extractDocs.map((d) => ({
               file: d.file,
               doc_type: d.doc_type,
               pages: d.pages,
             })),
           });
-          if (extraction.schema_version !== 1) {
+          if (extraction.schema_version !== 2) {
             throw new Error('extract_schema_version');
           }
-          // Ensure meta documents reflect OCR stats (AI may omit).
           extraction.meta = {
             ...extraction.meta,
-            schema_version: 1,
+            schema_version: 2,
             documents: extractDocs.map((d) => ({
               file: d.file,
               doc_type: d.doc_type,
@@ -228,7 +235,11 @@ export class AstePipelineService {
             })),
             not_found: extraction.meta?.not_found ?? [],
             warnings: extraction.meta?.warnings ?? [],
+            lotti_trovati: extraction.meta?.lotti_trovati ?? [],
+            lotto: extraction.meta?.lotto ?? null,
           };
+          assertLotScope(extraction, claimed.lotto_label);
+          extraction = applyPrezzoBasePrecedence(extraction);
           this.log.log(
             JSON.stringify({ event: 'aste.pipeline_stage', analysisId, stage: 'extract' }),
           );
@@ -243,6 +254,7 @@ export class AstePipelineService {
       }
 
       const semaforo = computeSemaforo(extraction);
+      const primary = primaryImmobile(extraction);
 
       {
         const stageTimer = astePipelineStageDuration.startTimer({ stage: 'embed' });
@@ -297,11 +309,11 @@ export class AstePipelineService {
           processingStartedAt: null,
           updatedAt: new Date(),
           tribunale: extraction.procedura.tribunale,
-          rge: extraction.procedura.rge,
-          lotto: extraction.procedura.lotto,
-          comune: extraction.immobile.comune,
-          provincia: extraction.immobile.provincia,
-          addressRaw: extraction.immobile.indirizzo,
+          rge: extraction.procedura.rge ?? extraction.procedura.numero,
+          lotto: extraction.procedura.lotto ?? claimed.lotto_label,
+          comune: primary.comune,
+          provincia: primary.provincia,
+          addressRaw: primary.indirizzo,
         })
         .where(eq(asteAnalyses.id, analysisId));
 
@@ -313,6 +325,10 @@ export class AstePipelineService {
         err && typeof err === 'object' && 'stage' in err
           ? String((err as { stage: string }).stage)
           : 'unknown';
+      if (err instanceof AsteLotScopeError) {
+        await this.fail(analysisId, claimed.attempts, err.message, stage, true);
+        return;
+      }
       const reason = categorizeFailure(stage, err);
       await this.fail(analysisId, claimed.attempts, reason, stage);
     }
@@ -323,9 +339,11 @@ export class AstePipelineService {
     attempts: number,
     reason: string,
     stage: string,
+    forceFailed = false,
   ): Promise<void> {
     const maxAttempts = this.config.ASTE_PIPELINE_MAX_ATTEMPTS;
-    const exhausted = attempts >= maxAttempts;
+    const lotFail = forceFailed || isLotScopeFailureReason(reason);
+    const exhausted = lotFail || attempts >= maxAttempts;
     const nextStatus = exhausted ? 'failed' : 'uploaded';
     await this.db
       .update(asteAnalyses)

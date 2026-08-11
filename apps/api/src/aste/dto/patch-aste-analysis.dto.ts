@@ -1,10 +1,10 @@
-import { IsBoolean, IsIn, IsOptional, ValidateIf } from 'class-validator';
+import { IsBoolean, IsIn, IsOptional, IsString, MaxLength, ValidateIf } from 'class-validator';
 
 const RESIDENCIES = ['it_resident', 'eu_nonresident', 'non_eu'] as const;
 const PURPOSES = ['prima_casa', 'investimento'] as const;
 const REGISTERS = ['investor', 'first_buyer'] as const;
 
-/** EC-24 — PATCH buyer profile / register on an analysis. */
+/** EC-24 / EC-23b — PATCH buyer profile / register / lotto label. */
 export class PatchAsteAnalysisDto {
   @IsOptional()
   @IsIn(REGISTERS)
@@ -39,4 +39,10 @@ export class PatchAsteAnalysisDto {
   @IsOptional()
   @IsBoolean()
   skip_buyer_profile?: boolean;
+
+  /** EC-23b — set/correct lot label (draft or failed). Empty string clears. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(64)
+  lottoLabel?: string | null;
 }

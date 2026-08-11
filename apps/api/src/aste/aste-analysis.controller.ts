@@ -66,6 +66,7 @@ export class AsteAnalysisController {
     return this.service.create(me.id, {
       language: dto.language,
       register: dto.register,
+      lottoLabel: dto.lottoLabel,
     });
   }
 
@@ -117,15 +118,35 @@ export class AsteAnalysisController {
     @Body() dto: PatchAsteAnalysisDto,
   ) {
     const me = await this.users.getOrCreate(user);
-    return this.reports.patchAnalysis(me.id, id, {
-      register: dto.register,
-      residency: dto.residency,
-      purpose: dto.purpose,
-      has_cf: dto.has_cf,
-      has_pec_firma: dto.has_pec_firma,
-      financing_needed: dto.financing_needed,
-      skip_buyer_profile: dto.skip_buyer_profile,
-    });
+    if (dto.lottoLabel !== undefined) {
+      await this.service.patchLottoLabel(me.id, id, dto.lottoLabel);
+    }
+    const hasBuyerPatch =
+      dto.register !== undefined ||
+      dto.residency !== undefined ||
+      dto.purpose !== undefined ||
+      dto.has_cf !== undefined ||
+      dto.has_pec_firma !== undefined ||
+      dto.financing_needed !== undefined ||
+      dto.skip_buyer_profile !== undefined;
+    if (hasBuyerPatch) {
+      return this.reports.patchAnalysis(me.id, id, {
+        register: dto.register,
+        residency: dto.residency,
+        purpose: dto.purpose,
+        has_cf: dto.has_cf,
+        has_pec_firma: dto.has_pec_firma,
+        financing_needed: dto.financing_needed,
+        skip_buyer_profile: dto.skip_buyer_profile,
+      });
+    }
+    return this.service.get(me.id, id);
+  }
+
+  @Post(':id/resubmit')
+  async resubmit(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    const me = await this.users.getOrCreate(user);
+    return this.service.resubmit(me.id, id);
   }
 
   @Throttle({ default: { limit: 30, ttl: 60_000 } })

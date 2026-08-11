@@ -2,16 +2,24 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { describe, expect, it, vi } from 'vitest';
 
 import { AstePipelineService } from '../../src/aste/aste-pipeline.service';
-import type { AsteExtractionV1 } from '../../src/aste/extraction-schema';
+import type { AsteExtractionV2 } from '../../src/aste/extraction-schema';
+import { emptyImmobileUnit } from '../../src/aste/extraction-schema';
 
 function dim1536(seed: number): number[] {
   return Array.from({ length: 1536 }, (_, i) => ((seed + i) % 97) / 97);
 }
 
-function extractionReady(): AsteExtractionV1 {
+function extractionReady(): AsteExtractionV2 {
+  const imm = emptyImmobileUnit();
+  imm.tipologia = 'appartamento';
+  imm.categoria_catastale = 'A/2';
+  imm.comune = 'Milano';
+  imm.provincia = 'MI';
   return {
-    schema_version: 1,
+    schema_version: 2,
     procedura: {
+      tipo: 'rge',
+      numero: '123/2024',
       tribunale: 'Milano',
       rge: '123/2024',
       lotto: '1',
@@ -24,24 +32,16 @@ function extractionReady(): AsteExtractionV1 {
       valore_stima: { value: 250000, source: { file: 'doc-perizia', page: 1 } },
       prezzo_base: { value: 200000, source: { file: 'doc-perizia', page: 1 } },
       offerta_minima: { value: 150000, source: { file: 'doc-perizia', page: 1 } },
-      cauzione_pct: { value: 10, source: { file: 'doc-perizia', page: 1 } },
+      cauzione: {
+        pct: 10,
+        base: 'prezzo_base',
+        importo: null,
+        source: { file: 'doc-perizia', page: 1 },
+      },
       rilancio_minimo: { value: 2000, source: { file: 'doc-perizia', page: 1 } },
       superficie_commerciale_mq: { value: 95, source: { file: 'doc-perizia', page: 1 } },
     },
-    immobile: {
-      tipologia: 'appartamento',
-      piano: null,
-      vani: null,
-      locali: [],
-      categoria_catastale: 'A/2',
-      foglio: null,
-      particella: null,
-      subalterno: null,
-      rendita: null,
-      indirizzo: null,
-      comune: 'Milano',
-      provincia: 'MI',
-    },
+    immobili: [imm],
     giuridica: {
       diritto_venduto: 'piena proprietà',
       stato_occupazione: { stato: 'libero', dettaglio: null, opponibilita: null },
@@ -59,7 +59,9 @@ function extractionReady(): AsteExtractionV1 {
       documents: [],
       not_found: ['spese.condominiali_arretrate'],
       warnings: [],
-      schema_version: 1,
+      schema_version: 2,
+      lotto: { label: '1', source: 'user' },
+      lotti_trovati: ['1'],
     },
   };
 }
@@ -148,6 +150,7 @@ describe('AstePipelineService (unit with mock AI)', () => {
       user_id: 'user-1',
       language: 'it',
       attempts: 1,
+      lotto_label: null,
     });
 
     expect(ai.ocr).toHaveBeenCalledTimes(2);
@@ -225,6 +228,7 @@ describe('AstePipelineService (unit with mock AI)', () => {
       user_id: 'u',
       language: 'it',
       attempts: 2,
+      lotto_label: null,
     });
     expect(statusUpdates).toContain('failed');
   });

@@ -1,4 +1,5 @@
-import type { AsteExtractionV1 } from './extraction-schema';
+import type { AsteExtractionV2 } from './extraction-schema';
+import { primaryImmobile } from './extraction-schema';
 
 /**
  * EC-24 — collect Italian free-text snippets for translation (stable path keys).
@@ -6,7 +7,7 @@ import type { AsteExtractionV1 } from './extraction-schema';
 
 export type FreeTextSnippet = { path: string; text: string };
 
-export function collectFreeTextSnippets(ex: AsteExtractionV1): FreeTextSnippet[] {
+export function collectFreeTextSnippets(ex: AsteExtractionV2): FreeTextSnippet[] {
   const out: FreeTextSnippet[] = [];
   const add = (path: string, text: string | null | undefined) => {
     const t = (text ?? '').trim();
@@ -48,7 +49,12 @@ export function collectFreeTextSnippets(ex: AsteExtractionV1): FreeTextSnippet[]
   ex.meta.warnings.forEach((w, i) => add(`meta.warnings.${i}`, w));
   ex.meta.not_found.forEach((n, i) => add(`meta.not_found.${i}`, n));
 
-  add('immobile.tipologia', ex.immobile.tipologia);
+  ex.immobili.forEach((imm, i) => {
+    add(`immobili.${i}.tipologia`, imm.tipologia);
+    add(`immobili.${i}.note_valore`, imm.note_valore);
+  });
+  const primary = primaryImmobile(ex);
+  add('immobile.tipologia', primary.tipologia);
 
   return out;
 }
