@@ -1,5 +1,5 @@
 -- EC-S-T21/T22 — seller viewings + open-house capacity on availability windows.
--- Migration id 0055 (verify tip was 0054 before landing).
+-- Migration id 0055 (0055 reserved for T20 enquiry inbox).
 --
 -- capacity DEFAULT 1 preserves Phase 29 / agent one-visitor-per-slot behaviour.
 -- Confirmed bookings count toward capacity; REQUESTED is unbounded (T22).

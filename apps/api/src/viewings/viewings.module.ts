@@ -17,6 +17,7 @@ import { EmailService } from '../email/email.service';
 import { isExpiresOnOrAfterRomeToday } from '../enquiries/banks4all/rome-date';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsService } from '../notifications/notifications.service';
+import { SellerModule } from '../seller/seller.module';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
@@ -610,7 +611,7 @@ export class DefaultViewingNotifier implements ViewingNotifier {
 }
 
 @Module({
-  imports: [UsersModule, NotificationsModule],
+  imports: [UsersModule, NotificationsModule, SellerModule],
   controllers: [ViewingsController, SellerViewingsController],
   providers: [
     ViewingsService,

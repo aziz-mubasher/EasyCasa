@@ -357,4 +357,31 @@ export class ViewingsService {
     }
     return c;
   }
+
+  /**
+   * EC-S-T21 — seller routes: listing ownership only (not mediator-as-conductor).
+   * Caller must separately require a seller_profile row.
+   */
+  async assertSellerOwner(
+    actorUserId: string,
+    listingIdOrSlug: string,
+  ): Promise<{ listingId: string; conductorUserId: string; ownerUserId: string }> {
+    const c = await this.listings.getConductor(listingIdOrSlug);
+    if (!c) throw new NotFoundException(`Listing ${listingIdOrSlug} not found`);
+    if (c.ownerUserId !== actorUserId) {
+      throw new ForbiddenException('Not your listing');
+    }
+    return c;
+  }
+
+  /** EC-S-T21 — seller must own the listing behind a viewing action. */
+  async assertSellerOwnsViewing(
+    actorUserId: string,
+    viewingId: string,
+  ): Promise<Viewing> {
+    const viewing = await this.viewings.get(viewingId);
+    if (!viewing) throw new NotFoundException(`Viewing ${viewingId} not found`);
+    await this.assertSellerOwner(actorUserId, viewing.listingId);
+    return viewing;
+  }
 }
