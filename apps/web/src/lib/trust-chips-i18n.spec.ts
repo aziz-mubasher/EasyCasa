@@ -6,9 +6,9 @@ import esMessages from '../../messages/es.json';
 import itMessages from '../../messages/it.json';
 
 const LOCALES = {
-  it: itMessages as AbstractIntlMessages,
-  en: enMessages as AbstractIntlMessages,
-  es: esMessages as AbstractIntlMessages,
+  it: itMessages as unknown as AbstractIntlMessages,
+  en: enMessages as unknown as AbstractIntlMessages,
+  es: esMessages as unknown as AbstractIntlMessages,
 } as const;
 
 const KEYS = [

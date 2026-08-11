@@ -3168,5 +3168,47 @@
         "ask": "No se pudo enviar la pregunta. Inténtalo de nuevo."
       }
     }
+  },
+  "sellerWizard": {
+    "signInTitle": "Inicia sesión para publicar",
+    "signIn": "Iniciar sesión",
+    "onboardingRequired": "Completa el alta de vendedor para continuar.",
+    "createFailed": "No se pudo iniciar el borrador.",
+    "saveFailed": "Error al guardar.",
+    "navFailed": "Error de navegación.",
+    "notReady": "Completa todos los pasos antes de publicar.",
+    "quotaExceeded": "Has alcanzado el límite de anuncios activos.",
+    "submitFailed": "Error al publicar.",
+    "publishedTitle": "Anuncio publicado",
+    "publishedBody": "Se ha registrado la fecha de primera publicación.",
+    "viewListing": "Ver anuncio",
+    "stepOf": "Paso {n} de {total}",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "publish": "Publicar",
+    "steps": {
+      "basics": "Tipo y título",
+      "address": "Dirección",
+      "details": "Detalles",
+      "price": "Precio",
+      "photos": "Fotos",
+      "description": "Descripción",
+      "review": "Revisión"
+    },
+    "fields": {
+      "propertyType": "Tipo",
+      "title": "Título",
+      "address": "Dirección",
+      "city": "Ciudad",
+      "province": "Provincia",
+      "postalCode": "CP",
+      "sqm": "m²",
+      "rooms": "Estancias",
+      "bathrooms": "Baños",
+      "price": "Precio (€)",
+      "photoUrls": "URL de fotos (una por línea, mín. 3)",
+      "description": "Descripción",
+      "acceptedTerms": "Confirmo ser el propietario / titular y aceptar las condiciones."
+    }
   }
 }
