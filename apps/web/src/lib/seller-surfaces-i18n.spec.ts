@@ -122,13 +122,16 @@ describe('seller wizard i18n (T31)', () => {
       const t = createTranslator({ locale, messages, namespace: 'sellerWizard' });
       for (const key of WIZARD_CHROME) {
         expect(t.has(key)).toBe(true);
-        expect(t(key).length).toBeGreaterThan(1);
       }
+      // ICU: provide values when resolving
+      expect(t('stepOf', { n: 1, total: 7 }).length).toBeGreaterThan(3);
       for (const step of WIZARD_STEPS) {
         expect(t.has(`steps.${step}`)).toBe(true);
+        expect(t(`steps.${step}`).length).toBeGreaterThan(1);
       }
       for (const field of WIZARD_FIELDS) {
         expect(t.has(`fields.${field}`)).toBe(true);
+        expect(t(`fields.${field}`).length).toBeGreaterThan(1);
       }
     });
 
@@ -158,8 +161,9 @@ describe('seller analytics dashboard i18n (T31)', () => {
       const t = createTranslator({ locale, messages, namespace: 'sellerAnalytics' });
       for (const key of ANALYTICS_KEYS) {
         expect(t.has(key)).toBe(true);
-        expect(t(key).length).toBeGreaterThan(1);
       }
+      expect(t('priceVsOmi', { pct: '+3%' }).length).toBeGreaterThan(8);
+      expect(t('title').length).toBeGreaterThan(1);
     });
   }
 
