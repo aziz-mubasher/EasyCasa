@@ -1145,6 +1145,7 @@
   "availability": {
     "timezoneNote": "Orari in ora italiana.",
     "skipConsequence": "Senza disponibilità i visitatori non potranno prenotare una visita — potranno solo scriverti.",
+    "capacityLabel": "Capienza",
     "dayOff": "Non disponibile",
     "weeklyHours": "{hours} ore a settimana",
     "windowCount": "{count} finestre",

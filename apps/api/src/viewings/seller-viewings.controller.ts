@@ -14,7 +14,6 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import {
   viewingForConductor,
-  viewingForSeeker,
 } from '../authority/serializers/viewing.serializer';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { SellerService } from '../seller/seller.service';
@@ -81,33 +80,28 @@ export class SellerViewingsController {
   @Post('viewings/:id/confirm')
   async confirm(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     const me = await this.requireSellerUser(user);
-    await this.service.assertSellerOwnsViewing(me.id, id);
-    const raw = await this.service.transition(me.id, id, 'CONFIRM');
+    const raw = await this.service.sellerTransition(me.id, id, 'CONFIRM');
     return viewingForConductor(raw);
   }
 
   @Post('viewings/:id/cancel')
   async cancel(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     const me = await this.requireSellerUser(user);
-    await this.service.assertSellerOwnsViewing(me.id, id);
-    const raw = await this.service.transition(me.id, id, 'CANCEL');
-    if (raw.conductorUserId === me.id) return viewingForConductor(raw);
-    return viewingForSeeker(raw);
+    const raw = await this.service.sellerTransition(me.id, id, 'CANCEL');
+    return viewingForConductor(raw);
   }
 
   @Post('viewings/:id/complete')
   async complete(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     const me = await this.requireSellerUser(user);
-    await this.service.assertSellerOwnsViewing(me.id, id);
-    const raw = await this.service.transition(me.id, id, 'COMPLETE');
+    const raw = await this.service.sellerTransition(me.id, id, 'COMPLETE');
     return viewingForConductor(raw);
   }
 
   @Post('viewings/:id/no-show')
   async noShow(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     const me = await this.requireSellerUser(user);
-    await this.service.assertSellerOwnsViewing(me.id, id);
-    const raw = await this.service.transition(me.id, id, 'NO_SHOW');
+    const raw = await this.service.sellerTransition(me.id, id, 'NO_SHOW');
     return viewingForConductor(raw);
   }
 
@@ -118,9 +112,7 @@ export class SellerViewingsController {
     @Body() dto: RescheduleDto,
   ) {
     const me = await this.requireSellerUser(user);
-    await this.service.assertSellerOwnsViewing(me.id, id);
-    const raw = await this.service.reschedule(me.id, id, dto.startMs);
-    if (raw.conductorUserId === me.id) return viewingForConductor(raw);
-    return viewingForSeeker(raw);
+    const raw = await this.service.sellerReschedule(me.id, id, dto.startMs);
+    return viewingForConductor(raw);
   }
 }

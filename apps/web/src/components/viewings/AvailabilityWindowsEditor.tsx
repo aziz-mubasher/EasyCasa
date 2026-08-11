@@ -112,7 +112,7 @@ export function AvailabilityWindowsEditor({
                 <span className="text-sm font-medium">{t(`weekday.${weekday}`)}</span>
               </label>
               {on && w ? (
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex flex-wrap items-center gap-2 text-sm">
                   <input
                     type="time"
                     className="rounded border border-line px-2 py-1"
@@ -130,6 +130,23 @@ export function AvailabilityWindowsEditor({
                       patchDay(weekday, { endMinutes: inputToMinutes(e.target.value) })
                     }
                   />
+                  <label className="flex items-center gap-1.5 text-muted">
+                    <span className="whitespace-nowrap">{t('capacityLabel')}</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={100}
+                      className="w-16 rounded border border-line px-2 py-1 text-ink"
+                      value={w.capacity ?? 1}
+                      onChange={(e) => {
+                        const n = Number(e.target.value);
+                        patchDay(weekday, {
+                          capacity: Number.isFinite(n) && n >= 1 ? Math.min(100, Math.floor(n)) : 1,
+                        });
+                      }}
+                      aria-label={t('capacityLabel')}
+                    />
+                  </label>
                 </div>
               ) : (
                 <span className="text-sm text-muted">{t('dayOff')}</span>

@@ -9,12 +9,15 @@ import { Button } from '@/components/ui/Button';
 import { AvailabilityWindowsEditor } from '@/components/viewings/AvailabilityWindowsEditor';
 import { Link } from '@/i18n/routing';
 import { useViewingsApi } from '@/lib/viewings-api';
+import type { ViewingsConductorSurface } from '@easycasa/api-client';
 
 type Props = {
   listingId: string;
+  /** Agent vs flag-gated seller conductor surface (T21). */
+  surface?: ViewingsConductorSurface;
 };
 
-export function EditListingAvailability({ listingId }: Props) {
+export function EditListingAvailability({ listingId, surface = 'agent' }: Props) {
   const t = useTranslations('availability');
   const ta = useTranslations('add');
   const { ready, isAuthenticated, signIn } = useAuth();
@@ -27,7 +30,7 @@ export function EditListingAvailability({ listingId }: Props) {
     if (!ready || !isAuthenticated) return;
     let cancelled = false;
     void api
-      .getAvailability(listingId)
+      .getAvailability(listingId, surface)
       .then((rows) => {
         if (!cancelled) setWindows(rows.length ? rows : defaultAvailabilityWindows());
       })
@@ -37,7 +40,7 @@ export function EditListingAvailability({ listingId }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [api, listingId, ready, isAuthenticated]);
+  }, [api, listingId, ready, isAuthenticated, surface]);
 
   const canSave = useMemo(() => windows !== null && status !== 'saving', [windows, status]);
 
@@ -46,7 +49,7 @@ export function EditListingAvailability({ listingId }: Props) {
     setStatus('saving');
     setError(null);
     try {
-      await api.setAvailability(listingId, windows, 'edit');
+      await api.setAvailability(listingId, windows, 'edit', surface);
       setStatus('ok');
     } catch {
       setStatus('err');
@@ -78,7 +81,10 @@ export function EditListingAvailability({ listingId }: Props) {
         <Button disabled={!canSave} onClick={() => void onSave()}>
           {status === 'saving' ? t('saving') : t('save')}
         </Button>
-        <Link href={`/listings/${listingId}`} className="text-sm text-azure underline">
+        <Link
+          href={surface === 'seller' ? `/seller/viewings` : `/listings/${listingId}`}
+          className="text-sm text-azure underline"
+        >
           {t('backToListing')}
         </Link>
       </div>

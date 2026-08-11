@@ -1145,6 +1145,7 @@
   "availability": {
     "timezoneNote": "Horarios en hora italiana.",
     "skipConsequence": "Sin disponibilidad, los visitantes no podrán reservar una visita — solo podrán escribirte.",
+    "capacityLabel": "Aforo",
     "dayOff": "No disponible",
     "weeklyHours": "{hours} horas por semana",
     "windowCount": "{count} ventanas",

@@ -188,6 +188,71 @@ export class ViewingsService {
 
   /** Confirm / cancel / complete / no-show. Seeker may cancel; conductor may do all. */
   async transition(actorUserId: string, viewingId: string, event: ViewingEvent): Promise<Viewing> {
+    return this.transitionInternal(actorUserId, viewingId, event, { mode: 'conductor' });
+  }
+
+  /**
+   * EC-S-T21 — seller lifecycle on own listings (seller_profile checked by controller).
+   * Authorizes via listing ownership, not conductorUserId equality.
+   */
+  async sellerTransition(
+    actorUserId: string,
+    viewingId: string,
+    event: ViewingEvent,
+  ): Promise<Viewing> {
+    await this.assertSellerOwnsViewing(actorUserId, viewingId);
+    return this.transitionInternal(actorUserId, viewingId, event, { mode: 'sellerOwner' });
+  }
+
+  /** EC-S-T21 — seller reschedule on own listing. */
+  async sellerReschedule(
+    actorUserId: string,
+    viewingId: string,
+    startMs: number,
+  ): Promise<Viewing> {
+    const viewing = await this.assertSellerOwnsViewing(actorUserId, viewingId);
+    if (viewing.conductorUserId === actorUserId) {
+      return this.reschedule(actorUserId, viewingId, startMs);
+    }
+    return this.rescheduleAsOwner(actorUserId, viewing, startMs);
+  }
+
+  private async rescheduleAsOwner(
+    actorUserId: string,
+    viewing: Viewing,
+    startMs: number,
+  ): Promise<Viewing> {
+    try {
+      nextViewingStatus(viewing.status, 'RESCHEDULE');
+    } catch (err) {
+      if (err instanceof ViewingTransitionError) throw new ConflictException(err.message);
+      throw err;
+    }
+    const meta = await this.listings.getConductor(viewing.listingId);
+    if (!meta) throw new NotFoundException('Listing not found');
+    const request: Slot = {
+      startMs,
+      endMs: startMs + this.cfg.slotMinutes * 60_000,
+    };
+    const tz = meta.timezone || DEFAULT_LISTING_TIMEZONE;
+    const [windows, occupancy] = await Promise.all([
+      this.availability.getWindows(viewing.listingId),
+      this.viewings.activeOccupancy(viewing.listingId, viewing.id),
+    ]);
+    const existing = blockingSlotsFromOccupancy(windows, occupancy, tz, this.cfg.slotMinutes);
+    const decision = validateBooking(request, windows, existing, this.cfg, Date.now(), tz);
+    if (!decision.ok) throw new ConflictException(decision.reason);
+    const updated = await this.viewings.reschedule(viewing.id, request.startMs, request.endMs);
+    await this.notifier.notify(viewing.seekerUserId, updated, 'requested');
+    return this.enrich(updated, actorUserId, { conductor: true });
+  }
+
+  private async transitionInternal(
+    actorUserId: string,
+    viewingId: string,
+    event: ViewingEvent,
+    opts: { mode: 'conductor' | 'sellerOwner' },
+  ): Promise<Viewing> {
     if (event === 'RESCHEDULE') {
       throw new ConflictException('Use POST /viewings/:id/reschedule with startMs');
     }
@@ -196,7 +261,9 @@ export class ViewingsService {
 
     const isConductor = viewing.conductorUserId === actorUserId;
     const isSeeker = viewing.seekerUserId === actorUserId;
-    if (!isConductor && !(isSeeker && event === 'CANCEL')) {
+    const authorized =
+      opts.mode === 'sellerOwner' || isConductor || (isSeeker && event === 'CANCEL');
+    if (!authorized) {
       throw new ForbiddenException('Not permitted');
     }
 
@@ -253,7 +320,9 @@ export class ViewingsService {
         actorUserId === viewing.seekerUserId ? viewing.conductorUserId : viewing.seekerUserId;
       await this.notifier.notify(other, updated, 'cancelled');
     }
-    return this.enrich(updated, actorUserId, { conductor: isConductor });
+    return this.enrich(updated, actorUserId, {
+      conductor: isConductor || opts.mode === 'sellerOwner',
+    });
   }
 
   /**

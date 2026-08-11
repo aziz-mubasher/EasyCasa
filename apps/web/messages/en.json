@@ -1145,6 +1145,7 @@
   "availability": {
     "timezoneNote": "Times in Italian local time.",
     "skipConsequence": "Without availability, visitors won’t be able to book a viewing — they can only write to you.",
+    "capacityLabel": "Capacity",
     "dayOff": "Unavailable",
     "weeklyHours": "{hours} hours per week",
     "windowCount": "{count} windows",

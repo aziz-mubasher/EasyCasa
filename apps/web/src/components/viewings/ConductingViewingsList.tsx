@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import type { Viewing } from '@easycasa/api-client';
+import {
+  isViewingCapacityFullError,
+  type Viewing,
+  type ViewingsConductorSurface,
+} from '@easycasa/api-client';
 
 import { useAuth } from '@/auth/AuthProvider';
 import { Button } from '@/components/ui/Button';
@@ -58,13 +62,19 @@ function Banks4AllViewingBadge({ viewing, locale }: { viewing: Viewing; locale: 
   );
 }
 
+type Props = {
+  /** Agent `/me/...` vs flag-gated seller `/seller/...` conductor surface (T21). */
+  surface?: ViewingsConductorSurface;
+};
+
 /** 05c conductor inbox — confirm/decline + optional EC-1 affordability badge. */
-export function ConductingViewingsList() {
+export function ConductingViewingsList({ surface = 'agent' }: Props) {
   const t = useTranslations('viewings');
   const locale = useLocale();
   const pathname = usePathname();
   const { ready, isAuthenticated, signIn } = useAuth();
   const api = useViewingsApi();
+  const signInPath = surface === 'seller' ? '/seller/viewings' : '/viewings/conducting';
 
   const [rows, setRows] = useState<Viewing[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -73,13 +83,13 @@ export function ConductingViewingsList() {
   const load = useCallback(async () => {
     setError(null);
     try {
-      const data = await api.listConducting();
+      const data = await api.listConducting(surface);
       setRows(data);
     } catch {
       setRows([]);
       setError(t('errorLoadConducting'));
     }
-  }, [api, t]);
+  }, [api, surface, t]);
 
   useEffect(() => {
     if (!ready || !isAuthenticated) return;
@@ -90,10 +100,14 @@ export function ConductingViewingsList() {
     setBusyId(id);
     setError(null);
     try {
-      await api.act(id, action);
+      await api.act(id, action, surface);
       await load();
-    } catch {
-      setError(action === 'confirm' ? t('errorConfirm') : t('errorCancel'));
+    } catch (err) {
+      if (action === 'confirm' && isViewingCapacityFullError(err)) {
+        setError(t('errors.capacityFull'));
+      } else {
+        setError(action === 'confirm' ? t('errorConfirm') : t('errorCancel'));
+      }
     } finally {
       setBusyId(null);
     }
@@ -107,7 +121,7 @@ export function ConductingViewingsList() {
     return (
       <div className="mt-8 space-y-3">
         <p className="text-sm text-muted">{t('signInPromptConducting')}</p>
-        <Button type="button" onClick={() => void signIn(pathname || '/viewings/conducting')}>
+        <Button type="button" onClick={() => void signIn(pathname || signInPath)}>
           {t('signInCta')}
         </Button>
       </div>
@@ -130,7 +144,7 @@ export function ConductingViewingsList() {
       ) : null}
       {rows.length === 0 ? (
         <div className="rounded-xl2 border border-line bg-paper p-5 space-y-2">
-          <p className="text-ink font-display font-medium">{t('emptyConducting')}</p>
+          <p className="font-display font-medium text-ink">{t('emptyConducting')}</p>
           <Link href="/viewings" className="text-sm text-azure underline hover:no-underline">
             {t('backToMine')}
           </Link>

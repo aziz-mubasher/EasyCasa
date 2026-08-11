@@ -163,6 +163,55 @@ describe('slot generation (Europe/Rome wall-clock)', () => {
     const starts = slots.map((s) => s.startMs);
     expect(new Set(starts).size).toBe(starts.length);
   });
+
+  it('DST spring-forward capacity: open-house occupancy uses Rome-local windows (2026-03-29)', () => {
+    const window: AvailabilityWindow = {
+      weekday: 0,
+      startMinutes: 60,
+      endMinutes: 240,
+      capacity: 5,
+    };
+    const start = localWallToUtcMs({ year: 2026, month: 3, day: 29 }, 195, TZ)!;
+    const end = start + 45 * MIN;
+    const fourConfirmed = Array.from({ length: 4 }, () => ({
+      startMs: start,
+      endMs: end,
+      status: 'CONFIRMED' as const,
+    }));
+    expect(blockingSlotsFromOccupancy([window], fourConfirmed, TZ)).toEqual([]);
+    expect(
+      blockingSlotsFromOccupancy(
+        [window],
+        [...fourConfirmed, { startMs: start, endMs: end, status: 'CONFIRMED' }],
+        TZ,
+      ),
+    ).toEqual([{ startMs: start, endMs: end }]);
+    expect(
+      blockingSlotsFromOccupancy(
+        [{ ...window, capacity: 1 }],
+        [{ startMs: start, endMs: end, status: 'REQUESTED' }],
+        TZ,
+      ),
+    ).toEqual([{ startMs: start, endMs: end }]);
+  });
+
+  it('DST fall-back capacity: open-house occupancy uses Rome-local windows (2026-10-25)', () => {
+    const window: AvailabilityWindow = {
+      weekday: 0,
+      startMinutes: 60,
+      endMinutes: 240,
+      capacity: 5,
+    };
+    const start = localWallToUtcMs({ year: 2026, month: 10, day: 25 }, 60, TZ)!;
+    const end = start + 45 * MIN;
+    const requests = Array.from({ length: 8 }, () => ({
+      startMs: start,
+      endMs: end,
+      status: 'REQUESTED' as const,
+    }));
+    expect(blockingSlotsFromOccupancy([window], requests, TZ)).toEqual([]);
+    expect(canConfirmAgainstCapacity(5, windowCapacity(window))).toBe(false);
+  });
 });
 
 describe('booking validation', () => {
