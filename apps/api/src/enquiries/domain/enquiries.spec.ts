@@ -90,6 +90,8 @@ describe('enquiry routing + conversion', () => {
       b4aBandMaxCents: null,
       b4aExpiresAt: null,
       b4aCheckedAt: null,
+      b4aHolderInitials: null,
+      b4aStatus: null,
       ...over,
     };
   }

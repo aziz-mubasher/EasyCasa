@@ -280,6 +280,26 @@
     "listedByOwner": "Listed directly by the owner",
     "daysOnMarket": "On the market {days, plural, =0 {since today} one {for # day} other {for # days}}"
   },
+  "sellerInbox": {
+    "title": "Enquiries",
+    "empty": "No enquiries yet.",
+    "unread": "Unread",
+    "markRead": "Mark as read",
+    "sortNewest": "Newest",
+    "sortBadgeFirst": "Badge first",
+    "sortUnreadFirst": "Unread first",
+    "filterBadgedOnly": "Badged only",
+    "filterUnreadOnly": "Unread only",
+    "viewingRequest": "Viewing request",
+    "badge": {
+      "valid": "Valid badge",
+      "expired": "Expired badge",
+      "none": ""
+    },
+    "bandMax": "Band up to {amount}",
+    "holderInitials": "Initials {initials}",
+    "receivedAt": "Received {when}"
+  },
   "listingDetail": {
     "forSale": "For sale",
     "forRent": "For rent",

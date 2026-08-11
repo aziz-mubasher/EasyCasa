@@ -24,6 +24,8 @@ function enquiry(over: Partial<Enquiry> = {}): Enquiry {
     b4aBandMaxCents: 32_500_000,
     b4aExpiresAt: '2026-07-28',
     b4aCheckedAt: '2026-07-01T12:00:00.000Z',
+    b4aHolderInitials: 'MR',
+    b4aStatus: 'valid',
     ...over,
   };
 }

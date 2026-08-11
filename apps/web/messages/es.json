@@ -280,6 +280,26 @@
     "listedByOwner": "Venta directa del propietario",
     "daysOnMarket": "En venta {days, plural, =0 {desde hoy} one {desde hace # día} other {desde hace # días}}"
   },
+  "sellerInbox": {
+    "title": "Consultas",
+    "empty": "Aún no hay consultas.",
+    "unread": "No leídas",
+    "markRead": "Marcar como leída",
+    "sortNewest": "Más recientes",
+    "sortBadgeFirst": "Con insignia primero",
+    "sortUnreadFirst": "No leídas primero",
+    "filterBadgedOnly": "Solo con insignia",
+    "filterUnreadOnly": "Solo no leídas",
+    "viewingRequest": "Solicitud de visita",
+    "badge": {
+      "valid": "Insignia válida",
+      "expired": "Insignia caducada",
+      "none": ""
+    },
+    "bandMax": "Franja hasta {amount}",
+    "holderInitials": "Iniciales {initials}",
+    "receivedAt": "Recibida {when}"
+  },
   "listingDetail": {
     "forSale": "En venta",
     "forRent": "En alquiler",

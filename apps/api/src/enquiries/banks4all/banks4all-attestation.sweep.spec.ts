@@ -23,6 +23,8 @@ function enq(over: Partial<Enquiry> = {}): Enquiry {
     b4aBandMaxCents: 32500000,
     b4aExpiresAt: '2027-01-27',
     b4aCheckedAt: new Date(Date.now() - 48 * 3600_000).toISOString(),
+    b4aHolderInitials: 'AB',
+    b4aStatus: 'valid',
     ...over,
   };
 }

@@ -198,6 +198,8 @@ export class EnquiriesService {
       b4aBandMaxCents: number | null;
       b4aExpiresAt: string | null;
       b4aCheckedAt: Date | null;
+      b4aHolderInitials: string | null;
+      b4aStatus: 'valid' | 'revoked' | null;
     };
     warning: Banks4AllAttachWarning | null;
   }> {
@@ -207,6 +209,8 @@ export class EnquiriesService {
         b4aBandMaxCents: null,
         b4aExpiresAt: null,
         b4aCheckedAt: null,
+        b4aHolderInitials: null,
+        b4aStatus: null as 'valid' | 'revoked' | null,
       },
       warning: null as Banks4AllAttachWarning | null,
     };
@@ -239,6 +243,8 @@ export class EnquiriesService {
         b4aBandMaxCents: outcome.attestation.bandMaxCents,
         b4aExpiresAt: outcome.attestation.expiresAt,
         b4aCheckedAt: new Date(),
+        b4aHolderInitials: outcome.attestation.holderInitials,
+        b4aStatus: 'valid',
       },
       warning: null,
     };

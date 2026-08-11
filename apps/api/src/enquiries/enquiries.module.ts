@@ -62,6 +62,9 @@ function toDomain(r: Row): Enquiry {
     b4aBandMaxCents: r.b4aBandMaxCents ?? null,
     b4aExpiresAt: r.b4aExpiresAt ?? null,
     b4aCheckedAt: r.b4aCheckedAt ? r.b4aCheckedAt.toISOString() : null,
+    b4aHolderInitials: r.b4aHolderInitials ?? null,
+    b4aStatus:
+      r.b4aStatus === 'valid' || r.b4aStatus === 'revoked' ? r.b4aStatus : null,
   };
 }
 
@@ -83,6 +86,8 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
     b4aBandMaxCents?: number | null;
     b4aExpiresAt?: string | null;
     b4aCheckedAt?: Date | null;
+    b4aHolderInitials?: string | null;
+    b4aStatus?: 'valid' | 'revoked' | null;
   }): Promise<Enquiry> {
     const [r] = await this.db
       .insert(enquiries)
@@ -101,6 +106,8 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
         b4aBandMaxCents: input.b4aBandMaxCents ?? null,
         b4aExpiresAt: input.b4aExpiresAt ?? null,
         b4aCheckedAt: input.b4aCheckedAt ?? null,
+        b4aHolderInitials: input.b4aHolderInitials ?? null,
+        b4aStatus: input.b4aStatus ?? null,
       })
       .returning();
     return toDomain(r);
@@ -151,6 +158,8 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
         b4aBandMaxCents: fields.b4aBandMaxCents,
         b4aExpiresAt: fields.b4aExpiresAt,
         b4aCheckedAt: fields.b4aCheckedAt,
+        b4aHolderInitials: fields.b4aHolderInitials ?? null,
+        b4aStatus: fields.b4aStatus ?? null,
         updatedAt: new Date(),
       })
       .where(eq(enquiries.id, id));
@@ -162,6 +171,8 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
       b4aBandMaxCents: null,
       b4aExpiresAt: null,
       b4aCheckedAt: null,
+      b4aHolderInitials: null,
+      b4aStatus: null,
     });
   }
 
@@ -173,6 +184,8 @@ export class DrizzleEnquiryRepository implements EnquiryRepository {
         b4aBandMaxCents: null,
         b4aExpiresAt: null,
         b4aCheckedAt: null,
+        b4aHolderInitials: null,
+        b4aStatus: null,
         updatedAt: new Date(),
       })
       .where(and(eq(enquiries.seekerUserId, seekerUserId), isNotNull(enquiries.b4aToken)))

@@ -12,6 +12,8 @@ export function enquiryForSeekerApi(enquiry: Enquiry): Enquiry {
     b4aBandMaxCents: null,
     b4aExpiresAt: null,
     b4aCheckedAt: null,
+    b4aHolderInitials: null,
+    b4aStatus: null,
     ...(b4aWarning ? { b4aWarning } : {}),
   };
 }
