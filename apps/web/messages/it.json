@@ -3368,5 +3368,17 @@
     "credentials": "Credenziali",
     "contact": "Contatto",
     "proMediaNote": "Materiale fotografico e tour virtuali passano dalla pipeline media standard (EXIF strip, content-addressed, dup-hash) — nessun upload dedicato per professionisti."
+  },
+  "consentUpdate": {
+    "bannerText": "Abbiamo aggiornato l'informativa privacy (versione {version}). Le modifiche sono minori e non richiedono alcuna azione.",
+    "bannerLink": "Leggi le novità",
+    "bannerDismiss": "Chiudi",
+    "interstitialTitle": "Informativa privacy aggiornata",
+    "interstitialBody": "L'informativa è stata aggiornata alla versione {version} con modifiche sostanziali. Per continuare a usare gli strumenti di vendita è necessario prenderne visione e accettarla.",
+    "interstitialReadLink": "Leggi l'informativa completa",
+    "interstitialAccept": "Ho letto e accetto",
+    "interstitialLater": "Non ora",
+    "interstitialLaterNote": "Potrai continuare a consultare i tuoi dati, ma le funzioni di vendita restano sospese finché non accetti.",
+    "errorIntegrity": "Si è verificato un problema con la versione dell'informativa. Il nostro team è stato avvisato; riprova più tardi."
   }
 }

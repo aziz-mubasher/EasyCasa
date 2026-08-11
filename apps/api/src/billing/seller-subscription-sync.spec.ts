@@ -51,6 +51,17 @@ function fakeStripeClient(
   } as unknown as Stripe;
 }
 
+function stubBoostSearch() {
+  return {
+    boosts: {
+      cancelByPaymentRef: async () => [] as string[],
+      activateFromPayment: async () => undefined,
+      boostWeightForListing: async () => 0,
+    },
+    search: { patchBoost: async () => undefined },
+  };
+}
+
 describe('StripeService — seller_subscription plan gating (T27)', () => {
   beforeEach(() => {
     Object.assign(process.env, {
@@ -64,7 +75,13 @@ describe('StripeService — seller_subscription plan gating (T27)', () => {
 
   it('customer.subscription.updated for a non-premium plan does NOT touch seller_subscription', async () => {
     const { db, sellerSubUpserts } = fakeDb();
-    const svc = new StripeService(db, { SELLER_PREMIUM_ENABLED: true } as ApiConfig);
+    const { boosts, search } = stubBoostSearch();
+    const svc = new StripeService(
+      db,
+      { SELLER_PREMIUM_ENABLED: true } as ApiConfig,
+      boosts as never,
+      search as never,
+    );
     const sub: Partial<Stripe.Subscription> = {
       id: 'sub_basic_1',
       status: 'active',
@@ -84,7 +101,13 @@ describe('StripeService — seller_subscription plan gating (T27)', () => {
 
   it('customer.subscription.updated for seller_premium upserts seller_subscription', async () => {
     const { db, sellerSubUpserts } = fakeDb();
-    const svc = new StripeService(db, { SELLER_PREMIUM_ENABLED: true } as ApiConfig);
+    const { boosts, search } = stubBoostSearch();
+    const svc = new StripeService(
+      db,
+      { SELLER_PREMIUM_ENABLED: true } as ApiConfig,
+      boosts as never,
+      search as never,
+    );
     const sub: Partial<Stripe.Subscription> = {
       id: 'sub_premium_1',
       status: 'past_due',
@@ -105,7 +128,13 @@ describe('StripeService — seller_subscription plan gating (T27)', () => {
 
   it('customer.subscription.deleted for seller_premium maps to canceled', async () => {
     const { db, sellerSubUpserts } = fakeDb();
-    const svc = new StripeService(db, { SELLER_PREMIUM_ENABLED: true } as ApiConfig);
+    const { boosts, search } = stubBoostSearch();
+    const svc = new StripeService(
+      db,
+      { SELLER_PREMIUM_ENABLED: true } as ApiConfig,
+      boosts as never,
+      search as never,
+    );
     const sub: Partial<Stripe.Subscription> = {
       id: 'sub_premium_2',
       status: 'canceled',

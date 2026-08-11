@@ -16,6 +16,7 @@ export default tseslint.config(
       "apps/mobile/**",
       "apps/admin/dist/**",
       "scripts/**",
+      "**/.worktrees/**",
     ],
   },
   js.configs.recommended,
