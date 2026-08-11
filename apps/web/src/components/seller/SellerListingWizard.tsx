@@ -21,6 +21,7 @@ import { Link } from '@/i18n/routing';
  */
 export function SellerListingWizard() {
   const t = useTranslations('sellerWizard');
+  const tQuota = useTranslations('errors.quota');
   const locale = useLocale();
   const { ready, isAuthenticated, signIn, getAccessToken } = useAuth();
   const [draftId, setDraftId] = useState<string | null>(null);
@@ -110,7 +111,7 @@ export function SellerListingWizard() {
         method: 'POST',
       });
       if (res.status === 429) {
-        setError(t('quotaExceeded'));
+        setError(tQuota('activeListings'));
         return;
       }
       if (!res.ok) {
@@ -161,7 +162,7 @@ export function SellerListingWizard() {
       {stepCodes.length > 0 ? (
         <ul className="mt-2 text-sm text-terracotta list-disc pl-5">
           {stepCodes.map((c) => (
-            <li key={c}>{c}</li>
+            <li key={c}>{t(`validation.${c}`)}</li>
           ))}
         </ul>
       ) : null}
@@ -177,7 +178,7 @@ export function SellerListingWizard() {
                 <option value="">—</option>
                 {PROPERTY_TYPES.map((p) => (
                   <option key={p} value={p}>
-                    {p}
+                    {t(`propertyTypes.${p}`)}
                   </option>
                 ))}
               </Select>
