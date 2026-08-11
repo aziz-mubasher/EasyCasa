@@ -303,11 +303,14 @@ export {
   ViewingStatusSchema,
   SlotSchema,
   ViewingSchema,
+  VIEWING_CAPACITY_FULL_CODE,
+  isViewingCapacityFullError,
   type ViewingStatus,
   type Slot,
   type Viewing,
   type AvailabilityWindow,
   type ViewingAction,
+  type ViewingsConductorSurface,
 } from './phase29';
 
 import {
