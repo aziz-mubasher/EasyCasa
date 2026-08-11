@@ -3168,5 +3168,14 @@
         "ask": "Domanda non riuscita. Riprova."
       }
     }
+  },
+  "nudges": {
+    "LOW_ENQUIRY_RATE": "Il tasso di richieste rispetto alle visualizzazioni è basso rispetto agli annunci con traffico simile.",
+    "ABOVE_OMI_BAND": "Il prezzo richiesto è oltre la fascia OMI di zona.",
+    "BELOW_OMI_BAND": "Il prezzo richiesto è sotto la fascia OMI di zona.",
+    "LONG_ON_MARKET": "L’annuncio è online da più di sessanta giorni.",
+    "STALE_NO_VIEWS": "Nessuna visualizzazione recente sull’annuncio.",
+    "dismiss": "Nascondi",
+    "title": "Osservazioni sull’annuncio"
   }
 }

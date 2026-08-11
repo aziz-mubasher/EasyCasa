@@ -3168,5 +3168,14 @@
         "ask": "No se pudo enviar la pregunta. Inténtalo de nuevo."
       }
     }
+  },
+  "nudges": {
+    "LOW_ENQUIRY_RATE": "La tasa de consultas respecto a las visitas es baja frente a anuncios con tráfico similar.",
+    "ABOVE_OMI_BAND": "El precio pedido está por encima de la franja OMI de la zona.",
+    "BELOW_OMI_BAND": "El precio pedido está por debajo de la franja OMI de la zona.",
+    "LONG_ON_MARKET": "El anuncio lleva más de sesenta días publicado.",
+    "STALE_NO_VIEWS": "No hay visitas recientes en este anuncio.",
+    "dismiss": "Ocultar",
+    "title": "Observaciones del anuncio"
   }
 }

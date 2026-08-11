@@ -51,6 +51,7 @@ import { OmiModule } from './omi/omi.module';
 import { SellerModule } from './seller/seller.module';
 import { VerifiedOwnerModule } from './verified-owner/verified-owner.module';
 import { SellerChecklistModule } from './seller-checklist/seller-checklist.module';
+import { SellerNudgesModule } from './nudges/seller-nudges.module';
 
 /** Static module imports (Privacy is DynamicModule via forRootProduction). */
 const REQUIRED_STATIC = [
@@ -99,6 +100,7 @@ const REQUIRED_STATIC = [
   SellerModule,
   VerifiedOwnerModule,
   SellerChecklistModule,
+  SellerNudgesModule,
   PilotModule,
   DemoModule,
   CrmModule,

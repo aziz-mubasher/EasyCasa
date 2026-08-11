@@ -1177,9 +1177,34 @@ export const sellerDocChecklist = pgTable('seller_doc_checklist', {
   listingUniq: uniqueIndex('seller_doc_checklist_listing_uidx').on(t.listingId),
 }));
 
+
+/** EC-S-T24 — nudge emission history (cooldown + optional dismiss). */
+export const listingNudges = pgTable(
+  'listing_nudges',
+  {
+    listingId: uuid('listing_id').notNull(),
+    code: text('code').notNull(),
+    emittedAt: timestamp('emitted_at', { withTimezone: true }).notNull().defaultNow(),
+    dismissedAt: timestamp('dismissed_at', { withTimezone: true }),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.listingId, t.code, t.emittedAt] }),
+    listingEmittedIdx: index('listing_nudges_listing_emitted_idx').on(
+      t.listingId,
+      t.emittedAt,
+    ),
+    listingCodeIdx: index('listing_nudges_listing_code_idx').on(
+      t.listingId,
+      t.code,
+      t.emittedAt,
+    ),
+  }),
+);
+
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
   sellerProfile, listingDraft, moderationEvents, verifiedOwnerCase, sellerDocChecklist,
+  listingNudges,
 
   enquiries,
   plans, memberships, featuredPlacements, conversations, messages, notifications,

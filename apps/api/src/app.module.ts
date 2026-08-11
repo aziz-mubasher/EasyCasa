@@ -43,6 +43,7 @@ import { OmiModule } from './omi/omi.module';
 import { SellerModule } from './seller/seller.module';
 import { VerifiedOwnerModule } from './verified-owner/verified-owner.module';
 import { SellerChecklistModule } from './seller-checklist/seller-checklist.module';
+import { SellerNudgesModule } from './nudges/seller-nudges.module';
 import { PilotModule } from './pilot/pilot.module';
 import { DemoModule } from './demo/demo.module';
 import { PrivacyModule } from './privacy/privacy.module';
@@ -118,6 +119,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     SellerModule,
     VerifiedOwnerModule,
     SellerChecklistModule,
+    SellerNudgesModule,
     PilotModule,
     DemoModule,
     CrmModule,
