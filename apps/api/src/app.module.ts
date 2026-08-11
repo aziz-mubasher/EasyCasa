@@ -16,6 +16,7 @@ import { AdminModule } from './admin/admin.module';
 import { SearchModule } from './search/search.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { PartnersModule } from './partners/partners.module';
+import { PartnerDirectoryModule } from './partner-directory/partner-directory.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { BillingModule } from './billing/billing.module';
 import { FeaturedModule } from './featured/featured.module';
@@ -90,6 +91,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     AlertsModule,
     // marketplace / partners
     PartnersModule,
+    PartnerDirectoryModule,
     MessagingModule,
     BillingModule,
     FeaturedModule,

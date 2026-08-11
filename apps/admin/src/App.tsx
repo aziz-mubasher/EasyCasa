@@ -17,6 +17,7 @@ import { DsarQueue } from './pages/DsarQueue';
 import { ListingTakedown } from './pages/ListingTakedown';
 import { IdentityReview } from './pages/IdentityReview';
 import { VoModeration } from './pages/VoModeration';
+import { PartnerDirectoryAdmin } from './pages/PartnerDirectoryAdmin';
 import { WhatsAppInbound } from './pages/WhatsAppInbound';
 import { AsteAdmin } from './pages/AsteAdmin';
 import { CrmShell } from './pages/crm/CrmShell';
@@ -28,6 +29,7 @@ type View =
   | 'takedown'
   | 'identity'
   | 'vo'
+  | 'partners'
   | 'whatsapp'
   | 'aste'
   | 'orchestration'
@@ -44,6 +46,7 @@ const NAV: { key: View; label: string; hint: string }[] = [
   { key: 'takedown', label: 'Takedown', hint: 'DSA reports' },
   { key: 'identity', label: 'Identity', hint: 'Manual verify' },
   { key: 'vo', label: 'Verified Owner', hint: 'VO moderation' },
+  { key: 'partners', label: 'Partners', hint: 'Directory · T28' },
   { key: 'whatsapp', label: 'EC WhatsApp', hint: 'Inbound · audited' },
   { key: 'aste', label: 'Aste', hint: 'Analyses · waitlist' },
   { key: 'orchestration', label: 'Orchestration', hint: 'Assign tasks' },
@@ -60,6 +63,7 @@ const VIEWS: Record<View, React.ReactNode> = {
   takedown: <ListingTakedown />,
   identity: <IdentityReview />,
   vo: <VoModeration />,
+  partners: <PartnerDirectoryAdmin />,
   whatsapp: <WhatsAppInbound />,
   aste: <AsteAdmin />,
   orchestration: <Orchestration />,

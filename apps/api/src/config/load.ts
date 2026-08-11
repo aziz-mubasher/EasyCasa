@@ -268,6 +268,11 @@ const Schema = z
      * T24 nudges share this flag.
      */
     SELLER_ANALYTICS_ENABLED: bool(false),
+    /**
+     * EC-S-T28/T29 — neutral partner directory (notai/geometri/APE/photographers).
+     * Default false. Monetised referral variants wait for G3 row 9.
+     */
+    PARTNER_DIRECTORY_ENABLED: bool(false),
     /** Runtime Nominatim base for T08 address resolve (reuse migration geocoder). */
     NOMINATIM_URL: z.string().default('https://nominatim.openstreetmap.org/search'),
     GEOCODER_USER_AGENT: z.string().default('EasyCasaAPI/1.0 (ops@easycasaita.com)'),

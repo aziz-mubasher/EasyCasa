@@ -255,6 +255,31 @@ export class EasyCasaAdminApi {
     });
   }
 
+  /* EC-S-T28 partner directory */
+  listPartnerDirectory(): Promise<unknown[]> {
+    return this.request('/admin/partner-directory', z.array(z.unknown()));
+  }
+  createPartnerDirectory(body: {
+    category: string;
+    name: string;
+    province: string;
+    credentials?: string;
+    contact: string;
+    active?: boolean;
+  }): Promise<unknown> {
+    return this.request('/admin/partner-directory', z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+  deletePartnerDirectory(id: string): Promise<unknown> {
+    return this.request(
+      `/admin/partner-directory/${encodeURIComponent(id)}`,
+      z.unknown(),
+      { method: 'DELETE' },
+    );
+  }
+
   /* Compliance config */
   listCatalog(): Promise<AdminCatalogItem[]> {
     return this.request('/admin/catalog', z.array(AdminCatalogItemSchema));

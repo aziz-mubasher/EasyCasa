@@ -25,6 +25,7 @@ import { MessagingModule } from './messaging/messaging.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { OrdersModule } from './orders/orders.module';
 import { PartnersModule } from './partners/partners.module';
+import { PartnerDirectoryModule } from './partner-directory/partner-directory.module';
 import { PaymentsModule } from './payments/payments.module';
 import { ProfessionalMeModule } from './professional-me/professional-me.module';
 import { ProfessionalsModule } from './professionals/professionals.module';
@@ -73,6 +74,7 @@ const REQUIRED_STATIC = [
   SearchModule,
   NotificationsModule,
   PartnersModule,
+  PartnerDirectoryModule,
   MessagingModule,
   BillingModule,
   FeaturedModule,

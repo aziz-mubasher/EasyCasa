@@ -244,3 +244,4 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | Variable | Used by | Notes |
 |---|---|---|
 | SELLER_ANALYTICS_ENABLED | api | Default `false`. T23 seller listing analytics **and** T24 nudges (shared flag). Also requires `SELLER_ONBOARDING_ENABLED`. Routes 404 when either flag is off. |
+| PARTNER_DIRECTORY_ENABLED | api | Default `false`. T28/T29 neutral partner directory. Monetised referral variants **wait for G3 row 9** — do not enable fee flows. |

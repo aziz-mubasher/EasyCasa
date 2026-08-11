@@ -3307,5 +3307,21 @@
     "BELOW_OMI_BAND": "The price is {pct}% below the local OMI band",
     "LONG_ON_MARKET": "On the market for {days} days; zone median {zoneMedian}",
     "STALE_NO_VIEWS": "{views} views in {days} days since publish"
+  },
+  "partnerDirectory": {
+    "title": "Professional directory",
+    "informationalLabel": "Informational list — no commission",
+    "lead": "Curated professionals by province. Direct contact; EasyCasa does not intermediate and takes no commission.",
+    "empty": "No professionals listed for these filters.",
+    "categories": {
+      "notaio": "Notary",
+      "geometra": "Surveyor",
+      "ape_certifier": "APE certifier",
+      "photographer": "Photographer",
+      "virtual_tour": "Virtual tour"
+    },
+    "credentials": "Credentials",
+    "contact": "Contact",
+    "proMediaNote": "Photo and virtual-tour assets still use the standard media pipeline (EXIF strip, content-addressed, dup-hash) — no pro-only upload endpoint."
   }
 }
