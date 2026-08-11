@@ -6,12 +6,25 @@ Stripe handles PCI. The **Customer Portal** manages upgrades/cancellations. Webh
 **signature-verified** using the raw request body (`rawBody: true` in `main.ts`).
 
 ### Subscriptions (memberships)
-- `GET /billing/plans` (public) — plan catalogue (seeded: free/basic/pro/agency).
+- **T27 note:** the billing rail already supported subscriptions before T27 —
+  `createSubscriptionCheckout` has always used `mode: 'subscription'`, and the
+  webhook already handled `checkout.session.completed` +
+  `customer.subscription.updated|deleted` into `memberships`. T27 reuses this
+  rail unchanged; it does not extend Stripe integration, it only adds a
+  parallel `seller_subscription` row (see below) and the `seller_premium`
+  plan definition.
+- `GET /billing/plans` (public) — plan catalogue (seeded: free/basic/pro/agency + T27 `seller_premium`).
 - `POST /billing/checkout` `{ planKey }` → `{ url }` — subscription Checkout with
   `automatic_tax` and `tax_id_collection` (collects **P.Iva/VAT** for EU invoicing).
 - `POST /billing/portal` → `{ url }` — manage the subscription.
 - Webhook `POST /billing/webhook` updates `memberships` on
   `checkout.session.completed` and `customer.subscription.updated|deleted`.
+- **T27:** the same webhook also upserts `seller_subscription` (`status`,
+  `current_period_end`, `cancel_at_period_end`). Entitlements / quota raises
+  read **only** this local row — never live Stripe. Freshness bound ≈ Stripe
+  webhook delivery SLA (typically seconds; worst case until the next
+  `customer.subscription.updated`). `SELLER_PREMIUM_ENABLED` must be true for
+  raises to apply; plan prices are flat-fee fixed EUR (not listing-contingent).
 
 ### Featured listings (one-time)
 - `POST /featured/checkout` `{ listingId, days }` → `{ url }` — one-time payment; the

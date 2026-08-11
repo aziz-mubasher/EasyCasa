@@ -244,3 +244,8 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | Variable | Used by | Notes |
 |---|---|---|
 | SELLER_ANALYTICS_ENABLED | api | Default `false`. T23 seller listing analytics **and** T24 nudges (shared flag). Also requires `SELLER_ONBOARDING_ENABLED`. Routes 404 when either flag is off. |
+
+## EC-S Phase 4 — premium seller tier (T27)
+| Variable | Used by | Notes |
+|---|---|---|
+| SELLER_PREMIUM_ENABLED | api | Default `false`. T27 premium seller tier (subscriptions → entitlements/quota raises + VO queue priority). When off, quota uses env floor only (ignores `seller_subscription`); `GET /seller/entitlements` 404s; checkout for plan key `seller_premium` is refused (404). Entitlements always read the local webhook-maintained `seller_subscription` row — never live Stripe (staleness ≈ webhook SLA). Reuses the existing Stripe subscription rail unchanged (see `docs/billing.md`) — no rail extension was needed. |

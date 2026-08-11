@@ -268,6 +268,12 @@ const Schema = z
      * T24 nudges share this flag.
      */
     SELLER_ANALYTICS_ENABLED: bool(false),
+    /**
+     * EC-S-T27 — premium seller tier (subscriptions → entitlements / quota raises).
+     * Default false. When off, quota path ignores seller_subscription (env floor only).
+     * Checkout for plan key `seller_premium` is refused while off.
+     */
+    SELLER_PREMIUM_ENABLED: bool(false),
     /** Runtime Nominatim base for T08 address resolve (reuse migration geocoder). */
     NOMINATIM_URL: z.string().default('https://nominatim.openstreetmap.org/search'),
     GEOCODER_USER_AGENT: z.string().default('EasyCasaAPI/1.0 (ops@easycasaita.com)'),

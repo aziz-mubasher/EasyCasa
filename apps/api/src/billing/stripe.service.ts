@@ -1,10 +1,34 @@
-import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import Stripe from 'stripe';
 import { eq } from 'drizzle-orm';
+import type { SubscriptionStatus } from '@easycasa/shared';
+
 import { apiConfig } from '../config';
+import { APP_CONFIG } from '../config/config.module';
+import type { ApiConfig } from '../config/load';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { plans, memberships, featuredPlacements, listings } from '../db/schema';
+import {
+  plans,
+  memberships,
+  sellerSubscription,
+  featuredPlacements,
+  listings,
+} from '../db/schema';
+
+const SELLER_PREMIUM_PLAN_KEY = 'seller_premium';
+
+function mapStripeSubscriptionStatus(status: Stripe.Subscription.Status): SubscriptionStatus {
+  switch (status) {
+    case 'active':
+    case 'trialing':
+      return 'active';
+    case 'past_due':
+      return 'past_due';
+    default:
+      return 'canceled';
+  }
+}
 
 @Injectable()
 export class StripeService {
@@ -12,7 +36,10 @@ export class StripeService {
   private readonly client: Stripe | null =
     apiConfig.STRIPE_SECRET_KEY ? new Stripe(apiConfig.STRIPE_SECRET_KEY) : null;
 
-  constructor(@Inject(DRIZZLE) private readonly db: Db) {}
+  constructor(
+    @Inject(DRIZZLE) private readonly db: Db,
+    @Inject(APP_CONFIG) private readonly config: ApiConfig,
+  ) {}
 
   private stripe(): Stripe {
     if (!this.client) throw new BadRequestException('billing not configured');
@@ -24,10 +51,23 @@ export class StripeService {
   }
 
   /** Subscription checkout (Stripe-hosted). Returns the redirect URL. */
-  async createSubscriptionCheckout(userId: string, email: string | undefined, planKey: string): Promise<string> {
+  async createSubscriptionCheckout(
+    userId: string,
+    email: string | undefined,
+    planKey: string,
+  ): Promise<string> {
+    if (planKey === SELLER_PREMIUM_PLAN_KEY && !this.config.SELLER_PREMIUM_ENABLED) {
+      throw new NotFoundException('seller premium not available');
+    }
+
     const planRows = await this.db.select().from(plans).where(eq(plans.key, planKey)).limit(1);
     const plan = planRows[0];
     if (!plan?.stripePriceId) throw new BadRequestException('plan not purchasable');
+
+    // T04 row 8: subscription prices must be fixed Stripe Price IDs (flat fee), never listing-derived.
+    if (plan.priceCents <= 0 && planKey === SELLER_PREMIUM_PLAN_KEY) {
+      throw new BadRequestException('seller premium plan misconfigured');
+    }
 
     const customerId = await this.ensureCustomer(userId, email);
     const session = await this.stripe().checkout.sessions.create({
@@ -78,13 +118,25 @@ export class StripeService {
   }
 
   private async ensureCustomer(userId: string, email: string | undefined): Promise<string> {
-    const existing = await this.db.select().from(memberships).where(eq(memberships.userId, userId)).limit(1);
+    const existing = await this.db
+      .select()
+      .from(memberships)
+      .where(eq(memberships.userId, userId))
+      .limit(1);
     if (existing[0]?.stripeCustomerId) return existing[0].stripeCustomerId;
     const customer = await this.stripe().customers.create({ email, metadata: { userId } });
     if (existing[0]) {
-      await this.db.update(memberships).set({ stripeCustomerId: customer.id }).where(eq(memberships.id, existing[0].id));
+      await this.db
+        .update(memberships)
+        .set({ stripeCustomerId: customer.id })
+        .where(eq(memberships.id, existing[0].id));
     } else {
-      await this.db.insert(memberships).values({ userId, tier: 'free', status: 'inactive', stripeCustomerId: customer.id });
+      await this.db.insert(memberships).values({
+        userId,
+        tier: 'free',
+        status: 'inactive',
+        stripeCustomerId: customer.id,
+      });
     }
     return customer.id;
   }
@@ -93,7 +145,11 @@ export class StripeService {
   async handleWebhook(rawBody: Buffer, signature: string): Promise<void> {
     let event: Stripe.Event;
     try {
-      event = this.stripe().webhooks.constructEvent(rawBody, signature, apiConfig.STRIPE_WEBHOOK_SECRET);
+      event = this.stripe().webhooks.constructEvent(
+        rawBody,
+        signature,
+        apiConfig.STRIPE_WEBHOOK_SECRET,
+      );
     } catch (err) {
       throw new BadRequestException(`invalid signature: ${(err as Error).message}`);
     }
@@ -102,16 +158,24 @@ export class StripeService {
       case 'checkout.session.completed': {
         const s = event.data.object;
         if (s.mode === 'subscription' && s.client_reference_id) {
-          await this.activateMembership(s.client_reference_id, s.subscription as string, s.customer as string);
+          await this.activateMembership(
+            s.client_reference_id,
+            s.subscription as string,
+            s.customer as string,
+          );
         } else if (s.mode === 'payment' && s.metadata?.kind === 'featured') {
-          await this.activateFeatured(s.metadata.listingId, Number(s.metadata.days ?? 7), s.payment_intent as string);
+          await this.activateFeatured(
+            s.metadata.listingId,
+            Number(s.metadata.days ?? 7),
+            s.payment_intent as string,
+          );
         }
         break;
       }
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted': {
         const sub = event.data.object;
-        await this.syncSubscription(sub);
+        await this.syncSubscription(sub, event.type === 'customer.subscription.deleted');
         break;
       }
       default:
@@ -119,33 +183,132 @@ export class StripeService {
     }
   }
 
-  private async activateMembership(userId: string, subscriptionId: string, customerId: string) {
+  private async activateMembership(
+    userId: string,
+    subscriptionId: string,
+    customerId: string,
+  ) {
     const sub = await this.stripe().subscriptions.retrieve(subscriptionId);
     const planKey = (sub.metadata?.planKey as string) ?? 'basic';
     const periodEnd = new Date(sub.current_period_end * 1000);
-    const existing = await this.db.select().from(memberships).where(eq(memberships.userId, userId)).limit(1);
+    const existing = await this.db
+      .select()
+      .from(memberships)
+      .where(eq(memberships.userId, userId))
+      .limit(1);
     const values = {
-      userId, tier: planKey, status: 'active',
-      stripeCustomerId: customerId, stripeSubscriptionId: subscriptionId, currentPeriodEnd: periodEnd,
+      userId,
+      tier: planKey,
+      status: 'active',
+      stripeCustomerId: customerId,
+      stripeSubscriptionId: subscriptionId,
+      currentPeriodEnd: periodEnd,
     };
     if (existing[0]) {
       await this.db.update(memberships).set(values).where(eq(memberships.id, existing[0].id));
     } else {
       await this.db.insert(memberships).values(values);
     }
+    // Only the seller_premium plan feeds seller entitlements — other plans
+    // (basic/pro/agency) must never grant premium-seller quota/priority.
+    if (planKey === SELLER_PREMIUM_PLAN_KEY) {
+      await this.upsertSellerSubscription({
+        userId,
+        status: mapStripeSubscriptionStatus(sub.status),
+        currentPeriodEnd: periodEnd,
+        cancelAtPeriodEnd: Boolean(sub.cancel_at_period_end),
+        stripeSubscriptionId: subscriptionId,
+        stripeCustomerId: customerId,
+      });
+    }
   }
 
-  private async syncSubscription(sub: Stripe.Subscription) {
-    const status = sub.status === 'active' || sub.status === 'trialing' ? 'active' : 'inactive';
+  private async syncSubscription(sub: Stripe.Subscription, deleted: boolean) {
+    const membershipStatus =
+      !deleted && (sub.status === 'active' || sub.status === 'trialing')
+        ? 'active'
+        : 'inactive';
     await this.db
       .update(memberships)
-      .set({ status, currentPeriodEnd: new Date(sub.current_period_end * 1000) })
+      .set({
+        status: membershipStatus,
+        currentPeriodEnd: new Date(sub.current_period_end * 1000),
+      })
       .where(eq(memberships.stripeSubscriptionId, sub.id));
+
+    const userId =
+      (typeof sub.metadata?.userId === 'string' && sub.metadata.userId) ||
+      (
+        await this.db
+          .select({ userId: memberships.userId })
+          .from(memberships)
+          .where(eq(memberships.stripeSubscriptionId, sub.id))
+          .limit(1)
+      )[0]?.userId;
+
+    if (!userId) {
+      this.logger.warn(`seller_subscription sync skipped — no user for ${sub.id}`);
+      return;
+    }
+
+    // Metadata is copied onto the Subscription at creation (subscription_data.metadata)
+    // and persists across its lifecycle, including cancellation — safe to gate on here.
+    if (sub.metadata?.planKey !== SELLER_PREMIUM_PLAN_KEY) return;
+
+    const status: SubscriptionStatus = deleted
+      ? 'canceled'
+      : mapStripeSubscriptionStatus(sub.status);
+
+    await this.upsertSellerSubscription({
+      userId,
+      status,
+      currentPeriodEnd: new Date(sub.current_period_end * 1000),
+      cancelAtPeriodEnd: Boolean(sub.cancel_at_period_end),
+      stripeSubscriptionId: sub.id,
+      stripeCustomerId: typeof sub.customer === 'string' ? sub.customer : sub.customer?.id,
+    });
+  }
+
+  private async upsertSellerSubscription(row: {
+    userId: string;
+    status: SubscriptionStatus;
+    currentPeriodEnd: Date;
+    cancelAtPeriodEnd: boolean;
+    stripeSubscriptionId: string;
+    stripeCustomerId?: string | null;
+  }) {
+    const existing = await this.db
+      .select({ userId: sellerSubscription.userId })
+      .from(sellerSubscription)
+      .where(eq(sellerSubscription.userId, row.userId))
+      .limit(1);
+    const values = {
+      userId: row.userId,
+      status: row.status,
+      currentPeriodEnd: row.currentPeriodEnd,
+      cancelAtPeriodEnd: row.cancelAtPeriodEnd,
+      stripeSubscriptionId: row.stripeSubscriptionId,
+      stripeCustomerId: row.stripeCustomerId ?? null,
+      updatedAt: new Date(),
+    };
+    if (existing[0]) {
+      await this.db
+        .update(sellerSubscription)
+        .set(values)
+        .where(eq(sellerSubscription.userId, row.userId));
+    } else {
+      await this.db.insert(sellerSubscription).values(values);
+    }
   }
 
   private async activateFeatured(listingId: string, days: number, paymentId: string) {
     const endsAt = new Date(Date.now() + days * 86_400_000);
-    await this.db.insert(featuredPlacements).values({ listingId, kind: 'featured', endsAt, stripePaymentId: paymentId });
-    await this.db.update(listings).set({ featuredUntil: endsAt }).where(eq(listings.id, listingId));
+    await this.db
+      .insert(featuredPlacements)
+      .values({ listingId, kind: 'featured', endsAt, stripePaymentId: paymentId });
+    await this.db
+      .update(listings)
+      .set({ featuredUntil: endsAt })
+      .where(eq(listings.id, listingId));
   }
 }

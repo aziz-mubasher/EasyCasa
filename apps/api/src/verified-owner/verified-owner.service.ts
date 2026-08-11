@@ -6,14 +6,17 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { and, asc, eq, inArray, lte } from 'drizzle-orm';
+import { and, asc, eq, inArray, lte, sql } from 'drizzle-orm';
 import { randomUUID } from 'node:crypto';
 import {
   VO_MODERATION_KINDS,
   matchOwnerName,
+  resolveTier,
   transition,
   uploadOpen,
   type MatchVerdict,
+  type SellerSubscription,
+  type SubscriptionStatus,
   type VoActor,
   type VoEventType,
   type VoState,
@@ -28,6 +31,7 @@ import {
   listings,
   moderationEvents,
   sellerProfile,
+  sellerSubscription,
   verifiedOwnerCase,
 } from '../db/schema';
 import { MediaService, sniffVoDocMime } from '../media/media.service';
@@ -250,22 +254,62 @@ export class VerifiedOwnerService {
   }
 
   async listQueue(states: Array<'submitted' | 'in_review'>, limit = 50, offset = 0) {
+    const now = new Date();
+    const premiumOn = this.config.SELLER_PREMIUM_ENABLED;
     const rows = await this.db
       .select({
         case: verifiedOwnerCase,
         sellerDisplayName: sellerProfile.displayName,
+        subStatus: sellerSubscription.status,
+        subPeriodEnd: sellerSubscription.currentPeriodEnd,
+        subCancelAtPeriodEnd: sellerSubscription.cancelAtPeriodEnd,
       })
       .from(verifiedOwnerCase)
       .leftJoin(sellerProfile, eq(sellerProfile.userId, verifiedOwnerCase.sellerUserId))
+      .leftJoin(
+        sellerSubscription,
+        eq(sellerSubscription.userId, verifiedOwnerCase.sellerUserId),
+      )
       .where(inArray(verifiedOwnerCase.state, states))
-      .orderBy(asc(verifiedOwnerCase.createdAt))
+      .orderBy(
+        // Priority bump is queue order ONLY — does not change verification standards.
+        asc(
+          sql`CASE
+            WHEN ${premiumOn} AND ${sellerSubscription.status} = 'active'
+              AND ${sellerSubscription.currentPeriodEnd} > ${now}
+              THEN 0
+            WHEN ${premiumOn} AND ${sellerSubscription.status} = 'past_due'
+              AND ${sellerSubscription.currentPeriodEnd} + interval '7 days' > ${now}
+              THEN 0
+            ELSE 1
+          END`,
+        ),
+        asc(verifiedOwnerCase.createdAt),
+      )
       .limit(limit)
       .offset(offset);
-    return rows.map((r) => ({
-      ...this.toView(r.case),
-      sellerUserId: r.case.sellerUserId,
-      sellerDisplayName: r.sellerDisplayName ?? null,
-    }));
+    return rows.map((r) => {
+      const sub: SellerSubscription | null =
+        r.subStatus &&
+        (r.subStatus === 'active' ||
+          r.subStatus === 'past_due' ||
+          r.subStatus === 'canceled') &&
+        r.subPeriodEnd
+          ? {
+              status: r.subStatus as SubscriptionStatus,
+              currentPeriodEnd: r.subPeriodEnd,
+              cancelAtPeriodEnd: Boolean(r.subCancelAtPeriodEnd),
+            }
+          : null;
+      const priorityModeration =
+        premiumOn && resolveTier(sub, now) === 'premium';
+      return {
+        ...this.toView(r.case),
+        sellerUserId: r.case.sellerUserId,
+        sellerDisplayName: r.sellerDisplayName ?? null,
+        priorityModeration,
+      };
+    });
   }
 
   async getCaseDetail(caseId: string) {

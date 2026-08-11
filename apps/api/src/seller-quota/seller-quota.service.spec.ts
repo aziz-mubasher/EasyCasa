@@ -76,3 +76,34 @@ describe('seller quota helpers (EC-S T19.1)', () => {
     }
   });
 });
+
+describe('T27 premium quota merge', () => {
+  it('flag off ⇒ effectiveQuotaConfig equals env floor (byte-identical free path)', async () => {
+    const { SellerQuotaService } = await import('./seller-quota.service');
+    const baseEnv = {
+      SELLER_MAX_ACTIVE_LISTINGS: 5,
+      SELLER_MAX_UPLOADS_PER_DAY: 20,
+      SELLER_PREMIUM_ENABLED: false,
+    } as unknown as ApiConfig;
+    const svc = new SellerQuotaService(
+      {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: async () => [
+                {
+                  status: 'active',
+                  currentPeriodEnd: new Date('2099-01-01T00:00:00Z'),
+                  cancelAtPeriodEnd: false,
+                },
+              ],
+            }),
+          }),
+        }),
+      } as never,
+      baseEnv,
+    );
+    const cfg = await svc.effectiveQuotaConfig('user-1');
+    expect(cfg).toEqual(resolveQuotaConfig(baseEnv));
+  });
+});

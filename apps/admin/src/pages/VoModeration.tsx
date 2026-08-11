@@ -11,6 +11,7 @@ const RowSchema = z.object({
   state: z.string(),
   sellerUserId: z.string().optional(),
   sellerDisplayName: z.string().nullable().optional(),
+  priorityModeration: z.boolean().optional(),
   nameMatchVerdict: z.string().nullable(),
   nameMatchScore: z.number().nullable(),
   docKeys: z.array(z.string()),
@@ -76,11 +77,13 @@ export function VoModeration() {
       <h1>Verified Owner</h1>
       <p className="muted">
         Listing anti-fraud moderation (T04 row 7). Name-match is advisory — never auto-verifies.
-        Company / partial verdicts require manual review (T05 §6.3).
+        Company / partial verdicts require manual review (T05 §6.3). Premium sellers may appear
+        earlier in this queue (priority flag) — that changes order only, not verification
+        standards or acceptance criteria.
       </p>
 
       <Table
-        columns={['Seller', 'Listing', 'State', 'Name match', 'Queued', 'Actions']}
+        columns={['Seller', 'Listing', 'State', 'Priority', 'Name match', 'Queued', 'Actions']}
         empty={rows.length === 0}
       >
         {rows.map((r) => (
@@ -88,6 +91,7 @@ export function VoModeration() {
             <td>{r.sellerDisplayName ?? r.sellerUserId?.slice(0, 8) ?? '—'}</td>
             <td className="mono">{r.listingId.slice(0, 8)}…</td>
             <td>{r.state}</td>
+            <td>{r.priorityModeration ? 'premium' : '—'}</td>
             <td>
               <span className="mono">
                 {r.nameMatchVerdict ?? '—'}
