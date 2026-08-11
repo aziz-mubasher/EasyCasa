@@ -272,6 +272,14 @@
     "save": "Save",
     "saved": "Saved"
   },
+  "trustChips": {
+    "verifiedOwner": "Verified Owner",
+    "verifiedOwnerAria": "Property with verified owner",
+    "docsScore": "Documentation {have}/{total}",
+    "docsScoreAria": "Documents ready: {have} of {total}",
+    "listedByOwner": "Listed directly by the owner",
+    "daysOnMarket": "On the market {days, plural, =0 {since today} one {for # day} other {for # days}}"
+  },
   "listingDetail": {
     "forSale": "For sale",
     "forRent": "For rent",
