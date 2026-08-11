@@ -48,6 +48,7 @@ describe('AppModule boot (PersonalDataRegistrar DI)', () => {
       'aste_chat_messages',
       'aste_leads',
       'consent',
+      'consent_acceptance_log',
       'crm',
       'enquiries',
       'profile',

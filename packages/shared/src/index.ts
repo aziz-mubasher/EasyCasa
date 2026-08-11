@@ -16,3 +16,4 @@ export * from './publish-lifecycle';
 export * from './upload-quota';
 export * from './enquiry-inbox';
 export * from './nudges';
+export * from './consent-versions';

@@ -35,10 +35,13 @@ export class SellerController {
   @Get('informativa')
   informativa() {
     const version = this.seller.informativaVersion();
+    const currentDecision = this.seller.consentStatus(version);
+    // Same version vs itself → ok when parseable; invalid when env is empty/malformed.
     return {
       version,
       layer1Key: `seller.informativa.${version || 'unset'}`,
-      ready: Boolean(version),
+      ready: currentDecision.decision === 'ok',
+      consentDecision: currentDecision.decision,
     };
   }
 
@@ -46,7 +49,13 @@ export class SellerController {
   @Get('me')
   async me(@CurrentUser() user: AuthUser) {
     const me = await this.users.getOrCreate(user);
-    return { profile: await this.seller.getProfile(me.id) };
+    const profile = await this.seller.getProfile(me.id);
+    const consent = this.seller.consentStatus(profile?.informativaVersionAccepted);
+    return {
+      profile,
+      /** T30 — ok|notice (banner) or reacceptance_required|invalid (block). */
+      consent,
+    };
   }
 
   @Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
@@ -59,6 +68,21 @@ export class SellerController {
       phone: body.phone,
       marketingConsent: body.marketingConsent === true,
     });
-    return { profile };
+    return {
+      profile,
+      consent: this.seller.consentStatus(profile.informativaVersionAccepted),
+    };
+  }
+
+  /** T30 — re-accept current informativa after a major version bump. */
+  @Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
+  @Post('informativa/accept')
+  async acceptInformativa(@CurrentUser() user: AuthUser) {
+    const me = await this.users.getOrCreate(user);
+    const profile = await this.seller.reacceptInformativa(me.id);
+    return {
+      profile,
+      consent: this.seller.consentStatus(profile.informativaVersionAccepted),
+    };
   }
 }

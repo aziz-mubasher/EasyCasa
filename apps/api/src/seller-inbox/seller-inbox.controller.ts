@@ -6,6 +6,7 @@ import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
+import { SellerConsentGuard } from '../seller/seller-consent.guard';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { SellerInboxEnabledGuard } from './seller-inbox.guard';
 import { SellerInboxService } from './seller-inbox.service';
@@ -29,7 +30,7 @@ class InboxQueryDto {
 }
 
 @Controller('seller/enquiries')
-@UseGuards(SellerOnboardingEnabledGuard, SellerInboxEnabledGuard)
+@UseGuards(SellerOnboardingEnabledGuard, SellerConsentGuard, SellerInboxEnabledGuard)
 export class SellerInboxController {
   constructor(
     private readonly inbox: SellerInboxService,

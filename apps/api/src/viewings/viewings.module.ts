@@ -40,7 +40,6 @@ import { buildViewingIcs, viewingIcsUid } from './ics';
 import { ViewingsController } from './viewings.controller';
 import { SellerViewingsController } from './seller-viewings.controller';
 import { SellerViewingsEnabledGuard } from './seller-viewings.guard';
-import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { ViewingsReminderScheduler } from './viewings-reminder.scheduler';
 import {
   AVAILABILITY_REPOSITORY,
@@ -617,7 +616,6 @@ export class DefaultViewingNotifier implements ViewingNotifier {
     ViewingsService,
     ViewingsReminderScheduler,
     ProductAnalyticsService,
-    SellerOnboardingEnabledGuard,
     SellerViewingsEnabledGuard,
     { provide: AVAILABILITY_REPOSITORY, useClass: DrizzleAvailabilityRepository },
     { provide: VIEWING_REPOSITORY, useClass: DrizzleViewingRepository },

@@ -11,6 +11,7 @@ import {
 import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
+import { SellerConsentGuard } from '../seller/seller-consent.guard';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { SellerService } from '../seller/seller.service';
 import { UsersService } from '../users/users.service';
@@ -21,7 +22,7 @@ import { SellerAnalyticsService } from './seller-analytics.service';
  * EC-S-T23 — seller listing analytics behind onboarding + analytics flags (404 when off).
  */
 @Controller('seller/listings')
-@UseGuards(SellerOnboardingEnabledGuard, SellerAnalyticsEnabledGuard)
+@UseGuards(SellerOnboardingEnabledGuard, SellerConsentGuard, SellerAnalyticsEnabledGuard)
 @Roles('seller')
 export class SellerAnalyticsController {
   constructor(

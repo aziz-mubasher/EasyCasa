@@ -4,6 +4,7 @@ import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
+import { SellerConsentGuard } from '../seller/seller-consent.guard';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
 import { ListingsService } from './listings.service';
 
@@ -12,7 +13,7 @@ import { ListingsService } from './listings.service';
  * Existing POST /listings/:id/publish remains for agents; both call the same service.
  */
 @Controller('seller/listings')
-@UseGuards(SellerOnboardingEnabledGuard)
+@UseGuards(SellerOnboardingEnabledGuard, SellerConsentGuard)
 export class SellerListingsController {
   constructor(
     private readonly listings: ListingsService,

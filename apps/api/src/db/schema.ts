@@ -1153,6 +1153,19 @@ export const sellerProfile = pgTable('seller_profile', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/**
+ * EC-S-T30 — append-only seller informativa acceptance log.
+ * `seller_profile.informativa_version_accepted` remains the current pointer.
+ */
+export const consentAcceptanceLog = pgTable('consent_acceptance_log', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull(),
+  policyVersion: text('policy_version').notNull(),
+  acceptedAt: timestamp('accepted_at', { withTimezone: true }).notNull().defaultNow(),
+}, (t) => ({
+  userAcceptedIdx: index('consent_acceptance_log_user_accepted_idx').on(t.userId, t.acceptedAt),
+}));
+
 /** EC-S-T07 — wizard draft autosave (payload validated by listingWizard machine). */
 export const listingDraft = pgTable('listing_draft', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -1246,6 +1259,7 @@ export const schema = {
   listingAnalyticsDaily,
 
   listingNudges,
+  consentAcceptanceLog,
 
   enquiries,
   plans, memberships, featuredPlacements, conversations, messages, notifications,
