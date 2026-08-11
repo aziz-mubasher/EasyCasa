@@ -1,4 +1,4 @@
-/** Client helpers for EC-22/24 aste analysis + report API (flag-gated on server). */
+/** Client helpers for EC-22/24/23b aste analysis + report API (flag-gated on server). */
 
 import { createAuthedFetch, apiUrl } from '@/auth/authedFetch';
 
@@ -7,6 +7,8 @@ export type AsteAnalysis = {
   status: string;
   language: string;
   register: string;
+  lottoLabel?: string | null;
+  failureReason?: string | null;
   documents?: AsteDocument[];
   extraction?: unknown;
   semaforo?: Record<string, string> | null;
@@ -35,6 +37,73 @@ export type AsteBuyerProfile = {
   financing_needed: boolean | null;
 };
 
+export type AsteSourceRef = { file: string; page: number };
+
+export type AsteSourcedNumber = {
+  value: number;
+  source: AsteSourceRef;
+};
+
+export type AsteCauzione = {
+  pct: number | null;
+  base: 'prezzo_base' | 'prezzo_offerto' | null;
+  importo: number | null;
+  source: AsteSourceRef | null;
+};
+
+export type AsteImmobileUnit = {
+  tipologia: string | null;
+  piano: string | null;
+  vani: number | null;
+  locali: string[];
+  categoria_catastale: string | null;
+  foglio: string | null;
+  particella: string | null;
+  subalterno: string | null;
+  rendita: number | null;
+  indirizzo: string | null;
+  comune: string | null;
+  provincia: string | null;
+  note_valore: string | null;
+};
+
+/** EC-23b extraction schema v2 (report rejects v1 with ASTE_REPROCESS_REQUIRED). */
+export type AsteExtractionV2 = {
+  schema_version: 2;
+  procedura: {
+    tipo: 'rge' | 'lg' | 'ei' | 'fall' | 'altro' | null;
+    numero: string | null;
+    rge: string | null;
+    tribunale: string | null;
+    lotto: string | null;
+    giudice_delegato: string | null;
+    data_asta: string | null;
+    termine_offerte: string | null;
+    modalita: 'telematica' | 'mista' | 'analogica' | null;
+  };
+  economics: {
+    valore_stima: AsteSourcedNumber | null;
+    prezzo_base: AsteSourcedNumber | null;
+    offerta_minima: AsteSourcedNumber | null;
+    cauzione: AsteCauzione | null;
+    rilancio_minimo: AsteSourcedNumber | null;
+    superficie_commerciale_mq: AsteSourcedNumber | null;
+  };
+  immobili: AsteImmobileUnit[];
+  giuridica: Record<string, unknown>;
+  urbanistica: Record<string, unknown>;
+  condizioni: Record<string, unknown>;
+  spese: Record<string, unknown>;
+  meta: {
+    documents: Array<{ file: string; doc_type: string; pages: number; ocr_pages: number }>;
+    not_found: string[];
+    warnings: string[];
+    schema_version: 2;
+    lotto: { label: string | null; source: string | null } | null;
+    lotti_trovati: string[];
+  };
+};
+
 export type AsteReport = {
   id: string;
   status: string;
@@ -42,27 +111,13 @@ export type AsteReport = {
   tribunale: string | null;
   rge: string | null;
   lotto: string | null;
+  lottoLabel: string | null;
   dataAsta: string | null;
   termineOfferte: string | null;
   addressRaw: string | null;
   comune: string | null;
   provincia: string | null;
-  extraction: {
-    schema_version: 1;
-    procedura: Record<string, unknown>;
-    economics: Record<string, { value: number; source: { file: string; page: number } } | null>;
-    immobile: Record<string, unknown>;
-    giuridica: Record<string, unknown>;
-    urbanistica: Record<string, unknown>;
-    condizioni: Record<string, unknown>;
-    spese: Record<string, unknown>;
-    meta: {
-      documents: Array<{ file: string; doc_type: string; pages: number; ocr_pages: number }>;
-      not_found: string[];
-      warnings: string[];
-      schema_version: 1;
-    };
-  };
+  extraction: AsteExtractionV2;
   semaforo: Record<string, string>;
   omiCheck: {
     available: boolean;
@@ -105,15 +160,50 @@ export type AsteReport = {
   translateCalls?: number;
 };
 
+export class AsteApiError extends Error {
+  readonly status: number;
+  readonly code?: string;
+
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.name = 'AsteApiError';
+    this.status = status;
+    this.code = code;
+  }
+}
+
 type TokenGetter = () => Promise<string | null>;
 
 function client(getAccessToken: TokenGetter) {
   return createAuthedFetch(getAccessToken);
 }
 
+async function readError(res: Response, fallback: string): Promise<AsteApiError> {
+  const body = (await res.json().catch(() => ({}))) as {
+    message?: string | { code?: string; message?: string };
+    code?: string;
+  };
+  if (typeof body.message === 'object' && body.message) {
+    return new AsteApiError(
+      body.message.message || fallback,
+      res.status,
+      body.message.code ?? body.code,
+    );
+  }
+  return new AsteApiError(
+    (typeof body.message === 'string' ? body.message : null) || fallback,
+    res.status,
+    body.code,
+  );
+}
+
 export async function createAnalysis(
   getAccessToken: TokenGetter,
-  input: { language: 'it' | 'en' | 'es'; register: 'investor' | 'first_buyer' },
+  input: {
+    language: 'it' | 'en' | 'es';
+    register: 'investor' | 'first_buyer';
+    lottoLabel?: string | null;
+  },
 ): Promise<AsteAnalysis> {
   const fetchAuth = client(getAccessToken);
   const res = await fetchAuth(apiUrl('/aste/analyses'), {
@@ -121,7 +211,7 @@ export async function createAnalysis(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
   });
-  if (!res.ok) throw new Error(`create failed: ${res.status}`);
+  if (!res.ok) throw await readError(res, `create failed: ${res.status}`);
   return (await res.json()) as AsteAnalysis;
 }
 
@@ -131,14 +221,14 @@ export async function getAnalysis(
 ): Promise<AsteAnalysis> {
   const fetchAuth = client(getAccessToken);
   const res = await fetchAuth(apiUrl(`/aste/analyses/${id}`), { cache: 'no-store' });
-  if (!res.ok) throw new Error(`get failed: ${res.status}`);
+  if (!res.ok) throw await readError(res, `get failed: ${res.status}`);
   return (await res.json()) as AsteAnalysis;
 }
 
 export async function listAnalyses(getAccessToken: TokenGetter): Promise<AsteAnalysis[]> {
   const fetchAuth = client(getAccessToken);
   const res = await fetchAuth(apiUrl('/aste/analyses'), { cache: 'no-store' });
-  if (!res.ok) throw new Error(`list failed: ${res.status}`);
+  if (!res.ok) throw await readError(res, `list failed: ${res.status}`);
   return (await res.json()) as AsteAnalysis[];
 }
 
@@ -169,14 +259,24 @@ export async function submitAnalysis(
 ): Promise<AsteAnalysis> {
   const fetchAuth = client(getAccessToken);
   const res = await fetchAuth(apiUrl(`/aste/analyses/${id}/submit`), { method: 'POST' });
-  if (!res.ok) throw new Error(`submit failed: ${res.status}`);
+  if (!res.ok) throw await readError(res, `submit failed: ${res.status}`);
+  return (await res.json()) as AsteAnalysis;
+}
+
+export async function resubmitAnalysis(
+  getAccessToken: TokenGetter,
+  id: string,
+): Promise<AsteAnalysis> {
+  const fetchAuth = client(getAccessToken);
+  const res = await fetchAuth(apiUrl(`/aste/analyses/${id}/resubmit`), { method: 'POST' });
+  if (!res.ok) throw await readError(res, `resubmit failed: ${res.status}`);
   return (await res.json()) as AsteAnalysis;
 }
 
 export async function deleteAnalysis(getAccessToken: TokenGetter, id: string): Promise<void> {
   const fetchAuth = client(getAccessToken);
   const res = await fetchAuth(apiUrl(`/aste/analyses/${id}`), { method: 'DELETE' });
-  if (!res.ok) throw new Error(`delete failed: ${res.status}`);
+  if (!res.ok) throw await readError(res, `delete failed: ${res.status}`);
 }
 
 export async function getReport(
@@ -189,7 +289,7 @@ export async function getReport(
   const q = new URLSearchParams({ lang });
   if (opts?.printed) q.set('printed', '1');
   const res = await fetchAuth(apiUrl(`/aste/analyses/${id}/report?${q}`), { cache: 'no-store' });
-  if (!res.ok) throw new Error(`report failed: ${res.status}`);
+  if (!res.ok) throw await readError(res, `report failed: ${res.status}`);
   return (await res.json()) as AsteReport;
 }
 
@@ -199,12 +299,15 @@ export async function patchAnalysis(
   body: Partial<AsteBuyerProfile> & {
     register?: 'investor' | 'first_buyer';
     skip_buyer_profile?: boolean;
+    lottoLabel?: string | null;
   },
 ): Promise<{
-  register: string;
-  buyerProfile: AsteBuyerProfile | null;
-  buyerReadiness: AsteReport['buyerReadiness'];
-  semaforo: Record<string, string>;
+  register?: string;
+  buyerProfile?: AsteBuyerProfile | null;
+  buyerReadiness?: AsteReport['buyerReadiness'];
+  semaforo?: Record<string, string>;
+  lottoLabel?: string | null;
+  status?: string;
 }> {
   const fetchAuth = client(getAccessToken);
   const res = await fetchAuth(apiUrl(`/aste/analyses/${id}`), {
@@ -212,12 +315,14 @@ export async function patchAnalysis(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(`patch failed: ${res.status}`);
+  if (!res.ok) throw await readError(res, `patch failed: ${res.status}`);
   return (await res.json()) as {
-    register: string;
-    buyerProfile: AsteBuyerProfile | null;
-    buyerReadiness: AsteReport['buyerReadiness'];
-    semaforo: Record<string, string>;
+    register?: string;
+    buyerProfile?: AsteBuyerProfile | null;
+    buyerReadiness?: AsteReport['buyerReadiness'];
+    semaforo?: Record<string, string>;
+    lottoLabel?: string | null;
+    status?: string;
   };
 }
 
@@ -239,7 +344,7 @@ export async function getChatHistory(
 ): Promise<{ messages: ChatMessage[]; filenameById: Record<string, string> }> {
   const fetchAuth = client(getAccessToken);
   const res = await fetchAuth(apiUrl(`/aste/analyses/${id}/chat`), { cache: 'no-store' });
-  if (!res.ok) throw new Error(`chat history failed: ${res.status}`);
+  if (!res.ok) throw await readError(res, `chat history failed: ${res.status}`);
   return (await res.json()) as { messages: ChatMessage[]; filenameById: Record<string, string> };
 }
 
@@ -262,7 +367,7 @@ export async function askChat(
     const body = (await res.json().catch(() => ({}))) as { message?: string };
     throw new Error(body.message || 'rate_limited');
   }
-  if (!res.ok) throw new Error(`chat ask failed: ${res.status}`);
+  if (!res.ok) throw await readError(res, `chat ask failed: ${res.status}`);
   return (await res.json()) as {
     userMessage: ChatMessage;
     assistantMessage: ChatMessage;

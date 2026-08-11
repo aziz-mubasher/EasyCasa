@@ -1,4 +1,4 @@
-import type { AsteExtractionV1, AsteSemaforo, SemaforoLevel } from './extraction-schema';
+import type { AsteExtractionV2, AsteSemaforo, SemaforoLevel } from './extraction-schema';
 
 /**
  * EC-24 — criticità cards from semaforo verify/critical dims (deterministic; no € impact guesses).
@@ -25,7 +25,7 @@ const ACTION_KEYS: Record<keyof AsteSemaforo, string> = {
   buyer_readiness: 'action_buyer',
 };
 
-function snippetsFor(dim: keyof AsteSemaforo, ex: AsteExtractionV1): string[] {
+function snippetsFor(dim: keyof AsteSemaforo, ex: AsteExtractionV2): string[] {
   const out: string[] = [];
   switch (dim) {
     case 'vincoli_gravami':
@@ -80,7 +80,7 @@ function snippetsFor(dim: keyof AsteSemaforo, ex: AsteExtractionV1): string[] {
 
 export function buildCriticitaCards(
   semaforo: AsteSemaforo,
-  extraction: AsteExtractionV1,
+  extraction: AsteExtractionV2,
 ): CriticitaCard[] {
   const dims = Object.keys(ACTION_KEYS) as Array<keyof AsteSemaforo>;
   const cards: CriticitaCard[] = [];

@@ -2959,6 +2959,16 @@
       "signIn": "Accedi per iniziare",
       "submit": "Crea bozza"
     },
+    "lotto": {
+      "title": "Lotto da analizzare",
+      "label": "Lotto",
+      "placeholder": "es. 1, 4, H, unico",
+      "hint": "Se il fascicolo ha più lotti, indica quale analizzare. Lascia vuoto se c’è un solo lotto.",
+      "editSub": "Puoi correggere il lotto senza ricaricare i documenti.",
+      "save": "Salva lotto",
+      "found": "Lotti trovati nei documenti: {labels}",
+      "needSelect": "Serve indicare il lotto: nei documenti risultano più lotti."
+    },
     "status": {
       "title": "Stato",
       "label": "Stato",
@@ -2967,6 +2977,8 @@
       "processing": "in elaborazione",
       "ready": "pronto",
       "failed": "errore",
+      "failedDetail": "Analisi non riuscita. Correggi il lotto se richiesto e riprova.",
+      "failureReason": "Motivo",
       "preparing": "In preparazione — il servizio è in fase di sviluppo."
     },
     "upload": {
@@ -2990,6 +3002,7 @@
     },
     "actions": {
       "submit": "Invia per l’analisi",
+      "resubmit": "Riprova l’analisi",
       "delete": "Elimina tutto",
       "openReport": "Apri report"
     },
@@ -2997,6 +3010,8 @@
       "create": "Creazione non riuscita.",
       "upload": "Caricamento non riuscito. Controlla formato e dimensione.",
       "submit": "Invio non riuscito. Serve almeno un documento.",
+      "resubmit": "Nuovo tentativo non riuscito.",
+      "lotto": "Salvataggio lotto non riuscito.",
       "delete": "Eliminazione non riuscita."
     }
   },
@@ -3065,10 +3080,13 @@
       "omi": "Confronto OMI",
       "scenari": "Nota scenari",
       "criticita": "Criticità",
-      "notFound": "Non rilevato"
+      "notFound": "Non rilevato",
+      "warnings": "Avvisi estrazione",
+      "immobili": "Unità immobiliari"
     },
     "fields": {
       "tribunale": "Tribunale",
+      "procTipo": "Tipo procedura",
       "lotto": "Lotto",
       "data_asta": "Data asta",
       "termine_offerte": "Termine offerte",
@@ -3077,12 +3095,25 @@
       "diritto": "Diritto venduto",
       "urb": "Conformità urbanistica",
       "cat": "Conformità catastale",
-      "catasto": "Dati catastali"
+      "catasto": "Dati catastali",
+      "unit": "Unità"
+    },
+    "procTipo": {
+      "rge": "Esecuzione immobiliare (R.G.E.)",
+      "lg": "Liquidazione giudiziale (L.G.)",
+      "ei": "Esecuzione immobiliare (E.I.)",
+      "fall": "Fallimento",
+      "altro": "Altro"
+    },
+    "cauzioneBase": {
+      "prezzo_base": "del prezzo base",
+      "prezzo_offerto": "del prezzo offerto"
     },
     "econ": {
       "valore_stima": "Valore di stima",
       "prezzo_base": "Prezzo base",
       "offerta_minima": "Offerta minima",
+      "cauzione": "Cauzione",
       "cauzione_pct": "Cauzione",
       "rilancio_minimo": "Rilancio minimo",
       "superficie_commerciale_mq": "Superficie commerciale"
@@ -3138,6 +3169,7 @@
     },
     "errors": {
       "load": "Impossibile caricare il report (non trovato, non pronto o non autorizzato).",
+      "reprocess": "Schema di estrazione obsoleto — riprocessa l’analisi dal caricamento documenti.",
       "profile": "Salvataggio profilo non riuscito."
     },
     "chat": {

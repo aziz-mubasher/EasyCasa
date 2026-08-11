@@ -11,6 +11,12 @@ export class CreateAsteAnalysisDto {
   @IsOptional()
   @IsIn(REGISTERS)
   register?: (typeof REGISTERS)[number];
+
+  /** EC-23b — lot selector (e.g. "4", "H", "unico"). */
+  @IsOptional()
+  @IsString()
+  @MaxLength(64)
+  lottoLabel?: string;
 }
 
 export const ASTE_DOC_TYPES = [

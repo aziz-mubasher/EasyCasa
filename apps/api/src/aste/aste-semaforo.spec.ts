@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
 import { computeSemaforo } from './aste-semaforo';
-import type { AsteExtractionV1 } from './extraction-schema';
+import type { AsteExtractionV2 } from './extraction-schema';
 
-function base(over: Partial<AsteExtractionV1> = {}): AsteExtractionV1 {
-  const empty: AsteExtractionV1 = {
-    schema_version: 1,
+function base(over: Partial<AsteExtractionV2> = {}): AsteExtractionV2 {
+  const empty: AsteExtractionV2 = {
+    schema_version: 2,
     procedura: {
+      tipo: 'rge',
+      numero: '1/2024',
       tribunale: null,
       rge: null,
       lotto: null,
@@ -19,11 +21,12 @@ function base(over: Partial<AsteExtractionV1> = {}): AsteExtractionV1 {
       valore_stima: { value: 100000, source: { file: 'd1', page: 1 } },
       prezzo_base: { value: 80000, source: { file: 'd1', page: 1 } },
       offerta_minima: { value: 60000, source: { file: 'd1', page: 1 } },
-      cauzione_pct: { value: 10, source: { file: 'd1', page: 1 } },
+      cauzione: { pct: 10, base: 'prezzo_base', importo: null, source: { file: 'd1', page: 1 } },
       rilancio_minimo: { value: 1000, source: { file: 'd1', page: 1 } },
       superficie_commerciale_mq: { value: 90, source: { file: 'd1', page: 1 } },
     },
-    immobile: {
+    immobili: [{
+
       tipologia: 'appartamento',
       piano: '2',
       vani: 5,
@@ -36,7 +39,8 @@ function base(over: Partial<AsteExtractionV1> = {}): AsteExtractionV1 {
       indirizzo: 'Via Roma 1',
       comune: 'Milano',
       provincia: 'MI',
-    },
+      note_valore: null,
+    }],
     giuridica: {
       diritto_venduto: 'piena proprietà',
       stato_occupazione: { stato: 'libero', dettaglio: null, opponibilita: null },
@@ -57,7 +61,9 @@ function base(over: Partial<AsteExtractionV1> = {}): AsteExtractionV1 {
       ],
       not_found: ['spese.condominiali_arretrate'],
       warnings: [],
-      schema_version: 1,
+      schema_version: 2,
+      lotto: null,
+      lotti_trovati: [],
     },
   };
   return {
@@ -173,7 +179,7 @@ describe('computeSemaforo', () => {
           ],
           not_found: [],
           warnings: [],
-          schema_version: 1,
+          schema_version: 2,
         },
       }),
     );
@@ -187,7 +193,7 @@ describe('computeSemaforo', () => {
           valore_stima: null,
           prezzo_base: null,
           offerta_minima: null,
-          cauzione_pct: null,
+          cauzione: null,
           rilancio_minimo: null,
           superficie_commerciale_mq: null,
         },
@@ -198,7 +204,7 @@ describe('computeSemaforo', () => {
           ],
           not_found: ['economics.prezzo_base', 'economics.valore_stima'],
           warnings: [],
-          schema_version: 1,
+          schema_version: 2,
         },
       }),
     );
@@ -212,7 +218,7 @@ describe('computeSemaforo', () => {
           documents: [{ file: 'd1', doc_type: 'perizia', pages: 10, ocr_pages: 0 }],
           not_found: [],
           warnings: [],
-          schema_version: 1,
+          schema_version: 2,
         },
       }),
     );

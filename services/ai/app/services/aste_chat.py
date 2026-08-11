@@ -10,7 +10,7 @@ from ..settings import Settings, get_settings
 
 log = logging.getLogger("aste.chat")
 
-PROMPT_VERSION = "aste-chat-v1"
+PROMPT_VERSION = "aste-chat-v2"
 
 SYSTEM_PROMPT = f"""You answer questions about Italian judicial auction (asta) documents.
 Prompt version: {PROMPT_VERSION}.
@@ -24,6 +24,7 @@ Hard rules:
 4. Quote short Italian source phrases verbatim alongside the answer_lang explanation. On first use of an Italian legal term from the glossary, expand it briefly.
 5. NEVER name natural persons even if present in chunk text. Refer generically to "il debitore" / "l'occupante" / "the debtor" / "the occupant".
 6. No advice on circumventing procedures, contacting the debtor, or occupancy self-help.
+7. Lot scope: if lotto_label is set, answer ONLY for that lot. If the user asks about another lot present in the documents, explain that this analysis is scoped to lotto_label and they need a separate analysis for the other lot. Do not mix economics across lots.
 """
 
 PERSON_NAME = re.compile(
@@ -64,6 +65,7 @@ def run_chat(req: ChatAnswerRequest, settings: Settings | None = None) -> ChatAn
     payload = {
         "question": req.question,
         "answer_lang": answer_lang,
+        "lotto_label": req.lotto_label,
         "chunks": [
             {"document_id": c.document_id, "page": c.page, "text": c.text} for c in req.chunks
         ],

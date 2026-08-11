@@ -156,6 +156,12 @@
   color: var(--aa-azure);
 }
 
+.aa-fail {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
 .aa-error {
   color: #8b2e22;
   margin: 0;

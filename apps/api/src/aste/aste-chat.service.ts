@@ -117,6 +117,7 @@ export class AsteChatService {
     const aiRes = await this.ai.chatAnswer({
       question,
       answer_lang: input.lang,
+      lotto_label: analysis.lottoLabel,
       chunks: chunks.map((c) => ({
         document_id: c.documentId,
         page: c.page,

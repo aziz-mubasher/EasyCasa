@@ -2959,6 +2959,16 @@
       "signIn": "Sign in to start",
       "submit": "Create draft"
     },
+    "lotto": {
+      "title": "Lot to analyse",
+      "label": "Lot",
+      "placeholder": "e.g. 1, 4, H, unico",
+      "hint": "If the file has multiple lots, choose which one to analyse. Leave blank for a single lot.",
+      "editSub": "You can correct the lot without re-uploading documents.",
+      "save": "Save lot",
+      "found": "Lots found in the documents: {labels}",
+      "needSelect": "A lot selection is required — the documents list multiple lots."
+    },
     "status": {
       "title": "Status",
       "label": "Status",
@@ -2967,6 +2977,8 @@
       "processing": "processing",
       "ready": "ready",
       "failed": "failed",
+      "failedDetail": "Analysis failed. Correct the lot if required and try again.",
+      "failureReason": "Reason",
       "preparing": "In preparation — the service is under development."
     },
     "upload": {
@@ -2990,6 +3002,7 @@
     },
     "actions": {
       "submit": "Submit for analysis",
+      "resubmit": "Retry analysis",
       "delete": "Delete everything",
       "openReport": "Open report"
     },
@@ -2997,6 +3010,8 @@
       "create": "Could not create the analysis.",
       "upload": "Upload failed. Check format and size.",
       "submit": "Submit failed. At least one document is required.",
+      "resubmit": "Retry failed.",
+      "lotto": "Could not save the lot.",
       "delete": "Delete failed."
     }
   },
@@ -3065,10 +3080,13 @@
       "omi": "OMI comparison",
       "scenari": "Scenario note",
       "criticita": "Issues",
-      "notFound": "Not found"
+      "notFound": "Not found",
+      "warnings": "Extraction warnings",
+      "immobili": "Property units"
     },
     "fields": {
       "tribunale": "Court",
+      "procTipo": "Procedure type",
       "lotto": "Lot",
       "data_asta": "Auction date",
       "termine_offerte": "Offer deadline",
@@ -3077,12 +3095,25 @@
       "diritto": "Right sold",
       "urb": "Planning compliance",
       "cat": "Cadastral compliance",
-      "catasto": "Cadastral refs"
+      "catasto": "Cadastral refs",
+      "unit": "Unit"
+    },
+    "procTipo": {
+      "rge": "Enforcement (R.G.E.)",
+      "lg": "Judicial liquidation (L.G.)",
+      "ei": "Enforcement (E.I.)",
+      "fall": "Bankruptcy",
+      "altro": "Other"
+    },
+    "cauzioneBase": {
+      "prezzo_base": "of the base price",
+      "prezzo_offerto": "of the offered price"
     },
     "econ": {
       "valore_stima": "Appraisal value",
       "prezzo_base": "Base price",
       "offerta_minima": "Minimum offer",
+      "cauzione": "Deposit",
       "cauzione_pct": "Deposit",
       "rilancio_minimo": "Minimum raise",
       "superficie_commerciale_mq": "Commercial floor area"
@@ -3138,6 +3169,7 @@
     },
     "errors": {
       "load": "Could not load the report (not found, not ready, or not authorised).",
+      "reprocess": "Outdated extraction schema — reprocess the analysis from the upload page.",
       "profile": "Could not save the buyer profile."
     },
     "chat": {

@@ -1,4 +1,4 @@
-import type { AsteExtractionV1, AsteSemaforo, SemaforoLevel } from './extraction-schema';
+import type { AsteExtractionV2, AsteSemaforo, SemaforoLevel } from './extraction-schema';
 
 /**
  * EC-24 — buyer profile + deterministic buyer_readiness (pure; unit-tested).
@@ -51,7 +51,7 @@ export function isBuyerProfileSkipped(profile: AsteBuyerProfile | null | undefin
 /** Pure mapper — same style as computeSemaforo. */
 export function computeBuyerReadiness(
   profile: AsteBuyerProfile | null | undefined,
-  extraction: AsteExtractionV1 | null | undefined,
+  extraction: AsteExtractionV2 | null | undefined,
 ): BuyerReadinessResult {
   if (isBuyerProfileSkipped(profile)) {
     return { level: 'unknown', checklist: [], profile_skipped: true };

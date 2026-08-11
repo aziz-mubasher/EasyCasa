@@ -29,7 +29,7 @@ import {
 } from './aste-free-text';
 import type { AsteOmiCheck } from './aste-omi-check';
 import { AsteOmiCheckService } from './aste-omi-check.service';
-import type { AsteExtractionV1, AsteSemaforo } from './extraction-schema';
+import type { AsteExtractionV2, AsteSemaforo } from './extraction-schema';
 
 @Injectable()
 export class AsteReportService {
@@ -48,9 +48,15 @@ export class AsteReportService {
     opts: { lang: 'it' | 'en' | 'es'; trackPrint?: boolean },
   ) {
     const analysis = await this.requireOwnedReady(userId, analysisId);
-    const extraction = analysis.extraction as AsteExtractionV1 | null;
-    if (!extraction || extraction.schema_version !== 1) {
+    const extraction = analysis.extraction as AsteExtractionV2 | null;
+    if (!extraction) {
       throw new BadRequestException('extraction not ready');
+    }
+    if (extraction.schema_version !== 2) {
+      throw new BadRequestException({
+        code: 'ASTE_REPROCESS_REQUIRED',
+        message: 'Extraction schema outdated — reprocess required',
+      });
     }
 
     const docs = await this.db
@@ -154,6 +160,7 @@ export class AsteReportService {
       tribunale: analysis.tribunale,
       rge: analysis.rge,
       lotto: analysis.lotto,
+      lottoLabel: analysis.lottoLabel,
       dataAsta: analysis.dataAsta,
       termineOfferte: analysis.termineOfferte?.toISOString() ?? null,
       addressRaw: analysis.addressRaw,
@@ -199,7 +206,7 @@ export class AsteReportService {
     },
   ) {
     const analysis = await this.requireOwned(userId, analysisId);
-    const extraction = analysis.extraction as AsteExtractionV1 | null;
+    const extraction = analysis.extraction as AsteExtractionV2 | null;
 
     let buyerProfile = (analysis.buyerProfile as AsteBuyerProfile | null) ?? emptyBuyerProfile();
     let register = analysis.register;

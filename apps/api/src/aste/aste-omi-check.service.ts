@@ -16,7 +16,8 @@ import {
   type OmiBandInput,
   type OmiCheckMethod,
 } from './aste-omi-check';
-import type { AsteExtractionV1 } from './extraction-schema';
+import type { AsteExtractionV2 } from './extraction-schema';
+import { primaryImmobile } from './extraction-schema';
 import { mapAsteToOmiCodTip } from './map-aste-to-omi-cod-tip';
 
 type QuoteRow = {
@@ -47,14 +48,15 @@ export class AsteOmiCheckService {
     private readonly analytics: ProductAnalyticsService,
   ) {}
 
-  async compute(extraction: AsteExtractionV1): Promise<AsteOmiCheck> {
+  async compute(extraction: AsteExtractionV2): Promise<AsteOmiCheck> {
+    const imm = primaryImmobile(extraction);
     const tip = mapAsteToOmiCodTip({
-      tipologia: extraction.immobile.tipologia,
-      categoria_catastale: extraction.immobile.categoria_catastale,
+      tipologia: imm.tipologia,
+      categoria_catastale: imm.categoria_catastale,
     });
 
-    const comuneRaw = extraction.immobile.comune ?? '';
-    const provinciaRaw = extraction.immobile.provincia ?? '';
+    const comuneRaw = imm.comune ?? '';
+    const provinciaRaw = imm.provincia ?? '';
     const comune = comuneRaw ? normalizeAsteOmiComune(comuneRaw) : null;
     const provincia = provinciaRaw ? normalizeProvinceSlug(provinciaRaw) : null;
 
@@ -69,14 +71,14 @@ export class AsteOmiCheckService {
 
     if (comune && provincia) {
       const addressParts = [
-        extraction.immobile.indirizzo,
+        imm.indirizzo,
         comuneRaw,
         provinciaRaw,
         'Italia',
       ].filter((p): p is string => Boolean(p && String(p).trim()));
       const address = addressParts.join(', ');
 
-      if (extraction.immobile.indirizzo?.trim()) {
+      if (imm.indirizzo?.trim()) {
         try {
           const hit = await this.zones.resolveAddress(address);
           if (hit?.zoneId) {

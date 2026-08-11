@@ -1,12 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { AsteExtractionV1 } from './extraction-schema';
+import type { AsteExtractionV2 } from './extraction-schema';
 import { collectFreeTextSnippets } from './aste-free-text';
 
-function readyExtraction(): AsteExtractionV1 {
+function readyExtraction(): AsteExtractionV2 {
   return {
-    schema_version: 1,
+    schema_version: 2,
     procedura: {
+      tipo: 'rge',
+      numero: '1/2024',
       tribunale: 'Milano',
       rge: '123/2024',
       lotto: '1',
@@ -19,11 +21,12 @@ function readyExtraction(): AsteExtractionV1 {
       valore_stima: { value: 250000, source: { file: 'doc-perizia', page: 2 } },
       prezzo_base: { value: 200000, source: { file: 'doc-avviso', page: 1 } },
       offerta_minima: { value: 150000, source: { file: 'doc-avviso', page: 1 } },
-      cauzione_pct: { value: 10, source: { file: 'doc-avviso', page: 1 } },
+      cauzione: { pct: 10, base: 'prezzo_base', importo: null, source: { file: 'doc-avviso', page: 1 } },
       rilancio_minimo: { value: 2000, source: { file: 'doc-avviso', page: 1 } },
       superficie_commerciale_mq: { value: 95, source: { file: 'doc-perizia', page: 3 } },
     },
-    immobile: {
+    immobili: [{
+
       tipologia: 'Appartamento',
       piano: '3',
       vani: 4,
@@ -36,7 +39,8 @@ function readyExtraction(): AsteExtractionV1 {
       indirizzo: 'Via Roma 1',
       comune: 'Milano',
       provincia: 'MI',
-    },
+      note_valore: null,
+    }],
     giuridica: {
       diritto_venduto: 'piena proprietà',
       stato_occupazione: {
@@ -68,7 +72,9 @@ function readyExtraction(): AsteExtractionV1 {
       ],
       not_found: ['spese.condominiali_arretrate'],
       warnings: ['Verificare formalità ipotecarie'],
-      schema_version: 1,
+      schema_version: 2,
+      lotto: null,
+      lotti_trovati: [],
     },
   };
 }
