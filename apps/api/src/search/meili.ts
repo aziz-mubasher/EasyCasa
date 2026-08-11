@@ -55,4 +55,8 @@ export interface ListingDoc {
   status: string;
   _geo?: { lat: number; lng: number };
   publishedAt: number | null;
+  /** EC-S-T26 — bounded ranking signal (0 = organic). */
+  boostWeight?: number;
+  /** DSA commercial label — not a trust signal. */
+  boosted?: boolean;
 }

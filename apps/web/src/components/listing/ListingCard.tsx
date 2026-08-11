@@ -28,6 +28,7 @@ function Chevron({ dir }: { dir: 'left' | 'right' }) {
 
 export function ListingCard({ l }: { l: ListingSummary }) {
   const t = useTranslations('trustChips');
+  const tBoost = useTranslations('listingBoost');
   const tListing = useTranslations('listing');
   const rent = l.transactionType === 'rent';
   const urls = imageUrlsFor(l);
@@ -117,6 +118,11 @@ export function ListingCard({ l }: { l: ListingSummary }) {
         )}
         <div className="absolute top-3 left-3 flex flex-col gap-1">
           <Badge tone={rent ? 'pine' : 'ink'}>{rent ? 'rent' : 'sale'}</Badge>
+          {l.boosted ? (
+            <Badge tone="spotlight" aria-label={tBoost('inEvidenzaAria')} data-testid="boost-label">
+              {tBoost('inEvidenza')}
+            </Badge>
+          ) : null}
           {l.trust?.verifiedOwner ? (
             <Badge tone="azure" aria-label={t('verifiedOwnerAria')}>
               {t('verifiedOwner')}

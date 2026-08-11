@@ -244,3 +244,6 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | Variable | Used by | Notes |
 |---|---|---|
 | SELLER_ANALYTICS_ENABLED | api | Default `false`. T23 seller listing analytics **and** T24 nudges (shared flag). Also requires `SELLER_ONBOARDING_ENABLED`. Routes 404 when either flag is off. |
+| LISTING_BOOST_ENABLED | api | Default `false`. T26 listing boost checkout/UI. When off, purchase paths 404; **existing active boosts still ranked + labelled**. |
+| STRIPE_PRICE_BOOST_7D | api | Optional Stripe Price ID for fixed 7-day boost (flat fee). Empty → Checkout `price_data` with fixed cents from shared `BOOST_FLAT_PRICE_CENTS`. |
+| STRIPE_PRICE_BOOST_30D | api | Optional Stripe Price ID for fixed 30-day boost (flat fee). |

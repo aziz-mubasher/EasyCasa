@@ -3307,5 +3307,10 @@
     "BELOW_OMI_BAND": "The price is {pct}% below the local OMI band",
     "LONG_ON_MARKET": "On the market for {days} days; zone median {zoneMedian}",
     "STALE_NO_VIEWS": "{views} views in {days} days since publish"
+  },
+  "listingBoost": {
+    "inEvidenza": "Featured",
+    "inEvidenzaAria": "Paid featured listing",
+    "directoryNote": "Advertisement — paid placement"
   }
 }

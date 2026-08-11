@@ -1,20 +1,56 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { IsInt, IsString, Max, Min } from 'class-validator';
-import { StripeService } from '../billing/stripe.service';
-import { Roles } from '../auth/roles.decorator';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Inject,
+  NotFoundException,
+  Post,
+} from '@nestjs/common';
+import { IsIn, IsUUID } from 'class-validator';
+import { isBoostDurationDays, type BoostDurationDays } from '@easycasa/shared';
 
-class FeatureDto {
-  @IsString() listingId!: string;
-  @IsInt() @Min(1) @Max(90) days!: number;
+import { Roles } from '../auth/roles.decorator';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { AuthUser } from '../auth/auth.types';
+import { APP_CONFIG } from '../config/config.module';
+import type { ApiConfig } from '../config/load';
+import { StripeService } from '../billing/stripe.service';
+import { UsersService } from '../users/users.service';
+import { ListingsRepository } from '../listings/listings.repository';
+
+class BoostCheckoutDto {
+  @IsUUID() listingId!: string;
+  @IsIn([7, 30]) days!: BoostDurationDays;
 }
 
 @Controller('featured')
-@Roles('seller', 'agent', 'partner', 'pro_marketer')
+@Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
 export class FeaturedController {
-  constructor(private readonly stripe: StripeService) {}
+  constructor(
+    private readonly stripe: StripeService,
+    private readonly users: UsersService,
+    private readonly listings: ListingsRepository,
+    @Inject(APP_CONFIG) private readonly config: ApiConfig,
+  ) {}
 
   @Post('checkout')
-  async checkout(@Body() dto: FeatureDto) {
+  async checkout(@CurrentUser() user: AuthUser, @Body() dto: BoostCheckoutDto) {
+    if (!this.config.LISTING_BOOST_ENABLED) {
+      throw new NotFoundException('listing boost not available');
+    }
+    if (!isBoostDurationDays(dto.days)) {
+      throw new BadRequestException('days must be 7 or 30');
+    }
+    const me = await this.users.getOrCreate(user);
+    const listing = await this.listings.findById(dto.listingId);
+    if (!listing) throw new NotFoundException('listing not found');
+    const owner = listing.ownerUserId ?? listing.agentId;
+    if (owner !== me.id && !user.roles.includes('admin')) {
+      throw new NotFoundException('listing not found');
+    }
+    if (listing.status !== 'published') {
+      throw new BadRequestException('listing must be published');
+    }
     return { url: await this.stripe.createFeaturedCheckout(dto.listingId, dto.days) };
   }
 }

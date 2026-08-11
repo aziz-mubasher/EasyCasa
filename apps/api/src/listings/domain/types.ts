@@ -92,6 +92,8 @@ export interface ListingDetail {
   hasFloorPlan: boolean;
   quality: QualityScore;
   agent: { id: string; displayName: string } | null;
+  /** EC-S-T26 — commercial boost label (DSA); outside trust. */
+  boosted?: boolean;
 }
 
 export interface SimilarPin {

@@ -43,6 +43,12 @@ const usersMock = {
 };
 
 function makeService(repo: ListingsRepository) {
+  const boostsMock = {
+    pauseForListing: vi.fn().mockResolvedValue(undefined),
+    resumeForListing: vi.fn().mockResolvedValue(undefined),
+    boostWeightForListing: vi.fn().mockResolvedValue(0),
+    isListingBoosted: vi.fn().mockResolvedValue(false),
+  };
   return new ListingsService(
     repo,
     searchMock,
@@ -51,6 +57,7 @@ function makeService(repo: ListingsRepository) {
     valuationBandMock as never,
     usersMock as never,
     {} as never, // DRIZZLE — view recording fail-soft; unused in unit tests
+    boostsMock as never,
   );
 }
 

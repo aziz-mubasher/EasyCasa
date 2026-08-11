@@ -1,10 +1,20 @@
 import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import Stripe from 'stripe';
 import { eq } from 'drizzle-orm';
+import {
+  boostFlatPriceCents,
+  isBoostDurationDays,
+  type BoostDurationDays,
+} from '@easycasa/shared';
+
 import { apiConfig } from '../config';
+import { APP_CONFIG } from '../config/config.module';
+import type { ApiConfig } from '../config/load';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { plans, memberships, featuredPlacements, listings } from '../db/schema';
+import { plans, memberships, featuredPlacements } from '../db/schema';
+import { ListingBoostService } from '../listing-boost/listing-boost.service';
+import { SearchService } from '../search/search.service';
 
 @Injectable()
 export class StripeService {
@@ -12,7 +22,12 @@ export class StripeService {
   private readonly client: Stripe | null =
     apiConfig.STRIPE_SECRET_KEY ? new Stripe(apiConfig.STRIPE_SECRET_KEY) : null;
 
-  constructor(@Inject(DRIZZLE) private readonly db: Db) {}
+  constructor(
+    @Inject(DRIZZLE) private readonly db: Db,
+    @Inject(APP_CONFIG) private readonly config: ApiConfig,
+    private readonly boosts: ListingBoostService,
+    private readonly search: SearchService,
+  ) {}
 
   private stripe(): Stripe {
     if (!this.client) throw new BadRequestException('billing not configured');
@@ -23,8 +38,11 @@ export class StripeService {
     return this.db.select().from(plans);
   }
 
-  /** Subscription checkout (Stripe-hosted). Returns the redirect URL. */
-  async createSubscriptionCheckout(userId: string, email: string | undefined, planKey: string): Promise<string> {
+  async createSubscriptionCheckout(
+    userId: string,
+    email: string | undefined,
+    planKey: string,
+  ): Promise<string> {
     const planRows = await this.db.select().from(plans).where(eq(plans.key, planKey)).limit(1);
     const plan = planRows[0];
     if (!plan?.stripePriceId) throw new BadRequestException('plan not purchasable');
@@ -38,30 +56,49 @@ export class StripeService {
       success_url: apiConfig.BILLING_SUCCESS_URL,
       cancel_url: apiConfig.BILLING_CANCEL_URL,
       automatic_tax: { enabled: true },
-      tax_id_collection: { enabled: true }, // collect P.Iva/VAT for EU invoicing
+      tax_id_collection: { enabled: true },
       subscription_data: { metadata: { userId, planKey } },
     });
     return session.url ?? '';
   }
 
-  /** One-time payment to feature a listing for N days. */
+  /**
+   * EC-S-T26 — flat-fee boost checkout for 7 or 30 days only.
+   * Uses Stripe Price IDs when configured; otherwise fixed price_data unit_amount.
+   */
   async createFeaturedCheckout(listingId: string, days: number): Promise<string> {
-    const priceCents = days * 200; // €2/day — configure per market
-    const session = await this.stripe().checkout.sessions.create({
-      mode: 'payment',
-      line_items: [
-        {
+    if (!isBoostDurationDays(days)) {
+      throw new BadRequestException('boost duration must be 7 or 30 days');
+    }
+    const duration = days as BoostDurationDays;
+    const unitAmount = boostFlatPriceCents(duration);
+    const priceId =
+      duration === 7
+        ? this.config.STRIPE_PRICE_BOOST_7D.trim()
+        : this.config.STRIPE_PRICE_BOOST_30D.trim();
+
+    const lineItem = priceId
+      ? { price: priceId, quantity: 1 as const }
+      : {
           price_data: {
             currency: apiConfig.CURRENCY,
-            unit_amount: priceCents,
-            product_data: { name: `Featured listing (${days} days)` },
+            unit_amount: unitAmount,
+            product_data: { name: `Listing boost (${duration} days)` },
           },
-          quantity: 1,
-        },
-      ],
+          quantity: 1 as const,
+        };
+
+    const session = await this.stripe().checkout.sessions.create({
+      mode: 'payment',
+      line_items: [lineItem],
       success_url: apiConfig.BILLING_SUCCESS_URL,
       cancel_url: apiConfig.BILLING_CANCEL_URL,
-      metadata: { listingId, days: String(days), kind: 'featured' },
+      metadata: {
+        listingId,
+        days: String(duration),
+        kind: 'featured',
+        flatFeeCents: String(unitAmount),
+      },
     });
     return session.url ?? '';
   }
@@ -78,22 +115,37 @@ export class StripeService {
   }
 
   private async ensureCustomer(userId: string, email: string | undefined): Promise<string> {
-    const existing = await this.db.select().from(memberships).where(eq(memberships.userId, userId)).limit(1);
+    const existing = await this.db
+      .select()
+      .from(memberships)
+      .where(eq(memberships.userId, userId))
+      .limit(1);
     if (existing[0]?.stripeCustomerId) return existing[0].stripeCustomerId;
     const customer = await this.stripe().customers.create({ email, metadata: { userId } });
     if (existing[0]) {
-      await this.db.update(memberships).set({ stripeCustomerId: customer.id }).where(eq(memberships.id, existing[0].id));
+      await this.db
+        .update(memberships)
+        .set({ stripeCustomerId: customer.id })
+        .where(eq(memberships.id, existing[0].id));
     } else {
-      await this.db.insert(memberships).values({ userId, tier: 'free', status: 'inactive', stripeCustomerId: customer.id });
+      await this.db.insert(memberships).values({
+        userId,
+        tier: 'free',
+        status: 'inactive',
+        stripeCustomerId: customer.id,
+      });
     }
     return customer.id;
   }
 
-  /** Verify + process a Stripe webhook. rawBody is the exact bytes received. */
   async handleWebhook(rawBody: Buffer, signature: string): Promise<void> {
     let event: Stripe.Event;
     try {
-      event = this.stripe().webhooks.constructEvent(rawBody, signature, apiConfig.STRIPE_WEBHOOK_SECRET);
+      event = this.stripe().webhooks.constructEvent(
+        rawBody,
+        signature,
+        apiConfig.STRIPE_WEBHOOK_SECRET,
+      );
     } catch (err) {
       throw new BadRequestException(`invalid signature: ${(err as Error).message}`);
     }
@@ -102,9 +154,31 @@ export class StripeService {
       case 'checkout.session.completed': {
         const s = event.data.object;
         if (s.mode === 'subscription' && s.client_reference_id) {
-          await this.activateMembership(s.client_reference_id, s.subscription as string, s.customer as string);
+          await this.activateMembership(
+            s.client_reference_id,
+            s.subscription as string,
+            s.customer as string,
+          );
         } else if (s.mode === 'payment' && s.metadata?.kind === 'featured') {
-          await this.activateFeatured(s.metadata.listingId, Number(s.metadata.days ?? 7), s.payment_intent as string);
+          await this.activateFeatured(
+            s.metadata.listingId,
+            Number(s.metadata.days ?? 7),
+            (s.payment_intent as string) || s.id,
+          );
+        }
+        break;
+      }
+      case 'charge.refunded': {
+        const charge = event.data.object;
+        const pi =
+          typeof charge.payment_intent === 'string'
+            ? charge.payment_intent
+            : charge.payment_intent?.id;
+        if (pi) {
+          const listingIds = await this.boosts.cancelByPaymentRef(pi);
+          for (const id of listingIds) {
+            await this.search.patchBoost(id, 0, false);
+          }
         }
         break;
       }
@@ -119,14 +193,26 @@ export class StripeService {
     }
   }
 
-  private async activateMembership(userId: string, subscriptionId: string, customerId: string) {
+  private async activateMembership(
+    userId: string,
+    subscriptionId: string,
+    customerId: string,
+  ) {
     const sub = await this.stripe().subscriptions.retrieve(subscriptionId);
     const planKey = (sub.metadata?.planKey as string) ?? 'basic';
     const periodEnd = new Date(sub.current_period_end * 1000);
-    const existing = await this.db.select().from(memberships).where(eq(memberships.userId, userId)).limit(1);
+    const existing = await this.db
+      .select()
+      .from(memberships)
+      .where(eq(memberships.userId, userId))
+      .limit(1);
     const values = {
-      userId, tier: planKey, status: 'active',
-      stripeCustomerId: customerId, stripeSubscriptionId: subscriptionId, currentPeriodEnd: periodEnd,
+      userId,
+      tier: planKey,
+      status: 'active',
+      stripeCustomerId: customerId,
+      stripeSubscriptionId: subscriptionId,
+      currentPeriodEnd: periodEnd,
     };
     if (existing[0]) {
       await this.db.update(memberships).set(values).where(eq(memberships.id, existing[0].id));
@@ -144,8 +230,24 @@ export class StripeService {
   }
 
   private async activateFeatured(listingId: string, days: number, paymentId: string) {
-    const endsAt = new Date(Date.now() + days * 86_400_000);
-    await this.db.insert(featuredPlacements).values({ listingId, kind: 'featured', endsAt, stripePaymentId: paymentId });
-    await this.db.update(listings).set({ featuredUntil: endsAt }).where(eq(listings.id, listingId));
+    if (!listingId) {
+      this.logger.warn('featured activate skipped — missing listingId');
+      return;
+    }
+    const duration = isBoostDurationDays(days) ? days : 7;
+    const endsAt = new Date(Date.now() + duration * 86_400_000);
+    await this.db.insert(featuredPlacements).values({
+      listingId,
+      kind: 'featured',
+      endsAt,
+      stripePaymentId: paymentId,
+    });
+    await this.boosts.activateFromPayment({
+      listingId,
+      days: duration,
+      paymentRef: paymentId,
+    });
+    const weight = await this.boosts.boostWeightForListing(listingId);
+    await this.search.patchBoost(listingId, weight, weight > 0);
   }
 }

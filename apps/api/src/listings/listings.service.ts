@@ -34,6 +34,7 @@ import { listingToPublishRecord } from './listing-trust';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { recordListingView } from '../seller-analytics/seller-analytics.service';
+import { ListingBoostService } from '../listing-boost/listing-boost.service';
 
 function slugify(title: string): string {
   return title.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '')
@@ -66,6 +67,7 @@ export class ListingsService {
     private readonly valuationBand: ValuationBandService,
     private readonly users: UsersService,
     @Inject(DRIZZLE) private readonly db: Db,
+    private readonly boosts: ListingBoostService,
   ) {}
 
   /** Public-safe publisher contact for listing pages (no email / OIDC slug). */
@@ -97,7 +99,9 @@ export class ListingsService {
     if (!raw) throw new NotFoundException(`Listing ${idOrSlug} not found`);
     // EC-S-T23 — fail-soft catalogue view increment (never breaks detail).
     void recordListingView(this.db, raw.id);
-    return buildListingDetail(raw);
+    const detail = buildListingDetail(raw);
+    const boosted = await this.boosts.isListingBoosted(raw.id);
+    return { ...detail, boosted };
   }
 
   /** Similar listings: same provincia + deal type; nearest by price. */
@@ -128,6 +132,7 @@ export class ListingsService {
       .filter((m) => m.type === 'image' || m.type === 'floorplan')
       .map((m) => m.url);
     const agent = await this.publicAgentFor(l.agentId);
+    const boosted = await this.boosts.isListingBoosted(l.id);
     return {
       ...l,
       price: l.price == null ? null : Number(l.price),
@@ -138,6 +143,7 @@ export class ListingsService {
       imageUrls,
       coverUrl: imageUrls[0] ?? null,
       agent,
+      boosted,
     };
   }
 
@@ -348,6 +354,7 @@ export class ListingsService {
       unpublishedAt: null,
     });
     if (published) {
+      await this.boosts.resumeForListing(published.id);
       await this.indexPublishedListing(published);
     }
     return published;
@@ -376,6 +383,14 @@ export class ListingsService {
       // firstPublishedAt intentionally omitted — must not be rewritten
     });
     if (unpublished) {
+      // T26 — pause boost clock while unpublished (remaining days preserved).
+      try {
+        await this.boosts.pauseForListing(unpublished.id, now);
+      } catch (err) {
+        this.logger.warn(
+          `boost pause on unpublish failed listing=${unpublished.id}: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
       try {
         await this.searchIndex.remove(unpublished.id);
       } catch (err) {
@@ -441,6 +456,8 @@ export class ListingsService {
           ? { lat: published.latitude, lng: published.longitude }
           : undefined,
       publishedAt: published.publishedAt ? published.publishedAt.getTime() : Date.now(),
+      boostWeight: await this.boosts.boostWeightForListing(published.id),
+      boosted: await this.boosts.isListingBoosted(published.id),
     });
 
     const pin = listingRowToPin({

@@ -282,6 +282,19 @@ export const featuredPlacements = pgTable('featured_placements', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-S-T26 — flat-fee listing boost (pauseable; ranking + DSA label). */
+export const listingBoost = pgTable('listing_boost', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id').notNull(),
+  startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
+  endsAt: timestamp('ends_at', { withTimezone: true }).notNull(),
+  stripePaymentRef: text('stripe_payment_ref'),
+  status: text('status').notNull().default('active'),
+  pausedAt: timestamp('paused_at', { withTimezone: true }),
+  remainingMs: bigint('remaining_ms', { mode: 'number' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const conversations = pgTable('conversations', {
   id: uuid('id').primaryKey().defaultRandom(),
   listingId: uuid('listing_id'),
@@ -1248,7 +1261,7 @@ export const schema = {
   listingNudges,
 
   enquiries,
-  plans, memberships, featuredPlacements, conversations, messages, notifications,
+  plans, memberships, featuredPlacements, listingBoost, conversations, messages, notifications,
   devices, partnerProfiles, leads, payouts,
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,

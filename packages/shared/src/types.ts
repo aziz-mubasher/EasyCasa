@@ -47,6 +47,11 @@ export interface ListingSummary {
     /** False when unpublished/draft — ListingCard must not show market-time chip. */
     showDaysOnMarket: boolean;
   };
+  /**
+   * EC-S-T26 — commercial boost labelling (DSA / Codice del Consumo).
+   * Outside `trust` — must not resemble trust chips.
+   */
+  boosted?: boolean;
 }
 
 export interface Paginated<T> {
