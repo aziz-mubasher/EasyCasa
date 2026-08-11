@@ -104,25 +104,19 @@ describe('aste-extract-guards (EC-23b)', () => {
 
 describe('aste-extract-guards traps (§5.6 fixtures)', () => {
   it('selection required trap', async () => {
-    const { trapSelectionRequired } = await import(
-      '../../test/fixtures/aste/schema-v2-traps'
-    );
+    const { trapSelectionRequired } = await import('./schema-v2-traps.fixtures');
     const ex = trapSelectionRequired();
     expect(() => assertLotScope(ex, null)).toThrow(AsteLotScopeError);
   });
 
   it('scoped multi-lot H ok', async () => {
-    const { trapMultiLotScopedH } = await import(
-      '../../test/fixtures/aste/schema-v2-traps'
-    );
+    const { trapMultiLotScopedH } = await import('./schema-v2-traps.fixtures');
     const ex = trapMultiLotScopedH();
     expect(() => assertLotScope(ex, 'H')).not.toThrow();
   });
 
   it('precedence trap prefers avviso', async () => {
-    const { trapPrezzoPrecedence } = await import(
-      '../../test/fixtures/aste/schema-v2-traps'
-    );
+    const { trapPrezzoPrecedence } = await import('./schema-v2-traps.fixtures');
     const ex = trapPrezzoPrecedence();
     applyPrezzoBasePrecedence(ex);
     expect(ex.economics.prezzo_base?.value).toBe(36000);
@@ -134,7 +128,7 @@ describe('aste-extract-guards traps (§5.6 fixtures)', () => {
       trapProceduraLg,
       trapApartmentPlusBox,
       trapLottoHNoteValore,
-    } = await import('../../test/fixtures/aste/schema-v2-traps');
+    } = await import('./schema-v2-traps.fixtures');
     expect(trapCauzionePrezzoOfferto().economics.cauzione?.base).toBe('prezzo_offerto');
     expect(trapProceduraLg().procedura.tipo).toBe('lg');
     expect(trapApartmentPlusBox().immobili).toHaveLength(2);

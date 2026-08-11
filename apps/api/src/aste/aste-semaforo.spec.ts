@@ -180,6 +180,8 @@ describe('computeSemaforo', () => {
           not_found: [],
           warnings: [],
           schema_version: 2,
+          lotto: null,
+          lotti_trovati: [],
         },
       }),
     );
@@ -205,6 +207,8 @@ describe('computeSemaforo', () => {
           not_found: ['economics.prezzo_base', 'economics.valore_stima'],
           warnings: [],
           schema_version: 2,
+          lotto: null,
+          lotti_trovati: [],
         },
       }),
     );
@@ -219,6 +223,8 @@ describe('computeSemaforo', () => {
           not_found: [],
           warnings: [],
           schema_version: 2,
+          lotto: null,
+          lotti_trovati: [],
         },
       }),
     );

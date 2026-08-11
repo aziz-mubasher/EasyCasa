@@ -2,8 +2,8 @@
  * EC-23b §5.6 — synthetic extraction fixtures encoding the seven real-document traps.
  * Used by unit tests; not golden-set PDFs (those stay AZM-only / Drive).
  */
-import type { AsteExtractionV2 } from '../../src/aste/extraction-schema';
-import { emptyImmobileUnit } from '../../src/aste/extraction-schema';
+import type { AsteExtractionV2 } from './extraction-schema';
+import { emptyImmobileUnit } from './extraction-schema';
 
 function baseMeta(extra?: Partial<AsteExtractionV2['meta']>): AsteExtractionV2['meta'] {
   return {
