@@ -8,7 +8,14 @@ import pytest
 
 from app.schemas_aste import ExtractDocumentIn, ExtractPageIn, ExtractRequest
 from app.services import aste_extract
-from app.services.aste_extract import empty_extraction, run_extract, scrub_person_names
+from app.services.aste_extract import (
+    empty_extraction,
+    merge_extractions,
+    page_lot_priority,
+    run_extract,
+    scrub_person_names,
+    split_documents_for_extract,
+)
 from app.settings import Settings
 
 
@@ -111,3 +118,115 @@ def test_normalize_lg_and_cauzione_and_immobili(monkeypatch: pytest.MonkeyPatch)
     assert out["economics"]["cauzione"]["pct"] == 20
     assert out["economics"]["cauzione"]["base"] == "prezzo_offerto"
     assert len(out["immobili"]) == 2
+
+
+def test_page_lot_priority_prefers_lot_mentions() -> None:
+    assert page_lot_priority("Lotto H prezzo base 100", "H", "perizia") > page_lot_priority(
+        "Lotto A non conforme", "H", "perizia"
+    )
+    assert page_lot_priority("prezzo", None, "avviso") > page_lot_priority("prezzo", None, "altro")
+
+
+def test_split_documents_packs_under_budget() -> None:
+    # Many mid-size pages → multiple chunks under a tight budget.
+    docs = [
+        ExtractDocumentIn(
+            file=f"d{i}",
+            doc_type="perizia" if i % 2 else "avviso",
+            pages=[
+                ExtractPageIn(
+                    page=1,
+                    text=("Lotto H economics " if i == 0 else f"doc{i} ") + ("x" * 800),
+                )
+            ],
+        )
+        for i in range(8)
+    ]
+    chunks = split_documents_for_extract(
+        docs, language="it", lotto_label="H", max_user_chars=3_500
+    )
+    assert len(chunks) >= 2
+    # Lot-mentioning page should land in an early chunk (priority sort).
+    first_files = {d.file for d in chunks[0]}
+    assert "d0" in first_files
+    # All pages preserved across chunks.
+    seen = {(d.file, p.page) for c in chunks for d in c for p in d.pages}
+    assert len(seen) == 8
+
+
+def test_merge_extractions_fills_nulls_and_drops_other_lot_nonconform() -> None:
+    meta_docs = [{"file": "d1", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    a = empty_extraction(meta_docs, not_found=["economics.offerta_minima", "giuridica.stato_occupazione"])
+    a["economics"]["prezzo_base"] = {"value": 1000, "source": {"file": "d1", "page": 1}}
+    a["urbanistica"]["conformita_urbanistica"] = {
+        "stato": "non_conforme",
+        "dettaglio": "Lotti A, C, D non conformi",
+    }
+    a["meta"]["lotti_trovati"] = ["A", "H"]
+
+    b = empty_extraction(meta_docs, not_found=["economics.prezzo_base"])
+    b["economics"]["offerta_minima"] = {"value": 750, "source": {"file": "d2", "page": 2}}
+    b["giuridica"]["stato_occupazione"] = {
+        "stato": "libero",
+        "dettaglio": None,
+        "opponibilita": None,
+    }
+    b["urbanistica"]["conformita_urbanistica"] = {"stato": "conforme", "dettaglio": "Lotto H ok"}
+    b["meta"]["lotti_trovati"] = ["H", "I"]
+
+    merged = merge_extractions([a, b], meta_docs, "H")
+    assert merged["economics"]["prezzo_base"]["value"] == 1000
+    assert merged["economics"]["offerta_minima"]["value"] == 750
+    assert merged["giuridica"]["stato_occupazione"]["stato"] == "libero"
+    # Other-lot non-conforme from chunk A must not stick when lotto H is selected.
+    assert merged["urbanistica"]["conformita_urbanistica"]["stato"] == "conforme"
+    assert set(merged["meta"]["lotti_trovati"]) == {"A", "H", "I"}
+    assert "economics.offerta_minima" not in merged["meta"]["not_found"]
+    assert "economics.prezzo_base" not in merged["meta"]["not_found"]
+
+
+def test_extract_chunked_calls_complete_per_chunk(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+
+    def fake_complete(s, system, user):  # noqa: ARG001
+        calls.append(user)
+        payload = json.loads(user)
+        idx = payload.get("chunk", {}).get("index", 1)
+        out = empty_extraction([])
+        if idx == 1:
+            out["economics"]["prezzo_base"] = {
+                "value": 42,
+                "source": {"file": "d0", "page": 1},
+            }
+            out["meta"]["lotto"] = {"label": "H", "source": "user"}
+        else:
+            out["economics"]["offerta_minima"] = {
+                "value": 30,
+                "source": {"file": "d1", "page": 1},
+            }
+        out["meta"]["lotti_trovati"] = ["H"]
+        out["meta"]["not_found"] = []
+        return json.dumps(out)
+
+    monkeypatch.setattr(aste_extract, "_complete_long", fake_complete)
+    monkeypatch.setattr(aste_extract, "MAX_EXTRACT_USER_CHARS", 3_500)
+
+    s = Settings(CHAT_PROVIDER="openai", OPENAI_API_KEY="sk-test")
+    docs = [
+        ExtractDocumentIn(
+            file=f"d{i}",
+            doc_type="perizia",
+            pages=[ExtractPageIn(page=1, text=f"Lotto H page {i} " + ("y" * 900))],
+        )
+        for i in range(6)
+    ]
+    req = ExtractRequest(language="it", lotto_label="H", documents=docs)
+    out = run_extract(req, settings=s)
+
+    assert len(calls) >= 2
+    assert any('"chunk"' in c for c in calls)
+    assert out["economics"]["prezzo_base"]["value"] == 42
+    assert out["economics"]["offerta_minima"]["value"] == 30
+    assert any(w.startswith("extract_chunked:") for w in out["meta"]["warnings"])
+    assert out["meta"]["lotto"]["label"] == "H"
+    assert out["procedura"]["lotto"] == "H"

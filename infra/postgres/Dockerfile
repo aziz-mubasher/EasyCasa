@@ -1,7 +1,24 @@
-# PostGIS base + pgvector extension binaries copied from the official
-# pgvector image. Avoid apt postgresql-16-pgvector — it can replace contrib
-# libs and break pg_trgm (undefined symbol: pg_mblen_unbounded).
-FROM pgvector/pgvector:pg16 AS pgvector
-FROM postgis/postgis:16-3.4
-COPY --from=pgvector /usr/lib/postgresql/16/lib/vector.so /usr/lib/postgresql/16/lib/
-COPY --from=pgvector /usr/share/postgresql/16/extension/vector* /usr/share/postgresql/16/extension/
+# PostGIS + pgvector for amd64 and arm64 (Apple Silicon).
+#
+# Build pgvector from source so the .so matches the image arch.
+# Avoid apt postgresql-16-pgvector — it can break pg_trgm.
+#
+# Pin FROM to $TARGETPLATFORM so Docker Desktop does not reuse a cached
+# linux/amd64 postgis layer when building linux/arm64.
+FROM --platform=$TARGETPLATFORM postgis/postgis:16-3.4
+
+ARG PGVECTOR_REF=v0.8.0
+
+RUN set -eux; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    git \
+    postgresql-server-dev-16; \
+  git clone --depth 1 --branch "${PGVECTOR_REF}" https://github.com/pgvector/pgvector.git /tmp/pgvector; \
+  make -C /tmp/pgvector; \
+  make -C /tmp/pgvector install; \
+  rm -rf /tmp/pgvector; \
+  apt-get purge -y --auto-remove build-essential git postgresql-server-dev-16; \
+  rm -rf /var/lib/apt/lists/*
