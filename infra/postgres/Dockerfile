@@ -1,13 +1,11 @@
 # PostGIS + pgvector for amd64 and arm64 (Apple Silicon).
 #
-# Do NOT COPY vector.so from a second image — multi-arch COPY often yields a
-# .so that dlopen rejects with "cannot open shared object file" under Docker
-# Desktop. Build pgvector from source in this image so the binary matches
-# the PostGIS runtime arch.
+# Build pgvector from source so the .so matches the image arch.
+# Avoid apt postgresql-16-pgvector — it can break pg_trgm.
 #
-# Avoid apt postgresql-16-pgvector — it can replace contrib libs and break
-# pg_trgm (undefined symbol: pg_mblen_unbounded).
-FROM postgis/postgis:16-3.4
+# Pin FROM to $TARGETPLATFORM so Docker Desktop does not reuse a cached
+# linux/amd64 postgis layer when building linux/arm64.
+FROM --platform=$TARGETPLATFORM postgis/postgis:16-3.4
 
 ARG PGVECTOR_REF=v0.8.0
 
