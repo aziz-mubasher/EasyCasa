@@ -16,6 +16,27 @@ PERSON_NAME_HINT = re.compile(
     re.UNICODE,
 )
 
+# Field-specific doc-type precedence (EC-30). Lower index = higher priority.
+PRECEDENCE_AUCTION = ("avviso", "ordinanza", "perizia", "certificazione")
+PRECEDENCE_VALORE_STIMA = ("perizia", "avviso", "ordinanza", "certificazione")
+PRECEDENCE_OCCUPAZIONE = ("perizia", "avviso", "ordinanza", "certificazione")
+
+# Perizia sections for occupazione / valore_stima must not be starved by lot-priority pack.
+FIELD_CONTEXT_KEYWORDS = re.compile(
+    r"stato\s+occupativ|occupato|occupazione|\blibero\b|condotto\s+in\s+locazione|canone|"
+    r"valore\s+di\s+stima|stima\s+del\s+valore|valore\s+commerciale|valore\s+stima|"
+    r"ctu|consulente\s+tecnico",
+    re.IGNORECASE,
+)
+
+OCCUPAZIONE_ENUM = (
+    "libero",
+    "occupato_esecutato",
+    "occupato_con_titolo",
+    "occupato_senza_titolo",
+    "non_rilevato",
+)
+
 # gpt-4o-mini ~128k tokens; leave headroom for system prompt + JSON completion.
 # Large multi-doc dossiers (Ex7) exceed this in a single request → HTTP 400.
 MAX_EXTRACT_USER_CHARS = 90_000
@@ -39,8 +60,21 @@ Procedura:
 
 Economics:
 - economics.cauzione = {pct, base: "prezzo_base"|"prezzo_offerto", importo|null, source}
-- Prefer avviso over ordinanza for prezzo_base when they conflict (ribassi / successive vendite).
-- If both appear, set economics.prezzo_base from the avviso and add meta.prezzo_base_candidates with both sourced values.
+- Extract cauzione.importo ONLY when explicitly stated in the text. If only pct is stated, leave importo null (post-processing may derive it from prezzo_base).
+- Prefer avviso over ordinanza for prezzo_base, offerta_minima, cauzione, rilancio_minimo when they conflict (ribassi / successive vendite).
+- If both avviso and ordinanza prezzo_base appear, set economics.prezzo_base from the avviso and add meta.prezzo_base_candidates with both sourced values.
+- economics.valore_stima = CTU/perizia estimate {value, source}. Prefer perizia over avviso/ordinanza. Look for "valore di stima", "stima del valore", "valore commerciale" in the perizia.
+
+Giuridica / occupazione (per lot when lotto_label set):
+- giuridica.stato_occupazione = {stato, dettaglio, opponibilita, source:{file,page}}
+- stato MUST be one of: libero | occupato_esecutato | occupato_con_titolo | occupato_senza_titolo | non_rilevato
+- Map Italian phrasing: "stato occupativo" passages; "occupato dall'esecutato" → occupato_esecutato;
+  "libero" / "libero da persone e cose" → libero;
+  "occupato con titolo opponibile alla procedura" → occupato_con_titolo;
+  "occupato senza titolo opponibile" → occupato_senza_titolo;
+  "condotto in locazione" / canone references → occupato_con_titolo or occupato_senza_titolo per opponibilità;
+  if stato cannot be determined → non_rilevato (never guess).
+- Prefer perizia over avviso for stato_occupazione; cite source page.
 
 Immobili:
 - immobili is an ARRAY (apartment+box, or multi-unit compendio). Each may include note_valore.
@@ -89,7 +123,12 @@ def empty_extraction(meta_docs: list[dict[str, Any]], not_found: list[str] | Non
         "immobili": [],
         "giuridica": {
             "diritto_venduto": None,
-            "stato_occupazione": {"stato": None, "dettaglio": None, "opponibilita": None},
+            "stato_occupazione": {
+                "stato": None,
+                "dettaglio": None,
+                "opponibilita": None,
+                "source": None,
+            },
             "vincoli": [],
             "formalita": [],
         },
@@ -134,6 +173,7 @@ def run_extract(req: ExtractRequest, settings: Settings | None = None) -> dict[s
         raw = _complete_long(s, SYSTEM_PROMPT, user_json)
         parsed = _parse_json_object(raw)
         normalized = _normalize(parsed, meta_docs, req.lotto_label)
+        normalized = _finalize_extraction(normalized, [normalized], meta_docs)
         return scrub_person_names(normalized)
 
     chunks = split_documents_for_extract(
@@ -214,6 +254,10 @@ def page_lot_priority(text: str, lotto_label: str | None, doc_type: str) -> int:
     dt = (doc_type or "").lower()
     if dt in ("avviso", "ordinanza", "perizia", "certificazione"):
         score += 2
+    if FIELD_CONTEXT_KEYWORDS.search(text or ""):
+        score += 5
+        if dt == "perizia":
+            score += 3
     if lotto_label:
         if _lot_mention_re(lotto_label).search(text or ""):
             score += 10
@@ -356,7 +400,230 @@ def merge_extractions(
     base["schema_version"] = 2
     base["meta"]["schema_version"] = 2
     base["meta"]["documents"] = meta_docs
-    return base
+    return _finalize_extraction(base, parts, meta_docs)
+
+
+def _doc_type_rank(doc_type: str | None, precedence: tuple[str, ...]) -> int:
+    dt = (doc_type or "").lower()
+    try:
+        return precedence.index(dt)
+    except ValueError:
+        return len(precedence)
+
+
+def _source_doc_type(
+    source: Any,
+    meta_docs: list[dict[str, Any]],
+) -> str | None:
+    if not isinstance(source, dict):
+        return None
+    file_id = source.get("file")
+    if not file_id:
+        return None
+    for doc in meta_docs:
+        if doc.get("file") == file_id:
+            dtype = doc.get("doc_type")
+            return str(dtype).lower() if dtype else None
+    return None
+
+
+def _pick_by_precedence(
+    candidates: list[tuple[Any, str | None]],
+    precedence: tuple[str, ...],
+) -> Any:
+    if not candidates:
+        return None
+    best_val: Any = None
+    best_rank = len(precedence) + 1
+    for val, doc_type in candidates:
+        rank = _doc_type_rank(doc_type, precedence)
+        if rank < best_rank:
+            best_rank = rank
+            best_val = val
+    return best_val
+
+
+def _collect_sourced_candidates(
+    parts: list[dict[str, Any]],
+    field_path: str,
+    meta_docs: list[dict[str, Any]],
+) -> list[tuple[Any, str | None]]:
+    """Collect (value, doc_type) from chunk parts for economics.* sourced numbers."""
+    out: list[tuple[Any, str | None]] = []
+    for part in parts:
+        econ = part.get("economics") if isinstance(part.get("economics"), dict) else {}
+        val = econ.get(field_path.split(".")[-1] if "." in field_path else field_path)
+        if _is_empty(val) or not isinstance(val, dict):
+            continue
+        dtype = _source_doc_type(val.get("source"), meta_docs)
+        out.append((val, dtype))
+    return out
+
+
+def _collect_cauzione_candidates(
+    parts: list[dict[str, Any]],
+    meta_docs: list[dict[str, Any]],
+) -> list[tuple[Any, str | None]]:
+    out: list[tuple[Any, str | None]] = []
+    for part in parts:
+        econ = part.get("economics") if isinstance(part.get("economics"), dict) else {}
+        val = econ.get("cauzione")
+        if _is_empty(val) or not isinstance(val, dict):
+            continue
+        dtype = _source_doc_type(val.get("source"), meta_docs)
+        out.append((val, dtype))
+    return out
+
+
+def _collect_occupazione_candidates(
+    parts: list[dict[str, Any]],
+    meta_docs: list[dict[str, Any]],
+) -> list[tuple[Any, str | None]]:
+    out: list[tuple[Any, str | None]] = []
+    for part in parts:
+        giu = part.get("giuridica") if isinstance(part.get("giuridica"), dict) else {}
+        occ = giu.get("stato_occupazione") if isinstance(giu.get("stato_occupazione"), dict) else {}
+        if _is_empty(occ.get("stato")):
+            continue
+        dtype = _source_doc_type(occ.get("source"), meta_docs)
+        out.append((occ, dtype))
+    return out
+
+
+def _apply_field_precedence(
+    merged: dict[str, Any],
+    parts: list[dict[str, Any]],
+    meta_docs: list[dict[str, Any]],
+) -> None:
+    """Field-specific doc-type precedence after chunk merge (EC-30)."""
+    econ = merged.setdefault("economics", {})
+    giu = merged.setdefault("giuridica", {})
+
+    for field in ("prezzo_base", "offerta_minima", "rilancio_minimo"):
+        picked = _pick_by_precedence(
+            _collect_sourced_candidates(parts, field, meta_docs),
+            PRECEDENCE_AUCTION,
+        )
+        if not _is_empty(picked):
+            econ[field] = picked
+
+    valore = _pick_by_precedence(
+        _collect_sourced_candidates(parts, "valore_stima", meta_docs),
+        PRECEDENCE_VALORE_STIMA,
+    )
+    if not _is_empty(valore):
+        econ["valore_stima"] = valore
+
+    cauzione = _pick_by_precedence(
+        _collect_cauzione_candidates(parts, meta_docs),
+        PRECEDENCE_AUCTION,
+    )
+    if not _is_empty(cauzione):
+        econ["cauzione"] = cauzione
+
+    occupazione = _pick_by_precedence(
+        _collect_occupazione_candidates(parts, meta_docs),
+        PRECEDENCE_OCCUPAZIONE,
+    )
+    if not _is_empty(occupazione):
+        giu["stato_occupazione"] = occupazione
+
+    # Ex2 regression: explicit dual candidates override sequential merge.
+    meta = merged.get("meta") if isinstance(merged.get("meta"), dict) else {}
+    dual = meta.get("prezzo_base_candidates")
+    if isinstance(dual, list) and len(dual) >= 2:
+        avviso = next(
+            (c for c in dual if isinstance(c, dict) and _source_doc_type(c.get("source"), meta_docs) == "avviso"),
+            None,
+        )
+        ordinanza = next(
+            (c for c in dual if isinstance(c, dict) and _source_doc_type(c.get("source"), meta_docs) == "ordinanza"),
+            None,
+        )
+        if avviso and ordinanza:
+            econ["prezzo_base"] = avviso
+
+
+def derive_cauzione_importo(economics: dict[str, Any]) -> None:
+    """Compute cauzione.importo from pct × prezzo_base when only pct is stated (EC-30)."""
+    cau = economics.get("cauzione")
+    if not isinstance(cau, dict):
+        return
+    if cau.get("importo") is not None:
+        cau.pop("derived", None)
+        return
+    pct = cau.get("pct")
+    if pct is None:
+        return
+    base_kind = cau.get("base") or "prezzo_base"
+    if base_kind != "prezzo_base":
+        return
+    prezzo = economics.get("prezzo_base")
+    if not isinstance(prezzo, dict) or prezzo.get("value") is None:
+        return
+    try:
+        pct_f = float(pct)
+        prezzo_f = float(prezzo["value"])
+    except (TypeError, ValueError):
+        return
+    importo = round(prezzo_f * pct_f / 100.0, 2)
+    cau["importo"] = importo
+    cau["derived"] = True
+
+
+def _normalize_occupazione_stato(giuridica: dict[str, Any]) -> None:
+    occ = giuridica.get("stato_occupazione")
+    if not isinstance(occ, dict):
+        return
+    stato = occ.get("stato")
+    if not isinstance(stato, str) or not stato.strip():
+        return
+    blob = stato.strip().lower()
+    normalized = blob.replace(" ", "_").replace("-", "_")
+    alias = {
+        "occupato_dall_esecutato": "occupato_esecutato",
+        "occupato_dal_debitore": "occupato_esecutato",
+        "occupato_dal_esecutato": "occupato_esecutato",
+    }
+    normalized = alias.get(normalized, normalized)
+    if normalized in OCCUPAZIONE_ENUM:
+        occ["stato"] = normalized
+        return
+    det = (occ.get("dettaglio") or "").lower()
+    combined = f"{blob} {det}"
+    if "libero" in combined and "occupat" not in combined:
+        occ["stato"] = "libero"
+    elif re.search(r"occupat.*(esecutat|debitore)", combined):
+        occ["stato"] = "occupato_esecutato"
+    elif "occupat" in combined and "titolo" in combined and "opponib" in combined:
+        occ["stato"] = "occupato_con_titolo"
+    elif "occupat" in combined and "senza" in combined and "titolo" in combined:
+        occ["stato"] = "occupato_senza_titolo"
+    elif "locazione" in combined or "canone" in combined:
+        if "opponib" in combined:
+            occ["stato"] = "occupato_con_titolo"
+        else:
+            occ["stato"] = "occupato_senza_titolo"
+
+
+def _finalize_extraction(
+    merged: dict[str, Any],
+    parts: list[dict[str, Any]],
+    meta_docs: list[dict[str, Any]],
+) -> dict[str, Any]:
+    _apply_field_precedence(merged, parts, meta_docs)
+    giu = merged.get("giuridica") if isinstance(merged.get("giuridica"), dict) else {}
+    _normalize_occupazione_stato(giu)
+    econ = merged.get("economics") if isinstance(merged.get("economics"), dict) else {}
+    derive_cauzione_importo(econ)
+    # Clear economics.cauzione from not_found when derived importo fills the gap.
+    meta = merged.setdefault("meta", {})
+    cau = econ.get("cauzione") if isinstance(econ.get("cauzione"), dict) else {}
+    if cau.get("importo") is not None:
+        nf = meta.get("not_found")
+        if isinstance(nf, list):
+            meta["not_found"] = [p for p in nf if p not in ("economics.cauzione", "economics.cauzione.importo")]
+    return merged
 
 
 def _is_empty(value: Any) -> bool:

@@ -1,4 +1,4 @@
-"""EC-23 — extract contract tests (mocked LLM)."""
+"""EC-23 / EC-30 — extract contract tests (mocked LLM)."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ import pytest
 from app.schemas_aste import ExtractDocumentIn, ExtractPageIn, ExtractRequest
 from app.services import aste_extract
 from app.services.aste_extract import (
+    derive_cauzione_importo,
     empty_extraction,
     merge_extractions,
     page_lot_priority,
@@ -17,6 +18,14 @@ from app.services.aste_extract import (
     split_documents_for_extract,
 )
 from app.settings import Settings
+
+
+def _meta_docs() -> list[dict]:
+    return [
+        {"file": "avviso.pdf", "doc_type": "avviso", "pages": 2, "ocr_pages": 0},
+        {"file": "ordinanza.pdf", "doc_type": "ordinanza", "pages": 1, "ocr_pages": 0},
+        {"file": "perizia.pdf", "doc_type": "perizia", "pages": 5, "ocr_pages": 0},
+    ]
 
 
 def test_scrub_person_names_clears_giudice() -> None:
@@ -230,3 +239,179 @@ def test_extract_chunked_calls_complete_per_chunk(monkeypatch: pytest.MonkeyPatc
     assert any(w.startswith("extract_chunked:") for w in out["meta"]["warnings"])
     assert out["meta"]["lotto"]["label"] == "H"
     assert out["procedura"]["lotto"] == "H"
+
+
+def test_page_lot_priority_boosts_perizia_field_keywords() -> None:
+    perizia_stima = page_lot_priority(
+        "Il valore di stima CTU ammonta a euro 120000",
+        "4",
+        "perizia",
+    )
+    perizia_generic = page_lot_priority("Descrizione generica catastale", "4", "perizia")
+    assert perizia_stima > perizia_generic
+
+
+def test_merge_valore_stima_prefers_perizia_over_avviso() -> None:
+    meta_docs = _meta_docs()
+    avviso_part = empty_extraction(meta_docs)
+    avviso_part["economics"]["valore_stima"] = {
+        "value": 80000,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    perizia_part = empty_extraction(meta_docs)
+    perizia_part["economics"]["valore_stima"] = {
+        "value": 120000,
+        "source": {"file": "perizia.pdf", "page": 12},
+    }
+    merged = merge_extractions([avviso_part, perizia_part], meta_docs, "4")
+    assert merged["economics"]["valore_stima"]["value"] == 120000
+    assert merged["economics"]["valore_stima"]["source"]["file"] == "perizia.pdf"
+
+
+def test_merge_prezzo_base_prefers_avviso_over_ordinanza_ex2() -> None:
+    meta_docs = _meta_docs()
+    ordinanza = empty_extraction(meta_docs)
+    ordinanza["economics"]["prezzo_base"] = {
+        "value": 50000,
+        "source": {"file": "ordinanza.pdf", "page": 3},
+    }
+    avviso = empty_extraction(meta_docs)
+    avviso["economics"]["prezzo_base"] = {
+        "value": 36039,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    avviso["meta"]["prezzo_base_candidates"] = [
+        avviso["economics"]["prezzo_base"],
+        ordinanza["economics"]["prezzo_base"],
+    ]
+    merged = merge_extractions([ordinanza, avviso], meta_docs, "4")
+    assert merged["economics"]["prezzo_base"]["value"] == 36039
+    assert merged["economics"]["prezzo_base"]["source"]["file"] == "avviso.pdf"
+
+
+def test_merge_occupazione_prefers_perizia_over_avviso() -> None:
+    meta_docs = _meta_docs()
+    avviso = empty_extraction(meta_docs)
+    avviso["giuridica"]["stato_occupazione"] = {
+        "stato": "non_rilevato",
+        "dettaglio": "Non indicato in avviso",
+        "opponibilita": None,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    perizia = empty_extraction(meta_docs)
+    perizia["giuridica"]["stato_occupazione"] = {
+        "stato": "occupato_esecutato",
+        "dettaglio": "Occupato dall'esecutato",
+        "opponibilita": None,
+        "source": {"file": "perizia.pdf", "page": 8},
+    }
+    merged = merge_extractions([avviso, perizia], meta_docs, "4")
+    assert merged["giuridica"]["stato_occupazione"]["stato"] == "occupato_esecutato"
+
+
+@pytest.mark.parametrize(
+    ("raw_stato", "expected"),
+    [
+        ("libero", "libero"),
+        ("Libero da persone e cose", "libero"),
+        ("occupato_esecutato", "occupato_esecutato"),
+        ("occupato dall'esecutato", "occupato_esecutato"),
+        ("occupato_con_titolo", "occupato_con_titolo"),
+        ("occupato_senza_titolo", "occupato_senza_titolo"),
+        ("non_rilevato", "non_rilevato"),
+    ],
+)
+def test_merge_normalizes_occupazione_enum(raw_stato: str, expected: str) -> None:
+    meta_docs = _meta_docs()
+    part = empty_extraction(meta_docs)
+    part["giuridica"]["stato_occupazione"] = {
+        "stato": raw_stato,
+        "dettaglio": None,
+        "opponibilita": None,
+        "source": {"file": "perizia.pdf", "page": 2},
+    }
+    merged = merge_extractions([part], meta_docs, "4")
+    assert merged["giuridica"]["stato_occupazione"]["stato"] == expected
+
+
+def test_derive_cauzione_importo_from_pct_and_prezzo_base() -> None:
+    economics = {
+        "prezzo_base": {"value": 36039, "source": {"file": "avviso.pdf", "page": 1}},
+        "cauzione": {
+            "pct": 10,
+            "base": "prezzo_base",
+            "importo": None,
+            "source": {"file": "avviso.pdf", "page": 1},
+        },
+    }
+    derive_cauzione_importo(economics)
+    assert economics["cauzione"]["importo"] == 3603.9
+    assert economics["cauzione"]["derived"] is True
+
+
+def test_derive_cauzione_importo_skips_when_stated() -> None:
+    economics = {
+        "prezzo_base": {"value": 36039, "source": {"file": "avviso.pdf", "page": 1}},
+        "cauzione": {
+            "pct": 10,
+            "base": "prezzo_base",
+            "importo": 5000,
+            "source": {"file": "avviso.pdf", "page": 1},
+            "derived": True,
+        },
+    }
+    derive_cauzione_importo(economics)
+    assert economics["cauzione"]["importo"] == 5000
+    assert "derived" not in economics["cauzione"]
+
+
+def test_merge_derives_cauzione_importo_when_only_pct() -> None:
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    part = empty_extraction(meta_docs, not_found=["economics.cauzione.importo"])
+    part["economics"]["prezzo_base"] = {
+        "value": 100000,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    part["economics"]["cauzione"] = {
+        "pct": 10,
+        "base": "prezzo_base",
+        "importo": None,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    merged = merge_extractions([part], meta_docs, None)
+    assert merged["economics"]["cauzione"]["importo"] == 10000.0
+    assert merged["economics"]["cauzione"]["derived"] is True
+    assert "economics.cauzione.importo" not in merged["meta"]["not_found"]
+
+
+def test_split_prioritizes_perizia_stato_occupativo_pages() -> None:
+    docs = [
+        ExtractDocumentIn(
+            file="filler",
+            doc_type="avviso",
+            pages=[ExtractPageIn(page=1, text="Lotto H avviso " + ("x" * 800))],
+        ),
+        ExtractDocumentIn(
+            file="perizia_occ",
+            doc_type="perizia",
+            pages=[
+                ExtractPageIn(
+                    page=1,
+                    text="Lotto H stato occupativo: libero da persone e cose " + ("y" * 800),
+                )
+            ],
+        ),
+        *[
+            ExtractDocumentIn(
+                file=f"d{i}",
+                doc_type="perizia",
+                pages=[ExtractPageIn(page=1, text=f"Lotto H filler {i} " + ("z" * 800))],
+            )
+            for i in range(6)
+        ],
+    ]
+    chunks = split_documents_for_extract(
+        docs, language="it", lotto_label="H", max_user_chars=3_500
+    )
+    first_files = {d.file for d in chunks[0]}
+    assert "perizia_occ" in first_files

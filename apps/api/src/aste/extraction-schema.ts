@@ -37,6 +37,8 @@ export type AsteCauzione = {
   base: AsteCauzioneBase | null;
   importo: number | null;
   source: AsteSourceRef | null;
+  /** True when importo was computed from pct × prezzo_base (EC-30). */
+  derived?: boolean;
 };
 
 export type AsteGiuridica = {
@@ -45,6 +47,7 @@ export type AsteGiuridica = {
     stato: string | null;
     dettaglio: string | null;
     opponibilita: string | null;
+    source?: AsteSourceRef | null;
   };
   vincoli: Array<{ tipo: string; descrizione: string; source: AsteSourceRef }>;
   formalita: Array<{
