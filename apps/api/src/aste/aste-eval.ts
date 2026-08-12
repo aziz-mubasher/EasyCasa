@@ -144,7 +144,11 @@ async function main() {
     process.exit(2);
   }
   const abs = path.resolve(dir);
-  const files = readdirSync(abs).filter((f) => /\.(pdf|png|jpe?g)$/i.test(f));
+  // Skip macOS AppleDouble sidecars (._*) — they match *.pdf on external volumes
+  // and corrupt live uploads if included.
+  const files = readdirSync(abs).filter(
+    (f) => /\.(pdf|png|jpe?g)$/i.test(f) && !f.startsWith('._') && !f.startsWith('.DS_Store'),
+  );
   if (!files.length) {
     console.error('No PDF/JPG/PNG files found in', abs);
     process.exit(1);
@@ -266,9 +270,11 @@ async function main() {
     console.log('No extraction on final row — check failureReason / logs.');
   }
   await app.close();
+  // Nest keeps the event loop alive (timers/handles) after close in some boots.
+  process.exit(0);
 }
 
 main().catch((err) => {
-  console.error(err instanceof Error ? err.message : err);
+  console.error(err instanceof Error ? err.stack || err.message : err);
   process.exit(1);
 });
