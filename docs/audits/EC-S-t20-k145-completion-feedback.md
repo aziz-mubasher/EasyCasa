@@ -1,6 +1,6 @@
 # EC-S-T20 / K EC 1.45 — completion R&D feedback (for Claude)
 
-**As of tip on `main` after T20 seller inbox web UI + CI hygiene.** Ships **dark** (`SELLER_INBOX_ENABLED` / `NEXT_PUBLIC_SELLER_INBOX_ENABLED` remain **false**). No G-gate flips. No new SQL migrations.
+**As of tip `123a5c8` on `main` after T20 seller inbox web UI + CI hygiene.** Ships **dark** (`SELLER_INBOX_ENABLED` / `NEXT_PUBLIC_SELLER_INBOX_ENABLED` remain **false** on VPS). No G-gate flips. No new SQL migrations. Web rebuilt; `/it/seller/enquiries` → **404** (expected).
 
 ## What landed
 
