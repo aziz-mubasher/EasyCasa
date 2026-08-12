@@ -11,18 +11,22 @@ Cloud agents **cannot** run the golden-set eval (Drive PDFs stay on AZM Mac). Th
 
 ### Ground truth (not in git)
 
-Score against Drive: `EC_Aste_GoldenSet_GroundTruth_v1.md`.
+Score against Drive: `EC_Aste_GoldenSet_GroundTruth_v1.md` (**Drive-only — not in this repo**).
+
+Full field scoring vs that document is a **human step** after the eval paste table. The `aste:eval` scorer prints hit/miss rows from the pipeline JSON; it does not auto-grade against Drive GT.
 
 ### Minimum meaningful set
 
 | GT case | Example folder (AZM Drive) | Lot label | Why |
 | --- | --- | --- | --- |
-| GT-1 | Example 1 | — (unico) | baseline |
+| GT-1 | `Example 1 ` (note trailing space) | — (unico) | baseline |
 | GT-2 | Example 2 | `4` and `7` (two runs) | scanned + prezzo-base precedence |
 | GT-3 | Example 4 | — | |
 | GT-4 | Example 5 | — | |
 | GT-5 | Example 7 | `H` | negative-space trap (must **not** mark non-conform) |
-| GT-8 | Example 8 | — | scanned + occupied |
+| GT-8 | Example 8 | **`A` and `B`** (two runs; `--lotto` required) | scanned + occupied |
+
+**Path warning:** the GT-1 folder on Drive is literally `Example 1 ` (trailing space). Quote the path exactly in shell commands or scripts will miss the directory.
 
 ### Stack up (local)
 
@@ -37,6 +41,29 @@ docker compose -f infra/docker-compose.yml --env-file .env up -d db minio api ai
 # apply pending migrations if your local DB is fresh (same as usual local API boot)
 ```
 
+#### Host-stack fallback (when Docker build fails on external volumes)
+
+On AZM Mac, Docker builds from `/Volumes/Muba/...` can fail on AppleDouble sidecar files (`._*` / xattr). If compose build breaks, run the stack on the **host** instead:
+
+- Postgres 17 (local install)
+- Redis, MinIO, Meilisearch, AI service (compose or host)
+- API pointed at host Postgres
+
+The eval runner skips `._*` / `.DS_Store` uploads automatically. AppleDouble files must not be uploaded with the dossier PDFs.
+
+#### Host OCR dependencies (required for scanned perizie)
+
+Install on the Mac host (AI service OCR path):
+
+- **Tesseract** + **`ita` language data**
+- **poppler** (`pdftoppm` / pdf rendering)
+
+Failure signature in logs: `ocr_upstream` or `TesseractNotFoundError`. Without these, scanned golden-set cases fail before extract.
+
+#### MinIO free space
+
+If the boot disk is nearly full (~99%), MinIO writes fail with `XMinioStorageFull`. Relocate MinIO data off the system volume — operator precedent: `/Volumes/Muba/easycasa-minio-data` (set in compose / `.env` as appropriate).
+
 Ensure `.env` (api + ai share the token):
 
 | Var | Where | Notes |
@@ -44,17 +71,26 @@ Ensure `.env` (api + ai share the token):
 | `ASTE_ANALYSIS_ENABLED=true` | api | local eval only |
 | `AI_URL` | api | e.g. `http://localhost:8000` (compose service URL as configured) |
 | `AI_INTERNAL_TOKEN` | api **and** ai | same value |
-| `CHAT_PROVIDER=openai` | ai | required for live extract |
-| `OPENAI_API_KEY` | ai | real key |
-| `DATABASE_URL` | api | points at local compose `db` |
+| `CHAT_PROVIDER=openai` | ai | **required** for live extract (must match across api env passthrough and ai service) |
+| `OPENAI_API_KEY` | ai | real key — see **`.env` hygiene** below |
+| `DATABASE_URL` | api | points at local compose `db` (or host PG in fallback mode) |
 | MinIO / S3 creds | api | match compose MinIO |
 
+**`.env` hygiene:** an empty line like `OPENAI_API_KEY=` can win over a real value in some dotenv loaders. In `.env.example` files, secrets are commented out (`# OPENAI_API_KEY=…`); in your local `.env`, either omit the key entirely or set the real value — never leave a blank assignment that overrides a later line.
+
 ### Invoke (per dossier, and per lot when multi-lot)
+
+Compiled path (required — `tsx` breaks Nest DI via `emitDecoratorMetadata`):
+
+```bash
+pnpm --filter @easycasa/api run aste:eval
+# = pnpm run build && node -r reflect-metadata dist/aste/aste-eval.js
+```
 
 Dry checklist (lists files + blank table):
 
 ```bash
-pnpm --filter @easycasa/api aste:eval "/Volumes/Muba/Easy Casa Italia/EC Aste /Example 5"
+pnpm --filter @easycasa/api run aste:eval "/Volumes/Muba/Easy Casa Italia/EC Aste /Example 5"
 ```
 
 Live pipeline:
@@ -65,19 +101,25 @@ CHAT_PROVIDER=openai \
 OPENAI_API_KEY=<key> \
 AI_INTERNAL_TOKEN=<shared> \
 ASTE_ANALYSIS_ENABLED=true \
-pnpm --filter @easycasa/api aste:eval "/Volumes/Muba/Easy Casa Italia/EC Aste /Example 5"
+pnpm --filter @easycasa/api run aste:eval "/Volumes/Muba/Easy Casa Italia/EC Aste /Example 5"
 ```
 
 Multi-lot (post EC-23b) — **required** or extract fails with `lotto_selection_required`:
 
 ```bash
-EVAL_LIVE=1 ... pnpm --filter @easycasa/api aste:eval "/path/to/Example 2" --lotto 4
-EVAL_LIVE=1 ... pnpm --filter @easycasa/api aste:eval "/path/to/Example 2" --lotto 7
-EVAL_LIVE=1 ... pnpm --filter @easycasa/api aste:eval "/path/to/Example 7" --lotto H
-# or: EC_ASTE_EVAL_LOTTO=H EVAL_LIVE=1 pnpm --filter @easycasa/api aste:eval ...
+EVAL_LIVE=1 ... pnpm --filter @easycasa/api run aste:eval "/path/to/Example 2" --lotto 4
+EVAL_LIVE=1 ... pnpm --filter @easycasa/api run aste:eval "/path/to/Example 2" --lotto 7
+EVAL_LIVE=1 ... pnpm --filter @easycasa/api run aste:eval "/path/to/Example 7" --lotto H
+EVAL_LIVE=1 ... pnpm --filter @easycasa/api run aste:eval "/path/to/Example 8" --lotto A
+EVAL_LIVE=1 ... pnpm --filter @easycasa/api run aste:eval "/path/to/Example 8" --lotto B
+# or: EC_ASTE_EVAL_LOTTO=H EVAL_LIVE=1 pnpm --filter @easycasa/api run aste:eval ...
 ```
 
-Script: `apps/api/src/aste/aste-eval.ts` · package script `aste:eval`.
+**Rate limits:** live OpenAI calls can return **429**. Backoff is implemented in `services/ai/app/services/aste_extract.py` (6 attempts, `Retry-After` / exponential). Space live golden-set runs; do not fire the full suite back-to-back without pause.
+
+**Large dossiers:** when extract exceeds `MAX_EXTRACT_USER_CHARS` (90_000), the AI service uses chunked map-reduce. Expect `meta.warnings` entry `extract_chunked:N` (N = chunk count) on the analysis row — not a failure by itself.
+
+Script source: `apps/api/src/aste/aste-eval.ts` · package script: `aste:eval` (compiled dist path above).
 
 ### Pass bar
 
@@ -106,6 +148,8 @@ occupazione
 conformita / non-conform
 invented_values            0/n       (list any)
 ```
+
+The live `aste:eval` scorer prints a TSV table (`field`, `hit`, `value`, `page`, `notes`) with nested money values unwrapped (no `[object Object]`). Compare that output to Drive GT manually.
 
 ---
 
