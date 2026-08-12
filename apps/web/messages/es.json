@@ -284,13 +284,23 @@
     "title": "Consultas",
     "empty": "Aún no hay consultas.",
     "unread": "No leídas",
+    "unreadCount": "{count} no leídas",
     "markRead": "Marcar como leída",
+    "sortLabel": "Ordenar",
     "sortNewest": "Más recientes",
     "sortBadgeFirst": "Con insignia primero",
     "sortUnreadFirst": "No leídas primero",
     "filterBadgedOnly": "Solo con insignia",
     "filterUnreadOnly": "Solo no leídas",
+    "listingLabel": "Anuncio",
+    "allListings": "Todos los anuncios",
+    "listingOption": "{id}… ({unread, plural, =0 {ninguna sin leer} one {# sin leer} other {# sin leer}})",
+    "listingLink": "Anuncio {id}…",
     "viewingRequest": "Solicitud de visita",
+    "loading": "Cargando consultas…",
+    "error": "No se pudieron cargar las consultas.",
+    "signIn": "Inicia sesión para ver las consultas de tus anuncios.",
+    "signInCta": "Iniciar sesión",
     "badge": {
       "valid": "Insignia válida",
       "expired": "Insignia caducada",
@@ -298,7 +308,16 @@
     },
     "bandMax": "Franja hasta {amount}",
     "holderInitials": "Iniciales {initials}",
+    "expiresAt": "Válida hasta {when}",
     "receivedAt": "Recibida {when}"
+  },
+  "sellerDashboard": {
+    "navLabel": "Área del vendedor",
+    "nav": {
+      "list": "Publicar anuncio",
+      "inbox": "Consultas",
+      "viewings": "Visitas"
+    }
   },
   "listingDetail": {
     "forSale": "En venta",

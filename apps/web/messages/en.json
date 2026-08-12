@@ -284,13 +284,23 @@
     "title": "Enquiries",
     "empty": "No enquiries yet.",
     "unread": "Unread",
+    "unreadCount": "{count} unread",
     "markRead": "Mark as read",
+    "sortLabel": "Sort",
     "sortNewest": "Newest",
     "sortBadgeFirst": "Badge first",
     "sortUnreadFirst": "Unread first",
     "filterBadgedOnly": "Badged only",
     "filterUnreadOnly": "Unread only",
+    "listingLabel": "Listing",
+    "allListings": "All listings",
+    "listingOption": "{id}… ({unread, plural, =0 {no unread} one {# unread} other {# unread}})",
+    "listingLink": "Listing {id}…",
     "viewingRequest": "Viewing request",
+    "loading": "Loading enquiries…",
+    "error": "Could not load enquiries.",
+    "signIn": "Sign in to view enquiries for your listings.",
+    "signInCta": "Sign in",
     "badge": {
       "valid": "Valid badge",
       "expired": "Expired badge",
@@ -298,7 +308,16 @@
     },
     "bandMax": "Band up to {amount}",
     "holderInitials": "Initials {initials}",
+    "expiresAt": "Valid to {when}",
     "receivedAt": "Received {when}"
+  },
+  "sellerDashboard": {
+    "navLabel": "Seller area",
+    "nav": {
+      "list": "List property",
+      "inbox": "Enquiries",
+      "viewings": "Viewings"
+    }
   },
   "listingDetail": {
     "forSale": "For sale",

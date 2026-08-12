@@ -284,13 +284,23 @@
     "title": "Richieste",
     "empty": "Nessuna richiesta per ora.",
     "unread": "Non lette",
+    "unreadCount": "{count} non lette",
     "markRead": "Segna come letta",
+    "sortLabel": "Ordina",
     "sortNewest": "Più recenti",
     "sortBadgeFirst": "Con badge prima",
     "sortUnreadFirst": "Non lette prima",
     "filterBadgedOnly": "Solo con badge",
     "filterUnreadOnly": "Solo non lette",
+    "listingLabel": "Annuncio",
+    "allListings": "Tutti gli annunci",
+    "listingOption": "{id}… ({unread, plural, =0 {nessuna non letta} one {# non letta} other {# non lette}})",
+    "listingLink": "Annuncio {id}…",
     "viewingRequest": "Richiesta di visita",
+    "loading": "Caricamento richieste…",
+    "error": "Impossibile caricare le richieste.",
+    "signIn": "Accedi per vedere le richieste sui tuoi annunci.",
+    "signInCta": "Accedi",
     "badge": {
       "valid": "Badge valido",
       "expired": "Badge scaduto",
@@ -298,7 +308,16 @@
     },
     "bandMax": "Fascia fino a {amount}",
     "holderInitials": "Iniziali {initials}",
+    "expiresAt": "Valido fino al {when}",
     "receivedAt": "Ricevuta {when}"
+  },
+  "sellerDashboard": {
+    "navLabel": "Area venditore",
+    "nav": {
+      "list": "Pubblica annuncio",
+      "inbox": "Richieste",
+      "viewings": "Visite"
+    }
   },
   "listingDetail": {
     "forSale": "In vendita",

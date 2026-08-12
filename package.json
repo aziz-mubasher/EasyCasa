@@ -10,7 +10,7 @@
     "check:omi-copy": "bash scripts/check-omi-price-copy.sh",
     "check:seller-inbox-copy": "bash scripts/check-seller-inbox-copy.sh",
     "check:seller-analytics-copy": "bash scripts/check-seller-analytics-copy.sh",
-    "check:seller-hardcoded-strings": "bash scripts/check-seller-hardcoded-strings.sh",
+    "check:seller-hardcoded-strings": "node scripts/check-seller-hardcoded-strings.mjs",
     "check:counsel-copy": "pnpm check:omi-copy && pnpm check:seller-inbox-copy && pnpm check:seller-analytics-copy && pnpm check:seller-hardcoded-strings",
     "build": "pnpm --filter @easycasa/shared build && pnpm -r --if-present build",
     "format": "prettier --write .",
