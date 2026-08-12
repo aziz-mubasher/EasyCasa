@@ -22,6 +22,8 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
+import { printExtractionScoreTable } from './aste-eval-scorer';
+
 function parseArgs(argv: string[]): { dir: string | undefined; lotto: string | null } {
   let dir: string | undefined;
   let lotto: string | null = process.env.EC_ASTE_EVAL_LOTTO?.trim() || null;
@@ -40,99 +42,6 @@ function parseArgs(argv: string[]): { dir: string | undefined; lotto: string | n
     }
   }
   return { dir, lotto };
-}
-
-function scoreExtraction(extraction: Record<string, unknown>): void {
-  const economics = (extraction.economics ?? {}) as Record<string, unknown>;
-  const procedura = (extraction.procedura ?? {}) as Record<string, unknown>;
-  const giuridica = (extraction.giuridica ?? {}) as {
-    stato_occupazione?: { stato?: string | null; dettaglio?: string | null };
-  };
-  const urbanistica = (extraction.urbanistica ?? {}) as {
-    conformita_urbanistica?: { stato?: string | null; dettaglio?: string | null };
-    conformita_catastale?: { stato?: string | null; dettaglio?: string | null };
-    difformita?: unknown[];
-  };
-  const meta = (extraction.meta ?? {}) as {
-    not_found?: string[];
-    warnings?: string[];
-    lotti_trovati?: string[];
-  };
-
-  const sourced = (v: unknown): { hit: boolean; value: string; page: string } => {
-    if (v == null) return { hit: false, value: '', page: '' };
-    if (typeof v === 'object' && v !== null && 'value' in v) {
-      const o = v as { value?: unknown; source?: { page?: unknown } };
-      return {
-        hit: o.value != null,
-        value: o.value == null ? '' : String(o.value),
-        page: o.source?.page == null ? '' : String(o.source.page),
-      };
-    }
-    return { hit: true, value: String(v), page: '' };
-  };
-
-  const cauzioneScore = (): { hit: boolean; value: string; page: string } => {
-    const c = economics.cauzione;
-    if (c == null || typeof c !== 'object') return { hit: false, value: '', page: '' };
-    const o = c as {
-      importo?: number | null;
-      pct?: number | null;
-      source?: { page?: unknown };
-    };
-    const hit = o.importo != null || o.pct != null;
-    const parts = [
-      o.importo != null ? `€${o.importo}` : null,
-      o.pct != null ? `${o.pct}%` : null,
-    ].filter(Boolean);
-    return {
-      hit,
-      value: parts.join(' / '),
-      page: o.source?.page == null ? '' : String(o.source.page),
-    };
-  };
-
-  const rows: Array<[string, ReturnType<typeof sourced>, string]> = [
-    ['economics.valore_stima', sourced(economics.valore_stima), ''],
-    [
-      'economics.prezzo_base',
-      sourced(economics.prezzo_base),
-      'Ex2: avviso not ordinanza',
-    ],
-    ['economics.offerta_minima', sourced(economics.offerta_minima), ''],
-    ['economics.cauzione', cauzioneScore(), ''],
-    ['economics.rilancio_minimo', sourced(economics.rilancio_minimo), ''],
-    ['procedura.tipo', sourced(procedura.tipo), ''],
-    ['procedura.numero', sourced(procedura.numero), ''],
-    ['procedura.tribunale', sourced(procedura.tribunale), ''],
-  ];
-
-  console.log('field\thit\tvalue\tpage\tnotes');
-  for (const [field, s, notes] of rows) {
-    console.log(`${field}\t${s.hit ? 'hit' : 'miss'}\t${s.value}\t${s.page}\t${notes}`);
-  }
-
-  const occ = giuridica.stato_occupazione;
-  const occStatus = occ?.stato?.trim() || '';
-  const occDet = occ?.dettaglio?.trim() || '';
-  console.log(
-    `giuridica.stato_occupazione\t${occStatus ? 'hit' : 'miss'}\t${[occStatus, occDet].filter(Boolean).join(' — ')}\t\t`,
-  );
-
-  const cu = urbanistica.conformita_urbanistica?.stato?.trim() || '';
-  const cc = urbanistica.conformita_catastale?.stato?.trim() || '';
-  const difn = Array.isArray(urbanistica.difformita) ? urbanistica.difformita.length : 0;
-  console.log(
-    `urbanistica.conformita\t${cu || cc ? 'hit' : 'miss'}\turb=${cu}|cat=${cc}|difformita=${difn}\t\tlotto H must NOT be marked non-conform`,
-  );
-
-  console.log(`meta.lotti_trovati\thit\t${(meta.lotti_trovati ?? []).join('|')}\t\t`);
-  console.log(
-    `meta.not_found\t-\t${(meta.not_found ?? []).join(',')}\t\tmisses must land here — no invented values`,
-  );
-  if (meta.warnings?.length) {
-    console.log(`meta.warnings\t-\t${meta.warnings.join(' | ')}\t\t`);
-  }
 }
 
 async function main() {
@@ -265,7 +174,7 @@ async function main() {
   );
   const extraction = (final as { extraction?: Record<string, unknown> }).extraction;
   if (extraction) {
-    scoreExtraction(extraction);
+    printExtractionScoreTable(extraction);
   } else {
     console.log('No extraction on final row — check failureReason / logs.');
   }
