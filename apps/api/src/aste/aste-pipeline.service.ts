@@ -379,9 +379,11 @@ export class AstePipelineService {
 
 function categorizeFailure(stage: string, err: unknown): string {
   const msg = err instanceof Error ? err.message : String(err);
+  if (/^extract_upstream:\d+$/.test(msg)) return msg;
   if (/timeout/i.test(msg)) return `${stage}_timeout`;
   if (/HTTP 401|token/i.test(msg)) return `${stage}_auth`;
   if (/HTTP 5/i.test(msg)) return `${stage}_upstream`;
+  if (/HTTP 4/i.test(msg)) return `${stage}_upstream`;
   if (/embed_dim|embed_count|schema_version/i.test(msg)) return `${stage}_invalid`;
   if (/CHAT_PROVIDER|extract_unavailable/i.test(msg)) return 'extract_unavailable';
   return `${stage}_error`;

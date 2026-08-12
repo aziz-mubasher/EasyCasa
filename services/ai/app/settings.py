@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     AI_INTERNAL_TOKEN: str = ""
     # Longer HTTP timeout for LLM extract calls (seconds).
     ASTE_EXTRACT_HTTP_TIMEOUT: float = 180.0
+    # EC-29 — max estimated tokens per map extract request (incl. headroom budget).
+    ASTE_EXTRACT_MAX_REQUEST_TOKENS: int = 80_000
     # EC-24 — translate HTTP timeout (seconds).
     ASTE_TRANSLATE_HTTP_TIMEOUT: float = 120.0
     # EC-25 — chat answer HTTP timeout (seconds).

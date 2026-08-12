@@ -16,7 +16,7 @@ from ..schemas_aste import (
     TranslateResponse,
 )
 from ..services.aste_chat import run_chat
-from ..services.aste_extract import run_extract
+from ..services.aste_extract import ExtractUpstreamError, run_extract
 from ..services.aste_ocr import run_ocr
 from ..services.aste_translate import run_translate
 from ..settings import Settings, get_settings
@@ -53,6 +53,8 @@ async def aste_ocr(file: UploadFile = File(...)) -> OcrResponse:
 def aste_extract(body: ExtractRequest) -> dict:
     try:
         return run_extract(body)
+    except ExtractUpstreamError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     except ValueError as exc:

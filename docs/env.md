@@ -119,6 +119,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | CHAT_PROVIDER / CHAT_MODEL | ai | `none` = grounded templated fallback; `openai` calls an LLM. |
 | USE_LLM_NLQ | ai | Use LLM to parse NL queries instead of heuristics. |
 | OPENAI_BASE_URL / OPENAI_API_KEY | ai | OpenAI-compatible endpoint (OpenAI, Ollama, TEI, LiteLLM). |
+| ASTE_EXTRACT_MAX_REQUEST_TOKENS | ai | EC-29 — max estimated tokens per map extract request when chunking large dossiers (default `80000`). |
 | AI_RATE_LIMIT_PER_MIN | ai | Per-client cap on assistant calls. |
 | AI_URL | web (server) | Internal AI base (e.g. `http://ai:8000`). |
 | NEXT_PUBLIC_AI_URL | web (browser) | Public AI base (e.g. `https://easycasaita.com/ai`). |

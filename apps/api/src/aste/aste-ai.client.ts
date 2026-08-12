@@ -147,10 +147,24 @@ export class AsteAiClient {
         signal: ctrl.signal,
       });
       if (!res.ok) {
+        let detail = '';
+        try {
+          const body = (await res.json()) as { detail?: unknown };
+          if (typeof body.detail === 'string') {
+            detail = body.detail;
+          }
+        } catch {
+          /* non-JSON error body */
+        }
         this.log.warn(
-          JSON.stringify({ event: 'aste.ai_http_error', path, status: res.status }),
+          JSON.stringify({
+            event: 'aste.ai_http_error',
+            path,
+            status: res.status,
+            detail: detail || undefined,
+          }),
         );
-        throw new Error(`AI ${path} HTTP ${res.status}`);
+        throw new Error(detail || `AI ${path} HTTP ${res.status}`);
       }
       return (await res.json()) as unknown;
     } catch (err) {
