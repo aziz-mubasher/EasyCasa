@@ -3390,5 +3390,13 @@
     "interstitialLater": "Not now",
     "interstitialLaterNote": "You can still view your data, but selling features stay paused until you accept.",
     "errorIntegrity": "There was a problem with the privacy notice version. Our team has been notified; please try again later."
+  },
+  "sellerDashboard": {
+    "navLabel": "Seller area",
+    "nav": {
+      "list": "List property",
+      "inbox": "Enquiries",
+      "viewings": "Viewings"
+    }
   }
 }

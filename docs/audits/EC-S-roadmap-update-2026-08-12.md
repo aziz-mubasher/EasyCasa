@@ -10,7 +10,7 @@
 
 ## 1. One-line verdict
 
-**Engineering for Phases 0–4 is on `main` and on the VPS.** Almost everything is still **flag-off**. The track is blocked on **humans** (counsel, G1, G7/DEMO_MODE, Stripe Prices) — not on missing feature code — except T20 web inbox UI, T19.2, T25, and T33 Next wiring.
+**Engineering for Phases 0–4 is on `main` and on the VPS.** Almost everything is still **flag-off**. The track is blocked on **humans** (counsel, G1, G7/DEMO_MODE, Stripe Prices) — not on missing feature code — except T19.2, T25, and T33 Next wiring (T20 web inbox UI landed dark — PR #137).
 
 ---
 

@@ -3390,5 +3390,13 @@
     "interstitialLater": "Non ora",
     "interstitialLaterNote": "Potrai continuare a consultare i tuoi dati, ma le funzioni di vendita restano sospese finché non accetti.",
     "errorIntegrity": "Si è verificato un problema con la versione dell'informativa. Il nostro team è stato avvisato; riprova più tardi."
+  },
+  "sellerDashboard": {
+    "navLabel": "Area venditore",
+    "nav": {
+      "list": "Pubblica annuncio",
+      "inbox": "Richieste",
+      "viewings": "Visite"
+    }
   }
 }

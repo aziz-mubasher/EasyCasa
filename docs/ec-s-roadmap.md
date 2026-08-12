@@ -12,7 +12,7 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **T01 / T03** | ✅ Page + ledger live |
 | **T02 / T04 / T05** | ⛔ Counsel/DPO still pending — savings/mediazione **fallback**; `INFORMATIVA_SELLER_VERSION` empty on VPS |
 | **T06–T24, T26–T32** | ✅ Engineering merged (feature flags **false** on VPS) |
-| **T20 web inbox UI** | ⚠ API+i18n only — page not built |
+| **T20 web inbox UI** | ✅ Dark route `/seller/enquiries` (PR #137) + seller nav; flags false |
 | **T19.2** | ⛔ HOLD until LIA signs |
 | **T25** | ⛔ HOLD until T05 §6.5 controllership |
 | **T31** | ✅ Wizard + dashboard IT/EN/ES (rescoped item closed) |

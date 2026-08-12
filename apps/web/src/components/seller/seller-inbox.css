@@ -158,3 +158,31 @@
   color: var(--azure, #1a6faa);
   border: 1px solid var(--line, #ddd);
 }
+
+/* Seller dashboard shell nav (K EC 1.45) */
+.seller-dash-nav {
+  border-bottom: 1px solid var(--line, #ddd);
+  background: var(--paper, #faf8f5);
+  padding: 0.5rem 1rem;
+}
+
+.seller-dash-nav ul {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 48rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+}
+
+.seller-dash-nav a {
+  font-size: 0.9rem;
+  color: var(--ink, #1a1a1a);
+  text-decoration: none;
+}
+
+.seller-dash-nav a[aria-current='page'] {
+  font-weight: 600;
+  color: var(--azure, #1a6faa);
+}
