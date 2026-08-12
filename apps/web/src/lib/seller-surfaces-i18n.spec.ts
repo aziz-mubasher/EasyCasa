@@ -107,6 +107,34 @@ const ANALYTICS_KEYS = [
   'error',
 ] as const;
 
+const INBOX_KEYS = [
+  'eyebrow',
+  'title',
+  'subtitle',
+  'empty',
+  'unread',
+  'unreadTotal',
+  'markRead',
+  'sortLabel',
+  'sortNewest',
+  'sortBadgeFirst',
+  'sortUnreadFirst',
+  'filterBadgedOnly',
+  'filterUnreadOnly',
+  'viewingRequest',
+  'listingLink',
+  'signIn',
+  'signInCta',
+  'loading',
+  'unavailable',
+  'error',
+  'badge.valid',
+  'badge.expired',
+  'bandMax',
+  'holderInitials',
+  'receivedAt',
+] as const;
+
 function flatKeys(obj: unknown, prefix = ''): string[] {
   if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return prefix ? [prefix] : [];
   return Object.entries(obj as Record<string, unknown>).flatMap(([k, v]) => {
@@ -171,6 +199,27 @@ describe('seller analytics dashboard i18n (T31)', () => {
     const itKeys = flatKeys(itMessages.sellerAnalytics).sort();
     expect(flatKeys(enMessages.sellerAnalytics).sort()).toEqual(itKeys);
     expect(flatKeys(esMessages.sellerAnalytics).sort()).toEqual(itKeys);
+  });
+});
+
+describe('seller inbox i18n (T20/T31)', () => {
+  for (const [locale, messages] of Object.entries(LOCALES)) {
+    it(`${locale}: sellerInbox keys render`, () => {
+      const t = createTranslator({ locale, messages, namespace: 'sellerInbox' });
+      for (const key of INBOX_KEYS) {
+        expect(t.has(key)).toBe(true);
+      }
+      expect(t('unreadTotal', { count: 2 }).length).toBeGreaterThan(5);
+      expect(t('bandMax', { amount: '€250,000' }).length).toBeGreaterThan(5);
+      expect(t('receivedAt', { when: '12 Aug 2026' }).length).toBeGreaterThan(5);
+      expect(t('title').length).toBeGreaterThan(1);
+    });
+  }
+
+  it('EN/ES cover the same sellerInbox keys as IT', () => {
+    const itKeys = flatKeys(itMessages.sellerInbox).sort();
+    expect(flatKeys(enMessages.sellerInbox).sort()).toEqual(itKeys);
+    expect(flatKeys(esMessages.sellerInbox).sort()).toEqual(itKeys);
   });
 });
 

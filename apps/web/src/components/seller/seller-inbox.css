@@ -1,0 +1,160 @@
+/* EC-S-T20 — seller enquiry inbox panel */
+
+.si-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.si-muted {
+  color: var(--muted, #5c5c5c);
+  font-size: 0.9rem;
+}
+
+.si-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1.25rem;
+}
+
+.si-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.si-field__label {
+  color: var(--muted, #5c5c5c);
+}
+
+.si-field__select {
+  font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--line, #ddd);
+  border-radius: 0.35rem;
+  padding: 0.35rem 0.5rem;
+  background: var(--paper, #faf8f5);
+  color: var(--ink, #1a1a1a);
+}
+
+.si-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  font-size: 0.85rem;
+}
+
+.si-summary {
+  font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  color: var(--muted, #5c5c5c);
+}
+
+.si-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.si-card {
+  border: 1px solid var(--line, #ddd);
+  border-radius: var(--radius-xl2, 1rem);
+  background: var(--paper, #faf8f5);
+  padding: 1rem 1.1rem;
+}
+
+.si-card--unread {
+  border-color: var(--azure, #1a6faa);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--azure, #1a6faa) 12%, transparent);
+}
+
+.si-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.si-card__meta {
+  font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  color: var(--muted, #5c5c5c);
+}
+
+.si-card__listing {
+  font-size: 0.85rem;
+}
+
+.si-card__listing a {
+  color: var(--azure, #1a6faa);
+  text-decoration: underline;
+}
+
+.si-badge {
+  margin-top: 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--line, #ddd);
+  background: color-mix(in srgb, var(--wash, #f3f0ea) 60%, transparent);
+  padding: 0.55rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.si-badge__title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink, #1a1a1a);
+}
+
+.si-badge__band {
+  font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  color: var(--ink, #1a1a1a);
+}
+
+.si-badge__initials {
+  font-size: 0.72rem;
+  color: var(--muted, #5c5c5c);
+}
+
+.si-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--azure, #1a6faa);
+  margin-top: 0.35rem;
+}
+
+.si-btn {
+  align-self: flex-start;
+  background: var(--azure, #1a6faa);
+  color: #fff;
+  border: 0;
+  border-radius: 9999px;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.si-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.si-btn--ghost {
+  background: transparent;
+  color: var(--azure, #1a6faa);
+  border: 1px solid var(--line, #ddd);
+}
