@@ -2,10 +2,10 @@
 # pgvector image. Avoid apt postgresql-16-pgvector — it can replace contrib
 # libs and break pg_trgm (undefined symbol: pg_mblen_unbounded).
 #
-# Pin both stages to $TARGETPLATFORM so `COPY --from=pgvector` does not pull an
-# amd64 vector.so into an arm64 PostGIS image (Apple Silicon / multi-arch).
-# That mismatch surfaces as: cannot open shared object file: No such file or directory.
-ARG TARGETPLATFORM
+# Use the built-in TARGETPLATFORM on both FROM lines (do NOT redeclare
+# `ARG TARGETPLATFORM` with an empty default — that clears the automatic
+# value and breaks multi-arch COPY). Same-arch COPY avoids Apple Silicon
+# dlopen failures: "cannot open shared object file: No such file or directory".
 FROM --platform=$TARGETPLATFORM pgvector/pgvector:pg16 AS pgvector
 FROM --platform=$TARGETPLATFORM postgis/postgis:16-3.4
 COPY --from=pgvector /usr/lib/postgresql/16/lib/vector.so /usr/lib/postgresql/16/lib/
