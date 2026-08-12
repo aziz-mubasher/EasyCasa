@@ -3,22 +3,23 @@
 **33 numbered tasks.** Source of truth for promise-ledger flips.  
 Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/config/sell-privately/promises.json`.
 
-## Status delta — 2026-08-10
+## Status delta — 2026-08-12
 
 | Item | Status |
 |------|--------|
-| **T01** | ✅ Built — Next 14 + next-intl; locale URLs via Next rewrites; scoped CSS; IT+EN+ES; live on VPS |
-| **T03** | ✅ Ledger + chips shipped with T01 (`promises.json` + `StatusChip`) |
-| **T31** | ⤵ Rescoped — page i18n done; remaining = wizard + dashboard only |
-| **T02 / T04** | ⛔ Counsel review pending — T02 packet + **T04 full boundary matrix** (`docs/legal/T04_mediazione_boundary.md`). Interim: `blocks.savingsFigures.state` / `mediazioneCopy.state` = `fallback` |
-| **T05** | ⛔ Seller-data memo ready — `docs/legal/ec-s-t05-seller-data-memo.md` (gates T06/T10/T14/T25); Layer 1 + version before collection |
-| **T06–T12** | ✅ Engineering foundation live (`329e963`) — see `docs/ec-s-phase1.md`; flags off; P2 live |
-| **T13** | ✅ Soft-launch closed — publish/unpublish + sticky `first_published_at` (`0054`); see `docs/audits/EC-S-soft-launch-completion-feedback.md` |
-| **T14–T19** | ✅ Engineering live (flags off) — see `docs/ec-s-phase2.md`; completion `docs/audits/EC-S-phase2-completion-feedback.md`; pre-brief `docs/audits/EC-S-phase2-feedback.md` |
-| **T19.1 quota** | ✅ Hard 429 live (Art. 6(1)(b) — **not** LIA-gated); soft-launch feedback above |
-| **T19.2** | ⛔ HOLD until LIA signs — dup-enforce + suspend UX |
-| **Trust chips i18n** | ✅ IT/EN/ES ICU plurals (blocks P3 flip rebuild) |
-| **T33** | ⚠ Partial — canonical/hreflang/x-default/sitemap OK after verification pack; Lighthouse Perf ≥90 PASS; SEO category FAIL while `NEXT_PUBLIC_DEMO_MODE=true` |
+| **Engineering Phases 0–4** | ✅ On `main` + VPS — update report `docs/audits/EC-S-roadmap-update-2026-08-12.md`; full audit `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` |
+| **Scoreboard** | **25 DONE** · **7 PARTIAL** · **1 NOT STARTED** (T25) |
+| **T01 / T03** | ✅ Page + ledger live |
+| **T02 / T04 / T05** | ⛔ Counsel/DPO still pending — savings/mediazione **fallback**; `INFORMATIVA_SELLER_VERSION` empty on VPS |
+| **T06–T24, T26–T32** | ✅ Engineering merged (feature flags **false** on VPS) |
+| **T20 web inbox UI** | ⚠ API+i18n only — page not built |
+| **T19.2** | ⛔ HOLD until LIA signs |
+| **T25** | ⛔ HOLD until T05 §6.5 controllership |
+| **T31** | ✅ Wizard + dashboard IT/EN/ES (rescoped item closed) |
+| **T32** | ✅ Merged PR #129 — consent UI + consolidation |
+| **T33** | ⚠ HOLD — builders staged; VPS `NEXT_PUBLIC_DEMO_MODE=true` blocks SEO; do not wire until G7 |
+| **Monetisation flags (VPS)** | `LISTING_BOOST_ENABLED` / `SELLER_PREMIUM_ENABLED` / `PARTNER_DIRECTORY_ENABLED` = **false** |
+| **Next humans** | G7 unset DEMO_MODE → counsel Claims 7–8 + T02/T04/T05 → G1 enablement → T20 inbox UI → T33 |
 
 **Rule:** the page may promise only what the ledger marks `live`. Flip a flag only when its tasks pass validation gates.
 
