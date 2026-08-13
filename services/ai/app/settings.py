@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     AI_INTERNAL_TOKEN: str = ""
     # Longer HTTP timeout for LLM extract calls (seconds).
     ASTE_EXTRACT_HTTP_TIMEOUT: float = 180.0
+    # EC-33 — reject valore_stima below this fraction of prezzo_base (€/mq mis-parse hygiene).
+    VALORE_STIMA_MIN_PREZZO_BASE_RATIO: float = 0.01
     # EC-24 — translate HTTP timeout (seconds).
     ASTE_TRANSLATE_HTTP_TIMEOUT: float = 120.0
     # EC-25 — chat answer HTTP timeout (seconds).
