@@ -1,5 +1,7 @@
 # EC-S Private Seller — remaining work to close the roadmap
 
+> **Superseded for open work:** see [`docs/ec-s-post-roadmap-polish.md`](../ec-s-post-roadmap-polish.md) (PP polish + PK parked). This file remains a historical close-out of the 2026-08-13 roadmap gates.
+
 **Date:** 2026-08-13  
 **Repo tip:** Claim 1–2 + G3 on `cursor/ecs-claim12-g3-directory-6d4e`  
 **VPS:** after deploy — Claim 1–2 live on sell-privately; partner directory supports `paidPlacement`  
@@ -7,7 +9,7 @@
 
 Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 + G1 + Claims 7–8 + Stripe/premium + Claim 1–2 + G3 paid directory done.**
 
-**Parked:** VO/checklist/analytics flips · Bunny DPA · T05 §6.5/T25 · housekeeping bundle.
+**Parked / polish:** tracked in `docs/ec-s-post-roadmap-polish.md` (not here).
 
 Completion feedback: `docs/audits/EC-S-claim12-g3-completion-feedback.md` · `docs/audits/EC-S-stripe-premium-completion-feedback.md` · …
 
