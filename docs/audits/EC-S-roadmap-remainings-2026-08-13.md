@@ -47,18 +47,23 @@ Do **not** flip monetisation / VO / analytics flags before the matching gate.
 
 ---
 
-## 2. G1 — counsel T02 / T04 / T05 + informativa version
+## 2. G1 — counsel T02 / T04 / T05 + informativa version ✅ DONE
 
 | | |
 |---|---|
-| **Owner** | Counsel / DPO → then Ops |
-| **Packets** | `docs/legal/ec-s-t02-counsel-review-packet.md` · `docs/legal/T04_mediazione_boundary.md` · `docs/legal/ec-s-t05-seller-data-memo.md` |
-| **Sign-off** | Approve (or amend) Claims 1–6 + boundary matrix + Layer 1 informativa text |
-| **Ops after sign** | Set `INFORMATIVA_SELLER_VERSION` to a parseable value (`v1.0` style — see `@easycasa/shared` consent helpers). Empty string **refuses** seller onboarding accept. |
-| **Then (product)** | Consider `SELLER_ONBOARDING_ENABLED=true` and other seller feature flags per G1 checklist — still one flag at a time |
-| **Ledger** | After counsel: may flip `savingsFigures` / `mediazioneCopy` from `fallback` → `live` in `promises.json` (separate eng PR) |
+| **Sign-off** | AZM 2026-08-13 — `docs/audits/EC-S-g1-signoff-enablement.md` |
+| **Version** | `INFORMATIVA_SELLER_VERSION=v1.1` |
+| **Flags** | `SELLER_ONBOARDING_ENABLED=true` · `SELLER_INBOX_ENABLED=true` · `NEXT_PUBLIC_SELLER_INBOX_ENABLED=true` (Docker build-arg) |
+| **Verified** | `/api/seller/me` + `/api/seller/enquiries` → **401**; `/it/seller/enquiries` → **Richieste** UI; sell-privately still **fallback** copy |
+| **Feedback** | `docs/audits/EC-S-g1-completion-feedback.md` |
 
-**Current:** `INFORMATIVA_SELLER_VERSION` empty on VPS.
+**Ledger note:** `savingsFigures` / `mediazioneCopy` stay **fallback** until a dedicated flip PR.
+
+---
+
+## 2b. Dual inbox enablement ✅ DONE (with G1)
+
+Was blocked on G1; completed in the same ops pass. Docker ARG gap fixed in `d4ad149`.
 
 ---
 
@@ -86,15 +91,13 @@ Do **not** flip monetisation / VO / analytics flags before the matching gate.
 
 ---
 
-## 5. Inbox enablement (dual flag)
+## 5. Inbox enablement (dual flag) ✅ DONE
 
 | | |
 |---|---|
-| **Owner** | Ops (after **G1**) |
-| **Flags** | `SELLER_INBOX_ENABLED=true` **and** `NEXT_PUBLIC_SELLER_INBOX_ENABLED=true` |
-| **Rebuild** | **web** required for the public flag; **api** recreate/restart so API flag is read |
-| **Route** | `/{locale}/seller/enquiries` (404 while either flag false) |
-| **Do not** | Enable before G1 / informativa version is set |
+| **Flags** | Both true on VPS; web rebuilt with Docker build-arg (`d4ad149`) |
+| **Route** | `/{locale}/seller/enquiries` live (sign-in panel) |
+| **Note** | See §2 / `docs/audits/EC-S-g1-completion-feedback.md` |
 
 ---
 
