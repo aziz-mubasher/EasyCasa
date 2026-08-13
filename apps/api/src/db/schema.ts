@@ -376,6 +376,8 @@ export const partnerDirectory = pgTable('partner_directory', {
   credentials: text('credentials'),
   contact: text('contact').notNull(),
   active: boolean('active').notNull().default(true),
+  /** G3 row 9 — flat-fee presence; labelled + sorts above unpaid. */
+  paidPlacement: boolean('paid_placement').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

@@ -1,7 +1,7 @@
 {
   "$schema": "./promises.schema.json",
   "version": 1,
-  "updatedAt": "2026-08-10",
+  "updatedAt": "2026-08-13",
   "promises": {
     "P1": {
       "state": "live",
@@ -71,14 +71,14 @@
   },
   "blocks": {
     "savingsFigures": {
-      "state": "fallback",
+      "state": "live",
       "gate": "T02",
-      "note": "No public EUR figures until counsel sign-off (T02). fallback = qualitative copy only."
+      "note": "Claim 1 live 2026-08-13 (AZM) — EUR comparison + slider; see T02 packet."
     },
     "mediazioneCopy": {
-      "state": "fallback",
+      "state": "live",
       "gate": "T04",
-      "note": "'Portal, not agent' block renders counsel-template-neutral variant until T04 sign-off."
+      "note": "Claim 2 live 2026-08-13 (AZM) — portal copy; mediation-disclosure.md reconciled to portal framing."
     }
   }
 }

@@ -1,13 +1,15 @@
 # EC-S Private Seller — remaining work to close the roadmap
 
 **Date:** 2026-08-13  
-**Repo tip:** Stripe/premium enablement on `cursor/ecs-stripe-premium-6d4e` · **API:** recreated with Traefik overlay  
-**VPS verified:** demo off · informativa `v1.1` · onboarding + dual inbox **true** · boost + directory **true** · **`SELLER_PREMIUM_ENABLED=true`** · `plans.seller_premium.stripe_price_id` set · boost Price IDs set  
-**Smoke:** `/api/billing/plans` has seller_premium Price ID; `/api/seller/entitlements` **401** (not flag-404)
+**Repo tip:** Claim 1–2 + G3 on `cursor/ecs-claim12-g3-directory-6d4e`  
+**VPS:** after deploy — Claim 1–2 live on sell-privately; partner directory supports `paidPlacement`  
+**Smoke (post-deploy):** `/it/vendi-da-privato` EUR + portal copy; `/api/partners/directory` includes `paidPlacement`
 
-Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 + G1 + Claims 7–8 + Stripe/premium done.** Remaining: optional ledger Claim 1–2 `live` flip, HOLDs.
+Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 + G1 + Claims 7–8 + Stripe/premium + Claim 1–2 + G3 paid directory done.**
 
-Completion feedback: `docs/audits/EC-S-stripe-premium-completion-feedback.md` · `docs/audits/EC-S-claims-7-8-completion-feedback.md` · `docs/audits/EC-S-g1-completion-feedback.md` · `docs/audits/EC-S-t33-completion-feedback.md`.
+**Parked:** VO/checklist/analytics flips · Bunny DPA · T05 §6.5/T25 · housekeeping bundle.
+
+Completion feedback: `docs/audits/EC-S-claim12-g3-completion-feedback.md` · `docs/audits/EC-S-stripe-premium-completion-feedback.md` · …
 
 ---
 
@@ -15,10 +17,10 @@ Completion feedback: `docs/audits/EC-S-stripe-premium-completion-feedback.md` ·
 
 ```
 G7 ✅ ──► T33 ✅
-G1 ✅ (T02/T04/T05 signed · INFORMATIVA=v1.1 · onboarding + dual inbox ON)
-Claims 7–8 ✅ → LISTING_BOOST + PARTNER_DIRECTORY ON
-Stripe Prices ✅ → SELLER_PREMIUM_ENABLED ON (+ boost Price IDs)
-Optional: savingsFigures / mediazioneCopy → live (dedicated PR — decision gate)
+G1 ✅ · Claims 7–8 ✅ · Stripe/premium ✅
+Claim 1–2 ✅ → savingsFigures + mediazioneCopy live (+ mediation-disclosure portal)
+G3 row 9 ✅ → paid_placement + labelled preferential sort (tracking still stripped)
+Parked: VO / checklist / analytics / Bunny DPA / T25 / housekeeping
 ```
 
 Do **not** flip monetisation / VO / analytics flags before the matching gate.
@@ -82,6 +84,28 @@ Was blocked on G1; completed in the same ops pass. Docker ARG gap fixed in `d4ad
 
 ---
 
+## 3b. Claim 1–2 ledger → live ✅ DONE
+
+| | |
+|---|---|
+| **Sign-off** | AZM 2026-08-13 — `docs/audits/EC-S-claim12-g3-enablement.md` |
+| **Ledger** | `savingsFigures` + `mediazioneCopy` → **live** |
+| **Guard** | `enforceCounselInterim` lifted |
+| **Disclosure** | `mediation-disclosure.md` portal framing |
+| **Feedback** | `docs/audits/EC-S-claim12-g3-completion-feedback.md` |
+
+---
+
+## 3c. G3 row 9 → paid directory ✅ DONE (MVP)
+
+| | |
+|---|---|
+| **Counsel** | Flat listing fee; IT `Presenza a pagamento`; preferential sort; no UTM tracking |
+| **Eng** | Migration `0064`; `paidPlacement` on API/admin; dual web labels |
+| **Fee rail** | Admin-marked after flat fee; Stripe partner checkout optional follow-up |
+
+---
+
 ## 4. Stripe Price IDs
 
 | | |
@@ -103,14 +127,16 @@ Was blocked on G1; completed in the same ops pass. Docker ARG gap fixed in `d4ad
 
 ---
 
-## Still HOLD (not in your five — keep on the board)
+## Still HOLD / parked
 
 | Item | Why |
 |------|-----|
 | **T25** in-portal messaging | T05 §6.5 controllership |
 | **T19.2** dup-enforce + suspend UX | LIA |
-| **P3 / P6 / P7 ledger flips** | Counsel + feature flags (`VERIFIED_OWNER_*`, checklist, analytics) |
+| **VO / checklist / analytics flags** | Parked — separate human gate (`VERIFIED_OWNER_*`, checklist, analytics) |
 | **Bunny CDN (`MEDIA_CDN_ENABLED`)** | DPA / T10 partial |
+| **Housekeeping bundle** | Parked |
+| **Partner Stripe self-serve checkout** | Optional follow-up — paid placement is admin-marked flat fee for now |
 
 ---
 
@@ -118,16 +144,13 @@ Was blocked on G1; completed in the same ops pass. Docker ARG gap fixed in `d4ad
 
 | Step | Board | Who | Cursor eng? |
 |------|-------|-----|-------------|
-| A | Ops: G7 DEMO_MODE off + web rebuild | Ops | ✅ done |
-| B | Dispatch **T33** SEO wire | Eng | ✅ done |
-| C | Counsel T02/T04/T05 + Claims 7–8 | Counsel / AZM | ✅ G1 + Claims 7–8 done |
-| D | Ops: Stripe Prices → premium flag | Ops | No |
-| E | Dual inbox flags + rebuilds | Ops | ✅ done with G1 |
-| F | Optional: ledger `fallback`→`live` copy PR | Eng | Yes — after Claim 1–2 text confirmed |
-| G | Optional: VO / checklist / analytics flips | Ops+product | No code if already built |
+| A–E | G7, T33, G1, Claims 7–8, Stripe/premium, dual inbox | Ops/Eng | ✅ done |
+| F | Claim 1–2 ledger → live + mediation-disclosure | Eng | ✅ done |
+| G | G3 row 9 paid directory | Counsel + Eng | ✅ done (MVP admin-marked) |
+| H | Parked: VO / checklist / analytics / Bunny / T25 | Ops+product | No until unparked |
 
 ---
 
 ## One-liner for Claude / Bridge
 
-> EC-S eng track closed for T01–T33 (HOLD **T25/T19.2**). G1 + Claims 7–8 flags on. Next human gates: Stripe Prices → `SELLER_PREMIUM_ENABLED`; optional ledger Claim 1–2 `live` flip; HOLDs (T25, Bunny DPA, G3 row 9 monetised partners).
+> EC-S eng track closed for T01–T33 (HOLD **T25/T19.2**). Claim 1–2 live; G3 paid directory MVP shipped (`paid_placement`). Parked: VO/checklist/analytics, Bunny DPA, T25, housekeeping. Optional follow-up: partner Stripe checkout for self-serve paid placement.

@@ -1,11 +1,11 @@
 # EC-S-T04 — Portal vs. Mediazione Boundary Document
 
-**Status:** G1 SIGNED (AZM 2026-08-13) as binding internal policy for rows 1–8 + 12 — see `docs/audits/EC-S-g1-signoff-enablement.md`. Claim 2 copy stays **fallback** until mediation-disclosure tension is resolved.  
+**Status:** G1 SIGNED (AZM 2026-08-13) as binding internal policy for rows 1–8 + 12 — see `docs/audits/EC-S-g1-signoff-enablement.md`. **Claim 2 `mediazioneCopy` → live** and mediation-disclosure portal reconcile: 2026-08-13 (`docs/audits/EC-S-claim12-g3-enablement.md`). **G3 row 9** (paid partner directory): signed same date — flat listing fee + labelled preferential ordering; outbound referral tracking remains stripped.  
 **Entity:** Mundida S.r.l. / Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Purpose:** Define, feature by feature, what EasyCasa may do for private sellers without becoming a *mediatore* under L. 39/1989 (as amended by L. 57/2001; agente immobiliare requirements, REA registration, *provvigione* entitlement under artt. 1754–1755 c.c.). Once approved, this matrix is the **acceptance criterion for tasks T20–T29** and all Phase S5 work.
 
 **Paired packet:** Claim 2 in [`ec-s-t02-counsel-review-packet.md`](./ec-s-t02-counsel-review-packet.md) (copy gate `blocks.mediazioneCopy.state`).  
-**Existing tension:** [`mediation-disclosure.md`](./mediation-disclosure.md) still templates EasyCasa as a licensed mediator — counsel must reconcile with this matrix before either document is treated as final.
+**Mediation disclosure:** [`mediation-disclosure.md`](./mediation-disclosure.md) rewritten to portal framing (Claim 2 reconcile).
 
 ---
 
@@ -48,7 +48,7 @@
 | 6 | ☐ yes ☐ no ☐ amend | |
 | 7 | ☐ yes ☐ no ☐ amend | |
 | 8 | ☐ yes ☐ no ☐ amend | |
-| 9 | ☐ yes ☐ no ☐ amend | |
+| 9 | ☑ yes | G3 2026-08-13: flat listing fee for directory presence; label **Presenza a pagamento**; paid entries may sort above unpaid; **no** outbound referral/UTM conversion tracking; not *segnalatore* activity when limited to labelled directory listing |
 | 10 | ☐ yes ☐ no ☐ amend | |
 | 11 | ☐ yes ☐ no ☐ amend | |
 | 12 | ☐ yes ☐ no ☐ amend | |
@@ -63,7 +63,7 @@
 4. **Payment rule:** no fee anywhere in the product may be computed as a percentage of, or contingent on, a sale (row 8). Catalogue `legal_basis` / Stripe amounts must stay flat or otherwise success-independent unless a separate licensed *mediazione* path is opened.
 5. Any feature idea touching rows **10–12** requires a written counsel opinion before a task brief is created.
 
-Until this document is counsel-approved, Sell Privately **Claim 2** copy stays on ledger `blocks.mediazioneCopy.state = "fallback"` (see T02 packet).
+Until Claim 2 cleared, Sell Privately **Claim 2** copy stayed on ledger `blocks.mediazioneCopy.state = "fallback"`. **Cleared 2026-08-13** — see sign-off below.
 
 ---
 
@@ -81,11 +81,12 @@ Until this document is counsel-approved, Sell Privately **Claim 2** copy stays o
 
 | Field | Value |
 |-------|-------|
-| Counsel name / firm | **AZM product-owner authorisation** (2026-08-13) — `docs/audits/EC-S-g1-signoff-enablement.md` |
+| Counsel name / firm | **AZM product-owner authorisation** — G1 2026-08-13; Claim 2 + G3 row 9 2026-08-13 — `docs/audits/EC-S-claim12-g3-enablement.md` |
 | Date | 2026-08-13 |
 | Matrix approved as binding internal policy | ☑ yes (as proposed) |
-| May flip `blocks.mediazioneCopy.state` → `live` (T02 Claim 2) | ☑ **no** this step — keep fallback until mediation-disclosure tension resolved in a dedicated PR |
-| Listing-page disclaimer required (Q3) | ☐ deferred — revisit with Claim 2 flip |
+| May flip `blocks.mediazioneCopy.state` → `live` (T02 Claim 2) | ☑ **yes** — mediation-disclosure reconciled to portal framing |
+| Listing-page disclaimer required (Q3) | ☐ deferred — revisit if external counsel requires |
 | Rows 10–12 stay prohibited pending S5 opinion | ☑ confirmed |
+| Row 9 paid directory (G3) | ☑ flat fee + labelled preferential ordering; tracking params still stripped |
 
 *Not legal advice. Binding only after counsel approval and recording of the sign-off above.*

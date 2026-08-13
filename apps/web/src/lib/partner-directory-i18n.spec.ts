@@ -1,4 +1,4 @@
-/** EC-S-T28/T29 — neutral partner directory labelling present on every locale (AC). */
+/** EC-S-T28/T29 + G3 — partner directory labelling present on every locale (AC). */
 
 import { createTranslator, type AbstractIntlMessages } from 'next-intl';
 import { describe, expect, it } from 'vitest';
@@ -14,9 +14,20 @@ const LOCALES = {
   es: esMessages as unknown as AbstractIntlMessages,
 } as const;
 
-const KEYS = ['title', 'informationalLabel', 'lead', 'empty', 'credentials', 'contact'] as const;
+const KEYS = [
+  'title',
+  'informationalLabel',
+  'paidListingLabel',
+  'paidBadge',
+  'paidLead',
+  'orderingNote',
+  'lead',
+  'empty',
+  'credentials',
+  'contact',
+] as const;
 
-describe('partnerDirectory i18n (EC-S-T28/T29)', () => {
+describe('partnerDirectory i18n (EC-S-T28/T29 + G3)', () => {
   for (const [locale, messages] of Object.entries(LOCALES)) {
     it(`${locale}: all partnerDirectory keys present`, () => {
       const t = createTranslator({ locale, messages, namespace: 'partnerDirectory' });
@@ -29,11 +40,17 @@ describe('partnerDirectory i18n (EC-S-T28/T29)', () => {
     });
   }
 
-  // Italian is the master copy — AC requires this exact string on every directory surface.
-  it('IT master label matches the required text exactly', () => {
+  it('IT master informational label matches the required text exactly', () => {
     expect(itMessages.partnerDirectory.informationalLabel).toBe(
       'Elenco informativo — nessuna commissione',
     );
+  });
+
+  it('IT master paid label matches G3 counsel wording', () => {
+    expect(itMessages.partnerDirectory.paidListingLabel).toBe(
+      'Elenco con presenza a pagamento — tariffa fissa',
+    );
+    expect(itMessages.partnerDirectory.paidBadge).toBe('Presenza a pagamento');
   });
 
   it('EN/ES labelling parity: present + non-empty, distinct per locale', () => {
@@ -43,7 +60,7 @@ describe('partnerDirectory i18n (EC-S-T28/T29)', () => {
     expect(es.trim().length).toBeGreaterThan(0);
   });
 
-  it('no fee/commission or paid-ordering language leaks into the label copy', () => {
+  it('informational lead stays free of paid-placement marketing jargon', () => {
     for (const [, messages] of Object.entries(LOCALES)) {
       const ns = (messages as unknown as { partnerDirectory: Record<string, unknown> })
         .partnerDirectory;

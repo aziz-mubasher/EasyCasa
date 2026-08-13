@@ -46,11 +46,11 @@ Supporting i18n (already shipped):
 - [x] Approve v1 IT master label as-is  
 - [ ] Amend label: _______________  
 - [x] Endorsement / non-guarantee disclaimer required: ☐ yes ☑ **no** for v1 go-live — lead already covers non-intermediation / no commission; stronger “no endorsement / no guarantee” wording deferred unless external counsel later requires it  
-- [x] Monetised-variant labelling (for G3 row 9): **HOLD** — do not enable fee / preferential / tracking flows until G3 row 9 answered  
-- [x] May flip `PARTNER_DIRECTORY_ENABLED` → `true` with this label: ☑ yes — date/name: **2026-08-13 / AZM (product owner)**
+- [x] Monetised-variant labelling (for G3 row 9): **SIGNED 2026-08-13** — IT master `Elenco con presenza a pagamento — tariffa fissa` / badge `Presenza a pagamento`; preferential sort for `paid_placement`; outbound UTM/referral tracking **still stripped**  
+- [x] May flip `PARTNER_DIRECTORY_ENABLED` → `true` with this label: ☑ yes — date/name: **2026-08-13 / AZM (product owner)** (done in Claims 7–8 enablement)
 
 ---
 
 **Requested deliverable:** approved label text per claim (IT master) + placement requirements; confirmation of which may go live with which gate.
 
-**Delivered:** Claim 7 IT master `In evidenza` (+ aria / directoryNote) → `LISTING_BOOST_ENABLED=true`. Claim 8 IT master `Elenco informativo — nessuna commissione` → `PARTNER_DIRECTORY_ENABLED=true`. Monetised partner variants still gated on G3 row 9. `SELLER_PREMIUM_ENABLED` **not** in scope (needs Stripe Price IDs).
+**Delivered:** Claim 7 IT master `In evidenza` (+ aria / directoryNote) → `LISTING_BOOST_ENABLED=true`. Claim 8 IT master `Elenco informativo — nessuna commissione` → `PARTNER_DIRECTORY_ENABLED=true`. **G3 row 9** signed → paid placement column + labelled preferential ordering (admin-marked flat fee; Stripe partner checkout optional follow-up). `SELLER_PREMIUM_ENABLED` handled separately (Stripe Prices enablement).

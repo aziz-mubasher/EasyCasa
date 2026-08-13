@@ -2006,7 +2006,7 @@
         }
       ],
       "outro1": "Los precios fijos no varían con el valor del inmueble: son los mismos en una casa de 150.000 € y en una de 800.000 €. Se indican antes del pedido y no suben después.",
-      "outro2": "Donde se aplique mediación con comisión, el importe se acuerda por escrito en el mandato antes de cualquier actividad, y solo nace al concluirse el negocio."
+      "outro2": "En el recorrido vender-entre-particulares EasyCasa opera como portal: no realiza mediación inmobiliaria y no cobra comisión sobre el precio de venta. Los servicios opcionales siguen siendo a tarifa fija, indicada antes del pedido."
     },
     "checks": {
       "title": "Cinco cosas que comprobar antes de firmar",
@@ -3370,6 +3370,10 @@
   "partnerDirectory": {
     "title": "Directorio de profesionales",
     "informationalLabel": "Lista informativa — sin comisión",
+    "paidListingLabel": "Directorio con presencia de pago — tarifa fija",
+    "paidBadge": "Presencia de pago",
+    "paidLead": "Algunos profesionales pagan una tarifa fija por aparecer destacados. EasyCasa no intermedia ni cobra comisión por el encargo con el profesional.",
+    "orderingNote": "Las entradas con presencia de pago aparecen antes que las demás; el orden no implica calidad ni recomendación.",
     "lead": "Profesionales seleccionados por provincia. Contacto directo; EasyCasa no intermedia ni cobra comisión.",
     "empty": "No hay profesionales para estos filtros.",
     "categories": {

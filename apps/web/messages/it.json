@@ -2006,7 +2006,7 @@
         }
       ],
       "outro1": "I prezzi fissi non variano con il valore dell'immobile: sono gli stessi su una casa da 150.000 € e su una da 800.000 €. Sono indicati prima dell'ordine e non aumentano dopo.",
-      "outro2": "Dove dovesse applicarsi un'attività di mediazione con provvigione, l'importo è concordato per iscritto nell'incarico prima di qualsiasi attività, e matura solo alla conclusione dell'affare."
+      "outro2": "EasyCasa, sul percorso vendi-da-privato, opera come portale: non svolge mediazione e non matura una provvigione sul prezzo di vendita. I servizi opzionali restano a tariffa fissa, indicata prima dell'ordine."
     },
     "checks": {
       "title": "Cinque cose da controllare prima di firmare",
@@ -3370,6 +3370,10 @@
   "partnerDirectory": {
     "title": "Elenco professionisti",
     "informationalLabel": "Elenco informativo — nessuna commissione",
+    "paidListingLabel": "Elenco con presenza a pagamento — tariffa fissa",
+    "paidBadge": "Presenza a pagamento",
+    "paidLead": "Alcuni professionisti pagano una tariffa fissa per comparire in evidenza nell'elenco. EasyCasa non intermedia e non riceve commissioni sull'incarico con il professionista.",
+    "orderingNote": "Le voci con presenza a pagamento compaiono prima delle altre; l'ordine non riflette qualità o raccomandazione.",
     "lead": "Professionisti selezionati per provincia. Contatti diretti; EasyCasa non intermedia e non riceve commissioni.",
     "empty": "Nessun professionista in elenco per questi filtri.",
     "categories": {

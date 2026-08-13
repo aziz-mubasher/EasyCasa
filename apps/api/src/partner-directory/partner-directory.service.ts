@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import {
   isPartnerDirectoryCategory,
   sanitizePartnerContact,
@@ -22,6 +22,8 @@ export type PartnerDirectoryWrite = {
   credentials?: string | null;
   contact: string;
   active?: boolean;
+  /** G3 row 9 — flat-fee labelled placement. */
+  paidPlacement?: boolean;
 };
 
 @Injectable()
@@ -45,6 +47,7 @@ export class PartnerDirectoryService {
       credentials: input.credentials?.trim() || null,
       contact,
       active: input.active !== false,
+      paidPlacement: input.paidPlacement === true,
     };
   }
 
@@ -67,12 +70,21 @@ export class PartnerDirectoryService {
         province: partnerDirectory.province,
         credentials: partnerDirectory.credentials,
         contact: partnerDirectory.contact,
+        paidPlacement: partnerDirectory.paidPlacement,
       })
       .from(partnerDirectory)
       .where(and(...filters))
-      .orderBy(asc(partnerDirectory.province), asc(partnerDirectory.name));
+      .orderBy(
+        desc(partnerDirectory.paidPlacement),
+        asc(partnerDirectory.province),
+        asc(partnerDirectory.name),
+      );
+    const anyPaid = rows.some((r) => r.paidPlacement);
     return {
-      labelKey: 'partnerDirectory.informationalLabel',
+      /** Page banner key — paid mix uses paidListingLabel; all-free keeps informational. */
+      labelKey: anyPaid
+        ? 'partnerDirectory.paidListingLabel'
+        : 'partnerDirectory.informationalLabel',
       items: rows,
     };
   }
@@ -81,7 +93,11 @@ export class PartnerDirectoryService {
     return this.db
       .select()
       .from(partnerDirectory)
-      .orderBy(asc(partnerDirectory.province), asc(partnerDirectory.name));
+      .orderBy(
+        desc(partnerDirectory.paidPlacement),
+        asc(partnerDirectory.province),
+        asc(partnerDirectory.name),
+      );
   }
 
   async create(input: PartnerDirectoryWrite) {

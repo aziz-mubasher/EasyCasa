@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import {
-  LedgerValidationError,
   promiseEntries,
   validateLedger,
   visiblePromiseEntries,
@@ -28,38 +27,28 @@ const validBase: PromiseLedger = {
 };
 
 describe('promiseLedger.validateLedger', () => {
-  it('accepts the shipped promises.json', () => {
+  it('accepts the shipped promises.json with Claim 1–2 live', () => {
     const ledger = validateLedger(rawLedger);
-    expect(ledger.blocks.savingsFigures.state).toBe('fallback');
-    expect(ledger.blocks.mediazioneCopy.state).toBe('fallback');
+    expect(ledger.blocks.savingsFigures.state).toBe('live');
+    expect(ledger.blocks.mediazioneCopy.state).toBe('live');
     expect(ledger.blocks.savingsFigures.gate).toBe('T02');
     expect(ledger.blocks.mediazioneCopy.gate).toBe('T04');
     expect(promiseEntries(ledger)).toHaveLength(8);
   });
 
-  it('T02/T04 interim: rejects live counsel blocks', () => {
-    expect(() =>
-      validateLedger({
-        ...validBase,
-        blocks: {
-          ...validBase.blocks,
-          savingsFigures: { state: 'live', gate: 'T02' },
-        },
-      }),
-    ).toThrow(LedgerValidationError);
-
-    expect(() =>
-      validateLedger({
-        ...validBase,
-        blocks: {
-          ...validBase.blocks,
-          mediazioneCopy: { state: 'live', gate: 'T04' },
-        },
-      }),
-    ).toThrow(/mediazioneCopy/);
+  it('accepts live counsel blocks by default (interim lifted 2026-08-13)', () => {
+    const ledger = validateLedger({
+      ...validBase,
+      blocks: {
+        savingsFigures: { state: 'live', gate: 'T02' },
+        mediazioneCopy: { state: 'live', gate: 'T04' },
+      },
+    });
+    expect(ledger.blocks.savingsFigures.state).toBe('live');
+    expect(ledger.blocks.mediazioneCopy.state).toBe('live');
   });
 
-  it('allows live counsel blocks only when interim enforcement is off', () => {
+  it('still accepts live when enforceCounselInterim is explicitly false', () => {
     const ledger = validateLedger(
       {
         ...validBase,

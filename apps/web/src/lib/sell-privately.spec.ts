@@ -30,15 +30,15 @@ describe('sell-privately ledger', () => {
     }
   });
 
-  it('keeps counsel blocks on fallback until T02/T04 sign-off (interim rule)', () => {
+  it('exposes Claim 1–2 counsel blocks as live after T02/T04 flip', () => {
     const { blocks } = getSellPrivatelyLedger();
-    expect(blocks.savingsFigures.state).toBe('fallback');
-    expect(blocks.mediazioneCopy.state).toBe('fallback');
+    expect(blocks.savingsFigures.state).toBe('live');
+    expect(blocks.mediazioneCopy.state).toBe('live');
     expect(blocks.savingsFigures.gate).toBe('T02');
     expect(blocks.mediazioneCopy.gate).toBe('T04');
-    expect(showSavingsFigures()).toBe(false);
-    expect(showSavingsFallback()).toBe(true);
-    expect(showMediazioneFallback()).toBe(true);
+    expect(showSavingsFigures()).toBe(true);
+    expect(showSavingsFallback()).toBe(false);
+    expect(showMediazioneFallback()).toBe(false);
   });
 
   it('Phase 0/1 exit: P1/P2/P4/P5/P8 live; P3/P6/P7 coming', () => {

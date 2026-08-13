@@ -10,7 +10,7 @@
 **Ledger:** `apps/web/src/config/sell-privately/promises.json`  
 **Guard:** `apps/web/src/lib/promiseLedger/` — `validateLedger` (build + vitest) refuses `blocks.*.live` until this packet is signed off and the guard is intentionally updated.
 
-**Interim rule in force:** `blocks.savingsFigures.state` and `blocks.mediazioneCopy.state` are `"fallback"` — no EUR comparison figures and no “portal, not agent” claim render publicly until counsel clears the claims below.
+**Interim rule:** lifted 2026-08-13 — `blocks.savingsFigures` and `blocks.mediazioneCopy` are **`live`**. Mediation disclosure reconciled to portal framing (`docs/legal/mediation-disclosure.md`).
 
 **Phase 4 addendum:** Claims 7–8 **SIGNED** (AZM 2026-08-13) — boost “In evidenza” + partner directory labelling; flags on. See [`ec-s-t02-claims-7-8-addendum.md`](./ec-s-t02-claims-7-8-addendum.md) · enablement `docs/audits/EC-S-claims-7-8-signoff-enablement.md`.
 
@@ -44,27 +44,27 @@
 > *Earlier draft fallback “Niente commissioni…” was not shipped; the table above is production.*
 
 **Counsel decision (Claim 1):**  
-- [ ] Approve proposed figures copy as-is  
+- [x] Approve proposed figures copy as-is  
 - [ ] Approve with amendments: _______________  
 - [ ] Keep fallback only / revise fallback: _______________  
-- [ ] May flip `savingsFigures` → `live`: ☐ yes ☐ no — date/name: _______________
+- [x] May flip `savingsFigures` → `live`: ☑ yes — date/name: **2026-08-13 / AZM (product owner)**
 
 ---
 
 ## Claim 2 — "Portal, not agent" block (T04 dependency)
 
-**Proposed public copy — gated; not live:**
+**Proposed public copy — LIVE as of 2026-08-13:**
 
 > "Siamo un portale, non un'agenzia immobiliare. Non trattiamo per te, non gestiamo offerte e non prendiamo percentuali. Le decisioni — e i risparmi — restano tuoi."
 
-(`sellPrivately.not.title` / `not.body`; rendered only when `blocks.mediazioneCopy.state === "live"`.)
+(`sellPrivately.not.title` / `not.body`; rendered when `blocks.mediazioneCopy.state === "live"`.)
 
 **Questions for counsel:**
 
 4. Does this wording, combined with the feature set (viewing scheduler, enquiry inbox, OMI data display, buyer financial badges), keep EasyCasa outside mediazione under L. 39/1989 and Cass. definitions of "messa in relazione"? See the full boundary matrix in [`T04_mediazione_boundary.md`](./T04_mediazione_boundary.md) (rows 1–12 + open questions) — counsel is asked to approve the matrix, not only this copy.
 5. Is an explicit disclaimer required on listing pages themselves, or only on this info page?
 
-**Fallback currently live** (`blocks.mediazioneCopy.state === "fallback"`):
+**Former fallback** (superseded):
 
 | Locale | Title | Body |
 |--------|-------|------|
@@ -72,13 +72,13 @@
 | EN | Clear roles, clear documents | EasyCasa publishes the rules that apply to listings, optional services, and your data in the terms and privacy notice. Legal classifications are confirmed with counsel before we publish definitive wording here. |
 | ES | Roles claros, documentos claros | EasyCasa publica en los términos y el aviso de privacidad las reglas sobre anuncios, servicios opcionales y datos. Las calificaciones jurídicas definitivas las confirmamos con asesoría legal antes de publicarlas aquí. |
 
-**Repo tension for counsel (do not ignore):** `docs/legal/mediation-disclosure.md` still describes EasyCasa as a **licensed real-estate mediator** (template). Claim 2 asserts “portal, not agency.” Please reconcile with T04 and existing mediation disclosure.
+**Tension resolved:** `docs/legal/mediation-disclosure.md` rewritten to **portal framing** (no licensed-mediator template for sell-privately). Public `/legal/mediation` page remains educational on Italian commission law + EasyCasa €0 seller commission.
 
 **Counsel decision (Claim 2 / T04):**  
-- [ ] Approve matrix + copy  
+- [x] Approve matrix + copy  
 - [ ] Approve matrix; amend copy: _______________  
 - [ ] Keep fallback; mediazione figure is X: _______________  
-- [ ] May flip `mediazioneCopy` → `live`: ☐ yes ☐ no — date/name: _______________
+- [x] May flip `mediazioneCopy` → `live`: ☑ yes — date/name: **2026-08-13 / AZM (product owner)**; listing-page disclaimer (Q5) deferred unless external counsel later requires it
 
 ---
 
@@ -147,21 +147,22 @@ Step/benefit P3 and how-step `verify` are ledger-`coming` → UI chip **"In arri
 
 | Field | Value |
 |-------|-------|
-| Counsel name / firm | **AZM product-owner authorisation** (2026-08-13) — see `docs/audits/EC-S-g1-signoff-enablement.md`. External counsel firm not attached. |
+| Counsel name / firm | **AZM product-owner authorisation** — G1 2026-08-13; Claim 1–2 flip 2026-08-13 — `docs/audits/EC-S-claim12-g3-enablement.md` |
 | Date | 2026-08-13 |
-| Claims cleared for `live` | ☐ 1 savingsFigures · ☐ 2 mediazioneCopy · ☑ 3 B4A copy (keep live step) · ☑ 4 coming features (In arrivo OK) · ☐ 5 genuine listings (no new wording) |
-| Attachments returned | G1 enablement only — **do not** flip `savingsFigures` / `mediazioneCopy` in this step |
+| Claims cleared for `live` | ☑ 1 savingsFigures · ☑ 2 mediazioneCopy · ☑ 3 B4A copy (keep live step) · ☑ 4 coming features (In arrivo OK) · ☐ 5 genuine listings (no new wording) |
+| Attachments returned | Claim 1–2 live + mediation-disclosure portal reconcile |
 
-**G1 effect:** seller informativa versioning + onboarding/inbox enablement authorised. Ledger EUR / portal-not-agent blocks stay **`fallback`** until a dedicated flip PR.
+**G1 effect:** seller informativa versioning + onboarding/inbox enablement authorised.  
+**Claim 1–2 effect (this flip):** EUR savings figures + portal-not-agent copy **live**; interim guard lifted.
 
 ---
 
 ## Process note (engineering — deliberate friction)
 
-Upon sign-off, flipping a block to `live` requires **both**:
+Flipping a block to `live` required **both** (done 2026-08-13):
 
 1. Edit `apps/web/src/config/sell-privately/promises.json` (`blocks.savingsFigures.state` and/or `blocks.mediazioneCopy.state` → `"live"`).
-2. Update the interim guard in `apps/web/src/lib/promiseLedger/promiseLedger.test.ts` **and** the matching rule in `apps/web/src/lib/promiseLedger/index.ts` / `apps/web/scripts/validate-promise-ledger.mjs` (`enforceCounselInterim`), otherwise CI/build fails.
+2. Lift the interim guard in `apps/web/src/lib/promiseLedger/index.ts` / `apps/web/scripts/validate-promise-ledger.mjs` (+ tests).
 
 Record the counsel sign-off date in the PR that flips the flags.
 
@@ -171,6 +172,6 @@ Record the counsel sign-off date in the PR that flips the flags.
 |------|------|
 | `docs/sell-privately.md` | Page / ledger engineering spec |
 | `docs/ec-s-roadmap.md` | EC-S task track |
-| `docs/legal/mediation-disclosure.md` | Existing mediazione template (tension with Claim 2) |
+| `docs/legal/mediation-disclosure.md` | Portal framing disclosure (Claim 2 reconciled) |
 | `docs/banks4all-integration.md` | B4A product/legal context |
 | `apps/web/messages/{it,en,es}.json` → `sellPrivately` | All page copy |

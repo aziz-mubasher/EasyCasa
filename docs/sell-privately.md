@@ -19,7 +19,7 @@ validated by `apps/web/src/lib/promiseLedger`
 
 How-it-works step chips are **derived** in `getSellPrivatelySteps()` (list→coming; price→P2; verify→P3; buyers→P4; viewings→P5) — not separate ledger rows.
 
-**Interim (T02/T04):** both blocks must be `fallback` or `hidden` — never `live` until counsel (enforced in `validateLedger`).
+**Interim (T02/T04):** cleared 2026-08-13 — both counsel blocks are `live` (see Claim 1–2 flip + `mediation-disclosure.md` portal reconcile).
 
 ## SEO (T33)
 

@@ -13,7 +13,7 @@ import { PartnerDirectoryEnabledGuard } from './partner-directory.guard';
 import type { ApiConfig } from '../config/load';
 
 describe('partner directory privacy', () => {
-  it('strips tracking / referral query params from contact URLs', () => {
+  it('strips tracking / referral query params from contact URLs (G3 still strips)', () => {
     expect(
       sanitizePartnerContact('https://studio.example/it?utm_source=ec&ref=paid'),
     ).toBe('https://studio.example/it');

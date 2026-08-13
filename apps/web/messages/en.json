@@ -2006,7 +2006,7 @@
         }
       ],
       "outro1": "Fixed prices do not change with property value: they are the same on a €150,000 home and an €800,000 one. They are shown before you order and do not rise afterwards.",
-      "outro2": "Where mediation with a commission applies, the amount is agreed in writing in the mandate before any activity, and becomes due only when the deal concludes."
+      "outro2": "On the sell-privately path EasyCasa operates as a portal: it does not perform real-estate mediation and does not earn a commission on the sale price. Optional services stay flat-fee, shown before you order."
     },
     "checks": {
       "title": "Five things to check before you sign",
@@ -3370,6 +3370,10 @@
   "partnerDirectory": {
     "title": "Professional directory",
     "informationalLabel": "Informational list — no commission",
+    "paidListingLabel": "Directory with paid presence — flat fee",
+    "paidBadge": "Paid presence",
+    "paidLead": "Some professionals pay a flat fee for highlighted placement. EasyCasa does not intermediate and takes no commission on work you hire them for.",
+    "orderingNote": "Paid-presence entries appear before others; order does not imply quality or endorsement.",
     "lead": "Curated professionals by province. Direct contact; EasyCasa does not intermediate and takes no commission.",
     "empty": "No professionals listed for these filters.",
     "categories": {

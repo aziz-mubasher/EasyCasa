@@ -58,18 +58,8 @@ export function validateLedger(raw, opts = {}) {
     }
   }
 
-  if (enforceCounselInterim) {
-    if (raw.blocks.savingsFigures.state === 'live') {
-      throw new LedgerValidationError(
-        'blocks.savingsFigures.state must not be live until T02 counsel sign-off (interim rule)',
-      );
-    }
-    if (raw.blocks.mediazioneCopy.state === 'live') {
-      throw new LedgerValidationError(
-        'blocks.mediazioneCopy.state must not be live until T04 counsel sign-off (interim rule)',
-      );
-    }
-  }
+  // Claim 1–2 cleared 2026-08-13 — interim no longer blocks `live`.
+  void enforceCounselInterim;
 
   return raw;
 }

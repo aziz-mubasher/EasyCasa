@@ -9,10 +9,12 @@ type DirItem = {
   province: string;
   credentials: string | null;
   contact: string;
+  paidPlacement?: boolean;
 };
 
 async function loadDirectory(province?: string, category?: string): Promise<{
   items: DirItem[];
+  labelKey: string;
 } | null> {
   const qs = new URLSearchParams();
   if (province) qs.set('province', province);
@@ -21,11 +23,14 @@ async function loadDirectory(province?: string, category?: string): Promise<{
   try {
     const res = await fetch(url, { next: { revalidate: 300 } });
     if (res.status === 404) return null;
-    if (!res.ok) return { items: [] };
-    const json = (await res.json()) as { items?: DirItem[] };
-    return { items: json.items ?? [] };
+    if (!res.ok) return { items: [], labelKey: 'partnerDirectory.informationalLabel' };
+    const json = (await res.json()) as { items?: DirItem[]; labelKey?: string };
+    return {
+      items: json.items ?? [],
+      labelKey: json.labelKey ?? 'partnerDirectory.informationalLabel',
+    };
   } catch {
-    return { items: [] };
+    return { items: [], labelKey: 'partnerDirectory.informationalLabel' };
   }
 }
 
@@ -46,6 +51,12 @@ export default async function PartnerDirectoryPage({
     );
   }
 
+  const bannerKey =
+    data.labelKey === 'partnerDirectory.paidListingLabel'
+      ? 'paidListingLabel'
+      : 'informationalLabel';
+  const anyPaid = data.items.some((i) => i.paidPlacement === true);
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-12 space-y-6">
       <header className="space-y-2">
@@ -53,10 +64,15 @@ export default async function PartnerDirectoryPage({
           className="text-sm font-medium text-ink border border-line rounded-sm px-3 py-2 bg-sand/40"
           data-testid="partner-directory-label"
         >
-          {t('informationalLabel')}
+          {t(bannerKey)}
         </p>
         <h1 className="font-display text-3xl font-semibold text-ink">{t('title')}</h1>
-        <p className="text-muted text-sm max-w-2xl">{t('lead')}</p>
+        <p className="text-muted text-sm max-w-2xl">{anyPaid ? t('paidLead') : t('lead')}</p>
+        {anyPaid ? (
+          <p className="text-xs text-muted" data-testid="partner-directory-ordering-note">
+            {t('orderingNote')}
+          </p>
+        ) : null}
         <p className="text-xs text-muted">{t('proMediaNote')}</p>
       </header>
 
@@ -74,6 +90,12 @@ export default async function PartnerDirectoryPage({
                 <p className="font-medium text-ink">{item.name}</p>
                 <p className="text-xs uppercase tracking-wide text-muted">
                   {catLabel} · {item.province}
+                  {item.paidPlacement ? (
+                    <>
+                      {' · '}
+                      <span data-testid="partner-paid-badge">{t('paidBadge')}</span>
+                    </>
+                  ) : null}
                 </p>
                 {item.credentials ? (
                   <p className="text-sm text-muted">

@@ -42,6 +42,11 @@ class PartnerDto {
   @IsOptional()
   @IsBoolean()
   active?: boolean;
+
+  /** G3 row 9 — flat-fee labelled placement (preferential sort). */
+  @IsOptional()
+  @IsBoolean()
+  paidPlacement?: boolean;
 }
 
 @Controller('admin/partner-directory')
