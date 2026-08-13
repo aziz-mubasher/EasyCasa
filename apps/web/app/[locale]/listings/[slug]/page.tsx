@@ -72,13 +72,14 @@ export default async function ListingPage({
           title: listing.title,
           description: listing.description ?? undefined,
           price: listing.price ?? undefined,
-          currency: listing.currency,
           city: listing.city ?? undefined,
+          region: listing.province ?? undefined,
           sizeSqm: listing.sizeSqm ?? undefined,
+          rooms: listing.rooms ?? undefined,
           bedrooms: listing.bedrooms ?? undefined,
-          bathrooms: listing.bathrooms ?? undefined,
-          latitude: listing.latitude ?? undefined,
-          longitude: listing.longitude ?? undefined,
+          propertyType: listing.propertyType ?? undefined,
+          images: listing.photoUrls,
+          firstPublishedAt: listing.firstPublishedAt ?? undefined,
         }}
       />
 

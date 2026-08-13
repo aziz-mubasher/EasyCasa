@@ -15,15 +15,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const languages = Object.fromEntries(
     routing.locales.map((l) => [l, `https://easycasaita.com/${l}`]),
   );
-  const robots =
-    process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
-      ? { index: false, follow: false, nocache: true }
-      : undefined;
 
   return {
     title: t('meta.title'),
     description: t('meta.description'),
-    robots,
     alternates: {
       canonical: `https://easycasaita.com/${locale}`,
       languages,

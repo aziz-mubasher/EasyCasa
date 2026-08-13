@@ -25,7 +25,7 @@ const listing: ListingSeoInput = {
   firstPublishedAt: new Date('2026-05-01T09:00:00Z'),
 };
 
-describe('buildRealEstateListing (T33 HOLD)', () => {
+describe('buildRealEstateListing (T33)', () => {
   it('produces a valid RealEstateListing shape', () => {
     const o = buildRealEstateListing(listing);
     expect(o['@type']).toBe('RealEstateListing');
@@ -62,7 +62,7 @@ describe('buildRealEstateListing (T33 HOLD)', () => {
   });
 });
 
-describe('buildFaqPage (T33 HOLD)', () => {
+describe('buildFaqPage (T33)', () => {
   it('maps items to Question/Answer', () => {
     const o = buildFaqPage([{ question: 'È gratuito?', answer: 'Sì, pubblicare è gratuito.' }]);
     const main = o.mainEntity as Array<Record<string, unknown>>;
@@ -76,7 +76,7 @@ describe('buildFaqPage (T33 HOLD)', () => {
   });
 });
 
-describe('serializeJsonLd — injection safety (T33 HOLD)', () => {
+describe('serializeJsonLd — injection safety (T33)', () => {
   it('neutralises </script> in seller-authored text', () => {
     const evil = buildRealEstateListing({
       ...listing,

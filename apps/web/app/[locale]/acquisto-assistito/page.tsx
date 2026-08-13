@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { JsonLdScript } from '@/components/JsonLdScript';
 import { AcquistoAssistitoPage } from '@/components/services/AcquistoAssistitoPage';
 import { routing } from '@/i18n/routing';
 
@@ -58,10 +59,7 @@ export default async function AcquistoAssistitoRoute({ params }: Props) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLdScript data={jsonLd} />
       <AcquistoAssistitoPage />
     </>
   );

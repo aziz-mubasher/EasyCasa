@@ -33,13 +33,6 @@ export function generateStaticParams() {
 
 type Locale = (typeof routing.locales)[number];
 
-export async function generateMetadata() {
-  if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') {
-    return { robots: { index: false, follow: false, nocache: true } };
-  }
-  return {};
-}
-
 export default async function LocaleLayout({
   children,
   params,

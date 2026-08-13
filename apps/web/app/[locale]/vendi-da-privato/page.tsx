@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { JsonLdScript } from '@/components/JsonLdScript';
 import { SellPrivatelyPage } from '@/components/services/SellPrivatelyPage';
 import { routing } from '@/i18n/routing';
 import {
@@ -7,6 +8,7 @@ import {
   sellPrivatelyAbsoluteUrl,
   sellPrivatelyLanguageAlternates,
 } from '@/lib/sell-privately';
+import { buildSellPrivatelyFaqLd, buildSellPrivatelyServiceLd } from '@/lib/sell-privately-schema';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -47,59 +49,26 @@ export default async function SellPrivatelyRoute({ params }: Props) {
   const faq = t.raw('faq.items') as Array<{ q: string; a: string }>;
   const liveBenefits = getSellPrivatelyBenefits().filter((b) => b.status === 'live');
 
-  const serviceLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: t('schema.serviceName'),
+  const serviceLd = buildSellPrivatelyServiceLd({
+    pageUrl,
+    site: SITE,
+    serviceName: t('schema.serviceName'),
     description: t('meta.description'),
-    url: pageUrl,
     serviceType: t('schema.serviceType'),
-    provider: {
-      '@type': 'Organization',
-      name: 'EasyCasa',
-      legalName: 'MUNDIDA S.r.l.',
-      url: SITE,
-      taxID: 'IT04531990986',
-    },
-    areaServed: { '@type': 'Country', name: 'Italy' },
-    availableLanguage: ['it', 'en', 'es'],
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'EUR',
-      description: t('schema.offerDescription'),
-    },
-    // Only advertise live ledger capabilities in structured data.
-    additionalProperty: liveBenefits.map((b) => ({
-      '@type': 'PropertyValue',
-      name: t(`benefits.items.${b.id}.title`),
-      value: t(`benefits.items.${b.id}.body`),
+    offerDescription: t('schema.offerDescription'),
+    liveBenefits: liveBenefits.map((b) => ({
+      id: b.id,
+      title: t(`benefits.items.${b.id}.title`),
+      body: t(`benefits.items.${b.id}.body`),
     })),
-  };
+  });
 
-  const faqLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faq.map((item) => ({
-      '@type': 'Question',
-      name: item.q,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.a,
-      },
-    })),
-  };
+  const faqLd = buildSellPrivatelyFaqLd(faq);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd).replace(/</g, '\\u003c') }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd).replace(/</g, '\\u003c') }}
-      />
+      <JsonLdScript data={serviceLd} />
+      <JsonLdScript data={faqLd} />
       <SellPrivatelyPage />
     </>
   );
