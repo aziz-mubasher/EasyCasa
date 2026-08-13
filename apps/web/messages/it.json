@@ -311,6 +311,10 @@
     "receivedAt": "Ricevuta {when}"
   },
   "listingDetail": {
+    "meta": {
+      "cityFallback": "Italia",
+      "descriptionFallback": "Annuncio immobiliare a {city} su EasyCasa — proprietario verificabile, senza provvigione dal venditore."
+    },
     "forSale": "In vendita",
     "forRent": "In affitto",
     "onRequest": "su richiesta",

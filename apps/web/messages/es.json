@@ -311,6 +311,10 @@
     "receivedAt": "Recibida {when}"
   },
   "listingDetail": {
+    "meta": {
+      "cityFallback": "Italia",
+      "descriptionFallback": "Anuncio inmobiliario en {city} en EasyCasa — propietario verificable, sin comisión del vendedor."
+    },
     "forSale": "En venta",
     "forRent": "En alquiler",
     "onRequest": "a consultar",
