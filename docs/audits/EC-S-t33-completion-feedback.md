@@ -59,7 +59,7 @@
 - Right-sized as one PR after G7. Slightly larger than “wire only” because Service builder + sitemap test harness were not fully pre-staged.
 
 ### 5. BLOCKED / NEEDS A HUMAN
-- **Lighthouse SEO ≥95** on `/it`, `/it/vendi-da-privato`, one live listing — record scores (no published listing slug in sitemap sample at deploy time — confirm inventory / Meili publish if empty).
+- ~~**Lighthouse SEO ≥95**~~ — **done** 2026-08-13: home **100**, vendi-da-privato **100**, listing `demo-sc1-verified` **100** (after listing `generateMetadata` fix `1f1269b`). See `docs/audits/EC-S-t33-lighthouse-scores.md`. Inventory/Meili: **118 published** in sync (earlier empty-sitemap note was a false alarm).
 - **G1** counsel T02/T04/T05 + `INFORMATIVA_SELLER_VERSION`.
 - Claims 7–8 counsel before boost/directory flags.
 - Stripe Price IDs before premium flip.

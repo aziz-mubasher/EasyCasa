@@ -44,7 +44,7 @@ Do **not** flip seller/monetisation flags before the matching gate.
 |---|---|
 | **PR** | [#140](https://github.com/aziz-mubasher/EasyCasa/pull/140) · tip `c6e4fdc` |
 | **Shipped** | `serializeJsonLd` everywhere; FAQPage+Service on sell-privately; RealEstateListing on listings; honest sitemap; CI `check:json-ld-escape` |
-| **Residual (human)** | Lighthouse SEO ≥95 on home / vendi-da-privato / one listing — operator commands in `docs/audits/EC-S-t33-hold.md` |
+| **Residual** | Lighthouse SEO ≥95 — **done** (100 / 100 / 100). Record: `docs/audits/EC-S-t33-lighthouse-scores.md`. Listing meta fix tip `1f1269b`. |
 
 ---
 
