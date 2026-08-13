@@ -1,28 +1,22 @@
-// JSON-LD structured data for rich results. Keep values in sync with the visible page.
+import { buildListingJsonLd } from '@/lib/listing-json-ld';
+import { JsonLdScript } from './JsonLdScript';
+
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://easycasaita.com';
+
 type Listing = {
   slug: string;
   title: string;
   description?: string;
   price?: number;
-  currency?: string;
-  images?: string[];
-  region?: string;
   city?: string;
+  region?: string;
   sizeSqm?: number;
+  rooms?: number;
   bedrooms?: number;
-  bathrooms?: number;
-  latitude?: number;
-  longitude?: number;
+  propertyType?: string;
+  images?: string[];
+  firstPublishedAt?: Date;
 };
-
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://easycasaita.com';
-
-function JsonLd({ data }: { data: Record<string, unknown> }) {
-  const json = JSON.stringify(data).replace(/</g, '\\u003c');
-  return (
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
-  );
-}
 
 export function ListingStructuredData({
   listing,
@@ -31,56 +25,29 @@ export function ListingStructuredData({
   listing: Listing;
   locale?: string;
 }) {
-  const url = `${SITE}/${locale}/listings/${listing.slug}`;
-  const data: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': ['Product', 'RealEstateListing'],
-    name: listing.title,
+  const data = buildListingJsonLd({
+    slug: listing.slug,
+    locale,
+    site: SITE,
+    title: listing.title,
     description: listing.description,
-    url,
-    image: listing.images?.map((i) => (i.startsWith('http') ? i : `${SITE}${i}`)),
-    ...(listing.latitude != null && listing.longitude != null
-      ? {
-          geo: {
-            '@type': 'GeoCoordinates',
-            latitude: listing.latitude,
-            longitude: listing.longitude,
-          },
-        }
-      : {}),
-    ...(listing.city || listing.region
-      ? {
-          address: {
-            '@type': 'PostalAddress',
-            addressLocality: listing.city,
-            addressRegion: listing.region,
-            addressCountry: 'IT',
-          },
-        }
-      : {}),
-    ...(listing.price != null
-      ? {
-          offers: {
-            '@type': 'Offer',
-            price: listing.price,
-            priceCurrency: listing.currency ?? 'EUR',
-            availability: 'https://schema.org/InStock',
-            url,
-          },
-        }
-      : {}),
-    ...(listing.sizeSqm != null
-      ? { floorSize: { '@type': 'QuantitativeValue', value: listing.sizeSqm, unitCode: 'MTK' } }
-      : {}),
-    ...(listing.bedrooms != null ? { numberOfBedrooms: listing.bedrooms } : {}),
-    ...(listing.bathrooms != null ? { numberOfBathroomsTotal: listing.bathrooms } : {}),
-  };
-  return <JsonLd data={data} />;
+    price: listing.price,
+    city: listing.city,
+    province: listing.region,
+    sizeSqm: listing.sizeSqm,
+    rooms: listing.rooms,
+    bedrooms: listing.bedrooms,
+    propertyType: listing.propertyType,
+    images: listing.images?.map((i) => (i.startsWith('http') ? i : `${SITE}${i}`)),
+    firstPublishedAt: listing.firstPublishedAt,
+  });
+  if (!data) return null;
+  return <JsonLdScript data={data} />;
 }
 
 export function OrganizationStructuredData() {
   return (
-    <JsonLd
+    <JsonLdScript
       data={{
         '@context': 'https://schema.org',
         '@type': 'Organization',

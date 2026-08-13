@@ -38,6 +38,8 @@ export interface ParsedListingDetail {
   city: string | null;
   province: string | null;
   address: string | null;
+  propertyType: string | null;
+  firstPublishedAt: Date | null;
   latitude: number | null;
   longitude: number | null;
   photoUrls: string[];
@@ -128,6 +130,8 @@ export function parseListingDetail(raw: Record<string, unknown>, slugFallback: s
     city: str(raw.city),
     province: str(raw.province),
     address: str(raw.address),
+    propertyType: str(raw.propertyType),
+    firstPublishedAt: raw.firstPublishedAt ? new Date(String(raw.firstPublishedAt)) : null,
     latitude: num(raw.latitude),
     longitude: num(raw.longitude),
     photoUrls: photoUrlsFromListing(raw),

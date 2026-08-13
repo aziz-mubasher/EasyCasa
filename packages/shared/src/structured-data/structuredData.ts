@@ -1,12 +1,8 @@
 /**
- * EC-S-T33 — schema.org JSON-LD builders (@easycasa/shared candidate).
+ * EC-S-T33 — schema.org JSON-LD builders (@easycasa/shared).
  *
- * HOLD until G7 (`NEXT_PUBLIC_DEMO_MODE` unset) — pre-validated so T33 is a
- * same-day dispatch. Pure builders: DTO in, plain object out; the Next layer
- * only calls `serializeJsonLd` into a <script type="application/ld+json">.
- * Do NOT wire into apps/web StructuredData until G7.
- *
- * Rules encoded:
+ * Pure builders: DTO in, plain object out; the Next layer calls `serializeJsonLd`
+ * via `JsonLdScript` into `<script type="application/ld+json">`.
  * - Injection-safe serialization: `<`, `>`, `&` escaped as unicode so listing
  *   text (seller-authored!) can never close the script tag.
  * - Prices are the seller's asking price presented as-is — no derived,
