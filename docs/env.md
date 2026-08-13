@@ -234,7 +234,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | Variable | Used by | Notes |
 |---|---|---|
 | SELLER_INBOX_ENABLED | api | Default `false`. Seller enquiry inbox (`/seller/enquiries`) returns 404 when off. Enable after G1. |
-| NEXT_PUBLIC_SELLER_INBOX_ENABLED | web (build) | EC-S-T20 — show dark `/[locale]/seller/enquiries` inbox UI. Must match API `SELLER_INBOX_ENABLED`. Default `false` → route 404. |
+| NEXT_PUBLIC_SELLER_INBOX_ENABLED | web (build) | EC-S-T20 — show `/[locale]/seller/enquiries` inbox UI. Must match API `SELLER_INBOX_ENABLED`. Default `false` → route 404. **Must be a Docker build ARG** (`apps/web/Dockerfile` + `infra/docker-compose.yml` `web.build.args`) — runtime `.env` alone does not bake Next `NEXT_PUBLIC_*`. |
 
 ## EC-S Phase 3 — seller viewings (T21–T22)
 | Variable | Used by | Notes |
