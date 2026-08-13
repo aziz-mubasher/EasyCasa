@@ -1,10 +1,11 @@
 # G1 — Analisi Aste status report (for Claude / R&D)
 
-**Date:** 2026-08-12 (post-deploy update)  
-**Operator:** Cursor agent on AZM Mac (Drive golden PDFs) + VPS deploy  
-**Shipped:** `main` @ **`57b0f1f`** — merge of extract chunking + G1 eval runner; **deployed** to `banks4all-vps` `/opt/easycasa-ita` (`api` + `ai` Recreated). Live `/api/version` reports `gitSha: 57b0f1f`.  
+**Date:** 2026-08-13 (full golden-set re-run)  
+**Operator:** Cursor agent on AZM Mac (Drive golden PDFs)  
+**Code tip:** `main` includes extract chunking (`57b0f1f`), field-quality work (`fab9973` / EC-30), eval DX + runbook (`0ebf1be` / EC-31). Tip HEAD at report time: `1f1269b`.  
 **Flags:** `ASTE_ANALYSIS_ENABLED` remains **off** in production — G2 / `docs/runbooks/aste-enable.md` still govern public enable.  
-**Spec:** `docs/runbooks/aste-g1-gate.md`
+**Spec:** `docs/runbooks/aste-g1-gate.md`  
+**Raw logs:** `/Users/azm/easycasa-g1-results/GT*.log` (Mac operator path; not in git)
 
 ---
 
@@ -12,12 +13,12 @@
 
 | G1 piece | Status | Notes |
 | --- | --- | --- |
-| Eval pass bar | **Conscious near-miss / hardening-first** | Ex2 avviso OK; GT-5 lotto H **not** non-conform ✓ (`extract_chunked:7`); systematic misses on `occupazione` + `valore_stima` |
+| Eval pass bar | **Conscious near-miss / hardening-first** | **8/8 `ready`**. Ex2 avviso OK (36039 / 64906). GT-5 lotto H **not** non-conform ✓ (`extract_chunked:7`). Occupazione now often populated (vs prior systematic null). Remaining gaps: `urbanistica.conformita` (all miss), nested `cauzione.importo` on several lots, `valore_stima` miss on Ex2 + Ex7; GT-4 `valore_stima=84` looks wrong |
 | Counsel packet **sent** | **NOT DONE** | Docs 1–8 on disk; email send is human |
 | Waitlist read | **WAIVED** | Prod snapshot 2026-08-11: 1 lead |
-| Code on `main` + VPS | **DONE** | `57b0f1f` — chunked extract + eval DX shipped and live on AI/API containers |
+| Code on `main` | **DONE** | Chunking + EC-30/31 landed; do not re-brief Ex7 400 as primary blocker |
 
-**Call for R&D:** G1 is **not** green. Engineering transport blockers for Ex7 are **closed**. Next briefs: field quality (`occupazione`, `valore_stima`, cauzione `importo`), eval scorer unwrap, runbook truth-up, **human counsel send**. Do **not** enable analysis flags.
+**Call for R&D:** G1 is **still not green**. Pipeline transport is fine. Next briefs: urbanistica conformity extraction, cauzione nested `importo`, suspicious/stale `valore_stima` (Ex5=84), Drive GT human score, **human counsel send**. Do **not** enable analysis flags.
 
 ---
 
@@ -27,164 +28,213 @@
 
 **What G1 is:** `eval pass bar` + `counsel packet sent` + `waitlist read (met or waived)`. Counsel **answers** → **G2**. Public enable → `docs/runbooks/aste-enable.md`.
 
-**Done**
-- Live golden-set eval on Drive PDFs (host stack on Mac).
-- Waitlist **WAIVED**.
-- Counsel files 1–8 verified present (not emailed).
-- Ex7 extract size fixed via **map-reduce chunking** (~90k chars); GT-5 re-run **ready**.
-- Landed on **`main`** and **deployed** `api` + `ai` to production VPS (`57b0f1f`).
+**Done (2026-08-13 re-run)**
+- Live golden-set eval on Drive PDFs via host stack (PG17 + Redis + MinIO on `/Volumes/Muba/easycasa-minio-data` + Meili + AI). One-shell suite so AI survives mid-run.
+- All eight cases: GT-1, GT-2×2, GT-3, GT-4, GT-5 lotto H, GT-8×2 → **`status: ready`**, exit 0.
+- Waitlist still **WAIVED**.
+- Counsel files 1–8 still present (not emailed).
+- Ex7 still healthy under chunking (`extract_chunked:7`); lotto H not marked non-conform.
 
 **Not done**
 - Counsel email / `packet sent <date>`.
 - Full field scoring vs Drive `EC_Aste_GoldenSet_GroundTruth_v1.md` (not in git).
-- Closing systematic `occupazione` / `valore_stima` misses.
+- Closing systematic `urbanistica.conformita` miss + remaining economics nesting gaps.
 
 **Gate call: conscious near-miss → hardening-first** (unchanged product stance).
 
-| Pass-bar item | Result |
+| Pass-bar item | Result (2026-08-13) |
 | --- | --- |
-| Economics + page refs | Partial — many `prezzo_base` / `offerta_minima` hits; **`valore_stima` miss all ready runs** |
-| Occupazione | **Fail** — null/miss every ready run |
-| Lotto H not non-conform | **Pass (verified)** — GT-5 `dd18c297-…`, `difformita=[]` |
+| Economics + page refs | Stronger than prior run — `prezzo_base` / `offerta_minima` hit on all ready cases; `valore_stima` hit GT-1/3/4/8A/8B; **miss Ex2×2 + Ex7**; GT-4 stima **84** is likely a bad extract |
+| Occupazione | **Improved** — hit with values on all 8 (`libero` / `non_rilevato` / `occupato_senza_titolo`). Detail/opponibilita often still `not_found` |
+| Lotto H not non-conform | **Pass** — GT-5 `b6f41726-…`, scorer `difformita=0`, warning `extract_chunked:7` |
 | Ex2 avviso (€36.039 / €64.906) | **Pass** — 36039 / 64906 |
-| Zero invented values | Appears clean on sampled rows; not fully GT-scored |
+| Urbanistica | **Fail** — `urbanistica.conformita` miss on every case (scorer line is noisy / shared with H note) |
+| Zero invented values | `meta.not_found` populated where miss; not fully GT-scored vs Drive |
 
 ### 2. WHERE THE BRIEF / RUNBOOK FAILED YOU
 
 | Type | Detail |
 | --- | --- |
-| Wrong env | Compose assumed; Docker on `/Volumes/Muba` breaks AppleDouble — used host PG17 + Redis/MinIO/Meili/AI |
-| Wrong invoke | `tsx` breaks Nest DI → must `build` + `node -r reflect-metadata dist/aste/aste-eval.js` (now in `aste:eval` script) |
-| Missing deps | Host **tesseract + ita** for OCR |
-| Ex8 lot | Runbook `—` but pipeline needs `--lotto A\|B` |
+| Wrong env | Compose assumed; Docker on `/Volumes/Muba` breaks AppleDouble — host PG17 + Redis/MinIO/Meili/AI |
+| AI lifecycle | Background AI shells get reaped → suite must start AI **in the same long-lived shell** (or mid-suite restart). First parallel suite aborted `AI_DOWN` exit 2 |
+| Wrong invoke | `tsx` breaks Nest DI → `aste:eval` must `build` + `node -r reflect-metadata` (shipped) |
+| Missing deps | Host **tesseract + ita** (+ poppler) for OCR |
+| Ex8 lot | Pipeline needs `--lotto A\|B` (runbook now documents this) |
 | Rate limits | Live **429** without backoff burns suite — backoff shipped |
-| Disk | System ~99% full → MinIO on `/Volumes/Muba/easycasa-minio-data` |
+| Disk | System volume often ~full → MinIO on `/Volumes/Muba/easycasa-minio-data` |
 | GT file | Ground truth Drive-only, not in git |
-| Scorer | Nested money → `[object Object]` in eval paste |
+| Scorer | Nested money used to print `[object Object]` — improved but urbanistica / cauzione paste still thin |
 | ~~Ex7 400~~ | **Resolved** by chunking; do not re-brief as primary blocker |
 
 ### 3. REPO REALITY CHECK
 
 - **Stack:** pnpm monorepo · Nest API · FastAPI AI (Py 3.12) · Next web · shared · migration · infra (Traefik on VPS).
-- **Prod tip:** `57b0f1f` — `api` + `ai` force-recreated 2026-08-12; health OK.
-- **Aste on main (flags off):** EC-21…EC-26 (+23b, EC-28). Extract: `services/ai/app/services/aste_extract.py` with **429 backoff** + **chunked map-reduce** (`MAX_EXTRACT_USER_CHARS = 90_000`, lot-priority pack, deterministic merge, other-lot `non_conforme` drop when `lotto_label` set). Warning: `extract_chunked:N`.
-- **Eval:** `apps/api` `aste:eval` compiled path; AppleDouble skip; `process.exit(0)` after Nest close.
+- **Aste extract:** `services/ai/app/services/aste_extract.py` — OpenAI **429 backoff** + **map-reduce chunking** (`MAX_EXTRACT_USER_CHARS ≈ 90k`, lot-priority pack, merge, drop other-lot `non_conforme` when `lotto_label` set). Warning: `extract_chunked:N`.
+- **Eval:** `apps/api` `pnpm --filter @easycasa/api run aste:eval` → compiled path; AppleDouble skip; `process.exit(0)` after Nest close.
+- **Later landings on main:** EC-30 field quality / cauzione derive; EC-31 eval DX + G1 runbook truth-up — tonight’s re-run reflects that tip.
 - **Enable:** still G2 — do not flip `ASTE_ANALYSIS_ENABLED` from this report.
 
 ### 4. EFFORT SIGNAL
 
-Much larger than “run compose checklist.” Infra + tooling dominated calendar time; golden-set wall-clock hours; chunking unblocked GT-5. Remaining miss is **field quality**, not extract transport.
+Tonight’s re-run ~50 minutes wall-clock (90s cooldown between cases) once AI stayed alive. Infra/tooling debt already paid earlier; remaining work is **field quality + human gate steps**, not extract transport.
 
-Split next briefs: (A) occupazione + valore_stima, (B) eval DX / runbook, (C) counsel send. Do **not** re-open Ex7 size as the main task unless chunking regresses in prod.
+Split next briefs: (A) urbanistica + cauzione `importo`, (B) audit `valore_stima` false positives (Ex5=84) / Ex2+Ex7 misses, (C) counsel send + Drive GT score. Do **not** re-open Ex7 size unless chunking regresses.
 
 ### 5. BLOCKED / NEEDS A HUMAN
 
 1. **Counsel email** — package 1–8 + LGL-1; requested response date; paste `packet sent <date>`.  
 2. **Drive GT scoring** — human with `EC_Aste_GoldenSet_GroundTruth_v1.md`.  
 3. **Mac disk hygiene** — keep MinIO off full system volume.  
-4. **Product call** — confirm near-miss → hardening-first vs hard-fail until occupazione/valore_stima green.  
-5. ~~Commit / deploy~~ — **done** (`57b0f1f` on `main` + VPS).
+4. **Product call** — confirm near-miss → hardening-first vs hard-fail until urbanistica/cauzione green.  
+5. ~~Chunking / deploy / eval runner~~ — already on `main`.
 
 ### 6. NEXT TASK SHOULD ACCOUNT FOR
 
-1. Chunking **shipped and deployed** — GT-5 verified; don’t re-spec Ex7 400 unless regression.  
-2. Hardening: `occupazione`, `valore_stima`, cauzione nested `importo`.  
-3. Eval scorer unwrap `{value|importo}` + page.  
-4. Runbook: compiled eval, tesseract, Ex8 lots, host-stack note, MinIO free space, `extract_chunked:N`.  
+1. Chunking **shipped** — GT-5 verified again 2026-08-13; don’t re-spec Ex7 400 unless regression.  
+2. Hardening priority shift: **`urbanistica.conformita`**, nested **`cauzione.importo`**, **`valore_stima`** quality (miss Ex2/Ex7; bogus Ex5=84). Occupazione is no longer the #1 systematic null.  
+3. Eval scorer: keep unwrapping `{value|importo}` + page; quiet the shared “lotto H” note on non-H cases.  
+4. Operator recipe: host stack + **same-shell AI** + MinIO on external volume + `Example 1 ` trailing space.  
 5. Consistent `.env` (no empty `OPENAI_API_KEY=` winning loaders).  
-6. Do **not** brief public enable / payments as G1-green.  
-7. Disk path: `Example 1 ` has trailing space.
+6. Do **not** brief public enable / payments as G1-green.
 
 ---
 
-## Eval paste tables (pipeline / DB)
+## Eval paste tables (2026-08-13 suite)
 
 ```
 ## GT-1 / Example 1 / lotto unico
-analysisId: 5bf241f2-cd2e-4646-b139-3fa15deef73f
+analysisId: 9aeb85f7-d902-4ada-8318-39d90dc63b87
 status: ready
-economics.valore_stima    miss
-economics.prezzo_base     hit        52250.4        1
-economics.offerta_minima   hit        39187.8
-economics.cauzione        hit        5225.04 / 10%  1
-occupazione               miss
+economics.valore_stima       hit   58056       p17
+economics.prezzo_base        hit   52250.4
+economics.offerta_minima     hit   39187.8
+economics.cauzione           hit   5225.04 / 10%  p2
+economics.rilancio_minimo    hit   5000
+giuridica.stato_occupazione  hit   libero
+urbanistica.conformita       miss
 
 ## GT-2 / Example 2 / lotto 4
-analysisId: 638adb7b-bd99-4e7b-aedd-8b6e8c97aa32
+analysisId: dd7c67a4-a53e-430a-868a-2dcc47f9c1e8
 status: ready
-economics.prezzo_base     hit        36039          1      avviso ✓
-economics.offerta_minima   hit        27029          1
-occupazione               miss
+meta.warnings: extract_chunked:2
+economics.valore_stima       miss  (not_found)
+economics.prezzo_base        hit   36039       p1   avviso ✓
+economics.offerta_minima     hit   27029       p1
+economics.cauzione           hit   10%         p5   (importo thin)
+economics.rilancio_minimo    hit   1000        p1
+giuridica.stato_occupazione  hit   non_rilevato
+urbanistica.conformita       miss
 
 ## GT-2 / Example 2 / lotto 7
-analysisId: ce93e40a-d9ce-4dca-b576-3e29c7d96e3d
+analysisId: 4f87dddf-fc97-454d-b42a-0f52a0103591
 status: ready
-economics.prezzo_base     hit        64906          2      avviso ✓
-economics.offerta_minima   hit        48680          2
-occupazione               miss
+meta.warnings: extract_chunked:2
+economics.valore_stima       miss  (not_found)
+economics.prezzo_base        hit   64906       p1   avviso ✓
+economics.offerta_minima     hit   48680       p1
+economics.cauzione           miss              p4
+economics.rilancio_minimo    hit   1500        p1
+giuridica.stato_occupazione  hit   non_rilevato
+urbanistica.conformita       miss
 
 ## GT-3 / Example 4 / unico
-analysisId: 17d3bd78-431f-484d-a257-14b9ef535c88
+analysisId: 12d918a6-2719-46ff-9fc4-e2cf81d9f7a7
 status: ready
-economics.prezzo_base     hit        242776         2
-economics.offerta_minima   hit        182082
-economics.cauzione        hit        24277.6 / 10%  2
-occupazione               miss
+economics.valore_stima       hit   242776      p14
+economics.prezzo_base        hit   242776      p2
+economics.offerta_minima     hit   182082      p2
+economics.cauzione           hit   24277 / 10% p2
+economics.rilancio_minimo    hit   10000       p2
+giuridica.stato_occupazione  hit   occupato_senza_titolo — occupato illegittimamente da autovetture
+urbanistica.conformita       miss
 
 ## GT-4 / Example 5 / lotto 001
-analysisId: f8687357-dadb-4ad6-a89c-e2587a0a5a38
+analysisId: 559e6566-897a-4f58-8eed-c27009bb253d
 status: ready
-economics.prezzo_base     hit        156000         1
-economics.offerta_minima   hit        117000         1
-economics.cauzione        hit        31200 / 20%    1
-occupazione               miss
+meta.warnings: extract_chunked:2
+economics.valore_stima       hit   84          p16   ⚠ likely wrong
+economics.prezzo_base        hit   156000      p1
+economics.offerta_minima     hit   117000      p1
+economics.cauzione           hit   31200 (derived) / 20%  p1
+economics.rilancio_minimo    hit   2000        p1
+giuridica.stato_occupazione  hit   occupato_senza_titolo — allestita ad uso abitativo, non autorizzato
+urbanistica.conformita       miss
 
 ## GT-5 / Example 7 / lotto H
-analysisId: dd18c297-a6e1-4d95-9bd8-60f68205d1e8
+analysisId: b6f41726-dd2a-426c-82a2-003ffa33f801
 status: ready
 meta.warnings: extract_chunked:7
-economics.prezzo_base     hit        100355.25
-economics.offerta_minima   hit        75266.44
-economics.cauzione        miss       pct=10, importo null
-economics.valore_stima    miss
-occupazione               miss
-urbanistica               pass       NOT non-conform ✓
+economics.valore_stima       miss
+economics.prezzo_base        hit   100355.25   p4
+economics.offerta_minima     hit   75266.44    p4
+economics.cauzione           miss              p6
+economics.rilancio_minimo    hit   3100        p4
+giuridica.stato_occupazione  hit   libero
+urbanistica.conformita       miss  (NOT non-conform ✓ — difformita=0)
 
 ## GT-8 / Example 8 / lotto A
-analysisId: f03a84bf-6783-4376-8c12-4d8c6d91b4be
+analysisId: 1cea007c-49f4-46d0-bab6-fc4cb3bf8980
 status: ready
-economics.prezzo_base     hit        130000
-occupazione               miss
+meta.warnings: extract_chunked:2
+economics.valore_stima       hit   130466.02   p25
+economics.prezzo_base        hit   130000      p1
+economics.offerta_minima     hit   97500       p1
+economics.cauzione           miss              p1
+economics.rilancio_minimo    hit   1000        p1
+giuridica.stato_occupazione  hit   occupato_senza_titolo
+urbanistica.conformita       miss
 
 ## GT-8 / Example 8 / lotto B
-analysisId: e5873551-dafb-4bb7-b3b4-c9448f841d9b
+analysisId: 8582aa49-8ce1-4fad-9e9d-9ef9df510095
 status: ready
-economics.prezzo_base     hit        130000
-economics.rilancio_minimo  hit        1000
-occupazione               miss
+meta.warnings: extract_chunked:2
+economics.valore_stima       hit   130466.02   p25
+economics.prezzo_base        hit   130000      p1
+economics.offerta_minima     hit   97500       p1
+economics.cauzione           miss              p26
+economics.rilancio_minimo    hit   1000        p1
+giuridica.stato_occupazione  hit   non_rilevato
+urbanistica.conformita       miss
 ```
+
+### Delta vs prior G1 paste (2026-08-12)
+
+| Area | Before | After (2026-08-13) |
+| --- | --- | --- |
+| Pipeline ready | 8/8 after chunking | 8/8 again |
+| Occupazione | systematic miss/null | **hit on all 8** with enum/text |
+| valore_stima | miss all ready | hit 5/8; miss Ex2×2 + Ex7; Ex5=84 suspect |
+| Urbanistica | thin / H-focused | **systematic conformita miss** still |
+| Cauzione | mixed | still miss nested importo on Ex2-7, Ex7, Ex8 A/B |
 
 ### G1 paste stub
 
 ```
 packet sent: NOT YET
 waitlist: WAIVED — 1 lead (2026-08-11)
-eval: near-miss / hardening-first — Ex2 avviso OK; GT-5 ready extract_chunked:7 lotto H not non-conform OK; occupazione+valore_stima systematic miss
-shipped: main 57b0f1f deployed api+ai (chunked extract live on VPS); flags still off
+eval: near-miss / hardening-first — 8/8 ready 2026-08-13; Ex2 avviso OK; GT-5 extract_chunked:7 lotto H not non-conform OK; occupazione improved; urbanistica.conformita + cauzione.importo + valore_stima quality remain
+shipped: main has chunking+EC-30/31; flags still off
 ```
 
 ---
 
-## Shipped deltas (now on main / VPS)
+## Operator recipe used (host stack)
 
-| Change | Why |
-| --- | --- |
-| `aste_extract.py` ~90k map-reduce + other-lot non-conforme drop | Unblocked GT-5 / Ex7 OpenAI 400 |
-| `aste_extract.py` 429 backoff | Live suite rate limits |
-| `apps/api` `aste:eval` → build + `reflect-metadata` | Nest DI under eval |
-| `aste-eval.ts` AppleDouble skip + `process.exit(0)` | Corrupt uploads / hung suite |
-| `docs/audits/G1-aste-status-rnd-feedback.md` | This report |
+```bash
+BASE="/Volumes/Muba/Easy Casa Italia/EC Aste "
+# AI must live in the same shell as the suite (or restart mid-suite).
+# Env overrides: EVAL_LIVE=1 ASTE_ANALYSIS_ENABLED=true ALLOW_PROVIDER_STUBS=true
+# AI_URL / S3_ENDPOINT / MEILI_URL / REDIS_URL / DATABASE_URL / AI_INTERNAL_TOKEN
+pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 1 "
+pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 2" --lotto 4
+pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 2" --lotto 7
+pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 4"
+pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 5"
+pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 7" --lotto H
+pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 8" --lotto A
+pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 8" --lotto B
+```
 
 ---
 
-*End of G1 status report for R&D (post-deploy).*
+*End of G1 status report for R&D (2026-08-13 re-run).*
