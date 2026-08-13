@@ -1,8 +1,13 @@
 # G1 — Analisi Aste status report (for Claude / R&D)
 
+> **SUPERSEDED for extract-next / hardening briefs (2026-08-13 evening).**  
+> EC-29→33 are **merged + deployed** (tip ≥ `fe1e0c7`). Canonical ledger + human remaining list:  
+> **`docs/audits/aste-g1-hardening-roadmap-ec29-33.md`**.  
+> Keep the paste tables below as the **pre–EC-32/33** baseline only. Do **not** re-brief urbanistica / cauzione / valore_stima extract from §4–§6 below.
+
 **Date:** 2026-08-13 (full golden-set re-run)  
 **Operator:** Cursor agent on AZM Mac (Drive golden PDFs)  
-**Code tip:** `main` includes extract chunking (`57b0f1f`), field-quality work (`fab9973` / EC-30), eval DX + runbook (`0ebf1be` / EC-31). Tip HEAD at report time: `1f1269b`.  
+**Code tip (at re-run):** `1f1269b` — chunking + EC-30/31. **Post-hardening tip:** ≥ `fe1e0c7` (EC-33).  
 **Flags:** `ASTE_ANALYSIS_ENABLED` remains **off** in production — G2 / `docs/runbooks/aste-enable.md` still govern public enable.  
 **Spec:** `docs/runbooks/aste-g1-gate.md`  
 **Raw logs:** `/Users/azm/easycasa-g1-results/GT*.log` (Mac operator path; not in git)
@@ -13,12 +18,12 @@
 
 | G1 piece | Status | Notes |
 | --- | --- | --- |
-| Eval pass bar | **Conscious near-miss / hardening-first** | **8/8 `ready`**. Ex2 avviso OK (36039 / 64906). GT-5 lotto H **not** non-conform ✓ (`extract_chunked:7`). Occupazione now often populated (vs prior systematic null). Remaining gaps: `urbanistica.conformita` (all miss), nested `cauzione.importo` on several lots, `valore_stima` miss on Ex2 + Ex7; GT-4 `valore_stima=84` looks wrong |
+| Eval pass bar | **Conscious near-miss / hardening-first** | Pre-hardening paste: **8/8 `ready`**. Ex2 avviso OK. GT-5 lotto H not non-conform. Occupazione hit 8/8. Urbanistica / cauzione / stima gaps → **fixed in EC-32/33; await live re-run on tip ≥ `fe1e0c7`** |
 | Counsel packet **sent** | **NOT DONE** | Docs 1–8 on disk; email send is human |
 | Waitlist read | **WAIVED** | Prod snapshot 2026-08-11: 1 lead |
-| Code on `main` | **DONE** | Chunking + EC-30/31 landed; do not re-brief Ex7 400 as primary blocker |
+| Code on `main` | **DONE (extract set)** | EC-29→33 merged; do not re-brief Ex7 400 or extract field work unless re-run regresses |
 
-**Call for R&D:** G1 is **still not green**. Pipeline transport is fine. Next briefs: urbanistica conformity extraction, cauzione nested `importo`, suspicious/stale `valore_stima` (Ex5=84), Drive GT human score, **human counsel send**. Do **not** enable analysis flags.
+**Call for R&D:** G1 is **still not green**. Extract-quality set is complete. Remaining: **live 8/8 verify**, Drive GT score, **human counsel send**, product call. Do **not** enable analysis flags.
 
 ---
 
