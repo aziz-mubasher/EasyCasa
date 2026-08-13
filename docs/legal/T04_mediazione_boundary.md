@@ -1,6 +1,6 @@
 # EC-S-T04 — Portal vs. Mediazione Boundary Document
 
-**Status:** TEMPLATE FOR COUNSEL REVIEW — becomes binding internal policy only after counsel approval.  
+**Status:** G1 SIGNED (AZM 2026-08-13) as binding internal policy for rows 1–8 + 12 — see `docs/audits/EC-S-g1-signoff-enablement.md`. Claim 2 copy stays **fallback** until mediation-disclosure tension is resolved.  
 **Entity:** Mundida S.r.l. / Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Purpose:** Define, feature by feature, what EasyCasa may do for private sellers without becoming a *mediatore* under L. 39/1989 (as amended by L. 57/2001; agente immobiliare requirements, REA registration, *provvigione* entitlement under artt. 1754–1755 c.c.). Once approved, this matrix is the **acceptance criterion for tasks T20–T29** and all Phase S5 work.
 
@@ -81,11 +81,11 @@ Until this document is counsel-approved, Sell Privately **Claim 2** copy stays o
 
 | Field | Value |
 |-------|-------|
-| Counsel name / firm | |
-| Date | |
-| Matrix approved as binding internal policy | ☐ yes ☐ yes with amendments attached |
-| May flip `blocks.mediazioneCopy.state` → `live` (T02 Claim 2) | ☐ yes ☐ no |
-| Listing-page disclaimer required (Q3) | ☐ yes ☐ no — text: _______________ |
-| Rows 10–12 stay prohibited pending S5 opinion | ☐ confirmed |
+| Counsel name / firm | **AZM product-owner authorisation** (2026-08-13) — `docs/audits/EC-S-g1-signoff-enablement.md` |
+| Date | 2026-08-13 |
+| Matrix approved as binding internal policy | ☑ yes (as proposed) |
+| May flip `blocks.mediazioneCopy.state` → `live` (T02 Claim 2) | ☑ **no** this step — keep fallback until mediation-disclosure tension resolved in a dedicated PR |
+| Listing-page disclaimer required (Q3) | ☐ deferred — revisit with Claim 2 flip |
+| Rows 10–12 stay prohibited pending S5 opinion | ☑ confirmed |
 
 *Not legal advice. Binding only after counsel approval and recording of the sign-off above.*

@@ -1,6 +1,6 @@
 # EC-S-T02 — Counsel Review Packet: "Vendi da privato" Page Claims
 
-**Status:** TEMPLATE FOR COUNSEL REVIEW — nothing herein is final legal text.  
+**Status:** G1 SIGNED (AZM 2026-08-13) for seller enablement — see `docs/audits/EC-S-g1-signoff-enablement.md`. EUR / portal-not-agent blocks remain **fallback** until a dedicated flip PR.  
 **Requesting entity:** Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Page under review:** `/{locale}/vendi-da-privato`  
 - IT: https://easycasaita.com/it/vendi-da-privato  
@@ -147,10 +147,12 @@ Step/benefit P3 and how-step `verify` are ledger-`coming` → UI chip **"In arri
 
 | Field | Value |
 |-------|-------|
-| Counsel name / firm | |
-| Date | |
-| Claims cleared for `live` | ☐ 1 savingsFigures · ☐ 2 mediazioneCopy · ☐ 3 B4A copy · ☐ 4 coming features · ☐ 5 genuine listings |
-| Attachments returned | |
+| Counsel name / firm | **AZM product-owner authorisation** (2026-08-13) — see `docs/audits/EC-S-g1-signoff-enablement.md`. External counsel firm not attached. |
+| Date | 2026-08-13 |
+| Claims cleared for `live` | ☐ 1 savingsFigures · ☐ 2 mediazioneCopy · ☑ 3 B4A copy (keep live step) · ☑ 4 coming features (In arrivo OK) · ☐ 5 genuine listings (no new wording) |
+| Attachments returned | G1 enablement only — **do not** flip `savingsFigures` / `mediazioneCopy` in this step |
+
+**G1 effect:** seller informativa versioning + onboarding/inbox enablement authorised. Ledger EUR / portal-not-agent blocks stay **`fallback`** until a dedicated flip PR.
 
 ---
 

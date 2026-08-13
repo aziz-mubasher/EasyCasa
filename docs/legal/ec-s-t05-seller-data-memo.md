@@ -1,6 +1,6 @@
 # EC-S-T05 — Seller-Side Data Protection Memo + Informativa Extension
 
-**Status:** TEMPLATE FOR COUNSEL/DPO REVIEW — extends the existing GDPR counsel packet; **not final**.  
+**Status:** G1 SIGNED (AZM 2026-08-13) — Layer 1 may ship; version `v1.1`. §6.5/T25 and Bunny DPA remain open. See `docs/audits/EC-S-g1-signoff-enablement.md`.  
 **Entity:** Mundida S.r.l. / Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Lesson applied:** informativa valid and versioned **before** collection begins (Contatta precedent). No seller-side field ships before this memo's informativa section is approved and versioned in the consent ledger (**T30**).
 
@@ -94,13 +94,13 @@ Sections to add to [`privacy-policy.md`](./privacy-policy.md) (and live `/legal/
 
 This extension **increments the policy version**; acceptance/consent records must link to that version id in the consent ledger (**T30**). Re-consent is not required for pure 6(1)(b) processing, but the **acceptance timestamp against version must be stored**.
 
-**Proposed next version id after approval:** `v1.1-seller` (counsel may rename).
+**Proposed next version id after approval:** `v1.1` (parseable `major.minor`; earlier draft `v1.1-seller` rejected by consent grammar).
 
 | Field | Value |
 |-------|-------|
-| Layer 1 approved | ☐ yes · ☐ amend attached |
-| Layer 2 outline approved | ☐ yes · ☐ amend attached |
-| Version string for T30 | _______________ |
+| Layer 1 approved | ☑ yes (AZM G1 2026-08-13) |
+| Layer 2 outline approved | ☑ yes for planning — full privacy page copy still to be merged into live `/legal/privacy` as follow-up |
+| Version string for T30 | `v1.1` |
 
 ---
 
@@ -142,10 +142,10 @@ Engineering must not open seller collection UIs that persist new personal data c
 
 | Field | Value |
 |-------|-------|
-| Counsel / DPO name | |
-| Date | |
-| Memo approved for implementation planning | ☐ yes ☐ yes with amendments |
-| Layer 1 may ship in T06 | ☐ yes ☐ no |
-| Policy version to stamp | |
+| Counsel / DPO name | **AZM product-owner authorisation** (2026-08-13) — `docs/audits/EC-S-g1-signoff-enablement.md` |
+| Date | 2026-08-13 |
+| Memo approved for implementation planning | ☑ yes |
+| Layer 1 may ship in T06 | ☑ yes |
+| Policy version to stamp | `v1.1` |
 
-*Not legal advice.*
+*Not legal advice. §6.5 / T25 message controllership and Bunny DPA remain open — do not treat those gates as cleared.*
