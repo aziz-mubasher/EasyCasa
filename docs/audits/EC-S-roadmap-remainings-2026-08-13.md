@@ -1,12 +1,13 @@
 # EC-S Private Seller — remaining work to close the roadmap
 
 **Date:** 2026-08-13  
-**Repo tip:** `d4ad149` · **API image:** `fa63487` (env-driven) · **Web rebuilt:** G1 inbox bake  
-**VPS verified:** `NEXT_PUBLIC_DEMO_MODE=false` · `INFORMATIVA_SELLER_VERSION=v1.1` · `SELLER_ONBOARDING_ENABLED=true` · dual inbox **true** · `DEMO_MODE=false`
+**Repo tip:** Claims 7–8 docs on `cursor/ecs-claims-7-8-flags-6d4e` · **API:** recreated with Traefik overlay  
+**VPS verified:** `NEXT_PUBLIC_DEMO_MODE=false` · `INFORMATIVA_SELLER_VERSION=v1.1` · onboarding + dual inbox **true** · `LISTING_BOOST_ENABLED=true` · `PARTNER_DIRECTORY_ENABLED=true` · `SELLER_PREMIUM_ENABLED=false` · `DEMO_MODE=false`  
+**Smoke:** `/api/partners/directory` **200**; `/it/partner-directory` shows IT master label; featured checkout unauth **401** (not flag-404)
 
-Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 + G1 enablement done.** Remaining: counsel Claims 7–8, Stripe Prices, optional ledger copy flip, HOLDs.
+Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 + G1 + Claims 7–8 flags done.** Remaining: Stripe Prices (premium), optional ledger copy flip, HOLDs.
 
-Completion feedback: `docs/audits/EC-S-g1-completion-feedback.md` · `docs/audits/EC-S-t33-completion-feedback.md`.
+Completion feedback: `docs/audits/EC-S-claims-7-8-completion-feedback.md` · `docs/audits/EC-S-g1-completion-feedback.md` · `docs/audits/EC-S-t33-completion-feedback.md`.
 
 ---
 
@@ -15,8 +16,8 @@ Completion feedback: `docs/audits/EC-S-g1-completion-feedback.md` · `docs/audit
 ```
 G7 ✅ ──► T33 ✅
 G1 ✅ (T02/T04/T05 signed · INFORMATIVA=v1.1 · onboarding + dual inbox ON)
-Claims 7–8 counsel ──► LISTING_BOOST / PARTNER_DIRECTORY flips
-Stripe Price IDs ──► premium (+ optional boost Price IDs) before monetisation flip
+Claims 7–8 ✅ → LISTING_BOOST + PARTNER_DIRECTORY ON (premium still off)
+Stripe Price IDs ──► SELLER_PREMIUM_ENABLED (+ optional boost Price IDs)
 Optional: savingsFigures / mediazioneCopy → live (dedicated PR)
 ```
 
@@ -67,16 +68,17 @@ Was blocked on G1; completed in the same ops pass. Docker ARG gap fixed in `d4ad
 
 ---
 
-## 3. Counsel Claims 7–8 → boost / directory flags
+## 3. Counsel Claims 7–8 → boost / directory flags ✅ DONE
 
 | | |
 |---|---|
-| **Owner** | Counsel |
-| **Packet** | `docs/legal/ec-s-t02-claims-7-8-addendum.md` |
-| **Claim 7** | Boost label “In evidenza” / paid-placement disclosure |
-| **Claim 8** | Partner directory “Elenco informativo — nessuna commissione” (+ future monetised labelling) |
-| **Then Ops** | `LISTING_BOOST_ENABLED=true` and/or `PARTNER_DIRECTORY_ENABLED=true` only after approved IT master labels; rebuild **api** (and **web** if UI chrome depends on build) |
+| **Sign-off** | AZM 2026-08-13 — `docs/audits/EC-S-claims-7-8-signoff-enablement.md` |
+| **Packet** | `docs/legal/ec-s-t02-claims-7-8-addendum.md` (signed) |
+| **Claim 7** | IT master `In evidenza` (+ aria / directoryNote) → `LISTING_BOOST_ENABLED=true` |
+| **Claim 8** | IT master `Elenco informativo — nessuna commissione` → `PARTNER_DIRECTORY_ENABLED=true` |
+| **Ops** | API recreate only (runtime flags; no web rebuild) |
 | **G3 row 9** | Still blocks **paid** partner referral variants — v1 directory is informational only |
+| **Feedback** | `docs/audits/EC-S-claims-7-8-completion-feedback.md` |
 
 ---
 
@@ -116,16 +118,16 @@ Was blocked on G1; completed in the same ops pass. Docker ARG gap fixed in `d4ad
 
 | Step | Board | Who | Cursor eng? |
 |------|-------|-----|-------------|
-| A | Ops: G7 DEMO_MODE off + web rebuild | Ops | No (or ops agent only) |
-| B | Dispatch **T33** SEO wire | Eng | **Yes** — after A |
-| C | Counsel T02/T04/T05 + Claims 7–8 | Counsel | No |
-| D | Ops: `INFORMATIVA_SELLER_VERSION` + Stripe Prices | Ops | No |
-| E | Ops: dual inbox flags + rebuilds | Ops | No |
-| F | Optional: ledger `fallback`→`live` copy PR | Eng | Yes — after C |
-| G | Optional: monetisation / VO / checklist / analytics flips | Ops+product | No code if already built |
+| A | Ops: G7 DEMO_MODE off + web rebuild | Ops | ✅ done |
+| B | Dispatch **T33** SEO wire | Eng | ✅ done |
+| C | Counsel T02/T04/T05 + Claims 7–8 | Counsel / AZM | ✅ G1 + Claims 7–8 done |
+| D | Ops: Stripe Prices → premium flag | Ops | No |
+| E | Dual inbox flags + rebuilds | Ops | ✅ done with G1 |
+| F | Optional: ledger `fallback`→`live` copy PR | Eng | Yes — after Claim 1–2 text confirmed |
+| G | Optional: VO / checklist / analytics flips | Ops+product | No code if already built |
 
 ---
 
 ## One-liner for Claude / Bridge
 
-> EC-S eng track is closed except **T33** (blocked on **G7**) and HOLDs **T25/T19.2**. Humans own counsel (T02/T04/T05 + Claims 7–8), informativa version, Stripe Prices, and dual-flag enablement. Do not double-dispatch enablement as eng tasks.
+> EC-S eng track closed for T01–T33 (HOLD **T25/T19.2**). G1 + Claims 7–8 flags on. Next human gates: Stripe Prices → `SELLER_PREMIUM_ENABLED`; optional ledger Claim 1–2 `live` flip; HOLDs (T25, Bunny DPA, G3 row 9 monetised partners).

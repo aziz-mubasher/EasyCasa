@@ -12,7 +12,7 @@
 
 **Interim rule in force:** `blocks.savingsFigures.state` and `blocks.mediazioneCopy.state` are `"fallback"` — no EUR comparison figures and no “portal, not agent” claim render publicly until counsel clears the claims below.
 
-**Phase 4 addendum:** Claims 7–8 (boost “In evidenza” + partner directory labelling) — see [`ec-s-t02-claims-7-8-addendum.md`](./ec-s-t02-claims-7-8-addendum.md).
+**Phase 4 addendum:** Claims 7–8 **SIGNED** (AZM 2026-08-13) — boost “In evidenza” + partner directory labelling; flags on. See [`ec-s-t02-claims-7-8-addendum.md`](./ec-s-t02-claims-7-8-addendum.md) · enablement `docs/audits/EC-S-claims-7-8-signoff-enablement.md`.
 
 > **Engineering note — gate vocabulary:** runtime states are `live` | `fallback` | `hidden` (not `full`). Deliverable C should say which blocks may flip to **`live`**.
 
