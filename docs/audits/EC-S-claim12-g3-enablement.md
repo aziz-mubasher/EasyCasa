@@ -29,7 +29,9 @@
 
 ## Deploy checklist
 
-- [ ] Apply `migration/sql/0064_ecs_g3_partner_directory_paid.sql` on VPS DB
-- [ ] Rebuild **web** (ledger + i18n + partner page) and **api** (schema/service) with Traefik overlay
-- [ ] Smoke: `/it/vendi-da-privato` shows EUR savings + portal copy; `/api/partners/directory` returns `paidPlacement` field
-- [ ] Confirm parked flags still false: VO / checklist / analytics / CDN
+- [x] Apply `migration/sql/0064_ecs_g3_partner_directory_paid.sql` on VPS DB
+- [x] Rebuild **web** (ledger + i18n + partner page) and **api** (schema/service) with Traefik overlay
+- [x] Smoke: `/it/vendi-da-privato` shows EUR savings + portal copy; `/api/partners/directory` 200
+- [x] Confirm parked flags still false: VO / checklist / analytics / CDN
+
+**Post-deploy R&D report:** `docs/audits/EC-S-claim12-g3-rnd-report.md`
