@@ -1,17 +1,19 @@
 # EC-S Private Seller — remaining work to close the roadmap
 
 **Date:** 2026-08-13  
-**Repo tip (docs):** `11eb805` · **API image:** `fa63487` · **Web rebuilt:** 2026-08-13T05:09Z  
+**Repo tip:** `c6e4fdc` · **API image:** `fa63487` · **Web rebuilt:** 2026-08-13T06:06Z (T33)  
 **VPS verified:** `NEXT_PUBLIC_DEMO_MODE=false` · `INFORMATIVA_SELLER_VERSION=` (empty) · `DEMO_MODE=false`
 
-Engineering for T01–T32 is on `main` (T25 messaging HOLD; T33 builders staged). **G7 is done** — site is indexable. What remains is **gates + enablement**, then eng dispatch (**T33**).
+Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 done.** What remains is almost entirely **human gates + enablement**.
+
+Completion feedback: `docs/audits/EC-S-t33-completion-feedback.md`.
 
 ---
 
 ## Ordered unblock sequence
 
 ```
-G7 ✅ ──► T33 eng dispatch (unblocked)
+G7 ✅ ──► T33 ✅ (merged #140, web deployed)
 G1 = counsel T02/T04/T05 + set INFORMATIVA_SELLER_VERSION
        └──► seller collection / onboarding enablement
 Claims 7–8 counsel ──► LISTING_BOOST / PARTNER_DIRECTORY flips
@@ -29,11 +31,20 @@ Do **not** flip seller/monetisation flags before the matching gate.
 |---|---|
 | **Owner** | Ops |
 | **Action** | On VPS `/opt/easycasa-ita/.env`: set `NEXT_PUBLIC_DEMO_MODE=false`. Rebuild **web** so the build-time flag lands. Confirm sitewide `noindex` gone. |
-| **Verified** | `.env` + web container `NEXT_PUBLIC_DEMO_MODE=false`; `curl https://easycasaita.com/it` → **no** `noindex`; `robots.txt` → `Allow: /` + sitemap; no “Ambiente dimostrativo” banner; `/api/version` → `fa63487` (API image unchanged; web-only rebuild expected) |
-| **Pre-check** | Web-only surface: banner, layout/home `robots`, `robots.ts`. API `DEMO_MODE` already `false` (email/WhatsApp stubs not engaged). Sell-privately copy remains counsel-approved **fallback** — fine for indexation. |
-| **Then** | Dispatch **T33** (wire `serializeJsonLd`, sitemap honesty, hreflang audit, CI grep). HOLD brief: `docs/audits/EC-S-t33-hold.md` |
+| **Verified** | `.env` + web container `NEXT_PUBLIC_DEMO_MODE=false`; `curl https://easycasaita.com/it` → **no** `noindex`; `robots.txt` → `Allow: /` + sitemap; no demo banner |
+| **Then** | ~~Dispatch T33~~ → **done** (K EC 1.46 / #140) |
 
-**Current:** `NEXT_PUBLIC_DEMO_MODE=false` on VPS (web image started `2026-08-13T05:09:52Z`).
+**Current:** `NEXT_PUBLIC_DEMO_MODE=false`; T33 web image live at tip `c6e4fdc`.
+
+---
+
+## 1b. T33 — SEO wiring ✅ DONE
+
+| | |
+|---|---|
+| **PR** | [#140](https://github.com/aziz-mubasher/EasyCasa/pull/140) · tip `c6e4fdc` |
+| **Shipped** | `serializeJsonLd` everywhere; FAQPage+Service on sell-privately; RealEstateListing on listings; honest sitemap; CI `check:json-ld-escape` |
+| **Residual (human)** | Lighthouse SEO ≥95 on home / vendi-da-privato / one listing — operator commands in `docs/audits/EC-S-t33-hold.md` |
 
 ---
 

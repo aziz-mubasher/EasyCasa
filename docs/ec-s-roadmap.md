@@ -17,10 +17,10 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **T25** | ⛔ HOLD until T05 §6.5 controllership |
 | **T31** | ✅ Wizard + dashboard IT/EN/ES (rescoped item closed) |
 | **T32** | ✅ Merged PR #129 — consent UI + consolidation |
-| **G7** | ✅ `NEXT_PUBLIC_DEMO_MODE=false` on VPS; web rebuilt; site indexable (`/it` no `noindex`; `robots.txt` Allow) |
-| **T33** | ⚠ Unblocked for eng dispatch — builders staged; wire Next + Lighthouse SEO (HOLD brief still applies until dispatched) |
+| **G7** | ✅ `NEXT_PUBLIC_DEMO_MODE=false` on VPS; site indexable |
+| **T33** | ✅ Merged #140 + web deploy tip `c6e4fdc` — JSON-LD / sitemap / CI guard; Lighthouse SEO ≥95 still operator residual |
 | **Monetisation flags (VPS)** | `LISTING_BOOST_ENABLED` / `SELLER_PREMIUM_ENABLED` / `PARTNER_DIRECTORY_ENABLED` = **false** |
-| **Next humans** | Dispatch T33 → counsel Claims 7–8 + T02/T04/T05 → G1 enablement → dual inbox flags |
+| **Next humans** | Lighthouse SEO scores → counsel Claims 7–8 + T02/T04/T05 → G1 enablement → dual inbox flags |
 
 **Rule:** the page may promise only what the ledger marks `live`. Flip a flag only when its tasks pass validation gates.
 
