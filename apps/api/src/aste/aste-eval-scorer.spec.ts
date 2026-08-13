@@ -132,4 +132,55 @@ describe('renderExtractionScoreTable', () => {
     expect(body).toContain('meta.warnings\t-\textract_chunked:7');
     expect(body).toContain('meta.not_found\t-\tgiuridica.stato_occupazione,economics.valore_stima');
   });
+
+  it('omits GT-5 lotto H note on non-H extractions', () => {
+    const table = renderExtractionScoreTable({
+      economics: {
+        valore_stima: null,
+        prezzo_base: { value: 36039, source: { file: 'avviso', page: 1 } },
+        offerta_minima: null,
+        cauzione: { pct: 10, importo: null, source: { file: 'avviso', page: 5 } },
+        rilancio_minimo: null,
+      },
+      procedura: { tipo: 'rge', numero: '1/2024', tribunale: 'Milano', lotto: '4' },
+      giuridica: { stato_occupazione: { stato: null, dettaglio: null } },
+      urbanistica: {
+        conformita_urbanistica: { stato: null, dettaglio: null },
+        conformita_catastale: { stato: null, dettaglio: null },
+        difformita: [],
+      },
+      meta: { not_found: [], lotti_trovati: ['4', '7'], warnings: [], lotto: { label: '4', source: 'user' } },
+    });
+    const body = table.join('\n');
+    expect(body).toContain('urbanistica.conformita\tmiss\turb=|cat=|difformita=0');
+    expect(body).not.toContain('lotto H must NOT');
+    expect(body).not.toContain('GT-5');
+  });
+
+  it('keeps GT-5 lotto H note when lotto label is H', () => {
+    const table = renderExtractionScoreTable({
+      economics: {
+        valore_stima: null,
+        prezzo_base: { value: 100355.25, source: { file: 'avviso', page: 4 } },
+        offerta_minima: null,
+        cauzione: null,
+        rilancio_minimo: null,
+      },
+      procedura: { tipo: 'rge', numero: '10/2023', tribunale: 'Roma', lotto: 'H' },
+      giuridica: { stato_occupazione: { stato: 'libero', dettaglio: null } },
+      urbanistica: {
+        conformita_urbanistica: { stato: 'conforme', dettaglio: null },
+        conformita_catastale: { stato: 'conforme', dettaglio: null },
+        difformita: [],
+      },
+      meta: {
+        not_found: [],
+        lotti_trovati: ['H', 'I', 'M'],
+        warnings: ['extract_chunked:7'],
+        lotto: { label: 'H', source: 'user' },
+      },
+    });
+    const body = table.join('\n');
+    expect(body).toContain('GT-5: lotto H must NOT be marked non-conform');
+  });
 });

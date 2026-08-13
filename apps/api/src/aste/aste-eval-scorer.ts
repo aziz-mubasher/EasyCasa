@@ -103,6 +103,7 @@ export function renderExtractionScoreTable(extraction: Record<string, unknown>):
     not_found?: string[];
     warnings?: string[];
     lotti_trovati?: string[];
+    lotto?: { label?: string | null } | null;
   };
 
   const notFound = new Set(meta.not_found ?? []);
@@ -160,8 +161,17 @@ export function renderExtractionScoreTable(extraction: Record<string, unknown>):
   const cu = urbanistica.conformita_urbanistica?.stato?.trim() || '';
   const cc = urbanistica.conformita_catastale?.stato?.trim() || '';
   const difn = Array.isArray(urbanistica.difformita) ? urbanistica.difformita.length : 0;
+  const lottoLabel = (
+    (meta as { lotto?: { label?: string | null } | null }).lotto?.label ??
+    (procedura.lotto as string | null | undefined) ??
+    ''
+  )
+    .trim()
+    .toUpperCase();
+  const conformitaNotes =
+    lottoLabel === 'H' ? 'GT-5: lotto H must NOT be marked non-conform' : '';
   lines.push(
-    `urbanistica.conformita\t${cu || cc ? 'hit' : 'miss'}\turb=${cu}|cat=${cc}|difformita=${difn}\t\tlotto H must NOT be marked non-conform`,
+    `urbanistica.conformita\t${cu || cc ? 'hit' : 'miss'}\turb=${cu}|cat=${cc}|difformita=${difn}\t\t${conformitaNotes}`,
   );
 
   lines.push(`meta.lotti_trovati\thit\t${(meta.lotti_trovati ?? []).join('|')}\t\t`);
