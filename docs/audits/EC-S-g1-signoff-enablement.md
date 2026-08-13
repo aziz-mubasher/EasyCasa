@@ -42,7 +42,7 @@ API container recreate picks up the three API env vars. Web rebuild bakes `NEXT_
 
 ## Verification checklist
 
-- [ ] `GET /api/health` ok
-- [ ] Seller onboarding API no longer hard-404 from flag (auth still required)
-- [ ] `/it/seller/enquiries` no longer dark 404 (may redirect to login)
-- [ ] Sell-privately still shows fallback savings / mediazione copy (not EUR figures)
+- [x] `GET /api/health` ok
+- [x] Seller onboarding API no longer hard-404 from flag (auth still required → 401)
+- [x] `/it/seller/enquiries` no longer dark 404 (renders Richieste + sign-in)
+- [x] Sell-privately still shows fallback savings / mediazione copy (not EUR claim body)

@@ -1,27 +1,26 @@
 # EC-S Private Seller — remaining work to close the roadmap
 
 **Date:** 2026-08-13  
-**Repo tip:** `c6e4fdc` · **API image:** `fa63487` · **Web rebuilt:** 2026-08-13T06:06Z (T33)  
-**VPS verified:** `NEXT_PUBLIC_DEMO_MODE=false` · `INFORMATIVA_SELLER_VERSION=` (empty) · `DEMO_MODE=false`
+**Repo tip:** `d4ad149` · **API image:** `fa63487` (env-driven) · **Web rebuilt:** G1 inbox bake  
+**VPS verified:** `NEXT_PUBLIC_DEMO_MODE=false` · `INFORMATIVA_SELLER_VERSION=v1.1` · `SELLER_ONBOARDING_ENABLED=true` · dual inbox **true** · `DEMO_MODE=false`
 
-Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 done.** What remains is almost entirely **human gates + enablement**.
+Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 + G1 enablement done.** Remaining: counsel Claims 7–8, Stripe Prices, optional ledger copy flip, HOLDs.
 
-Completion feedback: `docs/audits/EC-S-t33-completion-feedback.md`.
+Completion feedback: `docs/audits/EC-S-g1-completion-feedback.md` · `docs/audits/EC-S-t33-completion-feedback.md`.
 
 ---
 
 ## Ordered unblock sequence
 
 ```
-G7 ✅ ──► T33 ✅ (merged #140, web deployed)
-G1 = counsel T02/T04/T05 + set INFORMATIVA_SELLER_VERSION
-       └──► seller collection / onboarding enablement
+G7 ✅ ──► T33 ✅
+G1 ✅ (T02/T04/T05 signed · INFORMATIVA=v1.1 · onboarding + dual inbox ON)
 Claims 7–8 counsel ──► LISTING_BOOST / PARTNER_DIRECTORY flips
 Stripe Price IDs ──► premium (+ optional boost Price IDs) before monetisation flip
-Dual inbox flags + web rebuild ──► seller inbox live (after G1)
+Optional: savingsFigures / mediazioneCopy → live (dedicated PR)
 ```
 
-Do **not** flip seller/monetisation flags before the matching gate.
+Do **not** flip monetisation / VO / analytics flags before the matching gate.
 
 ---
 
@@ -34,7 +33,7 @@ Do **not** flip seller/monetisation flags before the matching gate.
 | **Verified** | `.env` + web container `NEXT_PUBLIC_DEMO_MODE=false`; `curl https://easycasaita.com/it` → **no** `noindex`; `robots.txt` → `Allow: /` + sitemap; no demo banner |
 | **Then** | ~~Dispatch T33~~ → **done** (K EC 1.46 / #140) |
 
-**Current:** `NEXT_PUBLIC_DEMO_MODE=false`; T33 web image live at tip `c6e4fdc`.
+**Current:** `NEXT_PUBLIC_DEMO_MODE=false`; T33 web image live.
 
 ---
 

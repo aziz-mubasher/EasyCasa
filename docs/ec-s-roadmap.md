@@ -10,9 +10,9 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **Engineering Phases 0–4** | ✅ On `main` + VPS — update report `docs/audits/EC-S-roadmap-update-2026-08-12.md`; full audit `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` |
 | **Scoreboard** | **25 DONE** · **7 PARTIAL** · **1 NOT STARTED** (T25) |
 | **T01 / T03** | ✅ Page + ledger live |
-| **T02 / T04 / T05** | ⛔ Counsel/DPO still pending — savings/mediazione **fallback**; `INFORMATIVA_SELLER_VERSION` empty on VPS |
-| **T06–T24, T26–T32** | ✅ Engineering merged (feature flags **false** on VPS) |
-| **T20 web inbox UI** | ✅ Dark route `/seller/enquiries` (PR #137) + seller nav; flags false |
+| **T02 / T04 / T05** | ✅ G1 signed (AZM 2026-08-13) — `INFORMATIVA_SELLER_VERSION=v1.1`; savings/mediazione still **fallback** |
+| **T06–T24, T26–T32** | ✅ Engineering merged; **onboarding + inbox flags ON** (G1); other seller/monetisation flags still false |
+| **T20 web inbox UI** | ✅ Live `/seller/enquiries` (dual flag true; Docker build-arg fix `d4ad149`) |
 | **T19.2** | ⛔ HOLD until LIA signs |
 | **T25** | ⛔ HOLD until T05 §6.5 controllership |
 | **T31** | ✅ Wizard + dashboard IT/EN/ES (rescoped item closed) |
@@ -20,7 +20,7 @@ Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/conf
 | **G7** | ✅ `NEXT_PUBLIC_DEMO_MODE=false` on VPS; site indexable |
 | **T33** | ✅ Merged #140 + listing meta `1f1269b`; Lighthouse SEO **100/100/100** (`docs/audits/EC-S-t33-lighthouse-scores.md`) |
 | **Monetisation flags (VPS)** | `LISTING_BOOST_ENABLED` / `SELLER_PREMIUM_ENABLED` / `PARTNER_DIRECTORY_ENABLED` = **false** |
-| **Next humans** | Counsel Claims 7–8 + T02/T04/T05 → G1 enablement → dual inbox flags |
+| **Next humans** | Optional external counsel countersign; ledger copy flip PR; Claims 7–8 + Stripe → monetisation flags |
 
 **Rule:** the page may promise only what the ledger marks `live`. Flip a flag only when its tasks pass validation gates.
 
