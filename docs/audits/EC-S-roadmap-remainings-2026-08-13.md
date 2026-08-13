@@ -1,13 +1,13 @@
 # EC-S Private Seller — remaining work to close the roadmap
 
 **Date:** 2026-08-13  
-**Repo tip:** Claims 7–8 docs on `cursor/ecs-claims-7-8-flags-6d4e` · **API:** recreated with Traefik overlay  
-**VPS verified:** `NEXT_PUBLIC_DEMO_MODE=false` · `INFORMATIVA_SELLER_VERSION=v1.1` · onboarding + dual inbox **true** · `LISTING_BOOST_ENABLED=true` · `PARTNER_DIRECTORY_ENABLED=true` · `SELLER_PREMIUM_ENABLED=false` · `DEMO_MODE=false`  
-**Smoke:** `/api/partners/directory` **200**; `/it/partner-directory` shows IT master label; featured checkout unauth **401** (not flag-404)
+**Repo tip:** Stripe/premium enablement on `cursor/ecs-stripe-premium-6d4e` · **API:** recreated with Traefik overlay  
+**VPS verified:** demo off · informativa `v1.1` · onboarding + dual inbox **true** · boost + directory **true** · **`SELLER_PREMIUM_ENABLED=true`** · `plans.seller_premium.stripe_price_id` set · boost Price IDs set  
+**Smoke:** `/api/billing/plans` has seller_premium Price ID; `/api/seller/entitlements` **401** (not flag-404)
 
-Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 + G1 + Claims 7–8 flags done.** Remaining: Stripe Prices (premium), optional ledger copy flip, HOLDs.
+Engineering for **T01–T33** is on `main` (T25 messaging HOLD). **G7 + T33 + G1 + Claims 7–8 + Stripe/premium done.** Remaining: optional ledger Claim 1–2 `live` flip, HOLDs.
 
-Completion feedback: `docs/audits/EC-S-claims-7-8-completion-feedback.md` · `docs/audits/EC-S-g1-completion-feedback.md` · `docs/audits/EC-S-t33-completion-feedback.md`.
+Completion feedback: `docs/audits/EC-S-stripe-premium-completion-feedback.md` · `docs/audits/EC-S-claims-7-8-completion-feedback.md` · `docs/audits/EC-S-g1-completion-feedback.md` · `docs/audits/EC-S-t33-completion-feedback.md`.
 
 ---
 
@@ -16,9 +16,9 @@ Completion feedback: `docs/audits/EC-S-claims-7-8-completion-feedback.md` · `do
 ```
 G7 ✅ ──► T33 ✅
 G1 ✅ (T02/T04/T05 signed · INFORMATIVA=v1.1 · onboarding + dual inbox ON)
-Claims 7–8 ✅ → LISTING_BOOST + PARTNER_DIRECTORY ON (premium still off)
-Stripe Price IDs ──► SELLER_PREMIUM_ENABLED (+ optional boost Price IDs)
-Optional: savingsFigures / mediazioneCopy → live (dedicated PR)
+Claims 7–8 ✅ → LISTING_BOOST + PARTNER_DIRECTORY ON
+Stripe Prices ✅ → SELLER_PREMIUM_ENABLED ON (+ boost Price IDs)
+Optional: savingsFigures / mediazioneCopy → live (dedicated PR — decision gate)
 ```
 
 Do **not** flip monetisation / VO / analytics flags before the matching gate.
