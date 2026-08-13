@@ -1,10 +1,12 @@
 /**
- * EC-S-T33 — HOLD until G7 (`NEXT_PUBLIC_DEMO_MODE` unset).
+ * EC-S-T33 — G7 cleared (`NEXT_PUBLIC_DEMO_MODE=false` on VPS, web rebuilt
+ * 2026-08-13). Still HOLD until T33 is **explicitly dispatched** — do not wire
+ * Next on opportunistic drive-bys.
  *
  * Pre-validated artifact landed in `@easycasa/shared` (`structured-data/`) with
  * injection-safety tests under `apps/api/src/seo/structured-data.spec.ts`.
- * Do **not** replace `apps/web/src/components/StructuredData.tsx` or extend
- * sitemap / hreflang until ops unsets demo mode and T33 is explicitly dispatched.
+ * On dispatch: replace `apps/web/src/components/StructuredData.tsx` raw
+ * stringify; extend sitemap / hreflang honesty.
  *
  * Brief (summary):
  * 1. JSON-LD via `serializeJsonLd` only (never raw JSON.stringify into ld+json).
