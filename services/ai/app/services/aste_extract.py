@@ -26,6 +26,8 @@ PRECEDENCE_URBANISTICA = ("perizia", "avviso", "ordinanza", "certificazione")
 FIELD_CONTEXT_KEYWORDS = re.compile(
     r"stato\s+occupativ|occupato|occupazione|\blibero\b|condotto\s+in\s+locazione|canone|"
     r"valore\s+di\s+stima|stima\s+del\s+valore|valore\s+commerciale|valore\s+stima|"
+    r"valore\s+di\s+mercato|pi[uù]\s+probabile\s+valore|valore\s+complessivo|riepilogo\s+valori|"
+    r"\bstima\b|"
     r"ctu|consulente\s+tecnico|"
     r"conformit[aà]\s+(?:urbanistica|catastale|edilizia)|difformit[aà]|"
     r"difformit[aà]\s+(?:edilizie|urbanistiche|catastali)|abuso\s+edilizio|"
@@ -78,7 +80,11 @@ Economics:
 - If pct is stated with base "prezzo_offerto" (e.g. "10% del prezzo OFFERTO"), set base="prezzo_offerto" and leave importo null — never fabricate importo from prezzo_base.
 - Prefer avviso over ordinanza for prezzo_base, offerta_minima, cauzione, rilancio_minimo when they conflict (ribassi / successive vendite).
 - If both avviso and ordinanza prezzo_base appear, set economics.prezzo_base from the avviso and add meta.prezzo_base_candidates with both sourced values.
-- economics.valore_stima = CTU/perizia estimate {value, source}. Prefer perizia over avviso/ordinanza. Look for "valore di stima", "stima del valore", "valore commerciale" in the perizia.
+- economics.valore_stima = CTU/perizia TOTAL estimate {value, source, dettaglio?} for the target property/lot.
+- valore_stima is the TOTAL stima ("valore di stima", "valore di mercato", "più probabile valore di mercato", "valore complessivo del lotto") — NEVER a per-square-metre (€/mq) figure, per-unit table row, or coefficient.
+- If the perizia states only €/mq without an explicit total for the lot, set valore_stima to null and add economics.valore_stima to meta.not_found — NEVER multiply €/mq × surface (that is invention, not derivation).
+- When lotto_label is set, extract ONLY the target lot's stima from multi-lot stima tables; cite lot in dettaglio when helpful (e.g. "Lotto 4"). Do NOT bleed another lot's stima.
+- Prefer perizia over avviso/ordinanza for valore_stima.
 
 Giuridica / occupazione (per lot when lotto_label set):
 - giuridica.stato_occupazione = {stato, dettaglio, opponibilita, source:{file,page}}
@@ -203,7 +209,13 @@ def run_extract(req: ExtractRequest, settings: Settings | None = None) -> dict[s
         raw = _complete_long(s, SYSTEM_PROMPT, user_json)
         parsed = _parse_json_object(raw)
         normalized = _normalize(parsed, meta_docs, req.lotto_label)
-        normalized = _finalize_extraction(normalized, [normalized], meta_docs, req.lotto_label)
+        normalized = _finalize_extraction(
+            normalized,
+            [normalized],
+            meta_docs,
+            req.lotto_label,
+            min_prezzo_base_ratio=s.VALORE_STIMA_MIN_PREZZO_BASE_RATIO,
+        )
         return scrub_person_names(normalized)
 
     chunks = split_documents_for_extract(
@@ -232,7 +244,12 @@ def run_extract(req: ExtractRequest, settings: Settings | None = None) -> dict[s
         parsed = _parse_json_object(raw)
         parts.append(_normalize(parsed, meta_docs, req.lotto_label))
 
-    merged = merge_extractions(parts, meta_docs, req.lotto_label)
+    merged = merge_extractions(
+        parts,
+        meta_docs,
+        req.lotto_label,
+        min_prezzo_base_ratio=s.VALORE_STIMA_MIN_PREZZO_BASE_RATIO,
+    )
     merged["meta"].setdefault("warnings", []).append(f"extract_chunked:{total}")
     return scrub_person_names(merged)
 
@@ -372,6 +389,8 @@ def merge_extractions(
     parts: list[dict[str, Any]],
     meta_docs: list[dict[str, Any]],
     lotto_label: str | None,
+    *,
+    min_prezzo_base_ratio: float = 0.01,
 ) -> dict[str, Any]:
     """Deterministic reduce: fill nulls from later chunks; never invent; union lists."""
     if not parts:
@@ -430,7 +449,13 @@ def merge_extractions(
     base["schema_version"] = 2
     base["meta"]["schema_version"] = 2
     base["meta"]["documents"] = meta_docs
-    return _finalize_extraction(base, parts, meta_docs, lotto_label)
+    return _finalize_extraction(
+        base,
+        parts,
+        meta_docs,
+        lotto_label,
+        min_prezzo_base_ratio=min_prezzo_base_ratio,
+    )
 
 
 def _doc_type_rank(doc_type: str | None, precedence: tuple[str, ...]) -> int:
@@ -520,6 +545,68 @@ def _collect_occupazione_candidates(
     return out
 
 
+def _collect_valore_stima_candidates(
+    parts: list[dict[str, Any]],
+    meta_docs: list[dict[str, Any]],
+    lotto_label: str | None = None,
+) -> list[tuple[Any, str | None]]:
+    out: list[tuple[Any, str | None]] = []
+    for part in parts:
+        econ = part.get("economics") if isinstance(part.get("economics"), dict) else {}
+        val = econ.get("valore_stima")
+        if _is_empty(val) or not isinstance(val, dict):
+            continue
+        if _valore_stima_for_other_lot_only(val, lotto_label):
+            continue
+        dtype = _source_doc_type(val.get("source"), meta_docs)
+        out.append((val, dtype))
+    return out
+
+
+def _valore_stima_for_other_lot_only(valore: Any, lotto_label: str | None) -> bool:
+    """True when valore_stima clearly belongs to another lot (Ex2 multi-lot stima tables)."""
+    if not lotto_label or not isinstance(valore, dict):
+        return False
+    lot = valore.get("lotto")
+    if isinstance(lot, str) and lot.strip():
+        return lot.strip().upper() != lotto_label.strip().upper()
+    det = valore.get("dettaglio")
+    if isinstance(det, str) and det.strip():
+        return _conformita_mentions_other_lots_only(det, lotto_label)
+    return False
+
+
+def guard_valore_stima_plausibility(
+    economics: dict[str, Any],
+    meta: dict[str, Any],
+    *,
+    min_prezzo_base_ratio: float = 0.01,
+) -> None:
+    """Reject implausibly small valore_stima vs prezzo_base (Ex5 €/mq mis-parse class)."""
+    vs = economics.get("valore_stima")
+    if not isinstance(vs, dict) or vs.get("value") is None:
+        return
+    pb = economics.get("prezzo_base")
+    if not isinstance(pb, dict) or pb.get("value") is None:
+        return
+    try:
+        stima = float(vs["value"])
+        prezzo = float(pb["value"])
+    except (TypeError, ValueError):
+        return
+    if prezzo <= 0 or min_prezzo_base_ratio <= 0:
+        return
+    if stima >= prezzo * min_prezzo_base_ratio:
+        return
+    economics["valore_stima"] = None
+    nf = meta.setdefault("not_found", [])
+    if isinstance(nf, list) and "economics.valore_stima" not in nf:
+        nf.append("economics.valore_stima")
+    warnings = meta.setdefault("warnings", [])
+    if isinstance(warnings, list) and "valore_stima_suspect" not in warnings:
+        warnings.append("valore_stima_suspect")
+
+
 def _collect_conformita_candidates(
     parts: list[dict[str, Any]],
     field: str,
@@ -576,7 +663,7 @@ def _apply_field_precedence(
             econ[field] = picked
 
     valore = _pick_by_precedence(
-        _collect_sourced_candidates(parts, "valore_stima", meta_docs),
+        _collect_valore_stima_candidates(parts, meta_docs, lotto_label),
         PRECEDENCE_VALORE_STIMA,
     )
     if not _is_empty(valore):
@@ -797,6 +884,8 @@ def _finalize_extraction(
     parts: list[dict[str, Any]],
     meta_docs: list[dict[str, Any]],
     lotto_label: str | None = None,
+    *,
+    min_prezzo_base_ratio: float = 0.01,
 ) -> dict[str, Any]:
     _apply_field_precedence(merged, parts, meta_docs, lotto_label)
     giu = merged.get("giuridica") if isinstance(merged.get("giuridica"), dict) else {}
@@ -806,8 +895,13 @@ def _finalize_extraction(
     econ = merged.get("economics") if isinstance(merged.get("economics"), dict) else {}
     _normalize_cauzione(econ)
     derive_cauzione_importo(econ)
-    # Clear economics.cauzione from not_found when derived importo fills the gap.
     meta = merged.setdefault("meta", {})
+    guard_valore_stima_plausibility(
+        econ,
+        meta,
+        min_prezzo_base_ratio=min_prezzo_base_ratio,
+    )
+    # Clear economics.cauzione from not_found when derived importo fills the gap.
     cau = econ.get("cauzione") if isinstance(econ.get("cauzione"), dict) else {}
     if cau.get("importo") is not None:
         nf = meta.get("not_found")

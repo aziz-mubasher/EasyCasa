@@ -120,6 +120,8 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | USE_LLM_NLQ | ai | Use LLM to parse NL queries instead of heuristics. |
 | OPENAI_BASE_URL / OPENAI_API_KEY | ai | OpenAI-compatible endpoint (OpenAI, Ollama, TEI, LiteLLM). |
 | AI_RATE_LIMIT_PER_MIN | ai | Per-client cap on assistant calls. |
+| ASTE_EXTRACT_HTTP_TIMEOUT | ai | EC-23 — LLM extract HTTP timeout seconds (default `180`). |
+| VALORE_STIMA_MIN_PREZZO_BASE_RATIO | ai | EC-33 — reject `valore_stima` below this fraction of `prezzo_base` when both known (default `0.01` = 1%). |
 | AI_URL | web (server) | Internal AI base (e.g. `http://ai:8000`). |
 | NEXT_PUBLIC_AI_URL | web (browser) | Public AI base (e.g. `https://easycasaita.com/ai`). |
 

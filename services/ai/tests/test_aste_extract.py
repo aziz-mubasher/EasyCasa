@@ -11,6 +11,7 @@ from app.services import aste_extract
 from app.services.aste_extract import (
     derive_cauzione_importo,
     empty_extraction,
+    guard_valore_stima_plausibility,
     merge_extractions,
     page_lot_priority,
     run_extract,
@@ -588,3 +589,210 @@ def test_merge_derives_cauzione_when_pct_in_later_chunk() -> None:
     merged = merge_extractions([prezzo, cau], meta_docs, "H")
     assert merged["economics"]["cauzione"]["importo"] == 10035.52
     assert merged["economics"]["cauzione"]["derived"] is True
+
+
+# --- EC-33: valore_stima correctness (€/mq guard, per-lot stima, packing) ---
+
+
+def test_guard_valore_stima_rejects_suspect_euro_mq_misparse() -> None:
+    economics = {
+        "prezzo_base": {"value": 84000, "source": {"file": "avviso.pdf", "page": 1}},
+        "valore_stima": {
+            "value": 84,
+            "source": {"file": "perizia.pdf", "page": 16},
+        },
+    }
+    meta: dict = {"not_found": [], "warnings": []}
+    guard_valore_stima_plausibility(economics, meta, min_prezzo_base_ratio=0.01)
+    assert economics["valore_stima"] is None
+    assert "economics.valore_stima" in meta["not_found"]
+    assert "valore_stima_suspect" in meta["warnings"]
+
+
+def test_guard_valore_stima_keeps_plausible_total() -> None:
+    economics = {
+        "prezzo_base": {"value": 84000, "source": {"file": "avviso.pdf", "page": 1}},
+        "valore_stima": {
+            "value": 130466.02,
+            "source": {"file": "perizia.pdf", "page": 25},
+        },
+    }
+    meta: dict = {"not_found": [], "warnings": []}
+    guard_valore_stima_plausibility(economics, meta, min_prezzo_base_ratio=0.01)
+    assert economics["valore_stima"]["value"] == 130466.02
+    assert "valore_stima_suspect" not in meta["warnings"]
+
+
+def test_merge_valore_stima_rejects_suspect_with_prezzo_base() -> None:
+    meta_docs = _meta_docs()
+    part = empty_extraction(meta_docs)
+    part["economics"]["prezzo_base"] = {
+        "value": 84000,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    part["economics"]["valore_stima"] = {
+        "value": 84,
+        "source": {"file": "perizia.pdf", "page": 16},
+    }
+    merged = merge_extractions([part], meta_docs, None)
+    assert merged["economics"]["valore_stima"] is None
+    assert "economics.valore_stima" in merged["meta"]["not_found"]
+    assert "valore_stima_suspect" in merged["meta"]["warnings"]
+
+
+def test_merge_valore_stima_per_lot_selects_target_only() -> None:
+    meta_docs = [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 20, "ocr_pages": 0}]
+    lot7 = empty_extraction(meta_docs)
+    lot7["economics"]["valore_stima"] = {
+        "value": 180000,
+        "dettaglio": "Lotto 7 — valore di stima complessivo",
+        "source": {"file": "perizia.pdf", "page": 14},
+    }
+    lot4 = empty_extraction(meta_docs)
+    lot4["economics"]["valore_stima"] = {
+        "value": 242776,
+        "dettaglio": "Lotto 4 — valore di stima complessivo",
+        "source": {"file": "perizia.pdf", "page": 14},
+    }
+    merged = merge_extractions([lot7, lot4], meta_docs, "4")
+    assert merged["economics"]["valore_stima"]["value"] == 242776
+
+
+def test_merge_valore_stima_drops_other_lot_via_lotto_field() -> None:
+    meta_docs = [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 20, "ocr_pages": 0}]
+    other = empty_extraction(meta_docs)
+    other["economics"]["valore_stima"] = {
+        "value": 58056,
+        "lotto": "7",
+        "source": {"file": "perizia.pdf", "page": 17},
+    }
+    target = empty_extraction(meta_docs)
+    target["economics"]["valore_stima"] = {
+        "value": 242776,
+        "lotto": "4",
+        "source": {"file": "perizia.pdf", "page": 17},
+    }
+    merged = merge_extractions([other, target], meta_docs, "4")
+    assert merged["economics"]["valore_stima"]["value"] == 242776
+
+
+def test_extract_valore_stima_euro_mq_only_returns_not_found(monkeypatch: pytest.MonkeyPatch) -> None:
+    payload = empty_extraction(
+        [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 1, "ocr_pages": 0}],
+        not_found=["economics.valore_stima"],
+    )
+    payload["economics"]["prezzo_base"] = {
+        "value": 84000,
+        "source": {"file": "perizia.pdf", "page": 1},
+    }
+
+    def fake_complete(s, system, user):  # noqa: ARG001
+        assert "NEVER a per-square-metre" in system
+        assert "NEVER multiply" in system
+        return json.dumps(payload)
+
+    monkeypatch.setattr(aste_extract, "_complete_long", fake_complete)
+    s = Settings(CHAT_PROVIDER="openai", OPENAI_API_KEY="sk-test")
+    req = ExtractRequest(
+        language="it",
+        documents=[
+            ExtractDocumentIn(
+                file="perizia.pdf",
+                doc_type="perizia",
+                pages=[
+                    ExtractPageIn(
+                        page=16,
+                        text="Valore unitario €/mq 84 — nessun valore complessivo indicato",
+                    )
+                ],
+            )
+        ],
+    )
+    out = run_extract(req, settings=s)
+    assert out["economics"]["valore_stima"] is None
+    assert "economics.valore_stima" in out["meta"]["not_found"]
+
+
+def test_extract_valore_stima_total_from_table(monkeypatch: pytest.MonkeyPatch) -> None:
+    payload = empty_extraction(
+        [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 1, "ocr_pages": 0}],
+        not_found=[],
+    )
+    payload["economics"]["prezzo_base"] = {
+        "value": 84000,
+        "source": {"file": "perizia.pdf", "page": 1},
+    }
+    payload["economics"]["valore_stima"] = {
+        "value": 130466.02,
+        "dettaglio": "Valore complessivo del lotto (non €/mq)",
+        "source": {"file": "perizia.pdf", "page": 16},
+    }
+
+    def fake_complete(s, system, user):  # noqa: ARG001
+        return json.dumps(payload)
+
+    monkeypatch.setattr(aste_extract, "_complete_long", fake_complete)
+    s = Settings(CHAT_PROVIDER="openai", OPENAI_API_KEY="sk-test")
+    req = ExtractRequest(
+        language="it",
+        documents=[
+            ExtractDocumentIn(
+                file="perizia.pdf",
+                doc_type="perizia",
+                pages=[
+                    ExtractPageIn(
+                        page=16,
+                        text="€/mq 1.550 — Valore complessivo euro 130.466,02",
+                    )
+                ],
+            )
+        ],
+    )
+    out = run_extract(req, settings=s)
+    assert out["economics"]["valore_stima"]["value"] == 130466.02
+
+
+def test_page_lot_priority_boosts_late_perizia_valore_mercato_keywords() -> None:
+    late_stima = page_lot_priority(
+        "Lotto H riepilogo valori — valore di mercato euro 58056 CTU pag. 25",
+        "H",
+        "perizia",
+    )
+    filler = page_lot_priority("Lotto H descrizione catastale generica", "H", "perizia")
+    assert late_stima > filler
+
+
+def test_split_prioritizes_late_perizia_valore_stima_pages() -> None:
+    docs = [
+        ExtractDocumentIn(
+            file="filler",
+            doc_type="avviso",
+            pages=[ExtractPageIn(page=1, text="Lotto H avviso " + ("x" * 800))],
+        ),
+        *[
+            ExtractDocumentIn(
+                file=f"d{i}",
+                doc_type="perizia",
+                pages=[ExtractPageIn(page=i, text=f"Lotto H filler {i} " + ("z" * 800))],
+            )
+            for i in range(1, 25)
+        ],
+        ExtractDocumentIn(
+            file="perizia_stima",
+            doc_type="perizia",
+            pages=[
+                ExtractPageIn(
+                    page=25,
+                    text=(
+                        "Lotto H valore di mercato — più probabile valore di mercato "
+                        "euro 58056 riepilogo valori CTU " + ("y" * 800)
+                    ),
+                )
+            ],
+        ),
+    ]
+    chunks = split_documents_for_extract(
+        docs, language="it", lotto_label="H", max_user_chars=3_500
+    )
+    first_files = {d.file for d in chunks[0]}
+    assert "perizia_stima" in first_files
