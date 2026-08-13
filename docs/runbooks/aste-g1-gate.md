@@ -115,7 +115,9 @@ EVAL_LIVE=1 ... pnpm --filter @easycasa/api run aste:eval "/path/to/Example 8" -
 # or: EC_ASTE_EVAL_LOTTO=H EVAL_LIVE=1 pnpm --filter @easycasa/api run aste:eval ...
 ```
 
-**Rate limits:** live OpenAI calls can return **429**. Backoff is implemented in `services/ai/app/services/aste_extract.py` (6 attempts, `Retry-After` / exponential). Space live golden-set runs; do not fire the full suite back-to-back without pause.
+**Rate limits:** live OpenAI calls can return **429**. Backoff is implemented in `services/ai/app/services/aste_extract.py` (6 attempts, `Retry-After` / exponential). Space live golden-set runs; do not fire the full suite back-to-back without pause. A **~90s cooldown between cases** is recommended to reduce 429 churn and give the AI service time to finish chunked merges.
+
+**AI service lifecycle:** the FastAPI AI process must run in the **same long-lived shell session** as the eval suite. Background AI shells started in a separate terminal are often reaped mid-run, which aborts the suite with `AI_DOWN` (exit 2). Start AI once before the first case and leave it running through GT-8; if it dies, restart AI in that same shell before continuing.
 
 **Large dossiers:** when extract exceeds `MAX_EXTRACT_USER_CHARS` (90_000), the AI service uses chunked map-reduce. Expect `meta.warnings` entry `extract_chunked:N` (N = chunk count) on the analysis row — not a failure by itself.
 

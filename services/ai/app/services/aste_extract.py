@@ -20,13 +20,25 @@ PERSON_NAME_HINT = re.compile(
 PRECEDENCE_AUCTION = ("avviso", "ordinanza", "perizia", "certificazione")
 PRECEDENCE_VALORE_STIMA = ("perizia", "avviso", "ordinanza", "certificazione")
 PRECEDENCE_OCCUPAZIONE = ("perizia", "avviso", "ordinanza", "certificazione")
+PRECEDENCE_URBANISTICA = ("perizia", "avviso", "ordinanza", "certificazione")
 
-# Perizia sections for occupazione / valore_stima must not be starved by lot-priority pack.
+# Perizia sections for occupazione / valore_stima / conformità must not be starved by lot-priority pack.
 FIELD_CONTEXT_KEYWORDS = re.compile(
     r"stato\s+occupativ|occupato|occupazione|\blibero\b|condotto\s+in\s+locazione|canone|"
     r"valore\s+di\s+stima|stima\s+del\s+valore|valore\s+commerciale|valore\s+stima|"
-    r"ctu|consulente\s+tecnico",
+    r"ctu|consulente\s+tecnico|"
+    r"conformit[aà]\s+(?:urbanistica|catastale|edilizia)|difformit[aà]|"
+    r"difformit[aà]\s+(?:edilizie|urbanistiche|catastali)|abuso\s+edilizio|"
+    r"\bcondono\b|sanatoria|agibilit[aà]|"
+    r"opere\s+realizzate\s+in\s+assenza\s+di\s+titolo|"
+    r"\b(?:cila|scia)\b.*sanatoria|titolo\s+edilizio",
     re.IGNORECASE,
+)
+
+CONFORMITA_ENUM = (
+    "conforme",
+    "non_conforme",
+    "non_rilevato",
 )
 
 OCCUPAZIONE_ENUM = (
@@ -60,7 +72,10 @@ Procedura:
 
 Economics:
 - economics.cauzione = {pct, base: "prezzo_base"|"prezzo_offerto", importo|null, source}
-- Extract cauzione.importo ONLY when explicitly stated in the text. If only pct is stated, leave importo null (post-processing may derive it from prezzo_base).
+- Extract cauzione.importo ONLY when explicitly stated in the text (e.g. "deposito cauzionale di euro 3.603,90", "a titolo di cauzione euro …", "cauzione pari al 10% del prezzo base pari a euro …").
+- Italian phrasing for pct: "cauzione pari al 10% del prezzo base/offerto", "deposito cauzionale", "a titolo di cauzione", "10% a titolo di cauzione".
+- If only pct is stated with base "prezzo_base", leave importo null (post-processing may derive it from prezzo_base).
+- If pct is stated with base "prezzo_offerto" (e.g. "10% del prezzo OFFERTO"), set base="prezzo_offerto" and leave importo null — never fabricate importo from prezzo_base.
 - Prefer avviso over ordinanza for prezzo_base, offerta_minima, cauzione, rilancio_minimo when they conflict (ribassi / successive vendite).
 - If both avviso and ordinanza prezzo_base appear, set economics.prezzo_base from the avviso and add meta.prezzo_base_candidates with both sourced values.
 - economics.valore_stima = CTU/perizia estimate {value, source}. Prefer perizia over avviso/ordinanza. Look for "valore di stima", "stima del valore", "valore commerciale" in the perizia.
@@ -75,6 +90,21 @@ Giuridica / occupazione (per lot when lotto_label set):
   "condotto in locazione" / canone references → occupato_con_titolo or occupato_senza_titolo per opponibilità;
   if stato cannot be determined → non_rilevato (never guess).
 - Prefer perizia over avviso for stato_occupazione; cite source page.
+
+Urbanistica / catastale (per lot when lotto_label set):
+- urbanistica.conformita_urbanistica = {stato, dettaglio, source?}
+- urbanistica.conformita_catastale = {stato, dettaglio, source?}
+- stato MUST be one of: conforme | non_conforme | non_rilevato
+- Map Italian phrasing in CTU/perizia sections:
+  "conformità urbanistica e catastale", "conforme", "in regola" → conforme;
+  "difformità edilizie/urbanistiche/catastali", "abuso edilizio", "non conforme", "difforme" → non_conforme;
+  "condono", "sanatoria", "CILA/SCIA in sanatoria", "opere realizzate in assenza di titolo" → non_conforme with difformita entries;
+  "agibilità" passages may indicate conforme or non_conforme depending on context;
+  if conformity cannot be determined → non_rilevato (never guess).
+- urbanistica.difformita = [{descrizione, sanabile|null, costo_stimato|null, source:{file,page}}]
+  Each difformità MUST include descrizione and source; set sanabile true/false when text states sanabile/non sanabile/condonabile.
+- Prefer perizia (CTU section) over avviso for conformità urbanistica/catastale; cite source page.
+- When lotto_label is set, do NOT assign another lot's difformità to this lot.
 
 Immobili:
 - immobili is an ARRAY (apartment+box, or multi-unit compendio). Each may include note_valore.
@@ -173,7 +203,7 @@ def run_extract(req: ExtractRequest, settings: Settings | None = None) -> dict[s
         raw = _complete_long(s, SYSTEM_PROMPT, user_json)
         parsed = _parse_json_object(raw)
         normalized = _normalize(parsed, meta_docs, req.lotto_label)
-        normalized = _finalize_extraction(normalized, [normalized], meta_docs)
+        normalized = _finalize_extraction(normalized, [normalized], meta_docs, req.lotto_label)
         return scrub_person_names(normalized)
 
     chunks = split_documents_for_extract(
@@ -400,7 +430,7 @@ def merge_extractions(
     base["schema_version"] = 2
     base["meta"]["schema_version"] = 2
     base["meta"]["documents"] = meta_docs
-    return _finalize_extraction(base, parts, meta_docs)
+    return _finalize_extraction(base, parts, meta_docs, lotto_label)
 
 
 def _doc_type_rank(doc_type: str | None, precedence: tuple[str, ...]) -> int:
@@ -490,10 +520,48 @@ def _collect_occupazione_candidates(
     return out
 
 
+def _collect_conformita_candidates(
+    parts: list[dict[str, Any]],
+    field: str,
+    meta_docs: list[dict[str, Any]],
+    lotto_label: str | None = None,
+) -> list[tuple[Any, str | None]]:
+    out: list[tuple[Any, str | None]] = []
+    for part in parts:
+        urb = part.get("urbanistica") if isinstance(part.get("urbanistica"), dict) else {}
+        block = urb.get(field) if isinstance(urb.get(field), dict) else {}
+        stato = block.get("stato")
+        dettaglio = block.get("dettaglio")
+        if _is_empty(stato):
+            continue
+        if _is_non_conforme(stato) and _conformita_mentions_other_lots_only(dettaglio, lotto_label):
+            continue
+        dtype = _source_doc_type(block.get("source"), meta_docs)
+        out.append((block, dtype))
+    return out
+
+
+def _merge_cauzione_fields(cauzione: dict[str, Any], candidates: list[tuple[Any, str | None]]) -> None:
+    """Fill missing pct/importo/base from other chunk cauzione objects (EC-32 pattern b)."""
+    for val, _dtype in candidates:
+        if not isinstance(val, dict):
+            continue
+        if cauzione.get("pct") is None and val.get("pct") is not None:
+            cauzione["pct"] = val["pct"]
+        if cauzione.get("importo") is None and val.get("importo") is not None:
+            cauzione["importo"] = val["importo"]
+            cauzione.pop("derived", None)
+        if cauzione.get("base") is None and val.get("base") is not None:
+            cauzione["base"] = val["base"]
+        if cauzione.get("source") is None and val.get("source") is not None:
+            cauzione["source"] = val["source"]
+
+
 def _apply_field_precedence(
     merged: dict[str, Any],
     parts: list[dict[str, Any]],
     meta_docs: list[dict[str, Any]],
+    lotto_label: str | None = None,
 ) -> None:
     """Field-specific doc-type precedence after chunk merge (EC-30)."""
     econ = merged.setdefault("economics", {})
@@ -518,7 +586,8 @@ def _apply_field_precedence(
         _collect_cauzione_candidates(parts, meta_docs),
         PRECEDENCE_AUCTION,
     )
-    if not _is_empty(cauzione):
+    if not _is_empty(cauzione) and isinstance(cauzione, dict):
+        _merge_cauzione_fields(cauzione, _collect_cauzione_candidates(parts, meta_docs))
         econ["cauzione"] = cauzione
 
     occupazione = _pick_by_precedence(
@@ -527,6 +596,15 @@ def _apply_field_precedence(
     )
     if not _is_empty(occupazione):
         giu["stato_occupazione"] = occupazione
+
+    urb = merged.setdefault("urbanistica", {})
+    for field in ("conformita_urbanistica", "conformita_catastale"):
+        picked = _pick_by_precedence(
+            _collect_conformita_candidates(parts, field, meta_docs, lotto_label),
+            PRECEDENCE_URBANISTICA,
+        )
+        if not _is_empty(picked) and isinstance(picked, dict):
+            urb[field] = picked
 
     # Ex2 regression: explicit dual candidates override sequential merge.
     meta = merged.get("meta") if isinstance(merged.get("meta"), dict) else {}
@@ -545,30 +623,138 @@ def _apply_field_precedence(
 
 
 def derive_cauzione_importo(economics: dict[str, Any]) -> None:
-    """Compute cauzione.importo from pct × prezzo_base when only pct is stated (EC-30)."""
+    """Compute cauzione.importo from pct × prezzo_base when only pct is stated (EC-30/32)."""
     cau = economics.get("cauzione")
     if not isinstance(cau, dict):
         return
     if cau.get("importo") is not None:
         cau.pop("derived", None)
         return
-    pct = cau.get("pct")
+
+    pct = _coerce_pct(cau.get("pct"))
     if pct is None:
         return
-    base_kind = cau.get("base") or "prezzo_base"
+    cau["pct"] = pct
+
+    base_kind = cau.get("base")
+    if base_kind is None:
+        base_kind = "prezzo_base"
+        cau["base"] = base_kind
     if base_kind != "prezzo_base":
         return
+
     prezzo = economics.get("prezzo_base")
     if not isinstance(prezzo, dict) or prezzo.get("value") is None:
         return
     try:
-        pct_f = float(pct)
         prezzo_f = float(prezzo["value"])
     except (TypeError, ValueError):
         return
-    importo = round(prezzo_f * pct_f / 100.0, 2)
+    importo = round(prezzo_f * pct / 100.0, 2)
     cau["importo"] = importo
     cau["derived"] = True
+
+
+def _coerce_pct(raw: Any) -> float | None:
+    if raw is None:
+        return None
+    if isinstance(raw, (int, float)):
+        return float(raw)
+    if isinstance(raw, str):
+        m = re.search(r"(\d+(?:[.,]\d+)?)", raw.replace(",", "."))
+        if m:
+            try:
+                return float(m.group(1))
+            except ValueError:
+                return None
+    return None
+
+
+def _coerce_importo(raw: Any) -> float | None:
+    if raw is None:
+        return None
+    if isinstance(raw, (int, float)):
+        return float(raw)
+    if isinstance(raw, str):
+        cleaned = raw.replace(".", "").replace(",", ".") if re.search(r"\d,\d{2}\b", raw) else raw.replace(",", ".")
+        m = re.search(r"(\d+(?:\.\d+)?)", cleaned)
+        if m:
+            try:
+                return float(m.group(1))
+            except ValueError:
+                return None
+    return None
+
+
+def _normalize_cauzione(economics: dict[str, Any]) -> None:
+    cau = economics.get("cauzione")
+    if not isinstance(cau, dict):
+        return
+    pct = _coerce_pct(cau.get("pct"))
+    if pct is not None:
+        cau["pct"] = pct
+    importo = _coerce_importo(cau.get("importo"))
+    if importo is not None:
+        cau["importo"] = importo
+        cau.pop("derived", None)
+    base = cau.get("base")
+    if isinstance(base, str):
+        blob = base.lower().replace(" ", "_")
+        if "offert" in blob:
+            cau["base"] = "prezzo_offerto"
+        elif "base" in blob:
+            cau["base"] = "prezzo_base"
+
+
+def _normalize_conformita_block(block: dict[str, Any]) -> None:
+    stato = block.get("stato")
+    if not isinstance(stato, str) or not stato.strip():
+        return
+    blob = stato.strip().lower().replace(" ", "_").replace("-", "_")
+    alias = {
+        "in_regola": "conforme",
+        "conforme_urbanisticamente": "conforme",
+        "conforme_catastalmente": "conforme",
+        "difforme": "non_conforme",
+        "non_conforme": "non_conforme",
+        "non_conformita": "non_conforme",
+        "non_conformità": "non_conforme",
+        "non_rilevato": "non_rilevato",
+        "non_rilevata": "non_rilevato",
+    }
+    normalized = alias.get(blob, blob)
+    if normalized in CONFORMITA_ENUM:
+        block["stato"] = normalized
+        return
+    det = (block.get("dettaglio") or "").lower()
+    combined = f"{blob} {det}"
+    if "non_rilev" in combined or "non indicat" in combined:
+        block["stato"] = "non_rilevato"
+    elif re.search(r"non[\s_]?conform|difform|abuso\s+ediliz", combined):
+        block["stato"] = "non_conforme"
+    elif "conform" in combined or "in regola" in combined:
+        block["stato"] = "conforme"
+
+
+def _normalize_urbanistica(urbanistica: dict[str, Any]) -> None:
+    for key in ("conformita_urbanistica", "conformita_catastale"):
+        block = urbanistica.get(key)
+        if isinstance(block, dict):
+            _normalize_conformita_block(block)
+    dif = urbanistica.get("difformita")
+    if isinstance(dif, list):
+        for item in dif:
+            if not isinstance(item, dict):
+                continue
+            san = item.get("sanabile")
+            if isinstance(san, str):
+                sl = san.strip().lower()
+                if sl in ("true", "si", "sì", "sanabile", "condonabile"):
+                    item["sanabile"] = True
+                elif sl in ("false", "no", "non sanabile", "non_sanabile"):
+                    item["sanabile"] = False
+                else:
+                    item["sanabile"] = None
 
 
 def _normalize_occupazione_stato(giuridica: dict[str, Any]) -> None:
@@ -610,11 +796,15 @@ def _finalize_extraction(
     merged: dict[str, Any],
     parts: list[dict[str, Any]],
     meta_docs: list[dict[str, Any]],
+    lotto_label: str | None = None,
 ) -> dict[str, Any]:
-    _apply_field_precedence(merged, parts, meta_docs)
+    _apply_field_precedence(merged, parts, meta_docs, lotto_label)
     giu = merged.get("giuridica") if isinstance(merged.get("giuridica"), dict) else {}
     _normalize_occupazione_stato(giu)
+    urb = merged.get("urbanistica") if isinstance(merged.get("urbanistica"), dict) else {}
+    _normalize_urbanistica(urb)
     econ = merged.get("economics") if isinstance(merged.get("economics"), dict) else {}
+    _normalize_cauzione(econ)
     derive_cauzione_importo(econ)
     # Clear economics.cauzione from not_found when derived importo fills the gap.
     meta = merged.setdefault("meta", {})
@@ -802,6 +992,8 @@ def _non_null_field_paths(data: dict[str, Any]) -> set[str]:
         block = urb.get(k) if isinstance(urb.get(k), dict) else {}
         if not _is_empty(block.get("stato")):
             found.add(f"urbanistica.{k}")
+    if isinstance(urb.get("difformita"), list) and urb["difformita"]:
+        found.add("urbanistica.difformita")
     proc = data.get("procedura") if isinstance(data.get("procedura"), dict) else {}
     for k, v in proc.items():
         if not _is_empty(v):

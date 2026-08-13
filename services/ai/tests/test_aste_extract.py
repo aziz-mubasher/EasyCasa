@@ -415,3 +415,176 @@ def test_split_prioritizes_perizia_stato_occupativo_pages() -> None:
     )
     first_files = {d.file for d in chunks[0]}
     assert "perizia_occ" in first_files
+
+
+# --- EC-32: urbanistica conformità + cauzione importo ---
+
+
+@pytest.mark.parametrize(
+    ("raw_stato", "dettaglio", "expected"),
+    [
+        ("conforme", "Conformità urbanistica e catastale in regola", "conforme"),
+        ("Conforme", None, "conforme"),
+        ("non conforme", "Difformità edilizie rilevate", "non_conforme"),
+        ("difforme", "Abuso edilizio", "non_conforme"),
+        ("non_rilevato", "Non indicato", "non_rilevato"),
+    ],
+)
+def test_normalize_conformita_stato(raw_stato: str, dettaglio: str | None, expected: str) -> None:
+    meta_docs = _meta_docs()
+    part = empty_extraction(meta_docs)
+    part["urbanistica"]["conformita_urbanistica"] = {"stato": raw_stato, "dettaglio": dettaglio}
+    merged = merge_extractions([part], meta_docs, "4")
+    assert merged["urbanistica"]["conformita_urbanistica"]["stato"] == expected
+
+
+def test_merge_conformita_prefers_perizia_over_avviso() -> None:
+    meta_docs = _meta_docs()
+    avviso = empty_extraction(meta_docs)
+    avviso["urbanistica"]["conformita_urbanistica"] = {
+        "stato": "non_conforme",
+        "dettaglio": "Difformità segnalata in avviso",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    perizia = empty_extraction(meta_docs)
+    perizia["urbanistica"]["conformita_urbanistica"] = {
+        "stato": "conforme",
+        "dettaglio": "CTU: conformità urbanistica e catastale",
+        "source": {"file": "perizia.pdf", "page": 18},
+    }
+    merged = merge_extractions([avviso, perizia], meta_docs, "4")
+    assert merged["urbanistica"]["conformita_urbanistica"]["stato"] == "conforme"
+
+
+def test_merge_conformita_non_conforme_with_difformita_list() -> None:
+    meta_docs = [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 3, "ocr_pages": 0}]
+    part = empty_extraction(meta_docs)
+    part["urbanistica"]["conformita_urbanistica"] = {
+        "stato": "non_conforme",
+        "dettaglio": "Opere realizzate in assenza di titolo",
+    }
+    part["urbanistica"]["conformita_catastale"] = {"stato": "non_conforme", "dettaglio": "Planimetria difforme"}
+    part["urbanistica"]["difformita"] = [
+        {
+            "descrizione": "CILA in sanatoria presentata",
+            "sanabile": True,
+            "costo_stimato": None,
+            "source": {"file": "perizia.pdf", "page": 20},
+        }
+    ]
+    merged = merge_extractions([part], meta_docs, "unico")
+    assert merged["urbanistica"]["conformita_urbanistica"]["stato"] == "non_conforme"
+    assert len(merged["urbanistica"]["difformita"]) == 1
+    assert merged["urbanistica"]["difformita"][0]["sanabile"] is True
+
+
+def test_gt5_negative_space_lotto_h_stays_conforme_with_other_lot_difformita() -> None:
+    meta_docs = [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 10, "ocr_pages": 0}]
+    other_lot = empty_extraction(meta_docs)
+    other_lot["urbanistica"]["conformita_urbanistica"] = {
+        "stato": "non_conforme",
+        "dettaglio": "Lotti A, C, D presentano difformità edilizie",
+    }
+    other_lot["urbanistica"]["difformita"] = [
+        {
+            "descrizione": "Abuso edilizio lotto A",
+            "sanabile": False,
+            "costo_stimato": None,
+            "source": {"file": "perizia.pdf", "page": 5},
+        }
+    ]
+    target_lot = empty_extraction(meta_docs)
+    target_lot["urbanistica"]["conformita_urbanistica"] = {
+        "stato": "conforme",
+        "dettaglio": "Lotto H conforme urbanisticamente e catastale",
+    }
+    merged = merge_extractions([other_lot, target_lot], meta_docs, "H")
+    assert merged["urbanistica"]["conformita_urbanistica"]["stato"] == "conforme"
+    assert merged["urbanistica"]["difformita"] == []
+
+
+def test_page_lot_priority_boosts_perizia_conformita_keywords() -> None:
+    perizia_conf = page_lot_priority(
+        "Conformità urbanistica e catastale: difformità edilizie CTU",
+        "H",
+        "perizia",
+    )
+    perizia_generic = page_lot_priority("Descrizione generica", "H", "perizia")
+    assert perizia_conf > perizia_generic
+
+
+def test_derive_cauzione_importo_coerces_string_pct() -> None:
+    economics = {
+        "prezzo_base": {"value": 64906, "source": {"file": "avviso.pdf", "page": 1}},
+        "cauzione": {
+            "pct": "10%",
+            "base": None,
+            "importo": None,
+            "source": {"file": "avviso.pdf", "page": 4},
+        },
+    }
+    derive_cauzione_importo(economics)
+    assert economics["cauzione"]["pct"] == 10.0
+    assert economics["cauzione"]["base"] == "prezzo_base"
+    assert economics["cauzione"]["importo"] == 6490.6
+    assert economics["cauzione"]["derived"] is True
+
+
+def test_derive_cauzione_importo_skips_prezzo_offerto_base() -> None:
+    economics = {
+        "prezzo_base": {"value": 100000, "source": {"file": "avviso.pdf", "page": 1}},
+        "cauzione": {
+            "pct": 20,
+            "base": "prezzo_offerto",
+            "importo": None,
+            "source": {"file": "avviso.pdf", "page": 2},
+        },
+    }
+    derive_cauzione_importo(economics)
+    assert economics["cauzione"].get("importo") is None
+    assert "derived" not in economics["cauzione"]
+
+
+def test_merge_cauzione_fills_pct_from_other_chunk_and_derives_importo() -> None:
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 2, "ocr_pages": 0}]
+    pct_only = empty_extraction(meta_docs, not_found=["economics.cauzione.importo"])
+    pct_only["economics"]["prezzo_base"] = {
+        "value": 36039,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    pct_only["economics"]["cauzione"] = {
+        "pct": 10,
+        "base": "prezzo_base",
+        "importo": None,
+        "source": {"file": "avviso.pdf", "page": 5},
+    }
+    importo_only = empty_extraction(meta_docs)
+    importo_only["economics"]["cauzione"] = {
+        "pct": None,
+        "base": "prezzo_base",
+        "importo": 3603.9,
+        "source": {"file": "avviso.pdf", "page": 5},
+    }
+    merged = merge_extractions([pct_only, importo_only], meta_docs, "4")
+    assert merged["economics"]["cauzione"]["pct"] == 10
+    assert merged["economics"]["cauzione"]["importo"] == 3603.9
+    assert "derived" not in merged["economics"]["cauzione"]
+
+
+def test_merge_derives_cauzione_when_pct_in_later_chunk() -> None:
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 2, "ocr_pages": 0}]
+    prezzo = empty_extraction(meta_docs)
+    prezzo["economics"]["prezzo_base"] = {
+        "value": 100355.25,
+        "source": {"file": "avviso.pdf", "page": 4},
+    }
+    cau = empty_extraction(meta_docs, not_found=["economics.cauzione.importo"])
+    cau["economics"]["cauzione"] = {
+        "pct": 10,
+        "base": "prezzo_base",
+        "importo": None,
+        "source": {"file": "avviso.pdf", "page": 6},
+    }
+    merged = merge_extractions([prezzo, cau], meta_docs, "H")
+    assert merged["economics"]["cauzione"]["importo"] == 10035.52
+    assert merged["economics"]["cauzione"]["derived"] is True
