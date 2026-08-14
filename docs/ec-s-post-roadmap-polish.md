@@ -19,7 +19,7 @@
 | PP-2 | **Housekeeping bundle** | (a) promote Service JSON-LD helper to `@easycasa/shared`; (b) SEO i18n pass on `valutazione-gratuita` / `acquisto-assistito` hardcoded EN strings; (c) listing titles on enquiry cards (API returns UUID only — needs small API field) | None | 1 PR |
 | PP-3 | **Static lastmod hygiene** | `STATIC_PAGE_LASTMOD` map is manual — bump on marketing copy changes, or wire to git log date per page | None | trivial |
 
-**Suggested order:** PP-4 → PP-5 → PP-6 → PP-1 → PP-2 (+PP-3 folded).
+**Suggested order:** ~~PP-4~~ → **PP-5** → PP-6 → PP-1 → PP-2 (+PP-3 folded).
 
 ## A2. Ops verifications
 
