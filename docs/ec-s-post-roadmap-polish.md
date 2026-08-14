@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** (P6 ledger + `SELLER_CHECKLIST_ENABLED`) · **VO dark** (PK-1 runbook ready) · **PP-1 partner self-serve checkout shipped** (needs Stripe Price ID backfill) · **PP-2+PP-3 housekeeping live** · paid directory MVP (migration 0064/0065) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)** · **PP-1/2/3/4/5/6 eng closed** · **PK-2 CLOSED** · PK-1 awaiting moderation capacity · **EC-S eng backlog empty** — remaining work is PK-1/3+ decisions and ops follow-ups.
+**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** (P6 ledger + `SELLER_CHECKLIST_ENABLED`) · **PK-3 analytics LIVE** (P7 ledger + `SELLER_ANALYTICS_ENABLED`) · **VO dark** (PK-1 runbook ready) · **PP-1 partner self-serve checkout shipped** (needs Stripe Price ID backfill) · **PP-2+PP-3 housekeeping live** · paid directory MVP (migration 0064/0065) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)** · **PP-1/2/3/4/5/6 eng closed** · **PK-2 CLOSED** · **PK-3 CLOSED** · PK-1 awaiting moderation capacity · **EC-S eng backlog empty** — remaining work is PK-1/4+ decisions and ops follow-ups.
 
 ---
 
@@ -35,7 +35,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 |----|------|-----------|-------|
 | PK-1 | VO flip (`VERIFIED_OWNER_ENABLED`) → P3 ledger live | **UI ready + runbook written** (`docs/runbooks/ec-s-vo-enablement.md`); awaiting **moderation capacity** (named reviewer + SLA) | AZM |
 | PK-2 | Checklist flip (`SELLER_CHECKLIST_ENABLED`) → P6 live | **CLOSED 2026-08-14** — K EC 1.52; see `docs/audits/EC-S-pk2-checklist-enablement.md` | done |
-| PK-3 | Analytics flip (`SELLER_ANALYTICS_ENABLED`) → P7 live | Product decision | AZM |
+| PK-3 | Analytics flip (`SELLER_ANALYTICS_ENABLED`) → P7 live | **CLOSED 2026-08-14** — K EC 1.53; see `docs/audits/EC-S-pk3-analytics-enablement.md` | done |
 | PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | Bunny DPA signed | AZM / DPO |
 | PK-5 | T25 in-portal messaging | T05 §6.5 controllership determination | Counsel |
 | PK-6 | T19.2 dup-enforce + suspend UX | LIA | Counsel |
@@ -74,7 +74,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pp2-k151-completion-feedback.md` | **PP-2+PP-3 / K EC 1.51** completion R&D feedback (eng backlog empty) |
 | `docs/audits/EC-S-pk2-checklist-enablement.md` | **PK-2 / K EC 1.52** checklist enablement record |
 | `docs/audits/EC-S-pk2-k152-completion-feedback.md` | **PK-2 / K EC 1.52** post-merge completion R&D feedback |
-| `docs/runbooks/ec-s-vo-enablement.md` | **PK-1 prep** — VO flip runbook (do not execute until moderation capacity) |
+| `docs/audits/EC-S-pk3-analytics-enablement.md` | **PK-3 / K EC 1.53** analytics enablement record |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
@@ -87,4 +87,4 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/env.md` | Flag/build-arg documentation |
 
 ---
-*Maintained by Claude (R&D coordination). PP-1–PP-6 + PP-2/PP-3 closed 2026-08-14. **PK-2 closed** (K EC 1.52). **EC-S eng backlog empty** — PK-1 (VO) awaits moderation capacity; PK-3+ remain. Update on every PK/V closure.*
+*Maintained by Claude (R&D coordination). PP-1–PP-6 + PP-2/PP-3 closed 2026-08-14. **PK-2 closed** (K EC 1.52). **PK-3 closed** (K EC 1.53). **EC-S eng backlog empty** — PK-1 (VO) awaits moderation capacity; PK-4+ remain. Update on every PK/V closure.*

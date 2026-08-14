@@ -54,11 +54,11 @@
       "note": "Document checklist — live 2026-08-14 (AZM PK-2); SELLER_CHECKLIST_ENABLED"
     },
     "P7": {
-      "state": "coming",
+      "state": "live",
       "tasks": [
         "T23"
       ],
-      "note": "Seller dashboard analytics"
+      "note": "Seller dashboard analytics — live 2026-08-14 (AZM PK-3); SELLER_ANALYTICS_ENABLED"
     },
     "P8": {
       "state": "live",

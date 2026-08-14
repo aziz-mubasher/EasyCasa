@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": null,
+  "kaizenCode": "K EC 1.53",
+  "polishId": "PK-3",
+  "title": "K EC 1.53",
+  "venture": "EasyCasa",
+  "lifecycle": "running",
+  "agentStatus": "RUNNING",
+  "agentBcId": "bc-0e9ab6c8-b4ba-4ed3-9f89-13154f2b43e8",
+  "agentUrl": "https://cursor.com/agents/bc-0e9ab6c8-b4ba-4ed3-9f89-13154f2b43e8",
+  "branch": "cursor/pk3-analytics-enablement-43e8",
+  "prNumber": null,
+  "prUrl": null,
+  "prState": null,
+  "dispatchedAt": "2026-08-14T20:18:45.339Z",
+  "updatedAt": "2026-08-14T20:18:45.339Z",
+  "summary": "PK-3 ledger flip + audit docs; VPS deploy pending",
+  "nextAction": "Run validation gates, push PR, VPS flip",
+  "errors": []
+}

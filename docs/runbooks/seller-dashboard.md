@@ -70,7 +70,7 @@ docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml -
 | `SELLER_PREMIUM_ENABLED` | `true` | Needs `plans.seller_premium.stripe_price_id` |
 | `PARTNER_DIRECTORY_ENABLED` | `true` | Informational + G3 `paid_placement` |
 | `SELLER_VIEWINGS_ENABLED` | **`true` (V-1 flipped 2026-08-14)** | Runtime on VPS; api recreated with Traefik pair. Page always rendered; seller viewing APIs now live (unauth → 401, not flag-404) |
-| `SELLER_ANALYTICS_ENABLED` | `false` (parked PK-3) | Do not flip without AZM |
+| `SELLER_ANALYTICS_ENABLED` | **`true` (PK-3 flipped 2026-08-14)** | Runtime on VPS; web rebuild for P7 ledger. Page always rendered; seller analytics/nudge APIs live (unauth → 401, not flag-404) |
 | `VERIFIED_OWNER_ENABLED` | `false` (parked PK-1) | Runbook: `docs/runbooks/ec-s-vo-enablement.md` |
 | `SELLER_CHECKLIST_ENABLED` | **`true` (PK-2 flipped 2026-08-14)** | Runtime on VPS; web rebuild for P6 ledger |
 | `MEDIA_CDN_ENABLED` | `false` (parked PK-4) | |
@@ -166,7 +166,7 @@ When `SELLER_ANALYTICS_ENABLED=true`:
 1. Open `/{locale}/seller/listings/<id>/analytics`.
 2. Confirm windowed metrics + nudge cards; dismiss via UI.
 
-**Do not enable** without AZM (PK-3).
+**Do not disable** without product decision (PK-3 closed 2026-08-14 — see `docs/audits/EC-S-pk3-analytics-enablement.md`).
 
 ### Step F — Monetisation (PP-5 web UI live)
 
