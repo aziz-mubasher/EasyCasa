@@ -1,6 +1,8 @@
 # EC-35 — Deterministic lot-section economics parse (completion)
 
 **Date:** 2026-08-14  
+**Merged:** #158 @ `6f92e31`  
+**Deploy:** VPS `ai` rebuilt+recreated; host tip `b303677` (contains EC-35); in-container smoke lot7=64906/48680, lot4=36039  
 **Kaizen:** K EC 7.3 · Operations · Improve  
 **Branch:** `cursor/ec-35-ex2-lot7-association-5db0`  
 **Adjudication:** `Ex2-7 = 64906` (AZM screenshot of `avviso quarta vendita lotto 4_7.pdf` — Lotto 7 prezzo base €64.906 / offerta minima €48.680)

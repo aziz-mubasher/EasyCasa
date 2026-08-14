@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T19:54:05.140Z",
+  "updatedAt": "2026-08-14T19:54:59.885Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -69,18 +69,18 @@
       "polishId": null,
       "title": "EC-35 Ex2 lotto-7 auction lot association",
       "venture": "EasyCasa",
-      "lifecycle": "pr_open",
+      "lifecycle": "merged",
       "agentStatus": "IDLE",
-      "agentBcId": "bc-6f57762a-047c-4cf0-8fc8-fa0ff9a21c63",
-      "agentUrl": "https://cursor.com/agents/bc-6f57762a-047c-4cf0-8fc8-fa0ff9a21c63",
-      "branch": "cursor/ec-35-ex2-lot7-association-5db0",
+      "agentBcId": "bc-490cf437-a923-4f60-be16-5adefa335db0",
+      "agentUrl": "https://cursor.com/agents/bc-490cf437-a923-4f60-be16-5adefa335db0",
+      "branch": "main",
       "prNumber": 158,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/158",
-      "prState": "DRAFT",
+      "prState": "MERGED",
       "dispatchedAt": "2026-08-14T08:42:40.236Z",
-      "updatedAt": "2026-08-14T19:35:04.647Z",
-      "summary": "EC-35 #158 DRAFT tip 3492389; pytest 61/61; CI ai+node green. Not merged; run-f5e681ea not found in accessible agents.",
-      "nextAction": "Review/merge #158; deploy ai; Mac Ex2-7 live; counsel send still open",
+      "updatedAt": "2026-08-14T19:54:59.885Z",
+      "summary": "EC-35 MERGED #158 @ 6f92e31 + DEPLOYED ai on VPS (tip b303677). Container smoke: lot7 64906/48680, lot4 36039. Flags off.",
+      "nextAction": "Mac live Ex2-7 aste:eval; counsel send still open; mark Kaizen K EC 7.3 ~90%",
       "errors": []
     },
     {
