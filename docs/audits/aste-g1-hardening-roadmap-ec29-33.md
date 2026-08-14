@@ -1,7 +1,7 @@
 # EC Aste — G1 Hardening Roadmap (EC-29 → EC-34)
 
 **Venture:** Easy Casa Italia · repo `aziz-mubasher/EasyCasa`  
-**Updated:** 2026-08-14 (EC-29→34 merged + deployed; live 8/8 verify still Mac-pending on tip ≥ `fc64987`)  
+**Updated:** 2026-08-14 (EC-29→34 merged + deployed; live 8/8 DONE — Ex2-7 economics adjudication open)  
 **Gate spec:** `docs/runbooks/aste-g1-gate.md` · Public enable: G2 / `docs/runbooks/aste-enable.md`  
 **Flags:** `ASTE_ANALYSIS_ENABLED` **off** in production. No brief in this set flips any flag.  
 **Board:** Kaizen EC · K EC 7.3 (AI Agent) · Operations  
@@ -18,7 +18,7 @@ Counsel **answers** unlock G2, not G1. Current stance: **conscious near-miss →
 
 | G1 piece | Status |
 | --- | --- |
-| Eval pass bar | Engineering done EC-29→34 — **awaiting live 8/8 on tip ≥ `fc64987`** (not `fe1e0c7`; EC-34 required after 2026-08-14 regressions) |
+| Eval pass bar | Live 8/8 **DONE** on ≥`fc64987` — GT-5/Ex8/GT-4/Ex7-honest/lot-bleed **green**; **Ex2-7 still 153850/115387.5** vs bar 64906/48680 → **adjudicate** before GREEN or EC-35 |
 | Counsel packet sent | **NOT DONE** — human (docs 1–8 + LGL-1, reply `packet sent <date>`) |
 | Waitlist | **WAIVED** — 1 lead (2026-08-11) |
 
@@ -89,14 +89,13 @@ Pass-bar checks on the paste tables: economics + page refs all hit; urbanistica.
 
 ---
 
-## Remaining to close G1 (all human)
+## Remaining to close G1
 
-1. **Live 8/8 re-run** on tip ≥ `fc64987` (recipe above) → paste tables to R&D / update `G1-post-ec34-rnd-report.md`. Expect: Ex2-7 **64906/48680**; GT-5 stato clean; Ex7 stima filled or **honest not_found**; GT-4 reconciled; Ex8 derive parity. If that lands → **eval pass bar green**.
-2. **Counsel email** — packet 1–8 + LGL-1, requested response date → reply `packet sent <date>`.
-3. **Drive GT true-score** vs `EC_Aste_GoldenSet_GroundTruth_v1.md` (Drive-only, not in git).
-4. **Product call** — near-miss → hardening-first vs green, based on the re-run.
-5. Board hygiene — link PRs #134/#136/#144/#146/#154 to K EC 7.3.
-6. **EC-24 note for R&D**: OMI sconto-reale must tolerate stima = not_found (guard can legitimately clear it) — verify before any EC-24-dependent brief.
+1. **Adjudicate Ex2 lotto 7** (open avviso row / Drive GT): **64906** → dispatch **EC-35** micro-brief (lot-association for this table shape only); **153850** → runbook bar correction and mark **eval pass bar GREEN** as of 2026-08-14 live run.
+2. **Counsel email** — packet 1–8 + LGL-1 → `packet sent <date>`.
+3. **Drive GT true-score** — also watch GT-3/Ex4 urbanistica `non_conforme`→`non_rilevato` vs perizia prose.
+4. Board hygiene — link PRs #134/#136/#144/#146/#154 to K EC 7.3.
+5. **EC-24 note for R&D**: OMI sconto-reale must tolerate stima = not_found (Ex7 honest miss confirmed live).
 
 After G1 green: EC-27 (payments split) and EC-28 lane work unlock; G2 (flag enable) still requires observability on VPS, counsel EXTERNAL sign-off, and `aste-enable.md` smoke.
 
@@ -109,7 +108,7 @@ After G1 green: EC-27 (payments split) and EC-28 lane work unlock; G2 (flag enab
 | SHAs on `origin/main` | `57b0f1f` … `fe1e0c7`, **`fc64987`** (EC-34) ancestors of tip `598c9a3` |
 | VPS `/opt/easycasa-ita` | `api`+`ai` recreated; `/api/version` → `gitSha: fc64987` (2026-08-14 deploy) |
 | Pytest (cloud) | `test_aste_extract.py` **53/53** |
-| Live 8/8 post-EC-34 | **PENDING** — Mac only |
+| Live 8/8 post-EC-34 | **DONE** 2026-08-14 — 8/8 ready; Ex2-7 economics adjudication open |
 | Stale draft | [#132](https://github.com/aziz-mubasher/EasyCasa/pull/132) may still be OPEN for EC-29 — close as superseded by `57b0f1f` |
 
 **Do not** claim G1 closed or flip `ASTE_ANALYSIS_ENABLED` without the human Mac paste + `packet sent <date>`.

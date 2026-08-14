@@ -73,13 +73,9 @@ Correctly one PR (~400 LOC logic + ~300 LOC tests). Brief sizing accurate. Merge
 
 **Expect pass-bar green** on live re-run for Ex2-7 economics + GT-5 stato + GT-4 not_found reconciliation + Ex8 derive parity. Ex7 stima may still be honest `not_found` if perizia lacks an explicit total. Do **not** enable `ASTE_ANALYSIS_ENABLED`. Counsel send remains the human G1 gate.
 
-### Paste stub (post live re-verify — update after Mac suite)
+### Live verify (2026-08-14, tip ≥ `fc64987`)
 
-```
-EC-34 merged+deployed: main fc64987 api+ai recreated
-live 8/8: PENDING operator re-run
-expected: Ex2-7 prezzo_base 64906; GT-5 stato non_rilevato|conforme; flags still off
-```
+8/8 `ready`. EC-34 landed for GT-5 orphaned stato, Ex8 derive parity, GT-4 reconcile, Ex7 honest `not_found`, occupazione/urbanistica lot bleed. **Ex2-7 economics still 153850/115387.5** — not closed by EC-34; see adjudication in canonical report.
 
 **Canonical gate status for Claude:** `docs/audits/G1-post-ec34-rnd-report.md`
 

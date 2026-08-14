@@ -1,16 +1,17 @@
-# G1 — Analisi Aste R&D report (post EC-34)
+# G1 — Analisi Aste R&D report (post EC-34 + live 8/8)
 
-**Date:** 2026-08-14  
+**Date:** 2026-08-14 (live verify landed)  
 **Audience:** Claude / R&D (forward via Aziz)  
-**Code tip:** `main` @ **`598c9a3`** (≥ merge `fc64987` EC-34 + deploy feedback)  
-**VPS:** `/opt/easycasa-ita` — `api` + `ai` force-recreated; `/api/version` reported **`gitSha: fc64987`** at deploy  
+**Code tip at live run:** ≥ **`fc64987`** (report branch on tip of docs PR; main also advanced with unrelated polish)  
+**VPS:** `api` + `ai` recreated at deploy — `/api/version` → **`gitSha: fc64987`**  
 **Flags:** `ASTE_ANALYSIS_ENABLED` **off** — G2 / `docs/runbooks/aste-enable.md`  
 **Spec:** `docs/runbooks/aste-g1-gate.md`  
 **Board:** Kaizen · K EC 7.3 · Operations · Improve  
 
-**Canonical prior paste tables:** `docs/audits/G1-aste-status-rnd-feedback.md` (2026-08-13 baseline) + live 2026-08-14 suite logs on Mac `/Users/azm/easycasa-g1-results/20260814_GT*.log`  
-**Extract completion audits:** EC-29…EC-34 under `docs/audits/EC-*-completion-feedback.md`  
-**Roadmap ledger:** `docs/audits/aste-g1-hardening-roadmap-ec29-33.md` (now includes EC-34)
+**Live analysisIds (2026-08-14 post-EC-34):** `f97b103c…` … `c7ad0915` (8/8 `ready`)  
+**Prior paste baselines:** `docs/audits/G1-aste-status-rnd-feedback.md` (2026-08-13) · Mac logs `/Users/azm/easycasa-g1-results/20260814_*.log`  
+**Extract audits:** `docs/audits/EC-29…EC-34-completion-feedback.md`  
+**Roadmap:** `docs/audits/aste-g1-hardening-roadmap-ec29-33.md`
 
 ---
 
@@ -18,21 +19,34 @@
 
 | G1 piece | Status | Notes |
 | --- | --- | --- |
-| Eval pass bar | **Pending live verify on tip ≥ `fc64987`** | Engineering extract set **EC-29→34** merged + deployed. Pre-EC-34 2026-08-14 run was 8/8 ready but **failed pass bar** (Ex2-7 bleed 153850; GT-5 orphaned `non_conforme`). EC-34 targets those. Cloud agent **cannot** re-run Drive PDFs. |
+| Eval pass bar | **Near-miss — one open adjudication** | Live 8/8 **DONE** on tip ≥ `fc64987`: 8/8 `ready`. GT-5 / Ex8 / GT-4 / Ex7-honest / lot-bleed on occupazione+urbanistica **green**. **Ex2 lotto 7 economics still 153850/115387.5** vs documented bar 64906/48680. |
 | Counsel packet **sent** | **NOT DONE** | Docs 1–8 on disk; email is human |
 | Waitlist | **WAIVED** | 1 lead (2026-08-11) |
-| Code on `main` + VPS | **DONE** | EC-34 [#154](https://github.com/aziz-mubasher/EasyCasa/pull/154) @ `fc64987`; fixtures **53/53** pytest green on cloud |
+| Code on `main` + VPS | **DONE** | EC-29→34 merged; EC-34 @ `fc64987`; pytest **53/53** |
 
-**Call for R&D:** Do **not** declare G1 green from this report. Do **not** flip flags. Next decisive step is **Mac live 8/8** on tip ≥ `fc64987`. If that run meets the pass-bar table below (Ex7 honest `not_found` allowed), **eval pass bar = green**; counsel send still blocks full G1.
+**Call for R&D / product:** Do **not** flip flags. Do **not** claim full G1 green (counsel unsent).  
+**Eval pass bar:** **not green yet** pending Ex2-7 adjudication:
+- If **64906** is the true avviso lotto-7 row → brief **EC-35** (micro: lot-association for this multi-lot table shape).
+- If **153850** is correct → **runbook bar correction**; eval pass bar = **GREEN as of this run**.
 
-### Paste stub
+### Paste stub (actual)
 
 ```
 G1 post-EC-34: tip 598c9a3 / deployed fc64987 api+ai
 extract set EC-29→34 MERGED; pytest aste_extract 53/53
-live 8/8 on ≥fc64987: PENDING (Mac only — Drive PDFs)
-pass-bar expect: Ex2-7 64906/48680; GT-5 stato clean; Ex7 stima or honest not_found; GT-4 reconciled; Ex8 derive parity
+live 8/8 on ≥fc64987: DONE 2026-08-14 — 8/8 ready (f97b103c…c7ad0915)
+pass-bar actual:
+  GT-5 stato clean ✓ (non_rilevato, orphaned_conformita_stato_dropped)
+  Ex8 derive parity ✓ (A+B 13000 derived / 10%)
+  GT-4 not_found reconciled ✓ (stima 156000 p22)
+  Ex7 stima honest not_found ✓ (micro-chunk found no explicit total — acceptable)
+  occupazione/urbanistica lot bleed resolved ✓
+  Ex2-7 economics ✗ — still 153850/115387.5 vs documented 64906/48680
 counsel: NOT SENT · waitlist WAIVED · flags OFF
+open: adjudicate Ex2-7 (open avviso lotto 7 row, or GT true-score)
+  → 64906 right: EC-35 micro-brief (lot-association for this table shape)
+  → 153850 right: runbook bar correction; eval = GREEN as of this run
+watch: GT-3/Ex4 urb non_conforme→non_rilevato downgrade — verify vs perizia prose in GT score
 ```
 
 ---
@@ -44,135 +58,85 @@ counsel: NOT SENT · waitlist WAIVED · flags OFF
 **G1 =** `eval pass bar` + `counsel packet sent` + `waitlist (met|waived)`. Counsel **answers** → G2. Public enable → `aste-enable.md`.
 
 **Done**
-- Full extract-quality sequence **EC-29 → EC-34** on `main`, VPS `ai`/`api` live at `fc64987`.
-- Live golden-set runs on Mac: 2026-08-13 (baseline) and **2026-08-14** (post EC-32/33 tip `c67c8ad`) — both 8/8 `ready`.
+- EC-29→34 on `main` + VPS deploy (`fc64987`).
+- Live golden-set **post-EC-34** on Mac: **8/8 `ready`** (analysisIds `f97b103c…c7ad0915`).
+- EC-34 goals that landed on live:
+  - GT-5 orphaned stato → **`non_rilevato`** + `orphaned_conformita_stato_dropped` ✓
+  - Ex8 A/B cauzione **13000 derived / 10%** parity ✓
+  - GT-4 stima **156000** reconciled out of `meta.not_found` ✓
+  - Ex7 stima **honest `not_found`** after micro-chunk (no explicit total) ✓
+  - Occupazione / urbanistica cross-lot bleed resolved ✓
 - Waitlist **WAIVED**.
-- EC-34 shipped: lot-scoped auction economics, orphaned conformità stato → `non_rilevato`, Ex7 stima micro-chunk (`ASTE_STIMA_MICROCHUNK_ENABLED`), `meta.not_found` reconciliation, per-lot cauzione derive determinism.
-- Cloud re-check: tip ancestor of `fc64987`; **53/53** `services/ai/tests/test_aste_extract.py`.
 
 **Not done**
-- Live 8/8 **re-verify on tip ≥ `fc64987`** (Mac / Drive only).
+- Ex2 lotto 7 economics vs documented bar (**153850** still returned).
 - Counsel email / `packet sent <date>`.
-- Drive GT true-score vs `EC_Aste_GoldenSet_GroundTruth_v1.md`.
+- Drive GT true-score (also needed to adjudicate Ex2-7 and watch GT-3 urbanistica).
 
-**Gate call:** still **not green**. Engineering stance: pass bar **should** go green after Mac verify if EC-34 holds; Ex7 `not_found` = acceptable-honest.
+**Gate call:** full G1 **not green**. Eval pass bar **blocked on one adjudication** (Ex2-7). Everything else on the post-EC-34 checklist is green or acceptable-honest.
 
 ### 2. WHERE BRIEFS / RUNBOOK FAILED YOU
 
 | Type | Detail |
 | --- | --- |
-| Wrong env (standing) | Compose on `/Volumes/Muba` breaks AppleDouble → host PG17 + Redis/MinIO/Meili/AI |
-| AI lifecycle | Suite must start AI **in the same shell** or mid-suite restart (`AI_DOWN` otherwise) |
-| Cloud vs Mac | Cloud agents **cannot** run golden-set (runbook line 6). Dispatching “live 8/8” to cloud wastes a turn |
-| EC-32/33 incomplete lot scope | Lot filter applied to **`valore_stima` only** → Ex2 lotto 7 economics bleed (64906 → **153850**) on 2026-08-14 |
-| GT-5 incomplete | Difformità drop worked; orphaned `stato=non_conforme` with `difformita=0` still failed pass bar → EC-34 |
-| Draft PR friction | EC-34 PR #154 was draft + dirty vs main ledger (PP-6) — needed local merge reconcile |
+| Ex2-7 bar vs extract | Documented pass bar hard-codes **64906/48680** from earlier runs; live post-EC-34 still extracts **153850/115387.5**. Either lot-association still misses this avviso table shape, **or** the runbook bar is wrong / stale vs the PDF row. **Human must open the avviso.** |
+| EC-34 incomplete for this shape | Lot-scoped auction filters fixed other bleeds (occupazione/urbanistica) but **not** this economics pair — do not re-ship a broad “lot filter” brief; micro-target the Ex2 multi-lot avviso table if 64906 is right. |
+| GT-3 watch | Ex4 urbanistica may have been downgraded `non_conforme` → `non_rilevato` by orphaned-stato rule — confirm against perizia prose in Drive GT score (could be correct drop or over-aggressive). |
+| Cloud vs Mac | Confirmed again: live 8/8 only on Mac. |
 
 ### 3. REPO REALITY CHECK
 
-- **Stack:** pnpm monorepo · Nest API · FastAPI AI (Py 3.12) · Next web · Traefik VPS `/opt/easycasa-ita`
-- **Extract:** `services/ai/app/services/aste_extract.py` — chunking + 429 backoff + field precedence + lot filters (now auction fields too) + orphaned-stato reconcile + optional stima micro-chunk
-- **Eval:** `pnpm --filter @easycasa/api run aste:eval` → build + `node -r reflect-metadata`
-- **Env knobs:** `VALORE_STIMA_MIN_PREZZO_BASE_RATIO` (default 0.01); `ASTE_STIMA_MICROCHUNK_ENABLED` (default true)
-- **Already exists:** do not re-brief Ex7 400, occupazione enum, urbanistica schema, scorer unwrap, runbook invoke — unless live re-run regresses
-- **Single-writer:** `aste_extract.py` — no parallel agents
+- **Stack:** pnpm · Nest API · FastAPI AI · Next · Traefik VPS `/opt/easycasa-ita`
+- **Extract tip behavior (live):** orphaned-stato path works; micro-chunk skips inventing Ex7 totals; Ex8 derive deterministic; Ex2-7 still picks the **153850-class** row
+- **Do not parallel** another agent on `aste_extract.py` until Ex2-7 adjudicated
+- **EC-35** only if 64906 confirmed — scope: this avviso lotto-7 table association only (synthetic fixture mirroring the shape). No schema bump, no flag flips, no Ex7 chunk re-work.
 
 ### 4. EFFORT SIGNAL
 
-EC-29→33 planned trilogy + **EC-34 regression** correctly one PR each. Live verify and counsel are **human calendar**, not more extract briefs. Do not invent EC-35 unless Mac paste shows a new systematic miss.
+Live verify was the right next step (not another speculative extract PR). Remaining engineering is **zero or one micro-brief (EC-35)** depending on PDF adjudication — correctly smaller than EC-34.
 
-### 5. BLOCKED / NEEDS A HUMAN (Aziz / Mac)
+### 5. BLOCKED / NEEDS A HUMAN
 
-1. **Live 8/8** on tip ≥ `fc64987` (recipe below) → paste TSV / analysisIds into chat or refresh this doc.  
+1. **Open Ex2 avviso lotto 7 row** (or Drive GT true-score) → choose 64906 vs 153850.  
 2. **Counsel email** → `packet sent <date>`.  
-3. **Drive GT score**.  
-4. **Product call** after paste: green vs still hardening-first.  
-5. Kaizen K EC 7.3 hygiene if bridge `completeOnAttach` missed.
+3. **GT score** — especially Ex2-7 + GT-3/Ex4 urbanistica prose vs `non_rilevato` downgrade.  
+4. If 153850 wins: **edit** `docs/runbooks/aste-g1-gate.md` pass-bar numbers; mark eval green in this report’s successor stub.  
+5. If 64906 wins: dispatch **EC-35** micro-brief only.
 
 ### 6. NEXT TASK SHOULD ACCOUNT FOR
 
-1. Prefer **Mac / local agent** for any golden-set work — never cloud-only.  
-2. Pass-bar expectations after EC-34 (see table).  
-3. Ex7 stima `not_found` after micro-chunk = **honest OK**, not a new brief by default.  
-4. Do **not** brief public enable / payments as G1-green.  
-5. Keep `Example 1 ` trailing space; same-shell AI; ~90s cooldown; MinIO on `/Volumes/Muba/easycasa-minio-data`.
+1. Adjudication first — **do not** auto-dispatch EC-35.  
+2. If EC-35: fixture-first for the two-lot avviso table that still bleeds; keep Ex2 lotto 4 = 36039 as regression fence.  
+3. Watch orphaned-stato over-firing on GT-3 when scoring GT.  
+4. Counsel + flags still block full G1 / public enable.  
+5. Ex7 honest `not_found` is **closed** — do not re-brief micro-chunk.
 
 ---
 
-## Live evidence timeline
+## Pass-bar scorecard (live ≥ `fc64987`, 2026-08-14)
 
-### A) 2026-08-13 (tip ~`1f1269b`, pre EC-32/33)
-
-8/8 ready. Ex2 avviso ✓ 36039/64906. Occupazione hit 8/8. Urbanistica miss 8/8. Ex5 stima=84 bogus. → drove EC-32/33.
-
-### B) 2026-08-14 morning (tip `c67c8ad`, post EC-32/33, pre EC-34)
-
-8/8 ready. Wins: urbanistica structured hit 8/8; Ex5 stima → 156000; Ex8 A cauzione derived.  
-**Pass-bar breaks:**
-- Ex2 lotto 7: **prezzo_base=153850 / offerta=115387.5** (want 64906/48680)
-- GT-5 H: `urb=non_conforme` with `difformita=0` (orphaned stato)
-
-Logs: `/Users/azm/easycasa-g1-results/20260814_GT*.log`
-
-### C) EC-34 merge + deploy (same day)
-
-PR [#154](https://github.com/aziz-mubasher/EasyCasa/pull/154) → `fc64987`. VPS api+ai Recreated. Feedback: `docs/audits/EC-34-completion-feedback.md`.
-
-### D) Cloud attempt to re-verify (this agent)
-
-Tip `598c9a3` ≥ `fc64987`. Drive path missing. Pytest **53/53**. **Live 8/8 not run.**
-
----
-
-## Pass-bar checklist (Mac re-run ≥ `fc64987`)
-
-| Check | Expect | Green if |
+| Check | Result | Notes |
 | --- | --- | --- |
-| Ex2 lotto 4 | `prezzo_base=36039` | unchanged |
-| Ex2 lotto 7 | `prezzo_base=64906`, `offerta_minima=48680` | restored (not 153850) |
-| GT-5 lotto H | stato `non_rilevato` **or** `conforme`; never bare `non_conforme` + empty difformita | clean |
-| Ex7 stima | value filled **or** honest `not_found` | either OK |
-| GT-4 | stima hit reconciled — not listed under `meta.not_found` when value present | reconciled |
-| Ex8 A/B | cauzione derive parity when same avviso pct + `prezzo_base` | both derive or both honest miss |
-| Pipeline | 8/8 `ready`, zero invented values | standing |
-
-If all land → **eval pass bar green** (note Ex7 `not_found` as acceptable-honest). Full G1 still needs counsel send.
-
----
-
-## Operator recipe (AZM Mac only)
-
-```bash
-cd /Volumes/Muba/EasyCasa && git pull --ff-only && git log -1 --format=%h   # must be ≥ fc64987
-# Start AI IN THIS SHELL, then:
-export EVAL_LIVE=1 ASTE_ANALYSIS_ENABLED=true ALLOW_PROVIDER_STUBS=true
-# AI_URL S3_ENDPOINT MEILI_URL REDIS_URL DATABASE_URL AI_INTERNAL_TOKEN — same as 2026-08-14
-BASE="/Volumes/Muba/Easy Casa Italia/EC Aste "
-OUT=/Users/azm/easycasa-g1-results; DATE_TAG=20260814_post34; COOLDOWN=90
-pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 1 "
-pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 2" --lotto 4
-pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 2" --lotto 7
-pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 4"
-pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 5"
-pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 7" --lotto H
-pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 8" --lotto A
-pnpm --filter @easycasa/api run aste:eval "${BASE}/Example 8" --lotto B
-# ~90s between cases; keep AI alive in same shell
-```
+| Pipeline 8/8 ready | ✓ | `f97b103c…c7ad0915` |
+| Ex2 lotto 4 = 36039 | ✓ (assumed held; not listed as fail) | Prior runs + no regression called out |
+| Ex2 lotto 7 = 64906/48680 | ✗ | Got **153850/115387.5** |
+| GT-5 stato clean | ✓ | `non_rilevato` + `orphaned_conformita_stato_dropped` |
+| Ex7 stima | ✓ honest | micro-chunk found no explicit total |
+| GT-4 not_found reconcile | ✓ | stima 156000 p22 |
+| Ex8 A/B derive parity | ✓ | both 13000 derived / 10% |
+| Occupazione/urbanistica lot bleed | ✓ | resolved |
+| GT-3 urb downgrade | watch | verify in GT score |
 
 ---
 
-## Extract task ledger (closed for engineering)
+## Extract task ledger
 
 | Task | Status | SHA / PR |
 | --- | --- | --- |
-| EC-29 chunking + eval DX | merged+deployed | `57b0f1f` |
-| EC-30 field precedence / occupazione / cauzione derive | merged+deployed | #134 `fab9973` |
-| EC-31 scorer + runbook | merged+deployed | #136 `0ebf1be` |
-| EC-32 urbanistica + cauzione patterns | merged+deployed | #144 `0b861ee` |
-| EC-33 valore_stima guards | merged+deployed | #146 `fe1e0c7` |
+| EC-29…EC-33 | merged+deployed | see roadmap |
 | EC-34 lot-bleed / orphaned stato / micro-chunk | merged+deployed | #154 `fc64987` |
+| EC-35 (conditional) | **not dispatched** | only if 64906 adjudicated correct |
 
 ---
 
-*End of G1 post–EC-34 R&D report. Update paste stub after Mac 8/8.*
+*End of G1 post–EC-34 live-verify R&D report.*
