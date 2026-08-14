@@ -122,6 +122,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | AI_RATE_LIMIT_PER_MIN | ai | Per-client cap on assistant calls. |
 | ASTE_EXTRACT_HTTP_TIMEOUT | ai | EC-23 — LLM extract HTTP timeout seconds (default `180`). |
 | VALORE_STIMA_MIN_PREZZO_BASE_RATIO | ai | EC-33 — reject `valore_stima` below this fraction of `prezzo_base` when both known (default `0.01` = 1%). |
+| ASTE_STIMA_MICROCHUNK_ENABLED | ai | EC-34 — when `true` (default), run one focused perizia micro-chunk LLM pass if main extract leaves `economics.valore_stima` not found and a perizia doc exists. |
 | AI_URL | web (server) | Internal AI base (e.g. `http://ai:8000`). |
 | NEXT_PUBLIC_AI_URL | web (browser) | Public AI base (e.g. `https://easycasaita.com/ai`). |
 

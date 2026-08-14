@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T08:21:23.155Z",
+  "updatedAt": "2026-08-14T08:44:06.292Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": null,
+      "kaizenCode": "K EC 7.3",
+      "polishId": null,
+      "title": "K EC 7.3",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-6c2d68f9-0329-4ed8-9f37-9b0cf401c143",
+      "agentUrl": "https://cursor.com/agents/bc-6c2d68f9-0329-4ed8-9f37-9b0cf401c143",
+      "branch": "cursor/ec-34-aste-regression-fix-c143",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-08-14T08:44:06.292Z",
+      "updatedAt": "2026-08-14T08:44:06.292Z",
+      "summary": "EC-34: investigating lot-bleed economics + GT-5 orphaned stato + Ex7 micro-chunk",
+      "nextAction": "Implement fixes in aste_extract.py + pytest fixtures",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ff7e343f",
       "kaizenCode": "K EC 1.48",
