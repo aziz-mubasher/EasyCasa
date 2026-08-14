@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://easycasa.local/schemas/azm-bridge-status-ledger.json",
+  "title": "AZM Dev Bridge Status Ledger",
+  "type": "object",
+  "required": ["schemaVersion", "updatedAt", "tasks"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "pollUrl": {
+      "type": "string",
+      "description": "Canonical raw URL Claude should WebFetch when re-polling."
+    },
+    "tasks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/task" }
+    }
+  },
+  "$defs": {
+    "task": {
+      "type": "object",
+      "required": [
+        "kaizenCode",
+        "title",
+        "lifecycle",
+        "updatedAt",
+        "venture"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "bridgeTaskId": {
+          "type": ["string", "null"],
+          "description": "azm-dev-bridge id (task_<hex>). Null if unknown."
+        },
+        "kaizenCode": {
+          "type": "string",
+          "description": "Kaizen task code, e.g. K EC 1.47"
+        },
+        "polishId": {
+          "type": ["string", "null"],
+          "description": "Optional polish/journey id, e.g. PP-4"
+        },
+        "title": { "type": "string" },
+        "venture": { "type": "string", "const": "EasyCasa" },
+        "lifecycle": {
+          "type": "string",
+          "enum": [
+            "dispatched",
+            "running",
+            "pr_open",
+            "pr_ready",
+            "merged",
+            "blocked",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "agentStatus": {
+          "type": ["string", "null"],
+          "description": "Cursor cloud agent lifecycle if known (RUNNING|IDLE|ERROR|…)."
+        },
+        "agentBcId": { "type": ["string", "null"] },
+        "agentUrl": { "type": ["string", "null"] },
+        "branch": { "type": ["string", "null"] },
+        "prNumber": { "type": ["integer", "null"] },
+        "prUrl": { "type": ["string", "null"] },
+        "prState": {
+          "type": ["string", "null"],
+          "description": "DRAFT|OPEN|MERGED|CLOSED"
+        },
+        "dispatchedAt": { "type": ["string", "null"], "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "summary": {
+          "type": "string",
+          "description": "One-line status Claude can quote verbatim."
+        },
+        "nextAction": {
+          "type": ["string", "null"],
+          "description": "What a human/Claude should do next."
+        },
+        "errors": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

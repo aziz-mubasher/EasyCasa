@@ -12,7 +12,7 @@
 | # | Stage | Surface | Status | Blocker |
 |---|-------|---------|--------|---------|
 | 1 | Discover | `/vendi-da-privato` (IT/EN/ES), Claim 1–2 live, T33 SEO | ✅ LIVE | — |
-| 2 | Sign up + onboard | OIDC + `POST /seller/onboarding` + informativa v1.1 | ⚠️ **API-only** | **PP-4** (no web form — funnel's broken first mile) |
+| 2 | Sign up + onboard | OIDC + `POST /seller/onboarding` + informativa v1.1 | 🟡 **PR open** ([#150](https://github.com/aziz-mubasher/EasyCasa/pull/150) draft) | **PP-4** eng landed; await merge → then ✅ |
 | 3 | Create listing | `/seller/list` wizard: OMI panel, photos, AI description, autosave, publish, quotas | ✅ LIVE | — |
 | 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | ⛔ DARK | PK-1/PK-2 flips **+ PP-6** (no seller VO/checklist UI) |
 | 5 | Receive enquiries | `/seller/enquiries`, Verified Buyer badges, mark-read | ✅ LIVE | (chat = T25, parked PK-5 — by design off-platform for now) |
@@ -35,7 +35,7 @@
 
 | ID | Item | Scope | Acceptance | Gate |
 |----|------|-------|-----------|------|
-| **PP-4** | **Seller onboarding web form** | Web UI for `POST /seller/onboarding` mounted where wizard raises `onboardingRequired`: display name, phone, marketing consent, informativa v1.1 acceptance (reuse T32 consent components). IT/EN/ES via i18n. No new API unless strictly needed | New OIDC user reaches published listing with **zero curl**; `consent.decision=ok`; flag-off still 404s | None — dispatch-ready |
+| **PP-4** | **Seller onboarding web form** | Web UI for `POST /seller/onboarding` mounted where wizard raises `onboardingRequired`: display name, phone, marketing consent, informativa v1.1 acceptance (reuse T32 consent components). IT/EN/ES via i18n. No new API unless strictly needed | New OIDC user reaches published listing with **zero curl**; `consent.decision=ok`; flag-off still 404s | **PR [#150](https://github.com/aziz-mubasher/EasyCasa/pull/150)** draft · bridge `task_89efec62` · agent IDLE — see `docs/azm-deliverables/_bridge/status-ledger.json` |
 | **PP-5** | **Monetisation purchase UI** | Boost buy button (7/30d) on seller listing cards → `/featured/checkout`; premium upsell surface (quota-429 moment + dashboard) → `/billing/checkout` + `/billing/portal` link; entitlements display from `/seller/entitlements`. T04-compliant wording; no new pricing copy without counsel check | Seller buys boost and premium end-to-end in UI; `In evidenza` label appears; unauth → 401 | None — dispatch-ready; **highest revenue leverage** |
 | **PP-6** | **VO + checklist seller UI** (pre-stage dark) | Seller-facing VO document submit + state display (`/seller/vo/*`) and checklist slots + completeness score (`/seller/checklist/*`), behind existing flags (dark until PK-1/PK-2). Web needs no `NEXT_PUBLIC_*` unless a route must 404 dark — if added, Dockerfile ARG + compose build.args in same PR (rule C.2) | Flag-off: invisible. Flag-on (staging): submit → documents_submitted → verified badge visible | None to build; PK-1/PK-2 to light |
 | **PP-1** | Partner Stripe self-serve checkout | (unchanged from polish backlog) | — | None |
@@ -71,4 +71,4 @@
 All dispatches follow `docs/ec-s-post-roadmap-polish.md` §C (single agent per code; `NEXT_PUBLIC_*` Docker ARG same-PR; Traefik compose pair; ops-flip vs eng-build stated explicitly; no parked flips bundled; ledger copy only via flip protocol).
 
 ---
-*Maintained by Claude (R&D coordination). V-1 flipped live 2026-08-14. Next: dispatch PP-4 (onboarding form) and/or authenticated viewings book→confirm smoke. Update the journey map on every merge/flip; fold back into the polish backlog when all stages are ✅ or decided.*
+*Maintained by Claude (R&D coordination). V-1 flipped live 2026-08-14. PP-4 eng on draft PR #150 (`task_89efec62`) — merge next, then PP-5. Status polls: `docs/runbooks/azm-dev-bridge.md`.*
