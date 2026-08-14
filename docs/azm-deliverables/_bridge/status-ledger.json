@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T07:53:35.895Z",
+  "updatedAt": "2026-08-14T08:02:00.051Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": null,
+      "kaizenCode": "bridge-feedback-loop",
+      "polishId": null,
+      "title": "azm-dev-bridge public status ledger (PR #151)",
+      "venture": "EasyCasa",
+      "lifecycle": "merged",
+      "agentStatus": null,
+      "agentBcId": null,
+      "agentUrl": null,
+      "branch": null,
+      "prNumber": 151,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/151",
+      "prState": "CLOSED",
+      "dispatchedAt": "2026-08-14T07:20:00.000Z",
+      "updatedAt": "2026-08-14T08:02:00.051Z",
+      "summary": "Bridge feedback loop LIVE on main @ 66073c3 (PR #151 superseded by same artifacts). Claude poll URL 200.",
+      "nextAction": "Update Claude Desktop standing prompt to WebFetch ledger; dispatch PP-5.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_89efec62",
       "kaizenCode": "K EC 1.47",

@@ -66,6 +66,8 @@
 | `docs/runbooks/azm-dev-bridge.md` | **Claude↔Cursor status poll / report protocol** |
 | `docs/azm-deliverables/_bridge/status-ledger.json` | Public dispatch status Claude WebFetches |
 | `docs/audits/EC-S-pp4-k147-completion-feedback.md` | **PP-4 / K EC 1.47** completion R&D feedback |
+| `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
+| `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
 | `docs/audits/EC-S-g1-signoff-enablement.md` | G1 record |
 | `docs/audits/EC-S-claim12-g3-enablement.md` | Claim 1–2 + G3 record |
