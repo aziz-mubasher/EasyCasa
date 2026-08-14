@@ -261,7 +261,8 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | STRIPE_PRICE_BOOST_7D | api | Optional Stripe Price ID for fixed 7-day boost (flat fee). Empty → Checkout `price_data` with fixed cents from shared `BOOST_FLAT_PRICE_CENTS`. |
 | STRIPE_PRICE_BOOST_30D | api | Optional Stripe Price ID for fixed 30-day boost (flat fee). |
 
-## EC-S Phase 4 — partner directory (T28/T29)
+## EC-S Phase 4 — partner directory (T28/T29 + PP-1)
 | Variable | Used by | Notes |
 |---|---|---|
-| PARTNER_DIRECTORY_ENABLED | api | Default `false`. T28/T29 neutral partner directory. Monetised referral variants **wait for G3 row 9** — do not enable fee flows. |
+| PARTNER_DIRECTORY_ENABLED | api | Default `false`. T28/T29 partner directory + G3 paid placement. When off, public + partner self-serve APIs → **404**; web page tolerates dark API. |
+| *(plans row)* `partner_directory_placement` | api/db | PP-1 flat listing fee. Migration `0065` seeds plan with **empty** `stripe_price_id`. **Backfill (AZM):** create Stripe Product + one-time Price in test/live mode, then `UPDATE plans SET stripe_price_id = 'price_…' WHERE key = 'partner_directory_placement';` — no hardcoded amounts in repo. Checkout `POST /partners/directory/checkout` returns **400 plan not purchasable** until backfilled. |

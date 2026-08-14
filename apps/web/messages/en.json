@@ -3387,7 +3387,33 @@
     },
     "credentials": "Credentials",
     "contact": "Contact",
-    "proMediaNote": "Photo and virtual-tour assets still use the standard media pipeline (EXIF strip, content-addressed, dup-hash) — no pro-only upload endpoint."
+    "proMediaNote": "Photo and virtual-tour assets still use the standard media pipeline (EXIF strip, content-addressed, dup-hash) — no pro-only upload endpoint.",
+    "selfServe": {
+      "title": "Directory presence for professionals",
+      "portalNote": "EasyCasa is an informational portal — we do not intermediate engagements with professionals and take no commission.",
+      "signInLead": "Sign in with a professional account to request directory presence.",
+      "signIn": "Sign in",
+      "unavailable": "Online requests are unavailable right now. Contact us for assistance.",
+      "paidActive": "Your entry «{name}» has active paid presence.",
+      "listingPending": "Entry «{name}» ({province}) is awaiting payment for paid presence.",
+      "checkoutCta": "Proceed to payment",
+      "checkoutBusy": "Redirecting…",
+      "notPurchasable": "Online payment is not available yet. Contact us to activate paid presence.",
+      "applyCta": "Submit request",
+      "applyBusy": "Submitting…",
+      "fields": {
+        "category": "Category",
+        "name": "Name / practice",
+        "province": "Province",
+        "credentials": "Credentials (optional)",
+        "contact": "Contact (no UTM/referral params)"
+      },
+      "errors": {
+        "applyFailed": "Could not submit your request. Try again or contact us.",
+        "checkoutFailed": "Could not start payment. Try again later.",
+        "alreadyPaid": "This entry already has active paid presence."
+      }
+    }
   },
   "consentUpdate": {
     "bannerText": "We have updated the privacy notice (version {version}). The changes are minor and require no action.",

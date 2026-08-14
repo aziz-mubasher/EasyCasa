@@ -27,6 +27,21 @@ const KEYS = [
   'contact',
 ] as const;
 
+const SELF_SERVE_KEYS = [
+  'title',
+  'portalNote',
+  'signInLead',
+  'signIn',
+  'unavailable',
+  'paidActive',
+  'listingPending',
+  'checkoutCta',
+  'checkoutBusy',
+  'notPurchasable',
+  'applyCta',
+  'applyBusy',
+] as const;
+
 describe('partnerDirectory i18n (EC-S-T28/T29 + G3)', () => {
   for (const [locale, messages] of Object.entries(LOCALES)) {
     it(`${locale}: all partnerDirectory keys present`, () => {
@@ -37,6 +52,16 @@ describe('partnerDirectory i18n (EC-S-T28/T29 + G3)', () => {
       for (const category of PARTNER_DIRECTORY_CATEGORIES) {
         expect(t.has(`categories.${category}`)).toBe(true);
       }
+      const tSelf = createTranslator({
+        locale,
+        messages,
+        namespace: 'partnerDirectory.selfServe',
+      });
+      for (const key of SELF_SERVE_KEYS) {
+        expect(tSelf.has(key)).toBe(true);
+      }
+      expect(tSelf.has('fields.category')).toBe(true);
+      expect(tSelf.has('errors.checkoutFailed')).toBe(true);
     });
   }
 
@@ -66,6 +91,15 @@ describe('partnerDirectory i18n (EC-S-T28/T29 + G3)', () => {
         .partnerDirectory;
       const lead = String(ns.lead ?? '');
       expect(lead).not.toMatch(/sponsor|featured|promo|paid placement/i);
+    }
+  });
+
+  it('selfServe copy avoids hardcoded EUR amounts (T04)', () => {
+    for (const [, messages] of Object.entries(LOCALES)) {
+      const ns = (messages as unknown as { partnerDirectory: Record<string, unknown> })
+        .partnerDirectory;
+      const selfServe = JSON.stringify(ns.selfServe ?? {});
+      expect(selfServe).not.toMatch(/€|\bEUR\b|\d+[,.]?\d*\s*(€|eur)/i);
     }
   });
 });

@@ -18,11 +18,13 @@ import {
   memberships,
   sellerSubscription,
   featuredPlacements,
+  partnerDirectory,
 } from '../db/schema';
 import { ListingBoostService } from '../listing-boost/listing-boost.service';
 import { SearchService } from '../search/search.service';
 
 const SELLER_PREMIUM_PLAN_KEY = 'seller_premium';
+const PARTNER_DIRECTORY_PLAN_KEY = 'partner_directory_placement';
 
 function mapStripeSubscriptionStatus(status: Stripe.Subscription.Status): SubscriptionStatus {
   switch (status) {
@@ -133,6 +135,37 @@ export class StripeService {
     return session.url ?? '';
   }
 
+  /** PP-1 — flat-fee partner directory placement (one-time payment, perpetual). */
+  async createPartnerDirectoryCheckout(partnerDirectoryId: string, userId: string): Promise<string> {
+    if (!this.config.PARTNER_DIRECTORY_ENABLED) {
+      throw new NotFoundException('partner directory not available');
+    }
+    const planRows = await this.db
+      .select()
+      .from(plans)
+      .where(eq(plans.key, PARTNER_DIRECTORY_PLAN_KEY))
+      .limit(1);
+    const plan = planRows[0];
+    if (!plan?.stripePriceId?.trim()) throw new BadRequestException('plan not purchasable');
+
+    const row = await this.findOwnedPartnerDirectory(partnerDirectoryId, userId);
+    if (!row.active) throw new BadRequestException('listing is inactive');
+    if (row.paidPlacement) throw new BadRequestException('listing already has paid placement');
+
+    const session = await this.stripe().checkout.sessions.create({
+      mode: 'payment',
+      line_items: [{ price: plan.stripePriceId, quantity: 1 }],
+      success_url: apiConfig.BILLING_SUCCESS_URL,
+      cancel_url: apiConfig.BILLING_CANCEL_URL,
+      metadata: {
+        kind: 'partner_directory',
+        partnerDirectoryId,
+        userId,
+      },
+    });
+    return session.url ?? '';
+  }
+
   async createPortalSession(userId: string): Promise<string> {
     const m = await this.db.select().from(memberships).where(eq(memberships.userId, userId)).limit(1);
     const customerId = m[0]?.stripeCustomerId;
@@ -194,6 +227,11 @@ export class StripeService {
           await this.activateFeatured(
             s.metadata.listingId,
             Number(s.metadata.days ?? 7),
+            (s.payment_intent as string) || s.id,
+          );
+        } else if (s.mode === 'payment' && s.metadata?.kind === 'partner_directory') {
+          await this.activatePartnerDirectory(
+            s.metadata.partnerDirectoryId,
             (s.payment_intent as string) || s.id,
           );
         }
@@ -362,5 +400,48 @@ export class StripeService {
     });
     const weight = await this.boosts.boostWeightForListing(listingId);
     await this.search.patchBoost(listingId, weight, weight > 0);
+  }
+
+  private async findOwnedPartnerDirectory(partnerDirectoryId: string, userId: string) {
+    const [row] = await this.db
+      .select()
+      .from(partnerDirectory)
+      .where(eq(partnerDirectory.id, partnerDirectoryId))
+      .limit(1);
+    if (!row || row.userId !== userId) {
+      throw new NotFoundException('partner listing not found');
+    }
+    return row;
+  }
+
+  private async activatePartnerDirectory(partnerDirectoryId: string, paymentId: string) {
+    if (!partnerDirectoryId) {
+      this.logger.warn('partner_directory activate skipped — missing partnerDirectoryId');
+      return;
+    }
+    const [row] = await this.db
+      .select()
+      .from(partnerDirectory)
+      .where(eq(partnerDirectory.id, partnerDirectoryId))
+      .limit(1);
+    if (!row) {
+      this.logger.warn(`partner_directory activate skipped — row ${partnerDirectoryId} not found`);
+      return;
+    }
+    if (row.stripePaymentId === paymentId && row.paidPlacement) return;
+    if (row.paidPlacement && row.stripePaymentId && row.stripePaymentId !== paymentId) {
+      this.logger.warn(
+        `partner_directory ${partnerDirectoryId} already paid via different payment`,
+      );
+      return;
+    }
+    await this.db
+      .update(partnerDirectory)
+      .set({
+        paidPlacement: true,
+        stripePaymentId: paymentId,
+        updatedAt: new Date(),
+      })
+      .where(eq(partnerDirectory.id, partnerDirectoryId));
   }
 }

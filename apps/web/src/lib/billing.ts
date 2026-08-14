@@ -33,6 +33,12 @@ export async function featureListing(
   return ((await res.json()) as { url: string }).url;
 }
 
+export async function startPartnerDirectoryCheckout(token: string): Promise<string> {
+  const res = await authedPost('/partners/directory/checkout', token, {});
+  if (!res.ok) throw new Error(`partner checkout failed: ${res.status}`);
+  return ((await res.json()) as { url: string }).url;
+}
+
 export async function startConversation(token: string, listingId: string, message: string): Promise<unknown> {
   const res = await authedPost('/conversations', token, { listingId, message });
   if (!res.ok) throw new Error(`message failed: ${res.status}`);

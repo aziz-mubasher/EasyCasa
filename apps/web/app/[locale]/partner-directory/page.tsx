@@ -1,5 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
+import { PartnerDirectorySelfServe } from '@/components/partner-directory/PartnerDirectorySelfServe';
+
 const API = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'https://easycasaita.com/api';
 
 type DirItem = {
@@ -75,6 +77,8 @@ export default async function PartnerDirectoryPage({
         ) : null}
         <p className="text-xs text-muted">{t('proMediaNote')}</p>
       </header>
+
+      <PartnerDirectorySelfServe />
 
       {data.items.length === 0 ? (
         <p className="text-muted">{t('empty')}</p>

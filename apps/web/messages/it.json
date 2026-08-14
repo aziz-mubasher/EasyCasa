@@ -3387,7 +3387,33 @@
     },
     "credentials": "Credenziali",
     "contact": "Contatto",
-    "proMediaNote": "Materiale fotografico e tour virtuali passano dalla pipeline media standard (EXIF strip, content-addressed, dup-hash) — nessun upload dedicato per professionisti."
+    "proMediaNote": "Materiale fotografico e tour virtuali passano dalla pipeline media standard (EXIF strip, content-addressed, dup-hash) — nessun upload dedicato per professionisti.",
+    "selfServe": {
+      "title": "Presenza in elenco per professionisti",
+      "portalNote": "EasyCasa è un portale informativo — non intermedia l'incarico con i professionisti e non matura commissioni.",
+      "signInLead": "Accedi con un account professionista per richiedere la presenza in elenco.",
+      "signIn": "Accedi",
+      "unavailable": "La richiesta online non è disponibile al momento. Contattaci per assistenza.",
+      "paidActive": "La tua voce «{name}» ha presenza a pagamento attiva.",
+      "listingPending": "Voce «{name}» ({province}) in attesa di pagamento per la presenza a pagamento.",
+      "checkoutCta": "Procedi al pagamento",
+      "checkoutBusy": "Reindirizzamento…",
+      "notPurchasable": "Il pagamento online non è ancora disponibile. Contattaci per attivare la presenza a pagamento.",
+      "applyCta": "Invia richiesta",
+      "applyBusy": "Invio…",
+      "fields": {
+        "category": "Categoria",
+        "name": "Nome / studio",
+        "province": "Provincia",
+        "credentials": "Credenziali (facoltativo)",
+        "contact": "Contatto (senza parametri UTM/referral)"
+      },
+      "errors": {
+        "applyFailed": "Impossibile inviare la richiesta. Riprova o contattaci.",
+        "checkoutFailed": "Impossibile avviare il pagamento. Riprova più tardi.",
+        "alreadyPaid": "Questa voce ha già presenza a pagamento attiva."
+      }
+    }
   },
   "consentUpdate": {
     "bannerText": "Abbiamo aggiornato l'informativa privacy (versione {version}). Le modifiche sono minori e non richiedono alcuna azione.",

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -124,5 +125,65 @@ export class PartnerDirectoryService {
       .returning({ id: partnerDirectory.id });
     if (!row) throw new NotFoundException('partner not found');
     return { ok: true as const, id: row.id };
+  }
+
+  async findByUserId(userId: string) {
+    const [row] = await this.db
+      .select()
+      .from(partnerDirectory)
+      .where(eq(partnerDirectory.userId, userId))
+      .limit(1);
+    return row ?? null;
+  }
+
+  /** PP-1 — partner claims a directory row (one per user). */
+  async apply(userId: string, input: PartnerDirectoryWrite) {
+    const existing = await this.findByUserId(userId);
+    if (existing) {
+      throw new ConflictException('partner already has a directory listing');
+    }
+    const values = this.normalize(input);
+    const [row] = await this.db
+      .insert(partnerDirectory)
+      .values({ ...values, userId, paidPlacement: false })
+      .returning();
+    return row;
+  }
+
+  async assertOwned(partnerDirectoryId: string, userId: string) {
+    const [row] = await this.db
+      .select()
+      .from(partnerDirectory)
+      .where(eq(partnerDirectory.id, partnerDirectoryId))
+      .limit(1);
+    if (!row || row.userId !== userId) {
+      throw new NotFoundException('partner listing not found');
+    }
+    return row;
+  }
+
+  /** PP-1 — idempotent webhook activation (perpetual paid placement). */
+  async activatePaidPlacement(partnerDirectoryId: string, paymentId: string) {
+    const [row] = await this.db
+      .select()
+      .from(partnerDirectory)
+      .where(eq(partnerDirectory.id, partnerDirectoryId))
+      .limit(1);
+    if (!row) return { activated: false as const, reason: 'not_found' as const };
+    if (row.stripePaymentId === paymentId && row.paidPlacement) {
+      return { activated: false as const, reason: 'already_paid' as const };
+    }
+    if (row.paidPlacement && row.stripePaymentId && row.stripePaymentId !== paymentId) {
+      return { activated: false as const, reason: 'already_paid_other' as const };
+    }
+    await this.db
+      .update(partnerDirectory)
+      .set({
+        paidPlacement: true,
+        stripePaymentId: paymentId,
+        updatedAt: new Date(),
+      })
+      .where(eq(partnerDirectory.id, partnerDirectoryId));
+    return { activated: true as const, reason: 'activated' as const };
   }
 }
