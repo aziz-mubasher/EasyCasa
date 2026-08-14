@@ -16,7 +16,7 @@
 | 3 | Create listing | `/seller/list` wizard: OMI panel, photos, AI description, autosave, publish, quotas | ✅ LIVE | — |
 | 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | ⛔ DARK | PK-1/PK-2 flips **+ PP-6** (no seller VO/checklist UI) |
 | 5 | Receive enquiries | `/seller/enquiries`, Verified Buyer badges, mark-read | ✅ LIVE | (chat = T25, parked PK-5 — by design off-platform for now) |
-| 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ⛔ **DARK** | **V-1 done 2026-08-14:** `SELLER_VIEWINGS_ENABLED` missing from VPS `.env` → API default **`false`**. Flip + api recreate when product wants stage 6 live |
+| 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ✅ **LIVE** | **V-1 flipped 2026-08-14:** `SELLER_VIEWINGS_ENABLED=true` + api recreate. Unauth APIs → 401; page 200. Full buyer-book → seller-confirm smoke needs authenticated accounts |
 | 7 | Steer the sale | analytics + price nudges | ⛔ DARK | PK-3 flip |
 | 8 | Pay us | boost + premium (Stripe rails live, flags on) | ⚠️ **No UI** | **PP-5** (no buy button / upsell surface — monetisation unsellable) |
 | 9 | Close | off-platform via partner directory (portal, not mediatore) | ✅ LIVE (by design) | PK-8 seeding for paid rows |
@@ -29,7 +29,7 @@
 
 | ID | Action | Owner | Result |
 |----|--------|-------|--------|
-| **V-1** | On VPS: `printenv SELLER_VIEWINGS_ENABLED` (Traefik-pair exec, SOP §3.2). Record in SOP flag matrix. If `false` and product wants stage 6 live: runtime flip + api recreate (no web rebuild — pages always render). Smoke: availability edit + buyer booking + seller confirm | AZM / ops | **2026-08-14:** var **absent** from `/opt/easycasa-ita/.env`; container inherits load.ts default **`false`**. Unauth `GET /api/seller/viewings/conducting` → flag-style unavailable (not live). Page `/it/seller/viewings` still **200**. **Flip deferred** until AZM wants stage 6 live |
+| **V-1** | On VPS: `printenv SELLER_VIEWINGS_ENABLED` (Traefik-pair exec, SOP §3.2). Record in SOP flag matrix. If `false` and product wants stage 6 live: runtime flip + api recreate (no web rebuild — pages always render). Smoke: availability edit + buyer booking + seller confirm | AZM / ops | **2026-08-14 CLOSED:** was absent → default false; set **`true`** + api recreate (Traefik pair). Container `printenv=true`. Unauth `/api/seller/viewings/conducting` + availability → **401** (not flag-404). `/it/seller/viewings` **200**. Authenticated buyer-book → seller-confirm left for operator with real accounts |
 
 ### 2b. Eng dispatches — in order (one Kaizen code, one agent each)
 
@@ -71,4 +71,4 @@
 All dispatches follow `docs/ec-s-post-roadmap-polish.md` §C (single agent per code; `NEXT_PUBLIC_*` Docker ARG same-PR; Traefik compose pair; ops-flip vs eng-build stated explicitly; no parked flips bundled; ledger copy only via flip protocol).
 
 ---
-*Maintained by Claude (R&D coordination). V-1 verified 2026-08-14 (flag off). Next: AZM decide viewings flip and/or dispatch PP-4. Update the journey map on every merge/flip; fold back into the polish backlog when all stages are ✅ or decided.*
+*Maintained by Claude (R&D coordination). V-1 flipped live 2026-08-14. Next: dispatch PP-4 (onboarding form) and/or authenticated viewings book→confirm smoke. Update the journey map on every merge/flip; fold back into the polish backlog when all stages are ✅ or decided.*

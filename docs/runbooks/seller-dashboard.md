@@ -64,7 +64,7 @@ docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml -
 | `LISTING_BOOST_ENABLED` | `true` | Runtime |
 | `SELLER_PREMIUM_ENABLED` | `true` | Needs `plans.seller_premium.stripe_price_id` |
 | `PARTNER_DIRECTORY_ENABLED` | `true` | Informational + G3 `paid_placement` |
-| `SELLER_VIEWINGS_ENABLED` | **`false` (V-1 2026-08-14)** | Absent from VPS `.env` → load.ts default. Page `/seller/viewings` still 200; seller viewing APIs dark. Flip + api recreate when AZM wants journey stage 6 |
+| `SELLER_VIEWINGS_ENABLED` | **`true` (V-1 flipped 2026-08-14)** | Runtime on VPS; api recreated with Traefik pair. Page always rendered; seller viewing APIs now live (unauth → 401, not flag-404) |
 | `SELLER_ANALYTICS_ENABLED` | `false` (parked PK-3) | Do not flip without AZM |
 | `VERIFIED_OWNER_ENABLED` | `false` (parked PK-1) | |
 | `SELLER_CHECKLIST_ENABLED` | `false` (parked PK-2) | |
@@ -266,7 +266,7 @@ Do **not** flip parked PK flags “to try” — each needs an AZM decision.
 
 1. No first-class **web onboarding** UI — API onboarding required for new sellers (**PP-4**).
 2. No seller web UI for VO submit / checklist / boost buy button / premium upsell (API + billing helpers only) — **PP-5** / **PP-6**.
-3. Viewings / analytics **pages** can render while APIs are flag-dark (**V-1:** viewings off as of 2026-08-14).
+3. Viewings / analytics **pages** can render while APIs are flag-dark (**V-1:** viewings **on** as of 2026-08-14; analytics still parked PK-3).
 4. T25 messaging **HOLD** (PK-5) — inbox is enquiry list, not chat threads.
 5. Empty partner directory paid catalogue → informational banner is **correct** (PK-8).
 

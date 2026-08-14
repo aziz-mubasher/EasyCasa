@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding + dual inbox on · boost/premium/directory on · paid directory MVP (migration 0064) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API still off (V-1)**.
+**Live state recap:** ledger claims 1–2 live · seller onboarding + dual inbox on · boost/premium/directory on · paid directory MVP (migration 0064) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)**.
 
 ---
 
@@ -25,7 +25,7 @@
 
 | ID | Item | Result / next |
 |----|------|----------------|
-| **V-1** | Confirm `SELLER_VIEWINGS_ENABLED` on VPS | **2026-08-14:** absent from `.env` → default **`false`**. Page `/seller/viewings` still 200; seller viewing APIs dark. **Flip when AZM wants journey stage 6** (runtime + api recreate, Traefik pair; no web rebuild) |
+| **V-1** | Confirm `SELLER_VIEWINGS_ENABLED` on VPS | **CLOSED 2026-08-14:** flipped **`true`** + api recreate (Traefik pair). Unauth seller viewing APIs → 401; page 200. Authenticated book/confirm smoke = operator follow-up |
 
 ## B. Parked gates — need a human decision before any dispatch (DO NOT bundle into other PRs)
 
