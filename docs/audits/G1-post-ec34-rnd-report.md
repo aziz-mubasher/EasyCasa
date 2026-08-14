@@ -19,17 +19,15 @@
 
 | G1 piece | Status | Notes |
 | --- | --- | --- |
-| Eval pass bar | **Near-miss — one open adjudication** | Live 8/8 **DONE** on tip ≥ `fc64987`: 8/8 `ready`. GT-5 / Ex8 / GT-4 / Ex7-honest / lot-bleed on occupazione+urbanistica **green**. **Ex2 lotto 7 economics still 153850/115387.5** vs documented bar 64906/48680. |
+| Eval pass bar | **Near-miss — EC-35 pending live re-verify** | Live 8/8 **DONE** on tip ≥ `fc64987`. **Adjudication:** `Ex2-7 = 64906` (avviso screenshot). Bar stays 64906/48680; live still returned 153850 → **EC-35** extract fix. |
 | Counsel packet **sent** | **NOT DONE** | Docs 1–8 on disk; email is human |
 | Waitlist | **WAIVED** | 1 lead (2026-08-11) |
-| Code on `main` + VPS | **DONE** | EC-29→34 merged; EC-34 @ `fc64987`; pytest **53/53** |
+| Code on `main` + VPS | **EC-34 DONE; EC-35 in flight** | EC-29→34 @ `fc64987`; EC-35 lot-association PR; pytest aste_extract **57/57** |
 
-**Call for R&D / product:** Do **not** flip flags. Do **not** claim full G1 green (counsel unsent).  
-**Eval pass bar:** **not green yet** pending Ex2-7 adjudication:
-- If **64906** is the true avviso lotto-7 row → brief **EC-35** (micro: lot-association for this multi-lot table shape).
-- If **153850** is correct → **runbook bar correction**; eval pass bar = **GREEN as of this run**.
+**Call for R&D / product:** Do **not** flip flags. Do **not** claim full G1 green (counsel unsent; Ex2-7 needs post-EC-35 live re-run).  
+**Eval pass bar:** adjudication closed (`Ex2-7 = 64906`). Remaining eng: merge/deploy **EC-35** → Mac live re-verify Ex2-7 (ideally full 8/8).
 
-**Human close checklist:** `docs/runbooks/aste-g1-human-close.md` (Ex2-7 adjudication + counsel send).
+**Human close checklist:** `docs/runbooks/aste-g1-human-close.md` (Action 1 done; Action 2 counsel send still open).
 
 ### Paste stub (actual)
 
