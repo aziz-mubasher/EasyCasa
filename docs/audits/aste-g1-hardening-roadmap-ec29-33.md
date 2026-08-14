@@ -91,8 +91,10 @@ Pass-bar checks on the paste tables: economics + page refs all hit; urbanistica.
 
 ## Remaining to close G1
 
-1. **Adjudicate Ex2 lotto 7** (open avviso row / Drive GT): **64906** → dispatch **EC-35** micro-brief (lot-association for this table shape only); **153850** → runbook bar correction and mark **eval pass bar GREEN** as of 2026-08-14 live run.
-2. **Counsel email** — packet 1–8 + LGL-1 → `packet sent <date>`.
+**Operator checklist (AZM):** `docs/runbooks/aste-g1-human-close.md` — Ex2-7 adjudication + counsel send.
+
+1. **Adjudicate Ex2 lotto 7** (open avviso row): reply `Ex2-7 = 64906` → **EC-35**; or `Ex2-7 = 153850` → runbook bar fix + eval GREEN on 2026-08-14 run.
+2. **Counsel email** — checklist rows 1–8 (LGL-1 = row 8) → reply `packet sent YYYY-MM-DD (response requested by YYYY-MM-DD)`.
 3. **Drive GT true-score** — also watch GT-3/Ex4 urbanistica `non_conforme`→`non_rilevato` vs perizia prose.
 4. Board hygiene — link PRs #134/#136/#144/#146/#154 to K EC 7.3.
 5. **EC-24 note for R&D**: OMI sconto-reale must tolerate stima = not_found (Ex7 honest miss confirmed live).

@@ -29,6 +29,8 @@
 - If **64906** is the true avviso lotto-7 row → brief **EC-35** (micro: lot-association for this multi-lot table shape).
 - If **153850** is correct → **runbook bar correction**; eval pass bar = **GREEN as of this run**.
 
+**Human close checklist:** `docs/runbooks/aste-g1-human-close.md` (Ex2-7 adjudication + counsel send).
+
 ### Paste stub (actual)
 
 ```
