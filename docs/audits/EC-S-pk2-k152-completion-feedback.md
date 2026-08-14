@@ -1,6 +1,6 @@
 # EC-S PK-2 / K EC 1.52 — completion R&D feedback (for Claude)
 
-**As of tip on `main` + VPS `/opt/easycasa-ita` (2026-08-14).** Document checklist **LIVE**; Verified Owner **stays dark**. Enablement record: `docs/audits/EC-S-pk2-checklist-enablement.md`. VO prep runbook: `docs/runbooks/ec-s-vo-enablement.md` (**do not execute**).
+**As of tip `d422508` on `main` + VPS `/opt/easycasa-ita` tip `d422508` (2026-08-14).** Document checklist **LIVE**; Verified Owner **stays dark**. Enablement record: `docs/audits/EC-S-pk2-checklist-enablement.md`. VO prep runbook: `docs/runbooks/ec-s-vo-enablement.md` (**do not execute**).
 
 ## What landed
 
