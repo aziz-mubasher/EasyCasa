@@ -8,13 +8,13 @@
   "agentStatus": "IDLE",
   "agentBcId": "bc-6c2d68f9-0329-4ed8-9f37-9b0cf401c143",
   "agentUrl": "https://cursor.com/agents/bc-6c2d68f9-0329-4ed8-9f37-9b0cf401c143",
-  "branch": "cursor/g1-post-ec34-rnd-report-5db0",
+  "branch": "main",
   "prNumber": 156,
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/156",
-  "prState": "OPEN",
+  "prState": "MERGED",
   "dispatchedAt": "2026-08-14T08:42:40.236Z",
-  "updatedAt": "2026-08-14T13:37:35.000Z",
-  "summary": "Live 8/8 DONE post-EC-34: pass-bar near-miss \u2014 Ex2-7 still 153850; GT-5/Ex8/GT-4/Ex7 OK. Docs PR #156 merging. Adjudicate Ex2-7 before EC-35 or bar fix.",
-  "nextAction": "Merge #156; VPS git pull (docs); adjudicate Ex2-7; counsel send",
+  "updatedAt": "2026-08-14T13:38:15.674Z",
+  "summary": "Docs PR #156 on main 2eabda4. Live 8/8 near-miss Ex2-7. VPS docs pull pending from cloud; code tip still fc64987.",
+  "nextAction": "Close #156 UI if open; VPS git pull; adjudicate Ex2-7; counsel send",
   "errors": []
 }
