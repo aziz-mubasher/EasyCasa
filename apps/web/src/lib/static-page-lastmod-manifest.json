@@ -1,0 +1,51 @@
+{
+  "": {
+    "namespaces": [
+      "home"
+    ],
+    "lastmod": "2026-08-12",
+    "contentFingerprint": "b4582d0c6674f649292025a12b75bba5e469b79c23debee6e976ae512b78c96a"
+  },
+  "/pricing": {
+    "namespaces": [
+      "pricing"
+    ],
+    "lastmod": "2026-07-26",
+    "contentFingerprint": "3e59c5a38b28f89b8e9facf41211f08473f1d9059c6a9f3003a01bc2aaece10d"
+  },
+  "/acquisto-assistito": {
+    "namespaces": [
+      "acquistoAssistito"
+    ],
+    "lastmod": "2026-08-14",
+    "contentFingerprint": "a107f8342f252d1e1b05e6462cdb4c547b6836d72abfff711952cf6aedc6bcbb"
+  },
+  "/for-buyers": {
+    "namespaces": [
+      "forBuyers"
+    ],
+    "lastmod": "2026-08-02",
+    "contentFingerprint": "3053b2532ad921e3da72200c9e25419b1b02dbe3b7b5bf6477f236f062eb163b"
+  },
+  "/about": {
+    "namespaces": [
+      "aboutUs"
+    ],
+    "lastmod": "2026-08-02",
+    "contentFingerprint": "ae3af8c8e84c3232230a0f5b7551982ff8403c8e136e4c57b396015833f3b288"
+  },
+  "/valutazione-gratuita": {
+    "namespaces": [
+      "valutazioneGratuita"
+    ],
+    "lastmod": "2026-08-14",
+    "contentFingerprint": "e56576c31210545fb465fc7da016da74736f99cf0ad8de9b4f54f6d0bb49f327"
+  },
+  "/vendi-da-privato": {
+    "namespaces": [
+      "sellPrivately"
+    ],
+    "lastmod": "2026-08-10",
+    "contentFingerprint": "c49c35424e5ab240fdc86aec2dffe409d39ca433fcac4b565c42a9d0bd1e5c48"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": null,
+  "kaizenCode": "K EC 1.51",
+  "polishId": "PP-2",
+  "title": "K EC 1.51",
+  "venture": "EasyCasa",
+  "lifecycle": "running",
+  "agentStatus": "RUNNING",
+  "agentBcId": null,
+  "agentUrl": null,
+  "branch": "cursor/pp2-pp3-housekeeping-8e05",
+  "prNumber": null,
+  "prUrl": null,
+  "prState": null,
+  "dispatchedAt": "2026-08-14T13:50:46.584Z",
+  "updatedAt": "2026-08-14T13:50:46.584Z",
+  "summary": "PP-2+PP-3 housekeeping bundle in progress",
+  "nextAction": "Implement shared Service JSON-LD, service i18n, enquiry titles, lastmod CI",
+  "errors": []
+}

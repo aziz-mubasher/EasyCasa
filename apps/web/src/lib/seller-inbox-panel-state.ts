@@ -4,6 +4,8 @@ import type { InboxSort } from '@easycasa/shared';
 export type SellerInboxItemWire = {
   id: string;
   listingId: string;
+  listingTitle: string;
+  listingSlug: string | null;
   receivedAt: string;
   read: boolean;
   badge: {
@@ -43,6 +45,10 @@ export function resolveInboxPanelState(params: {
   if (params.error) return 'error';
   if (params.itemCount === 0) return 'empty';
   return 'ready';
+}
+
+export function listingHref(item: { listingSlug: string | null; listingId: string }): string | null {
+  return item.listingSlug ? `/listings/${item.listingSlug}` : null;
 }
 
 export function buildEnquiriesQuery(params: {

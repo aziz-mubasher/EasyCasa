@@ -14,6 +14,8 @@ const NOW = new Date('2026-08-11T12:00:00Z');
 function item(partial: Partial<EnquiryListItem> & Pick<EnquiryListItem, 'id'>): EnquiryListItem {
   return {
     listingId: 'L1',
+    listingTitle: 'Sample listing',
+    listingSlug: 'sample-listing',
     receivedAt: new Date('2026-08-10T12:00:00Z'),
     read: false,
     badge: null,

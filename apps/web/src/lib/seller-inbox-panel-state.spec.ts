@@ -4,6 +4,7 @@ import {
   buildEnquiriesQuery,
   formatBandAmount,
   formatReceivedAt,
+  listingHref,
   resolveInboxPanelState,
 } from './seller-inbox-panel-state';
 
@@ -40,6 +41,18 @@ describe('resolveInboxPanelState (EC-S-T20 inbox UI states)', () => {
 
   it('ready when items are present', () => {
     expect(resolveInboxPanelState({ ...base, itemCount: 3 })).toBe('ready');
+  });
+});
+
+describe('listingHref (PP-2 enquiry card link)', () => {
+  it('uses public slug when available', () => {
+    expect(listingHref({ listingSlug: 'trilocale-milano', listingId: 'uuid' })).toBe(
+      '/listings/trilocale-milano',
+    );
+  });
+
+  it('returns null when slug is missing', () => {
+    expect(listingHref({ listingSlug: null, listingId: 'uuid' })).toBeNull();
   });
 });
 

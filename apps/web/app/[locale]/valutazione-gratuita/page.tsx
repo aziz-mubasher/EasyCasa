@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { buildService } from '@easycasa/shared';
 import { JsonLdScript } from '@/components/JsonLdScript';
 import { ValutazioneGratuitaPage } from '@/components/services/ValutazioneGratuitaPage';
 import { routing } from '@/i18n/routing';
 
 type Props = { params: Promise<{ locale: string }> };
+
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://easycasaita.com';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -36,30 +39,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ValutazioneGratuitaRoute({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'valutazioneGratuita' });
+  const pageUrl = `${SITE}/${locale}/valutazione-gratuita`;
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: 'Free property valuation — EasyCasa',
-    serviceType: 'Indicative OMI-based property valuation',
-    provider: {
-      '@type': 'Organization',
-      name: 'EasyCasa',
-      legalName: 'MUNDIDA',
-      url: 'https://easycasaita.com',
-    },
-    areaServed: { '@type': 'Country', name: 'Italy' },
-    availableLanguage: ['it', 'en', 'es'],
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'EUR',
-    },
-  };
+  const serviceLd = buildService({
+    pageUrl,
+    site: SITE,
+    serviceName: t('schema.serviceName'),
+    description: t('meta.description'),
+    serviceType: t('schema.serviceType'),
+    offerDescription: t('schema.offerDescription'),
+  });
 
   return (
     <>
-      <JsonLdScript data={jsonLd} />
+      <JsonLdScript data={serviceLd} />
       <ValutazioneGratuitaPage />
     </>
   );

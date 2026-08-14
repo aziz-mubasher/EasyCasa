@@ -12,7 +12,7 @@ import {
 
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { enquiries, viewings } from '../db/schema';
+import { enquiries, listings, viewings } from '../db/schema';
 
 @Injectable()
 export class SellerInboxService {
@@ -23,6 +23,8 @@ export class SellerInboxService {
       .select({
         id: enquiries.id,
         listingId: enquiries.listingId,
+        listingTitle: listings.title,
+        listingSlug: listings.slug,
         createdAt: enquiries.createdAt,
         readAt: enquiries.readAt,
         b4aStatus: enquiries.b4aStatus,
@@ -32,6 +34,7 @@ export class SellerInboxService {
         viewingId: viewings.id,
       })
       .from(enquiries)
+      .innerJoin(listings, eq(enquiries.listingId, listings.id))
       .leftJoin(viewings, eq(viewings.enquiryId, enquiries.id))
       .where(eq(enquiries.ownerUserId, ownerUserId))
       .orderBy(desc(enquiries.createdAt));
@@ -60,6 +63,8 @@ export class SellerInboxService {
       byId.set(r.id, {
         id: r.id,
         listingId: r.listingId,
+        listingTitle: r.listingTitle,
+        listingSlug: r.listingSlug,
         receivedAt: r.createdAt,
         read: r.readAt != null,
         badge,

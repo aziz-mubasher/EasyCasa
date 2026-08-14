@@ -880,6 +880,15 @@
       "title": "Comprare casa in Italia dall'estero — EasyCasa",
       "description": "Supporto a tariffa fissa per acquirenti esteri che comprano in Italia. Visure, contratti, notaio e rogito — in italiano, inglese o spagnolo. Nessuna provvigione sul prezzo."
     },
+    "schema": {
+      "serviceName": "Acquisto Assistito — comprare casa in Italia dall'estero",
+      "serviceType": "Supporto all'acquisto immobiliare per acquirenti non residenti",
+      "offers": [
+        { "name": "Verifica", "price": "290" },
+        { "name": "Acquisto Assistito", "price": "1490" },
+        { "name": "Trasferimento", "price": "2900" }
+      ]
+    },
     "hero": {
       "eyebrow": "Per chi compra dall'estero",
       "title": "Compra in Italia",
@@ -1215,6 +1224,11 @@
     "meta": {
       "title": "Quanto vale davvero la tua casa — EasyCasa",
       "description": "Valutazione gratuita basata sui valori ufficiali dell'Agenzia delle Entrate per la tua microzona. Nessun agente ti richiama. Nessuna provvigione."
+    },
+    "schema": {
+      "serviceName": "Valutazione gratuita immobili — EasyCasa",
+      "serviceType": "Valutazione indicativa basata sui dati OMI",
+      "offerDescription": "Valutazione gratuita — nessuna provvigione dal venditore"
     },
     "hero": {
       "eyebrow": "Valutazione gratuita · tutta Italia",

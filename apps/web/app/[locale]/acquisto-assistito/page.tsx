@@ -1,10 +1,15 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { buildService } from '@easycasa/shared';
 import { JsonLdScript } from '@/components/JsonLdScript';
 import { AcquistoAssistitoPage } from '@/components/services/AcquistoAssistitoPage';
 import { routing } from '@/i18n/routing';
 
 type Props = { params: Promise<{ locale: string }> };
+
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://easycasaita.com';
+
+type SchemaOffer = { name: string; price: string };
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -36,30 +41,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AcquistoAssistitoRoute({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'acquistoAssistito' });
+  const pageUrl = `${SITE}/${locale}/acquisto-assistito`;
+  const schemaOffers = t.raw('schema.offers') as SchemaOffer[];
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: 'Acquisto Assistito — buying property in Italy from abroad',
-    serviceType: 'Property purchase support for non-resident buyers',
-    provider: {
-      '@type': 'Organization',
-      name: 'EasyCasa',
-      legalName: 'MUNDIDA',
-      url: 'https://easycasaita.com',
-    },
-    areaServed: { '@type': 'Country', name: 'Italy' },
-    availableLanguage: ['it', 'en', 'es'],
-    offers: [
-      { '@type': 'Offer', name: 'Verifica', price: '290', priceCurrency: 'EUR' },
-      { '@type': 'Offer', name: 'Acquisto Assistito', price: '1490', priceCurrency: 'EUR' },
-      { '@type': 'Offer', name: 'Trasferimento', price: '2900', priceCurrency: 'EUR' },
-    ],
-  };
+  const serviceLd = buildService({
+    pageUrl,
+    site: SITE,
+    serviceName: t('schema.serviceName'),
+    description: t('meta.description'),
+    serviceType: t('schema.serviceType'),
+    offers: schemaOffers.map((o) => ({
+      name: o.name,
+      price: o.price,
+      priceCurrency: 'EUR',
+    })),
+  });
 
   return (
     <>
-      <JsonLdScript data={jsonLd} />
+      <JsonLdScript data={serviceLd} />
       <AcquistoAssistitoPage />
     </>
   );
