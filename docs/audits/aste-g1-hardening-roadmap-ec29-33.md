@@ -110,3 +110,5 @@ After G1 green: EC-27 (payments split) and EC-28 lane work unlock; G2 (flag enab
 | Public DNS from cloud agent | `easycasa.online` may fail resolve; use VPS tip + prior deploy notes |
 
 **Do not** claim G1 closed or flip `ASTE_ANALYSIS_ENABLED` without the human paste + `packet sent <date>`.
+
+| **EC-34** | Ex2 lot-bleed economics, GT-5 orphaned stato → non_rilevato, Ex7 stima micro-chunk | **MERGED + deployed** | [#154](https://github.com/aziz-mubasher/EasyCasa/pull/154) `fc64987` |

@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T09:12:58.306Z",
+  "updatedAt": "2026-08-14T09:17:37.000Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
       "bridgeTaskId": "task_4f931596",
       "kaizenCode": "K EC 7.3",
       "polishId": null,
-      "title": "EC-34 Aste regression fix \u2014 lot-bleed / GT-5 stato / Ex7 micro-chunk",
+      "title": "EC-34 Aste regression fix",
       "venture": "EasyCasa",
       "lifecycle": "merged",
       "agentStatus": "IDLE",
@@ -17,10 +17,10 @@
       "prNumber": 154,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/154",
       "prState": "MERGED",
-      "dispatchedAt": "2026-08-14T08:44:06.292Z",
-      "updatedAt": "2026-08-14T09:11:41.373Z",
-      "summary": "EC-34 merged on main (tip fc64987); VPS tip includes PP-6 + EC-34.",
-      "nextAction": "Confirm VPS ai+api if needed; write EC-34 R&D feedback if missing.",
+      "dispatchedAt": "2026-08-14T08:42:40.236Z",
+      "updatedAt": "2026-08-14T09:17:37.000Z",
+      "summary": "EC-34 MERGED + DEPLOYED tip fc64987 (api+ai recreate). R&D feedback in docs/audits/EC-34-completion-feedback.md. Live 8/8 re-verify pending.",
+      "nextAction": "Operator live 8/8 on tip \u2265 fc64987; mark Kaizen K EC 7.3 complete after paste.",
       "errors": []
     },
     {
