@@ -9,12 +9,12 @@
   "agentBcId": null,
   "agentUrl": null,
   "branch": "cursor/pk2-checklist-enablement-ad02",
-  "prNumber": 158,
+  "prNumber": 159,
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/158",
   "prState": "DRAFT",
   "dispatchedAt": "2026-08-14T19:06:19.463Z",
-  "updatedAt": "2026-08-14T19:14:23.243Z",
-  "summary": "PK-2 CLOSED: SELLER_CHECKLIST_ENABLED=true, P6 live, VO runbook written; VPS deployed be8517b",
-  "nextAction": "Review draft PR; operator authenticated checklist upload smoke",
+  "updatedAt": "2026-08-14T19:15:09.631Z",
+  "summary": "PK-2 CLOSED: SELLER_CHECKLIST_ENABLED=true, P6 live, VO runbook written; VPS deployed 6e1a468",
+  "nextAction": "Review draft PR #159; operator authenticated checklist upload smoke",
   "errors": []
 }
