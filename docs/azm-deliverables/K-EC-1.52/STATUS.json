@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/159",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-14T19:06:19.463Z",
-  "updatedAt": "2026-08-14T19:35:51.347Z",
-  "summary": "PK-2 / K EC 1.52 MERGED + DEPLOYED. SELLER_CHECKLIST_ENABLED=true; P6 live; VO dark (runbook ready). Feat tip be8517b on main.",
+  "updatedAt": "2026-08-14T19:54:05.140Z",
+  "summary": "PK-2 / K EC 1.52 MERGED + DEPLOYED at tip d422508 (api). Checklist live; VO dark; P6 Attivo. Docker disk pruned ~49GB during redeploy.",
   "nextAction": "Mark Kaizen K EC 1.52 complete; authenticated checklist upload smoke; PK-1 when moderation capacity confirmed.",
   "errors": []
 }

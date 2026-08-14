@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T19:53:07.728Z",
+  "updatedAt": "2026-08-14T19:54:05.140Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -18,8 +18,8 @@
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/159",
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T19:06:19.463Z",
-      "updatedAt": "2026-08-14T19:35:51.347Z",
-      "summary": "PK-2 / K EC 1.52 MERGED + DEPLOYED. SELLER_CHECKLIST_ENABLED=true; P6 live; VO dark (runbook ready). Feat tip be8517b on main.",
+      "updatedAt": "2026-08-14T19:54:05.140Z",
+      "summary": "PK-2 / K EC 1.52 MERGED + DEPLOYED at tip d422508 (api). Checklist live; VO dark; P6 Attivo. Docker disk pruned ~49GB during redeploy.",
       "nextAction": "Mark Kaizen K EC 1.52 complete; authenticated checklist upload smoke; PK-1 when moderation capacity confirmed.",
       "errors": []
     },
@@ -60,7 +60,7 @@
       "dispatchedAt": "2026-08-14T09:40:00.000Z",
       "updatedAt": "2026-08-14T13:42:47.091Z",
       "summary": "PP-1 / K EC 1.50 MERGED + DEPLOYED at tip c4f8d3e. Migration 0065 applied; partner self-serve live; Checkout gated on stripe_price_id backfill.",
-      "nextAction": "Mark Kaizen K EC 1.50 complete; AZM Stripe Price backfill; authenticated apply\u2192pay smoke; next PP-2 or PK.",
+      "nextAction": "Mark Kaizen K EC 1.50 complete; AZM Stripe Price backfill; authenticated apply→pay smoke; next PP-2 or PK.",
       "errors": []
     },
     {
@@ -99,7 +99,7 @@
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T08:25:00.000Z",
       "updatedAt": "2026-08-14T09:11:41.373Z",
-      "summary": "PP-6 / K EC 1.49 MERGED + DEPLOYED dark at tip 3fdf7cb (VPS now fc64987 incl. EC-34). VO/checklist flags false \u2192 API 404; /verification + /documents pages 200.",
+      "summary": "PP-6 / K EC 1.49 MERGED + DEPLOYED dark at tip 3fdf7cb (VPS now fc64987 incl. EC-34). VO/checklist flags false → API 404; /verification + /documents pages 200.",
       "nextAction": "Mark Kaizen K EC 1.49 complete; do NOT flip VO/checklist without PK-1/PK-2; next PP-1 or PK decisions.",
       "errors": []
     },
@@ -107,7 +107,7 @@
       "bridgeTaskId": "task_ff7e343f",
       "kaizenCode": "K EC 1.48",
       "polishId": "PP-5",
-      "title": "PP-5 Monetisation purchase UI \u2014 boost buy + premium upsell",
+      "title": "PP-5 Monetisation purchase UI — boost buy + premium upsell",
       "venture": "EasyCasa",
       "lifecycle": "merged",
       "agentStatus": "IDLE",
@@ -119,7 +119,7 @@
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T08:00:00.000Z",
       "updatedAt": "2026-08-14T08:21:23.155Z",
-      "summary": "PP-5 / K EC 1.48 MERGED + DEPLOYED at tip 44ceeec. /it/seller/listings + /it/account 200; unauth checkout/entitlements/listings API \u2192 401.",
+      "summary": "PP-5 / K EC 1.48 MERGED + DEPLOYED at tip 44ceeec. /it/seller/listings + /it/account 200; unauth checkout/entitlements/listings API → 401.",
       "nextAction": "Mark Kaizen K EC 1.48 complete; authenticated Stripe buy smoke; dispatch PP-6.",
       "errors": []
     },
@@ -147,7 +147,7 @@
       "bridgeTaskId": "task_89efec62",
       "kaizenCode": "K EC 1.47",
       "polishId": "PP-4",
-      "title": "Seller onboarding web form \u2014 close the self-serve first mile",
+      "title": "Seller onboarding web form — close the self-serve first mile",
       "venture": "EasyCasa",
       "lifecycle": "merged",
       "agentStatus": "IDLE",
@@ -159,7 +159,7 @@
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T06:53:00.000Z",
       "updatedAt": "2026-08-14T07:53:35.895Z",
-      "summary": "PP-4 / K EC 1.47 MERGED + DEPLOYED at tip c67c8ad. Onboarding web live; unauth /seller/me \u2192 401; /it/seller/onboarding \u2192 200.",
+      "summary": "PP-4 / K EC 1.47 MERGED + DEPLOYED at tip c67c8ad. Onboarding web live; unauth /seller/me → 401; /it/seller/onboarding → 200.",
       "nextAction": "Mark Kaizen K EC 1.47 complete; dispatch PP-5; optional authenticated zero-curl smoke.",
       "errors": []
     }
