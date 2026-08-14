@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_89efec62",
+  "kaizenCode": "K EC 1.47",
+  "polishId": "PP-4",
+  "title": "Seller onboarding web form — close the self-serve first mile",
+  "venture": "EasyCasa",
+  "lifecycle": "merged",
+  "agentStatus": "IDLE",
+  "agentBcId": "bc-51dcfe26-06b0-4887-bcbf-fdf0bde8f4d8",
+  "agentUrl": "https://cursor.com/agents/bc-51dcfe26-06b0-4887-bcbf-fdf0bde8f4d8",
+  "branch": "cursor/seller-onboarding-form-f4d8",
+  "prNumber": 150,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/150",
+  "prState": "MERGED",
+  "dispatchedAt": "2026-08-14T06:53:00.000Z",
+  "updatedAt": "2026-08-14T07:53:35.895Z",
+  "summary": "PP-4 / K EC 1.47 MERGED + DEPLOYED at tip c67c8ad. Onboarding web live; unauth /seller/me → 401; /it/seller/onboarding → 200.",
+  "nextAction": "Mark Kaizen K EC 1.47 complete; dispatch PP-5; optional authenticated zero-curl smoke.",
+  "errors": []
+}

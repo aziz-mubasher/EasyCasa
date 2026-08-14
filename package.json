@@ -13,6 +13,8 @@
     "check:seller-hardcoded-strings": "bash scripts/check-seller-hardcoded-strings.sh",
     "check:json-ld-escape": "bash scripts/check-json-ld-escape.sh",
     "check:counsel-copy": "pnpm check:omi-copy && pnpm check:seller-inbox-copy && pnpm check:seller-analytics-copy && pnpm check:seller-hardcoded-strings && pnpm check:json-ld-escape",
+    "azm:bridge-status": "node scripts/azm-bridge-status.mjs",
+    "azm:bridge-status:validate": "node scripts/azm-bridge-status.mjs validate",
     "build": "pnpm --filter @easycasa/shared build && pnpm -r --if-present build",
     "format": "prettier --write .",
     "demo:seed": "pnpm --filter @easycasa/api demo:seed",

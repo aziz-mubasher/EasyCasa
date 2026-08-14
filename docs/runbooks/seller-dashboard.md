@@ -24,13 +24,14 @@ Locales: `it` (default), `en`, `es`. Paths are **not** rewritten — use `/{loca
 
 | Route | Purpose | Web gate | API gate |
 |-------|---------|----------|----------|
-| `/{locale}/seller/list` | Listing wizard (create / autosave / publish) | Always | `SELLER_ONBOARDING_ENABLED` |
+| `/{locale}/seller/onboarding` | Seller profile + informativa first mile (PP-4) | Always (flag-off API → 404 → gate message) | `SELLER_ONBOARDING_ENABLED` |
+| `/{locale}/seller/list` | Listing wizard (create / autosave / publish); embeds onboarding when profile missing | Always | `SELLER_ONBOARDING_ENABLED` |
 | `/{locale}/seller/enquiries` | Seller inbox (Richieste) | `NEXT_PUBLIC_SELLER_INBOX_ENABLED` | `SELLER_INBOX_ENABLED` |
 | `/{locale}/seller/viewings` | Conducting viewings list | Always (page) | `SELLER_VIEWINGS_ENABLED` |
 | `/{locale}/seller/listings/:id/availability` | Open-house / capacity slots | Always (page) | `SELLER_VIEWINGS_ENABLED` |
 | `/{locale}/seller/listings/:id/analytics` | Listing analytics + nudges | Always (page) | `SELLER_ANALYTICS_ENABLED` |
 
-**Shell:** `apps/web/app/[locale]/seller/layout.tsx` — `SellerConsentUpdate` + `SellerDashboardNav` (list · inbox · viewings). Analytics / availability are deep links only.
+**Shell:** `apps/web/app/[locale]/seller/layout.tsx` — `SellerOnboardingGate` + `SellerConsentUpdate` + `SellerDashboardNav` (list · inbox · viewings). Analytics / availability are deep links only.
 
 **Marketing entry:** `/{locale}/vendi-da-privato` (EN/ES aliases) — promise ledger Claim 1–2 live.
 
@@ -99,9 +100,9 @@ $KC add-roles -r easycasa --uusername "$SELLER_USERNAME" --rolename seller
 
 ### Step A — Onboarding + informativa
 
-**Gap:** there is **no dedicated web onboarding form**. Onboarding is `POST /api/seller/onboarding`. The wizard surfaces `onboardingRequired` when the API returns 404 (flag off) or onboarding incomplete.
+**Preferred (PP-4 web, live):** signed-in seller opens `https://easycasaita.com/it/seller/list` or `https://easycasaita.com/it/seller/onboarding` → fills display name, phone, optional marketing → submits (records informativa acceptance) → continues wizard.
 
-**Operator path (API):**
+**API fallback (ops / automation):**
 
 1. Obtain a bearer token for the seller (browser DevTools → Authorization after login, or Keycloak token endpoint).
 2. Confirm informativa version:

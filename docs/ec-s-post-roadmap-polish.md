@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding + dual inbox on · boost/premium/directory on · paid directory MVP (migration 0064) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)**.
+**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · paid directory MVP (migration 0064) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)** · **PP-4 closed (K EC 1.47 / tip `c67c8ad`)**.
 
 ---
 
@@ -42,18 +42,19 @@
 
 ## C. Standing brief rules (bake into every future EC-S dispatch)
 
-1. **One agent per Kaizen task code.** Never re-issue a code after a bridge timeout — verify via `list_tasks` first (T20 duplicate-PR lesson).
-2. **New `NEXT_PUBLIC_*` flag ⇒ same PR adds** `apps/web/Dockerfile` ARG/ENV **and** `infra/docker-compose.yml` `web.build.args`. Runtime `.env` alone does not light Next dark routes.
-3. **VPS recreates always use the Traefik pair:** `docker compose -f docker-compose.yml -f docker-compose.traefik.yml …` — single-file recreate 404s public `/api`.
-4. **API flags = runtime** (env_file + recreate, image unchanged). **Web `NEXT_PUBLIC_*` = build-time** (`--no-cache` web rebuild).
-5. **Merges land via** `git push origin <branch>:main` — `gh` token is read-only for merges.
-6. Route naming: `/seller/enquiries` (not `/inbox`). Unauth seller API → 401; flag-off → 404.
-7. State explicitly whether a gate item is an **ops flip** or an **eng build**, and whether Stripe checkout is in scope (G3 lesson).
-8. Verify live copy in **no-script HTML** — fallback strings persist in the Next messages payload.
-9. No CI Lighthouse gating; use documented operator flags (SwiftShader WebGL) for listing pages.
-10. Consent version grammar: no suffixes (`v1.1`, not `v1.1-seller`). Enquiry consent purpose key stays `mediation_disclosure` (historical).
-11. Ledger/copy changes only via dedicated flip protocol (`promises.json` + dual validators + disclosure reconcile + packet boxes). Never bundle parked flips into copy/legal PRs.
-12. Empty paid-partner catalogue ⇒ informational banner is **correct**, not a bug.
+1. **One agent per Kaizen task code.** Never re-issue a code after a bridge timeout — verify via `list_tasks` **and** the public bridge ledger first (T20 duplicate-PR lesson; `task_89efec62` false “no PR” lesson).
+2. **Bridge feedback loop (mandatory):** Cursor upserts `docs/azm-deliverables/_bridge/status-ledger.json` at start / PR-open / fail via `node scripts/azm-bridge-status.mjs upsert …` and pastes the `AZM_BRIDGE_STATUS` block in chat. Claude re-polls that ledger (WebFetch raw `main` URL) **before** claiming “still running / no PR”. Runbook: [`docs/runbooks/azm-dev-bridge.md`](./runbooks/azm-dev-bridge.md).
+3. **New `NEXT_PUBLIC_*` flag ⇒ same PR adds** `apps/web/Dockerfile` ARG/ENV **and** `infra/docker-compose.yml` `web.build.args`. Runtime `.env` alone does not light Next dark routes.
+4. **VPS recreates always use the Traefik pair:** `docker compose -f docker-compose.yml -f docker-compose.traefik.yml …` — single-file recreate 404s public `/api`.
+5. **API flags = runtime** (env_file + recreate, image unchanged). **Web `NEXT_PUBLIC_*` = build-time** (`--no-cache` web rebuild).
+6. **Merges land via** `git push origin <branch>:main` — `gh` token is read-only for merges.
+7. Route naming: `/seller/enquiries` (not `/inbox`). Unauth seller API → 401; flag-off → 404.
+8. State explicitly whether a gate item is an **ops flip** or an **eng build**, and whether Stripe checkout is in scope (G3 lesson).
+9. Verify live copy in **no-script HTML** — fallback strings persist in the Next messages payload.
+10. No CI Lighthouse gating; use documented operator flags (SwiftShader WebGL) for listing pages.
+11. Consent version grammar: no suffixes (`v1.1`, not `v1.1-seller`). Enquiry consent purpose key stays `mediation_disclosure` (historical).
+12. Ledger/copy changes only via dedicated flip protocol (`promises.json` + dual validators + disclosure reconcile + packet boxes). Never bundle parked flips into copy/legal PRs.
+13. Empty paid-partner catalogue ⇒ informational banner is **correct**, not a bug.
 
 ## D. Reference docs
 
@@ -62,6 +63,9 @@
 | `docs/ec-s-roadmap.md` | Completed T01–T33 (authoritative, historical) |
 | `docs/ec-s-seller-journey-completion.md` | **Self-serve journey plan** (stages + PP-4/5/6 + V-1) |
 | `docs/runbooks/seller-dashboard.md` | **SOP — seller dashboard process** (ops/QA) |
+| `docs/runbooks/azm-dev-bridge.md` | **Claude↔Cursor status poll / report protocol** |
+| `docs/azm-deliverables/_bridge/status-ledger.json` | Public dispatch status Claude WebFetches |
+| `docs/audits/EC-S-pp4-k147-completion-feedback.md` | **PP-4 / K EC 1.47** completion R&D feedback |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
 | `docs/audits/EC-S-g1-signoff-enablement.md` | G1 record |
 | `docs/audits/EC-S-claim12-g3-enablement.md` | Claim 1–2 + G3 record |

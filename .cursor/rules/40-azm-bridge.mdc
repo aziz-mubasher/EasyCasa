@@ -1,0 +1,60 @@
+---
+description: AZM Claude↔Cursor bridge feedback loop (status reporting)
+alwaysApply: true
+---
+
+# AZM Dev Bridge — feedback loop (mandatory)
+
+Claude Desktop dispatches EasyCasa work via **azm-dev-bridge** (`send_dev_task` → `task_<hex>`). Claude **cannot** read this repo or GitHub PRs. If you finish work without updating the public status ledger, Claude will incorrectly report “still running, no PR”.
+
+## When this applies
+Any handoff that mentions: `azm-dev-bridge`, `send_dev_task`, `task_<hex>`, Kaizen `K EC …`, polish `PP-*` / `PK-*` / `V-*`, or “R&D FEEDBACK — for Claude”.
+
+## Required status surface
+Canonical poll file (Claude WebFetches after it lands on `main`):
+
+`docs/azm-deliverables/_bridge/status-ledger.json`
+
+Also write per-task:
+
+`docs/azm-deliverables/<K-EC-x.y>/STATUS.json`
+
+Use the helper (do not hand-edit unless the script is unavailable):
+
+```bash
+node scripts/azm-bridge-status.mjs upsert \
+  --bridge task_<hex> \
+  --kaizen "K EC x.y" \
+  --polish PP-N \
+  --lifecycle <dispatched|running|pr_open|pr_ready|merged|blocked|failed|cancelled> \
+  --pr <number> --pr-state DRAFT|OPEN|MERGED \
+  --agent-status IDLE|RUNNING|ERROR \
+  --agent-bc bc-… \
+  --agent-url https://cursor.com/agents/bc-… \
+  --branch cursor/… \
+  --summary "one line Claude can quote" \
+  --next-action "what human/Claude should do next"
+```
+
+Then print the forwardable block into chat:
+
+```bash
+node scripts/azm-bridge-status.mjs claude-block --bridge task_<hex>
+```
+
+## Timing rules (do not skip)
+1. **Start of work** → `lifecycle=running` (include `bridgeTaskId` if present in the brief).
+2. **Immediately after the draft PR exists** → `lifecycle=pr_open` with `prUrl` / `prNumber` / `prState`. Commit + push the ledger update on the **same** feature branch (or a tiny follow-up commit) so Claude can see it once merged — and paste the `AZM_BRIDGE_STATUS` block in the chat progress update **now** (Aziz forwards to Claude even before merge).
+3. **Ready for review** → `lifecycle=pr_ready` (mark draft ready only if asked).
+4. **After merge** → `lifecycle=merged` on `main` (or a docs PR).
+5. **Hard fail / cancel** → `lifecycle=failed|cancelled` with `errors[]`.
+
+## Chat / PR contract
+- Every progress update for a bridge task must include the `<!-- AZM_BRIDGE_STATUS_BEGIN --> … END -->` block from `claude-block`.
+- Every bridge PR body must end with `## R&D FEEDBACK — for Claude` **and** the same status block near the top of that section.
+- Update Kaizen (category + %) and Startup (phase + %) with the PR URL when the handoff asks for boards.
+
+## Anti-patterns (caused the 2026-08-14 miss)
+- Opening a PR then going IDLE without ledger/status block → Claude polls bridge and says “still running, no PR”.
+- Relying only on Cursor agent IDLE / chat summary.
+- Re-dispatching the same Kaizen code after a bridge timeout without `list_tasks` + ledger check.
