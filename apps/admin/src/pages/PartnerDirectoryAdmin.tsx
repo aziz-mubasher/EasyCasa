@@ -13,6 +13,7 @@ const RowSchema = z.object({
   credentials: z.string().nullable().optional(),
   contact: z.string(),
   active: z.boolean(),
+  paidPlacement: z.boolean().optional(),
 });
 
 const CATEGORIES = [
@@ -30,6 +31,7 @@ const EMPTY_FORM = {
   credentials: '',
   contact: '',
   active: true,
+  paidPlacement: false,
 };
 
 export function PartnerDirectoryAdmin() {
@@ -88,9 +90,8 @@ export function PartnerDirectoryAdmin() {
     <section>
       <h1>Partner directory</h1>
       <p className="muted">
-        Neutral informational list (T28/T29). Label every public surface: «Elenco
-        informativo — nessuna commissione». No fees, no conversion tracking. Monetised
-        variants wait for G3 row 9.
+        Neutral informational list (T28/T29). G3/PP-1: paid placement via admin mark or partner
+        self-serve checkout. Label every public surface. No conversion tracking.
       </p>
       {err ? <p className="error">{err}</p> : null}
 
@@ -156,6 +157,14 @@ export function PartnerDirectoryAdmin() {
           />{' '}
           Active
         </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={form.paidPlacement}
+            onChange={(e) => setForm((f) => ({ ...f, paidPlacement: e.target.checked }))}
+          />{' '}
+          Paid placement (G3 flat fee — admin fallback)
+        </label>
         <div className="stack stack--row">
           <button
             type="submit"
@@ -173,7 +182,7 @@ export function PartnerDirectoryAdmin() {
       </form>
 
       <Table
-        columns={['Name', 'Category', 'Province', 'Contact', 'Active', '']}
+        columns={['Name', 'Category', 'Province', 'Contact', 'Active', 'Paid', '']}
         empty={rows.length === 0}
       >
         {rows.map((r) => (
@@ -183,6 +192,7 @@ export function PartnerDirectoryAdmin() {
             <td>{r.province}</td>
             <td className="mono">{r.contact}</td>
             <td>{r.active ? 'yes' : 'no'}</td>
+            <td>{r.paidPlacement ? 'yes' : 'no'}</td>
             <td>
               <div className="stack stack--row">
                 <button
@@ -198,6 +208,7 @@ export function PartnerDirectoryAdmin() {
                       credentials: r.credentials ?? '',
                       contact: r.contact,
                       active: r.active,
+                      paidPlacement: r.paidPlacement ?? false,
                     });
                   }}
                 >

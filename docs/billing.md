@@ -32,6 +32,14 @@ Stripe handles PCI. The **Customer Portal** manages upgrades/cancellations. Webh
 - Refund (`charge.refunded`) cancels the boost and clears ranking weight.
 - Unpublish pauses remaining time; republish resumes. Flag off hides purchase UI but still honours active boosts.
 
+### Partner directory placement (PP-1, one-time)
+- `POST /partners/directory/apply` — partner claims a directory row (one per user).
+- `GET /partners/directory/me` — partner's row + `checkoutAvailable` (plan has Stripe Price).
+- `POST /partners/directory/checkout` → `{ url }` — flat-fee placement; gated by `PARTNER_DIRECTORY_ENABLED`.
+- Webhook `checkout.session.completed` with `metadata.kind=partner_directory` sets `paid_placement=true` (perpetual; idempotent via `stripe_payment_id`).
+- Admin manual `paid_placement` on `PATCH /admin/partner-directory/:id` remains the offline fallback.
+- Plan key `partner_directory_placement` — config-driven Stripe Price ID (empty until ops backfill).
+
 ## Messaging (with spam controls)
 - `POST /conversations` `{ listingId, message }` — starts a thread, rejects spam
   (`isLikelySpam`), rate-limits new conversations, notifies the agent, and **routes a lead**.

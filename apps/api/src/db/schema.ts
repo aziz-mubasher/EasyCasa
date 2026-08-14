@@ -378,6 +378,10 @@ export const partnerDirectory = pgTable('partner_directory', {
   active: boolean('active').notNull().default(true),
   /** G3 row 9 — flat-fee presence; labelled + sorts above unpaid. */
   paidPlacement: boolean('paid_placement').notNull().default(false),
+  /** PP-1 — claiming partner user (null for admin-seeded rows). */
+  userId: uuid('user_id'),
+  /** PP-1 — idempotent webhook activation. */
+  stripePaymentId: text('stripe_payment_id'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

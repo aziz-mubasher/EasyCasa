@@ -3387,7 +3387,33 @@
     },
     "credentials": "Credenciales",
     "contact": "Contacto",
-    "proMediaNote": "Fotos y tours virtuales usan el pipeline multimedia estándar (EXIF, hash, dup-detect) — sin endpoint de subida exclusivo para profesionales."
+    "proMediaNote": "Fotos y tours virtuales usan el pipeline multimedia estándar (EXIF, hash, dup-detect) — sin endpoint de subida exclusivo para profesionales.",
+    "selfServe": {
+      "title": "Presencia en el directorio para profesionales",
+      "portalNote": "EasyCasa es un portal informativo — no intermediamos el encargo con los profesionales ni cobramos comisión.",
+      "signInLead": "Inicia sesión con una cuenta profesional para solicitar presencia en el directorio.",
+      "signIn": "Iniciar sesión",
+      "unavailable": "La solicitud en línea no está disponible ahora. Contáctanos para ayuda.",
+      "paidActive": "Tu entrada «{name}» tiene presencia de pago activa.",
+      "listingPending": "Entrada «{name}» ({province}) pendiente de pago para presencia de pago.",
+      "checkoutCta": "Ir al pago",
+      "checkoutBusy": "Redirigiendo…",
+      "notPurchasable": "El pago en línea aún no está disponible. Contáctanos para activar la presencia de pago.",
+      "applyCta": "Enviar solicitud",
+      "applyBusy": "Enviando…",
+      "fields": {
+        "category": "Categoría",
+        "name": "Nombre / estudio",
+        "province": "Provincia",
+        "credentials": "Credenciales (opcional)",
+        "contact": "Contacto (sin parámetros UTM/referral)"
+      },
+      "errors": {
+        "applyFailed": "No se pudo enviar la solicitud. Inténtalo de nuevo o contáctanos.",
+        "checkoutFailed": "No se pudo iniciar el pago. Inténtalo más tarde.",
+        "alreadyPaid": "Esta entrada ya tiene presencia de pago activa."
+      }
+    }
   },
   "consentUpdate": {
     "bannerText": "Hemos actualizado la información de privacidad (versión {version}). Los cambios son menores y no requieren ninguna acción.",
