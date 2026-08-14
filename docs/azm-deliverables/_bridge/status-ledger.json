@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T20:27:00.000Z",
+  "updatedAt": "2026-08-14T20:26:55.911Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -89,16 +89,16 @@
       "polishId": null,
       "title": "EC-G1-LEDGER — G1 eval bar GREEN (product-accepted); counsel send only",
       "venture": "EasyCasa",
-      "lifecycle": "running",
-      "agentStatus": "RUNNING",
+      "lifecycle": "pr_open",
+      "agentStatus": "IDLE",
       "agentBcId": "bc-7fea1533-0af9-41e9-94fd-740e880be431",
       "agentUrl": "https://cursor.com/agents/bc-7fea1533-0af9-41e9-94fd-740e880be431",
       "branch": "cursor/ec-g1-ledger-e431",
-      "prNumber": null,
-      "prUrl": null,
-      "prState": null,
+      "prNumber": 161,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/161",
+      "prState": "DRAFT",
       "dispatchedAt": "2026-08-14T20:25:00.000Z",
-      "updatedAt": "2026-08-14T20:26:17.394Z",
+      "updatedAt": "2026-08-14T20:26:55.911Z",
       "summary": "G1 eval bar GREEN (product-accepted); G1 pending counsel send only; EC-29→35 complete; flags off",
       "nextAction": "AZM counsel send → packet sent <date> → flip G1 GREEN",
       "errors": []
