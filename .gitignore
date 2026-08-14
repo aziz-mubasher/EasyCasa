@@ -29,3 +29,7 @@ migration/omi/omi_quotes.csv
 migration/omi/omi_quotes.csv.gz
 migration/omi/omi_zone_quotes.csv
 migration/omi/omi_zone_quotes.csv.gz
+
+# local noise
+node_modules.partial.*/
+infra/docker-compose.local-ports.yml
