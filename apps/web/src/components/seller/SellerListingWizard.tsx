@@ -15,7 +15,10 @@ import { Button } from '@/components/ui/Button';
 import { Field, Input, Select, TextArea } from '@/components/ui/Field';
 import { Link } from '@/i18n/routing';
 import { SellerOnboardingForm } from '@/components/seller/SellerOnboardingForm';
+import { SellerQuotaUpsell } from '@/components/seller/SellerPremiumPanel';
+import { useSellerEntitlements } from '@/hooks/useSellerEntitlements';
 import { useSellerMe } from '@/hooks/useSellerMe';
+import { parseQuotaErrorCode, type QuotaErrorCode } from '@/lib/seller-monetisation';
 import { resolveWizardEntryPhase, type SellerProfileView } from '@/lib/seller-onboarding';
 
 /**
@@ -31,12 +34,14 @@ export function SellerListingWizard() {
   const { loading: meLoading, flagOff, profile, consent, refresh: refreshMe } = useSellerMe(
     ready && isAuthenticated,
   );
+  const entitlements = useSellerEntitlements(ready && isAuthenticated);
   const [draftId, setDraftId] = useState<string | null>(null);
   const [draft, setDraft] = useState<ListingDraftPayload>({ currentStep: 'basics' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [listingId, setListingId] = useState<string | null>(null);
   const [stepCodes, setStepCodes] = useState<string[]>([]);
+  const [quotaCode, setQuotaCode] = useState<QuotaErrorCode | null>(null);
   const [localProfile, setLocalProfile] = useState<SellerProfileView | null>(null);
 
   const effectiveProfile = localProfile ?? profile;
@@ -126,12 +131,23 @@ export function SellerListingWizard() {
     }
     setBusy(true);
     setError(null);
+    setQuotaCode(null);
     try {
       const res = await authedFetch()(apiUrl(`/listing-drafts/${draftId}/submit`), {
         method: 'POST',
       });
       if (res.status === 429) {
-        setError(tQuota('activeListings'));
+        const body = (await res.json().catch(() => null)) as unknown;
+        const code = parseQuotaErrorCode(body);
+        const quotaMsg =
+          code === 'errors.quota.uploadsPerDay'
+            ? tQuota('uploadsPerDay')
+            : tQuota('activeListings');
+        if (code && !entitlements.flagOff && entitlements.data?.tier !== 'premium') {
+          setQuotaCode(code);
+          return;
+        }
+        setError(quotaMsg);
         return;
       }
       if (!res.ok) {
@@ -191,9 +207,35 @@ export function SellerListingWizard() {
       <div className="mx-auto max-w-xl px-4 py-16 text-center">
         <h1 className="font-display text-2xl">{t('publishedTitle')}</h1>
         <p className="mt-2 text-muted">{t('publishedBody')}</p>
-        <Link href={`/listings/${listingId}`} className="mt-6 inline-block underline">
-          {t('viewListing')}
-        </Link>
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <Link href={`/listings/${listingId}`} className="underline">
+            {t('viewListing')}
+          </Link>
+          <Link href="/seller/listings" className="underline text-sm">
+            {t('manageListings')}
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (quotaCode) {
+    return (
+      <div className="mx-auto max-w-xl px-4 py-10">
+        <p className="mb-4 text-sm text-terracotta">
+          {quotaCode === 'errors.quota.uploadsPerDay'
+            ? tQuota('uploadsPerDay')
+            : tQuota('activeListings')}
+        </p>
+        <SellerQuotaUpsell
+          premiumEnabled={!entitlements.flagOff}
+          entitlements={entitlements.data}
+        />
+        <div className="mt-6 text-center">
+          <Button variant="ghost" onClick={() => setQuotaCode(null)}>
+            {t('back')}
+          </Button>
+        </div>
       </div>
     );
   }

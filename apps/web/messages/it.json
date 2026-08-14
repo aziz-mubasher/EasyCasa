@@ -3261,6 +3261,7 @@
     "publishedTitle": "Annuncio pubblicato",
     "publishedBody": "La data di prima pubblicazione è stata registrata.",
     "viewListing": "Vedi annuncio",
+    "manageListings": "Gestisci i tuoi annunci",
     "stepOf": "Passo {n} di {total}",
     "back": "Indietro",
     "next": "Avanti",
@@ -3425,8 +3426,71 @@
     "navLabel": "Area venditore",
     "nav": {
       "list": "Pubblica annuncio",
+      "listings": "I miei annunci",
       "inbox": "Richieste",
       "viewings": "Visite"
+    }
+  },
+  "sellerMonetisation": {
+    "myListings": {
+      "title": "I miei annunci",
+      "lead": "Gestisci gli annunci pubblicati e gli strumenti a pagamento opzionali. EasyCasa è un portale — le tariffe sono fisse e indipendenti dalla vendita.",
+      "empty": "Non hai ancora annunci. Usa «Pubblica annuncio» per il primo.",
+      "loading": "Caricamento annunci…",
+      "unavailable": "Gli strumenti venditore non sono disponibili al momento.",
+      "signInTitle": "Accedi per gestire i tuoi annunci",
+      "signIn": "Accedi",
+      "viewPublic": "Vedi pagina pubblica",
+      "status": {
+        "published": "Pubblicato",
+        "draft": "Bozza",
+        "unpublished": "Non pubblicato"
+      }
+    },
+    "boost": {
+      "buyLead": "Visibilità opzionale a pagamento nei risultati di ricerca (tariffa fissa via checkout sicuro).",
+      "buy7d": "In evidenza — 7 giorni",
+      "buy30d": "In evidenza — 30 giorni",
+      "activeRemaining": "{days, plural, one {# giorno rimasto} other {# giorni rimasti}}",
+      "activeLockout": "Questo annuncio ha già un periodo In evidenza attivo.",
+      "checkoutFailed": "Impossibile avviare il checkout. Riprova.",
+      "redirecting": "Reindirizzamento…"
+    },
+    "premium": {
+      "title": "Piano venditore",
+      "tierFree": "Piano gratuito",
+      "tierPremium": "Piano Premium",
+      "loading": "Caricamento piano…",
+      "signInLead": "Accedi per vedere il tuo piano e gli upgrade opzionali.",
+      "signIn": "Accedi",
+      "entitlements": {
+        "activeListings": "Annunci attivi: fino a {limit}",
+        "uploadsPerDay": "Caricamenti foto al giorno: fino a {limit}",
+        "analyticsWindow": "Finestra analytics: {days} giorni",
+        "priorityModeration": "Coda revisione documenti prioritaria"
+      },
+      "subscribe": "Passa a Premium",
+      "manage": "Gestisci abbonamento",
+      "refresh": "Aggiorna",
+      "redirecting": "Reindirizzamento…",
+      "checkoutFailed": "Impossibile avviare il checkout. Riprova.",
+      "portalFailed": "Impossibile aprire il portale di fatturazione. Riprova.",
+      "portalNote": "EasyCasa non agisce come mediatore e non applica commissioni sul prezzo di vendita. Gli abbonamenti sono a tariffa fissa e mostrati nel checkout sicuro.",
+      "upsellTitle": "Limite annunci raggiunto",
+      "upsellBody": "Premium aumenta i limiti di annunci e caricamenti. Gli importi sono nel checkout sicuro — nessuna commissione sulla vendita.",
+      "upsellLimitsCurrent": "Limite attuale: {limit} annunci attivi",
+      "upsellLimitsPremium": "Limite Premium: {limit} annunci attivi",
+      "upsellAction": "Vedi upgrade Premium",
+      "upsellManageLink": "Apri area venditore"
+    },
+    "billingReturn": {
+      "successTitle": "Pagamento ricevuto",
+      "successBody": "L'acquisto è in elaborazione. In evidenza o il piano possono richiedere qualche secondo.",
+      "cancelTitle": "Checkout annullato",
+      "cancelBody": "Nessun addebito. Puoi riprovare dall'area venditore.",
+      "backToListings": "Torna ai miei annunci",
+      "backToSeller": "Torna all'area venditore",
+      "unknown": "Niente da mostrare."
     }
   }
 }

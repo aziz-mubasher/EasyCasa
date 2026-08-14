@@ -8,7 +8,7 @@ import { sellerInboxEnabled } from '@/lib/seller-inbox-config';
 import './seller-inbox.css';
 
 type NavItem = {
-  key: 'list' | 'inbox' | 'viewings';
+  key: 'list' | 'listings' | 'inbox' | 'viewings';
   href: string;
   /** When true, omit unless NEXT_PUBLIC_SELLER_INBOX_ENABLED is on. */
   inboxGated?: boolean;
@@ -16,6 +16,7 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { key: 'list', href: '/seller/list' },
+  { key: 'listings', href: '/seller/listings' },
   { key: 'inbox', href: '/seller/enquiries', inboxGated: true },
   { key: 'viewings', href: '/seller/viewings' },
 ];

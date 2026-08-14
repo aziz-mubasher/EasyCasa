@@ -3261,6 +3261,7 @@
     "publishedTitle": "Anuncio publicado",
     "publishedBody": "Se ha registrado la fecha de primera publicación.",
     "viewListing": "Ver anuncio",
+    "manageListings": "Gestionar tus anuncios",
     "stepOf": "Paso {n} de {total}",
     "back": "Atrás",
     "next": "Siguiente",
@@ -3425,8 +3426,71 @@
     "navLabel": "Área del vendedor",
     "nav": {
       "list": "Publicar anuncio",
+      "listings": "Mis anuncios",
       "inbox": "Consultas",
       "viewings": "Visitas"
+    }
+  },
+  "sellerMonetisation": {
+    "myListings": {
+      "title": "Mis anuncios",
+      "lead": "Gestiona anuncios publicados y herramientas de pago opcionales. EasyCasa es un portal — las tarifas son fijas e independientes de la venta.",
+      "empty": "Aún no tienes anuncios. Usa «Publicar anuncio» para el primero.",
+      "loading": "Cargando anuncios…",
+      "unavailable": "Las herramientas de vendedor no están disponibles ahora.",
+      "signInTitle": "Inicia sesión para gestionar tus anuncios",
+      "signIn": "Iniciar sesión",
+      "viewPublic": "Ver página pública",
+      "status": {
+        "published": "Publicado",
+        "draft": "Borrador",
+        "unpublished": "No publicado"
+      }
+    },
+    "boost": {
+      "buyLead": "Visibilidad opcional de pago en resultados de búsqueda (tarifa fija vía checkout seguro).",
+      "buy7d": "Destacado — 7 días",
+      "buy30d": "Destacado — 30 días",
+      "activeRemaining": "{days, plural, one {# día restante} other {# días restantes}}",
+      "activeLockout": "Este anuncio ya tiene un periodo destacado activo.",
+      "checkoutFailed": "No se pudo iniciar el checkout. Inténtalo de nuevo.",
+      "redirecting": "Redirigiendo…"
+    },
+    "premium": {
+      "title": "Plan de vendedor",
+      "tierFree": "Plan gratuito",
+      "tierPremium": "Plan Premium",
+      "loading": "Cargando plan…",
+      "signInLead": "Inicia sesión para ver tu plan y mejoras opcionales.",
+      "signIn": "Iniciar sesión",
+      "entitlements": {
+        "activeListings": "Anuncios activos: hasta {limit}",
+        "uploadsPerDay": "Subidas de fotos al día: hasta {limit}",
+        "analyticsWindow": "Ventana de analítica: {days} días",
+        "priorityModeration": "Cola prioritaria de revisión de documentos"
+      },
+      "subscribe": "Mejorar a Premium",
+      "manage": "Gestionar suscripción",
+      "refresh": "Actualizar",
+      "redirecting": "Redirigiendo…",
+      "checkoutFailed": "No se pudo iniciar el checkout. Inténtalo de nuevo.",
+      "portalFailed": "No se pudo abrir el portal de facturación. Inténtalo de nuevo.",
+      "portalNote": "EasyCasa no actúa como mediador ni cobra comisión sobre el precio de venta. Las suscripciones son tarifa fija y se muestran en el checkout seguro.",
+      "upsellTitle": "Límite de anuncios alcanzado",
+      "upsellBody": "Premium aumenta tus límites de anuncios y subidas. Los importes aparecen en el checkout seguro — sin comisión sobre la venta.",
+      "upsellLimitsCurrent": "Límite actual: {limit} anuncios activos",
+      "upsellLimitsPremium": "Límite Premium: {limit} anuncios activos",
+      "upsellAction": "Ver mejora Premium",
+      "upsellManageLink": "Abrir área de vendedor"
+    },
+    "billingReturn": {
+      "successTitle": "Pago recibido",
+      "successBody": "Tu compra se está procesando. El destacado o el plan pueden tardar unos segundos.",
+      "cancelTitle": "Checkout cancelado",
+      "cancelBody": "No se ha cobrado nada. Puedes intentarlo de nuevo desde el área de vendedor.",
+      "backToListings": "Volver a mis anuncios",
+      "backToSeller": "Volver al área de vendedor",
+      "unknown": "Nada que mostrar."
     }
   }
 }

@@ -31,6 +31,7 @@ const WIZARD_CHROME = [
   'publishedTitle',
   'publishedBody',
   'viewListing',
+  'manageListings',
   'stepOf',
   'back',
   'next',

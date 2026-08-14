@@ -3261,6 +3261,7 @@
     "publishedTitle": "Listing published",
     "publishedBody": "First-published date has been recorded.",
     "viewListing": "View listing",
+    "manageListings": "Manage your listings",
     "stepOf": "Step {n} of {total}",
     "back": "Back",
     "next": "Next",
@@ -3425,8 +3426,71 @@
     "navLabel": "Seller area",
     "nav": {
       "list": "List property",
+      "listings": "My listings",
       "inbox": "Enquiries",
       "viewings": "Viewings"
+    }
+  },
+  "sellerMonetisation": {
+    "myListings": {
+      "title": "My listings",
+      "lead": "Manage published listings and optional paid tools. EasyCasa is a listing portal — fees are flat and independent of whether you sell.",
+      "empty": "You have no listings yet. Use “List property” to publish your first one.",
+      "loading": "Loading listings…",
+      "unavailable": "Seller tools are not available right now.",
+      "signInTitle": "Sign in to manage your listings",
+      "signIn": "Sign in",
+      "viewPublic": "View public page",
+      "status": {
+        "published": "Published",
+        "draft": "Draft",
+        "unpublished": "Unpublished"
+      }
+    },
+    "boost": {
+      "buyLead": "Optional paid visibility in search results (flat fee via secure checkout).",
+      "buy7d": "Featured — 7 days",
+      "buy30d": "Featured — 30 days",
+      "activeRemaining": "{days, plural, one {# day left} other {# days left}}",
+      "activeLockout": "This listing already has active featured placement.",
+      "checkoutFailed": "Could not start checkout. Please try again.",
+      "redirecting": "Redirecting…"
+    },
+    "premium": {
+      "title": "Seller plan",
+      "tierFree": "Free plan",
+      "tierPremium": "Premium plan",
+      "loading": "Loading plan details…",
+      "signInLead": "Sign in to view your plan and optional upgrades.",
+      "signIn": "Sign in",
+      "entitlements": {
+        "activeListings": "Active listings: up to {limit}",
+        "uploadsPerDay": "Photo uploads per day: up to {limit}",
+        "analyticsWindow": "Analytics window: {days} days",
+        "priorityModeration": "Priority document review queue"
+      },
+      "subscribe": "Upgrade to Premium",
+      "manage": "Manage subscription",
+      "refresh": "Refresh",
+      "redirecting": "Redirecting…",
+      "checkoutFailed": "Could not start checkout. Please try again.",
+      "portalFailed": "Could not open the billing portal. Please try again.",
+      "portalNote": "EasyCasa does not act as a mediator and does not charge a commission on the sale price. Subscription fees are flat and shown in secure checkout.",
+      "upsellTitle": "Listing limit reached",
+      "upsellBody": "Premium raises your listing and upload limits. Amounts are shown in secure checkout — no commission on your sale.",
+      "upsellLimitsCurrent": "Your current limit: {limit} active listings",
+      "upsellLimitsPremium": "Premium limit: {limit} active listings",
+      "upsellAction": "View Premium upgrade",
+      "upsellManageLink": "Open seller dashboard"
+    },
+    "billingReturn": {
+      "successTitle": "Payment received",
+      "successBody": "Your purchase is being processed. Featured placement or plan changes may take a few seconds to appear.",
+      "cancelTitle": "Checkout cancelled",
+      "cancelBody": "No charge was made. You can try again from your seller dashboard.",
+      "backToListings": "Back to my listings",
+      "backToSeller": "Back to seller area",
+      "unknown": "Nothing to show here."
     }
   }
 }
