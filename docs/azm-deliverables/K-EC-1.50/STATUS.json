@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_7f48de29",
+  "kaizenCode": "K EC 1.50",
+  "polishId": "PP-1",
+  "title": "PP-1 Partner directory self-serve Stripe checkout",
+  "venture": "EasyCasa",
+  "lifecycle": "pr_open",
+  "agentStatus": "IDLE",
+  "agentBcId": "bc-7b7d0e7f-d8dd-4b0d-ad60-3f0a8c7f358f",
+  "agentUrl": "https://cursor.com/agents/bc-7b7d0e7f-d8dd-4b0d-ad60-3f0a8c7f358f",
+  "branch": "cursor/pp1-partner-directory-checkout-358f",
+  "prNumber": 155,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/155",
+  "prState": "DRAFT",
+  "dispatchedAt": "2026-08-14T09:40:00.000Z",
+  "updatedAt": "2026-08-14T09:56:46.547Z",
+  "summary": "PP-1 / K EC 1.50 eng DONE: draft PR #155 open; Cursor agent IDLE. Not merged/deployed yet.",
+  "nextAction": "Review/merge PR #155; deploy api+web; smoke partner Stripe checkout; confirm UTM strip + paid_placement.",
+  "errors": []
+}
