@@ -26,6 +26,8 @@ Locales: `it` (default), `en`, `es`. Paths are **not** rewritten — use `/{loca
 |-------|---------|----------|----------|
 | `/{locale}/seller/onboarding` | Seller profile + informativa first mile (PP-4) | Always (flag-off API → 404 → gate message) | `SELLER_ONBOARDING_ENABLED` |
 | `/{locale}/seller/list` | Listing wizard (create / autosave / publish); embeds onboarding when profile missing | Always | `SELLER_ONBOARDING_ENABLED` |
+| `/{locale}/seller/listings` | Seller listings dashboard + **boost buy** (PP-5) | Always | `SELLER_ONBOARDING_ENABLED` + `LISTING_BOOST_ENABLED` for checkout |
+| `/{locale}/account` | Account / **premium upsell + entitlements** (PP-5) | Always | `SELLER_PREMIUM_ENABLED` for checkout |
 | `/{locale}/seller/enquiries` | Seller inbox (Richieste) | `NEXT_PUBLIC_SELLER_INBOX_ENABLED` | `SELLER_INBOX_ENABLED` |
 | `/{locale}/seller/viewings` | Conducting viewings list | Always (page) | `SELLER_VIEWINGS_ENABLED` |
 | `/{locale}/seller/listings/:id/availability` | Open-house / capacity slots | Always (page) | `SELLER_VIEWINGS_ENABLED` |
@@ -164,12 +166,20 @@ When `SELLER_ANALYTICS_ENABLED=true`:
 
 **Do not enable** without AZM (PK-3).
 
-### Step F — Monetisation
+### Step F — Monetisation (PP-5 web UI live)
+
+**Preferred (web):**
+
+1. Open `https://easycasaita.com/it/seller/listings` — boost **7 / 30 giorni** on cards → Stripe Checkout (`POST /featured/checkout`). Active boost shows **In evidenza** + remaining days.
+2. Open `https://easycasaita.com/it/account` — premium upsell / manage → `POST /billing/checkout` or portal; entitlements from `GET /seller/entitlements`.
+3. Wizard quota **429** surfaces premium prompt instead of a dead end.
+
+**API fallback:**
 
 | Action | How |
 |--------|-----|
-| **Boost (T26)** | `POST /api/featured/checkout` `{ "listingId", "days": 7 \| 30 }` → Stripe Checkout URL. Label **In evidenza** on list/detail when active. |
-| **Premium (T27)** | `POST /api/billing/checkout` `{ "planKey": "seller_premium" }` → subscription Checkout. Entitlements: `GET /api/seller/entitlements`. |
+| **Boost (T26)** | `POST /api/featured/checkout` `{ "listingId", "days": 7 \| 30 }` → Stripe Checkout URL. |
+| **Premium (T27)** | `POST /api/billing/checkout` `{ "planKey": "seller_premium" }` → subscription Checkout. |
 | **Portal** | `POST /api/billing/portal` → Stripe Customer Portal. |
 
 Unauthenticated probes: **401** (not flag-404) when flags are on.
@@ -265,13 +275,14 @@ Do **not** flip parked PK flags “to try” — each needs an AZM decision.
 
 ## 10. Known gaps (do not file as regressions)
 
-1. No first-class **web onboarding** UI — API onboarding required for new sellers (**PP-4**).
-2. No seller web UI for VO submit / checklist / boost buy button / premium upsell (API + billing helpers only) — **PP-5** / **PP-6**.
-3. Viewings / analytics **pages** can render while APIs are flag-dark (**V-1:** viewings **on** as of 2026-08-14; analytics still parked PK-3).
-4. T25 messaging **HOLD** (PK-5) — inbox is enquiry list, not chat threads.
-5. Empty partner directory paid catalogue → informational banner is **correct** (PK-8).
+1. ~~No first-class web onboarding UI~~ — **CLOSED PP-4 / K EC 1.47** (`/seller/onboarding` + wizard embed).
+2. ~~No boost buy / premium upsell web UI~~ — **CLOSED PP-5 / K EC 1.48** (`/seller/listings` + `/account`).
+3. No seller web UI for VO submit / checklist (API only) — **PP-6**.
+4. Viewings / analytics **pages** can render while APIs are flag-dark (**V-1:** viewings **on** as of 2026-08-14; analytics still parked PK-3).
+5. T25 messaging **HOLD** (PK-5) — inbox is enquiry list, not chat threads.
+6. Empty partner directory paid catalogue → informational banner is **correct** (PK-8).
 
 **Journey plan:** `docs/ec-s-seller-journey-completion.md`.
 
 ---
-*Owner: Ops + Eng. Update when seller flags unpark or onboarding UI ships.*
+*Owner: Ops + Eng. Update when seller flags unpark or polish items close.*

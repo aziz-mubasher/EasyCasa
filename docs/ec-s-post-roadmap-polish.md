@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · paid directory MVP (migration 0064) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)** · **PP-4 closed (K EC 1.47 / tip `c67c8ad`)**.
+**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · paid directory MVP (migration 0064) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)** · **PP-4 closed (K EC 1.47)** · **PP-5 closed (K EC 1.48)**.
 
 ---
 
@@ -19,7 +19,7 @@
 | PP-2 | **Housekeeping bundle** | (a) promote Service JSON-LD helper to `@easycasa/shared`; (b) SEO i18n pass on `valutazione-gratuita` / `acquisto-assistito` hardcoded EN strings; (c) listing titles on enquiry cards (API returns UUID only — needs small API field) | None | 1 PR |
 | PP-3 | **Static lastmod hygiene** | `STATIC_PAGE_LASTMOD` map is manual — bump on marketing copy changes, or wire to git log date per page | None | trivial |
 
-**Suggested order:** ~~PP-4~~ → **PP-5** → PP-6 → PP-1 → PP-2 (+PP-3 folded).
+**Suggested order:** ~~PP-4~~ → ~~PP-5~~ → **PP-6** → PP-1 → PP-2 (+PP-3 folded).
 
 ## A2. Ops verifications
 
@@ -66,6 +66,7 @@
 | `docs/runbooks/azm-dev-bridge.md` | **Claude↔Cursor status poll / report protocol** |
 | `docs/azm-deliverables/_bridge/status-ledger.json` | Public dispatch status Claude WebFetches |
 | `docs/audits/EC-S-pp4-k147-completion-feedback.md` | **PP-4 / K EC 1.47** completion R&D feedback |
+| `docs/audits/EC-S-pp5-k148-completion-feedback.md` | **PP-5 / K EC 1.48** completion R&D feedback |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |

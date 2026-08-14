@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T08:09:47.891Z",
+  "updatedAt": "2026-08-14T08:21:23.155Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "PP-5",
       "title": "PP-5 Monetisation purchase UI — boost buy + premium upsell",
       "venture": "EasyCasa",
-      "lifecycle": "pr_open",
+      "lifecycle": "merged",
       "agentStatus": "IDLE",
       "agentBcId": "bc-4462962b-030b-407b-a08e-f4049575058e",
       "agentUrl": "https://cursor.com/agents/bc-4462962b-030b-407b-a08e-f4049575058e",
       "branch": "cursor/pp5-monetisation-ui-058e",
       "prNumber": 152,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/152",
-      "prState": "DRAFT",
+      "prState": "MERGED",
       "dispatchedAt": "2026-08-14T08:00:00.000Z",
-      "updatedAt": "2026-08-14T08:09:47.891Z",
-      "summary": "PP-5 / K EC 1.48 eng DONE: draft PR #152 open; Cursor agent IDLE. Not merged/deployed yet.",
-      "nextAction": "Review/merge PR #152, rebuild web (and api if needed), smoke boost+premium checkout UI.",
+      "updatedAt": "2026-08-14T08:21:23.155Z",
+      "summary": "PP-5 / K EC 1.48 MERGED + DEPLOYED at tip 44ceeec. /it/seller/listings + /it/account 200; unauth checkout/entitlements/listings API → 401.",
+      "nextAction": "Mark Kaizen K EC 1.48 complete; authenticated Stripe buy smoke; dispatch PP-6.",
       "errors": []
     },
     {
