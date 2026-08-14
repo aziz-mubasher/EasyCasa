@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/158",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-14T08:42:40.236Z",
-  "updatedAt": "2026-08-14T19:54:59.885Z",
-  "summary": "EC-35 MERGED #158 @ 6f92e31 + DEPLOYED ai on VPS (tip b303677). Container smoke: lot7 64906/48680, lot4 36039. Flags off.",
-  "nextAction": "Mac live Ex2-7 aste:eval; counsel send still open; mark Kaizen K EC 7.3 ~90%",
+  "updatedAt": "2026-08-14T19:57:40.332Z",
+  "summary": "G1 post-EC-35 R&D filed. #158 merged+ai deployed; VPS smoke 64906/48680. Mac live + counsel still open.",
+  "nextAction": "Forward docs/audits/G1-post-ec35-rnd-report.md to Claude; Mac Ex2-7 live; counsel send",
   "errors": []
 }

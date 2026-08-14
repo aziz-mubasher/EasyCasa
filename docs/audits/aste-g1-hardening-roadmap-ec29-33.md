@@ -18,7 +18,7 @@ Counsel **answers** unlock G2, not G1. Current stance: **conscious near-miss →
 
 | G1 piece | Status |
 | --- | --- |
-| Eval pass bar | Live 8/8 **DONE** on ≥`fc64987`; **Ex2-7 adjudicated `64906`** (avviso screenshot) → **EC-35** lot-association; live re-verify after deploy |
+| Eval pass bar | **EC-35 MERGED+DEPLOYED** (#158 @ `6f92e31`); VPS smoke lot7=64906/48680. **Mac live Ex2-7 / 8/8 re-verify** still required before eval bar fully GREEN. Counsel unsent. Canonical: `docs/audits/G1-post-ec35-rnd-report.md` |
 | Counsel packet sent | **NOT DONE** — human (docs 1–8 + LGL-1, reply `packet sent <date>`) |
 | Waitlist | **WAIVED** — 1 lead (2026-08-11) |
 

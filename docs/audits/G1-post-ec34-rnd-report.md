@@ -19,14 +19,12 @@
 
 | G1 piece | Status | Notes |
 | --- | --- | --- |
-| Eval pass bar | **Near-miss — EC-35 pending live re-verify** | Live 8/8 **DONE** on tip ≥ `fc64987`. **Adjudication:** `Ex2-7 = 64906` (avviso screenshot). Bar stays 64906/48680; live still returned 153850 → **EC-35** extract fix. |
+| Eval pass bar | **Superseded by post-EC-35 report** | See **`docs/audits/G1-post-ec35-rnd-report.md`**. Adjudication `Ex2-7 = 64906`; EC-35 merged+deployed; Mac live re-verify still open. |
 | Counsel packet **sent** | **NOT DONE** | Docs 1–8 on disk; email is human |
 | Waitlist | **WAIVED** | 1 lead (2026-08-11) |
-| Code on `main` + VPS | **EC-34 DONE; EC-35 in flight** | EC-29→34 @ `fc64987`; EC-35 lot-association PR; pytest aste_extract **57/57** |
+| Code on `main` + VPS | **EC-35 DONE (see successor)** | EC-29→35 on `main`; #158 @ `6f92e31` |
 
-**Call for R&D / product:** Do **not** flip flags. Do **not** claim full G1 green (counsel unsent; Ex2-7 needs post-EC-35 live re-run).  
-**Eval pass bar:** adjudication closed (`Ex2-7 = 64906`). Remaining eng: merge/deploy **EC-35** → Mac live re-verify Ex2-7 (ideally full 8/8).
-
+**Call for R&D / product:** Use **`G1-post-ec35-rnd-report.md`** as the canonical scorecard going forward.  
 **Human close checklist:** `docs/runbooks/aste-g1-human-close.md` (Action 1 done; Action 2 counsel send still open).
 
 ### Paste stub (actual)
