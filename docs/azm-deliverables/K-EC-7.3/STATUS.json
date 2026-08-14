@@ -1,5 +1,5 @@
 {
-  "bridgeTaskId": "task_ec35_pending",
+  "bridgeTaskId": "task_31ff3a14",
   "kaizenCode": "K EC 7.3",
   "polishId": null,
   "title": "EC-35 Ex2 lotto-7 auction lot association",
@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/158",
   "prState": "DRAFT",
   "dispatchedAt": "2026-08-14T08:42:40.236Z",
-  "updatedAt": "2026-08-14T14:17:25.697Z",
-  "summary": "EC-35 #158 DRAFT: deterministic lot-section economics parse; Ex2-7=64906; pytest 61/61",
-  "nextAction": "Review/merge #158; deploy ai; Mac Ex2 lotto 4+7 live re-verify",
+  "updatedAt": "2026-08-14T19:35:04.647Z",
+  "summary": "EC-35 #158 DRAFT tip 3492389; pytest 61/61; CI ai+node green. Not merged; run-f5e681ea not found in accessible agents.",
+  "nextAction": "Review/merge #158; deploy ai; Mac Ex2-7 live; counsel send still open",
   "errors": []
 }
