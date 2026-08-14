@@ -1,7 +1,7 @@
 {
   "$schema": "./promises.schema.json",
   "version": 1,
-  "updatedAt": "2026-08-13",
+  "updatedAt": "2026-08-14",
   "promises": {
     "P1": {
       "state": "live",
@@ -47,11 +47,11 @@
       "note": "Viewing scheduler \u2014 core live; seller-conducted after T21"
     },
     "P6": {
-      "state": "coming",
+      "state": "live",
       "tasks": [
         "T18"
       ],
-      "note": "Document checklist"
+      "note": "Document checklist — live 2026-08-14 (AZM PK-2); SELLER_CHECKLIST_ENABLED"
     },
     "P7": {
       "state": "coming",

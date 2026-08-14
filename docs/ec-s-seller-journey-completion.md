@@ -14,7 +14,7 @@
 | 1 | Discover | `/vendi-da-privato` (IT/EN/ES), Claim 1–2 live, T33 SEO | ✅ LIVE | — |
 | 2 | Sign up + onboard | OIDC + web onboarding form + `POST /seller/onboarding` + informativa v1.1 | ✅ **LIVE** | **PP-4 merged** — `/seller/onboarding` + wizard gate |
 | 3 | Create listing | `/seller/list` wizard: OMI panel, photos, AI description, autosave, publish, quotas | ✅ LIVE | — |
-| 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | ⛔ **UI ready, awaiting PK-1/PK-2 flips** | PK-1/PK-2 runtime flips — **PP-6 merged** (seller VO/checklist UI dark) |
+| 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | **Partial — checklist LIVE (PK-2 2026-08-14); VO dark (PK-1)** | P6 live + `SELLER_CHECKLIST_ENABLED=true`; P3/VO awaiting moderation capacity — runbook `docs/runbooks/ec-s-vo-enablement.md` |
 | 5 | Receive enquiries | `/seller/enquiries`, Verified Buyer badges, mark-read, **listing title + slug on cards** | ✅ LIVE | (chat = T25, parked PK-5 — by design off-platform for now) |
 | 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ✅ **LIVE** | **V-1 flipped 2026-08-14:** `SELLER_VIEWINGS_ENABLED=true` + api recreate. Unauth APIs → 401; page 200. Full buyer-book → seller-confirm smoke needs authenticated accounts |
 | 7 | Steer the sale | analytics + price nudges | ⛔ DARK | PK-3 flip |
@@ -48,7 +48,7 @@
 
 | ID | Decision | Effect on journey |
 |----|----------|-------------------|
-| PK-1 / PK-2 | VO + checklist flips (after PP-6 merges) | Stage 4 live → P3/P6 ledger flip |
+| PK-1 / PK-2 | VO + checklist flips (after PP-6 merges) | Stage 4: **PK-2 done** (checklist live); **PK-1** UI + runbook ready — flip when moderation capacity confirmed |
 | PK-3 | Analytics flip | Stage 7 live → P7 already live; deepens it |
 | PK-4 | Bunny DPA → CDN | Photo delivery performance (non-blocking) |
 | PK-5 | T05 §6.5 → T25 messaging | Stage 5 upgrade: enquiries → chat threads |
@@ -64,11 +64,11 @@
 4. Availability set → buyer books → seller confirms → completes.
 5. Boost purchased in UI → `In evidenza` on card; premium purchased → entitlements raised, quota 429 gone.
 6. No-script HTML on `/vendi-da-privato` still shows Claim 1 EUR + portal copy.
-7. Parked flags still false (VO/checklist/analytics/CDN) unless PK decisions recorded.
+7. Parked flags still false (VO/analytics/CDN) unless PK decisions recorded — **checklist ON after PK-2**.
 
 ## 4. Standing rules
 
 All dispatches follow `docs/ec-s-post-roadmap-polish.md` §C (single agent per code; `NEXT_PUBLIC_*` Docker ARG same-PR; Traefik compose pair; ops-flip vs eng-build stated explicitly; no parked flips bundled; ledger copy only via flip protocol).
 
 ---
-*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 closed 2026-08-14. **EC-S eng backlog empty.** Next: PK-1/PK-2 enablement (+ Stripe Price backfill for partner directory). Status polls: `docs/runbooks/azm-dev-bridge.md`.*
+*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-2** closed 2026-08-14. **EC-S eng backlog empty.** Next: **PK-1** VO enablement when moderation capacity confirmed (+ Stripe Price backfill). Status polls: `docs/runbooks/azm-dev-bridge.md`.*

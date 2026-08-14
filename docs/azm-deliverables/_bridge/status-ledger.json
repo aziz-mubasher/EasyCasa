@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T14:43:55.290Z",
+  "updatedAt": "2026-08-14T19:06:19.463Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": null,
+      "kaizenCode": "K EC 1.52",
+      "polishId": "PK-2",
+      "title": "K EC 1.52",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": null,
+      "agentBcId": null,
+      "agentUrl": null,
+      "branch": null,
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-08-14T19:06:19.463Z",
+      "updatedAt": "2026-08-14T19:06:19.463Z",
+      "summary": "PK-2 in progress: P6 ledger live, VPS checklist flip + smoke pending",
+      "nextAction": "Await PR merge + VPS deploy smoke",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_6bc2a7b6",
       "kaizenCode": "K EC 1.51",
