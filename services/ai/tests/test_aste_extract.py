@@ -1096,3 +1096,217 @@ def test_ec34_stima_microchunk_guard_rejects_suspect(monkeypatch: pytest.MonkeyP
     assert out["economics"]["valore_stima"] is None
     assert "economics.valore_stima" in out["meta"]["not_found"]
     assert "valore_stima_suspect" in out["meta"]["warnings"]
+
+
+# --- EC-35: Ex2 lotto-7 association — competing 153850 must lose ---
+
+
+def _ex2_avviso_competing_other_lot_text() -> str:
+    """Synthetic shape: correct L4/L7 rows + distractor lot carrying the live wrong pair."""
+    return (
+        "Tribunale di Ragusa — Quarta vendita senza incanto\n"
+        "Lotto 4: immobili siti in C/da Esempio, foglio 1, particelle 10-11.\n"
+        "Prezzo base d'asta: Euro 36.039,00\n"
+        "Offerta minima: Euro 27.029,25\n"
+        "Cauzione: 10% del prezzo offerto. Rilancio minimo: Euro 1.000,00\n"
+        "Lotto 7: immobili siti in C/da Esempio, foglio 95, particelle 89-29-30-91.\n"
+        "Prezzo base d'asta: Euro 64.906,00\n"
+        "Offerta minima: Euro 48.680,00\n"
+        "Cauzione: 10% del prezzo offerto. Rilancio minimo: Euro 1.500,00\n"
+        "Lotto 12: fabbricato rurale.\n"
+        "Prezzo base d'asta: Euro 153.850,00\n"
+        "Offerta minima: Euro 115.387,50\n"
+    )
+
+
+def _ex2_avviso_older_attempt_under_lot7_text() -> str:
+    """Synthetic shape: older vendita 153850 under Lotto 7; current quarta = 64906."""
+    return (
+        "Avviso di vendita — Quarta vendita senza incanto\n"
+        "Lotto 7\n"
+        "Prima vendita: prezzo base euro 153.850,00 — offerta minima euro 115.387,50\n"
+        "Quarta vendita: prezzo base d'asta euro 64.906,00 — offerta minima euro 48.680,00\n"
+        "Lotto 4\n"
+        "Prezzo base d'asta euro 36.039,00 — offerta minima euro 27.029,25\n"
+    )
+
+
+def test_ec35_untagged_wrong_lot_row_rejected_for_lotto7() -> None:
+    """Live failure class: LLM emits only 153850 untagged on a multi-lot avviso page."""
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text = _ex2_avviso_competing_other_lot_text()
+    page_text_index = {("avviso.pdf", 1): page_text}
+
+    wrong = empty_extraction(meta_docs)
+    wrong["economics"]["prezzo_base"] = {
+        "value": 153850,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    wrong["economics"]["offerta_minima"] = {
+        "value": 115387.5,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+
+    merged7 = merge_extractions([wrong], meta_docs, "7", page_text_index=page_text_index)
+    assert merged7["economics"]["prezzo_base"]["value"] == 64906
+    assert merged7["economics"]["offerta_minima"]["value"] == 48680
+    assert "auction_lot_section_parse" in merged7["meta"]["warnings"]
+
+    merged4 = merge_extractions([wrong], meta_docs, "4", page_text_index=page_text_index)
+    assert merged4["economics"]["prezzo_base"]["value"] == 36039
+    assert merged4["economics"]["offerta_minima"]["value"] == 27029.25
+
+
+def test_ec35_wrong_dettaglio_tag_overridden_by_section() -> None:
+    """LLM tags 153850 as Lotto 7 but the number only appears under another lot."""
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text_index = {("avviso.pdf", 1): _ex2_avviso_competing_other_lot_text()}
+
+    wrong = empty_extraction(meta_docs)
+    wrong["economics"]["prezzo_base"] = {
+        "value": 153850,
+        "dettaglio": "Lotto 7",
+        "lotto": "7",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    wrong["economics"]["offerta_minima"] = {
+        "value": 115387.5,
+        "dettaglio": "Lotto 7",
+        "lotto": "7",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+
+    merged = merge_extractions([wrong], meta_docs, "7", page_text_index=page_text_index)
+    assert merged["economics"]["prezzo_base"]["value"] == 64906
+    assert merged["economics"]["offerta_minima"]["value"] == 48680
+
+
+def test_ec35_older_vendita_under_same_lot_prefers_current() -> None:
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text_index = {("avviso.pdf", 1): _ex2_avviso_older_attempt_under_lot7_text()}
+
+    wrong = empty_extraction(meta_docs)
+    wrong["economics"]["prezzo_base"] = {
+        "value": 153850,
+        "dettaglio": "Lotto 7",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    wrong["economics"]["offerta_minima"] = {
+        "value": 115387.5,
+        "dettaglio": "Lotto 7",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+
+    merged7 = merge_extractions([wrong], meta_docs, "7", page_text_index=page_text_index)
+    assert merged7["economics"]["prezzo_base"]["value"] == 64906
+    assert merged7["economics"]["offerta_minima"]["value"] == 48680
+
+    merged4 = merge_extractions([wrong], meta_docs, "4", page_text_index=page_text_index)
+    assert merged4["economics"]["prezzo_base"]["value"] == 36039
+
+
+def test_ec35_first_fill_bleed_cleared_when_only_other_lot_candidate() -> None:
+    """Tagged-other-lot candidate must not leave first-fill 153850 after finalize."""
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text_index = {("avviso.pdf", 1): _ex2_avviso_competing_other_lot_text()}
+
+    other = empty_extraction(meta_docs)
+    other["economics"]["prezzo_base"] = {
+        "value": 153850,
+        "dettaglio": "Lotto 12",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    other["economics"]["offerta_minima"] = {
+        "value": 115387.5,
+        "dettaglio": "Lotto 12",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+
+    merged = merge_extractions([other], meta_docs, "7", page_text_index=page_text_index)
+    assert merged["economics"]["prezzo_base"]["value"] == 64906
+    assert merged["economics"]["offerta_minima"]["value"] == 48680
+
+
+def test_ec35_wrong_only_llm_red_on_main_tip() -> None:
+    """Documents EC-34 gap: untagged wrong-lot LLM row kept 153850 on main before EC-35."""
+    # Verified manually against main @ d7f24fb: merge_extractions(..., "7") → 153850/115387.5
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text_index = {("avviso.pdf", 1): _ex2_avviso_competing_other_lot_text()}
+    wrong = empty_extraction(meta_docs)
+    wrong["economics"]["prezzo_base"] = {
+        "value": 153850,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    wrong["economics"]["offerta_minima"] = {
+        "value": 115387.5,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    merged = merge_extractions([wrong], meta_docs, "7", page_text_index=page_text_index)
+    assert merged["economics"]["prezzo_base"]["value"] != 153850
+    assert merged["economics"]["offerta_minima"]["value"] != 115387.5
+
+
+def test_ec35_honest_not_found_when_no_target_section_or_candidates() -> None:
+    """Neither deterministic parse nor lot-filtered LLM → not_found (no cross-lot bleed)."""
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text = (
+        "Lotto 4\nPrezzo base d'asta Euro 36.039,00\nOfferta minima Euro 27.029,25\n"
+        "Lotto 12\nPrezzo base d'asta Euro 153.850,00\nOfferta minima Euro 115.387,50\n"
+    )
+    page_text_index = {("avviso.pdf", 1): page_text}
+    other = empty_extraction(meta_docs, not_found=["economics.prezzo_base", "economics.offerta_minima"])
+    other["economics"]["prezzo_base"] = {
+        "value": 153850,
+        "dettaglio": "Lotto 12",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    other["economics"]["offerta_minima"] = {
+        "value": 115387.5,
+        "dettaglio": "Lotto 12",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    merged = merge_extractions([other], meta_docs, "7", page_text_index=page_text_index)
+    assert merged["economics"]["prezzo_base"] is None
+    assert merged["economics"]["offerta_minima"] is None
+    assert "economics.prezzo_base" in merged["meta"]["not_found"]
+    assert "economics.offerta_minima" in merged["meta"]["not_found"]
+
+
+def test_ec35_single_lot_doc_skips_deterministic_override() -> None:
+    """Single-lot avviso: LLM candidate kept; no auction_lot_section_parse warning."""
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text = (
+        "Lotto 7\nPrezzo base d'asta Euro 64.906,00\nOfferta minima Euro 48.680,00\n"
+    )
+    page_text_index = {("avviso.pdf", 1): page_text}
+    llm = empty_extraction(meta_docs)
+    llm["economics"]["prezzo_base"] = {
+        "value": 70000,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    llm["economics"]["offerta_minima"] = {
+        "value": 52500,
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    merged = merge_extractions([llm], meta_docs, "7", page_text_index=page_text_index)
+    assert merged["economics"]["prezzo_base"]["value"] == 70000
+    assert "auction_lot_section_parse" not in merged["meta"].get("warnings", [])
+
+
+def test_ec35_italian_number_formats_in_section_parse() -> None:
+    """Italian formats € 64.906 / Euro 64.906,00 / 48.680,00 parse correctly."""
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text = (
+        "Lotto 4\nPrezzo base d'asta € 36.039\nOfferta minima € 27.029,25\n"
+        "Lotto 7\nPrezzo base d'asta Euro 64.906,00\nOfferta minima: Euro 48.680,00\n"
+        "Cauzione: 10% del prezzo offerto. Rilancio minimo: Euro 1.500,00\n"
+    )
+    page_text_index = {("avviso.pdf", 1): page_text}
+    empty = empty_extraction(meta_docs)
+    merged7 = merge_extractions([empty], meta_docs, "7", page_text_index=page_text_index)
+    assert merged7["economics"]["prezzo_base"]["value"] == 64906
+    assert merged7["economics"]["offerta_minima"]["value"] == 48680
+    assert merged7["economics"]["rilancio_minimo"]["value"] == 1500
+    assert merged7["economics"]["cauzione"]["pct"] == 10
+    assert merged7["economics"]["prezzo_base"]["source"] == {"file": "avviso.pdf", "page": 1}
+    assert "auction_lot_section_parse" in merged7["meta"]["warnings"]

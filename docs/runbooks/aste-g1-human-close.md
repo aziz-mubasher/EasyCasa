@@ -11,7 +11,10 @@
 
 ## Action 1 — Adjudicate Ex2 lotto 7 (≈10 min)
 
-**Question:** what is the CURRENT prezzo base for **lotto 7** in the fourth-sale avviso?  
+**STATUS (2026-08-14): DONE — `Ex2-7 = 64906`**  
+AZM confirmed from avviso screenshot (Lotto 7: Prezzo base d'asta €64.906,00 / Offerta minima €48.680,00). Pipeline `153850` is wrong → **EC-35** (lot-association + deterministic lot-section parse). Counsel send (Action 2) still open.
+
+**Question (historical):** what is the CURRENT prezzo base for **lotto 7** in the fourth-sale avviso?  
 The pipeline's last two runs say **153.850**; the runbook pass bar and the first two runs say **64.906**. One of them is another lot's row, an older attempt's price, or a bar error.
 
 ### Steps
