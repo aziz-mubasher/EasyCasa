@@ -18,7 +18,7 @@ Counsel **answers** unlock G2, not G1. Current stance: **conscious near-miss →
 
 | G1 piece | Status |
 | --- | --- |
-| Eval pass bar | Live 8/8 **DONE** on ≥`fc64987` — GT-5/Ex8/GT-4/Ex7-honest/lot-bleed **green**; **Ex2-7 still 153850/115387.5** vs bar 64906/48680 → **adjudicate** before GREEN or EC-35 |
+| Eval pass bar | Live 8/8 **DONE** on ≥`fc64987`; **Ex2-7 adjudicated `64906`** (avviso screenshot) → **EC-35** lot-association; live re-verify after deploy |
 | Counsel packet sent | **NOT DONE** — human (docs 1–8 + LGL-1, reply `packet sent <date>`) |
 | Waitlist | **WAIVED** — 1 lead (2026-08-11) |
 
@@ -93,7 +93,7 @@ Pass-bar checks on the paste tables: economics + page refs all hit; urbanistica.
 
 **Operator checklist (AZM):** `docs/runbooks/aste-g1-human-close.md` — Ex2-7 adjudication + counsel send.
 
-1. **Adjudicate Ex2 lotto 7** (open avviso row): reply `Ex2-7 = 64906` → **EC-35**; or `Ex2-7 = 153850` → runbook bar fix + eval GREEN on 2026-08-14 run.
+1. **Adjudicate Ex2 lotto 7** — **DONE** `Ex2-7 = 64906` → **EC-35** (merge/deploy + Mac live re-verify). Counsel send still open.
 2. **Counsel email** — checklist rows 1–8 (LGL-1 = row 8) → reply `packet sent YYYY-MM-DD (response requested by YYYY-MM-DD)`.
 3. **Drive GT true-score** — also watch GT-3/Ex4 urbanistica `non_conforme`→`non_rilevato` vs perizia prose.
 4. Board hygiene — link PRs #134/#136/#144/#146/#154 to K EC 7.3.
