@@ -73,6 +73,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pp1-k150-completion-feedback.md` | **PP-1 / K EC 1.50** completion R&D feedback (Stripe Price backfill still needed) |
 | `docs/audits/EC-S-pp2-k151-completion-feedback.md` | **PP-2+PP-3 / K EC 1.51** completion R&D feedback (eng backlog empty) |
 | `docs/audits/EC-S-pk2-checklist-enablement.md` | **PK-2 / K EC 1.52** checklist enablement record |
+| `docs/audits/EC-S-pk2-k152-completion-feedback.md` | **PK-2 / K EC 1.52** post-merge completion R&D feedback |
 | `docs/runbooks/ec-s-vo-enablement.md` | **PK-1 prep** — VO flip runbook (do not execute until moderation capacity) |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
