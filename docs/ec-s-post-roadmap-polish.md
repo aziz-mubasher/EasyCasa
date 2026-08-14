@@ -48,6 +48,7 @@
 | Doc | Purpose |
 |-----|---------|
 | `docs/ec-s-roadmap.md` | Completed T01–T33 (authoritative, historical) |
+| `docs/runbooks/seller-dashboard.md` | **SOP — seller dashboard process** (ops/QA) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
 | `docs/audits/EC-S-g1-signoff-enablement.md` | G1 record |
 | `docs/audits/EC-S-claim12-g3-enablement.md` | Claim 1–2 + G3 record |
