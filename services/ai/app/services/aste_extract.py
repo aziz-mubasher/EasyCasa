@@ -591,6 +591,23 @@ def _value_in_lot_section(value: Any, lot_label: str, text: str) -> bool:
     return False
 
 
+def _value_only_in_other_lot_section(
+    value: Any,
+    selected: str,
+    source_text: str,
+) -> bool:
+    """True when a numeric value appears under another lot section but not the target."""
+    sections = _split_by_lot_sections(source_text)
+    if not sections or value is None:
+        return False
+    if _value_in_lot_section(value, selected, source_text):
+        return False
+    return any(
+        other != selected and _value_in_lot_section(value, other, source_text)
+        for other in sections
+    )
+
+
 def _sourced_value_for_other_lot_only(
     val: Any,
     lotto_label: str | None,
@@ -600,6 +617,15 @@ def _sourced_value_for_other_lot_only(
     if not lotto_label or not isinstance(val, dict):
         return False
     selected = lotto_label.strip().upper()
+
+    # EC-35: page-section evidence overrides wrong LLM lotto/dettaglio tags when the
+    # numeric value lives only under another lot on a multi-lot page.
+    source_text = _lookup_page_text(page_text_index, val.get("source"))
+    value = val.get("value") if "value" in val else None
+    if value is None and isinstance(val.get("importo"), (int, float)):
+        value = val.get("importo")
+    if source_text and value is not None and _value_only_in_other_lot_section(value, selected, source_text):
+        return True
 
     lot = val.get("lotto")
     if isinstance(lot, str) and lot.strip():
@@ -612,11 +638,9 @@ def _sourced_value_for_other_lot_only(
         if _conformita_mentions_other_lots_only(det, lotto_label):
             return True
 
-    source_text = _lookup_page_text(page_text_index, val.get("source"))
     if source_text:
         sections = _split_by_lot_sections(source_text)
         if sections:
-            value = val.get("value")
             if value is not None and _value_in_lot_section(value, selected, source_text):
                 return False
             if selected not in sections:
@@ -634,6 +658,22 @@ def _sourced_value_for_other_lot_only(
     return False
 
 
+def _sourced_value_in_target_lot_section(
+    val: Any,
+    lotto_label: str | None,
+    page_text_index: dict[tuple[str, int], str] | None,
+) -> bool:
+    if not lotto_label or not isinstance(val, dict):
+        return False
+    source_text = _lookup_page_text(page_text_index, val.get("source"))
+    if not source_text:
+        return False
+    value = val.get("value")
+    if value is None:
+        return False
+    return _value_in_lot_section(value, lotto_label.strip().upper(), source_text)
+
+
 def _sourced_value_matches_target_lot(
     val: Any,
     lotto_label: str | None,
@@ -643,6 +683,19 @@ def _sourced_value_matches_target_lot(
         return False
     selected = lotto_label.strip().upper()
 
+    source_text = _lookup_page_text(page_text_index, val.get("source"))
+    value = val.get("value") if isinstance(val.get("value"), (int, float)) else None
+    # EC-35: on multi-lot pages, numeric values must appear in the target section.
+    if source_text and value is not None:
+        sections = _split_by_lot_sections(source_text)
+        if sections:
+            if _value_in_lot_section(value, selected, source_text):
+                return True
+            if _value_only_in_other_lot_section(value, selected, source_text):
+                return False
+            # Value not found in any section → do not treat page-mention as a match.
+            return False
+
     lot = val.get("lotto")
     if isinstance(lot, str) and lot.strip().upper() == selected:
         return True
@@ -651,9 +704,7 @@ def _sourced_value_matches_target_lot(
     if isinstance(det, str) and selected in _lots_mentioned(det):
         return True
 
-    source_text = _lookup_page_text(page_text_index, val.get("source"))
     if source_text:
-        value = val.get("value")
         if value is not None and _value_in_lot_section(value, selected, source_text):
             return True
         if _lot_mention_re(lotto_label).search(source_text):
@@ -681,6 +732,13 @@ def _pick_by_precedence_lot_aware(
         ]
         if explicit:
             pool = explicit
+        in_section = [
+            (val, dtype)
+            for val, dtype in pool
+            if _sourced_value_in_target_lot_section(val, lotto_label, page_text_index)
+        ]
+        if in_section:
+            pool = in_section
     return _pick_by_precedence(pool, precedence)
 
 
@@ -1022,6 +1080,139 @@ def _merge_cauzione_fields(cauzione: dict[str, Any], candidates: list[tuple[Any,
             cauzione["source"] = val["source"]
 
 
+_ITALIAN_MONEY_RE = re.compile(
+    r"(?:euro|€)\s*(\d{1,3}(?:[.\s]\d{3})*(?:,\d{1,2})?|\d+(?:,\d{1,2})?)",
+    re.IGNORECASE,
+)
+_PREZZO_BASE_CTX_RE = re.compile(
+    r"prezzo\s+base(?:\s+d[''`´]asta)?",
+    re.IGNORECASE,
+)
+_OFFERTA_MINIMA_CTX_RE = re.compile(r"offerta\s+minima", re.IGNORECASE)
+_CURRENT_VENDITA_RE = re.compile(
+    r"\b(?:quarta|quinta|sesta|attuale|corrente)\s+vendita\b|"
+    r"prezzo\s+base\s+d[''`´]asta",
+    re.IGNORECASE,
+)
+_OLDER_VENDITA_RE = re.compile(
+    r"\b(?:prima|seconda|terza)\s+vendita\b",
+    re.IGNORECASE,
+)
+
+
+def _parse_italian_money(token: str) -> float | None:
+    raw = (token or "").strip().replace(" ", "").replace(".", "").replace(",", ".")
+    if not raw:
+        return None
+    try:
+        return float(raw)
+    except ValueError:
+        return None
+
+
+def _score_auction_money_match(section: str, match_start: int, match_end: int) -> int:
+    """Prefer current-attempt / prezzo base d'asta phrasing over older vendita rows."""
+    window = section[max(0, match_start - 80) : min(len(section), match_end + 40)]
+    score = 0
+    if _CURRENT_VENDITA_RE.search(window):
+        score += 10
+    if _OLDER_VENDITA_RE.search(window):
+        score -= 10
+    if "d'asta" in window.lower() or "d`asta" in window.lower() or "d´asta" in window.lower():
+        score += 3
+    # Later rows in the same section often list the current attempt after earlier ones.
+    score += match_start // 200
+    return score
+
+
+def _find_auction_money_in_section(
+    section: str,
+    label_re: re.Pattern[str],
+) -> float | None:
+    best: tuple[int, float] | None = None
+    for label in label_re.finditer(section):
+        tail = section[label.end() : label.end() + 120]
+        money = _ITALIAN_MONEY_RE.search(tail)
+        if not money:
+            continue
+        parsed = _parse_italian_money(money.group(1))
+        if parsed is None:
+            continue
+        money_end = label.end() + money.end()
+        score = _score_auction_money_match(section, label.start(), money_end)
+        if best is None or score > best[0]:
+            best = (score, parsed)
+    return best[1] if best else None
+
+
+def _deterministic_lot_auction_economics(
+    lotto_label: str | None,
+    page_text_index: dict[tuple[str, int], str] | None,
+    meta_docs: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Parse prezzo_base / offerta_minima from the target lot section on avviso pages (EC-35)."""
+    if not lotto_label or not page_text_index:
+        return {}
+    selected = lotto_label.strip().upper()
+    avviso_files = {
+        str(d.get("file"))
+        for d in meta_docs
+        if str(d.get("doc_type") or "").lower() == "avviso" and d.get("file")
+    }
+    out: dict[str, Any] = {}
+    for (file_id, page_no), text in page_text_index.items():
+        if avviso_files and file_id not in avviso_files:
+            continue
+        sections = _split_by_lot_sections(text or "")
+        section = sections.get(selected)
+        if not section:
+            continue
+        source = {"file": file_id, "page": page_no}
+        if "prezzo_base" not in out:
+            pb = _find_auction_money_in_section(section, _PREZZO_BASE_CTX_RE)
+            if pb is not None:
+                out["prezzo_base"] = {
+                    "value": pb,
+                    "dettaglio": f"Lotto {selected}",
+                    "source": source,
+                    "derived": True,
+                }
+        if "offerta_minima" not in out:
+            om = _find_auction_money_in_section(section, _OFFERTA_MINIMA_CTX_RE)
+            if om is not None:
+                out["offerta_minima"] = {
+                    "value": om,
+                    "dettaglio": f"Lotto {selected}",
+                    "source": source,
+                    "derived": True,
+                }
+        if "prezzo_base" in out and "offerta_minima" in out:
+            break
+    return out
+
+
+def _clear_auction_field_if_other_lot(
+    econ: dict[str, Any],
+    field: str,
+    lotto_label: str | None,
+    page_text_index: dict[tuple[str, int], str] | None,
+    meta: dict[str, Any],
+) -> None:
+    cur = econ.get(field)
+    if _is_empty(cur) or not isinstance(cur, dict):
+        return
+    if not _sourced_value_for_other_lot_only(cur, lotto_label, page_text_index):
+        return
+    econ[field] = None
+    nf = meta.setdefault("not_found", [])
+    path = f"economics.{field}"
+    if isinstance(nf, list) and path not in nf:
+        nf.append(path)
+    warnings = meta.setdefault("warnings", [])
+    if isinstance(warnings, list) and "auction_other_lot_cleared" not in warnings:
+        warnings.append("auction_other_lot_cleared")
+
+
 def _apply_field_precedence(
     merged: dict[str, Any],
     parts: list[dict[str, Any]],
@@ -1032,6 +1223,9 @@ def _apply_field_precedence(
     """Field-specific doc-type precedence after chunk merge (EC-30)."""
     econ = merged.setdefault("economics", {})
     giu = merged.setdefault("giuridica", {})
+    meta = merged.setdefault("meta", {}) if isinstance(merged.get("meta"), dict) else {}
+    if not isinstance(merged.get("meta"), dict):
+        merged["meta"] = meta
 
     for field in ("prezzo_base", "offerta_minima", "rilancio_minimo"):
         picked = _pick_by_precedence_lot_aware(
@@ -1044,6 +1238,37 @@ def _apply_field_precedence(
         )
         if not _is_empty(picked):
             econ[field] = picked
+        else:
+            # EC-35: do not keep first-fill bleed when all candidates were lot-rejected.
+            _clear_auction_field_if_other_lot(
+                econ, field, lotto_label, page_text_index, meta
+            )
+
+    # EC-35: deterministic avviso lot-section parse recovers current-attempt economics
+    # when the LLM picked another lot's row or an older vendita under the same lot.
+    det_econ = _deterministic_lot_auction_economics(lotto_label, page_text_index, meta_docs)
+    for field, det_val in det_econ.items():
+        cur = econ.get(field)
+        prefer_det = False
+        if _is_empty(cur):
+            prefer_det = True
+        elif isinstance(cur, dict):
+            if _sourced_value_for_other_lot_only(cur, lotto_label, page_text_index):
+                prefer_det = True
+            elif not _sourced_value_in_target_lot_section(cur, lotto_label, page_text_index):
+                prefer_det = True
+            elif cur.get("value") != det_val.get("value"):
+                # Same lot section but conflicting amounts → prefer scored current attempt.
+                prefer_det = True
+        if prefer_det:
+            econ[field] = det_val
+            warnings = meta.setdefault("warnings", [])
+            if isinstance(warnings, list) and "auction_lot_section_parse" not in warnings:
+                warnings.append("auction_lot_section_parse")
+            nf = meta.get("not_found")
+            if isinstance(nf, list):
+                path = f"economics.{field}"
+                meta["not_found"] = [p for p in nf if p != path]
 
     valore = _pick_by_precedence_lot_aware(
         _collect_valore_stima_candidates(parts, meta_docs, lotto_label, page_text_index),
