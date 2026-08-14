@@ -5,14 +5,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/auth/AuthProvider';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 import {
-  parseSellerListingsResponse,
-  type SellerListingsResponse,
-} from '@/lib/seller-monetisation';
+  parseSellerListingsWithTrust,
+  type SellerListingsWithTrustResponse,
+} from '@/lib/seller-trust';
 
 type SellerListingsState = {
   loading: boolean;
   unavailable: boolean;
-  data: SellerListingsResponse | null;
+  data: SellerListingsWithTrustResponse | null;
   refresh: () => Promise<void>;
 };
 
@@ -21,7 +21,7 @@ export function useSellerListings(enabled = true): SellerListingsState {
   const { ready, isAuthenticated, getAccessToken } = useAuth();
   const [loading, setLoading] = useState(true);
   const [unavailable, setUnavailable] = useState(false);
-  const [data, setData] = useState<SellerListingsResponse | null>(null);
+  const [data, setData] = useState<SellerListingsWithTrustResponse | null>(null);
 
   const refresh = useCallback(async () => {
     if (!enabled || !ready || !isAuthenticated) {
@@ -43,7 +43,7 @@ export function useSellerListings(enabled = true): SellerListingsState {
         setData(null);
         return;
       }
-      const parsed = parseSellerListingsResponse(await res.json());
+      const parsed = parseSellerListingsWithTrust(await res.json());
       setUnavailable(false);
       setData(parsed);
     } finally {

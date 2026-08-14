@@ -1,4 +1,9 @@
 import { Controller, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  SELLER_CHECKLIST_TYPE_CODES,
+  badgeActive,
+  type VoState,
+} from '@easycasa/shared';
 
 import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -34,12 +39,22 @@ export class SellerListingsController {
     const me = await this.users.getOrCreate(user);
     const rows = await this.repo.listForOwner(me.id);
     const boostEnabled = this.config.LISTING_BOOST_ENABLED;
+    const voEnabled = this.config.VERIFIED_OWNER_ENABLED;
+    const checklistEnabled = this.config.SELLER_CHECKLIST_ENABLED;
+    const checklistTotal = SELLER_CHECKLIST_TYPE_CODES.length;
     const now = new Date();
     const items = await Promise.all(
       rows.map(async (row) => {
         const boostRow = boostEnabled
           ? await this.boosts.activeBoostForListing(row.id, now)
           : null;
+        const completeness =
+          row.docCompleteness == null ? null : Number(row.docCompleteness);
+        const docHave =
+          completeness == null
+            ? null
+            : Math.round((completeness / 100) * checklistTotal);
+        const voState = (row.voState as VoState | null) ?? null;
         return {
           id: row.id,
           slug: row.slug,
@@ -49,6 +64,14 @@ export class SellerListingsController {
           price: row.price,
           currency: row.currency,
           coverUrl: row.coverUrl,
+          trust: {
+            verifiedOwner: voState ? badgeActive(voState) : false,
+            voState,
+            docScore:
+              docHave != null && completeness != null
+                ? { have: docHave, total: checklistTotal }
+                : null,
+          },
           boost: boostRow
             ? {
                 active: true,
@@ -68,6 +91,8 @@ export class SellerListingsController {
       flags: {
         listingBoostEnabled: boostEnabled,
         sellerPremiumEnabled: this.config.SELLER_PREMIUM_ENABLED,
+        verifiedOwnerEnabled: voEnabled,
+        sellerChecklistEnabled: checklistEnabled,
       },
       items,
     };

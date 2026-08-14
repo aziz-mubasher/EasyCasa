@@ -40,6 +40,10 @@ export function SellerListingsPanel() {
   }
 
   const boostEnabled = listings.data?.flags.listingBoostEnabled ?? false;
+  const trustFlags = {
+    verifiedOwnerEnabled: listings.data?.flags.verifiedOwnerEnabled ?? false,
+    sellerChecklistEnabled: listings.data?.flags.sellerChecklistEnabled ?? false,
+  };
   const items = listings.data?.items ?? [];
 
   return (
@@ -67,7 +71,7 @@ export function SellerListingsPanel() {
       <ul className="space-y-4">
         {items.map((item) => (
           <li key={item.id}>
-            <SellerListingCard item={item} boostEnabled={boostEnabled} />
+            <SellerListingCard item={item} boostEnabled={boostEnabled} trustFlags={trustFlags} />
           </li>
         ))}
       </ul>

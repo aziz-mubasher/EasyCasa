@@ -14,7 +14,7 @@
 | 1 | Discover | `/vendi-da-privato` (IT/EN/ES), Claim 1–2 live, T33 SEO | ✅ LIVE | — |
 | 2 | Sign up + onboard | OIDC + web onboarding form + `POST /seller/onboarding` + informativa v1.1 | ✅ **LIVE** | **PP-4 merged** — `/seller/onboarding` + wizard gate |
 | 3 | Create listing | `/seller/list` wizard: OMI panel, photos, AI description, autosave, publish, quotas | ✅ LIVE | — |
-| 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | ⛔ DARK | PK-1/PK-2 flips **+ PP-6** (no seller VO/checklist UI) |
+| 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | ⛔ **UI ready, awaiting PK-1/PK-2 flips** | PK-1/PK-2 runtime flips — **PP-6 merged** (seller VO/checklist UI dark) |
 | 5 | Receive enquiries | `/seller/enquiries`, Verified Buyer badges, mark-read | ✅ LIVE | (chat = T25, parked PK-5 — by design off-platform for now) |
 | 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ✅ **LIVE** | **V-1 flipped 2026-08-14:** `SELLER_VIEWINGS_ENABLED=true` + api recreate. Unauth APIs → 401; page 200. Full buyer-book → seller-confirm smoke needs authenticated accounts |
 | 7 | Steer the sale | analytics + price nudges | ⛔ DARK | PK-3 flip |
@@ -37,12 +37,12 @@
 |----|------|-------|-----------|------|
 | **PP-4** | **Seller onboarding web form** | Web UI for `POST /seller/onboarding` mounted where wizard raises `onboardingRequired`: display name, phone, marketing consent, informativa v1.1 acceptance (reuse T32 consent components). IT/EN/ES via i18n. No new API unless strictly needed | New OIDC user reaches published listing with **zero curl**; `consent.decision=ok`; flag-off still 404s | **CLOSED 2026-08-14** — merged + deployed (K EC 1.47 / PR #150) |
 | **PP-5** | **Monetisation purchase UI** | Boost buy button (7/30d) on seller listing cards → `/featured/checkout`; premium upsell surface (quota-429 moment + dashboard) → `/billing/checkout` + `/billing/portal` link; entitlements display from `/seller/entitlements`. T04-compliant wording; no new pricing copy without counsel check | Seller buys boost and premium end-to-end in UI; `In evidenza` label appears; unauth → 401 | **CLOSED 2026-08-14** — K EC 1.48 |
-| **PP-6** | **VO + checklist seller UI** (pre-stage dark) | Seller-facing VO document submit + state display (`/seller/vo/*`) and checklist slots + completeness score (`/seller/checklist/*`), behind existing flags (dark until PK-1/PK-2). Web needs no `NEXT_PUBLIC_*` unless a route must 404 dark — if added, Dockerfile ARG + compose build.args in same PR (rule C.2) | Flag-off: invisible. Flag-on (staging): submit → documents_submitted → verified badge visible | None to build; PK-1/PK-2 to light |
+| **PP-6** | **VO + checklist seller UI** (pre-stage dark) | Seller-facing VO document submit + state display (`/seller/vo/*`) and checklist slots + completeness score (`/seller/checklist/*`), behind existing flags (dark until PK-1/PK-2). Web needs no `NEXT_PUBLIC_*` unless a route must 404 dark — if added, Dockerfile ARG + compose build.args in same PR (rule C.2) | Flag-off: invisible. Flag-on (staging): submit → documents_submitted → verified badge visible | **CLOSED 2026-08-14** — K EC 1.49 UI merged; PK-1/PK-2 to light |
 | **PP-1** | Partner Stripe self-serve checkout | (unchanged from polish backlog) | — | None |
 | **PP-2** | Housekeeping bundle | (unchanged: shared Service helper, service-page i18n, enquiry-card listing titles) | — | None |
 | **PP-3** | Static lastmod hygiene | (unchanged) | — | None |
 
-**Suggested dispatch order:** ~~PP-4~~ → ~~**PP-5**~~ → PP-6 → PP-1 → PP-2 (+PP-3 folded into any of them). After AZM decision: authenticated viewings book→confirm smoke independent of eng order.
+**Suggested dispatch order:** ~~PP-4~~ → ~~**PP-5**~~ → ~~PP-6~~ → PP-1 → PP-2 (+PP-3 folded into any of them). After AZM decision: authenticated viewings book→confirm smoke independent of eng order.
 
 ### 2c. Product/counsel decisions (unchanged from polish backlog — not eng)
 
@@ -71,4 +71,4 @@
 All dispatches follow `docs/ec-s-post-roadmap-polish.md` §C (single agent per code; `NEXT_PUBLIC_*` Docker ARG same-PR; Traefik compose pair; ops-flip vs eng-build stated explicitly; no parked flips bundled; ledger copy only via flip protocol).
 
 ---
-*Maintained by Claude (R&D coordination). PP-4 + PP-5 + V-1 closed 2026-08-14. Next: dispatch PP-6 (VO/checklist UI). Status polls: `docs/runbooks/azm-dev-bridge.md`.*
+*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + V-1 closed 2026-08-14. Next: PK-1/PK-2 enablement or PP-1. Status polls: `docs/runbooks/azm-dev-bridge.md`.*

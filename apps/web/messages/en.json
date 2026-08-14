@@ -3492,5 +3492,106 @@
       "backToSeller": "Back to seller area",
       "unknown": "Nothing to show here."
     }
+  },
+  "sellerTrust": {
+    "page": {
+      "signInTitle": "Sign in to manage listing documents",
+      "signIn": "Sign in",
+      "unavailable": "This feature is not available right now.",
+      "backToListings": "Back to my listings",
+      "verificationTitle": "Ownership verification",
+      "verificationLead": "Upload ownership documents for listing anti-fraud review. EasyCasa is a portal — we do not provide legal advice or brokerage.",
+      "documentsTitle": "Listing documents",
+      "documentsLead": "Complete recommended documents to show progress on your public listing card. Files stay private unless you share them off-platform."
+    },
+    "actions": {
+      "manageVerification": "Ownership verification",
+      "manageDocuments": "Listing documents"
+    },
+    "upload": {
+      "fileLabel": "Document",
+      "filesLabel": "Documents",
+      "chooseFile": "Choose file",
+      "chooseFiles": "Choose files",
+      "uploading": "Uploading…",
+      "hint": "PDF or images up to 15 MB. EXIF metadata is stripped on upload."
+    },
+    "verifiedOwner": {
+      "title": "Ownership verification",
+      "lead": "Confirm you are an owner or co-owner of the property. Verification is anti-fraud screening — not legal advice.",
+      "loading": "Loading verification status…",
+      "intestatariLabel": "Owners named on land registry extract",
+      "intestatariHint": "One name per line, as shown on the visura.",
+      "portalNote": "EasyCasa does not act as a mediator. Documents are used for listing verification only.",
+      "awaitingReview": "Documents are under review. Check back here for the outcome — no need to re-upload unless asked.",
+      "rejectionTitle": "Verification outcome",
+      "rejectionCustom": "Reviewer note: {reason}",
+      "verifiedAt": "Verified since {date}",
+      "refresh": "Refresh status",
+      "state": {
+        "unverified": "Not verified",
+        "documents_submitted": "Documents submitted",
+        "in_review": "Under review",
+        "verified": "Ownership verified",
+        "rejected": "Verification not completed",
+        "revoked": "Verification revoked",
+        "expired": "Verification expired"
+      },
+      "stateHint": {
+        "unverified": "Upload visura or deed to start verification.",
+        "documents_submitted": "Documents received — awaiting review.",
+        "in_review": "A reviewer is checking your documents.",
+        "verified": "The Verified Owner badge is visible on your public listing.",
+        "rejected": "You can submit corrected documents.",
+        "revoked": "Verification was revoked — you may submit new documents.",
+        "expired": "Verification expired — submit updated documents."
+      },
+      "errors": {
+        "filesRequired": "Select at least one document.",
+        "intestatariRequired": "Enter at least one owner name.",
+        "submitFailed": "Could not submit. Please try again.",
+        "conflict": "You cannot submit documents in this state."
+      }
+    },
+    "checklist": {
+      "title": "Document checklist",
+      "lead": "Recommended documents for a transparent sale. The score appears on your listing card — files are not public.",
+      "loading": "Loading checklist…",
+      "score": "Documentation {have}/{total}",
+      "slotAttached": "Document uploaded",
+      "slotEmpty": "No document yet",
+      "remove": "Remove",
+      "working": "Working…",
+      "privateNote": "Documents stay in private storage — they are not publicly downloadable.",
+      "slots": {
+        "APE": {
+          "title": "EPC (APE)",
+          "hint": "Energy performance certificate."
+        },
+        "PLANIMETRIA_CATASTALE": {
+          "title": "Cadastral floor plan",
+          "hint": "Updated floor plan for the unit."
+        },
+        "VISURA_CATASTALE": {
+          "title": "Cadastral extract",
+          "hint": "Updated land registry extract."
+        },
+        "ATTO_PROVENIENZA": {
+          "title": "Title deed",
+          "hint": "Deed or proof of ownership."
+        }
+      },
+      "errors": {
+        "uploadFailed": "Upload failed. Please try again.",
+        "removeFailed": "Could not remove. Please try again."
+      }
+    },
+    "rejectionTemplates": {
+      "illegible_document": "The document is not readable — please upload a clearer scan.",
+      "name_mismatch": "Owner names do not match your seller profile — check names and try again.",
+      "expired_document": "The document appears expired — upload an updated version.",
+      "incomplete_submission": "Submission incomplete — please upload all required files.",
+      "wrong_listing": "Documents do not match this listing — verify and resubmit."
+    }
   }
 }

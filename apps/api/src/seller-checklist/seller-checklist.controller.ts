@@ -40,6 +40,11 @@ class AttachDto {
   typeCode!: string;
 }
 
+class RemoveDto {
+  @IsString()
+  typeCode!: string;
+}
+
 @Controller('seller/checklist')
 @UseGuards(SellerChecklistEnabledGuard)
 export class SellerChecklistController {
@@ -48,7 +53,7 @@ export class SellerChecklistController {
     private readonly users: UsersService,
   ) {}
 
-  @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
+  @Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Get(':listingId')
   async get(
     @CurrentUser() user: AuthUser,
@@ -58,7 +63,7 @@ export class SellerChecklistController {
     return this.checklist.getForSeller(me.id, listingId);
   }
 
-  @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
+  @Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Post(':listingId/docs')
   @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 15 * 1024 * 1024 } }))
   async attach(
@@ -78,6 +83,24 @@ export class SellerChecklistController {
       listingId,
       typeCode: body.typeCode,
       file: { buffer: file.buffer, originalname: file.originalname || 'doc.pdf' },
+    });
+  }
+
+  @Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
+  @Post(':listingId/docs/remove')
+  async remove(
+    @CurrentUser() user: AuthUser,
+    @Param('listingId', ParseUUIDPipe) listingId: string,
+    @Body() body: RemoveDto,
+  ) {
+    if (!isSellerChecklistTypeCode(body.typeCode)) {
+      throw new BadRequestException('invalid typeCode');
+    }
+    const me = await this.users.getOrCreate(user);
+    return this.checklist.removeDoc({
+      sellerUserId: me.id,
+      listingId,
+      typeCode: body.typeCode,
     });
   }
 }

@@ -3492,5 +3492,106 @@
       "backToSeller": "Torna all'area venditore",
       "unknown": "Niente da mostrare."
     }
+  },
+  "sellerTrust": {
+    "page": {
+      "signInTitle": "Accedi per gestire i documenti dell'annuncio",
+      "signIn": "Accedi",
+      "unavailable": "Questa funzione non è disponibile al momento.",
+      "backToListings": "Torna ai miei annunci",
+      "verificationTitle": "Verifica titolarità",
+      "verificationLead": "Carica documenti di proprietà per la verifica anti-frode dell'annuncio. EasyCasa è un portale — non effettuiamo perizie legali né mediazione.",
+      "documentsTitle": "Documentazione annuncio",
+      "documentsLead": "Completa i documenti consigliati per mostrare l'avanzamento sulla scheda pubblica. I file restano privati finché non li condividi fuori piattaforma."
+    },
+    "actions": {
+      "manageVerification": "Verifica titolarità",
+      "manageDocuments": "Documenti annuncio"
+    },
+    "upload": {
+      "fileLabel": "Documento",
+      "filesLabel": "Documenti",
+      "chooseFile": "Scegli file",
+      "chooseFiles": "Scegli file",
+      "uploading": "Caricamento…",
+      "hint": "PDF o immagini fino a 15 MB. I metadati EXIF vengono rimossi in fase di caricamento."
+    },
+    "verifiedOwner": {
+      "title": "Verifica titolarità",
+      "lead": "Conferma che sei titolare o co-titolare dell'immobile. La verifica è un controllo anti-frode — non sostituisce consulenza legale.",
+      "loading": "Caricamento stato verifica…",
+      "intestatariLabel": "Intestatari indicati in visura",
+      "intestatariHint": "Un nome per riga, come compare in visura catastale.",
+      "portalNote": "EasyCasa non agisce come mediatore. I documenti servono solo alla verifica dell'annuncio.",
+      "awaitingReview": "I documenti sono in revisione. Riceverai l'esito qui — non serve ricaricarli finché non te lo chiediamo.",
+      "rejectionTitle": "Esito della verifica",
+      "rejectionCustom": "Motivo indicato dal revisore: {reason}",
+      "verifiedAt": "Verifica attiva dal {date}",
+      "refresh": "Aggiorna stato",
+      "state": {
+        "unverified": "Non verificato",
+        "documents_submitted": "Documenti inviati",
+        "in_review": "In revisione",
+        "verified": "Titolarità verificata",
+        "rejected": "Verifica non completata",
+        "revoked": "Verifica revocata",
+        "expired": "Verifica scaduta"
+      },
+      "stateHint": {
+        "unverified": "Carica visura o atto per avviare la verifica.",
+        "documents_submitted": "Documenti ricevuti — in attesa di revisione.",
+        "in_review": "Un revisore sta controllando i documenti.",
+        "verified": "Il badge Proprietario Verificato è visibile sulla scheda pubblica.",
+        "rejected": "Puoi inviare nuovi documenti corretti.",
+        "revoked": "La verifica è stata revocata — puoi inviare nuovi documenti.",
+        "expired": "La verifica è scaduta — invia documenti aggiornati."
+      },
+      "errors": {
+        "filesRequired": "Seleziona almeno un documento.",
+        "intestatariRequired": "Indica almeno un intestatario.",
+        "submitFailed": "Invio non riuscito. Riprova.",
+        "conflict": "Non puoi inviare documenti in questo stato."
+      }
+    },
+    "checklist": {
+      "title": "Checklist documenti",
+      "lead": "Documenti consigliati per vendere con trasparenza. Il punteggio compare sulla scheda — i file non sono pubblici.",
+      "loading": "Caricamento checklist…",
+      "score": "Documentazione {have}/{total}",
+      "slotAttached": "Documento caricato",
+      "slotEmpty": "Nessun documento",
+      "remove": "Rimuovi",
+      "working": "Operazione in corso…",
+      "privateNote": "I documenti restano in archivio privato — non sono scaricabili dal pubblico.",
+      "slots": {
+        "APE": {
+          "title": "APE",
+          "hint": "Attestato di prestazione energetica."
+        },
+        "PLANIMETRIA_CATASTALE": {
+          "title": "Planimetria catastale",
+          "hint": "Planimetria aggiornata dell'unità."
+        },
+        "VISURA_CATASTALE": {
+          "title": "Visura catastale",
+          "hint": "Visura aggiornata dell'immobile."
+        },
+        "ATTO_PROVENIENZA": {
+          "title": "Atto di provenienza",
+          "hint": "Atto o titolo di proprietà."
+        }
+      },
+      "errors": {
+        "uploadFailed": "Caricamento non riuscito. Riprova.",
+        "removeFailed": "Rimozione non riuscita. Riprova."
+      }
+    },
+    "rejectionTemplates": {
+      "illegible_document": "Il documento non è leggibile — invia una scansione più nitida.",
+      "name_mismatch": "I nomi indicati non corrispondono al profilo venditore — verifica intestatari e riprova.",
+      "expired_document": "Il documento risulta scaduto — carica una versione aggiornata.",
+      "incomplete_submission": "Documentazione incompleta — invia tutti i file richiesti.",
+      "wrong_listing": "I documenti non corrispondono a questo annuncio — verifica e reinvia."
+    }
   }
 }

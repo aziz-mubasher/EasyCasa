@@ -35,6 +35,15 @@ export class ListingsRepository {
         price: listings.price,
         currency: listings.currency,
         coverUrl: sql<string | null>`(SELECT url FROM media m WHERE m.listing_id = listings.id AND m.type IN ('image','floorplan') ORDER BY m.position LIMIT 1)`,
+        voState: sql<string | null>`(
+          SELECT voc.state FROM verified_owner_case voc
+          WHERE voc.listing_id = listings.id
+          ORDER BY voc.updated_at DESC LIMIT 1
+        )`,
+        docCompleteness: sql<number | null>`(
+          SELECT sdc.completeness FROM seller_doc_checklist sdc
+          WHERE sdc.listing_id = listings.id LIMIT 1
+        )`,
       })
       .from(listings)
       .where(eq(listings.ownerUserId, ownerUserId))

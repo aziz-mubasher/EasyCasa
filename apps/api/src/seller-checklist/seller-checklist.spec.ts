@@ -20,4 +20,16 @@ describe('seller checklist scoring (EC-S-T18)', () => {
     expect(scoreChecklist(items)).toEqual({ have: 3, total: 4 });
     expect(completenessPercent(scoreChecklist(items))).toBe(75);
   });
+
+  it('remove clears slot from score (PP-6 UI contract)', () => {
+    const items = emptyChecklistItems().map((i) =>
+      i.typeCode === 'APE'
+        ? { ...i, docKey: 'users/u/docs/checklist/l/ape.pdf', addedAt: '2026-08-10' }
+        : i,
+    );
+    const cleared = items.map((i) =>
+      i.typeCode === 'APE' ? { ...i, docKey: null, addedAt: null } : i,
+    );
+    expect(scoreChecklist(cleared)).toEqual({ have: 0, total: 4 });
+  });
 });

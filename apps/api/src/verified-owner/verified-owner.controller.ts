@@ -47,7 +47,7 @@ export class VerifiedOwnerController {
     private readonly users: UsersService,
   ) {}
 
-  @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
+  @Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Get(':listingId')
   async get(
     @CurrentUser() user: AuthUser,
@@ -57,7 +57,7 @@ export class VerifiedOwnerController {
     return this.vo.getForSeller(me.id, listingId);
   }
 
-  @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
+  @Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Post(':listingId/submit')
   @UseInterceptors(
     FilesInterceptor('files', 10, {
