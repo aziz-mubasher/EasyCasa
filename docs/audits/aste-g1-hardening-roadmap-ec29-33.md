@@ -1,11 +1,12 @@
-# EC Aste — G1 Hardening Roadmap (EC-29 → EC-33)
+# EC Aste — G1 Hardening Roadmap (EC-29 → EC-34)
 
 **Venture:** Easy Casa Italia · repo `aziz-mubasher/EasyCasa`  
-**Updated:** 2026-08-13 (EC-29→33 all merged — extract-quality set complete; gate now waits on humans)  
+**Updated:** 2026-08-14 (EC-29→34 merged + deployed; live 8/8 DONE — Ex2-7 economics adjudication open)  
 **Gate spec:** `docs/runbooks/aste-g1-gate.md` · Public enable: G2 / `docs/runbooks/aste-enable.md`  
 **Flags:** `ASTE_ANALYSIS_ENABLED` **off** in production. No brief in this set flips any flag.  
 **Board:** Kaizen EC · K EC 7.3 (AI Agent) · Operations  
 
+**Canonical post–EC-34 R&D report:** `docs/audits/G1-post-ec34-rnd-report.md`  
 **Supersedes extract-next guidance in** `docs/audits/G1-aste-status-rnd-feedback.md` (that file’s 2026-08-13 paste tables remain the pre–EC-32/33 baseline; do not re-brief urbanistica / cauzione / valore_stima extract work from it).
 
 ---
@@ -13,11 +14,11 @@
 ## Gate G1 definition (do not reinterpret)
 
 `eval pass bar` + `counsel packet sent` + `waitlist read (met or WAIVED)`.  
-Counsel **answers** unlock G2, not G1. Current stance: **conscious near-miss → hardening-first.**
+Counsel **answers** unlock G2, not G1. Current stance: **conscious near-miss → hardening-first** until Mac paste on tip ≥ `fc64987` lands.
 
 | G1 piece | Status |
 | --- | --- |
-| Eval pass bar | Near-miss; all planned fixes merged — awaiting live 8/8 re-run on tip ≥ `fe1e0c7` |
+| Eval pass bar | Live 8/8 **DONE** on ≥`fc64987` — GT-5/Ex8/GT-4/Ex7-honest/lot-bleed **green**; **Ex2-7 still 153850/115387.5** vs bar 64906/48680 → **adjudicate** before GREEN or EC-35 |
 | Counsel packet sent | **NOT DONE** — human (docs 1–8 + LGL-1, reply `packet sent <date>`) |
 | Waitlist | **WAIVED** — 1 lead (2026-08-11) |
 
@@ -32,8 +33,9 @@ Counsel **answers** unlock G2, not G1. Current stance: **conscious near-miss →
 | **EC-31** | Scorer unwrap `{value\|importo}` + page → paste-ready TSV; G1 runbook truth-up; commented .env placeholders | **MERGED + deployed** | [#136](https://github.com/aziz-mubasher/EasyCasa/pull/136) `0ebf1be` |
 | **EC-32** | Urbanistica/catastale structured conformità (enum + difformita[]), lot-filtered precedence (lotto_label into `_apply_field_precedence`), cauzione patterns (a)/(b)/(c) + offer-based no-derive, GT-5 negative-space fixture, scorer lotto-H noise fix, same-shell-AI runbook note | **MERGED + deployed** | [#144](https://github.com/aziz-mubasher/EasyCasa/pull/144) `0b861ee` |
 | **EC-33** | valore_stima correctness: total-not-€/mq prompt guard, `valore_stima_suspect` plausibility guard (`VALORE_STIMA_MIN_PREZZO_BASE_RATIO`, default 0.01), per-lot stima filter, stima keyword packing (micro-chunk held as fallback, 0 extra tokens) | **MERGED + deployed** | [#146](https://github.com/aziz-mubasher/EasyCasa/pull/146) `fe1e0c7` |
+| **EC-34** | Ex2 lot-bleed economics (auction fields lot-scoped), GT-5 orphaned stato → `non_rilevato`, Ex7 stima micro-chunk (`ASTE_STIMA_MICROCHUNK_ENABLED`), not_found reconcile, Ex8 derive parity | **MERGED + deployed** | [#154](https://github.com/aziz-mubasher/EasyCasa/pull/154) `fc64987` |
 
-Completion audits: `docs/audits/EC-30-completion-feedback.md` … `EC-33-completion-feedback.md`, plus batch `EC-30-31-T20-batch-completion.md`.
+Completion audits: `docs/audits/EC-30-completion-feedback.md` … `EC-34-completion-feedback.md`, plus batch `EC-30-31-T20-batch-completion.md`.
 
 ---
 
@@ -67,7 +69,7 @@ Completion audits: `docs/audits/EC-30-completion-feedback.md` … `EC-33-complet
 
 ## Operator verification recipe (host stack, AZM Mac)
 
-Run on tip ≥ `fe1e0c7`. AI service must live in the **same long-lived shell** as the suite; ~90s cooldown between cases; MinIO data dir on `/Volumes/Muba/easycasa-minio-data`; host tesseract + ita installed.
+Run on tip ≥ **`fc64987`** (EC-34). AI service must live in the **same long-lived shell** as the suite; ~90s cooldown between cases; MinIO data dir on `/Volumes/Muba/easycasa-minio-data`; host tesseract + ita installed. Cloud agents cannot run this (Drive PDFs).
 
 ```bash
 BASE="/Volumes/Muba/Easy Casa Italia/EC Aste "
@@ -87,28 +89,26 @@ Pass-bar checks on the paste tables: economics + page refs all hit; urbanistica.
 
 ---
 
-## Remaining to close G1 (all human)
+## Remaining to close G1
 
-1. **Live 8/8 re-run** on tip ≥ `fe1e0c7` (recipe above) → paste tables to R&D. Expected: valore_stima green or honest not_found + `valore_stima_suspect`; if Ex7 stima still misses → micro-chunk-only follow-up brief (not a new number unless needed).
-2. **Counsel email** — packet 1–8 + LGL-1, requested response date → reply `packet sent <date>`.
-3. **Drive GT true-score** vs `EC_Aste_GoldenSet_GroundTruth_v1.md` (Drive-only, not in git).
-4. **Product call** — near-miss → hardening-first vs green, based on the re-run.
-5. Board hygiene — link PRs #134/#136/#144/#146 to K EC 7.3.
-6. **EC-24 note for R&D**: OMI sconto-reale must tolerate stima = not_found (guard can legitimately clear it) — verify before any EC-24-dependent brief.
+1. **Adjudicate Ex2 lotto 7** (open avviso row / Drive GT): **64906** → dispatch **EC-35** micro-brief (lot-association for this table shape only); **153850** → runbook bar correction and mark **eval pass bar GREEN** as of 2026-08-14 live run.
+2. **Counsel email** — packet 1–8 + LGL-1 → `packet sent <date>`.
+3. **Drive GT true-score** — also watch GT-3/Ex4 urbanistica `non_conforme`→`non_rilevato` vs perizia prose.
+4. Board hygiene — link PRs #134/#136/#144/#146/#154 to K EC 7.3.
+5. **EC-24 note for R&D**: OMI sconto-reale must tolerate stima = not_found (Ex7 honest miss confirmed live).
 
 After G1 green: EC-27 (payments split) and EC-28 lane work unlock; G2 (flag enable) still requires observability on VPS, counsel EXTERNAL sign-off, and `aste-enable.md` smoke.
 
 ---
 
-## Agent verify (2026-08-13, this doc land)
+## Agent verify
 
 | Check | Result |
 | --- | --- |
-| SHAs on `origin/main` | `57b0f1f`, `fab9973`, `0ebf1be`, `0b861ee`, `fe1e0c7` all ancestors |
-| VPS `/opt/easycasa-ita` tip | `0921e67` (includes `fe1e0c7`) |
-| Stale draft | [#132](https://github.com/aziz-mubasher/EasyCasa/pull/132) still OPEN draft for EC-29 — close as superseded by `57b0f1f` |
-| Public DNS from cloud agent | `easycasa.online` may fail resolve; use VPS tip + prior deploy notes |
+| SHAs on `origin/main` | `57b0f1f` … `fe1e0c7`, **`fc64987`** (EC-34) ancestors of tip `598c9a3` |
+| VPS `/opt/easycasa-ita` | `api`+`ai` recreated; `/api/version` → `gitSha: fc64987` (2026-08-14 deploy) |
+| Pytest (cloud) | `test_aste_extract.py` **53/53** |
+| Live 8/8 post-EC-34 | **DONE** 2026-08-14 — 8/8 ready; Ex2-7 economics adjudication open |
+| Stale draft | [#132](https://github.com/aziz-mubasher/EasyCasa/pull/132) may still be OPEN for EC-29 — close as superseded by `57b0f1f` |
 
-**Do not** claim G1 closed or flip `ASTE_ANALYSIS_ENABLED` without the human paste + `packet sent <date>`.
-
-| **EC-34** | Ex2 lot-bleed economics, GT-5 orphaned stato → non_rilevato, Ex7 stima micro-chunk | **MERGED + deployed** | [#154](https://github.com/aziz-mubasher/EasyCasa/pull/154) `fc64987` |
+**Do not** claim G1 closed or flip `ASTE_ANALYSIS_ENABLED` without the human Mac paste + `packet sent <date>`.
