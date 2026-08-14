@@ -3251,6 +3251,7 @@
     "signInTitle": "Accedi per pubblicare",
     "signIn": "Accedi",
     "onboardingRequired": "Completa l'onboarding venditore per continuare.",
+    "consentRequired": "Prendi visione e accetta l'informativa aggiornata per continuare.",
     "createFailed": "Impossibile avviare la bozza.",
     "saveFailed": "Salvataggio non riuscito.",
     "navFailed": "Navigazione non riuscita.",
@@ -3398,6 +3399,27 @@
     "interstitialLater": "Non ora",
     "interstitialLaterNote": "Potrai continuare a consultare i tuoi dati, ma le funzioni di vendita restano sospese finché non accetti.",
     "errorIntegrity": "Si è verificato un problema con la versione dell'informativa. Il nostro team è stato avvisato; riprova più tardi."
+  },
+  "sellerOnboarding": {
+    "title": "Completa il profilo venditore",
+    "lead": "Alcuni dati per pubblicare il tuo annuncio su EasyCasa. Operiamo come portale di annunci — non come agenzia — e gli strumenti qui sotto sono solo informativi, non consulenza legale o di valutazione.",
+    "fields": {
+      "displayName": "Nome visualizzato",
+      "phone": "Telefono (facoltativo)",
+      "phonePlaceholder": "+39 …",
+      "phoneHint": "Usato solo per gestire l'annuncio e le richieste degli acquirenti."
+    },
+    "informativaLoading": "Caricamento versione informativa…",
+    "informativaNotice": "Continuando accetti l'informativa privacy venditore (versione {version}). Trattiamo i tuoi dati per pubblicare l'annuncio e fornirti gli strumenti di vendita (esecuzione del contratto, art. 6.1.b GDPR). I documenti di verifica non sono mai pubblici.",
+    "informativaLink": "Leggi l'informativa completa",
+    "marketingLabel": "Acconsento a ricevere aggiornamenti e suggerimenti facoltativi sulla vendita su EasyCasa (puoi revocare il consenso in qualsiasi momento).",
+    "submit": "Continua con l'annuncio",
+    "portalNote": "EasyCasa è un portale che mette in contatto privati acquirenti e venditori. Non svolgiamo attività di mediazione e non maturiamo provvigione sul prezzo di vendita.",
+    "errors": {
+      "displayNameRequired": "Inserisci il nome da mostrare sull'annuncio.",
+      "submitFailed": "Impossibile completare l'onboarding. Riprova.",
+      "versionMissing": "La versione dell'informativa non è ancora disponibile. Riprova più tardi."
+    }
   },
   "sellerDashboard": {
     "navLabel": "Area venditore",

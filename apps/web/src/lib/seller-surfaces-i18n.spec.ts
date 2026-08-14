@@ -21,6 +21,7 @@ const WIZARD_CHROME = [
   'signInTitle',
   'signIn',
   'onboardingRequired',
+  'consentRequired',
   'createFailed',
   'saveFailed',
   'navFailed',

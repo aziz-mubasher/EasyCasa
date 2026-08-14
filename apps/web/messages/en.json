@@ -3251,6 +3251,7 @@
     "signInTitle": "Sign in to list",
     "signIn": "Sign in",
     "onboardingRequired": "Complete seller onboarding to continue.",
+    "consentRequired": "Review and accept the updated privacy notice to continue.",
     "createFailed": "Could not start the draft.",
     "saveFailed": "Save failed.",
     "navFailed": "Navigation failed.",
@@ -3398,6 +3399,27 @@
     "interstitialLater": "Not now",
     "interstitialLaterNote": "You can still view your data, but selling features stay paused until you accept.",
     "errorIntegrity": "There was a problem with the privacy notice version. Our team has been notified; please try again later."
+  },
+  "sellerOnboarding": {
+    "title": "Set up your seller profile",
+    "lead": "A few details to publish your listing on EasyCasa. We operate as a listing portal — not as an estate agent — and the tools below are for information only, not legal or valuation advice.",
+    "fields": {
+      "displayName": "Display name",
+      "phone": "Phone (optional)",
+      "phonePlaceholder": "+39 …",
+      "phoneHint": "Used only to manage your listing and buyer enquiries."
+    },
+    "informativaLoading": "Loading privacy notice version…",
+    "informativaNotice": "By continuing you accept the seller privacy notice (version {version}). We process your data to publish your listing and provide selling tools (contract performance, Art. 6(1)(b) GDPR). Verification documents are never public.",
+    "informativaLink": "Read the full privacy notice",
+    "marketingLabel": "I agree to receive optional updates and tips about selling on EasyCasa (you can withdraw consent anytime).",
+    "submit": "Continue to listing",
+    "portalNote": "EasyCasa is a listing portal connecting private buyers and sellers. We do not act as a mediator and do not charge a commission on the sale price.",
+    "errors": {
+      "displayNameRequired": "Enter the name to show on your listing.",
+      "submitFailed": "Could not complete onboarding. Please try again.",
+      "versionMissing": "The privacy notice version is not available yet. Please try again later."
+    }
   },
   "sellerDashboard": {
     "navLabel": "Seller area",

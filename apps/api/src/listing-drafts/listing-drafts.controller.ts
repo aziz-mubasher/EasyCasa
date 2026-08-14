@@ -37,14 +37,14 @@ export class ListingDraftsController {
     private readonly quota: SellerQuotaService,
   ) {}
 
-  @Roles('seller')
+  @Roles('buyer', 'seller')
   @Post()
   async create(@CurrentUser() user: AuthUser) {
     const me = await this.users.getOrCreate(user);
     return this.drafts.create(me.id);
   }
 
-  @Roles('seller')
+  @Roles('buyer', 'seller')
   @Get(':id')
   async get(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     const me = await this.users.getOrCreate(user);
@@ -52,7 +52,7 @@ export class ListingDraftsController {
     return { id: row.id, status: row.status, draft: row.payload, updatedAt: row.updatedAt };
   }
 
-  @Roles('seller')
+  @Roles('buyer', 'seller')
   @Patch(':id')
   async patch(
     @CurrentUser() user: AuthUser,
@@ -64,7 +64,7 @@ export class ListingDraftsController {
     return this.drafts.patch(me.id, id, raw);
   }
 
-  @Roles('seller')
+  @Roles('buyer', 'seller')
   @Post(':id/navigate')
   async navigate(
     @CurrentUser() user: AuthUser,
@@ -75,7 +75,7 @@ export class ListingDraftsController {
     return this.drafts.navigate(me.id, id, body.direction);
   }
 
-  @Roles('seller')
+  @Roles('buyer', 'seller')
   @Post(':id/submit')
   async submit(
     @CurrentUser() user: AuthUser,

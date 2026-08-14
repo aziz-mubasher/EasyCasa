@@ -14,9 +14,13 @@ import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 import { Button } from '@/components/ui/Button';
 import { Field, Input, Select, TextArea } from '@/components/ui/Field';
 import { Link } from '@/i18n/routing';
+import { SellerOnboardingForm } from '@/components/seller/SellerOnboardingForm';
+import { useSellerMe } from '@/hooks/useSellerMe';
+import { resolveWizardEntryPhase, type SellerProfileView } from '@/lib/seller-onboarding';
 
 /**
  * EC-S PR-W — private-seller T07 wizard UI.
+ * PP-4 — onboarding form when seller_profile is missing.
  * Autosaves via /listing-drafts; submit creates listing + publish.
  */
 export function SellerListingWizard() {
@@ -24,20 +28,36 @@ export function SellerListingWizard() {
   const tQuota = useTranslations('errors.quota');
   const locale = useLocale();
   const { ready, isAuthenticated, signIn, getAccessToken } = useAuth();
+  const { loading: meLoading, flagOff, profile, consent, refresh: refreshMe } = useSellerMe(
+    ready && isAuthenticated,
+  );
   const [draftId, setDraftId] = useState<string | null>(null);
   const [draft, setDraft] = useState<ListingDraftPayload>({ currentStep: 'basics' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [listingId, setListingId] = useState<string | null>(null);
   const [stepCodes, setStepCodes] = useState<string[]>([]);
+  const [localProfile, setLocalProfile] = useState<SellerProfileView | null>(null);
+
+  const effectiveProfile = localProfile ?? profile;
 
   const authedFetch = useCallback(() => createAuthedFetch(getAccessToken), [getAccessToken]);
 
+  const phase = resolveWizardEntryPhase({
+    ready,
+    isAuthenticated,
+    flagOff,
+    profile: effectiveProfile,
+    consent,
+    loading: meLoading && !localProfile,
+  });
+
   useEffect(() => {
-    if (!ready || !isAuthenticated || draftId) return;
+    if (phase !== 'wizard' || !ready || !isAuthenticated || draftId) return;
     let cancelled = false;
     void (async () => {
       setBusy(true);
+      setError(null);
       try {
         const res = await authedFetch()(apiUrl('/listing-drafts'), { method: 'POST' });
         if (!res.ok) {
@@ -57,7 +77,7 @@ export function SellerListingWizard() {
     return () => {
       cancelled = true;
     };
-  }, [ready, isAuthenticated, draftId, authedFetch, t]);
+  }, [phase, ready, isAuthenticated, draftId, authedFetch, t]);
 
   const save = async (next: ListingDraftPayload) => {
     if (!draftId) return;
@@ -125,14 +145,43 @@ export function SellerListingWizard() {
     }
   };
 
-  if (!ready) return null;
-  if (!isAuthenticated) {
+  if (!ready || phase === 'loading') return null;
+
+  if (phase === 'sign_in') {
     return (
       <div className="mx-auto max-w-xl px-4 py-16 text-center">
         <h1 className="font-display text-2xl">{t('signInTitle')}</h1>
         <Button className="mt-6" onClick={() => void signIn(`/${locale}/seller/list`)}>
           {t('signIn')}
         </Button>
+      </div>
+    );
+  }
+
+  if (phase === 'flag_off') {
+    return (
+      <div className="mx-auto max-w-xl px-4 py-16 text-center">
+        <p className="text-sm text-terracotta">{t('onboardingRequired')}</p>
+      </div>
+    );
+  }
+
+  if (phase === 'onboarding') {
+    return (
+      <SellerOnboardingForm
+        variant="embedded"
+        onComplete={(body) => {
+          if (body.profile) setLocalProfile(body.profile);
+          void refreshMe();
+        }}
+      />
+    );
+  }
+
+  if (phase === 'consent_blocked') {
+    return (
+      <div className="mx-auto max-w-xl px-4 py-16 text-center">
+        <p className="text-sm text-muted">{t('consentRequired')}</p>
       </div>
     );
   }

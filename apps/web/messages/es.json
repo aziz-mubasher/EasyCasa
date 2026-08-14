@@ -3251,6 +3251,7 @@
     "signInTitle": "Inicia sesión para publicar",
     "signIn": "Iniciar sesión",
     "onboardingRequired": "Completa el alta de vendedor para continuar.",
+    "consentRequired": "Revisa y acepta el aviso de privacidad actualizado para continuar.",
     "createFailed": "No se pudo iniciar el borrador.",
     "saveFailed": "Error al guardar.",
     "navFailed": "Error de navegación.",
@@ -3398,6 +3399,27 @@
     "interstitialLater": "Ahora no",
     "interstitialLaterNote": "Podrás seguir consultando tus datos, pero las funciones de venta quedan en pausa hasta que aceptes.",
     "errorIntegrity": "Ha habido un problema con la versión de la información de privacidad. Nuestro equipo ha sido avisado; inténtalo más tarde."
+  },
+  "sellerOnboarding": {
+    "title": "Configura tu perfil de vendedor",
+    "lead": "Unos datos para publicar tu anuncio en EasyCasa. Operamos como portal de anuncios — no como agencia — y las herramientas son solo informativas, no asesoramiento legal ni de valoración.",
+    "fields": {
+      "displayName": "Nombre visible",
+      "phone": "Teléfono (opcional)",
+      "phonePlaceholder": "+34 …",
+      "phoneHint": "Se usa solo para gestionar el anuncio y las consultas de compradores."
+    },
+    "informativaLoading": "Cargando versión del aviso de privacidad…",
+    "informativaNotice": "Al continuar aceptas el aviso de privacidad para vendedores (versión {version}). Tratamos tus datos para publicar el anuncio y ofrecerte herramientas de venta (ejecución del contrato, art. 6.1.b RGPD). Los documentos de verificación nunca son públicos.",
+    "informativaLink": "Leer el aviso de privacidad completo",
+    "marketingLabel": "Acepto recibir actualizaciones y consejos opcionales sobre la venta en EasyCasa (puedes retirar el consentimiento en cualquier momento).",
+    "submit": "Continuar con el anuncio",
+    "portalNote": "EasyCasa es un portal que conecta compradores y vendedores particulares. No actuamos como mediadores ni cobramos comisión sobre el precio de venta.",
+    "errors": {
+      "displayNameRequired": "Introduce el nombre que se mostrará en el anuncio.",
+      "submitFailed": "No se pudo completar el alta. Inténtalo de nuevo.",
+      "versionMissing": "La versión del aviso de privacidad aún no está disponible. Inténtalo más tarde."
+    }
   },
   "sellerDashboard": {
     "navLabel": "Área del vendedor",
