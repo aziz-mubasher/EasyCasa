@@ -4,8 +4,8 @@
   "polishId": null,
   "title": "EC-35 Ex2 lotto-7 auction lot association",
   "venture": "EasyCasa",
-  "lifecycle": "pr_open",
-  "agentStatus": "RUNNING",
+  "lifecycle": "pr_ready",
+  "agentStatus": "IDLE",
   "agentBcId": "bc-490cf437-a923-4f60-be16-5adefa335db0",
   "agentUrl": "https://cursor.com/agents/bc-490cf437-a923-4f60-be16-5adefa335db0",
   "branch": "cursor/ec-35-ex2-lot7-association-5db0",
@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/158",
   "prState": "DRAFT",
   "dispatchedAt": "2026-08-14T08:42:40.236Z",
-  "updatedAt": "2026-08-14T14:06:44.059Z",
-  "summary": "EC-35 draft PR #158: Ex2-7=64906 association fix; pytest 57/57. Awaiting merge+deploy+Mac live re-verify.",
-  "nextAction": "Review/merge #158; deploy ai; Mac live Ex2-7; counsel send still open",
+  "updatedAt": "2026-08-14T14:06:56.066Z",
+  "summary": "EC-35 ready for review (#158 DRAFT). Ex2-7=64906 fix; pytest 57/57. Merge→deploy→Mac live.",
+  "nextAction": "Human: merge #158, deploy ai, Mac Ex2-7 live; counsel send still open",
   "errors": []
 }
