@@ -67,6 +67,7 @@
 | `docs/azm-deliverables/_bridge/status-ledger.json` | Public dispatch status Claude WebFetches |
 | `docs/audits/EC-S-pp4-k147-completion-feedback.md` | **PP-4 / K EC 1.47** completion R&D feedback |
 | `docs/audits/EC-S-pp5-k148-completion-feedback.md` | **PP-5 / K EC 1.48** completion R&D feedback |
+| `docs/audits/EC-S-pp6-k149-completion-feedback.md` | **PP-6 / K EC 1.49** completion R&D feedback (UI dark) |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |

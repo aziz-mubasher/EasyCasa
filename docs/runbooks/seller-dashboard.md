@@ -27,13 +27,15 @@ Locales: `it` (default), `en`, `es`. Paths are **not** rewritten — use `/{loca
 | `/{locale}/seller/onboarding` | Seller profile + informativa first mile (PP-4) | Always (flag-off API → 404 → gate message) | `SELLER_ONBOARDING_ENABLED` |
 | `/{locale}/seller/list` | Listing wizard (create / autosave / publish); embeds onboarding when profile missing | Always | `SELLER_ONBOARDING_ENABLED` |
 | `/{locale}/seller/listings` | Seller listings dashboard + **boost buy** (PP-5) | Always | `SELLER_ONBOARDING_ENABLED` + `LISTING_BOOST_ENABLED` for checkout |
+| `/{locale}/seller/listings/:id/verification` | Verified Owner submit/state (PP-6) | Always (page; APIs dark) | `VERIFIED_OWNER_ENABLED` |
+| `/{locale}/seller/listings/:id/documents` | Document checklist (PP-6) | Always (page; APIs dark) | `SELLER_CHECKLIST_ENABLED` |
 | `/{locale}/account` | Account / **premium upsell + entitlements** (PP-5) | Always | `SELLER_PREMIUM_ENABLED` for checkout |
 | `/{locale}/seller/enquiries` | Seller inbox (Richieste) | `NEXT_PUBLIC_SELLER_INBOX_ENABLED` | `SELLER_INBOX_ENABLED` |
 | `/{locale}/seller/viewings` | Conducting viewings list | Always (page) | `SELLER_VIEWINGS_ENABLED` |
 | `/{locale}/seller/listings/:id/availability` | Open-house / capacity slots | Always (page) | `SELLER_VIEWINGS_ENABLED` |
 | `/{locale}/seller/listings/:id/analytics` | Listing analytics + nudges | Always (page) | `SELLER_ANALYTICS_ENABLED` |
 
-**Shell:** `apps/web/app/[locale]/seller/layout.tsx` — `SellerOnboardingGate` + `SellerConsentUpdate` + `SellerDashboardNav` (list · inbox · viewings). Analytics / availability are deep links only.
+**Shell:** `apps/web/app/[locale]/seller/layout.tsx` — `SellerOnboardingGate` + `SellerConsentUpdate` + `SellerDashboardNav` (list · **listings** · inbox · viewings). VO/checklist are deep links from listing cards; premium under `/{locale}/account`.
 
 **Marketing entry:** `/{locale}/vendi-da-privato` (EN/ES aliases) — promise ledger Claim 1–2 live.
 
@@ -184,9 +186,16 @@ When `SELLER_ANALYTICS_ENABLED=true`:
 
 Unauthenticated probes: **401** (not flag-404) when flags are on.
 
-### Step G — VO / checklist (parked)
+### Step G — VO / checklist (PP-6 UI live, flags parked)
 
-API exists (`/seller/vo/*`, `/seller/checklist/*`) but flags are **off** → **404**. No dedicated seller web UI yet. Admin moderation: `/admin` VO queue when VO is on. **Do not flip** without AZM (PK-1 / PK-2).
+**Web (deployed):**
+
+- `/{locale}/seller/listings/<id>/verification` — VO intestatari + multi-file upload + state machine
+- `/{locale}/seller/listings/<id>/documents` — checklist slots + completeness
+
+**API flags still off (expected):** `VERIFIED_OWNER_ENABLED=false`, `SELLER_CHECKLIST_ENABLED=false` → `/api/seller/vo/*` and `/api/seller/checklist/*` return **404**. Pages still render; UI should show unavailable / empty until PK-1/PK-2.
+
+Admin moderation: `/admin` VO queue when VO is on. **Do not flip** without AZM (PK-1 / PK-2).
 
 ---
 
@@ -277,7 +286,7 @@ Do **not** flip parked PK flags “to try” — each needs an AZM decision.
 
 1. ~~No first-class web onboarding UI~~ — **CLOSED PP-4 / K EC 1.47** (`/seller/onboarding` + wizard embed).
 2. ~~No boost buy / premium upsell web UI~~ — **CLOSED PP-5 / K EC 1.48** (`/seller/listings` + `/account`).
-3. No seller web UI for VO submit / checklist (API only) — **PP-6**.
+3. ~~No seller web UI for VO submit / checklist~~ — **CLOSED PP-6 / K EC 1.49** (UI deployed **dark**; light with PK-1/PK-2).
 4. Viewings / analytics **pages** can render while APIs are flag-dark (**V-1:** viewings **on** as of 2026-08-14; analytics still parked PK-3).
 5. T25 messaging **HOLD** (PK-5) — inbox is enquiry list, not chat threads.
 6. Empty partner directory paid catalogue → informational banner is **correct** (PK-8).
