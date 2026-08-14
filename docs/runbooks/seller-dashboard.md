@@ -64,7 +64,7 @@ docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml -
 | `LISTING_BOOST_ENABLED` | `true` | Runtime |
 | `SELLER_PREMIUM_ENABLED` | `true` | Needs `plans.seller_premium.stripe_price_id` |
 | `PARTNER_DIRECTORY_ENABLED` | `true` | Informational + G3 `paid_placement` |
-| `SELLER_VIEWINGS_ENABLED` | check VPS | Page may 200 while API 404s if off |
+| `SELLER_VIEWINGS_ENABLED` | **`false` (V-1 2026-08-14)** | Absent from VPS `.env` → load.ts default. Page `/seller/viewings` still 200; seller viewing APIs dark. Flip + api recreate when AZM wants journey stage 6 |
 | `SELLER_ANALYTICS_ENABLED` | `false` (parked PK-3) | Do not flip without AZM |
 | `VERIFIED_OWNER_ENABLED` | `false` (parked PK-1) | |
 | `SELLER_CHECKLIST_ENABLED` | `false` (parked PK-2) | |
