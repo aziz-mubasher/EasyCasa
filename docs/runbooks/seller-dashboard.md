@@ -71,8 +71,8 @@ docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml -
 | `PARTNER_DIRECTORY_ENABLED` | `true` | Informational + G3 `paid_placement` |
 | `SELLER_VIEWINGS_ENABLED` | **`true` (V-1 flipped 2026-08-14)** | Runtime on VPS; api recreated with Traefik pair. Page always rendered; seller viewing APIs now live (unauth → 401, not flag-404) |
 | `SELLER_ANALYTICS_ENABLED` | `false` (parked PK-3) | Do not flip without AZM |
-| `VERIFIED_OWNER_ENABLED` | `false` (parked PK-1) | |
-| `SELLER_CHECKLIST_ENABLED` | `false` (parked PK-2) | |
+| `VERIFIED_OWNER_ENABLED` | `false` (parked PK-1) | Runbook: `docs/runbooks/ec-s-vo-enablement.md` |
+| `SELLER_CHECKLIST_ENABLED` | **`true` (PK-2 flipped 2026-08-14)** | Runtime on VPS; web rebuild for P6 ledger |
 | `MEDIA_CDN_ENABLED` | `false` (parked PK-4) | |
 
 Confirm on VPS:
@@ -193,9 +193,9 @@ Unauthenticated probes: **401** (not flag-404) when flags are on.
 - `/{locale}/seller/listings/<id>/verification` — VO intestatari + multi-file upload + state machine
 - `/{locale}/seller/listings/<id>/documents` — checklist slots + completeness
 
-**API flags still off (expected):** `VERIFIED_OWNER_ENABLED=false`, `SELLER_CHECKLIST_ENABLED=false` → `/api/seller/vo/*` and `/api/seller/checklist/*` return **404**. Pages still render; UI should show unavailable / empty until PK-1/PK-2.
+**API flags (2026-08-14):** `SELLER_CHECKLIST_ENABLED=true` → `/api/seller/checklist/*` returns **401** unauth (not flag-404). `VERIFIED_OWNER_ENABLED=false` → `/api/seller/vo/*` still **404**. Pages always render.
 
-Admin moderation: `/admin` VO queue when VO is on. **Do not flip** without AZM (PK-1 / PK-2).
+Admin moderation: `https://admin.easycasaita.com/#vo` when VO is on. **Do not flip VO** without AZM (PK-1).
 
 ---
 

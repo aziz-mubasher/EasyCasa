@@ -880,6 +880,15 @@
       "title": "Comprar vivienda en Italia desde el extranjero — EasyCasa",
       "description": "Apoyo a tarifa fija para compradores extranjeros en Italia. Visuras, contratos, notario y escritura — en inglés, italiano o español. Sin comisión sobre el precio."
     },
+    "schema": {
+      "serviceName": "Acquisto Assistito — comprar vivienda en Italia desde el extranjero",
+      "serviceType": "Apoyo a la compra inmobiliaria para compradores no residentes",
+      "offers": [
+        { "name": "Verifica", "price": "290" },
+        { "name": "Acquisto Assistito", "price": "1490" },
+        { "name": "Trasferimento", "price": "2900" }
+      ]
+    },
     "hero": {
       "eyebrow": "Para compradores fuera de Italia",
       "title": "Compra en Italia",
@@ -1215,6 +1224,11 @@
     "meta": {
       "title": "Cuánto vale de verdad tu casa — EasyCasa",
       "description": "Valoración gratuita basada en los valores oficiales de la Agenzia delle Entrate para tu microzona. Ningún agente te llama. Sin comisión del vendedor."
+    },
+    "schema": {
+      "serviceName": "Valoración gratuita de inmuebles — EasyCasa",
+      "serviceType": "Valoración indicativa basada en datos OMI",
+      "offerDescription": "Valoración gratuita — sin comisión del vendedor"
     },
     "hero": {
       "eyebrow": "Valoración gratuita · toda Italia",

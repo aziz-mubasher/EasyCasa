@@ -4,11 +4,13 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed dark** · **PP-1 partner self-serve checkout shipped** (needs Stripe Price ID backfill) · paid directory MVP (migration 0064/0065) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)** · **PP-4/5/6/1 eng closed** · PK-1/PK-2 still parked.
+**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** (P6 ledger + `SELLER_CHECKLIST_ENABLED`) · **VO dark** (PK-1 runbook ready) · **PP-1 partner self-serve checkout shipped** (needs Stripe Price ID backfill) · **PP-2+PP-3 housekeeping live** · paid directory MVP (migration 0064/0065) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)** · **PP-1/2/3/4/5/6 eng closed** · **PK-2 CLOSED** · PK-1 awaiting moderation capacity · **EC-S eng backlog empty** — remaining work is PK-1/3+ decisions and ops follow-ups.
 
 ---
 
 ## A. Polish items — dispatchable on AZM's word (one Kaizen code per item, one agent per code)
+
+_All PP items closed 2026-08-14. Section intentionally empty — no further eng dispatches until a new product brief._
 
 | ID | Item | Scope | Gate | Est. |
 |----|------|-------|------|------|
@@ -16,10 +18,10 @@
 | **PP-5** | **Monetisation purchase UI** | Boost 7/30d buy → `/featured/checkout`; premium upsell + portal → `/billing/checkout` + entitlements. T04 wording | **CLOSED 2026-08-14** — PR #152 merged + deployed (K EC 1.48) | done |
 | **PP-6** | **VO + checklist seller UI** | Seller VO submit/state + checklist UI behind existing flags (dark until PK-1/PK-2). Follow C.2 if any new `NEXT_PUBLIC_*` | **CLOSED 2026-08-14** — PR #153 merged + deployed dark (K EC 1.49); PK-1/PK-2 to light | done |
 | **PP-1** | **Partner Stripe self-serve checkout** | Stripe Price + checkout for partner flat listing fee; replaces admin-marked `paid_placement`; keep UTM/referral strip; labelled sort unchanged | **CLOSED 2026-08-14** — PR #155 merged + deployed (K EC 1.50); AZM must backfill `plans.stripe_price_id` for `partner_directory_placement` before live checkout | done |
-| PP-2 | **Housekeeping bundle** | (a) promote Service JSON-LD helper to `@easycasa/shared`; (b) SEO i18n pass on `valutazione-gratuita` / `acquisto-assistito` hardcoded EN strings; (c) listing titles on enquiry cards (API returns UUID only — needs small API field) | None | 1 PR |
-| PP-3 | **Static lastmod hygiene** | `STATIC_PAGE_LASTMOD` map is manual — bump on marketing copy changes, or wire to git log date per page | None | trivial |
+| **PP-2** | **Housekeeping bundle** | (a) promote Service JSON-LD helper to `@easycasa/shared`; (b) SEO i18n pass on `valutazione-gratuita` / `acquisto-assistito`; (c) listing titles on enquiry cards | **CLOSED 2026-08-14** — K EC 1.51 | done |
+| **PP-3** | **Static lastmod hygiene** | CI fingerprint check on mapped marketing i18n + manual `STATIC_PAGE_LASTMOD` bumps (honest dates, no git-stamp freshness) | **CLOSED 2026-08-14** — folded into K EC 1.51 | done |
 
-**Suggested order:** ~~PP-4~~ → ~~PP-5~~ → ~~PP-6~~ → ~~PP-1~~ → **PP-2** (+PP-3 folded).
+**Suggested order:** ~~PP-4~~ → ~~PP-5~~ → ~~PP-6~~ → ~~PP-1~~ → ~~PP-2~~ (+PP-3). **Track complete.**
 
 ## A2. Ops verifications
 
@@ -31,8 +33,8 @@
 
 | ID | Item | Blocked on | Owner |
 |----|------|-----------|-------|
-| PK-1 | VO flip (`VERIFIED_OWNER_ENABLED`) → P3 ledger live | Product decision (+ prefer PP-6 UI first) | AZM |
-| PK-2 | Checklist flip (`SELLER_CHECKLIST_ENABLED`) → P6 live | Product decision (+ prefer PP-6 UI first) | AZM |
+| PK-1 | VO flip (`VERIFIED_OWNER_ENABLED`) → P3 ledger live | **UI ready + runbook written** (`docs/runbooks/ec-s-vo-enablement.md`); awaiting **moderation capacity** (named reviewer + SLA) | AZM |
+| PK-2 | Checklist flip (`SELLER_CHECKLIST_ENABLED`) → P6 live | **CLOSED 2026-08-14** — K EC 1.52; see `docs/audits/EC-S-pk2-checklist-enablement.md` | done |
 | PK-3 | Analytics flip (`SELLER_ANALYTICS_ENABLED`) → P7 live | Product decision | AZM |
 | PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | Bunny DPA signed | AZM / DPO |
 | PK-5 | T25 in-portal messaging | T05 §6.5 controllership determination | Counsel |
@@ -69,6 +71,10 @@
 | `docs/audits/EC-S-pp5-k148-completion-feedback.md` | **PP-5 / K EC 1.48** completion R&D feedback |
 | `docs/audits/EC-S-pp6-k149-completion-feedback.md` | **PP-6 / K EC 1.49** completion R&D feedback (UI dark) |
 | `docs/audits/EC-S-pp1-k150-completion-feedback.md` | **PP-1 / K EC 1.50** completion R&D feedback (Stripe Price backfill still needed) |
+| `docs/audits/EC-S-pp2-k151-completion-feedback.md` | **PP-2+PP-3 / K EC 1.51** completion R&D feedback (eng backlog empty) |
+| `docs/audits/EC-S-pk2-checklist-enablement.md` | **PK-2 / K EC 1.52** checklist enablement record |
+| `docs/audits/EC-S-pk2-k152-completion-feedback.md` | **PK-2 / K EC 1.52** post-merge completion R&D feedback |
+| `docs/runbooks/ec-s-vo-enablement.md` | **PK-1 prep** — VO flip runbook (do not execute until moderation capacity) |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
@@ -81,4 +87,4 @@
 | `docs/env.md` | Flag/build-arg documentation |
 
 ---
-*Maintained by Claude (R&D coordination). PP-1 closed 2026-08-14 (Price ID ops gate remains). Update on every PP/PK/V closure; delete when empty.*
+*Maintained by Claude (R&D coordination). PP-1–PP-6 + PP-2/PP-3 closed 2026-08-14. **PK-2 closed** (K EC 1.52). **EC-S eng backlog empty** — PK-1 (VO) awaits moderation capacity; PK-3+ remain. Update on every PK/V closure.*

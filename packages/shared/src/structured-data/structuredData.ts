@@ -36,7 +36,97 @@ export interface FaqItem {
   answer: string;
 }
 
+export interface ServiceBenefitInput {
+  id: string;
+  title: string;
+  body: string;
+}
+
+export interface ServiceOfferInput {
+  name?: string;
+  price: string;
+  priceCurrency: string;
+  description?: string;
+}
+
+export interface ServiceSeoInput {
+  /** Canonical absolute URL of the service page (locale-specific). */
+  pageUrl: string;
+  site: string;
+  serviceName: string;
+  description?: string;
+  serviceType: string;
+  /** Single-offer description (sell-privately / valutazione). */
+  offerDescription?: string;
+  /** Explicit offer(s); defaults to a free EUR offer when omitted. */
+  offers?: ServiceOfferInput | readonly ServiceOfferInput[];
+  liveBenefits?: readonly ServiceBenefitInput[];
+}
+
 type JsonLd = Record<string, unknown>;
+
+const EASY_CASA_PROVIDER = {
+  '@type': 'Organization' as const,
+  name: 'EasyCasa',
+  legalName: 'MUNDIDA S.r.l.',
+  taxID: 'IT04531990986',
+};
+
+function normalizeServiceOffers(input: ServiceSeoInput): JsonLd | JsonLd[] {
+  if (input.offers !== undefined) {
+    const list = Array.isArray(input.offers) ? input.offers : [input.offers];
+    return list.map((o) => ({
+      '@type': 'Offer',
+      ...(o.name !== undefined ? { name: o.name } : {}),
+      price: o.price,
+      priceCurrency: o.priceCurrency,
+      ...(o.description !== undefined ? { description: o.description } : {}),
+    }));
+  }
+  return {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'EUR',
+    ...(input.offerDescription !== undefined ? { description: input.offerDescription } : {}),
+  };
+}
+
+/** schema.org Service builder — shared by sell-privately and service landings. */
+export function buildService(input: ServiceSeoInput): JsonLd {
+  if (!/^https:\/\//.test(input.pageUrl)) {
+    throw new Error(`service pageUrl must be absolute https: ${input.pageUrl}`);
+  }
+  if (!/^https:\/\//.test(input.site)) {
+    throw new Error(`service site must be absolute https: ${input.site}`);
+  }
+
+  const obj: JsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: input.serviceName,
+  };
+  if (input.description !== undefined) obj.description = input.description;
+  obj.url = input.pageUrl;
+  obj.serviceType = input.serviceType;
+  obj.provider = {
+    '@type': 'Organization',
+    name: EASY_CASA_PROVIDER.name,
+    legalName: EASY_CASA_PROVIDER.legalName,
+    url: input.site,
+    taxID: EASY_CASA_PROVIDER.taxID,
+  };
+  obj.areaServed = { '@type': 'Country', name: 'Italy' };
+  obj.availableLanguage = ['it', 'en', 'es'];
+  obj.offers = normalizeServiceOffers(input);
+  if (input.liveBenefits !== undefined && input.liveBenefits.length > 0) {
+    obj.additionalProperty = input.liveBenefits.map((b) => ({
+      '@type': 'PropertyValue',
+      name: b.title,
+      value: b.body,
+    }));
+  }
+  return obj;
+}
 
 export function buildRealEstateListing(l: ListingSeoInput): JsonLd {
   if (!/^https:\/\//.test(l.url)) throw new Error(`listing url must be absolute https: ${l.url}`);

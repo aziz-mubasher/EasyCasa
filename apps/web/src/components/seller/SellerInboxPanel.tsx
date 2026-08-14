@@ -11,6 +11,7 @@ import {
   buildEnquiriesQuery,
   formatBandAmount,
   formatReceivedAt,
+  listingHref,
   resolveInboxPanelState,
   type SellerInboxItemWire,
   type SellerInboxListResponse,
@@ -209,7 +210,11 @@ export function SellerInboxPanel() {
                 ) : null}
               </div>
               <p className="si-card__listing">
-                <Link href={`/listings/${item.listingId}`}>{t('listingLink')}</Link>
+                {listingHref(item) ? (
+                  <Link href={listingHref(item)!}>{item.listingTitle}</Link>
+                ) : (
+                  <span>{item.listingTitle}</span>
+                )}
               </p>
               {!item.read ? <span className="si-tag">{t('unread')}</span> : null}
               {item.hasViewingRequest ? (

@@ -7,6 +7,7 @@ import { describe, it, expect } from 'vitest';
 import {
   buildRealEstateListing,
   buildFaqPage,
+  buildService,
   serializeJsonLd,
   type ListingSeoInput,
 } from '@easycasa/shared';
@@ -93,5 +94,80 @@ describe('serializeJsonLd — injection safety (T33)', () => {
   it('escapes ampersands', () => {
     const s = serializeJsonLd(buildFaqPage([{ question: 'A & B?', answer: 'C & D.' }]));
     expect(s).toContain('\\u0026');
+  });
+});
+
+describe('buildService (PP-2)', () => {
+  const sellPrivatelyFixture = {
+    pageUrl: 'https://easycasaita.com/it/vendi-da-privato',
+    site: 'https://easycasaita.com',
+    serviceName: 'Vendere da privato su EasyCasa',
+    description: 'Annuncio privato gratuito.',
+    serviceType: 'Portale di annunci immobiliari tra privati',
+    offerDescription: 'Annuncio privato gratuito — nessuna provvigione',
+    liveBenefits: [{ id: 'P1', title: 'Pubblicazione gratuita', body: 'Pubblica senza costi.' }],
+  } as const;
+
+  /** Golden output from web-local sell-privately-schema.ts (pre-PP-2 promotion). */
+  const sellPrivatelyGolden = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Vendere da privato su EasyCasa',
+    description: 'Annuncio privato gratuito.',
+    url: 'https://easycasaita.com/it/vendi-da-privato',
+    serviceType: 'Portale di annunci immobiliari tra privati',
+    provider: {
+      '@type': 'Organization',
+      name: 'EasyCasa',
+      legalName: 'MUNDIDA S.r.l.',
+      url: 'https://easycasaita.com',
+      taxID: 'IT04531990986',
+    },
+    areaServed: { '@type': 'Country', name: 'Italy' },
+    availableLanguage: ['it', 'en', 'es'],
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'EUR',
+      description: 'Annuncio privato gratuito — nessuna provvigione',
+    },
+    additionalProperty: [
+      {
+        '@type': 'PropertyValue',
+        name: 'Pubblicazione gratuita',
+        value: 'Pubblica senza costi.',
+      },
+    ],
+  };
+
+  it('sell-privately Service JSON-LD is byte-equivalent after shared promotion', () => {
+    const built = buildService(sellPrivatelyFixture);
+    expect(JSON.stringify(built)).toBe(JSON.stringify(sellPrivatelyGolden));
+  });
+
+  it('supports tiered offers (acquisto-assistito)', () => {
+    const o = buildService({
+      pageUrl: 'https://easycasaita.com/en/acquisto-assistito',
+      site: 'https://easycasaita.com',
+      serviceName: 'Acquisto Assistito',
+      serviceType: 'Property purchase support for non-resident buyers',
+      offers: [
+        { name: 'Verifica', price: '290', priceCurrency: 'EUR' },
+        { name: 'Acquisto Assistito', price: '1490', priceCurrency: 'EUR' },
+      ],
+    });
+    const offers = o.offers as Array<Record<string, unknown>>;
+    expect(Array.isArray(offers)).toBe(true);
+    expect(offers).toHaveLength(2);
+    expect(offers[0]!.name).toBe('Verifica');
+  });
+
+  it('guards absolute https urls', () => {
+    expect(() =>
+      buildService({
+        ...sellPrivatelyFixture,
+        pageUrl: '/it/vendi-da-privato',
+      }),
+    ).toThrow(/absolute https/);
   });
 });

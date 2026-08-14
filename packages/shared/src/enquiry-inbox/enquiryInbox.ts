@@ -15,6 +15,10 @@ export interface EnquiryBadge {
 export interface EnquiryListItem {
   id: string;
   listingId: string;
+  /** Public listing title for seller inbox cards (no buyer PII). */
+  listingTitle: string;
+  /** Public slug for linking; null when listing has no slug yet. */
+  listingSlug: string | null;
   receivedAt: Date;
   read: boolean;
   badge: EnquiryBadge | null;

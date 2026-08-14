@@ -880,6 +880,15 @@
       "title": "Buying property in Italy from abroad — EasyCasa",
       "description": "Fixed-fee support for foreign buyers purchasing Italian property. Title checks, contracts, notary coordination and completion — in English, Italian or Spanish. No commission on the purchase price."
     },
+    "schema": {
+      "serviceName": "Acquisto Assistito — buying property in Italy from abroad",
+      "serviceType": "Property purchase support for non-resident buyers",
+      "offers": [
+        { "name": "Verifica", "price": "290" },
+        { "name": "Acquisto Assistito", "price": "1490" },
+        { "name": "Trasferimento", "price": "2900" }
+      ]
+    },
     "hero": {
       "eyebrow": "For buyers outside Italy",
       "title": "Buy in Italy",
@@ -1215,6 +1224,11 @@
     "meta": {
       "title": "What your home is really worth — EasyCasa",
       "description": "Free valuation based on official Agenzia delle Entrate values for your microzone. No agent calls you back. No seller commission."
+    },
+    "schema": {
+      "serviceName": "Free property valuation — EasyCasa",
+      "serviceType": "Indicative OMI-based property valuation",
+      "offerDescription": "Free valuation — no seller commission"
     },
     "hero": {
       "eyebrow": "Free valuation · all of Italy",
