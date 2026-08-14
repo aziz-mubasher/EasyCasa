@@ -126,6 +126,48 @@ export class SellerChecklistService {
     };
   }
 
+  async removeDoc(opts: {
+    sellerUserId: string;
+    listingId: string;
+    typeCode: SellerChecklistTypeCode;
+  }) {
+    if (!isSellerChecklistTypeCode(opts.typeCode)) {
+      throw new BadRequestException('invalid typeCode');
+    }
+    const current = await this.getForSeller(opts.sellerUserId, opts.listingId);
+    const prev = current.items.find((i) => i.typeCode === opts.typeCode);
+    if (prev?.docKey) {
+      await this.media.deletePrivateUserDoc(prev.docKey);
+    }
+
+    const items: SellerChecklistItem[] = current.items.map((i) =>
+      i.typeCode === opts.typeCode
+        ? { typeCode: i.typeCode, docKey: null, addedAt: null }
+        : i,
+    );
+    const score = scoreChecklist(items);
+    const [updated] = await this.db
+      .update(sellerDocChecklist)
+      .set({
+        items,
+        completeness: completenessPercent(score),
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(sellerDocChecklist.listingId, opts.listingId),
+          eq(sellerDocChecklist.sellerUserId, opts.sellerUserId),
+        ),
+      )
+      .returning();
+    return {
+      listingId: opts.listingId,
+      items,
+      score,
+      completeness: updated?.completeness ?? completenessPercent(score),
+    };
+  }
+
   async eraseForSubject(subjectUserId: string): Promise<{ erased: number; keys: number }> {
     const rows = await this.db
       .select()

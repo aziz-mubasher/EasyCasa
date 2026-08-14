@@ -3492,5 +3492,106 @@
       "backToSeller": "Volver al área de vendedor",
       "unknown": "Nada que mostrar."
     }
+  },
+  "sellerTrust": {
+    "page": {
+      "signInTitle": "Inicia sesión para gestionar los documentos del anuncio",
+      "signIn": "Iniciar sesión",
+      "unavailable": "Esta función no está disponible en este momento.",
+      "backToListings": "Volver a mis anuncios",
+      "verificationTitle": "Verificación de titularidad",
+      "verificationLead": "Sube documentos de propiedad para la revisión antifraude del anuncio. EasyCasa es un portal — no ofrecemos asesoramiento legal ni mediación.",
+      "documentsTitle": "Documentación del anuncio",
+      "documentsLead": "Completa los documentos recomendados para mostrar el progreso en la ficha pública. Los archivos permanecen privados."
+    },
+    "actions": {
+      "manageVerification": "Verificación de titularidad",
+      "manageDocuments": "Documentos del anuncio"
+    },
+    "upload": {
+      "fileLabel": "Documento",
+      "filesLabel": "Documentos",
+      "chooseFile": "Elegir archivo",
+      "chooseFiles": "Elegir archivos",
+      "uploading": "Subiendo…",
+      "hint": "PDF o imágenes hasta 15 MB. Los metadatos EXIF se eliminan al subir."
+    },
+    "verifiedOwner": {
+      "title": "Verificación de titularidad",
+      "lead": "Confirma que eres titular o cotitular del inmueble. La verificación es control antifraude — no es asesoramiento legal.",
+      "loading": "Cargando estado de verificación…",
+      "intestatariLabel": "Titulares según registro",
+      "intestatariHint": "Un nombre por línea, como en la visura.",
+      "portalNote": "EasyCasa no actúa como mediador. Los documentos sirven solo para verificar el anuncio.",
+      "awaitingReview": "Los documentos están en revisión. Vuelve aquí para el resultado — no hace falta volver a subirlos salvo que te lo pidamos.",
+      "rejectionTitle": "Resultado de la verificación",
+      "rejectionCustom": "Nota del revisor: {reason}",
+      "verifiedAt": "Verificado desde {date}",
+      "refresh": "Actualizar estado",
+      "state": {
+        "unverified": "No verificado",
+        "documents_submitted": "Documentos enviados",
+        "in_review": "En revisión",
+        "verified": "Titularidad verificada",
+        "rejected": "Verificación no completada",
+        "revoked": "Verificación revocada",
+        "expired": "Verificación caducada"
+      },
+      "stateHint": {
+        "unverified": "Sube visura o escritura para iniciar la verificación.",
+        "documents_submitted": "Documentos recibidos — pendientes de revisión.",
+        "in_review": "Un revisor está comprobando los documentos.",
+        "verified": "La insignia Propietario Verificado aparece en la ficha pública.",
+        "rejected": "Puedes enviar documentos corregidos.",
+        "revoked": "La verificación fue revocada — puedes enviar nuevos documentos.",
+        "expired": "La verificación caducó — envía documentos actualizados."
+      },
+      "errors": {
+        "filesRequired": "Selecciona al menos un documento.",
+        "intestatariRequired": "Indica al menos un titular.",
+        "submitFailed": "No se pudo enviar. Inténtalo de nuevo.",
+        "conflict": "No puedes enviar documentos en este estado."
+      }
+    },
+    "checklist": {
+      "title": "Checklist de documentos",
+      "lead": "Documentos recomendados para una venta transparente. La puntuación aparece en la ficha — los archivos no son públicos.",
+      "loading": "Cargando checklist…",
+      "score": "Documentación {have}/{total}",
+      "slotAttached": "Documento subido",
+      "slotEmpty": "Sin documento",
+      "remove": "Eliminar",
+      "working": "Procesando…",
+      "privateNote": "Los documentos permanecen en almacenamiento privado — no son descargables públicamente.",
+      "slots": {
+        "APE": {
+          "title": "Certificado energético (APE)",
+          "hint": "Certificado de eficiencia energética."
+        },
+        "PLANIMETRIA_CATASTALE": {
+          "title": "Plano catastral",
+          "hint": "Plano actualizado de la unidad."
+        },
+        "VISURA_CATASTALE": {
+          "title": "Visura catastral",
+          "hint": "Extracto catastral actualizado."
+        },
+        "ATTO_PROVENIENZA": {
+          "title": "Escritura de propiedad",
+          "hint": "Escritura o título de propiedad."
+        }
+      },
+      "errors": {
+        "uploadFailed": "Error al subir. Inténtalo de nuevo.",
+        "removeFailed": "No se pudo eliminar. Inténtalo de nuevo."
+      }
+    },
+    "rejectionTemplates": {
+      "illegible_document": "El documento no es legible — sube un escaneo más nítido.",
+      "name_mismatch": "Los nombres no coinciden con tu perfil — revisa titulares e inténtalo de nuevo.",
+      "expired_document": "El documento parece caducado — sube una versión actualizada.",
+      "incomplete_submission": "Envío incompleto — sube todos los archivos requeridos.",
+      "wrong_listing": "Los documentos no corresponden a este anuncio — verifica y reenvía."
+    }
   }
 }

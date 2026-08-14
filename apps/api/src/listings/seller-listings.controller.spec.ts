@@ -11,7 +11,7 @@ import type { AuthUser } from '../auth/auth.types';
 function makeController(over: {
   rows?: Array<Record<string, unknown>>;
   boosts?: Record<string, { endsAt: Date; remainingMs: number } | null>;
-  flags?: { boost?: boolean; premium?: boolean };
+  flags?: { boost?: boolean; premium?: boolean; vo?: boolean; checklist?: boolean };
 }) {
   const listingsService = {} as unknown as ListingsService;
   const repo = {
@@ -28,6 +28,8 @@ function makeController(over: {
   const config = {
     LISTING_BOOST_ENABLED: over.flags?.boost ?? true,
     SELLER_PREMIUM_ENABLED: over.flags?.premium ?? true,
+    VERIFIED_OWNER_ENABLED: over.flags?.vo ?? true,
+    SELLER_CHECKLIST_ENABLED: over.flags?.checklist ?? true,
   } as unknown as ApiConfig;
   return {
     controller: new SellerListingsController(listingsService, repo, boosts, users, config),
@@ -71,5 +73,30 @@ describe('SellerListingsController (PP-5 dashboard index)', () => {
     const res = await controller.listMine(seller);
     expect(res.flags.listingBoostEnabled).toBe(false);
     expect(res.items[0]?.boost).toBeNull();
+  });
+
+  it('exposes trust flags off by default shape (PP-6)', async () => {
+    const { controller } = makeController({
+      flags: { boost: false, premium: false, vo: false, checklist: false },
+      rows: [
+        {
+          id: 'l1',
+          slug: null,
+          title: 'T',
+          status: 'published',
+          city: null,
+          price: null,
+          currency: 'EUR',
+          coverUrl: null,
+          voState: null,
+          docCompleteness: null,
+        },
+      ],
+    });
+    const res = await controller.listMine(seller);
+    expect(res.flags.verifiedOwnerEnabled).toBe(false);
+    expect(res.flags.sellerChecklistEnabled).toBe(false);
+    expect(res.items[0]?.trust.verifiedOwner).toBe(false);
+    expect(res.items[0]?.trust.docScore).toBeNull();
   });
 });

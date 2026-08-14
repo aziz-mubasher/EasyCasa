@@ -4,17 +4,22 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import { Link } from '@/i18n/routing';
 import { euro } from '@/lib/format';
-import type { SellerListingItemWire } from '@/lib/seller-monetisation';
+import type { SellerListingItemWithTrust } from '@/lib/seller-trust';
 
 import { SellerBoostActions } from './SellerBoostActions';
+import { SellerTrustActions } from './SellerTrustActions';
 
 type Props = {
-  item: SellerListingItemWire;
+  item: SellerListingItemWithTrust;
   boostEnabled: boolean;
+  trustFlags: {
+    verifiedOwnerEnabled: boolean;
+    sellerChecklistEnabled: boolean;
+  };
 };
 
-/** PP-5 — seller dashboard listing card with boost purchase / active label. */
-export function SellerListingCard({ item, boostEnabled }: Props) {
+/** PP-5/PP-6 — seller dashboard listing card with boost + trust surfaces. */
+export function SellerListingCard({ item, boostEnabled, trustFlags }: Props) {
   const t = useTranslations('sellerMonetisation.myListings');
   const locale = useLocale();
   const hrefSlug = item.slug || item.id;
@@ -43,16 +48,19 @@ export function SellerListingCard({ item, boostEnabled }: Props) {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-start justify-between gap-3">
-        <SellerBoostActions
-          listingId={item.id}
-          listingStatus={item.status}
-          boostEnabled={boostEnabled}
-          boost={item.boost}
-        />
-        <Link href={`/listings/${hrefSlug}`} className="text-sm underline">
-          {t('viewPublic')}
-        </Link>
+      <div className="mt-4 space-y-3">
+        <SellerTrustActions listingId={item.id} flags={trustFlags} trust={item.trust} />
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <SellerBoostActions
+            listingId={item.id}
+            listingStatus={item.status}
+            boostEnabled={boostEnabled}
+            boost={item.boost}
+          />
+          <Link href={`/listings/${hrefSlug}`} className="text-sm underline">
+            {t('viewPublic')}
+          </Link>
+        </div>
       </div>
     </article>
   );
