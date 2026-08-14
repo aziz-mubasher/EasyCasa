@@ -5,6 +5,8 @@
 **Scope:** `SELLER_CHECKLIST_ENABLED` + P6 ledger live only — **not** VO (`VERIFIED_OWNER_ENABLED`), P3, analytics, CDN, T25, T19.2  
 **Companion runbook (prepare only):** `docs/runbooks/ec-s-vo-enablement.md` (PK-1)
 
+**VPS deploy tip:** `6e1a468` on `main` (2026-08-14T19:13Z).
+
 ## Decisions
 
 | Item | Decision | Effect |
