@@ -61,17 +61,18 @@ Protocol: `promises.json` + `sell-privately.spec.ts` + `promiseLedger.test.ts` (
 
 | Check | Expected | Result |
 |-------|----------|--------|
-| Container `SELLER_CHECKLIST_ENABLED` | `true` | _see deploy log_ |
-| Container `VERIFIED_OWNER_ENABLED` | `false` | _see deploy log_ |
-| `GET /api/health` | **200** | _see deploy log_ |
-| `GET /api/seller/checklist/<id>` unauth | **401** (not flag-404) | _see deploy log_ |
-| `GET /api/seller/vo/<id>` unauth | **404** (flag dark) | _see deploy log_ |
-| `/it/vendi-da-privato` no-script HTML — P6 tile | `Attivo` + `Checklist documenti` (not only `In arrivo`) | _see deploy log_ |
-| Claim 1–2 regression | EUR savings + portal copy still present | _see deploy log_ |
+| Container `SELLER_CHECKLIST_ENABLED` | `true` | **true** (2026-08-14 deploy) |
+| Container `VERIFIED_OWNER_ENABLED` | `false` | **false** (unchanged) |
+| `GET /api/health` | **200** | **200** |
+| `GET /api/seller/checklist/:listingId` unauth | **401** (not flag-404) | **401** |
+| `GET /api/seller/vo/:listingId` unauth | **401** (JWT before flag guard; flag still off) | **401** |
+| `GET /api/seller/vo` (no listing id) | **404** | **404** |
+| `/it/vendi-da-privato` no-script HTML — P6 tile | `Attivo` + `Checklist documenti` | **PASS** — `sp-chip--live` + `Attivo` on P6 tile |
+| Claim 1–2 regression | EUR savings + portal copy still present | **PASS** — `7.500` + portale copy in no-script HTML |
 | Authenticated seller `/it/seller/listings/<id>/documents` | slots render; upload updates score | _operator follow-up_ |
 | Listing card doc score | visible when checklist on | _operator follow-up_ |
 | Private docs | no public URL on listing page | _operator follow-up_ |
-| VO badge / surfaces | unchanged (dark) | _see deploy log_ |
+| VO badge / surfaces | unchanged (dark) | **PASS** — `VERIFIED_OWNER_ENABLED=false`; no VO badge path lit |
 
 ### No-script HTML probe (P6 live)
 
