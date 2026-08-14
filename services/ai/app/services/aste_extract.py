@@ -133,6 +133,21 @@ CHUNK_HINT = (
     "Do not invent values from outside this chunk."
 )
 
+STIMA_MICROCHUNK_HINT = (
+    "FOCUSED PASS: extract ONLY economics.valore_stima (total CTU/perizia stima for the target lot). "
+    "Leave all other fields null. If no explicit total stima for the target lot, set valore_stima null "
+    "and include economics.valore_stima in meta.not_found. NEVER use €/mq or invent totals."
+)
+
+STIMA_MICROCHUNK_KEYWORDS = re.compile(
+    r"valore\s+di\s+stima|stima\s+del\s+valore|valore\s+commerciale|valore\s+stima|"
+    r"valore\s+di\s+mercato|pi[uù]\s+probabile\s+valore|valore\s+complessivo|riepilogo\s+valori|"
+    r"\bstima\b|ctu|consulente\s+tecnico",
+    re.IGNORECASE,
+)
+
+MAX_STIMA_MICROCHUNK_CHARS = 12_000
+
 
 def empty_extraction(meta_docs: list[dict[str, Any]], not_found: list[str] | None = None) -> dict[str, Any]:
     return {
@@ -209,13 +224,16 @@ def run_extract(req: ExtractRequest, settings: Settings | None = None) -> dict[s
         raw = _complete_long(s, SYSTEM_PROMPT, user_json)
         parsed = _parse_json_object(raw)
         normalized = _normalize(parsed, meta_docs, req.lotto_label)
+        page_text_index = _build_page_text_index(req.documents)
         normalized = _finalize_extraction(
             normalized,
             [normalized],
             meta_docs,
             req.lotto_label,
             min_prezzo_base_ratio=s.VALORE_STIMA_MIN_PREZZO_BASE_RATIO,
+            page_text_index=page_text_index,
         )
+        normalized = _maybe_stima_microchunk_pass(req, normalized, s, meta_docs, page_text_index)
         return scrub_person_names(normalized)
 
     chunks = split_documents_for_extract(
@@ -244,13 +262,16 @@ def run_extract(req: ExtractRequest, settings: Settings | None = None) -> dict[s
         parsed = _parse_json_object(raw)
         parts.append(_normalize(parsed, meta_docs, req.lotto_label))
 
+    page_text_index = _build_page_text_index(req.documents)
     merged = merge_extractions(
         parts,
         meta_docs,
         req.lotto_label,
         min_prezzo_base_ratio=s.VALORE_STIMA_MIN_PREZZO_BASE_RATIO,
+        page_text_index=page_text_index,
     )
     merged["meta"].setdefault("warnings", []).append(f"extract_chunked:{total}")
+    merged = _maybe_stima_microchunk_pass(req, merged, s, meta_docs, page_text_index)
     return scrub_person_names(merged)
 
 
@@ -391,6 +412,7 @@ def merge_extractions(
     lotto_label: str | None,
     *,
     min_prezzo_base_ratio: float = 0.01,
+    page_text_index: dict[tuple[str, int], str] | None = None,
 ) -> dict[str, Any]:
     """Deterministic reduce: fill nulls from later chunks; never invent; union lists."""
     if not parts:
@@ -455,6 +477,7 @@ def merge_extractions(
         meta_docs,
         lotto_label,
         min_prezzo_base_ratio=min_prezzo_base_ratio,
+        page_text_index=page_text_index,
     )
 
 
@@ -498,17 +521,371 @@ def _pick_by_precedence(
     return best_val
 
 
+def _build_page_text_index(
+    documents: list[ExtractDocumentIn],
+) -> dict[tuple[str, int], str]:
+    index: dict[tuple[str, int], str] = {}
+    for doc in documents:
+        for page in doc.pages:
+            index[(doc.file, page.page)] = page.text or ""
+    return index
+
+
+def _lookup_page_text(
+    page_text_index: dict[tuple[str, int], str] | None,
+    source: Any,
+) -> str | None:
+    if not page_text_index or not isinstance(source, dict):
+        return None
+    file_id = source.get("file")
+    page_no = source.get("page")
+    if not file_id or page_no is None:
+        return None
+    try:
+        page_i = int(page_no)
+    except (TypeError, ValueError):
+        return None
+    return page_text_index.get((str(file_id), page_i))
+
+
+def _split_by_lot_sections(text: str) -> dict[str, str]:
+    sections: dict[str, str] = {}
+    pattern = re.compile(r"\blotto\s+([A-Za-z0-9]+)\b", re.IGNORECASE)
+    matches = list(pattern.finditer(text or ""))
+    for i, match in enumerate(matches):
+        label = match.group(1).upper()
+        start = match.start()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        sections[label] = text[start:end]
+    return sections
+
+
+def _value_numeric_variants(value: Any) -> list[str]:
+    if value is None:
+        return []
+    try:
+        num = float(value)
+    except (TypeError, ValueError):
+        return []
+    variants: list[str] = []
+    if num == int(num):
+        variants.append(str(int(num)))
+    variants.append(str(num))
+    whole = int(round(num))
+    variants.append(f"{whole:,}".replace(",", "."))
+    variants.append(f"{whole:,}".replace(",", " "))
+    return [v for v in variants if v]
+
+
+def _value_in_lot_section(value: Any, lot_label: str, text: str) -> bool:
+    sections = _split_by_lot_sections(text)
+    section = sections.get(lot_label.strip().upper())
+    if not section:
+        return False
+    blob = section.lower()
+    for variant in _value_numeric_variants(value):
+        if variant.lower() in blob.replace(" ", ""):
+            return True
+        if variant in section:
+            return True
+    return False
+
+
+def _sourced_value_for_other_lot_only(
+    val: Any,
+    lotto_label: str | None,
+    page_text_index: dict[tuple[str, int], str] | None,
+) -> bool:
+    """True when a sourced economics/occupazione value clearly belongs to another lot."""
+    if not lotto_label or not isinstance(val, dict):
+        return False
+    selected = lotto_label.strip().upper()
+
+    lot = val.get("lotto")
+    if isinstance(lot, str) and lot.strip():
+        return lot.strip().upper() != selected
+
+    det = val.get("dettaglio")
+    if isinstance(det, str) and det.strip():
+        if selected in _lots_mentioned(det):
+            return False
+        if _conformita_mentions_other_lots_only(det, lotto_label):
+            return True
+
+    source_text = _lookup_page_text(page_text_index, val.get("source"))
+    if source_text:
+        sections = _split_by_lot_sections(source_text)
+        if sections:
+            value = val.get("value")
+            if value is not None and _value_in_lot_section(value, selected, source_text):
+                return False
+            if selected not in sections:
+                mentioned = set(sections.keys())
+                if mentioned and selected not in mentioned:
+                    if value is None or any(
+                        _value_in_lot_section(value, other, source_text) for other in mentioned
+                    ):
+                        return True
+        elif _lot_mention_re(lotto_label).search(source_text) is None:
+            lots = _lots_mentioned(source_text)
+            if lots and selected not in lots:
+                return True
+
+    return False
+
+
+def _sourced_value_matches_target_lot(
+    val: Any,
+    lotto_label: str | None,
+    page_text_index: dict[tuple[str, int], str] | None,
+) -> bool:
+    if not lotto_label or not isinstance(val, dict):
+        return False
+    selected = lotto_label.strip().upper()
+
+    lot = val.get("lotto")
+    if isinstance(lot, str) and lot.strip().upper() == selected:
+        return True
+
+    det = val.get("dettaglio")
+    if isinstance(det, str) and selected in _lots_mentioned(det):
+        return True
+
+    source_text = _lookup_page_text(page_text_index, val.get("source"))
+    if source_text:
+        value = val.get("value")
+        if value is not None and _value_in_lot_section(value, selected, source_text):
+            return True
+        if _lot_mention_re(lotto_label).search(source_text):
+            sections = _split_by_lot_sections(source_text)
+            if not sections or selected in sections:
+                return True
+
+    return False
+
+
+def _pick_by_precedence_lot_aware(
+    candidates: list[tuple[Any, str | None]],
+    precedence: tuple[str, ...],
+    lotto_label: str | None,
+    page_text_index: dict[tuple[str, int], str] | None,
+) -> Any:
+    if not candidates:
+        return None
+    pool = candidates
+    if lotto_label:
+        explicit = [
+            (val, dtype)
+            for val, dtype in pool
+            if _sourced_value_matches_target_lot(val, lotto_label, page_text_index)
+        ]
+        if explicit:
+            pool = explicit
+    return _pick_by_precedence(pool, precedence)
+
+
+def _occupazione_for_other_lot_only(
+    occ: dict[str, Any],
+    lotto_label: str | None,
+    page_text_index: dict[tuple[str, int], str] | None,
+) -> bool:
+    if not lotto_label:
+        return False
+    det = occ.get("dettaglio")
+    if isinstance(det, str) and det.strip():
+        if lotto_label.strip().upper() in _lots_mentioned(det):
+            return False
+        if _conformita_mentions_other_lots_only(det, lotto_label):
+            return True
+    source_text = _lookup_page_text(page_text_index, occ.get("source"))
+    if source_text:
+        lots = _lots_mentioned(source_text)
+        selected = lotto_label.strip().upper()
+        if lots and selected not in lots:
+            if _lot_mention_re(lotto_label).search(source_text) is None:
+                return True
+    return False
+
+
+def _has_explicit_target_nonconformity(dettaglio: Any, lotto_label: str | None) -> bool:
+    """True when dettaglio states non-conformity for the target lot (not other-lot-only)."""
+    if not isinstance(dettaglio, str) or not dettaglio.strip():
+        return False
+    if lotto_label and lotto_label.strip().upper() in _lots_mentioned(dettaglio):
+        return True
+    if _conformita_mentions_other_lots_only(dettaglio, lotto_label):
+        return False
+    blob = dettaglio.lower()
+    return bool(re.search(r"non[\s_]?conform|difform|abuso\s+ediliz", blob))
+
+
+def _reconcile_orphaned_conformita_stato(
+    urbanistica: dict[str, Any],
+    lotto_label: str | None,
+    meta: dict[str, Any],
+) -> None:
+    """Drop bare non_conforme when target-lot difformità evidence was fully filtered out (GT-5)."""
+    dif = urbanistica.get("difformita")
+    has_difformita = isinstance(dif, list) and len(dif) > 0
+    warnings = meta.setdefault("warnings", [])
+
+    for field in ("conformita_urbanistica", "conformita_catastale"):
+        block = urbanistica.get(field)
+        if not isinstance(block, dict):
+            continue
+        stato = block.get("stato")
+        if not _is_non_conforme(stato):
+            continue
+        if has_difformita:
+            continue
+        det = block.get("dettaglio")
+        if _has_explicit_target_nonconformity(det, lotto_label):
+            continue
+        block["stato"] = "non_rilevato"
+        block["dettaglio"] = None
+        if "orphaned_conformita_stato_dropped" not in warnings:
+            warnings.append("orphaned_conformita_stato_dropped")
+
+
+def _reconcile_not_found(meta: dict[str, Any], data: dict[str, Any]) -> None:
+    """Remove not_found paths after late fills (micro-chunk, derive, guards)."""
+    nf = meta.get("not_found")
+    if not isinstance(nf, list):
+        return
+    found = _non_null_field_paths(data)
+    drop: set[str] = set()
+    for path in found:
+        drop.add(path)
+        if "." in path:
+            drop.add(f"{path}.value")
+    econ = data.get("economics") if isinstance(data.get("economics"), dict) else {}
+    vs = econ.get("valore_stima")
+    if isinstance(vs, dict) and vs.get("value") is not None:
+        drop.update({"economics.valore_stima", "economics.valore_stima.value"})
+    meta["not_found"] = sorted(p for p in nf if p not in drop)
+
+
+def _build_stima_microchunk_documents(
+    documents: list[ExtractDocumentIn],
+    lotto_label: str | None,
+    *,
+    max_chars: int = MAX_STIMA_MICROCHUNK_CHARS,
+) -> list[ExtractDocumentIn]:
+    ranked: list[tuple[int, str, str, ExtractPageIn]] = []
+    for doc in documents:
+        if (doc.doc_type or "").lower() != "perizia":
+            continue
+        for page in doc.pages:
+            text = page.text or ""
+            if not STIMA_MICROCHUNK_KEYWORDS.search(text):
+                continue
+            pri = page_lot_priority(text, lotto_label, "perizia")
+            ranked.append((pri, doc.file, doc.doc_type, ExtractPageIn(page=page.page, text=text)))
+
+    ranked.sort(key=lambda t: (-t[0], t[1], t[3].page))
+
+    out_docs: dict[str, ExtractDocumentIn] = {}
+    order: list[str] = []
+    size = 0
+    for _pri, file_id, doc_type, page in ranked:
+        trial = dict(out_docs)
+        if file_id not in trial:
+            trial[file_id] = ExtractDocumentIn(file=file_id, doc_type=doc_type, pages=[])
+        trial_doc = ExtractDocumentIn(
+            file=file_id,
+            doc_type=doc_type,
+            pages=[*trial[file_id].pages, page],
+        )
+        trial[file_id] = trial_doc
+        trial_order = order if file_id in out_docs else [*order, file_id]
+        payload = _build_user_payload(
+            "it",
+            lotto_label,
+            [trial[k] for k in trial_order],
+        )
+        trial_size = len(json.dumps(payload, ensure_ascii=False))
+        if out_docs and trial_size > max_chars:
+            break
+        out_docs = trial
+        order = trial_order
+        size = trial_size
+
+    return [out_docs[k] for k in order]
+
+
+def _maybe_stima_microchunk_pass(
+    req: ExtractRequest,
+    merged: dict[str, Any],
+    settings: Settings,
+    meta_docs: list[dict[str, Any]],
+    page_text_index: dict[tuple[str, int], str],
+) -> dict[str, Any]:
+    if not settings.ASTE_STIMA_MICROCHUNK_ENABLED:
+        return merged
+
+    econ = merged.get("economics") if isinstance(merged.get("economics"), dict) else {}
+    vs = econ.get("valore_stima")
+    if isinstance(vs, dict) and vs.get("value") is not None:
+        return merged
+
+    nf = merged.get("meta", {}).get("not_found") if isinstance(merged.get("meta"), dict) else []
+    needs_stima = "economics.valore_stima" in (nf or []) or "economics.valore_stima.value" in (nf or [])
+    if not needs_stima and not _is_empty(vs):
+        return merged
+
+    has_perizia = any((d.doc_type or "").lower() == "perizia" for d in req.documents)
+    if not has_perizia:
+        return merged
+
+    micro_docs = _build_stima_microchunk_documents(req.documents, req.lotto_label)
+    if not micro_docs:
+        return merged
+
+    payload = _build_user_payload(req.language, req.lotto_label, micro_docs)
+    payload["microchunk"] = {"focus": "economics.valore_stima", "hint": STIMA_MICROCHUNK_HINT}
+    user_json = json.dumps(payload, ensure_ascii=False)
+    raw = _complete_long(settings, SYSTEM_PROMPT, user_json)
+    parsed = _parse_json_object(raw)
+    part = _normalize(parsed, meta_docs, req.lotto_label)
+
+    micro_val = part.get("economics", {}).get("valore_stima") if isinstance(part.get("economics"), dict) else None
+    if _is_empty(micro_val) or not isinstance(micro_val, dict):
+        merged.setdefault("meta", {}).setdefault("warnings", []).append("stima_microchunk:no_fill")
+        return merged
+
+    if _sourced_value_for_other_lot_only(micro_val, req.lotto_label, page_text_index):
+        merged.setdefault("meta", {}).setdefault("warnings", []).append("stima_microchunk:other_lot_rejected")
+        return merged
+
+    merged.setdefault("economics", {})["valore_stima"] = micro_val
+    merged = _finalize_extraction(
+        merged,
+        [merged, part],
+        meta_docs,
+        req.lotto_label,
+        min_prezzo_base_ratio=settings.VALORE_STIMA_MIN_PREZZO_BASE_RATIO,
+        page_text_index=page_text_index,
+    )
+    merged.setdefault("meta", {}).setdefault("warnings", []).append("stima_microchunk:fill")
+    return merged
+
+
 def _collect_sourced_candidates(
     parts: list[dict[str, Any]],
     field_path: str,
     meta_docs: list[dict[str, Any]],
+    lotto_label: str | None = None,
+    page_text_index: dict[tuple[str, int], str] | None = None,
 ) -> list[tuple[Any, str | None]]:
     """Collect (value, doc_type) from chunk parts for economics.* sourced numbers."""
+    field = field_path.split(".")[-1] if "." in field_path else field_path
     out: list[tuple[Any, str | None]] = []
     for part in parts:
         econ = part.get("economics") if isinstance(part.get("economics"), dict) else {}
-        val = econ.get(field_path.split(".")[-1] if "." in field_path else field_path)
+        val = econ.get(field)
         if _is_empty(val) or not isinstance(val, dict):
+            continue
+        if _sourced_value_for_other_lot_only(val, lotto_label, page_text_index):
             continue
         dtype = _source_doc_type(val.get("source"), meta_docs)
         out.append((val, dtype))
@@ -518,12 +895,16 @@ def _collect_sourced_candidates(
 def _collect_cauzione_candidates(
     parts: list[dict[str, Any]],
     meta_docs: list[dict[str, Any]],
+    lotto_label: str | None = None,
+    page_text_index: dict[tuple[str, int], str] | None = None,
 ) -> list[tuple[Any, str | None]]:
     out: list[tuple[Any, str | None]] = []
     for part in parts:
         econ = part.get("economics") if isinstance(part.get("economics"), dict) else {}
         val = econ.get("cauzione")
         if _is_empty(val) or not isinstance(val, dict):
+            continue
+        if _sourced_value_for_other_lot_only(val, lotto_label, page_text_index):
             continue
         dtype = _source_doc_type(val.get("source"), meta_docs)
         out.append((val, dtype))
@@ -533,12 +914,16 @@ def _collect_cauzione_candidates(
 def _collect_occupazione_candidates(
     parts: list[dict[str, Any]],
     meta_docs: list[dict[str, Any]],
+    lotto_label: str | None = None,
+    page_text_index: dict[tuple[str, int], str] | None = None,
 ) -> list[tuple[Any, str | None]]:
     out: list[tuple[Any, str | None]] = []
     for part in parts:
         giu = part.get("giuridica") if isinstance(part.get("giuridica"), dict) else {}
         occ = giu.get("stato_occupazione") if isinstance(giu.get("stato_occupazione"), dict) else {}
         if _is_empty(occ.get("stato")):
+            continue
+        if _occupazione_for_other_lot_only(occ, lotto_label, page_text_index):
             continue
         dtype = _source_doc_type(occ.get("source"), meta_docs)
         out.append((occ, dtype))
@@ -549,6 +934,7 @@ def _collect_valore_stima_candidates(
     parts: list[dict[str, Any]],
     meta_docs: list[dict[str, Any]],
     lotto_label: str | None = None,
+    page_text_index: dict[tuple[str, int], str] | None = None,
 ) -> list[tuple[Any, str | None]]:
     out: list[tuple[Any, str | None]] = []
     for part in parts:
@@ -556,7 +942,7 @@ def _collect_valore_stima_candidates(
         val = econ.get("valore_stima")
         if _is_empty(val) or not isinstance(val, dict):
             continue
-        if _valore_stima_for_other_lot_only(val, lotto_label):
+        if _sourced_value_for_other_lot_only(val, lotto_label, page_text_index):
             continue
         dtype = _source_doc_type(val.get("source"), meta_docs)
         out.append((val, dtype))
@@ -565,15 +951,7 @@ def _collect_valore_stima_candidates(
 
 def _valore_stima_for_other_lot_only(valore: Any, lotto_label: str | None) -> bool:
     """True when valore_stima clearly belongs to another lot (Ex2 multi-lot stima tables)."""
-    if not lotto_label or not isinstance(valore, dict):
-        return False
-    lot = valore.get("lotto")
-    if isinstance(lot, str) and lot.strip():
-        return lot.strip().upper() != lotto_label.strip().upper()
-    det = valore.get("dettaglio")
-    if isinstance(det, str) and det.strip():
-        return _conformita_mentions_other_lots_only(det, lotto_label)
-    return False
+    return _sourced_value_for_other_lot_only(valore, lotto_label, None)
 
 
 def guard_valore_stima_plausibility(
@@ -649,37 +1027,53 @@ def _apply_field_precedence(
     parts: list[dict[str, Any]],
     meta_docs: list[dict[str, Any]],
     lotto_label: str | None = None,
+    page_text_index: dict[tuple[str, int], str] | None = None,
 ) -> None:
     """Field-specific doc-type precedence after chunk merge (EC-30)."""
     econ = merged.setdefault("economics", {})
     giu = merged.setdefault("giuridica", {})
 
     for field in ("prezzo_base", "offerta_minima", "rilancio_minimo"):
-        picked = _pick_by_precedence(
-            _collect_sourced_candidates(parts, field, meta_docs),
+        picked = _pick_by_precedence_lot_aware(
+            _collect_sourced_candidates(
+                parts, field, meta_docs, lotto_label, page_text_index
+            ),
             PRECEDENCE_AUCTION,
+            lotto_label,
+            page_text_index,
         )
         if not _is_empty(picked):
             econ[field] = picked
 
-    valore = _pick_by_precedence(
-        _collect_valore_stima_candidates(parts, meta_docs, lotto_label),
+    valore = _pick_by_precedence_lot_aware(
+        _collect_valore_stima_candidates(parts, meta_docs, lotto_label, page_text_index),
         PRECEDENCE_VALORE_STIMA,
+        lotto_label,
+        page_text_index,
     )
     if not _is_empty(valore):
         econ["valore_stima"] = valore
 
-    cauzione = _pick_by_precedence(
-        _collect_cauzione_candidates(parts, meta_docs),
+    cau_candidates = _collect_cauzione_candidates(
+        parts, meta_docs, lotto_label, page_text_index
+    )
+    cauzione = _pick_by_precedence_lot_aware(
+        cau_candidates,
         PRECEDENCE_AUCTION,
+        lotto_label,
+        page_text_index,
     )
     if not _is_empty(cauzione) and isinstance(cauzione, dict):
-        _merge_cauzione_fields(cauzione, _collect_cauzione_candidates(parts, meta_docs))
+        _merge_cauzione_fields(cauzione, cau_candidates)
         econ["cauzione"] = cauzione
 
-    occupazione = _pick_by_precedence(
-        _collect_occupazione_candidates(parts, meta_docs),
+    occupazione = _pick_by_precedence_lot_aware(
+        _collect_occupazione_candidates(
+            parts, meta_docs, lotto_label, page_text_index
+        ),
         PRECEDENCE_OCCUPAZIONE,
+        lotto_label,
+        page_text_index,
     )
     if not _is_empty(occupazione):
         giu["stato_occupazione"] = occupazione
@@ -698,11 +1092,23 @@ def _apply_field_precedence(
     dual = meta.get("prezzo_base_candidates")
     if isinstance(dual, list) and len(dual) >= 2:
         avviso = next(
-            (c for c in dual if isinstance(c, dict) and _source_doc_type(c.get("source"), meta_docs) == "avviso"),
+            (
+                c
+                for c in dual
+                if isinstance(c, dict)
+                and not _sourced_value_for_other_lot_only(c, lotto_label, page_text_index)
+                and _source_doc_type(c.get("source"), meta_docs) == "avviso"
+            ),
             None,
         )
         ordinanza = next(
-            (c for c in dual if isinstance(c, dict) and _source_doc_type(c.get("source"), meta_docs) == "ordinanza"),
+            (
+                c
+                for c in dual
+                if isinstance(c, dict)
+                and not _sourced_value_for_other_lot_only(c, lotto_label, page_text_index)
+                and _source_doc_type(c.get("source"), meta_docs) == "ordinanza"
+            ),
             None,
         )
         if avviso and ordinanza:
@@ -886,16 +1292,18 @@ def _finalize_extraction(
     lotto_label: str | None = None,
     *,
     min_prezzo_base_ratio: float = 0.01,
+    page_text_index: dict[tuple[str, int], str] | None = None,
 ) -> dict[str, Any]:
-    _apply_field_precedence(merged, parts, meta_docs, lotto_label)
+    _apply_field_precedence(merged, parts, meta_docs, lotto_label, page_text_index)
     giu = merged.get("giuridica") if isinstance(merged.get("giuridica"), dict) else {}
     _normalize_occupazione_stato(giu)
     urb = merged.get("urbanistica") if isinstance(merged.get("urbanistica"), dict) else {}
     _normalize_urbanistica(urb)
+    meta = merged.setdefault("meta", {})
+    _reconcile_orphaned_conformita_stato(urb, lotto_label, meta)
     econ = merged.get("economics") if isinstance(merged.get("economics"), dict) else {}
     _normalize_cauzione(econ)
     derive_cauzione_importo(econ)
-    meta = merged.setdefault("meta", {})
     guard_valore_stima_plausibility(
         econ,
         meta,
@@ -907,6 +1315,7 @@ def _finalize_extraction(
         nf = meta.get("not_found")
         if isinstance(nf, list):
             meta["not_found"] = [p for p in nf if p not in ("economics.cauzione", "economics.cauzione.importo")]
+    _reconcile_not_found(meta, merged)
     return merged
 
 
@@ -1003,12 +1412,15 @@ def _merge_urbanistica(dst: dict[str, Any], src: dict[str, Any], lotto_label: st
         s_det = s_block.get("dettaglio")
         # Drop non-conforme that only names other lots (negative-space).
         if _is_non_conforme(s_stato) and _conformita_mentions_other_lots_only(s_det, lotto_label):
+            if lotto_label:
+                d_block["stato"] = "non_rilevato"
+                d_block["dettaglio"] = None
             s_stato = None
             s_det = None
         if _is_non_conforme(d_block.get("stato")) and _conformita_mentions_other_lots_only(
             d_block.get("dettaglio"), lotto_label
         ):
-            d_block["stato"] = None
+            d_block["stato"] = "non_rilevato" if lotto_label else None
             d_block["dettaglio"] = None
         if _is_empty(d_block.get("stato")) and not _is_empty(s_stato):
             d_block["stato"] = s_stato
