@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/156",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-14T08:42:40.236Z",
-  "updatedAt": "2026-08-14T13:38:15.674Z",
-  "summary": "Docs PR #156 on main 2eabda4. Live 8/8 near-miss Ex2-7. VPS docs pull pending from cloud; code tip still fc64987.",
-  "nextAction": "Close #156 UI if open; VPS git pull; adjudicate Ex2-7; counsel send",
+  "updatedAt": "2026-08-14T13:42:59.606Z",
+  "summary": "Docs tip 3c7cf62 on main + VPS pulled. Live 8/8 near-miss Ex2-7. Code tip still fc64987. Counsel unsent.",
+  "nextAction": "Adjudicate Ex2-7 (64906→EC-35 / 153850→bar fix+eval GREEN); counsel send",
   "errors": []
 }

@@ -3,7 +3,7 @@
 **Date:** 2026-08-14  
 **PR:** https://github.com/aziz-mubasher/EasyCasa/pull/156 → landed on `main` as **`2eabda4`** (local merge; was draft/dirty vs main)  
 **Canonical status doc:** `docs/audits/G1-post-ec34-rnd-report.md`  
-**Deploy:** **docs-only** — code tip still `fc64987` on VPS (`/api/version`). Cloud agent could not SSH `banks4all-vps`; **human/Mac must `git pull` on `/opt/easycasa-ita`** so Claude’s status-ledger poll URL updates.  
+**Deploy:** **docs-only** — VPS `/opt/easycasa-ita` **pulled** to tip **`3c7cf62`** (fast-forward). Code containers still `gitSha: fc64987` (no recreate needed). Claude poll URL current on `main`.  
 **Flags:** `ASTE_ANALYSIS_ENABLED` **off**  
 **Board:** Kaizen · K EC 7.3 · Operations  
 
