@@ -1,4 +1,4 @@
-# EC-35 — Ex2 lotto-7 auction lot association (completion)
+# EC-35 — Deterministic lot-section economics parse (completion)
 
 **Date:** 2026-08-14  
 **Kaizen:** K EC 7.3 · Operations · Improve  
@@ -7,18 +7,20 @@
 
 ## What shipped
 
-1. **Tighten lot association** for sourced auction numbers on multi-lot pages:
-   - Reject values that appear only under another lot’s section (overrides wrong LLM `lotto` / `dettaglio` tags).
-   - Require numeric values to sit in the target lot section when sections exist (drop page-mention fallthrough).
-2. **Clear first-fill bleed** when every candidate is lot-rejected (`auction_other_lot_cleared`).
-3. **Deterministic avviso lot-section parse** for `prezzo_base` / `offerta_minima` (Italian money + current-vendita scoring) so a wrong-only LLM pick of `153850` recovers `64906`/`48680` (`auction_lot_section_parse`).
-4. **Fixtures** covering: untagged distractor lot, wrong LLM tags, older vendita under same lot, first-fill survival. Lotto 4 = `36039` regression fence.
+1. **Deterministic avviso lot-section parse** (multi-lot docs only, when `lotto_label` set):
+   - `prezzo_base`, `offerta_minima`, `rilancio_minimo`, `cauzione.pct` from target lot section text.
+   - Italian money formats (`64.906,00`, `€ 64.906`, `Euro 64.906,00`).
+   - Current-vendita scoring + **75% prezzo/offerta pair heuristic** when multiple rows exist in one section.
+   - Authoritative over lot-filtered LLM candidates; source doc + page on parsed values.
+2. **Lot association hardening** (EC-34 gap): reject values appearing only under another lot’s section; clear first-fill bleed.
+3. **Fixtures**: wrong-only LLM (red on main @ d7f24fb → green after), Ex2 headline L4/L7, honest `not_found`, single-lot bypass, Italian formats.
 
-## Out of scope
+## Red-before / green-after
 
-- No schema bump, no flag flips, no Ex7 micro-chunk changes, no counsel send.
+Main tip `merge_extractions(..., lotto "7")` with untagged LLM `153850/115387.5` on Ex2-shaped avviso → **153850** (fail).  
+After EC-35 → **64906/48680** + `auction_lot_section_parse` warning.
 
 ## Verify
 
-- `services/ai` pytest `tests/test_aste_extract.py` — **57 passed** (includes EC-35).
-- **Still required on Mac:** live Ex2-7 (ideally full 8/8) after deploy tip ≥ this PR; counsel packet send remains the other G1 human gate.
+- `services/ai` pytest `tests/test_aste_extract.py` — **61 passed** (8 EC-35).
+- **Mac operator post-merge:** Ex2 `--lotto 4` → 36039/27029; `--lotto 7` → 64906/48680.

@@ -1089,6 +1089,11 @@ _PREZZO_BASE_CTX_RE = re.compile(
     re.IGNORECASE,
 )
 _OFFERTA_MINIMA_CTX_RE = re.compile(r"offerta\s+minima", re.IGNORECASE)
+_RILANCIO_MINIMO_CTX_RE = re.compile(r"rilancio\s+minimo", re.IGNORECASE)
+_CAUZIONE_PCT_RE = re.compile(
+    r"cauzione\s*:\s*(\d+(?:[.,]\d+)?)\s*%\s*(?:del\s+prezzo\s+(?:offerto|base))?",
+    re.IGNORECASE,
+)
 _CURRENT_VENDITA_RE = re.compile(
     r"\b(?:quarta|quinta|sesta|attuale|corrente)\s+vendita\b|"
     r"prezzo\s+base\s+d[''`´]asta",
@@ -1145,12 +1150,125 @@ def _find_auction_money_in_section(
     return best[1] if best else None
 
 
+def _labeled_money_matches(
+    section: str,
+    label_re: re.Pattern[str],
+) -> list[tuple[int, int, float]]:
+    """Return (label_start, value_end, parsed_amount) for each labeled money hit."""
+    hits: list[tuple[int, int, float]] = []
+    for label in label_re.finditer(section):
+        tail = section[label.end() : label.end() + 120]
+        money = _ITALIAN_MONEY_RE.search(tail)
+        if not money:
+            continue
+        parsed = _parse_italian_money(money.group(1))
+        if parsed is None:
+            continue
+        hits.append((label.start(), label.end() + money.end(), parsed))
+    return hits
+
+
+def _score_prezzo_offerta_pair(
+    section: str,
+    pb_start: int,
+    pb_end: int,
+    pb_val: float,
+    om_start: int,
+    om_end: int,
+    om_val: float,
+) -> int:
+    """Prefer current-attempt wording and pairs where offerta_minima ≈ 75% × prezzo_base."""
+    score = _score_auction_money_match(section, pb_start, pb_end)
+    score += _score_auction_money_match(section, om_start, om_end)
+    if pb_val > 0:
+        ratio = om_val / pb_val
+        # Italian auction offerta minima is typically 75% of prezzo base (±2%).
+        if abs(ratio - 0.75) <= 0.02:
+            score += 15
+        elif abs(ratio - 0.75) <= 0.05:
+            score += 8
+    return score
+
+
+def _best_prezzo_offerta_pair(
+    section: str,
+) -> tuple[float, float] | None:
+    pb_hits = _labeled_money_matches(section, _PREZZO_BASE_CTX_RE)
+    om_hits = _labeled_money_matches(section, _OFFERTA_MINIMA_CTX_RE)
+    if not pb_hits or not om_hits:
+        return None
+    best: tuple[int, float, float] | None = None
+    for pb_start, pb_end, pb_val in pb_hits:
+        for om_start, om_end, om_val in om_hits:
+            if om_start < pb_start:
+                continue
+            if om_start - pb_end > 200:
+                continue
+            pair_score = _score_prezzo_offerta_pair(
+                section, pb_start, pb_end, pb_val, om_start, om_end, om_val
+            )
+            if best is None or pair_score > best[0]:
+                best = (pair_score, pb_val, om_val)
+    return (best[1], best[2]) if best else None
+
+
+def _find_cauzione_pct_in_section(section: str) -> float | None:
+    m = _CAUZIONE_PCT_RE.search(section)
+    if not m:
+        return None
+    return _coerce_pct(m.group(1))
+
+
+def _parse_lot_section_auction_economics(
+    section: str,
+    source: dict[str, Any],
+    lot_label: str,
+) -> dict[str, Any]:
+    """Extract auction economics from one lot section (EC-35)."""
+    pair = _best_prezzo_offerta_pair(section)
+    if pair is None:
+        return {}
+    pb_val, om_val = pair
+    out: dict[str, Any] = {
+        "prezzo_base": {
+            "value": pb_val,
+            "dettaglio": f"Lotto {lot_label}",
+            "source": source,
+            "derived": True,
+        },
+        "offerta_minima": {
+            "value": om_val,
+            "dettaglio": f"Lotto {lot_label}",
+            "source": source,
+            "derived": True,
+        },
+    }
+    rm = _find_auction_money_in_section(section, _RILANCIO_MINIMO_CTX_RE)
+    if rm is not None:
+        out["rilancio_minimo"] = {
+            "value": rm,
+            "dettaglio": f"Lotto {lot_label}",
+            "source": source,
+            "derived": True,
+        }
+    pct = _find_cauzione_pct_in_section(section)
+    if pct is not None:
+        out["cauzione"] = {
+            "pct": pct,
+            "base": "prezzo_offerto",
+            "dettaglio": f"Lotto {lot_label}",
+            "source": source,
+            "derived": True,
+        }
+    return out
+
+
 def _deterministic_lot_auction_economics(
     lotto_label: str | None,
     page_text_index: dict[tuple[str, int], str] | None,
     meta_docs: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    """Parse prezzo_base / offerta_minima from the target lot section on avviso pages (EC-35)."""
+    """Parse lot-scoped auction economics from avviso lot sections (EC-35, multi-lot only)."""
     if not lotto_label or not page_text_index:
         return {}
     selected = lotto_label.strip().upper()
@@ -1164,28 +1282,17 @@ def _deterministic_lot_auction_economics(
         if avviso_files and file_id not in avviso_files:
             continue
         sections = _split_by_lot_sections(text or "")
+        # Single-lot docs: keep existing LLM/precedence behaviour (no section override).
+        if len(sections) < 2:
+            continue
         section = sections.get(selected)
         if not section:
             continue
         source = {"file": file_id, "page": page_no}
-        if "prezzo_base" not in out:
-            pb = _find_auction_money_in_section(section, _PREZZO_BASE_CTX_RE)
-            if pb is not None:
-                out["prezzo_base"] = {
-                    "value": pb,
-                    "dettaglio": f"Lotto {selected}",
-                    "source": source,
-                    "derived": True,
-                }
-        if "offerta_minima" not in out:
-            om = _find_auction_money_in_section(section, _OFFERTA_MINIMA_CTX_RE)
-            if om is not None:
-                out["offerta_minima"] = {
-                    "value": om,
-                    "dettaglio": f"Lotto {selected}",
-                    "source": source,
-                    "derived": True,
-                }
+        parsed = _parse_lot_section_auction_economics(section, source, selected)
+        for field, val in parsed.items():
+            if field not in out:
+                out[field] = val
         if "prezzo_base" in out and "offerta_minima" in out:
             break
     return out
@@ -1247,7 +1354,10 @@ def _apply_field_precedence(
     # EC-35: deterministic avviso lot-section parse recovers current-attempt economics
     # when the LLM picked another lot's row or an older vendita under the same lot.
     det_econ = _deterministic_lot_auction_economics(lotto_label, page_text_index, meta_docs)
-    for field, det_val in det_econ.items():
+    for field in ("prezzo_base", "offerta_minima", "rilancio_minimo"):
+        det_val = det_econ.get(field)
+        if det_val is None:
+            continue
         cur = econ.get(field)
         prefer_det = False
         if _is_empty(cur):
@@ -1291,6 +1401,24 @@ def _apply_field_precedence(
     if not _is_empty(cauzione) and isinstance(cauzione, dict):
         _merge_cauzione_fields(cauzione, cau_candidates)
         econ["cauzione"] = cauzione
+
+    det_cau = det_econ.get("cauzione")
+    if isinstance(det_cau, dict):
+        cur_cau = econ.get("cauzione")
+        prefer_det_cau = _is_empty(cur_cau)
+        if isinstance(cur_cau, dict):
+            if _sourced_value_for_other_lot_only(cur_cau, lotto_label, page_text_index):
+                prefer_det_cau = True
+            elif cur_cau.get("pct") != det_cau.get("pct"):
+                prefer_det_cau = True
+        if prefer_det_cau:
+            econ["cauzione"] = det_cau
+            warnings = meta.setdefault("warnings", [])
+            if isinstance(warnings, list) and "auction_lot_section_parse" not in warnings:
+                warnings.append("auction_lot_section_parse")
+            nf = meta.get("not_found")
+            if isinstance(nf, list):
+                meta["not_found"] = [p for p in nf if p != "economics.cauzione"]
 
     occupazione = _pick_by_precedence_lot_aware(
         _collect_occupazione_candidates(
