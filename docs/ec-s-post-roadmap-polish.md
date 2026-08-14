@@ -71,6 +71,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pp5-k148-completion-feedback.md` | **PP-5 / K EC 1.48** completion R&D feedback |
 | `docs/audits/EC-S-pp6-k149-completion-feedback.md` | **PP-6 / K EC 1.49** completion R&D feedback (UI dark) |
 | `docs/audits/EC-S-pp1-k150-completion-feedback.md` | **PP-1 / K EC 1.50** completion R&D feedback (Stripe Price backfill still needed) |
+| `docs/audits/EC-S-pp2-k151-completion-feedback.md` | **PP-2+PP-3 / K EC 1.51** completion R&D feedback (eng backlog empty) |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
