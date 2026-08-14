@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T14:16:59.530Z",
+  "updatedAt": "2026-08-14T14:17:25.697Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -30,7 +30,7 @@
       "title": "EC-35 Ex2 lotto-7 auction lot association",
       "venture": "EasyCasa",
       "lifecycle": "pr_open",
-      "agentStatus": "RUNNING",
+      "agentStatus": "IDLE",
       "agentBcId": "bc-6f57762a-047c-4cf0-8fc8-fa0ff9a21c63",
       "agentUrl": "https://cursor.com/agents/bc-6f57762a-047c-4cf0-8fc8-fa0ff9a21c63",
       "branch": "cursor/ec-35-ex2-lot7-association-5db0",
@@ -38,8 +38,8 @@
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/158",
       "prState": "DRAFT",
       "dispatchedAt": "2026-08-14T08:42:40.236Z",
-      "updatedAt": "2026-08-14T14:16:59.529Z",
-      "summary": "EC-35 #158: deterministic lot-section economics parse; Ex2-7=64906; pytest 61/61 EC-35 fixtures green",
+      "updatedAt": "2026-08-14T14:17:25.697Z",
+      "summary": "EC-35 #158 DRAFT: deterministic lot-section economics parse; Ex2-7=64906; pytest 61/61",
       "nextAction": "Review/merge #158; deploy ai; Mac Ex2 lotto 4+7 live re-verify",
       "errors": []
     },
