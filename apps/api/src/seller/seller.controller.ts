@@ -72,7 +72,7 @@ export class SellerController {
   }
 
   /** EC-S-T27 — effective tier + entitlements (local seller_subscription only). */
-  @Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
+  @Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
   @Get('entitlements')
   async entitlements(@CurrentUser() user: AuthUser) {
     if (!this.config.SELLER_PREMIUM_ENABLED) {

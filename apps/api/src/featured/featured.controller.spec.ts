@@ -1,10 +1,11 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FeaturedController } from './featured.controller';
 import type { StripeService } from '../billing/stripe.service';
 import type { UsersService } from '../users/users.service';
 import type { ListingsRepository } from '../listings/listings.repository';
+import type { ListingBoostService } from '../listing-boost/listing-boost.service';
 import type { ApiConfig } from '../config/load';
 import type { AuthUser } from '../auth/auth.types';
 
@@ -13,6 +14,7 @@ function makeController(over: {
   listing?: Record<string, unknown> | null;
   meId?: string;
   url?: string;
+  alreadyBoosted?: boolean;
 }) {
   const stripe = {
     createFeaturedCheckout: vi.fn().mockResolvedValue(over.url ?? 'https://stripe/checkout'),
@@ -27,8 +29,11 @@ function makeController(over: {
         : over.listing,
     ),
   } as unknown as ListingsRepository;
+  const boosts = {
+    isListingBoosted: vi.fn().mockResolvedValue(over.alreadyBoosted ?? false),
+  } as unknown as ListingBoostService;
   const config = { LISTING_BOOST_ENABLED: over.flag ?? true } as unknown as ApiConfig;
-  return { controller: new FeaturedController(stripe, users, listings, config), stripe };
+  return { controller: new FeaturedController(stripe, users, listings, boosts, config), stripe };
 }
 
 const seller: AuthUser = { sub: 'u', roles: ['seller'] };
@@ -67,5 +72,13 @@ describe('FeaturedController (T26 boost checkout)', () => {
     await expect(controller.checkout(seller, { listingId: 'l1', days: 7 })).rejects.toBeInstanceOf(
       BadRequestException,
     );
+  });
+
+  it('active boost ⇒ 409 (prevent double purchase)', async () => {
+    const { controller, stripe } = makeController({ flag: true, alreadyBoosted: true });
+    await expect(controller.checkout(seller, { listingId: 'l1', days: 7 })).rejects.toBeInstanceOf(
+      ConflictException,
+    );
+    expect(stripe.createFeaturedCheckout).not.toHaveBeenCalled();
   });
 });

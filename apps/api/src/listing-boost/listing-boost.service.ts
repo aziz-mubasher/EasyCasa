@@ -140,6 +140,29 @@ export class ListingBoostService {
     return (await this.boostWeightForListing(listingId, now)) > 0;
   }
 
+  /** Active boost window for seller dashboard (null when none / expired). */
+  async activeBoostForListing(
+    listingId: string,
+    now = new Date(),
+  ): Promise<{ endsAt: Date; remainingMs: number } | null> {
+    await this.expireEnded(now);
+    const rows = await this.db
+      .select({
+        status: listingBoost.status,
+        startsAt: listingBoost.startsAt,
+        endsAt: listingBoost.endsAt,
+      })
+      .from(listingBoost)
+      .where(and(eq(listingBoost.listingId, listingId), eq(listingBoost.status, 'active')))
+      .limit(5);
+    for (const row of rows) {
+      if (isBoostActive({ status: row.status, startsAt: row.startsAt, endsAt: row.endsAt, now })) {
+        return { endsAt: row.endsAt, remainingMs: remainingBoostMs(row.endsAt, now) };
+      }
+    }
+    return null;
+  }
+
   async boostedListingIds(ids: string[], now = new Date()): Promise<Set<string>> {
     if (ids.length === 0) return new Set();
     const rows = await this.db

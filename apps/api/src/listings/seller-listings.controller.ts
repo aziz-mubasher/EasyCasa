@@ -1,24 +1,77 @@
-import { Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
 
 import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
+import { APP_CONFIG } from '../config/config.module';
+import type { ApiConfig } from '../config/load';
 import { UsersService } from '../users/users.service';
 import { SellerConsentGuard } from '../seller/seller-consent.guard';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
+import { ListingBoostService } from '../listing-boost/listing-boost.service';
 import { ListingsService } from './listings.service';
+import { ListingsRepository } from './listings.repository';
 
 /**
  * EC-S-T13 — seller publish/unpublish behind onboarding flag (404 when off).
- * Existing POST /listings/:id/publish remains for agents; both call the same service.
+ * PP-5 — GET index for dashboard listing cards + boost state.
  */
 @Controller('seller/listings')
 @UseGuards(SellerOnboardingEnabledGuard, SellerConsentGuard)
 export class SellerListingsController {
   constructor(
     private readonly listings: ListingsService,
+    private readonly repo: ListingsRepository,
+    private readonly boosts: ListingBoostService,
     private readonly users: UsersService,
+    @Inject(APP_CONFIG) private readonly config: ApiConfig,
   ) {}
+
+  /** PP-5 — seller dashboard listing cards (boost label + purchase gating metadata). */
+  @Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
+  @Get()
+  async listMine(@CurrentUser() user: AuthUser) {
+    const me = await this.users.getOrCreate(user);
+    const rows = await this.repo.listForOwner(me.id);
+    const boostEnabled = this.config.LISTING_BOOST_ENABLED;
+    const now = new Date();
+    const items = await Promise.all(
+      rows.map(async (row) => {
+        const boostRow = boostEnabled
+          ? await this.boosts.activeBoostForListing(row.id, now)
+          : null;
+        return {
+          id: row.id,
+          slug: row.slug,
+          title: row.title,
+          status: row.status,
+          city: row.city,
+          price: row.price,
+          currency: row.currency,
+          coverUrl: row.coverUrl,
+          boost: boostRow
+            ? {
+                active: true,
+                endsAt: boostRow.endsAt.toISOString(),
+                remainingDays: Math.max(
+                  1,
+                  Math.ceil(boostRow.remainingMs / 86_400_000),
+                ),
+              }
+            : boostEnabled
+              ? { active: false, endsAt: null, remainingDays: null }
+              : null,
+        };
+      }),
+    );
+    return {
+      flags: {
+        listingBoostEnabled: boostEnabled,
+        sellerPremiumEnabled: this.config.SELLER_PREMIUM_ENABLED,
+      },
+      items,
+    };
+  }
 
   @Roles('seller')
   @Post(':id/publish')

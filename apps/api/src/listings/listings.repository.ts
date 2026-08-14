@@ -23,6 +23,24 @@ export class ListingsRepository {
     return rows[0] ?? null;
   }
 
+  /** Seller dashboard — own listings newest first (all statuses). */
+  async listForOwner(ownerUserId: string) {
+    return this.db
+      .select({
+        id: listings.id,
+        slug: listings.slug,
+        title: listings.title,
+        status: listings.status,
+        city: listings.city,
+        price: listings.price,
+        currency: listings.currency,
+        coverUrl: sql<string | null>`(SELECT url FROM media m WHERE m.listing_id = listings.id AND m.type IN ('image','floorplan') ORDER BY m.position LIMIT 1)`,
+      })
+      .from(listings)
+      .where(eq(listings.ownerUserId, ownerUserId))
+      .orderBy(desc(listings.updatedAt));
+  }
+
   async listMedia(listingId: string) {
     return this.db
       .select({

@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   Inject,
   NotFoundException,
@@ -17,6 +18,7 @@ import type { ApiConfig } from '../config/load';
 import { StripeService } from '../billing/stripe.service';
 import { UsersService } from '../users/users.service';
 import { ListingsRepository } from '../listings/listings.repository';
+import { ListingBoostService } from '../listing-boost/listing-boost.service';
 
 class BoostCheckoutDto {
   @IsUUID() listingId!: string;
@@ -24,12 +26,13 @@ class BoostCheckoutDto {
 }
 
 @Controller('featured')
-@Roles('seller', 'agent', 'partner', 'pro_marketer', 'admin')
+@Roles('buyer', 'seller', 'agent', 'partner', 'pro_marketer', 'admin')
 export class FeaturedController {
   constructor(
     private readonly stripe: StripeService,
     private readonly users: UsersService,
     private readonly listings: ListingsRepository,
+    private readonly boosts: ListingBoostService,
     @Inject(APP_CONFIG) private readonly config: ApiConfig,
   ) {}
 
@@ -50,6 +53,9 @@ export class FeaturedController {
     }
     if (listing.status !== 'published') {
       throw new BadRequestException('listing must be published');
+    }
+    if (await this.boosts.isListingBoosted(dto.listingId)) {
+      throw new ConflictException('listing already has an active boost');
     }
     return { url: await this.stripe.createFeaturedCheckout(dto.listingId, dto.days) };
   }
