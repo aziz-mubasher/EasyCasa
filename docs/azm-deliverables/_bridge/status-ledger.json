@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T19:57:40.332Z",
+  "updatedAt": "2026-08-14T20:25:14.638Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_dacdc348",
+      "kaizenCode": "K EC 1.53",
+      "polishId": "PK-3",
+      "title": "PK-3 analytics enablement — SELLER_ANALYTICS + P7 ledger",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-0e9ab6c8-b4ba-4ed3-9f89-13154f2b43e8",
+      "agentUrl": "https://cursor.com/agents/bc-0e9ab6c8-b4ba-4ed3-9f89-13154f2b43e8",
+      "branch": "cursor/pk3-analytics-enablement-43e8",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-08-14T20:25:14.637Z",
+      "updatedAt": "2026-08-14T20:25:14.637Z",
+      "summary": "PK-3 IN FLIGHT: agent RUNNING; branch tip 8b99459 (P7 ledger + audit) not on main; NO PR yet. VPS already has SELLER_ANALYTICS_ENABLED=true + P7 Attivo (checked out on feature branch — not main). run-d4abce11-… is NOT a bcId — matched bc-0e9ab6c8-….",
+      "nextAction": "Wait for agent to open PR; land branch→main; put VPS back on main; recreate api if needed; authenticated analytics smoke.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_e38c40e8",
       "kaizenCode": "K EC 1.52",
