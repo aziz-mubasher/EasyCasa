@@ -81,6 +81,8 @@ live 8/8: PENDING operator re-run
 expected: Ex2-7 prezzo_base 64906; GT-5 stato non_rilevato|conforme; flags still off
 ```
 
+**Canonical gate status for Claude:** `docs/audits/G1-post-ec34-rnd-report.md`
+
 ---
 
 *End of EC-34 completion feedback for R&D.*

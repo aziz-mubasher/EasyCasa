@@ -1,8 +1,8 @@
 # G1 — Analisi Aste status report (for Claude / R&D)
 
-> **SUPERSEDED for extract-next / hardening briefs (2026-08-13 evening).**  
-> EC-29→33 are **merged + deployed** (tip ≥ `fe1e0c7`). Canonical ledger + human remaining list:  
-> **`docs/audits/aste-g1-hardening-roadmap-ec29-33.md`**.  
+> **SUPERSEDED for extract-next / hardening briefs (2026-08-14).**  
+> EC-29→**34** are **merged + deployed** (tip ≥ `fc64987`). Canonical R&D status:  
+> **`docs/audits/G1-post-ec34-rnd-report.md`** · ledger: **`docs/audits/aste-g1-hardening-roadmap-ec29-33.md`**.  
 > Keep the paste tables below as the **pre–EC-32/33** baseline only. Do **not** re-brief urbanistica / cauzione / valore_stima extract from §4–§6 below.
 
 **Date:** 2026-08-13 (full golden-set re-run)  
