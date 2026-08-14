@@ -5,7 +5,7 @@
 **Scope:** `SELLER_ANALYTICS_ENABLED` + P7 ledger live only — **not** VO (`VERIFIED_OWNER_ENABLED`), P3, checklist rollback, CDN, T25, T19.2  
 **Pattern:** Same shape as PK-2 (`docs/audits/EC-S-pk2-checklist-enablement.md`)
 
-**VPS deploy tip:** after merge of PK-3 PR on `main` (branch `cursor/pk3-analytics-enablement-43e8`).
+**VPS deploy tip:** `8b99459` on branch `cursor/pk3-analytics-enablement-43e8` deployed 2026-08-14T20:24Z (pre-merge).
 
 ## Decisions
 
@@ -67,18 +67,18 @@ Protocol: `promises.json` + `sell-privately.spec.ts` + `promiseLedger.test.ts` (
 
 | Check | Expected | Result |
 |-------|----------|--------|
-| Container `SELLER_ANALYTICS_ENABLED` | `true` | _after deploy_ |
+| Container `SELLER_ANALYTICS_ENABLED` | `true` | **true** (2026-08-14 deploy) |
 | Container `VERIFIED_OWNER_ENABLED` | `false` | **false** (unchanged) |
-| `GET /api/health` | **200** | **200** (pre-flip baseline) |
-| `GET /api/seller/listings/:id/analytics` unauth | **401** (not flag-404 when flag on) | **401** (JWT before flag; baseline) |
-| `GET /api/seller/listings/:id/nudges` unauth | **401** | **401** (baseline) |
-| `/it/vendi-da-privato` no-script HTML — P7 tile | `Attivo` + `Dashboard venditore` | _after web rebuild_ |
-| `/it/vendi-da-privato` P3 tile | `In arrivo` | **PASS** pre-flip — `sp-chip--coming` |
-| `/it/vendi-da-privato` P6 tile | `Attivo` | **PASS** pre-flip — checklist still live |
-| Claim 1–2 regression | EUR savings + portal copy | **PASS** pre-flip — `7.500` + portale copy |
+| `GET /api/health` | **200** | **200** |
+| `GET /api/seller/listings/:id/analytics` unauth | **401** (not flag-404 when flag on) | **401** |
+| `GET /api/seller/listings/:id/nudges` unauth | **401** | **401** |
+| `/it/vendi-da-privato` no-script HTML — P7 tile | `Attivo` + `Dashboard venditore` | **PASS** — `sp-chip--live` + `Attivo` on P7 tile |
+| `/it/vendi-da-privato` P3 tile | `In arrivo` | **PASS** — `sp-chip--coming` |
+| `/it/vendi-da-privato` P6 tile | `Attivo` | **PASS** — checklist still live |
+| Claim 1–2 regression | EUR savings + portal copy | **PASS** — `7.500` + portale copy |
 | Authenticated `/it/seller/listings/<id>/analytics` | windowed metrics + nudge cards | _operator follow-up_ |
-| Nudge copy T04 | data-triggered, no advice framing | see R&D feedback in PR |
-| Analytics data path | non-zero rows for published listings | **PASS pre-flip** — 118 published; 63 listings with rows; 590 total views in `listing_analytics_daily` (no backfill; ~55 listings may show empty charts) |
+| Nudge copy T04 | data-triggered, no advice framing | **PASS** — i18n uses observation framing; see PR R&D |
+| Analytics data path | non-zero rows for published listings | **PASS** — 118 published; 63 listings with rows; 590 total views (no backfill; ~55 listings may show sparse charts) |
 
 ### No-script HTML probe (P7 live)
 
