@@ -264,11 +264,13 @@ Do **not** flip parked PK flags “to try” — each needs an AZM decision.
 
 ## 10. Known gaps (do not file as regressions)
 
-1. No first-class **web onboarding** UI — API onboarding required for new sellers.
-2. No seller web UI for VO submit / checklist / boost buy button / premium upsell (API + billing helpers only).
-3. Viewings / analytics **pages** can render while APIs are flag-dark.
+1. No first-class **web onboarding** UI — API onboarding required for new sellers (**PP-4**).
+2. No seller web UI for VO submit / checklist / boost buy button / premium upsell (API + billing helpers only) — **PP-5** / **PP-6**.
+3. Viewings / analytics **pages** can render while APIs are flag-dark (**V-1:** viewings off as of 2026-08-14).
 4. T25 messaging **HOLD** (PK-5) — inbox is enquiry list, not chat threads.
 5. Empty partner directory paid catalogue → informational banner is **correct** (PK-8).
+
+**Journey plan:** `docs/ec-s-seller-journey-completion.md`.
 
 ---
 *Owner: Ops + Eng. Update when seller flags unpark or onboarding UI ships.*

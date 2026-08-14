@@ -1,9 +1,10 @@
 # EC-S Post-Roadmap Polish Backlog
 
 **Status:** Roadmap v2 (T01–T33) COMPLETE as of `main @ b88ec82` / VPS tip `4879928` (2026-08-13).
-**This doc:** the only remaining EC-S work — polish items (PP) and parked gates (PK). Nothing here blocks live operation.
+**This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
+**Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding + dual inbox on · boost/premium/directory on · paid directory MVP (migration 0064) · Claims 7–8 + G1 + G3 row 9 closed.
+**Live state recap:** ledger claims 1–2 live · seller onboarding + dual inbox on · boost/premium/directory on · paid directory MVP (migration 0064) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API still off (V-1)**.
 
 ---
 
@@ -11,16 +12,27 @@
 
 | ID | Item | Scope | Gate | Est. |
 |----|------|-------|------|------|
+| **PP-4** | **Seller onboarding web form** | Web UI for `POST /seller/onboarding` where wizard raises `onboardingRequired` (name, phone, marketing consent, informativa v1.1). IT/EN/ES. Zero-curl path to publish | None — **dispatch first** (broken first mile) | 1 PR |
+| **PP-5** | **Monetisation purchase UI** | Boost 7/30d buy → `/featured/checkout`; premium upsell + portal → `/billing/checkout` + entitlements. T04 wording | None — **highest revenue leverage** | 1 PR |
+| **PP-6** | **VO + checklist seller UI** | Seller VO submit/state + checklist UI behind existing flags (dark until PK-1/PK-2). Follow C.2 if any new `NEXT_PUBLIC_*` | Build anytime; light with PK-1/PK-2 | 1 PR |
 | PP-1 | **Partner Stripe self-serve checkout** | Stripe Price + checkout for partner flat listing fee; replaces admin-marked `paid_placement`; keep UTM/referral strip; labelled sort unchanged | None (G3 row 9 signed) | 1 PR |
 | PP-2 | **Housekeeping bundle** | (a) promote Service JSON-LD helper to `@easycasa/shared`; (b) SEO i18n pass on `valutazione-gratuita` / `acquisto-assistito` hardcoded EN strings; (c) listing titles on enquiry cards (API returns UUID only — needs small API field) | None | 1 PR |
 | PP-3 | **Static lastmod hygiene** | `STATIC_PAGE_LASTMOD` map is manual — bump on marketing copy changes, or wire to git log date per page | None | trivial |
+
+**Suggested order:** PP-4 → PP-5 → PP-6 → PP-1 → PP-2 (+PP-3 folded).
+
+## A2. Ops verifications
+
+| ID | Item | Result / next |
+|----|------|----------------|
+| **V-1** | Confirm `SELLER_VIEWINGS_ENABLED` on VPS | **2026-08-14:** absent from `.env` → default **`false`**. Page `/seller/viewings` still 200; seller viewing APIs dark. **Flip when AZM wants journey stage 6** (runtime + api recreate, Traefik pair; no web rebuild) |
 
 ## B. Parked gates — need a human decision before any dispatch (DO NOT bundle into other PRs)
 
 | ID | Item | Blocked on | Owner |
 |----|------|-----------|-------|
-| PK-1 | VO flip (`VERIFIED_OWNER_ENABLED`) → P3 ledger live | Product decision (code ready since Phase 2) | AZM |
-| PK-2 | Checklist flip (`SELLER_CHECKLIST_ENABLED`) → P6 live | Product decision | AZM |
+| PK-1 | VO flip (`VERIFIED_OWNER_ENABLED`) → P3 ledger live | Product decision (+ prefer PP-6 UI first) | AZM |
+| PK-2 | Checklist flip (`SELLER_CHECKLIST_ENABLED`) → P6 live | Product decision (+ prefer PP-6 UI first) | AZM |
 | PK-3 | Analytics flip (`SELLER_ANALYTICS_ENABLED`) → P7 live | Product decision | AZM |
 | PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | Bunny DPA signed | AZM / DPO |
 | PK-5 | T25 in-portal messaging | T05 §6.5 controllership determination | Counsel |
@@ -48,6 +60,7 @@
 | Doc | Purpose |
 |-----|---------|
 | `docs/ec-s-roadmap.md` | Completed T01–T33 (authoritative, historical) |
+| `docs/ec-s-seller-journey-completion.md` | **Self-serve journey plan** (stages + PP-4/5/6 + V-1) |
 | `docs/runbooks/seller-dashboard.md` | **SOP — seller dashboard process** (ops/QA) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
 | `docs/audits/EC-S-g1-signoff-enablement.md` | G1 record |
@@ -59,4 +72,4 @@
 | `docs/env.md` | Flag/build-arg documentation |
 
 ---
-*Maintained by Claude (R&D coordination). Update on every PP/PK closure; delete when empty.*
+*Maintained by Claude (R&D coordination). Update on every PP/PK/V closure; delete when empty.*
