@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T20:18:45.339Z",
+  "updatedAt": "2026-08-14T20:25:24.242Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "PK-3",
       "title": "K EC 1.53",
       "venture": "EasyCasa",
-      "lifecycle": "running",
+      "lifecycle": "pr_open",
       "agentStatus": "RUNNING",
       "agentBcId": "bc-0e9ab6c8-b4ba-4ed3-9f89-13154f2b43e8",
       "agentUrl": "https://cursor.com/agents/bc-0e9ab6c8-b4ba-4ed3-9f89-13154f2b43e8",
       "branch": "cursor/pk3-analytics-enablement-43e8",
-      "prNumber": null,
-      "prUrl": null,
-      "prState": null,
+      "prNumber": 160,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/160",
+      "prState": "DRAFT",
       "dispatchedAt": "2026-08-14T20:18:45.339Z",
-      "updatedAt": "2026-08-14T20:18:45.339Z",
-      "summary": "PK-3 ledger flip + audit docs; VPS deploy pending",
-      "nextAction": "Run validation gates, push PR, VPS flip",
+      "updatedAt": "2026-08-14T20:25:24.241Z",
+      "summary": "PK-3 deployed on VPS; P7 Attivo; analytics flag true; PR #160 open",
+      "nextAction": "Merge PR #160; VPS checkout main after merge; authenticated seller smoke",
       "errors": []
     },
     {
