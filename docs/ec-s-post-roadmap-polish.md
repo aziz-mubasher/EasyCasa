@@ -13,7 +13,7 @@
 | ID | Item | Scope | Gate | Est. |
 |----|------|-------|------|------|
 | **PP-4** | **Seller onboarding web form** | Web UI for `POST /seller/onboarding` where wizard raises `onboardingRequired` (name, phone, marketing consent, informativa v1.1). IT/EN/ES. Zero-curl path to publish | **CLOSED 2026-08-14** — PR #150 merged + deployed | done |
-| **PP-5** | **Monetisation purchase UI** | Boost 7/30d buy → `/featured/checkout`; premium upsell + portal → `/billing/checkout` + entitlements. T04 wording | None — **highest revenue leverage** | 1 PR |
+| **PP-5** | **Monetisation purchase UI** | Boost 7/30d buy → `/featured/checkout`; premium upsell + portal → `/billing/checkout` + entitlements. T04 wording | **CLOSED 2026-08-14** — PR #152 merged + deployed (K EC 1.48) | done |
 | **PP-6** | **VO + checklist seller UI** | Seller VO submit/state + checklist UI behind existing flags (dark until PK-1/PK-2). Follow C.2 if any new `NEXT_PUBLIC_*` | Build anytime; light with PK-1/PK-2 | 1 PR |
 | PP-1 | **Partner Stripe self-serve checkout** | Stripe Price + checkout for partner flat listing fee; replaces admin-marked `paid_placement`; keep UTM/referral strip; labelled sort unchanged | None (G3 row 9 signed) | 1 PR |
 | PP-2 | **Housekeeping bundle** | (a) promote Service JSON-LD helper to `@easycasa/shared`; (b) SEO i18n pass on `valutazione-gratuita` / `acquisto-assistito` hardcoded EN strings; (c) listing titles on enquiry cards (API returns UUID only — needs small API field) | None | 1 PR |
