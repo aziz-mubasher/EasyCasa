@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T08:56:57.095Z",
+  "updatedAt": "2026-08-14T09:05:10.000Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_4f931596",
+      "kaizenCode": "K EC 7.3",
+      "polishId": null,
+      "title": "EC-34 Aste regression fix \u2014 lot-bleed / GT-5 stato / Ex7 micro-chunk",
+      "venture": "EasyCasa",
+      "lifecycle": "pr_open",
+      "agentStatus": "IDLE",
+      "agentBcId": "bc-6c2d68f9-0329-4ed8-9f37-9b0cf401c143",
+      "agentUrl": "https://cursor.com/agents/bc-6c2d68f9-0329-4ed8-9f37-9b0cf401c143",
+      "branch": "cursor/ec-34-aste-regression-fix-c143",
+      "prNumber": 154,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/154",
+      "prState": "OPEN",
+      "dispatchedAt": "2026-08-14T08:44:06.292Z",
+      "updatedAt": "2026-08-14T09:05:10.000Z",
+      "summary": "EC-34 PR #154 conflict-resolved vs main; ready to merge.",
+      "nextAction": "Merge #154; deploy ai+api; write EC-34 R&D feedback.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_1edf8ef7",
       "kaizenCode": "K EC 1.49",
@@ -27,7 +47,7 @@
       "bridgeTaskId": "task_ff7e343f",
       "kaizenCode": "K EC 1.48",
       "polishId": "PP-5",
-      "title": "PP-5 Monetisation purchase UI — boost buy + premium upsell",
+      "title": "PP-5 Monetisation purchase UI \u2014 boost buy + premium upsell",
       "venture": "EasyCasa",
       "lifecycle": "merged",
       "agentStatus": "IDLE",
@@ -39,7 +59,7 @@
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T08:00:00.000Z",
       "updatedAt": "2026-08-14T08:21:23.155Z",
-      "summary": "PP-5 / K EC 1.48 MERGED + DEPLOYED at tip 44ceeec. /it/seller/listings + /it/account 200; unauth checkout/entitlements/listings API → 401.",
+      "summary": "PP-5 / K EC 1.48 MERGED + DEPLOYED at tip 44ceeec. /it/seller/listings + /it/account 200; unauth checkout/entitlements/listings API \u2192 401.",
       "nextAction": "Mark Kaizen K EC 1.48 complete; authenticated Stripe buy smoke; dispatch PP-6.",
       "errors": []
     },
@@ -67,7 +87,7 @@
       "bridgeTaskId": "task_89efec62",
       "kaizenCode": "K EC 1.47",
       "polishId": "PP-4",
-      "title": "Seller onboarding web form — close the self-serve first mile",
+      "title": "Seller onboarding web form \u2014 close the self-serve first mile",
       "venture": "EasyCasa",
       "lifecycle": "merged",
       "agentStatus": "IDLE",
@@ -79,7 +99,7 @@
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T06:53:00.000Z",
       "updatedAt": "2026-08-14T07:53:35.895Z",
-      "summary": "PP-4 / K EC 1.47 MERGED + DEPLOYED at tip c67c8ad. Onboarding web live; unauth /seller/me → 401; /it/seller/onboarding → 200.",
+      "summary": "PP-4 / K EC 1.47 MERGED + DEPLOYED at tip c67c8ad. Onboarding web live; unauth /seller/me \u2192 401; /it/seller/onboarding \u2192 200.",
       "nextAction": "Mark Kaizen K EC 1.47 complete; dispatch PP-5; optional authenticated zero-curl smoke.",
       "errors": []
     }

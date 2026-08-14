@@ -796,3 +796,303 @@ def test_split_prioritizes_late_perizia_valore_stima_pages() -> None:
     )
     first_files = {d.file for d in chunks[0]}
     assert "perizia_stima" in first_files
+
+
+# --- EC-34: lot-bleed economics, orphaned stato, stima micro-chunk ---
+
+
+def _two_lot_avviso_page_text() -> str:
+    return (
+        "Quarta vendita senza incanto\n"
+        "Lotto 4\n"
+        "Prezzo base € 36.039,00\n"
+        "Offerta minima € 27.029,25\n"
+        "Cauzione 10% del prezzo base\n"
+        "Lotto 7\n"
+        "Prezzo base € 64.906,00\n"
+        "Offerta minima € 48.680,00\n"
+        "Cauzione 10% del prezzo base\n"
+    )
+
+
+def test_ec34_two_lot_avviso_economics_isolation_both_directions() -> None:
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text = _two_lot_avviso_page_text()
+    page_text_index = {("avviso.pdf", 1): page_text}
+
+    lot4 = empty_extraction(meta_docs)
+    lot4["economics"]["prezzo_base"] = {
+        "value": 36039,
+        "dettaglio": "Lotto 4",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    lot4["economics"]["offerta_minima"] = {
+        "value": 27029.25,
+        "dettaglio": "Lotto 4",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    lot7 = empty_extraction(meta_docs)
+    lot7["economics"]["prezzo_base"] = {
+        "value": 64906,
+        "dettaglio": "Lotto 7",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    lot7["economics"]["offerta_minima"] = {
+        "value": 48680,
+        "dettaglio": "Lotto 7",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+
+    merged4 = merge_extractions(
+        [lot4, lot7], meta_docs, "4", page_text_index=page_text_index
+    )
+    assert merged4["economics"]["prezzo_base"]["value"] == 36039
+    assert merged4["economics"]["offerta_minima"]["value"] == 27029.25
+
+    merged7 = merge_extractions(
+        [lot4, lot7], meta_docs, "7", page_text_index=page_text_index
+    )
+    assert merged7["economics"]["prezzo_base"]["value"] == 64906
+    assert merged7["economics"]["offerta_minima"]["value"] == 48680
+
+
+def test_ec34_two_lot_avviso_occupazione_no_cross_bleed() -> None:
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text_index = {("avviso.pdf", 1): _two_lot_avviso_page_text()}
+
+    lot4_occ = empty_extraction(meta_docs)
+    lot4_occ["giuridica"]["stato_occupazione"] = {
+        "stato": "libero",
+        "dettaglio": "Lotto 4 libero da persone e cose",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+    lot7_occ = empty_extraction(meta_docs)
+    lot7_occ["giuridica"]["stato_occupazione"] = {
+        "stato": "occupato_senza_titolo",
+        "dettaglio": "Lotto 7 occupato senza titolo",
+        "source": {"file": "avviso.pdf", "page": 1},
+    }
+
+    merged4 = merge_extractions(
+        [lot4_occ, lot7_occ], meta_docs, "4", page_text_index=page_text_index
+    )
+    assert merged4["giuridica"]["stato_occupazione"]["stato"] == "libero"
+
+    merged7 = merge_extractions(
+        [lot4_occ, lot7_occ], meta_docs, "7", page_text_index=page_text_index
+    )
+    assert merged7["giuridica"]["stato_occupazione"]["stato"] == "occupato_senza_titolo"
+
+
+def test_ec34_orphaned_non_conforme_stato_becomes_non_rilevato() -> None:
+    meta_docs = [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 5, "ocr_pages": 0}]
+    part = empty_extraction(meta_docs)
+    part["urbanistica"]["conformita_urbanistica"] = {
+        "stato": "non_conforme",
+        "dettaglio": "Lotti A, C, D presentano difformità edilizie",
+        "source": {"file": "perizia.pdf", "page": 3},
+    }
+    part["urbanistica"]["difformita"] = [
+        {
+            "descrizione": "Abuso edilizio lotto A",
+            "sanabile": False,
+            "costo_stimato": None,
+            "source": {"file": "perizia.pdf", "page": 3},
+        }
+    ]
+    merged = merge_extractions([part], meta_docs, "H")
+    assert merged["urbanistica"]["conformita_urbanistica"]["stato"] == "non_rilevato"
+    assert merged["urbanistica"]["difformita"] == []
+    assert "orphaned_conformita_stato_dropped" in merged["meta"]["warnings"]
+
+
+def test_ec34_not_found_reconciled_after_valore_stima_fill() -> None:
+    meta_docs = _meta_docs()
+    part = empty_extraction(meta_docs, not_found=["economics.valore_stima.value"])
+    part["economics"]["valore_stima"] = {
+        "value": 156000,
+        "source": {"file": "perizia.pdf", "page": 31},
+    }
+    merged = merge_extractions([part], meta_docs, "H")
+    assert merged["economics"]["valore_stima"]["value"] == 156000
+    assert "economics.valore_stima" not in merged["meta"]["not_found"]
+    assert "economics.valore_stima.value" not in merged["meta"]["not_found"]
+
+
+def test_ec34_per_lot_cauzione_derive_deterministic_same_avviso() -> None:
+    meta_docs = [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}]
+    page_text = _two_lot_avviso_page_text()
+    page_text_index = {("avviso.pdf", 1): page_text}
+
+    def _part_for_lot(label: str, prezzo: float) -> dict:
+        part = empty_extraction(meta_docs)
+        part["economics"]["prezzo_base"] = {
+            "value": prezzo,
+            "dettaglio": f"Lotto {label}",
+            "source": {"file": "avviso.pdf", "page": 1},
+        }
+        part["economics"]["cauzione"] = {
+            "pct": 10,
+            "base": "prezzo_base",
+            "importo": None,
+            "dettaglio": f"Lotto {label}",
+            "source": {"file": "avviso.pdf", "page": 1},
+        }
+        return part
+
+    merged_a = merge_extractions(
+        [_part_for_lot("A", 130000)], meta_docs, "A", page_text_index=page_text_index
+    )
+    merged_b = merge_extractions(
+        [_part_for_lot("B", 80000)], meta_docs, "B", page_text_index=page_text_index
+    )
+    assert merged_a["economics"]["cauzione"]["importo"] == 13000.0
+    assert merged_b["economics"]["cauzione"]["importo"] == 8000.0
+    assert merged_a["economics"]["cauzione"]["derived"] is True
+    assert merged_b["economics"]["cauzione"]["derived"] is True
+
+
+def test_ec34_stima_microchunk_fills_valore_stima(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+
+    def fake_complete(s, system, user):  # noqa: ARG001
+        calls.append(user)
+        if '"microchunk"' in user:
+            payload = empty_extraction(
+                [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 1, "ocr_pages": 0}],
+                not_found=[],
+            )
+            payload["economics"]["valore_stima"] = {
+                "value": 58056,
+                "dettaglio": "Lotto H valore di mercato CTU",
+                "source": {"file": "perizia.pdf", "page": 25},
+            }
+            return json.dumps(payload)
+        payload = empty_extraction(
+            [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 1, "ocr_pages": 0}],
+            not_found=["economics.valore_stima"],
+        )
+        payload["economics"]["prezzo_base"] = {
+            "value": 50000,
+            "source": {"file": "avviso.pdf", "page": 1},
+        }
+        return json.dumps(payload)
+
+    monkeypatch.setattr(aste_extract, "_complete_long", fake_complete)
+    s = Settings(
+        CHAT_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test",
+        ASTE_STIMA_MICROCHUNK_ENABLED=True,
+    )
+    req = ExtractRequest(
+        language="it",
+        lotto_label="H",
+        documents=[
+            ExtractDocumentIn(
+                file="avviso.pdf",
+                doc_type="avviso",
+                pages=[ExtractPageIn(page=1, text="Lotto H prezzo base 50000")],
+            ),
+            ExtractDocumentIn(
+                file="perizia.pdf",
+                doc_type="perizia",
+                pages=[
+                    ExtractPageIn(
+                        page=25,
+                        text="Lotto H valore di mercato CTU euro 58056 riepilogo valori",
+                    )
+                ],
+            ),
+        ],
+    )
+    out = run_extract(req, settings=s)
+    assert len(calls) == 2
+    assert any('"microchunk"' in c for c in calls)
+    assert out["economics"]["valore_stima"]["value"] == 58056
+    assert "economics.valore_stima" not in out["meta"]["not_found"]
+    assert "stima_microchunk:fill" in out["meta"]["warnings"]
+
+
+def test_ec34_stima_microchunk_skipped_without_perizia(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+
+    def fake_complete(s, system, user):  # noqa: ARG001
+        calls.append(user)
+        payload = empty_extraction(
+            [{"file": "avviso.pdf", "doc_type": "avviso", "pages": 1, "ocr_pages": 0}],
+            not_found=["economics.valore_stima"],
+        )
+        payload["economics"]["prezzo_base"] = {
+            "value": 64906,
+            "source": {"file": "avviso.pdf", "page": 1},
+        }
+        return json.dumps(payload)
+
+    monkeypatch.setattr(aste_extract, "_complete_long", fake_complete)
+    s = Settings(
+        CHAT_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test",
+        ASTE_STIMA_MICROCHUNK_ENABLED=True,
+    )
+    req = ExtractRequest(
+        language="it",
+        lotto_label="7",
+        documents=[
+            ExtractDocumentIn(
+                file="avviso.pdf",
+                doc_type="avviso",
+                pages=[ExtractPageIn(page=1, text="Lotto 7 prezzo base 64906")],
+            )
+        ],
+    )
+    out = run_extract(req, settings=s)
+    assert len(calls) == 1
+    assert out["economics"]["valore_stima"] is None
+    assert "economics.valore_stima" in out["meta"]["not_found"]
+
+
+def test_ec34_stima_microchunk_guard_rejects_suspect(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_complete(s, system, user):  # noqa: ARG001
+        if '"microchunk"' in user:
+            payload = empty_extraction(
+                [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 1, "ocr_pages": 0}],
+                not_found=[],
+            )
+            payload["economics"]["valore_stima"] = {
+                "value": 84,
+                "source": {"file": "perizia.pdf", "page": 16},
+            }
+            return json.dumps(payload)
+        payload = empty_extraction(
+            [{"file": "perizia.pdf", "doc_type": "perizia", "pages": 1, "ocr_pages": 0}],
+            not_found=["economics.valore_stima"],
+        )
+        payload["economics"]["prezzo_base"] = {
+            "value": 84000,
+            "source": {"file": "perizia.pdf", "page": 1},
+        }
+        return json.dumps(payload)
+
+    monkeypatch.setattr(aste_extract, "_complete_long", fake_complete)
+    s = Settings(
+        CHAT_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test",
+        ASTE_STIMA_MICROCHUNK_ENABLED=True,
+    )
+    req = ExtractRequest(
+        language="it",
+        documents=[
+            ExtractDocumentIn(
+                file="perizia.pdf",
+                doc_type="perizia",
+                pages=[
+                    ExtractPageIn(page=16, text="Valore di stima unitario €/mq 84"),
+                    ExtractPageIn(page=1, text="Prezzo base 84000"),
+                ],
+            )
+        ],
+    )
+    out = run_extract(req, settings=s)
+    assert out["economics"]["valore_stima"] is None
+    assert "economics.valore_stima" in out["meta"]["not_found"]
+    assert "valore_stima_suspect" in out["meta"]["warnings"]
