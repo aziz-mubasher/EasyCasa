@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-14T14:27:10.307Z",
+  "updatedAt": "2026-08-14T14:27:29.520Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -12,13 +12,13 @@
       "lifecycle": "pr_open",
       "agentStatus": "IDLE",
       "agentBcId": "bc-1b7ed6a2-d9da-47d3-a505-a82b50298e05",
-      "agentUrl": null,
+      "agentUrl": "https://cursor.com/agents/bc-1b7ed6a2-d9da-47d3-a505-a82b50298e05",
       "branch": "cursor/pp2-pp3-housekeeping-8e05",
       "prNumber": 157,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/157",
       "prState": "DRAFT",
       "dispatchedAt": "2026-08-14T14:27:10.307Z",
-      "updatedAt": "2026-08-14T14:27:10.307Z",
+      "updatedAt": "2026-08-14T14:27:29.520Z",
       "summary": "PP-2+PP-3 eng DONE: draft PR #157 open (MERGEABLE, CI unstable). Agent IDLE. Not merged/deployed. Note: run-ab2afe74-… is NOT a Cursor bcId — matched agent bc-1b7ed6a2-….",
       "nextAction": "Review/merge PR #157; deploy api+web if needed; smoke service pages + seller enquiries listingTitle; close EC-S eng backlog.",
       "errors": []
