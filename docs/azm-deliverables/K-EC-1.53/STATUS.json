@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/160",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-14T20:25:14.637Z",
-  "updatedAt": "2026-08-15T09:30:08.823Z",
-  "summary": "PK-3 MERGED+DEPLOYED; authenticated analytics smoke PASS (views 431); P7 honest; VO dark. Docs on main via #163.",
-  "nextAction": "Mark Kaizen K EC 1.53 complete; PK-1 when moderation ready.",
+  "updatedAt": "2026-08-15T11:26:34.088Z",
+  "summary": "PK-3 MERGED+DEPLOYED; authenticated analytics smoke PASS (views 431); P7 honest. PK-1 now live.",
+  "nextAction": "Mark Kaizen K EC 1.53 complete (if not already).",
   "errors": []
 }
