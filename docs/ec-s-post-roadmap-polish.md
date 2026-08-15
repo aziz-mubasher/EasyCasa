@@ -90,4 +90,4 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/env.md` | Flag/build-arg documentation |
 
 ---
-*Maintained by Claude (R&D coordination). PP-1–PP-6 + PP-2/PP-3 closed 2026-08-14. **PK-2 closed** (K EC 1.52). **PK-3 closed** (K EC 1.53). **EC-S eng backlog empty** — PK-1 (VO) awaits moderation capacity; PK-4+ remain. Update on every PK/V closure.*
+*Maintained by Claude (R&D coordination). PP-1–PP-6 + PP-2/PP-3 closed 2026-08-14. **PK-2 closed** (K EC 1.52). **PK-3 closed** (K EC 1.53). **V-1 auth smoke PASS** + **PP-1 Stripe Price backfill** 2026-08-15. **EC-S eng backlog empty** — PK-1 (VO) awaits moderation capacity; PK-4+ remain. Update on every PK/V closure.*
