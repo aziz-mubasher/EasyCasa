@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T19:16:33.532Z",
+  "updatedAt": "2026-08-15T19:30:00.000Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_s_closeout",
+      "kaizenCode": "K EC 1.56",
+      "polishId": null,
+      "title": "EC-S close-out — verification sweep, DPA decision packet, board reconciliation",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-6d60d0be-2f74-4220-953c-972fae5cc9a3",
+      "agentUrl": "https://cursor.com/agents/bc-6d60d0be-2f74-4220-953c-972fae5cc9a3",
+      "branch": "cursor/ec-s-closeout-k156-c9a3",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-08-15T19:20:00.000Z",
+      "updatedAt": "2026-08-15T19:30:00.000Z",
+      "summary": "VO LIVE (0 cases); P7 sparse (26/118 views); DPA packet OPEN; partner pilot badges; ledger reconcile",
+      "nextAction": "Open draft PR; AZM decide VO staffing + Bunny DPA option; Claude assign PK-5–PK-8 Kaizen codes",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_pk7_pk8",
       "kaizenCode": "PENDING Claude PK-7+8",
@@ -19,8 +39,8 @@
       "prState": "MERGED",
       "dispatchedAt": "2026-08-15T19:08:44.000Z",
       "updatedAt": "2026-08-15T19:16:33.532Z",
-      "summary": "PK-7 residual risk closed; PK-8 7/7 paid Mundida pilots live; tip 940145a on main+VPS; feedback docs/audits/EC-S-pk7-pk8-completion-feedback.md",
-      "nextAction": "Claude assign Kaizen codes; optional replace pilots with real partners",
+      "summary": "PK-7 residual risk closed; PK-8 7/7 paid Mundida pilots live; tip 940145a land-before-PR; operatorManaged fix in K EC 1.56",
+      "nextAction": "Claude assign Kaizen codes (suggest K EC 1.61/1.62); replace pilots with real partners",
       "errors": []
     },
     {
@@ -79,8 +99,8 @@
       "prState": "MERGED",
       "dispatchedAt": "2026-08-15T12:50:43.869Z",
       "updatedAt": "2026-08-15T18:33:18.369Z",
-      "summary": "PK-4 DPA gap CLOSED via AZM residual-risk acceptance 2026-08-15. CDN stays live; T05 §4 still ☐ until DPA cited.",
-      "nextAction": "Optional file Bunny DPA later; remaining EC-S parked PK-5–PK-8 only.",
+      "summary": "PK-4 CDN live; DPA gap OPEN — decision packet docs/audits/EC-S-pk4-dpa-gap.md; T05 §4 ☐ until DPA cited",
+      "nextAction": "AZM choose DPA accept / CDN rollback / residual-risk with expiry (K EC 1.56 packet)",
       "errors": []
     },
     {
@@ -264,7 +284,7 @@
       "errors": []
     },
     {
-      "bridgeTaskId": null,
+      "bridgeTaskId": "task_bridge_feedback",
       "kaizenCode": "bridge-feedback-loop",
       "polishId": null,
       "title": "azm-dev-bridge public status ledger (PR #151)",
