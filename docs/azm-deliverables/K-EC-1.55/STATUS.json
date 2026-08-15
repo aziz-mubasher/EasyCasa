@@ -13,7 +13,7 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/169",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-15T12:50:43.869Z",
-  "updatedAt": "2026-08-15T12:51:02.922Z",
+  "updatedAt": "2026-08-15T12:51:03.043Z",
   "summary": "PK-4 MERGED+DEPLOYED. MEDIA_CDN_ENABLED=true; upload→b-cdn.net PASS; VO MinIO PASS. Docs on main via #169.",
   "nextAction": "Mark Kaizen K EC 1.55 complete; optional cdn.easycasaita.com TLS.",
   "errors": []
