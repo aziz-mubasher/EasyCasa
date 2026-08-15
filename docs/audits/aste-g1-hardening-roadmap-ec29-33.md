@@ -6,7 +6,9 @@
 **Flags:** `ASTE_ANALYSIS_ENABLED` **off** in production. No brief in this set flips any flag.  
 **Board:** Kaizen EC · K EC 7.3 (AI Agent) · Operations · EC-G1-LEDGER  
 
-**Canonical post–EC-35 R&D report:** `docs/audits/G1-post-ec35-rnd-report.md`  
+**Canonical post–EC-35 extract R&D:** `docs/audits/G1-post-ec35-rnd-report.md`  
+**Canonical post–EC-G1-LEDGER R&D (product acceptance):** `docs/audits/G1-ledger-rnd-report.md`  
+**Claude R&D index:** `docs/rnd/README.md`  
 **Supersedes extract-next guidance in** `docs/audits/G1-aste-status-rnd-feedback.md` (that file’s 2026-08-13 paste tables remain the pre–EC-32/33 baseline; do not re-brief urbanistica / cauzione / valore_stima extract work from it).
 
 **Unchanged (explicit):** `ASTE_ANALYSIS_ENABLED` **off** · EC-27 / EC-28 monetization briefs **locked** until G1 fully green · G2 / `docs/runbooks/aste-enable.md` **untouched** · counsel **ANSWERS** gate G2, not G1.

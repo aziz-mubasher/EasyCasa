@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/161",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-14T20:25:00.000Z",
-  "updatedAt": "2026-08-14T20:27:09.139Z",
-  "summary": "G1 eval bar GREEN (product-accepted); G1 pending counsel send only; EC-29→35 complete; flags off",
-  "nextAction": "AZM counsel send → packet sent <date> → flip G1 GREEN",
+  "updatedAt": "2026-08-15T05:35:23.048Z",
+  "summary": "G1 eval GREEN (product-accepted); counsel only open. R&D: docs/audits/G1-ledger-rnd-report.md + docs/rnd/.",
+  "nextAction": "AZM counsel send → packet sent <date>; forward G1-ledger-rnd-report.md to Claude",
   "errors": []
 }
