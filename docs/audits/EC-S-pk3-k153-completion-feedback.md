@@ -1,6 +1,6 @@
 # EC-S PK-3 / K EC 1.53 — completion R&D feedback (for Claude)
 
-**As of tip on `main` + VPS `/opt/easycasa-ita` normalized to `main` (2026-08-15).** Seller analytics + price nudges **LIVE**; Verified Owner **stays dark**. Enablement record: `docs/audits/EC-S-pk3-analytics-enablement.md`.
+**As of tip `6273684` on `main` + VPS `/opt/easycasa-ita` on `main` @ `6273684` (2026-08-15).** Seller analytics + price nudges **LIVE**; Verified Owner **stays dark**. Enablement record: `docs/audits/EC-S-pk3-analytics-enablement.md`.
 
 ## What landed
 
