@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T14:14:04.000Z",
+  "updatedAt": "2026-08-15T14:24:00.000Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "EC-27",
       "title": "EC-27 Aste teaser/full split + Stripe credit packs",
       "venture": "EasyCasa",
-      "lifecycle": "pr_open",
+      "lifecycle": "merged",
       "agentStatus": "IDLE",
       "agentBcId": "bc-451e4b9b-1d89-432c-899b-63f27eccfc32",
       "agentUrl": "https://cursor.com/agents/bc-451e4b9b-1d89-432c-899b-63f27eccfc32",
       "branch": "cursor/ec27-aste-teaser-credits-fc32",
       "prNumber": 171,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/171",
-      "prState": "DRAFT",
+      "prState": "MERGED",
       "dispatchedAt": "2026-08-15T12:59:54.364Z",
-      "updatedAt": "2026-08-15T14:14:04.000Z",
-      "summary": "EC-27: CSS fix + rebase onto main; ready for merge/deploy (flags stay off)",
-      "nextAction": "Merge #171; VPS migrate 0066 + api/web recreate; Stripe prices human",
+      "updatedAt": "2026-08-15T14:24:00.000Z",
+      "summary": "EC-27 MERGED+DEPLOYED tip 66d71b6. Migration 0066 applied. Dual-flag dark (ASTE analysis still off). Stripe Price IDs human.",
+      "nextAction": "AZM Stripe prices + webhook E2E runbook; G2 waits counsel answers. Do not flip ASTE_ANALYSIS_ENABLED.",
       "errors": []
     },
     {
