@@ -1,7 +1,8 @@
 # COUNSEL-EMAIL — Aste packet ready to send (G1)
 
 **Owner:** AZM (human only)  
-**Purpose:** Close the last G1 box — **counsel packet sent**  
+**Status:** **SENT** — `packet sent 2026-08-15 (response requested by 2026-08-29)` → G1 FULL GREEN  
+**Purpose (historical):** Close the last G1 box — **counsel packet sent**  
 **Canonical checklist:** [`counsel-send-checklist.md`](./counsel-send-checklist.md)  
 **Human-close runbook:** [`../runbooks/aste-g1-human-close.md`](../runbooks/aste-g1-human-close.md)  
 **Ledger:** [`../audits/aste-g1-hardening-roadmap-ec29-33.md`](../audits/aste-g1-hardening-roadmap-ec29-33.md)

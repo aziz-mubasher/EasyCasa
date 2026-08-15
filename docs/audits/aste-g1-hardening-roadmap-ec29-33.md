@@ -1,15 +1,17 @@
 # EC Aste — G1 Hardening Roadmap (EC-29 → EC-35)
 
 **Venture:** Easy Casa Italia · repo `aziz-mubasher/EasyCasa`  
-**Updated:** 2026-08-14 (EC-29→35 complete; **eval pass bar GREEN — product-accepted**; G1 pending counsel send only)  
+**Updated:** 2026-08-15 — **G1 FULL GREEN** (`packet sent 2026-08-15`, response requested by **2026-08-29**)  
 **Gate spec:** `docs/runbooks/aste-g1-gate.md` · Public enable: G2 / `docs/runbooks/aste-enable.md`  
-**Flags:** `ASTE_ANALYSIS_ENABLED` **off** in production. No brief in this set flips any flag.  
+**Flags:** `ASTE_ANALYSIS_ENABLED` **off** in production. G1 green does **not** flip any flag.  
 **Board:** Kaizen EC · K EC 7.3 (AI Agent) · Operations · EC-G1-LEDGER  
 
 **Canonical post–EC-35 R&D report:** `docs/audits/G1-post-ec35-rnd-report.md`  
+**G1 full-green flip report:** `docs/audits/G1-full-green-rnd-report.md`  
+**Pre-EC-27 checklist (OPEN):** `docs/runbooks/aste-pre-ec27-checklist.md`  
 **Supersedes extract-next guidance in** `docs/audits/G1-aste-status-rnd-feedback.md` (that file’s 2026-08-13 paste tables remain the pre–EC-32/33 baseline; do not re-brief urbanistica / cauzione / valore_stima extract work from it).
 
-**Unchanged (explicit):** `ASTE_ANALYSIS_ENABLED` **off** · EC-27 / EC-28 monetization briefs **locked** until G1 fully green · G2 / `docs/runbooks/aste-enable.md` **untouched** · counsel **ANSWERS** gate G2, not G1.
+**Unchanged (explicit):** `ASTE_ANALYSIS_ENABLED` **off** · G2 / `docs/runbooks/aste-enable.md` **untouched** until counsel **ANSWERS** + observability + enable smoke · EC-27/EC-28 briefs may be drafted only after pre-EC-27 checklist (a)(b)(c).
 
 ---
 
@@ -21,10 +23,10 @@ Counsel **answers** unlock G2, not G1.
 | G1 piece | Status |
 | --- | --- |
 | Eval pass bar | **GREEN (product-accepted 2026-08-14)** — evidence: post-EC-34 live 8/8 (analysisIds `f97b103c…c7ad0915`: GT-5 stato clean, Ex8 derive parity, not_found reconciled, occupazione bleed resolved, Ex7 stima honest not_found, zero invented values) + EC-35 VPS smoke Ex2-7 **64906/48680** (#158, `_deterministic_lot_auction_economics`; 153850 was other-lot/older-vendita; wrong-only-LLM fixtures). Optional confirmatory Mac run (Example 2 `--lotto 4\|7`) noted as nice-to-have, **not gating**. |
-| Counsel packet sent | **NOT SENT — the only open G1 box.** G1 flips to full GREEN on `packet sent <date>`. |
+| Counsel packet sent | **DONE** — `packet sent 2026-08-15 (response requested by 2026-08-29)` (AZM human confirm) |
 | Waitlist | **WAIVED** (1 lead, 2026-08-11) |
 
-**G1 as a whole is NOT yet green** — eval bar accepted; counsel send remains.
+**G1 as a whole is FULL GREEN (2026-08-15).**
 
 ---
 
@@ -70,7 +72,7 @@ Post-EC-34 live 8/8 `ready` (analysisIds `f97b103c…c7ad0915`). EC-35 closed Ex
 5. Field-specific source priority: auction economics avviso > ordinanza > perizia; valore_stima / occupazione / urbanistica perizia-first; lot filter via `lotto_label`.
 6. Do not re-brief Ex7 400 / chunk size unless regression. Do not re-litigate the runbook invoke section.
 7. Synthetic Italian fixtures only — no real court PDFs in git (third-party PII).
-8. Flags stay off; G2 + `aste-enable.md` govern public enable; never brief EC-27/EC-28 as "G1 green" until the gate ledger says **full G1 green** (counsel sent).
+8. Flags stay off; G2 + `aste-enable.md` govern public enable. G1 is full green as of 2026-08-15; do **not** treat that as flag enable. EC-27/EC-28 require `docs/runbooks/aste-pre-ec27-checklist.md` before dispatch.
 
 ---
 
@@ -96,29 +98,34 @@ Pass-bar checks on the paste tables: economics + page refs all hit; urbanistica.
 
 ---
 
-## Remaining to close G1 (one box)
+## G1 close record
 
-**Operator checklist (AZM):** `docs/runbooks/aste-g1-human-close.md` — counsel send only (eval bar accepted).
+| Item | Status |
+| --- | --- |
+| Counsel email | **SENT** `packet sent 2026-08-15 (response requested by 2026-08-29)` |
+| Operator checklist | `docs/runbooks/aste-g1-human-close.md` Action 2 **DONE** |
+| Ready-to-send draft | `docs/legal/COUNSEL-EMAIL-aste-packet-ready-to-send.md` |
 
-1. **Counsel email** — checklist rows 1–8 (LGL-1 = row 8) → reply `packet sent YYYY-MM-DD (response requested by YYYY-MM-DD)`. **This is the only open G1 box.**
-2. **Drive GT true-score** (recommended, human) — also watch GT-3/Ex4 urbanistica `non_conforme`→`non_rilevato` vs perizia prose.
-3. Board hygiene — link PRs #134/#136/#144/#146/#154/#158 to K EC 7.3.
+**Post-G1 hygiene (not gate boxes):**
+1. Drive GT true-score (recommended) — watch GT-3/Ex4 urbanistica `non_conforme`→`non_rilevato` vs perizia prose.
+2. Board hygiene — link PRs #134/#136/#144/#146/#154/#158 to K EC 7.3.
+3. Await counsel **answers** by 2026-08-29 → feed G2 / `aste-enable.md` (not G1).
 
-**One-line flip when counsel sends:** update counsel row above to `packet sent <date>` → G1 fully green.
-
-After **full** G1 green: EC-27 (payments split) and EC-28 lane work unlock; G2 (flag enable) still requires observability on VPS, counsel EXTERNAL sign-off, and `aste-enable.md` smoke.
+**G2 (flag enable) still requires:** VPS observability, counsel EXTERNAL sign-off (answers), and `aste-enable.md` smoke. Do **not** flip `ASTE_ANALYSIS_ENABLED` from this ledger update.
 
 ---
 
-## Pre-EC-27 checklist (stub — do not dispatch EC-27 until all ✓)
+## Pre-EC-27 checklist — OPEN
 
-| # | Gate | Notes |
+Canonical checklist: **`docs/runbooks/aste-pre-ec27-checklist.md`**.
+
+| # | Gate | Status (2026-08-15) |
 | --- | --- | --- |
-| (a) | **G1 fully green** | Counsel packet **sent** (`packet sent <date>` recorded in this ledger) |
-| (b) | **EC-24 OMI sconto-reale** | Verify tolerates `valore_stima = not_found` (EC-33/34 guards can legitimately clear stima) |
-| (c) | **Drive GT true-score** | Recommended human evidence before monetization lane |
+| (a) | **G1 fully green** | **✓** — this flip |
+| (b) | **EC-24 OMI sconto-reale** tolerates `valore_stima = not_found` | **OPEN** — verify before EC-27 dispatch |
+| (c) | **Drive GT true-score** | **OPEN** — recommended before monetization lane |
 
-EC-27 / EC-28 monetization briefs remain **locked** until (a).
+EC-27 / EC-28 monetization briefs: unlocked for drafting after (a); **do not dispatch build** until (b) ✓ (and preferably (c)).
 
 ---
 
@@ -127,10 +134,9 @@ EC-27 / EC-28 monetization briefs remain **locked** until (a).
 | Check | Result |
 | --- | --- |
 | SHAs on `origin/main` | `57b0f1f` … `fc64987`, **`6f92e31`** (EC-35) on `main` |
-| VPS `/opt/easycasa-ita` | `ai` rebuilt+recreated; in-container smoke lot7 **64906/48680**, lot4 **36039** |
-| Pytest (cloud) | `test_aste_extract.py` **61/61** |
-| Live 8/8 post-EC-34 | **DONE** 2026-08-14 — 8/8 ready; Ex2-7 closed by EC-35 VPS smoke + product acceptance |
+| VPS `/opt/easycasa-ita` | tip past EC-35; prior smoke lot7 **64906/48680**, lot4 **36039** |
+| Live 8/8 post-EC-34 | **DONE** 2026-08-14 |
 | Eval pass bar | **GREEN (product-accepted 2026-08-14)** |
-| Full G1 | **Pending counsel send only** |
-
-**Do not** claim **full** G1 closed or flip `ASTE_ANALYSIS_ENABLED` until `packet sent <date>` lands in this ledger.
+| Counsel packet | **SENT** 2026-08-15 · response by 2026-08-29 |
+| Full G1 | **FULL GREEN** 2026-08-15 |
+| Flags | **`ASTE_ANALYSIS_ENABLED` still off** |
