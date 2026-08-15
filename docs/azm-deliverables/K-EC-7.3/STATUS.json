@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/161",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-14T20:25:00.000Z",
-  "updatedAt": "2026-08-15T05:35:23.048Z",
-  "summary": "G1 eval GREEN (product-accepted); counsel only open. R&D: docs/audits/G1-ledger-rnd-report.md + docs/rnd/.",
-  "nextAction": "AZM counsel send → packet sent <date>; forward G1-ledger-rnd-report.md to Claude",
+  "updatedAt": "2026-08-15T05:59:16.822Z",
+  "summary": "Counsel email READY TO SEND (8 PDFs packed). G1 still NOT SENT. After send: packet sent 2026-08-15 (response by 2026-08-29).",
+  "nextAction": "AZM: send counsel email from info@easycasaita.com with 8 PDFs; reply packet sent line to Claude",
   "errors": []
 }
