@@ -11,6 +11,15 @@ export type PerceptualHashes = {
   dhashBucket: number;
 };
 
+/** Postgres `bigint` is signed int64 — AI hashes must fit or inserts 500. */
+const PG_BIGINT_MAX = 9223372036854775807n;
+const PG_BIGINT_MIN = -9223372036854775808n;
+
+export function toPgInt64OrNull(value: bigint): bigint | null {
+  if (value > PG_BIGINT_MAX || value < PG_BIGINT_MIN) return null;
+  return value;
+}
+
 /** Call AI `/v1/image-hashes` — fail-soft (returns null) if AI down. */
 export async function fetchPerceptualHashes(
   cfg: ApiConfig,
@@ -30,9 +39,13 @@ export async function fetchPerceptualHashes(
       phash: number | string;
       dhashBucket: number;
     };
+    const dhash = toPgInt64OrNull(BigInt(json.dhash));
+    const phash = toPgInt64OrNull(BigInt(json.phash));
+    // Out-of-range unsigned-style hashes must not block listing uploads (PK-4 CDN path).
+    if (dhash == null || phash == null) return null;
     return {
-      dhash: BigInt(json.dhash),
-      phash: BigInt(json.phash),
+      dhash,
+      phash,
       dhashBucket: Number(json.dhashBucket),
     };
   } catch {
