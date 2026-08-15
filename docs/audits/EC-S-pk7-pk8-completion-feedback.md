@@ -5,6 +5,16 @@
 **Kaizen:** **PENDING Claude PK-7+8** (distinct from PK-5/6 pending key — ledger collision lesson)  
 **Bridge:** `task_pk7_pk8`
 
+## Live verification (2026-08-15)
+
+| Check | Result |
+|-------|--------|
+| VPS tip | `7ad2377` |
+| Migration `0069` | **INSERT 0 7** |
+| `GET /api/partners/directory` | **7** items, all `paidPlacement: true`, `labelKey=paidListingLabel` |
+| Claim 1 no-script HTML | `7.500` + `portale` still present |
+| Artifact | `/opt/cursor/artifacts/pk78_deploy_smoke.log` |
+
 ## Outcomes
 
 | ID | Path | Result |
