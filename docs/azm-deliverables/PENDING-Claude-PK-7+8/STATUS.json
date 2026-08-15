@@ -10,11 +10,11 @@
   "agentUrl": "https://cursor.com/agents/bc-8782c3ec-9c1d-4d1c-abcc-189b87886d4e",
   "branch": "cursor/pk7-pk8-enablement-6d4e",
   "prNumber": null,
-  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/commit/3803778",
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/commit/940145a",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-15T19:08:44.000Z",
-  "updatedAt": "2026-08-15T19:16:17.516Z",
-  "summary": "PK-7 residual risk closed; PK-8 7/7 paid Mundida pilots live; tip 3803778 on main+VPS; feedback docs/audits/EC-S-pk7-pk8-completion-feedback.md",
+  "updatedAt": "2026-08-15T19:16:33.532Z",
+  "summary": "PK-7 residual risk closed; PK-8 7/7 paid Mundida pilots live; tip 940145a on main+VPS; feedback docs/audits/EC-S-pk7-pk8-completion-feedback.md",
   "nextAction": "Claude assign Kaizen codes; optional replace pilots with real partners",
   "errors": []
 }

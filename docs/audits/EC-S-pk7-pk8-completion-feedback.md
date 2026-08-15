@@ -10,8 +10,8 @@
 
 | Surface | Tip / state |
 |---------|-------------|
-| `origin/main` | **`4cb3209`** (PK-7/8 + feedback finalize + bridge merged) |
-| VPS `/opt/easycasa-ita` | **`4cb3209`** — `git reset --hard origin/main` |
+| `origin/main` | **`940145a`** (PK-7/8 + feedback finalize + bridge merged) |
+| VPS `/opt/easycasa-ita` | **`940145a`** — `git reset --hard origin/main` |
 | Migration `0069` | Applied — **7** paid rows |
 | API rebuild | **Not required** (SQL seed only) |
 | Web rebuild | **Not required** (directory is API-driven) |
