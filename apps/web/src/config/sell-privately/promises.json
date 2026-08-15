@@ -1,7 +1,7 @@
 {
   "$schema": "./promises.schema.json",
   "version": 1,
-  "updatedAt": "2026-08-14",
+  "updatedAt": "2026-08-15",
   "promises": {
     "P1": {
       "state": "live",
@@ -19,14 +19,14 @@
       "note": "OMI price guidance \u2014 live after T08+T09"
     },
     "P3": {
-      "state": "coming",
+      "state": "live",
       "tasks": [
         "T14",
         "T15",
         "T16",
         "T17"
       ],
-      "note": "Verified Owner / genuine listings"
+      "note": "Verified Owner — live 2026-08-15 (AZM PK-1); VERIFIED_OWNER_ENABLED; moderation capacity confirmed"
     },
     "P4": {
       "state": "live",

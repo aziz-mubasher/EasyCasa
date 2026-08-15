@@ -41,18 +41,18 @@ describe('sell-privately ledger', () => {
     expect(showMediazioneFallback()).toBe(false);
   });
 
-  it('PK-3 exit: P1/P2/P4/P5/P6/P7/P8 live; P3 coming', () => {
+  it('PK-1 exit: P1–P8 all live', () => {
     const byId = Object.fromEntries(
       Object.entries(getSellPrivatelyLedger().promises).map(([id, p]) => [id, p.state]),
     );
     expect(byId.P1).toBe('live');
     expect(byId.P2).toBe('live');
+    expect(byId.P3).toBe('live');
     expect(byId.P4).toBe('live');
     expect(byId.P5).toBe('live');
     expect(byId.P6).toBe('live');
     expect(byId.P7).toBe('live');
     expect(byId.P8).toBe('live');
-    expect(byId.P3).toBe('coming');
   });
 
   it('omits hidden entries from visible lists', () => {
