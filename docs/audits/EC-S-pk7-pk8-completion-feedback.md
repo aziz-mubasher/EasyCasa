@@ -10,8 +10,8 @@
 
 | Surface | Tip / state |
 |---------|-------------|
-| `origin/main` | **`232a7f1`** (PK-7/8 + feedback finalize + bridge merged) |
-| VPS `/opt/easycasa-ita` | **`232a7f1`** — `git reset --hard origin/main` |
+| `origin/main` | **`4cb3209`** (PK-7/8 + feedback finalize + bridge merged) |
+| VPS `/opt/easycasa-ita` | **`4cb3209`** — `git reset --hard origin/main` |
 | Migration `0069` | Applied — **7** paid rows |
 | API rebuild | **Not required** (SQL seed only) |
 | Web rebuild | **Not required** (directory is API-driven) |
@@ -21,7 +21,7 @@
 
 | Check | Result |
 |-------|--------|
-| VPS tip | `232a7f1` |
+| VPS tip | `4cb3209` |
 | Live directory | **7 / 7** paid (`GET https://easycasaita.com/api/partners/directory`) |
 | Pilot sample | `EasyCasa Pilot · Photo · BS`, contact `partner-directory@easycasaita.com` |
 | Claim 1 no-script HTML | `7.500` + `portale, non` still present (PK-7 did not touch copy) |
