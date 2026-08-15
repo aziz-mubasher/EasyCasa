@@ -91,6 +91,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/legal/vendors/bunny-dpa-citation.md` | **PK-4** Bunny DPA Option 1 citation (**CITED**) |
 | `docs/legal/vendors/bunny-dpa-2026-08-15.pdf` | Executed Mundida ↔ BunnyWay DPA v2 (15 Aug 2026) |
 | `docs/audits/EC-S-vo-staffing-decision.md` | **VO** keep-live + reviewers Ibrahim / Silvana |
+| `docs/audits/EC-S-vo-dpa-cite-rnd-report.md` | **VO + Bunny DPA cite** R&D report (for Claude) |
 | `docs/audits/EC-S-closeout-2026-08-15.md` | **K EC 1.56** EC-S close-out verification sweep |
 | `docs/audits/EC-S-pk4-dpa-residual-risk-closeout.md` | **PK-4** residual-risk close-out R&D feedback |
 | `docs/audits/EC-S-pk4-private-doc-leak-check.md` | **PK-4** VO/checklist stay off CDN (PASS 2026-08-15) |
