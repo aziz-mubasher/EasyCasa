@@ -50,7 +50,7 @@
 |----|----------|-------------------|
 | PK-1 / PK-2 | VO + checklist flips (after PP-6 merges) | Stage 4: **PK-2 + PK-1 CLOSED** — checklist + VO live (2026-08-14/15) |
 | PK-3 | Analytics flip | Stage 7 **CLOSED 2026-08-14** — P7 live + analytics/nudges API on |
-| PK-4 | Bunny DPA → CDN | Photo delivery — **CLOSED PK-4 / K EC 1.55** (`MEDIA_CDN_ENABLED=true`; private docs MinIO) |
+| PK-4 | Bunny DPA → CDN | Photo delivery — **CLOSED** CDN live + **AZM residual-risk acceptance** (DPA still not evidenced; T05 ☐) — `docs/audits/EC-S-pk4-dpa-gap.md` |
 | PK-5 | T05 §6.5 → T25 messaging | Stage 5 upgrade: enquiries → chat threads |
 | PK-6 | LIA → T19.2 dup-enforce | Abuse hardening |
 | PK-7 | External counsel countersign | Risk posture on live claims |
