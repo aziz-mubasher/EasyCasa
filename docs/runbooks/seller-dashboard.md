@@ -3,7 +3,7 @@
 **Audience:** Ops / support / QA operators on EasyCasa ITA (`easycasaita.com`).  
 **Scope:** End-to-end private-seller dashboard: identity → onboarding → list → publish → inbox → viewings → analytics → monetisation.  
 **Not in scope:** Agency `/add` wizard, admin VO queue UI details (see admin pages), T25 in-portal messaging (parked).  
-**Live state (post-roadmap):** onboarding + dual inbox **on**; boost / premium / directory **on**; VO / checklist / analytics **parked off**. Canonical open work: `docs/ec-s-post-roadmap-polish.md`.
+**Live state (post-roadmap):** onboarding + dual inbox **on**; boost / premium / directory **on**; **checklist + analytics on** (PK-2/PK-3); VO **parked off**. Canonical open work: `docs/ec-s-post-roadmap-polish.md`.
 
 ---
 
@@ -190,14 +190,16 @@ Prod has no durable `SMOKE_BEARER` by default; PK-3 close-out used an ephemeral 
 
 Unauthenticated probes: **401** (not flag-404) when flags are on.
 
-### Step G — VO / checklist (PP-6 UI live, flags parked)
+### Step G — VO / checklist (PP-6 UI live; checklist lit, VO parked)
 
 **Web (deployed):**
 
 - `/{locale}/seller/listings/<id>/verification` — VO intestatari + multi-file upload + state machine
 - `/{locale}/seller/listings/<id>/documents` — checklist slots + completeness
 
-**API flags (2026-08-14):** `SELLER_CHECKLIST_ENABLED=true` → `/api/seller/checklist/*` returns **401** unauth (not flag-404). `VERIFIED_OWNER_ENABLED=false` → `/api/seller/vo/*` still **404**. Pages always render.
+**API flags (2026-08-14/15):** `SELLER_CHECKLIST_ENABLED=true` → `/api/seller/checklist/*` returns **401** unauth (not flag-404). `VERIFIED_OWNER_ENABLED=false` → `/api/seller/vo/*` still **404** (or JWT-first **401**). Pages always render.
+
+**Honesty check (P6):** unauth **401** + sell-privately P6 **Attivo** is not enough. Confirm authenticated `POST /api/seller/checklist/<id>/docs` (multipart `typeCode` + PDF/JPEG/PNG) returns score `have≥1`, and `GET /api/seller/listings` card includes `trust.docScore`. Confirm public `/api/listings/<slug>` and listing HTML do **not** contain private `docKey` paths. PK-2 close-out used ephemeral Keycloak (same pattern as PK-3); record: `docs/audits/EC-S-pk2-checklist-enablement.md`.
 
 Admin moderation: `https://admin.easycasaita.com/#vo` when VO is on. **Do not flip VO** without AZM (PK-1).
 
@@ -236,6 +238,7 @@ Admin moderation: `https://admin.easycasaita.com/#vo` when VO is on. **Do not fl
 - [ ] `GET /api/seller/entitlements` (auth) 200 when premium on
 - [ ] Parked flags still false unless AZM unparked: VO, CDN (checklist + analytics are live as of PK-2/PK-3)
 - [ ] Authenticated analytics honesty: `GET /api/seller/listings/<id>/analytics?window=30d` → **200** with non-zero rollups on a listing that has daily rows
+- [ ] Authenticated checklist honesty: upload one slot → score `have` increments; seller card `docScore`; public listing has no private `docKey`
 - [ ] Sell-privately no-script HTML still shows Claim 1 EUR + portal copy (regression)
 
 ---

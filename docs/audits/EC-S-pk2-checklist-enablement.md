@@ -71,10 +71,21 @@ Protocol: `promises.json` + `sell-privately.spec.ts` + `promiseLedger.test.ts` (
 | `GET /api/seller/vo` (no listing id) | **404** | **404** |
 | `/it/vendi-da-privato` no-script HTML — P6 tile | `Attivo` + `Checklist documenti` | **PASS** — `sp-chip--live` + `Attivo` on P6 tile |
 | Claim 1–2 regression | EUR savings + portal copy still present | **PASS** — `7.500` + portale copy in no-script HTML |
-| Authenticated seller `/it/seller/listings/<id>/documents` | slots render; upload updates score | _operator follow-up_ |
-| Listing card doc score | visible when checklist on | _operator follow-up_ |
-| Private docs | no public URL on listing page | _operator follow-up_ |
+| Authenticated seller `GET /api/seller/checklist/:id` | empty score `0/4` | **PASS** (2026-08-15) — listing `f05d1508-…` |
+| Authenticated `POST …/docs` (APE PDF) | score → `1/4`, completeness 25 | **PASS** — **201**; private `docKey` under `users/…/docs/checklist/…` |
+| Seller listings card `docScore` | `{ have: 1, total: 4 }` when flag on | **PASS** — `trust.docScore` + `flags.sellerChecklistEnabled=true` |
+| Page `/it/seller/listings/<id>/documents` | SSR loads | **PASS** — **200** |
+| Private docs | no public URL / no `docKey` on public listing | **PASS** — public API + `/it/listings/<slug>` lack private key |
+| Cleanup | ownership restored; KC + checklist row removed | **PASS** |
 | VO badge / surfaces | unchanged (dark) | **PASS** — `VERIFIED_OWNER_ENABLED=false`; no VO badge path lit |
+
+### Authenticated smoke (checklist honesty) — 2026-08-15
+
+Same ephemeral-Keycloak pattern as PK-3 (no durable `SMOKE_BEARER`): confidential client `easycasa-pk2-smoke` + temporary ownership of `demo-mb-monza-115`, upload minimal PDF to slot `APE`, assert score + card `docScore`, assert public surfaces do not leak `docKey`, then remove doc and delete client/user.
+
+Artifact: `/opt/cursor/artifacts/pk2_authenticated_checklist_smoke.log` (`AUTH_SMOKE_COMPLETE … upload=201`).
+
+**Verdict:** P6 is honest — checklist API + seller card score work end-to-end; private docs stay private.
 
 ### No-script HTML probe (P6 live)
 

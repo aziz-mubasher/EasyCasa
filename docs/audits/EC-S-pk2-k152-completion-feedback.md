@@ -1,6 +1,6 @@
 # EC-S PK-2 / K EC 1.52 — completion R&D feedback (for Claude)
 
-**As of tip `d422508` on `main` + VPS `/opt/easycasa-ita` tip `d422508` (2026-08-14).** Document checklist **LIVE**; Verified Owner **stays dark**. Enablement record: `docs/audits/EC-S-pk2-checklist-enablement.md`. VO prep runbook: `docs/runbooks/ec-s-vo-enablement.md` (**do not execute**).
+**As of tip `d422508` on `main` + VPS tip later + authenticated checklist smoke PASS (2026-08-15).** Document checklist **LIVE** and **honest**; Verified Owner **stays dark**. Enablement record: `docs/audits/EC-S-pk2-checklist-enablement.md`. VO prep runbook: `docs/runbooks/ec-s-vo-enablement.md` (**do not execute**).
 
 ## What landed
 
@@ -11,6 +11,7 @@
 | VO | `VERIFIED_OWNER_ENABLED=false` unchanged; P3 stays `coming` |
 | PR | [#159](https://github.com/aziz-mubasher/EasyCasa/pull/159) — residual ledger tip after feat `be8517b` already on main |
 | Bridge | `task_e38c40e8` · agent `bc-0ec20d2c-…` |
+| Auth smoke | Ephemeral KC + APE upload → score `1/4` + card `docScore` → no public leak → cleanup |
 
 ## Deploy smoke (re-verified on merge close-out)
 
@@ -18,8 +19,19 @@
 |-------|--------|
 | Container `SELLER_CHECKLIST_ENABLED` | **true** |
 | Container `VERIFIED_OWNER_ENABLED` | **false** |
-| `GET /api/seller/checklist/me` unauth | **401** (not flag-404) |
+| `GET /api/seller/checklist/:id` unauth | **401** (not flag-404) |
 | `/it/vendi-da-privato` P6 | **Attivo** / `sp-chip--live` + Checklist documenti |
+
+## Authenticated checklist smoke — PASS (2026-08-15)
+
+| Check | Result |
+|-------|--------|
+| Auth GET checklist | **200** — score `0/4` |
+| Auth POST docs (APE) | **201** — score `1/4`, completeness 25 |
+| `GET /seller/listings` card | `trust.docScore` `{have:1,total:4}` |
+| Documents page | **200** |
+| Public leak | none — `docKey` absent from public API/HTML |
+| Cleanup | owner restored; ephemeral KC + checklist row deleted |
 
 ## R&D FEEDBACK — for Claude
 
@@ -39,13 +51,13 @@
 - Ops flip + docs/runbook; correctly one Kaizen. Residual PR was ledger hygiene after direct main land of feat.
 
 ### 5. BLOCKED / NEEDS A HUMAN
-- Mark **K EC 1.52** complete on Kaizen.
-- Operator: authenticated `/seller/listings/<id>/documents` upload → score.
+- Mark **K EC 1.52** complete on Kaizen (Notion MCP needsAuth in this agent).
 - **PK-1** blocked on moderation capacity (named reviewer + SLA) — runbook ready.
 
 ### 6. NEXT TASK SHOULD ACCOUNT FOR
-- Next product gate: **PK-1** (VO) or **PK-3** (analytics).
+- Next product gate: **PK-1** (VO) only — PK-3 analytics already live + auth-smoked.
 - Always set `bridgeTaskId` + correct `prUrl` when upserting (do not reuse stale `existing.prUrl`).
+- Checklist honesty: assert upload → `score.have` + seller-listings `docScore` + no public `docKey` leak (not just unauth 401 + P6 chip).
 
 ## Bridge status
 
@@ -58,8 +70,8 @@ lifecycle: merged
 agentStatus: IDLE
 prUrl: https://github.com/aziz-mubasher/EasyCasa/pull/159
 prState: MERGED
-summary: PK-2 / K EC 1.52 MERGED + DEPLOYED. Checklist live; VO dark; P6 Attivo.
-nextAction: Mark Kaizen K EC 1.52 complete; authenticated checklist smoke; PK-1 when moderation ready.
+summary: PK-2 MERGED+DEPLOYED; authenticated checklist smoke PASS (APE→1/4, no public leak); P6 honest; VO dark.
+nextAction: Mark Kaizen K EC 1.52 complete; PK-1 when moderation ready.
 pollUrl: https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json
 <!-- AZM_BRIDGE_STATUS_END -->
 ```
