@@ -20,6 +20,7 @@ import {
   asteCreditLedger,
   asteReportUnlocks,
 } from '../db/schema';
+import { asteUserHasAnalysisAccess } from './aste-access';
 
 export type AsteEntitlementSnapshot = {
   monetisationEnabled: boolean;
@@ -38,8 +39,9 @@ export class AsteCreditsService {
     private readonly analytics: ProductAnalyticsService,
   ) {}
 
-  monetisationEnabled(): boolean {
-    return this.config.ASTE_ANALYSIS_ENABLED && this.config.PAYMENTS_ENABLED;
+  monetisationEnabled(email?: string): boolean {
+    if (!this.config.PAYMENTS_ENABLED) return false;
+    return asteUserHasAnalysisAccess(this.config, email);
   }
 
   async getBalance(userId: string): Promise<number> {
@@ -62,8 +64,8 @@ export class AsteCreditsService {
     return Boolean(row);
   }
 
-  async getEntitlement(userId: string, analysisId: string): Promise<AsteEntitlementSnapshot> {
-    const monetisationEnabled = this.monetisationEnabled();
+  async getEntitlement(userId: string, analysisId: string, email?: string): Promise<AsteEntitlementSnapshot> {
+    const monetisationEnabled = this.monetisationEnabled(email);
     if (!monetisationEnabled) {
       return { monetisationEnabled: false, unlocked: true, creditBalance: 0 };
     }
@@ -150,8 +152,9 @@ export class AsteCreditsService {
   async unlockReport(
     userId: string,
     analysisId: string,
+    email?: string,
   ): Promise<{ unlocked: boolean; creditBalance: number; alreadyUnlocked: boolean }> {
-    if (!this.monetisationEnabled()) {
+    if (!this.monetisationEnabled(email)) {
       throw new NotFoundException();
     }
 
@@ -228,7 +231,11 @@ export class AsteCreditsService {
         resourceType: 'aste_analysis',
         resourceId: analysisId,
         subjectUserId: userId,
-        reason: `credit_consumed:balance=${creditBalance}`,
+        reason: `credit_consumed:balance=${creditBalance}${
+          !this.config.ASTE_ANALYSIS_ENABLED && this.config.ASTE_INTERNAL_PREVIEW
+            ? ':internal_preview'
+            : ''
+        }`,
       });
       this.analytics.track(PRODUCT_EVENTS.ASTE_REPORT_UNLOCKED, {
         analysisId,

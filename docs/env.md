@@ -84,8 +84,11 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | NEXT_PUBLIC_MAP_STYLE | web (build) | MapLibre basemap style JSON URL (default: OpenFreeMap Liberty — keyless, OSM data). **Rebuild web** after changing. |
 | NEXT_PUBLIC_VALUATION_BAND_ENABLED | web (build) | Show the provisional market valuation band on listing detail and add-listing price step. Must match API `VALUATION_BAND_ENABLED`. Rebuild web after changing. |
 | VALUATION_BAND_ENABLED | api | Serve `GET /listings/:slug/valuation-band` and `POST /avm/band`. Uses OMI cache when populated, else stub comparables. Default `false`. |
-| NEXT_PUBLIC_ASTE_ANALYSIS_ENABLED | web (build) | EC-22 — show dark `/[locale]/aste/analisi` upload UI. Must match API `ASTE_ANALYSIS_ENABLED`. Default `false` (redirects to `/aste`). |
+| NEXT_PUBLIC_ASTE_ANALYSIS_ENABLED | web (build) | EC-22 — show dark `/[locale]/aste/analisi` upload UI. Must match API `ASTE_ANALYSIS_ENABLED`. Default `false` (redirects to `/aste`). **Docker build ARG** (`apps/web/Dockerfile` + `infra/docker-compose.yml`). |
+| NEXT_PUBLIC_ASTE_INTERNAL_PREVIEW | web (build) | EC-36 — mount analisi routes for internal preview while public flag stays off. Requires server allowlist (`ASTE_INTERNAL_PREVIEW_EMAILS` on web runtime). Default `false`. **Docker build ARG**. |
 | ASTE_ANALYSIS_ENABLED | api | EC-22 — authenticated `/aste/analyses*` endpoints. Default `false` → **404**. EC-26 admin `/admin/aste*` is **not** gated by this flag. |
+| ASTE_INTERNAL_PREVIEW | api + web (runtime) | EC-36 — allowlist-gated internal preview on prod while public flag stays off. Default `false`. |
+| ASTE_INTERNAL_PREVIEW_EMAILS | api + web (runtime) | EC-36 — comma-separated Keycloak emails (case-insensitive). Empty ⇒ preview inert. |
 | ASTE_DOCS_RETENTION_DAYS | api | EC-22 — purge aged submitted/failed analyses + MinIO objects (default `365`). **COUNSEL PENDING (LGL-1)**. |
 | AI_INTERNAL_TOKEN | api + ai | EC-23 — shared secret for AI `/aste/*` (`X-EC-Internal`). Empty → Nest cannot call; AI rejects. |
 | ASTE_PIPELINE_POLL_MS | api | EC-23 — worker poll interval (default `10000`). |
@@ -134,7 +137,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | GO_LIVE_PAYMENTS_ACK | api | Explicit human ack before accepting `sk_live_*`. Default `false`. |
 | PAYMENTS_SUCCESS_URL / PAYMENTS_CANCEL_URL | api | Redirect targets for embedded checkout return (web success/cancel pages). |
 | NEXT_PUBLIC_PAYMENTS_ENABLED | web (build) | Shows pay path on `/pricing`. Must match API `PAYMENTS_ENABLED`. Rebuild web after changing. |
-| STRIPE_PRICE_ASTE_CREDITS_1 / _3 / _10 | api | EC-27 — optional Stripe Price IDs for Aste credit packs (1/3/10 full-report unlocks). Empty → test-mode `price_data` fallback. Requires **both** `ASTE_ANALYSIS_ENABLED` and `PAYMENTS_ENABLED`. |
+| STRIPE_PRICE_ASTE_CREDITS_1 / _3 / _10 | api | EC-27 — optional Stripe Price IDs for Aste credit packs (1/3/10 full-report unlocks). Empty → test-mode `price_data` fallback. Requires **payments on** and analysis access (public **or** EC-36 preview allowlist). Live `sk_live_*` checkout refused while `ASTE_ANALYSIS_ENABLED=false`. |
 | NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY | web (build) | Stripe `pk_test_*` / `pk_live_*` for Payment Element. Never commit real keys. |
 | BILLING_SUCCESS_URL / BILLING_CANCEL_URL | api | Checkout redirect targets. |
 | CURRENCY | api | Default charge currency (e.g. `eur`). |

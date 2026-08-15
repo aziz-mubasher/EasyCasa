@@ -5,13 +5,27 @@ import { AsteAnalysisEnabledGuard } from './aste-analysis.guard';
 
 describe('AsteAnalysisEnabledGuard', () => {
   it('404s when flag is off', () => {
-    const guard = new AsteAnalysisEnabledGuard({ ASTE_ANALYSIS_ENABLED: false } as never);
-    expect(() => guard.canActivate()).toThrow(NotFoundException);
+    const guard = new AsteAnalysisEnabledGuard({
+      ASTE_ANALYSIS_ENABLED: false,
+      ASTE_INTERNAL_PREVIEW: false,
+      ASTE_INTERNAL_PREVIEW_EMAILS: '',
+    } as never);
+    expect(() => guard.canActivate({ switchToHttp: () => ({ getRequest: () => ({}) }) } as never)).toThrow(
+      NotFoundException,
+    );
   });
 
-  it('allows when flag is on', () => {
-    const guard = new AsteAnalysisEnabledGuard({ ASTE_ANALYSIS_ENABLED: true } as never);
-    expect(guard.canActivate()).toBe(true);
+  it('allows when public flag is on', () => {
+    const guard = new AsteAnalysisEnabledGuard({
+      ASTE_ANALYSIS_ENABLED: true,
+      ASTE_INTERNAL_PREVIEW: false,
+      ASTE_INTERNAL_PREVIEW_EMAILS: '',
+    } as never);
+    expect(
+      guard.canActivate({
+        switchToHttp: () => ({ getRequest: () => ({ user: { email: 'a@b.com' } }) }),
+      } as never),
+    ).toBe(true);
   });
 });
 
@@ -40,7 +54,6 @@ describe('AsteStorage key layout', () => {
   });
 });
 
-// Keep a smoke create test with a narrow drizzle stub
 describe('AsteAnalysisService.create', () => {
   it('persists draft and emits analytics without PII', async () => {
     const { AsteAnalysisService } = await import('./aste-analysis.service');
@@ -54,6 +67,7 @@ describe('AsteAnalysisService.create', () => {
         tribunale: null,
         rge: null,
         lotto: null,
+        lottoLabel: null,
         dataAsta: null,
         termineOfferte: null,
         addressRaw: null,
@@ -67,6 +81,7 @@ describe('AsteAnalysisService.create', () => {
         failureReason: null,
         attempts: 0,
         processingStartedAt: null,
+        internalPreview: false,
         createdAt: new Date('2026-01-01T00:00:00Z'),
         updatedAt: new Date('2026-01-01T00:00:00Z'),
       },
@@ -76,7 +91,17 @@ describe('AsteAnalysisService.create', () => {
     };
     const storage = { buildKey: vi.fn(), putObject: vi.fn(), deleteObject: vi.fn() };
     const analytics = { track: vi.fn() };
-    const service = new AsteAnalysisService(db as never, storage as never, analytics as never);
+    const audit = { record: vi.fn(async () => ({ id: 'audit-1' })) };
+    const service = new AsteAnalysisService(
+      db as never,
+      {
+        ASTE_ANALYSIS_ENABLED: false,
+        ASTE_INTERNAL_PREVIEW: true,
+      } as never,
+      storage as never,
+      analytics as never,
+      audit as never,
+    );
     const row = await service.create('u1', { language: 'es', register: 'first_buyer' });
     expect(row.id).toBe('a1');
     expect(analytics.track).toHaveBeenCalledWith(
@@ -86,5 +111,9 @@ describe('AsteAnalysisService.create', () => {
     const props = analytics.track.mock.calls[0]![1] as Record<string, unknown>;
     expect(props).not.toHaveProperty('email');
     expect(props).not.toHaveProperty('userId');
+    expect(db.insert).toHaveBeenCalled();
+    expect(audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ action: 'aste.internal_preview_analysis_created' }),
+    );
   });
 });

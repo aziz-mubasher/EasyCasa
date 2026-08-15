@@ -1,11 +1,14 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import { IsIn } from 'class-validator';
 import { Throttle } from '@nestjs/throttler';
 
 import { RequiresAuth } from '../auth/capability.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
+import { AdminAuditService } from '../authority/admin-audit.service';
 import { StripeService } from '../billing/stripe.service';
+import type { ApiConfig } from '../config';
+import { APP_CONFIG } from '../config/config.module';
 import { UsersService } from '../users/users.service';
 import { AsteAnalysisEnabledGuard } from './aste-analysis.guard';
 import { AsteCreditsService } from './aste-credits.service';
@@ -24,6 +27,8 @@ export class AsteCreditsController {
     private readonly credits: AsteCreditsService,
     private readonly stripe: StripeService,
     private readonly users: UsersService,
+    private readonly audit: AdminAuditService,
+    @Inject(APP_CONFIG) private readonly config: ApiConfig,
   ) {}
 
   @Get('balance')
@@ -44,7 +49,17 @@ export class AsteCreditsController {
   async checkout(@CurrentUser() user: AuthUser, @Body() dto: CreditCheckoutDto) {
     const me = await this.users.getOrCreate(user);
     const pack = this.credits.assertPack(dto.pack);
-    const url = await this.stripe.createAsteCreditsCheckout(me.id, me.email ?? undefined, pack);
+    const url = await this.stripe.createAsteCreditsCheckout(me.id, me.email ?? user.email, pack);
+    if (!this.config.ASTE_ANALYSIS_ENABLED && this.config.ASTE_INTERNAL_PREVIEW) {
+      await this.audit.record({
+        actorUserId: me.id,
+        action: 'aste.internal_preview_checkout_started',
+        resourceType: 'aste_credit_balance',
+        resourceId: me.id,
+        subjectUserId: me.id,
+        reason: `pack:${pack}`,
+      });
+    }
     return { url };
   }
 }
@@ -62,6 +77,6 @@ export class AsteUnlockController {
   @Post(':id/unlock')
   async unlock(@CurrentUser() user: AuthUser, @Param('id') analysisId: string) {
     const me = await this.users.getOrCreate(user);
-    return this.credits.unlockReport(me.id, analysisId);
+    return this.credits.unlockReport(me.id, analysisId, me.email ?? user.email);
   }
 }

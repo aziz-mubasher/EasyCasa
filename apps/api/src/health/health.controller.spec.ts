@@ -91,6 +91,8 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     SENTRY_DSN: '',
     VALUATION_BAND_ENABLED: false,
     ASTE_ANALYSIS_ENABLED: false,
+    ASTE_INTERNAL_PREVIEW: false,
+    ASTE_INTERNAL_PREVIEW_EMAILS: '',
     ASTE_DOCS_RETENTION_DAYS: 365,
     AI_URL: 'http://ai:8000',
     AI_INTERNAL_TOKEN: '',

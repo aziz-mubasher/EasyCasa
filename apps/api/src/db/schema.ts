@@ -952,6 +952,8 @@ export const asteAnalyses = pgTable('aste_analyses', {
   attempts: integer('attempts').notNull().default(0),
   /** EC-23 — when status entered processing (stale recovery). */
   processingStartedAt: timestamp('processing_started_at', { withTimezone: true }),
+  /** EC-36 — created during internal preview (purge before public G2 flip). */
+  internalPreview: boolean('internal_preview').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

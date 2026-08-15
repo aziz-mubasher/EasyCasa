@@ -26,6 +26,7 @@ import {
 import { ListingBoostService } from '../listing-boost/listing-boost.service';
 import { SearchService } from '../search/search.service';
 import type { AsteCreditsService } from '../aste/aste-credits.service';
+import { asteUserHasAnalysisAccess, asteCreditsCheckoutBlockedByLiveKey } from '../aste/aste-access';
 
 const SELLER_PREMIUM_PLAN_KEY = 'seller_premium';
 const PARTNER_DIRECTORY_PLAN_KEY = 'partner_directory_placement';
@@ -177,8 +178,13 @@ export class StripeService {
     email: string | undefined,
     pack: AsteCreditPackSize,
   ): Promise<string> {
-    if (!this.config.ASTE_ANALYSIS_ENABLED || !this.config.PAYMENTS_ENABLED) {
+    if (!asteUserHasAnalysisAccess(this.config, email) || !this.config.PAYMENTS_ENABLED) {
       throw new NotFoundException('aste credits not available');
+    }
+    if (asteCreditsCheckoutBlockedByLiveKey(this.config)) {
+      throw new BadRequestException(
+        'Aste credit checkout refused: live Stripe key while public Aste flag is off (use sk_test_* for internal preview)',
+      );
     }
 
     const priceId = this.resolveAsteCreditPriceId(pack);

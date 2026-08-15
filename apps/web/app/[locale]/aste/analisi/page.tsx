@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirect } from '@/i18n/routing';
 import { AsteAnalisiPage } from '@/components/services/AsteAnalisiPage';
-import { asteAnalysisEnabled } from '@/lib/aste-analysis-config';
+import { asteAnalysisRouteAllowed } from '@/lib/aste-access-server';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AsteAnalisiRoute({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  if (!asteAnalysisEnabled()) {
+  if (!(await asteAnalysisRouteAllowed())) {
     redirect({ href: '/aste', locale });
   }
   return <AsteAnalisiPage />;

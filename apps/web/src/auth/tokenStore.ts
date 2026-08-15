@@ -1,4 +1,5 @@
 const ACCESS_KEY = 'ec.access';
+const ACCESS_COOKIE = 'ec_access';
 const REFRESH_KEY = 'ec.refresh';
 const EXPIRY_KEY = 'ec.expiry';
 const PKCE_VERIFIER_KEY = 'ec.pkce_verifier';
@@ -28,7 +29,18 @@ function tokenPersistStore(): Storage | null {
   return window.localStorage;
 }
 
-/** One-time migrate from older sessionStorage-only sessions. */
+function setAccessCookie(access: string, expiresAt: number): void {
+  if (typeof document === 'undefined') return;
+  const maxAge = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+  const secure = typeof location !== 'undefined' && location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie = `${ACCESS_COOKIE}=${encodeURIComponent(access)}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secure}`;
+}
+
+function clearAccessCookie(): void {
+  if (typeof document === 'undefined') return;
+  document.cookie = `${ACCESS_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax`;
+}
+
 function migrateTokensFromSession(): void {
   const ls = tokenPersistStore();
   const ss = sessionStore();
@@ -66,6 +78,7 @@ export const tokenStore = {
     if (!s) return;
     s.setItem(ACCESS_KEY, tokens.accessToken);
     s.setItem(EXPIRY_KEY, String(tokens.expiresAt));
+    setAccessCookie(tokens.accessToken, tokens.expiresAt);
     if (tokens.refreshToken) s.setItem(REFRESH_KEY, tokens.refreshToken);
     else s.removeItem(REFRESH_KEY);
     // Drop any leftover sessionStorage copy from older builds.
@@ -82,6 +95,7 @@ export const tokenStore = {
       s.removeItem(REFRESH_KEY);
       s.removeItem(EXPIRY_KEY);
     }
+    clearAccessCookie();
     const ss = sessionStore();
     ss?.removeItem(ACCESS_KEY);
     ss?.removeItem(REFRESH_KEY);

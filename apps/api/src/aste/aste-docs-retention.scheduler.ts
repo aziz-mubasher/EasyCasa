@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 
 import type { ApiConfig } from '../config';
 import { APP_CONFIG } from '../config/config.module';
+import { astePipelineShouldRun } from './aste-access';
 import { AsteAnalysisService } from './aste-analysis.service';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -9,7 +10,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 /**
  * EC-22 — daily purge of aged aste analyses + MinIO objects.
  * Retention days default 365 (COUNSEL PENDING — LGL-1).
- * No-ops when ASTE_ANALYSIS_ENABLED is false.
+ * No-ops when neither public nor internal preview pipeline is active.
  */
 @Injectable()
 export class AsteDocsRetentionScheduler implements OnModuleInit {
@@ -22,7 +23,7 @@ export class AsteDocsRetentionScheduler implements OnModuleInit {
   ) {}
 
   onModuleInit(): void {
-    if (!this.config.ASTE_ANALYSIS_ENABLED) return;
+    if (!astePipelineShouldRun(this.config)) return;
     const days = this.config.ASTE_DOCS_RETENTION_DAYS;
     void this.runOnce(days);
     this.timer = setInterval(() => {

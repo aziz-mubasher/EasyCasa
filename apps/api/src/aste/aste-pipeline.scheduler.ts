@@ -2,11 +2,12 @@ import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 
 import type { ApiConfig } from '../config';
 import { APP_CONFIG } from '../config/config.module';
+import { astePipelineShouldRun } from './aste-access';
 import { AstePipelineService } from './aste-pipeline.service';
 
 /**
  * EC-23 — in-process setInterval worker (no @nestjs/schedule).
- * Active only when ASTE_ANALYSIS_ENABLED is true. Concurrency 1 via service lock.
+ * Active when public Aste is on or EC-36 internal preview is configured. Concurrency 1 via service lock.
  */
 @Injectable()
 export class AstePipelineScheduler implements OnModuleInit {
@@ -19,7 +20,7 @@ export class AstePipelineScheduler implements OnModuleInit {
   ) {}
 
   onModuleInit(): void {
-    if (!this.config.ASTE_ANALYSIS_ENABLED) return;
+    if (!astePipelineShouldRun(this.config)) return;
     const ms = this.config.ASTE_PIPELINE_POLL_MS;
     void this.runOnce();
     this.timer = setInterval(() => {
