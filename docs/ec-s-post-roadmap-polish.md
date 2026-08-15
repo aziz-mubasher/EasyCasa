@@ -91,6 +91,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pk4-dpa-residual-risk-closeout.md` | **PK-4** residual-risk close-out R&D feedback |
 | `docs/audits/EC-S-pk4-private-doc-leak-check.md` | **PK-4** VO/checklist stay off CDN (PASS 2026-08-15) |
 | `docs/audits/EC-S-pk4-rnd-report.md` | **PK-4** post-merge/deploy R&D report (for Claude) |
+| `docs/audits/EC-S-pk5-pk6-completion-feedback.md` | **PK-5/PK-6** post-deploy completion R&D feedback |
 | `docs/audits/EC-S-pk5-pk6-counsel-determinations.md` | **PK-5/PK-6** AZM §6.5 + LIA determinations |
 | `docs/audits/EC-S-pk5-messaging-enablement.md` | **PK-5** T25 messaging enablement |
 | `docs/audits/EC-S-pk6-dup-enforce-enablement.md` | **PK-6** T19.2 enforce + suspend |

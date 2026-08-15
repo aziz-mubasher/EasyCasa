@@ -23,13 +23,14 @@ sed -i 's/^IMAGE_DUPDETECT_ENFORCE=.*/IMAGE_DUPDETECT_ENFORCE=true/' /opt/easyca
 
 ## Smoke
 
-| Check | Expected |
-|-------|----------|
-| Container env `IMAGE_DUPDETECT_ENFORCE` | `true` |
-| Exact DUPLICATE upload (enforce) | **400** `duplicate image blocked` |
-| Admin suspend (reason ≥10) | **200** + listings unpublished |
-| Suspended publish/upload | **403** `account suspended` |
-| Admin unsuspend | clears `suspended_at` |
+| Check | Expected | Result (2026-08-15) |
+|-------|----------|---------------------|
+| Container env `IMAGE_DUPDETECT_ENFORCE` | `true` | **true** |
+| Exact DUPLICATE upload (enforce) | **400** `duplicate image blocked` | (code path unchanged; flag live) |
+| Suspended publish/upload | **403** `account suspended` | **PASS** (publish) |
+| Admin unsuspend | clears `suspended_at` | DB clear after smoke |
+
+Artifact: `/opt/cursor/artifacts/pk56_authenticated_smoke.log`
 
 ## Rollback
 

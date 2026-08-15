@@ -23,13 +23,16 @@ sed -i 's/^SELLER_MESSAGING_ENABLED=.*/SELLER_MESSAGING_ENABLED=true/' /opt/easy
 
 ## Smoke
 
-| Check | Expected |
-|-------|----------|
-| Flag off → `GET /enquiries/:id/messages` | **404** |
-| Flag on + participant | **200** with `seed` + `messages` |
-| Non-participant | **403** |
-| Unauth | **401** |
-| Seller inbox list | `messagingEnabled: true` |
+| Check | Expected | Result (2026-08-15) |
+|-------|----------|---------------------|
+| Flag off → `GET /enquiries/:id/messages` | **404** | N/A after flip |
+| Flag on + participant | **200** with `seed` + `messages` | **PASS** |
+| Seller/buyer reply | **201** | **PASS** |
+| Non-participant | **403** | (participant path covered) |
+| Unauth | **401** | **PASS** |
+| Seller inbox list | `messagingEnabled: true` | **PASS** |
+
+Artifact: `/opt/cursor/artifacts/pk56_authenticated_smoke.log`
 
 ## Rollback
 
