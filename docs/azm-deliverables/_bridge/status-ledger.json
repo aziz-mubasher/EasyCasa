@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T11:26:34.088Z",
+  "updatedAt": "2026-08-15T12:35:59.076Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -104,23 +104,23 @@
       "errors": []
     },
     {
-      "bridgeTaskId": "task_8d0a770d",
+      "bridgeTaskId": "task_ec24_verify",
       "kaizenCode": "K EC 7.3",
       "polishId": null,
-      "title": "EC-G1 — FULL GREEN (counsel packet sent 2026-08-15)",
+      "title": "EC-24-VERIFY Pre-EC-27 (b) OMI sconto-reale stima not_found",
       "venture": "EasyCasa",
       "lifecycle": "merged",
       "agentStatus": "IDLE",
-      "agentBcId": "bc-7fea1533-0af9-41e9-94fd-740e880be431",
-      "agentUrl": "https://cursor.com/agents/bc-7fea1533-0af9-41e9-94fd-740e880be431",
-      "branch": "cursor/g1-full-green-2145",
-      "prNumber": 161,
-      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/161",
+      "agentBcId": "bc-69db7d02-68f1-4663-8ae9-9d735479dd2c",
+      "agentUrl": "https://cursor.com/agents/bc-69db7d02-68f1-4663-8ae9-9d735479dd2c",
+      "branch": "cursor/ec-24-verify-stima-not-found-dd2c",
+      "prNumber": 170,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/170",
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T20:25:00.000Z",
-      "updatedAt": "2026-08-15T12:28:00.000Z",
-      "summary": "G1 FULL GREEN: eval + packet sent 2026-08-15 (response by 2026-08-29) + waitlist WAIVED. Flags off. Pre-EC-27 checklist open.",
-      "nextAction": "aste-pre-ec27-checklist (b) EC-24 not_found; then EC-27. G2 waits counsel answers.",
+      "updatedAt": "2026-08-15T12:50:00.000Z",
+      "summary": "EC-24-VERIFY PASS — tolerant as-built; tests merged. Pre-EC-27 (b) ✓. Flags still off.",
+      "nextAction": "Dispatch EC-27 payments brief; optional Drive GT (c). G2 waits counsel answers.",
       "errors": []
     },
     {

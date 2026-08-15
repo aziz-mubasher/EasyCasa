@@ -18,6 +18,7 @@ import {
   resolveAsteFinancingTrigger,
 } from '@/lib/aste-financing-trigger';
 import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
+import { formatOmiScontoRealePct, formatReportMoney } from '@/lib/aste-report-display';
 import './aste-report.css';
 
 const SEMAFORO_DIMS = [
@@ -57,12 +58,7 @@ function levelIcon(level: string): string {
 }
 
 function formatMoney(n: number | null | undefined, locale: string): string {
-  if (n == null || !Number.isFinite(n)) return '—';
-  return new Intl.NumberFormat(locale === 'en' ? 'en-GB' : locale === 'es' ? 'es-ES' : 'it-IT', {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 0,
-  }).format(n);
+  return formatReportMoney(n, locale as 'it' | 'en' | 'es');
 }
 
 function Translated({
@@ -785,7 +781,7 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
                 </div>
                 <div>
                   <dt>{t('omi.sconto')}</dt>
-                  <dd>{omi.sconto_reale_pct != null ? `${omi.sconto_reale_pct}%` : '—'}</dd>
+                  <dd>{formatOmiScontoRealePct(omi.sconto_reale_pct)}</dd>
                 </div>
                 <div>
                   <dt>{t('omi.method')}</dt>

@@ -122,10 +122,10 @@ Canonical checklist: **`docs/runbooks/aste-pre-ec27-checklist.md`**.
 | # | Gate | Status (2026-08-15) |
 | --- | --- | --- |
 | (a) | **G1 fully green** | **✓** — this flip |
-| (b) | **EC-24 OMI sconto-reale** tolerates `valore_stima = not_found` | **OPEN** — verify before EC-27 dispatch |
+| (b) | **EC-24 OMI sconto-reale** tolerates `valore_stima = not_found` | **✓ DONE** 2026-08-15 — EC-24-VERIFY (#170): tolerant as-built; regression tests landed |
 | (c) | **Drive GT true-score** | **OPEN** — recommended before monetization lane |
 
-EC-27 / EC-28 monetization briefs: unlocked for drafting after (a); **do not dispatch build** until (b) ✓ (and preferably (c)).
+EC-27 / EC-28 monetization briefs: **(a)(b) ✓** — EC-27 build may be dispatched; prefer (c) before charging real users.
 
 ---
 

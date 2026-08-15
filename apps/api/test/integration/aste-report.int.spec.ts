@@ -12,6 +12,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { computeSemaforo } from '../../src/aste/aste-semaforo';
 import { fixtureReadyExtraction } from '../fixtures/aste/ready-extraction';
+import { fixtureEx2NoPeriziaLotto7 } from '../../src/aste/stima-not-found.fixtures';
 import { dockerAvailable } from './harness';
 import { asUser } from './test-auth';
 
@@ -245,6 +246,72 @@ gate('Aste report (integration EC-24)', () => {
     return { analysisId, periziaId, avvisoId };
   }
 
+  async function seedNotFoundStimaAnalysis() {
+    const created = await request(api()).post('/aste/analyses').set(owner).send({
+      language: 'it',
+      register: 'investor',
+    });
+    expect([200, 201]).toContain(created.status);
+    const analysisId = created.body.id as string;
+
+    const { db } = await import('../../src/db/drizzle');
+    const { asteAnalyses, asteDocuments, omiQuotes } = await import('../../src/db/schema');
+    const { eq } = await import('drizzle-orm');
+
+    const rows = await db.select().from(asteAnalyses).where(eq(asteAnalyses.id, analysisId)).limit(1);
+    const userId = rows[0]!.userId;
+
+    const avvisoId = randomUUID();
+    await db.insert(asteDocuments).values({
+      id: avvisoId,
+      analysisId,
+      minioKey: `users/${userId}/aste/${analysisId}/${avvisoId}/avviso.pdf`,
+      originalFilename: 'avviso-ex2-lotto7.pdf',
+      docType: 'avviso',
+      mime: 'application/pdf',
+      sizeBytes: 80,
+      pageCount: 6,
+      ocrStatus: 'done',
+    });
+
+    const extraction = fixtureEx2NoPeriziaLotto7(avvisoId);
+    const semaforo = computeSemaforo(extraction);
+
+    await db.insert(omiQuotes).values({
+      comune: 'NOCERA INFERIORE',
+      provincia: 'SA',
+      type: 'apartment',
+      minPerM2Cents: 80_000,
+      maxPerM2Cents: 120_000,
+      period: '2024_2',
+      omiZone: 'Z1',
+      linkZona: 'SA-Z1',
+      codTip: 20,
+      stato: 'NORMALE',
+      geoLevel: 'comune',
+      basis: 'zone_median',
+      attribution: 'Fonte: OMI — Agenzia delle Entrate',
+    });
+
+    await db
+      .update(asteAnalyses)
+      .set({
+        status: 'ready',
+        extraction,
+        semaforo,
+        tribunale: 'Nocera Inferiore',
+        rge: '10/2023',
+        lotto: '7',
+        comune: 'Nocera Inferiore',
+        provincia: 'SA',
+        addressRaw: 'Via Example 10',
+        updatedAt: new Date(),
+      })
+      .where(eq(asteAnalyses.id, analysisId));
+
+    return { analysisId, avvisoId };
+  }
+
   it('IT report zero translate; EN translate once then cache; citations use filename; buyer profile', async () => {
     const { analysisId } = await seedReadyAnalysis();
     translateCalls = 0;
@@ -298,5 +365,24 @@ gate('Aste report (integration EC-24)', () => {
 
     const foreign = await request(api()).get(`/aste/analyses/${analysisId}/report`).set(other);
     expect([403, 404]).toContain(foreign.status);
+  });
+
+  it('EC-24-VERIFY: valore_stima not_found — OMI band + null stima pct; no throw', async () => {
+    const { analysisId } = await seedNotFoundStimaAnalysis();
+
+    const res = await request(api()).get(`/aste/analyses/${analysisId}/report?lang=it`).set(owner);
+    expect(res.status).toBe(200);
+    expect(res.body.extraction.economics.valore_stima).toBeNull();
+    expect(res.body.extraction.meta.not_found).toContain('economics.valore_stima');
+    expect(res.body.extraction.economics.cauzione.derived).toBe(true);
+
+    const omi = res.body.omiCheck;
+    expect(omi.available).toBe(true);
+    expect(omi.omi_range).toBeTruthy();
+    expect(omi.valore_stima_vs_omi_pct).toBeNull();
+    expect(omi.sconto_reale_pct == null || Number.isFinite(omi.sconto_reale_pct)).toBe(true);
+    if (omi.sconto_reale_pct != null) {
+      expect(Number.isFinite(omi.sconto_reale_pct)).toBe(true);
+    }
   });
 });
