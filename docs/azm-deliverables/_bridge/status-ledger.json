@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T18:42:33.257Z",
+  "updatedAt": "2026-08-15T18:47:06.026Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "PK-5+PK-6",
       "title": "PK-5 T25 messaging + PK-6 T19.2 dup-enforce/suspend",
       "venture": "EasyCasa",
-      "lifecycle": "running",
+      "lifecycle": "pr_open",
       "agentStatus": "RUNNING",
       "agentBcId": "bc-8782c3ec-9c1d-4d1c-abcc-189b87886d4e",
       "agentUrl": "https://cursor.com/agents/bc-8782c3ec-9c1d-4d1c-abcc-189b87886d4e",
       "branch": "cursor/pk5-pk6-enablement-6d4e",
-      "prNumber": null,
-      "prUrl": null,
-      "prState": null,
+      "prNumber": 173,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/173",
+      "prState": "DRAFT",
       "dispatchedAt": "2026-08-15T18:42:33.257Z",
-      "updatedAt": "2026-08-15T18:42:33.257Z",
-      "summary": "PK-5+PK-6 in progress: recording AZM §6.5 + LIA; building T25 messaging + T19.2 enforce/suspend",
-      "nextAction": "Implement eng, open PR, deploy, smoke",
+      "updatedAt": "2026-08-15T18:47:06.025Z",
+      "summary": "Draft PR #173 open — PK-5 messaging + PK-6 enforce/suspend; testing then deploy",
+      "nextAction": "pnpm test + land :main + VPS migrate/flip",
       "errors": []
     },
     {
