@@ -45,8 +45,9 @@
 - Larger than a pure ops flip: required eng dual-store + hash sanitizer + two api rebuilds. Still correctly one Kaizen.
 
 ### 5. BLOCKED / NEEDS A HUMAN
-- Mark **K EC 1.55** complete on Kaizen (Notion needsAuth).
-- Fix TLS for `cdn.easycasaita.com` if brand hostname desired.
+- Mark **K EC 1.55** complete on Kaizen (Notion needsAuth) — **or replace** with a real Claude-issued Kaizen if board rejects invented codes.
+- **Bunny DPA not evidenced** — close gap (`docs/audits/EC-S-pk4-dpa-gap.md`): cite countersigned DPA, or rollback `MEDIA_CDN_ENABLED`, or accept residual risk in writing.
+- Optional: TLS for `cdn.easycasaita.com` if brand hostname desired.
 - Optional: Bunny purge API key for GDPR erasure; Optimizer width whitelist.
 
 ### 6. NEXT TASK SHOULD ACCOUNT FOR

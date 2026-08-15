@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** · **PK-3 analytics LIVE** · **PK-1 VO LIVE** · **PK-4 Bunny CDN LIVE** (2026-08-15) · **PP-1 partner self-serve checkout LIVE** (Stripe €49) · **PP-2+PP-3 housekeeping live** · paid directory MVP · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP-1/2/3/4/5/6 eng closed** · **PK-1/2/3/4 CLOSED** · **EC-S eng backlog empty** — remaining work is PK-5+ decisions (optional admin VO verify smoke; optional partner pay webhook).
+**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** · **PK-3 analytics LIVE** (auth honesty smoke PASS) · **PK-1 VO LIVE** · **PK-4 Bunny CDN OPS-LIVE** (private-doc leak PASS; **DPA not evidenced**) · **PP-1 partner self-serve checkout LIVE** (Stripe €49) · **PP-2+PP-3 housekeeping live** · paid directory MVP · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP eng closed** · remaining: **PK-4 DPA gap** + **PK-5–PK-8**.
 
 ---
 
@@ -36,7 +36,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | PK-1 | VO flip (`VERIFIED_OWNER_ENABLED`) → P3 ledger live | **CLOSED 2026-08-15** — K EC 1.54; `docs/audits/EC-S-pk1-vo-enablement.md` | done |
 | PK-2 | Checklist flip (`SELLER_CHECKLIST_ENABLED`) → P6 live | **CLOSED 2026-08-14** — K EC 1.52; see `docs/audits/EC-S-pk2-checklist-enablement.md` | done |
 | PK-3 | Analytics flip (`SELLER_ANALYTICS_ENABLED`) → P7 live | **CLOSED 2026-08-14** — K EC 1.53; see `docs/audits/EC-S-pk3-analytics-enablement.md` | done |
-| PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | **CLOSED 2026-08-15** — K EC 1.55; `docs/audits/EC-S-pk4-cdn-enablement.md` | done |
+| PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | **OPS LIVE 2026-08-15** — private-doc leak PASS; **DPA not evidenced** (`docs/audits/EC-S-pk4-dpa-gap.md`) | AZM / DPO |
 | PK-5 | T25 in-portal messaging | T05 §6.5 controllership determination | Counsel |
 | PK-6 | T19.2 dup-enforce + suspend UX | LIA | Counsel |
 | PK-7 | External counsel countersign — Claim 1 EUR figures, Claim 2 wording, packet PDFs | Counsel engagement (recommended: claims are public on product-owner sign-off only) | AZM → counsel |
@@ -57,6 +57,12 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 11. Consent version grammar: no suffixes (`v1.1`, not `v1.1-seller`). Enquiry consent purpose key stays `mediation_disclosure` (historical).
 12. Ledger/copy changes only via dedicated flip protocol (`promises.json` + dual validators + disclosure reconcile + packet boxes). Never bundle parked flips into copy/legal PRs.
 13. Empty paid-partner catalogue ⇒ informational banner is **correct**, not a bug.
+14. **CDN / object-storage briefs (PK-4 lesson):**
+    - **Kaizen code required in the brief** — agents must not invent one. No Kaizen ⇒ do not start; ask Claude/AZM.
+    - **DPA evidence required before CDN enablement** — cite countersigned Bunny.net DPA (doc id / date / storage path). Product-owner “proceed” alone is **not** DPA evidence. Photos are personal data in context.
+    - **Private-MinIO check mandatory** — VO + checklist (`users/…/docs/…`) must stay on MinIO / `MEDIA_PRIVATE_BASE` API proxy. Explicitly verify: no CDN-public URL for private keys; unauth `/api/media/file/users/…` ≠ 200; auth owner can read.
+    - **Live CDN host only** — production Pull Zone is `https://easycasa1.b-cdn.net`. Do **not** invent `cdn.easycasaita.com` (or other hosts) in briefs/docs unless TLS + DNS are verified live.
+    - **Build vs flip** — if dual-store / authZ / URL shaping work is needed, the brief must say **eng build** (and scope it). A one-line “gate flip” is insufficient when private docs already exist (PK-2 live). Same lesson as G3 (ops flip vs eng build).
 
 ## D. Reference docs
 
@@ -81,6 +87,8 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pk3-k153-completion-feedback.md` | **PK-3 / K EC 1.53** post-merge completion R&D feedback |
 | `docs/audits/EC-S-pk4-cdn-enablement.md` | **PK-4 / K EC 1.55** Bunny CDN enablement record |
 | `docs/audits/EC-S-pk4-k155-completion-feedback.md` | **PK-4 / K EC 1.55** post-merge completion R&D feedback |
+| `docs/audits/EC-S-pk4-dpa-gap.md` | **PK-4** Bunny DPA evidence gap (open — needs AZM/DPO) |
+| `docs/audits/EC-S-pk4-private-doc-leak-check.md` | **PK-4** VO/checklist stay off CDN (PASS 2026-08-15) |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
@@ -93,4 +101,4 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/env.md` | Flag/build-arg documentation |
 
 ---
-*Maintained by Claude (R&D coordination). PP-1–PP-6 closed 2026-08-14. **PK-1/2/3/4 closed** (VO + checklist + analytics + Bunny CDN). **V-1 auth smoke** + **PP-1 Stripe Price** 2026-08-15. **EC-S eng backlog empty** — PK-5+ remain. Update on every PK/V closure.*
+*Maintained by Claude (R&D coordination). PP-1–PP-6 closed 2026-08-14. **PK-1/2/3 ops-closed**; **PK-4 CDN ops-live but DPA gap open**. **V-1 auth smoke** + **PP-1 Stripe Price** + **PK-3 analytics honesty smoke** 2026-08-14/15. Standing rule §C.14 added for CDN/storage briefs. Remaining product/counsel: PK-5–PK-8 (+ close PK-4 DPA gap). Update on every PK/V closure.*

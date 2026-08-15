@@ -11,7 +11,7 @@
 
 | # | Precondition | Record |
 |---|--------------|--------|
-| 1 | Bunny.net DPA | **Authorised by AZM proceed** (product-owner gate for T05 §4 / T10). Checkbox updated in `docs/legal/ec-s-t05-seller-data-memo.md`. |
+| 1 | Bunny.net DPA | **NOT EVIDENCED** — AZM “proceed” only; no countersigned DPA cited. Gap record: `docs/audits/EC-S-pk4-dpa-gap.md`. T05 §4 remains open. |
 | 2 | Pull Zone / storage | Live zone `easycasaita`; CDN host **`https://easycasa1.b-cdn.net`** (custom `cdn.easycasaita.com` SSL broken — do not switch until cert fixed). |
 | 3 | Private docs stay off CDN | Eng fix: dedicated MinIO client for `users/` (`resolveMinioObjectStorage` + `putPrivateUserDoc`). |
 | 4 | Listing upload path | `POST /api/media/upload` → Bunny HTTP PUT → `media.url` on CDN. |
@@ -59,12 +59,18 @@ docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml -
 | Auth `POST /media/upload` | **201** + URL on `easycasa1.b-cdn.net` | **PASS** |
 | CDN fetch of new object | **200** | **PASS** |
 | Auth VO submit | **201** `submitted`; `docKeys` under `users/` | **PASS** |
+| Private leak check (VO+checklist) | CDN ≠200; unauth API 401; auth 200; MinIO present | **PASS** — `docs/audits/EC-S-pk4-private-doc-leak-check.md` |
 | Regression VO/checklist gates | still **401** unauth | unchanged |
 
 Artifacts:
 - `/opt/cursor/artifacts/pk4_cdn_flag_verify.log`
 - `/opt/cursor/artifacts/pk4_authenticated_cdn_smoke.log` (`PK4_AUTH_SMOKE_COMPLETE`)
+- `/opt/cursor/artifacts/pk4_private_doc_leak_check.log` (`PK4_PRIVATE_DOC_LEAK_CHECK_PASS`)
 - `/opt/cursor/artifacts/pk4_object_storage_unit.log`
+
+## DPA gap
+
+CDN is **ops-live** without cited countersigned DPA. Do not treat T10 as counsel-cleared. Options: evidence DPA, rollback flag, or accept residual risk — `docs/audits/EC-S-pk4-dpa-gap.md`.
 
 ## Rollback
 
