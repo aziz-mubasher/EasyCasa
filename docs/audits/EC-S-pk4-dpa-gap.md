@@ -1,9 +1,10 @@
 # EC-S PK-4 — Bunny DPA gap decision packet (2026-08-15)
 
-**Status:** **OPEN — Option 1 selected** (AZM 2026-08-15). CDN stays live; **executed DPA citation still PENDING** (dashboard Accept + download).  
-**Citation stub:** `docs/legal/vendors/bunny-dpa-citation.md`  
-**Related:** PK-4 CDN ops-live (`MEDIA_CDN_ENABLED=true`); private-doc leak check PASS (`docs/audits/EC-S-pk4-private-doc-leak-check.md`)  
-**Supersedes:** prior “CLOSED via residual-risk acceptance” wording — product-owner proceed is **not** DPA evidence (§C.14 / standing rules).
+**Status:** **CLOSED — Option 1 complete** (AZM 2026-08-15). Executed Bunny DPA cited; CDN stays live (`MEDIA_CDN_ENABLED=true`).  
+**Citation:** `docs/legal/vendors/bunny-dpa-citation.md`  
+**PDF:** `docs/legal/vendors/bunny-dpa-2026-08-15.pdf` (Mundida ↔ BunnyWay; processing from **15 Aug 2026**)  
+**Related:** PK-4 CDN ops-live; private-doc leak check PASS (`docs/audits/EC-S-pk4-private-doc-leak-check.md`)  
+**Supersedes:** residual-risk acceptance as the standing close path — DPA is now evidenced.
 
 ---
 
@@ -18,73 +19,32 @@
 | **Processing activity** | Storage + global edge delivery of listing images uploaded via `POST /api/media/upload` |
 | **Private docs excluded** | VO/checklist `users/…/docs/…` remain on MinIO / `MEDIA_PRIVATE_BASE` API proxy (PK-4 eng) |
 | **Sub-processors** | Bunny.net edge + storage; see Bunny published list at `https://bunny.net/gdpr/sub-processors/` |
-| **Erasure today** | App deletes DB `media` row + MinIO object; **no Bunny Storage purge API wired** — CDN objects may persist until manual zone purge or TTL |
+| **Erasure today** | App deletes DB `media` row + MinIO object; **no Bunny Storage purge API wired** — CDN objects may persist until manual zone purge or TTL (eng follow-up; not a DPA cite blocker) |
 
 ---
 
-## (b) Three options — precise steps
+## (b) Three options — outcome
 
-### Option 1 — Cite countersigned Bunny DPA (preferred)
-
-1. Log in to Bunny dashboard → **Account → DPA** (`https://dash.bunny.net/account/dpa`).
-2. Review pre-filled DPA → **Accept** → **Download** signed PDF/JSON export.
-3. Store in counsel vault (path TBD — e.g. `docs/legal/vendors/bunny-dpa-YYYY-MM-DD.pdf`, git-ignored if sensitive).
-4. Record in repo: doc id, acceptance date, signatory, storage path (redacted public pointer OK).
-5. Tick T05 §4 checkbox with citation — **no CDN flip required** (already live).
-
-**Rollback risk:** none if DPA acceptable.
-
-### Option 2 — Roll back CDN (`MEDIA_CDN_ENABLED=false`)
-
-```bash
-cd /opt/easycasa-ita
-grep -E '^MEDIA_CDN_ENABLED=' .env
-sed -i 's/^MEDIA_CDN_ENABLED=.*/MEDIA_CDN_ENABLED=false/' .env
-docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml --env-file .env \
-  up -d --no-deps --force-recreate api
-docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml --env-file .env \
-  exec -T api printenv MEDIA_CDN_ENABLED MEDIA_ORIGIN
-```
-
-**Effect:** New listing uploads fall back to MinIO (`object-storage.ts` gate). Existing **588** CDN URLs in DB **remain** until media migration/re-upload — plan a backfill or accept mixed delivery during transition.
-
-**Verify:**
-
-```bash
-curl -fsS -o /dev/null -w '%{http_code}\n' 'https://easycasa1.b-cdn.net/listings/<sample>.webp'
-# Auth upload smoke → URL should NOT be on b-cdn.net when flag off
-```
-
-### Option 3 — Written residual-risk acceptance with close-by date
-
-1. AZM signs a one-page record: CDN stays live until **YYYY-MM-DD**; DPA pursuit owner; max exposure (588 objects, listing photos only).
-2. File under `docs/legal/` or audit trail (like PK-7 residual pattern) with **explicit expiry**.
-3. T05 §4 stays **☐** until Option 1 completes.
-4. Calendar reminder before expiry → force Option 1 or Option 2.
-
-**This agent does not execute Option 3** — AZM only.
+| Option | Result |
+|--------|--------|
+| **1 — Cite countersigned Bunny DPA** | **CHOSEN + COMPLETE** |
+| 2 — Roll back CDN | Not taken |
+| 3 — Residual-risk with expiry | Superseded by Option 1 cite |
 
 ---
 
-## (c) Bunny standard DPA — publication & execution
+## (c) Bunny DPA — execution evidence
 
 | Question | Answer |
 |----------|--------|
-| Does Bunny publish a standard DPA? | **Yes** — account DPA available at `https://dash.bunny.net/account/dpa` (docs: `https://bunny.net/docs/account/data-processing-agreement`) |
-| Is EasyCasa’s DPA executed? | **UNVERIFIED** — requires Bunny dashboard access; not evidenced in repo |
-| Counterparty | BunnyWay d.o.o. (per public DPA template v2, Jul 2024) |
-| Execution mechanism | Click **Accept** in dashboard; download signed copy post-acceptance |
-
----
-
-## (d) GDPR erasure implications
-
-| Path | Today |
-|------|-------|
-| Seller/listing erasure (DSAR) | App logic deletes `media` rows + MinIO keys for private docs |
-| Bunny CDN copy | **Not automatically purged** — no `bunnyHttpDelete` wired for listing masters on erasure (purge API exists for eng follow-up) |
-| Risk | Residual photos on edge cache / storage until manual purge or zone lifecycle |
-| Mitigation options | Wire purge on listing delete; document residual retention in ROPA; or roll back CDN (Option 2) |
+| Does Bunny publish a standard DPA? | **Yes** — `https://dash.bunny.net/account/dpa` |
+| Is EasyCasa / Mundida DPA executed? | **YES** — PDF export dated **15 Aug 2026** |
+| Controller | Mundida, Piazza Roma 8, 25030 Torbole Casaglia, Italy |
+| Processor | BunnyWay, informacijske storitve d.o.o. |
+| Processing start (DPA §2) | **15 Aug 2026** |
+| Repo path | `docs/legal/vendors/bunny-dpa-2026-08-15.pdf` |
+| SHA-256 | `c391dea4c9f4f004f5e394f455c7309fa122d76e987958f9eb3904dafd558b10` |
+| T05 §4 | **☑** |
 
 ---
 
@@ -95,12 +55,12 @@ curl -fsS -o /dev/null -w '%{http_code}\n' 'https://easycasa1.b-cdn.net/listings
 | Chosen option | **1 — Cite countersigned Bunny DPA** |
 | Decided by | **AZM** |
 | Date | **2026-08-15** |
-| DPA doc id / path | **PENDING** — fill `docs/legal/vendors/bunny-dpa-citation.md` after dashboard Accept |
-| Residual-risk expiry | n/a (Option 3 not chosen) |
-| Follow-up owner | **AZM** (Bunny login) → Cursor ticks T05 §4 on cite |
+| DPA doc id / path | `docs/legal/vendors/bunny-dpa-2026-08-15.pdf` · citation `docs/legal/vendors/bunny-dpa-citation.md` |
+| Residual-risk expiry | n/a |
+| Follow-up owner | Eng optional: wire Bunny purge on listing erase |
 
 **CDN action:** none (Option 1 keeps `MEDIA_CDN_ENABLED=true`).
 
 ---
 
-*Packet produced by K EC 1.56 close-out; Option 1 selected 2026-08-15. No `MEDIA_CDN_ENABLED` change.*
+*Packet closed 2026-08-15 after AZM uploaded executed DPA PDF.*

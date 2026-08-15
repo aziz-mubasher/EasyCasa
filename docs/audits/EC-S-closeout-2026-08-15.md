@@ -64,7 +64,7 @@ See full packet: [`EC-S-pk4-dpa-gap.md`](./EC-S-pk4-dpa-gap.md) (reopened **OPEN
 | Private VO/checklist on MinIO | unchanged (PK-4 leak check PASS — not re-run this sweep) |
 | Bunny purge API wired | **No** — erasure path is DB + MinIO only today |
 
-**DPA existence:** Bunny publishes a **standard account DPA** at `https://dash.bunny.net/account/dpa` (accept + download). **AZM chose Option 1** (2026-08-15) — cite countersigned DPA; CDN stays live. Execution **PENDING** dashboard Accept + citation (`docs/legal/vendors/bunny-dpa-citation.md`). Do **not** treat T05 §4 as ticked until doc id + acceptance date + stored path are filled.
+**DPA existence:** **CITED 2026-08-15.** Executed Mundida ↔ BunnyWay Art. 28 DPA v2 (processing from **15 Aug 2026**). PDF `docs/legal/vendors/bunny-dpa-2026-08-15.pdf` · citation `docs/legal/vendors/bunny-dpa-citation.md`. T05 §4 **☑**. CDN unchanged.
 
 ---
 

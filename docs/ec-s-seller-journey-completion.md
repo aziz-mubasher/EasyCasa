@@ -50,7 +50,7 @@
 |----|----------|-------------------|
 | PK-1 / PK-2 | VO + checklist flips (after PP-6 merges) | Stage 4: **PK-2 + PK-1 CLOSED** — checklist + VO live (2026-08-14/15) |
 | PK-3 | Analytics flip | Stage 7 **CLOSED 2026-08-14** — P7 live + analytics/nudges API on |
-| PK-4 | Bunny DPA → CDN | Photo delivery — **CDN LIVE** · **DPA Option 1 selected** — citation PENDING (`docs/legal/vendors/bunny-dpa-citation.md`) |
+| PK-4 | Bunny DPA → CDN | Photo delivery — **CDN LIVE** · **DPA CITED** (`docs/legal/vendors/bunny-dpa-2026-08-15.pdf`) |
 | PK-5 | T05 §6.5 → T25 messaging | **CLOSED 2026-08-15** |
 | PK-6 | LIA → T19.2 dup-enforce | **CLOSED 2026-08-15** |
 | PK-7 | External counsel countersign | **CLOSED 2026-08-15** (residual / product-owner) |

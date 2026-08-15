@@ -224,7 +224,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 |---|---|---|
 | SELLER_ONBOARDING_ENABLED | api | Default `false`. Enable only after signed T05 Layer 1. Routes 404 when off. |
 | INFORMATIVA_SELLER_VERSION | api | Version id stored on `seller_profile`. Empty ⇒ refuse onboarding insert. |
-| MEDIA_CDN_ENABLED | api | Default `false` until Bunny DPA (T05). `MEDIA_ORIGIN=bunny` refused while false. **Live `true` as of PK-4 / K EC 1.55 (2026-08-15)** — listing masters on Bunny; `users/` private docs stay MinIO. See `docs/audits/EC-S-pk4-cdn-enablement.md`. |
+| MEDIA_CDN_ENABLED | api | Default `false` until Bunny DPA (T05). `MEDIA_ORIGIN=bunny` refused while false. **Live `true` as of PK-4 / K EC 1.55 (2026-08-15)** — listing masters on Bunny; `users/` private docs stay MinIO. **DPA cited 2026-08-15** (`docs/legal/vendors/bunny-dpa-2026-08-15.pdf`). See `docs/audits/EC-S-pk4-cdn-enablement.md`. |
 | IMAGE_DUPDETECT_ENFORCE | api | Default `false` (flag-only week). When true, DUPLICATE uploads are blocked. |
 | SELLER_MESSAGING_ENABLED | api | Default `false`. EC-S-T25 enquiry thread messages (`GET/POST /enquiries/:id/messages`) return 404 when off. Inbox list includes `messagingEnabled` so web needs no `NEXT_PUBLIC_*`. Enable after T05 §6.5. |
 | SELLER_MAX_ACTIVE_LISTINGS | api | Default `5`. Hard 429 on listing create when seller has this many **published** listings. Art. 6(1)(b) — not LIA-gated. Soft-parse invalid → default. |

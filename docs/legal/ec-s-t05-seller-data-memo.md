@@ -1,6 +1,6 @@
 # EC-S-T05 — Seller-Side Data Protection Memo + Informativa Extension
 
-**Status:** G1 SIGNED (AZM 2026-08-13) — Layer 1 may ship; version `v1.1`. **§6.5 / §3.1 CLOSED** (AZM 2026-08-15 — hosting carve-out for message content; see below). **Bunny.net DPA: Option 1 selected** (AZM 2026-08-15) — CDN stays live; **executed DPA not yet cited** (`docs/legal/vendors/bunny-dpa-citation.md`). Do **not** treat T10 as counsel-cleared until the citation table is filled.  
+**Status:** G1 SIGNED (AZM 2026-08-13) — Layer 1 may ship; version `v1.1`. **§6.5 / §3.1 CLOSED** (AZM 2026-08-15 — hosting carve-out for message content; see below). **Bunny.net DPA: CITED** (Option 1 — executed PDF `docs/legal/vendors/bunny-dpa-2026-08-15.pdf`; citation `docs/legal/vendors/bunny-dpa-citation.md`). CDN stays live.  
 **Entity:** Mundida S.r.l. / Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Lesson applied:** informativa valid and versioned **before** collection begins (Contatta precedent). No seller-side field ships before this memo's informativa section is approved and versioned in the consent ledger (**T30**).
 
@@ -61,7 +61,7 @@ No new ones beyond the known set (Keycloak self-hosted, MinIO self-hosted, Meili
 
 | Processor | Role | DPA status |
 |-----------|------|------------|
-| Bunny.net | CDN / media delivery | ☐ **Option 1 in progress** — AZM 2026-08-15 chose countersign+cite; CDN stays live; citation PENDING (`docs/legal/vendors/bunny-dpa-citation.md`). Live host `easycasa1.b-cdn.net`. Re-tick ☑ only when citation table is complete. |
+| Bunny.net | CDN / media delivery | ☑ **executed + cited 2026-08-15** — Mundida ↔ BunnyWay Art. 28 DPA v2; processing from **15 Aug 2026**; PDF `docs/legal/vendors/bunny-dpa-2026-08-15.pdf` · citation `docs/legal/vendors/bunny-dpa-citation.md`. Live host `easycasa1.b-cdn.net`. |
 | Stripe | Optional paid services | ☐ already covered · ☐ extend |
 | Brevo | Transactional email | ☐ already covered · ☐ extend |
 
@@ -127,7 +127,7 @@ This extension **increments the policy version**; acceptance/consent records mus
 | Task | Blocked until |
 |------|----------------|
 | **T06** seller onboarding | §5 Layer 1 approved + versioned |
-| **T10** media pipeline | Bunny.net DPA executed (§4) |
+| **T10** media pipeline | Bunny.net DPA executed (§4) — **cleared 2026-08-15** (cited PDF) |
 | **T14 / T18** documents | §6.3 answered |
 | **T25** messaging | §6.5 / §3.1 **answered** (AZM 2026-08-15) — eng may proceed under `SELLER_MESSAGING_ENABLED` |
 | **T30** consent ledger seller purposes | This memo + version string |
@@ -148,4 +148,4 @@ Engineering must not open seller collection UIs that persist new personal data c
 | Layer 1 may ship in T06 | ☑ yes |
 | Policy version to stamp | `v1.1` |
 
-*Not legal advice. §6.5 / §3.1 **closed** AZM 2026-08-15 (hosting carve-out for content). Bunny listing CDN is **ops-live (PK-4)** under **AZM residual-risk acceptance** — DPA still **not evidenced**; do not treat the T10 counsel gate as cleared. Private VO/checklist docs stay on MinIO / API proxy (leak-checked 2026-08-15).*
+*Not legal advice. §6.5 / §3.1 **closed** AZM 2026-08-15 (hosting carve-out for content). Bunny listing CDN is **ops-live (PK-4)** with **executed DPA cited 2026-08-15** (`docs/legal/vendors/bunny-dpa-2026-08-15.pdf`). Private VO/checklist docs stay on MinIO / API proxy (leak-checked 2026-08-15).*
