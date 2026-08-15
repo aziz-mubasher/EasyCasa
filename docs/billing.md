@@ -38,7 +38,7 @@ Stripe handles PCI. The **Customer Portal** manages upgrades/cancellations. Webh
 - `POST /partners/directory/checkout` → `{ url }` — flat-fee placement; gated by `PARTNER_DIRECTORY_ENABLED`.
 - Webhook `checkout.session.completed` with `metadata.kind=partner_directory` sets `paid_placement=true` (perpetual; idempotent via `stripe_payment_id`).
 - Admin manual `paid_placement` on `PATCH /admin/partner-directory/:id` remains the offline fallback.
-- Plan key `partner_directory_placement` — config-driven Stripe Price ID (empty until ops backfill).
+- Plan key `partner_directory_placement` — Stripe Price **backfilled 2026-08-15** (`price_1U4dyaD5t2lALalHXqDTLh8k`, €49.00 one-time). Record: `docs/audits/EC-S-pp1-stripe-price-backfill.md`.
 
 ## Messaging (with spam controls)
 - `POST /conversations` `{ listingId, message }` — starts a thread, rejects spam

@@ -265,4 +265,4 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | Variable | Used by | Notes |
 |---|---|---|
 | PARTNER_DIRECTORY_ENABLED | api | Default `false`. T28/T29 partner directory + G3 paid placement. When off, public + partner self-serve APIs → **404**; web page tolerates dark API. |
-| *(plans row)* `partner_directory_placement` | api/db | PP-1 flat listing fee. Migration `0065` seeds plan with **empty** `stripe_price_id`. **Backfill (AZM):** create Stripe Product + one-time Price in test/live mode, then `UPDATE plans SET stripe_price_id = 'price_…' WHERE key = 'partner_directory_placement';` — no hardcoded amounts in repo. Checkout `POST /partners/directory/checkout` returns **400 plan not purchasable** until backfilled. |
+| *(plans row)* `partner_directory_placement` | api/db | PP-1 flat listing fee. Migration `0065` seeds empty `stripe_price_id`. **Backfilled 2026-08-15 (live):** `price_1U4dyaD5t2lALalHXqDTLh8k` (€49.00 one-time) + `price_cents=4900` — see `docs/audits/EC-S-pp1-stripe-price-backfill.md`. Revise via new Stripe Price + SQL UPDATE (Prices are immutable). |
