@@ -1,6 +1,6 @@
 # EC-S-T05 — Seller-Side Data Protection Memo + Informativa Extension
 
-**Status:** G1 SIGNED (AZM 2026-08-13) — Layer 1 may ship; version `v1.1`. **§6.5 / §3.1 CLOSED** (AZM 2026-08-15 — hosting carve-out for message content; see below). **Bunny.net DPA: not evidenced** — PK-4 CDN ops-live under **AZM residual-risk acceptance** (2026-08-15; `docs/audits/EC-S-pk4-dpa-gap.md`). Do **not** treat T10 as counsel-cleared until a countersigned DPA is cited.  
+**Status:** G1 SIGNED (AZM 2026-08-13) — Layer 1 may ship; version `v1.1`. **§6.5 / §3.1 CLOSED** (AZM 2026-08-15 — hosting carve-out for message content; see below). **Bunny.net DPA: Option 1 selected** (AZM 2026-08-15) — CDN stays live; **executed DPA not yet cited** (`docs/legal/vendors/bunny-dpa-citation.md`). Do **not** treat T10 as counsel-cleared until the citation table is filled.  
 **Entity:** Mundida S.r.l. / Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Lesson applied:** informativa valid and versioned **before** collection begins (Contatta precedent). No seller-side field ships before this memo's informativa section is approved and versioned in the consent ledger (**T30**).
 
@@ -61,7 +61,7 @@ No new ones beyond the known set (Keycloak self-hosted, MinIO self-hosted, Meili
 
 | Processor | Role | DPA status |
 |-----------|------|------------|
-| Bunny.net | CDN / media delivery | ☐ **not evidenced** — PK-4 CDN ops-live; **AZM residual-risk acceptance 2026-08-15** (`docs/audits/EC-S-pk4-dpa-gap.md`). Live host `easycasa1.b-cdn.net`. Re-tick only when countersigned DPA is cited. |
+| Bunny.net | CDN / media delivery | ☐ **Option 1 in progress** — AZM 2026-08-15 chose countersign+cite; CDN stays live; citation PENDING (`docs/legal/vendors/bunny-dpa-citation.md`). Live host `easycasa1.b-cdn.net`. Re-tick ☑ only when citation table is complete. |
 | Stripe | Optional paid services | ☐ already covered · ☐ extend |
 | Brevo | Transactional email | ☐ already covered · ☐ extend |
 

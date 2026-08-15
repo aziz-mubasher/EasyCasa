@@ -14,7 +14,7 @@
 | 1 | Discover | `/vendi-da-privato` (IT/EN/ES), Claim 1–2 live, T33 SEO | ✅ LIVE | — |
 | 2 | Sign up + onboard | OIDC + web onboarding form + `POST /seller/onboarding` + informativa v1.1 | ✅ **LIVE** | **PP-4 merged** — `/seller/onboarding` + wizard gate |
 | 3 | Create listing | `/seller/list` wizard: OMI panel, photos, AI description, autosave, publish, quotas | ✅ LIVE | — |
-| 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | ⚠️ **LIVE but untested** — `VERIFIED_OWNER_ENABLED=true`, P3 Attivo, **0 VO cases**; checklist PK-2 live | AZM: staff reviewers or rollback — `docs/audits/EC-S-closeout-2026-08-15.md` |
+| 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | ✅ **LIVE + staffed** — reviewers **Ibrahim**; **Silvana** (`admin_superadmin`); checklist PK-2 live — `docs/audits/EC-S-vo-staffing-decision.md` | done |
 | 5 | Receive enquiries | `/seller/enquiries`, Verified Buyer badges, mark-read, **listing title + slug on cards**, **in-portal thread (PK-5)** | ✅ LIVE | T25 messaging via `SELLER_MESSAGING_ENABLED` |
 | 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ✅ **LIVE** | **V-1** flag + **auth book/confirm smoke PASS 2026-08-15** (`docs/audits/EC-S-v1-viewings-auth-smoke.md`) |
 | 7 | Steer the sale | analytics + price nudges | ⚠️ **LIVE, sparse** | PK-3 flipped; **26/118** published listings have views; **92** empty — `docs/audits/EC-S-closeout-2026-08-15.md` |
@@ -50,7 +50,7 @@
 |----|----------|-------------------|
 | PK-1 / PK-2 | VO + checklist flips (after PP-6 merges) | Stage 4: **PK-2 + PK-1 CLOSED** — checklist + VO live (2026-08-14/15) |
 | PK-3 | Analytics flip | Stage 7 **CLOSED 2026-08-14** — P7 live + analytics/nudges API on |
-| PK-4 | Bunny DPA → CDN | Photo delivery — **CDN LIVE** · **DPA OPEN** — `docs/audits/EC-S-pk4-dpa-gap.md` |
+| PK-4 | Bunny DPA → CDN | Photo delivery — **CDN LIVE** · **DPA Option 1 selected** — citation PENDING (`docs/legal/vendors/bunny-dpa-citation.md`) |
 | PK-5 | T05 §6.5 → T25 messaging | **CLOSED 2026-08-15** |
 | PK-6 | LIA → T19.2 dup-enforce | **CLOSED 2026-08-15** |
 | PK-7 | External counsel countersign | **CLOSED 2026-08-15** (residual / product-owner) |

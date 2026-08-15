@@ -18,11 +18,12 @@
 
 **Verdict: VO is LIVE.** Routes are gated on (401), container flag is `true`, and the public P3 promise reads **Attivo**.
 
-**AZM decision required (do not flip in this task):**
+**AZM decision (2026-08-15) — CLOSED:**
 
-- PK-1 / K EC 1.54 recorded named reviewers (`muba_operations`, `muba_superadmin`) and a 2-business-day SLA, but **there are zero submissions** since enablement — moderation capacity is untested in production.
-- Options: (a) **keep live** and staff the `#vo` queue before first seller submit; (b) **roll back** `VERIFIED_OWNER_ENABLED=false` + P3 ledger `coming` until a named reviewer confirms active coverage.
-- This agent did **not** change flags or ledger.
+- **Keep VO live.** Named reviewers: **Ibrahim**; **Silvana** (Keycloak role **`admin_superadmin`** → `vo_moderation`).
+- SLA: **2 business days**. Queue: `https://admin.easycasaita.com/#vo`.
+- Record: `docs/audits/EC-S-vo-staffing-decision.md`.
+- Flag/ledger **unchanged** (`VERIFIED_OWNER_ENABLED=true`, P3 Attivo). Submissions still **0** at decision time — first real case will exercise the queue.
 
 ---
 
@@ -63,9 +64,7 @@ See full packet: [`EC-S-pk4-dpa-gap.md`](./EC-S-pk4-dpa-gap.md) (reopened **OPEN
 | Private VO/checklist on MinIO | unchanged (PK-4 leak check PASS — not re-run this sweep) |
 | Bunny purge API wired | **No** — erasure path is DB + MinIO only today |
 
-**DPA existence:** Bunny publishes a **standard account DPA** at `https://dash.bunny.net/account/dpa` (accept + download). Whether **EasyCasa’s account has executed** it is **UNVERIFIED** from this agent (no dashboard access). Do **not** treat T05 §4 as ticked until AZM cites doc id + acceptance date + stored path.
-
-**No flag changes in this task.**
+**DPA existence:** Bunny publishes a **standard account DPA** at `https://dash.bunny.net/account/dpa` (accept + download). **AZM chose Option 1** (2026-08-15) — cite countersigned DPA; CDN stays live. Execution **PENDING** dashboard Accept + citation (`docs/legal/vendors/bunny-dpa-citation.md`). Do **not** treat T05 §4 as ticked until doc id + acceptance date + stored path are filled.
 
 ---
 
@@ -132,13 +131,13 @@ See full packet: [`EC-S-pk4-dpa-gap.md`](./EC-S-pk4-dpa-gap.md) (reopened **OPEN
 |------|--------|
 | Engineering backlog (PP/PK builds) | **Empty** — code shipped |
 | Ops flips PK-1–PK-8 | **Done** on VPS |
-| **Bunny DPA (T05 §4)** | **OPEN** — CDN live without cited executed DPA |
-| **VO moderation** | **OPEN** — live with **0** submissions; capacity untested |
+| **Bunny DPA (T05 §4)** | **OPEN — Option 1 selected** — CDN live; citation PENDING (`docs/legal/vendors/bunny-dpa-citation.md`) |
+| **VO moderation** | **STAFFED / keep live** — reviewers **Ibrahim**; **Silvana** (`admin_superadmin`); **0** submissions at decision |
 | **P7 seller experience** | **Partial** — API works; **78%** of published listings have zero metrics |
 | **Partner directory** | **Fixed presentation** in this PR; still no genuine third-party paid partner |
 | Kaizen board codes | **Stale** — invented 1.54/1.55 + PENDING Claude keys |
 
-**EC-S cannot be called fully closed** until AZM resolves DPA path, VO staffing/rollback, and Claude assigns real Kaizen codes for PK-5–PK-8.
+**EC-S cannot be called fully closed** until the Bunny DPA citation is filed (Option 1), and Claude assigns real Kaizen codes for PK-5–PK-8. VO staffing fork is **closed** (keep live).
 
 ---
 

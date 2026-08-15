@@ -10,7 +10,7 @@
 
 | # | Precondition | Why it blocks PK-1 |
 |---|--------------|-------------------|
-| 1 | **Named VO reviewer(s)** with Keycloak `admin` + realm role granting `admin_operations` or `admin_superadmin` (`vo_moderation` capability) | Queue is useless without a human who can Claim → Verify/Reject |
+| 1 | **Named VO reviewer(s)** with Keycloak `admin` + realm role granting `admin_operations` or `admin_superadmin` (`vo_moderation` capability) | **Active (2026-08-15):** **Ibrahim**; **Silvana** — role **`admin_superadmin`**. Record: `docs/audits/EC-S-vo-staffing-decision.md` |
 | 2 | **Target turnaround SLA** documented (e.g. 2 business days) and communicated to sellers | Submissions sit in `submitted` until claimed; no auto-verify |
 | 3 | **Stall policy** — what sellers see if review exceeds SLA; who escalates | FSM has no seller-facing SLA timer; only `submitted` / `in_review` states |
 | 4 | **Document retention** per T05 §1 — verification docs: outcome + 12m; originals deleted on account deletion | Counsel table still has open checkboxes; ops must not delete docs ad hoc |

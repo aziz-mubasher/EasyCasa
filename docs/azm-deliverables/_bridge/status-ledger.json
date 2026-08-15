@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T19:39:11.784Z",
+  "updatedAt": "2026-08-15T20:16:26.016Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -13,14 +13,14 @@
       "agentStatus": "IDLE",
       "agentBcId": "bc-6d60d0be-2f74-4220-953c-972fae5cc9a3",
       "agentUrl": "https://cursor.com/agents/bc-6d60d0be-2f74-4220-953c-972fae5cc9a3",
-      "branch": "cursor/ec-s-closeout-k156-c9a3",
+      "branch": "cursor/ecs-vo-dpa-decisions-6d4e",
       "prNumber": 174,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/174",
       "prState": "MERGED",
       "dispatchedAt": "2026-08-15T19:20:00.000Z",
-      "updatedAt": "2026-08-15T19:39:11.784Z",
-      "summary": "K EC 1.56 MERGED+DEPLOYED tip 1dc1732. Migration 0070 7/7 operator_managed; api+web live; Gestito badge live. EC-S NOT fully closed (DPA/VO/P7/Kaizen).",
-      "nextAction": "AZM VO staffing or rollback; Bunny DPA option; Claude assign PK-5..8 Kaizen codes; optional close PR #174 UI",
+      "updatedAt": "2026-08-15T20:16:26.016Z",
+      "summary": "VO staffed keep-live (Ibrahim; Silvana admin_superadmin). Bunny DPA Option 1 selected; citation PENDING (T05 §4 still open).",
+      "nextAction": "AZM: Accept Bunny DPA at dash.bunny.net + send PDF/date/path; Cursor ticks T05 §4",
       "errors": []
     },
     {

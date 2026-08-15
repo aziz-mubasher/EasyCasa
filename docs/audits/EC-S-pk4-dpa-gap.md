@@ -1,6 +1,7 @@
 # EC-S PK-4 — Bunny DPA gap decision packet (2026-08-15)
 
-**Status:** **OPEN** — listing photos (personal data in context) are served from `https://easycasa1.b-cdn.net` while **no executed Bunny DPA is cited** in repo counsel records.  
+**Status:** **OPEN — Option 1 selected** (AZM 2026-08-15). CDN stays live; **executed DPA citation still PENDING** (dashboard Accept + download).  
+**Citation stub:** `docs/legal/vendors/bunny-dpa-citation.md`  
 **Related:** PK-4 CDN ops-live (`MEDIA_CDN_ENABLED=true`); private-doc leak check PASS (`docs/audits/EC-S-pk4-private-doc-leak-check.md`)  
 **Supersedes:** prior “CLOSED via residual-risk acceptance” wording — product-owner proceed is **not** DPA evidence (§C.14 / standing rules).
 
@@ -87,17 +88,19 @@ curl -fsS -o /dev/null -w '%{http_code}\n' 'https://easycasa1.b-cdn.net/listings
 
 ---
 
-## Decision record (blank — AZM fill)
+## Decision record
 
 | Field | Value |
 |-------|-------|
-| Chosen option | _1 / 2 / 3_ |
-| Decided by | _AZM_ |
-| Date | _YYYY-MM-DD_ |
-| DPA doc id / path | _if Option 1_ |
-| Residual-risk expiry | _if Option 3_ |
-| Follow-up owner | _name_ |
+| Chosen option | **1 — Cite countersigned Bunny DPA** |
+| Decided by | **AZM** |
+| Date | **2026-08-15** |
+| DPA doc id / path | **PENDING** — fill `docs/legal/vendors/bunny-dpa-citation.md` after dashboard Accept |
+| Residual-risk expiry | n/a (Option 3 not chosen) |
+| Follow-up owner | **AZM** (Bunny login) → Cursor ticks T05 §4 on cite |
+
+**CDN action:** none (Option 1 keeps `MEDIA_CDN_ENABLED=true`).
 
 ---
 
-*Packet produced by K EC 1.56 close-out. No `MEDIA_CDN_ENABLED` change in this task.*
+*Packet produced by K EC 1.56 close-out; Option 1 selected 2026-08-15. No `MEDIA_CDN_ENABLED` change.*

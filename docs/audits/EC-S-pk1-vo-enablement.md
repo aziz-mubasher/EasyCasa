@@ -11,7 +11,7 @@
 
 | # | Precondition | Record |
 |---|--------------|--------|
-| 1 | Named VO reviewer(s) | **Confirmed** — Keycloak users `muba_operations` (`admin_operations`) + `muba_superadmin` (`admin_superadmin`) have `vo_moderation` capability. Queue: `https://admin.easycasaita.com/#vo` |
+| 1 | Named VO reviewer(s) | **Confirmed** — **Ibrahim**; **Silvana** with Keycloak role **`admin_superadmin`** (`vo_moderation`). Queue: `https://admin.easycasaita.com/#vo`. Prior PK-1 accounts `muba_operations` / `muba_superadmin` remain capable; AZM staffing decision 2026-08-15 names Ibrahim & Silvana as active reviewers (`docs/audits/EC-S-vo-staffing-decision.md`). |
 | 2 | Target turnaround SLA | **2 business days** (runbook default; AZM proceed = capacity go) |
 | 3 | Stall policy | Sellers stay on `submitted` / `in_review` until Claim/Verify/Reject; escalate via admin `#vo` |
 | 4 | Doc retention | Acknowledge T05 §1 (outcome + 12m); no bulk purge on this flip |
