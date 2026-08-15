@@ -9,12 +9,12 @@
   "agentBcId": "bc-6d60d0be-2f74-4220-953c-972fae5cc9a3",
   "agentUrl": "https://cursor.com/agents/bc-6d60d0be-2f74-4220-953c-972fae5cc9a3",
   "branch": "cursor/ecs-vo-dpa-decisions-6d4e",
-  "prNumber": 174,
-  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/174",
+  "prNumber": 175,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/175",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-15T19:20:00.000Z",
-  "updatedAt": "2026-08-15T20:16:26.016Z",
-  "summary": "VO staffed keep-live (Ibrahim; Silvana admin_superadmin). Bunny DPA Option 1 selected; citation PENDING (T05 §4 still open).",
+  "updatedAt": "2026-08-15T20:16:47.591Z",
+  "summary": "VO staffed keep-live (Ibrahim; Silvana). Bunny DPA Option 1 selected via #175; citation PENDING (T05 §4 open).",
   "nextAction": "AZM: Accept Bunny DPA at dash.bunny.net + send PDF/date/path; Cursor ticks T05 §4",
   "errors": []
 }
