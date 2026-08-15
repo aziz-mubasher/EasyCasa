@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** (P6 + auth smoke PASS) · **PK-3 analytics LIVE** (P7 + auth smoke PASS) · **VO dark** (PK-1 runbook ready) · **PP-1 partner self-serve checkout LIVE** (Stripe Price backfilled 2026-08-15) · **PP-2+PP-3 housekeeping live** · paid directory MVP (migration 0064/0065) · Claims 7–8 + G1 + G3 row 9 closed · **viewings API on (V-1 2026-08-14)** · **PP-1/2/3/4/5/6 eng closed** · **PK-2 CLOSED** · **PK-3 CLOSED** · PK-1 awaiting moderation capacity · **EC-S eng backlog empty** — remaining work is PK-1/4+ decisions and ops follow-ups (V-1 auth book/confirm; optional paid-purchase webhook smoke).
+**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** (P6 + auth smoke PASS) · **PK-3 analytics LIVE** (P7 + auth smoke PASS) · **VO dark** (PK-1 runbook ready) · **PP-1 partner self-serve checkout LIVE** (Stripe €49 Price; AZM fee OK 2026-08-15) · **PP-2+PP-3 housekeeping live** · paid directory MVP (migration 0064/0065) · Claims 7–8 + G1 + G3 row 9 closed · **viewings LIVE (V-1 + auth book/confirm PASS 2026-08-15)** · **PP-1/2/3/4/5/6 eng closed** · **PK-2 CLOSED** · **PK-3 CLOSED** · PK-1 awaiting moderation capacity · **EC-S eng backlog empty** — remaining work is PK-1/4+ decisions (optional real partner pay webhook smoke).
 
 ---
 
@@ -27,7 +27,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 
 | ID | Item | Result / next |
 |----|------|----------------|
-| **V-1** | Confirm `SELLER_VIEWINGS_ENABLED` on VPS | **CLOSED 2026-08-14:** flipped **`true`** + api recreate (Traefik pair). Unauth seller viewing APIs → 401; page 200. Authenticated book/confirm smoke = still operator follow-up |
+| **V-1** | Confirm `SELLER_VIEWINGS_ENABLED` on VPS | **CLOSED 2026-08-14** flag flip · **auth book/confirm smoke PASS 2026-08-15** — `docs/audits/EC-S-v1-viewings-auth-smoke.md` |
 
 ## B. Parked gates — need a human decision before any dispatch (DO NOT bundle into other PRs)
 
@@ -71,7 +71,9 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pp4-k147-completion-feedback.md` | **PP-4 / K EC 1.47** completion R&D feedback |
 | `docs/audits/EC-S-pp5-k148-completion-feedback.md` | **PP-5 / K EC 1.48** completion R&D feedback |
 | `docs/audits/EC-S-pp6-k149-completion-feedback.md` | **PP-6 / K EC 1.49** completion R&D feedback (UI dark) |
-| `docs/audits/EC-S-pp1-k150-completion-feedback.md` | **PP-1 / K EC 1.50** completion R&D feedback (Stripe Price backfill still needed) |
+| `docs/audits/EC-S-pp1-k150-completion-feedback.md` | **PP-1 / K EC 1.50** completion R&D feedback (Stripe Price backfilled 2026-08-15) |
+| `docs/audits/EC-S-pp1-stripe-price-backfill.md` | **PP-1** live Stripe Price + purchasability smoke |
+| `docs/audits/EC-S-v1-viewings-auth-smoke.md` | **V-1** authenticated book/confirm smoke |
 | `docs/audits/EC-S-pp2-k151-completion-feedback.md` | **PP-2+PP-3 / K EC 1.51** completion R&D feedback (eng backlog empty) |
 | `docs/audits/EC-S-pk2-checklist-enablement.md` | **PK-2 / K EC 1.52** checklist enablement record |
 | `docs/audits/EC-S-pk2-k152-completion-feedback.md` | **PK-2 / K EC 1.52** post-merge completion R&D feedback |

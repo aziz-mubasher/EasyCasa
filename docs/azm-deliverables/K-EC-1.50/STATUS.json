@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/155",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-14T09:40:00.000Z",
-  "updatedAt": "2026-08-15T09:35:57.370Z",
-  "summary": "PP-1 MERGED+DEPLOYED; Stripe Price backfilled (€49 price_1U4dya…); checkoutAvailable true; apply→Checkout URL smoke PASS.",
-  "nextAction": "Mark Kaizen K EC 1.50 complete; optional real-pay webhook smoke; confirm/revise €49 if needed.",
+  "updatedAt": "2026-08-15T09:49:47.040Z",
+  "summary": "PP-1 live; Stripe €49 Price backfilled; AZM fee OK; apply→Checkout smoke PASS.",
+  "nextAction": "Mark Kaizen K EC 1.50 complete; optional real-pay webhook smoke.",
   "errors": []
 }

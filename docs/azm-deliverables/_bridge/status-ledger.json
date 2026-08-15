@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T09:35:57.370Z",
+  "updatedAt": "2026-08-15T09:49:47.066Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -58,9 +58,9 @@
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/157",
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T14:27:10.307Z",
-      "updatedAt": "2026-08-14T14:43:55.289Z",
-      "summary": "PP-2+PP-3 / K EC 1.51 MERGED + DEPLOYED at tip 685b3b5. Service JSON-LD i18n live; enquiries API unauth 401; EC-S eng backlog empty.",
-      "nextAction": "Mark Kaizen K EC 1.51 complete; next PK-1/PK-2 or ops (Stripe Price backfill, viewings smoke).",
+      "updatedAt": "2026-08-15T09:49:47.065Z",
+      "summary": "PP-2+PP-3 MERGED+DEPLOYED; EC-S eng backlog empty; V-1 auth viewings smoke PASS 2026-08-15.",
+      "nextAction": "Mark Kaizen K EC 1.51 complete; PK-1 when moderation ready.",
       "errors": []
     },
     {
@@ -78,9 +78,9 @@
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/155",
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T09:40:00.000Z",
-      "updatedAt": "2026-08-15T09:35:57.370Z",
-      "summary": "PP-1 MERGED+DEPLOYED; Stripe Price backfilled (€49 price_1U4dya…); checkoutAvailable true; apply→Checkout URL smoke PASS.",
-      "nextAction": "Mark Kaizen K EC 1.50 complete; optional real-pay webhook smoke; confirm/revise €49 if needed.",
+      "updatedAt": "2026-08-15T09:49:47.040Z",
+      "summary": "PP-1 live; Stripe €49 Price backfilled; AZM fee OK; apply→Checkout smoke PASS.",
+      "nextAction": "Mark Kaizen K EC 1.50 complete; optional real-pay webhook smoke.",
       "errors": []
     },
     {

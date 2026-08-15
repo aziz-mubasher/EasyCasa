@@ -67,7 +67,7 @@ Optional: complete a real card payment to exercise webhook → `paid_placement=t
 
 ### 5. BLOCKED / NEEDS A HUMAN
 - Mark **K EC 1.50** complete on Kaizen (Notion MCP needsAuth here).
-- Confirm or revise €49 launch fee if product wants a different amount (new Stripe Price + UPDATE).
+- Confirm or revise €49 launch fee if product wants a different amount (new Stripe Price + UPDATE). → **AZM confirmed €49 OK (2026-08-15).**
 - Optional: real card → webhook → paid badge + preferential sort smoke.
 - Forward this feedback + status block to Claude.
 

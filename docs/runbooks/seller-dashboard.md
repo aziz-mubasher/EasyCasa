@@ -151,11 +151,15 @@ curl -fsS -H "Authorization: Bearer $TOKEN" https://easycasaita.com/api/seller/m
 
 **Dual-flag check:** if page is dark 404 but API returns 401 unauth → web build missing `NEXT_PUBLIC_SELLER_INBOX_ENABLED`. Rebuild web with Docker ARG (see §7).
 
-### Step D — Viewings
+### Step D — Viewings (V-1 live)
 
-1. Set availability: `/{locale}/seller/listings/<id>/availability`.
-2. Buyer books a viewing (public listing flow).
-3. Seller opens `/{locale}/seller/viewings` — confirm / cancel / complete / no-show / reschedule as needed.
+When `SELLER_VIEWINGS_ENABLED=true`:
+
+1. Set availability: `/{locale}/seller/listings/<id>/availability` (or `POST /api/seller/listings/<id>/availability`).
+2. Buyer books: `POST /api/listings/<id>/viewings` `{ startMs }` (pick from public `GET /api/listings/<id>/slots`).
+3. Seller opens `/{locale}/seller/viewings` — confirm / cancel / complete / no-show / reschedule (`POST /api/seller/viewings/:id/confirm` …).
+
+**Honesty check (V-1):** unauth **401** + page **200** is not enough. Confirm authenticated seller set-availability → buyer book → seller confirm → status `CONFIRMED`. Record: `docs/audits/EC-S-v1-viewings-auth-smoke.md` (2026-08-15 PASS).
 
 If API flag off: page may still render while API calls **404**.
 
@@ -237,6 +241,7 @@ Admin moderation: `https://admin.easycasaita.com/#vo` when VO is on. **Do not fl
 - [ ] `POST /api/featured/checkout` (auth) returns Stripe URL when boost on
 - [ ] `GET /api/seller/entitlements` (auth) 200 when premium on
 - [ ] Parked flags still false unless AZM unparked: VO, CDN (checklist + analytics are live as of PK-2/PK-3)
+- [ ] Authenticated viewings honesty: seller availability → buyer book → seller confirm → `CONFIRMED`
 - [ ] Authenticated analytics honesty: `GET /api/seller/listings/<id>/analytics?window=30d` → **200** with non-zero rollups on a listing that has daily rows
 - [ ] Authenticated checklist honesty: upload one slot → score `have` increments; seller card `docScore`; public listing has no private `docKey`
 - [ ] Sell-privately no-script HTML still shows Claim 1 EUR + portal copy (regression)
@@ -296,7 +301,7 @@ Do **not** flip parked PK flags “to try” — each needs an AZM decision.
 1. ~~No first-class web onboarding UI~~ — **CLOSED PP-4 / K EC 1.47** (`/seller/onboarding` + wizard embed).
 2. ~~No boost buy / premium upsell web UI~~ — **CLOSED PP-5 / K EC 1.48** (`/seller/listings` + `/account`).
 3. ~~No seller web UI for VO submit / checklist~~ — **CLOSED PP-6 / K EC 1.49** (UI deployed **dark**; light with PK-1/PK-2).
-4. Viewings / analytics **pages** can render while APIs are flag-dark (**V-1:** viewings **on** as of 2026-08-14; analytics still parked PK-3).
+4. Viewings / analytics **pages** can render while APIs are flag-dark (**V-1:** viewings **on** + auth smoke PASS; **PK-3:** analytics **on** + auth smoke PASS).
 5. T25 messaging **HOLD** (PK-5) — inbox is enquiry list, not chat threads.
 6. Empty partner directory paid catalogue → informational banner is **correct** (PK-8).
 

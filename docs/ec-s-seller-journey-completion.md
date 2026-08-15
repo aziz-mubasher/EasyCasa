@@ -16,7 +16,7 @@
 | 3 | Create listing | `/seller/list` wizard: OMI panel, photos, AI description, autosave, publish, quotas | ✅ LIVE | — |
 | 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | **Partial — checklist LIVE (PK-2 2026-08-14); VO dark (PK-1)** | P6 live + `SELLER_CHECKLIST_ENABLED=true`; P3/VO awaiting moderation capacity — runbook `docs/runbooks/ec-s-vo-enablement.md` |
 | 5 | Receive enquiries | `/seller/enquiries`, Verified Buyer badges, mark-read, **listing title + slug on cards** | ✅ LIVE | (chat = T25, parked PK-5 — by design off-platform for now) |
-| 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ✅ **LIVE** | **V-1 flipped 2026-08-14:** `SELLER_VIEWINGS_ENABLED=true` + api recreate. Unauth APIs → 401; page 200. Full buyer-book → seller-confirm smoke needs authenticated accounts |
+| 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ✅ **LIVE** | **V-1** flag + **auth book/confirm smoke PASS 2026-08-15** (`docs/audits/EC-S-v1-viewings-auth-smoke.md`) |
 | 7 | Steer the sale | analytics + price nudges | ✅ **LIVE** | **PK-3 flipped 2026-08-14:** P7 live + `SELLER_ANALYTICS_ENABLED=true`; see `docs/audits/EC-S-pk3-analytics-enablement.md` |
 | 8 | Pay us | boost + premium (Stripe rails live, flags on) | ✅ **LIVE** | **PP-5 merged** — seller listings dashboard + boost buy + premium upsell |
 | 9 | Close | off-platform via partner directory (portal, not mediatore) | ✅ LIVE (by design) | **PP-1 merged** — self-serve Stripe checkout (needs Price ID); PK-8 seeding still optional via admin or self-serve |
@@ -29,7 +29,7 @@
 
 | ID | Action | Owner | Result |
 |----|--------|-------|--------|
-| **V-1** | On VPS: `printenv SELLER_VIEWINGS_ENABLED` (Traefik-pair exec, SOP §3.2). Record in SOP flag matrix. If `false` and product wants stage 6 live: runtime flip + api recreate (no web rebuild — pages always render). Smoke: availability edit + buyer booking + seller confirm | AZM / ops | **2026-08-14 CLOSED:** was absent → default false; set **`true`** + api recreate (Traefik pair). Container `printenv=true`. Unauth `/api/seller/viewings/conducting` + availability → **401** (not flag-404). `/it/seller/viewings` **200**. Authenticated buyer-book → seller-confirm left for operator with real accounts |
+| **V-1** | On VPS: `printenv SELLER_VIEWINGS_ENABLED` (Traefik-pair exec, SOP §3.2). Record in SOP flag matrix. If `false` and product wants stage 6 live: runtime flip + api recreate (no web rebuild — pages always render). Smoke: availability edit + buyer booking + seller confirm | AZM / ops | **2026-08-14 CLOSED** flag · **2026-08-15 auth smoke PASS** — seller set availability → buyer book → seller confirm → `CONFIRMED` (`docs/audits/EC-S-v1-viewings-auth-smoke.md`) |
 
 ### 2b. Eng dispatches — in order (one Kaizen code, one agent each)
 
@@ -42,7 +42,7 @@
 | **PP-2** | Housekeeping bundle | Shared Service JSON-LD, service-page i18n, enquiry-card listing titles + slug links | — | **CLOSED 2026-08-14** — K EC 1.51 |
 | **PP-3** | Static lastmod hygiene | CI fingerprint check + manual lastmod bumps | — | **CLOSED 2026-08-14** — folded into K EC 1.51 |
 
-**Suggested dispatch order:** ~~PP-4~~ → ~~**PP-5**~~ → ~~PP-6~~ → ~~PP-1~~ → ~~PP-2~~ (+PP-3). **EC-S eng backlog empty** — next work is PK decisions or ops (Stripe Price backfill, viewings smoke).
+**Suggested dispatch order:** ~~PP-4~~ → ~~**PP-5**~~ → ~~PP-6~~ → ~~PP-1~~ → ~~PP-2~~ (+PP-3). **EC-S eng backlog empty** — next work is PK decisions (PK-1 VO when moderation ready).
 
 ### 2c. Product/counsel decisions (unchanged from polish backlog — not eng)
 
@@ -71,4 +71,4 @@
 All dispatches follow `docs/ec-s-post-roadmap-polish.md` §C (single agent per code; `NEXT_PUBLIC_*` Docker ARG same-PR; Traefik compose pair; ops-flip vs eng-build stated explicitly; no parked flips bundled; ledger copy only via flip protocol).
 
 ---
-*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-2** + **PK-3** closed 2026-08-14. **EC-S eng backlog empty.** Next: **PK-1** VO enablement when moderation capacity confirmed (+ Stripe Price backfill). Status polls: `docs/runbooks/azm-dev-bridge.md`.*
+*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-2** + **PK-3** closed 2026-08-14; V-1 auth smoke + PP-1 Price backfill 2026-08-15. **EC-S eng backlog empty.** Next: **PK-1** VO enablement when moderation capacity confirmed. Status polls: `docs/runbooks/azm-dev-bridge.md`.*

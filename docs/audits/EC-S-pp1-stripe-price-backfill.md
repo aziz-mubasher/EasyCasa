@@ -16,7 +16,7 @@ Migration `0065` seeded `price_cents=0` and empty `stripe_price_id` by design (n
 | Tax | `exclusive` | Same as seller premium / boost Prices; Checkout still uses automatic tax where configured |
 | Mode | **live** (`sk_live_…`) | Production VPS |
 
-**Revise:** create a new Stripe Price + `UPDATE plans SET stripe_price_id=…, price_cents=… WHERE key='partner_directory_placement'` (Stripe Prices are immutable).
+**Fee confirmation:** AZM confirmed €49 launch fee is OK (2026-08-15 chat).
 
 ## Stripe artefacts (live mode)
 
