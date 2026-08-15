@@ -89,6 +89,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pk4-k155-completion-feedback.md` | **PK-4 / K EC 1.55** post-merge completion R&D feedback |
 | `docs/audits/EC-S-pk4-dpa-gap.md` | **PK-4** Bunny DPA evidence gap (open — needs AZM/DPO) |
 | `docs/audits/EC-S-pk4-private-doc-leak-check.md` | **PK-4** VO/checklist stay off CDN (PASS 2026-08-15) |
+| `docs/audits/EC-S-pk4-rnd-report.md` | **PK-4** post-merge/deploy R&D report (for Claude) |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |

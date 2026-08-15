@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/169",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-15T12:50:43.869Z",
-  "updatedAt": "2026-08-15T12:51:03.043Z",
-  "summary": "PK-4 MERGED+DEPLOYED. MEDIA_CDN_ENABLED=true; upload→b-cdn.net PASS; VO MinIO PASS. Docs on main via #169.",
-  "nextAction": "Mark Kaizen K EC 1.55 complete; optional cdn.easycasaita.com TLS.",
+  "updatedAt": "2026-08-15T13:08:03.089Z",
+  "summary": "PK-4 MERGED+DEPLOYED tip 26a50fa. CDN live; private leak PASS; DPA NOT evidenced; §C.14 rules landed. R&D report EC-S-pk4-rnd-report.md.",
+  "nextAction": "AZM/DPO close DPA gap (evidence|rollback|residual risk); reconcile invented K EC 1.55 on board.",
   "errors": []
 }

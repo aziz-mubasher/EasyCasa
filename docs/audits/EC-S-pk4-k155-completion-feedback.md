@@ -1,6 +1,6 @@
 # EC-S PK-4 / K EC 1.55 — completion R&D feedback (for Claude)
 
-**As of tip `59295f6` on `main` + VPS `/opt/easycasa-ita` on `main` @ `59295f6` (2026-08-15).** Bunny listing CDN **LIVE**; VO/checklist private docs remain MinIO. Enablement: `docs/audits/EC-S-pk4-cdn-enablement.md`.
+**As of tip `26a50fa` on `main` + VPS `/opt/easycasa-ita` on `main` @ `26a50fa` (2026-08-15).** Bunny listing CDN **OPS-LIVE**; private docs MinIO (leak PASS); **DPA not evidenced**. Full R&D report: `docs/audits/EC-S-pk4-rnd-report.md`.
 
 ## What landed
 
@@ -66,8 +66,8 @@ lifecycle: merged
 agentStatus: IDLE
 prUrl: https://github.com/aziz-mubasher/EasyCasa/pull/169
 prState: MERGED
-summary: PK-4 MERGED+DEPLOYED. MEDIA_CDN_ENABLED=true; upload→b-cdn.net PASS; VO MinIO PASS. Docs on main via #169.
-nextAction: Mark Kaizen K EC 1.55 complete; optional cdn.easycasaita.com TLS.
+summary: PK-4 MERGED+DEPLOYED tip 26a50fa. CDN live; private leak PASS; DPA NOT evidenced; §C.14 rules landed. R&D report EC-S-pk4-rnd-report.md.
+nextAction: AZM/DPO close DPA gap (evidence|rollback|residual risk); reconcile invented K EC 1.55 on board.
 pollUrl: https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json
 <!-- AZM_BRIDGE_STATUS_END -->
 ```
