@@ -131,13 +131,13 @@ See full packet: [`EC-S-pk4-dpa-gap.md`](./EC-S-pk4-dpa-gap.md) (reopened **OPEN
 |------|--------|
 | Engineering backlog (PP/PK builds) | **Empty** — code shipped |
 | Ops flips PK-1–PK-8 | **Done** on VPS |
-| **Bunny DPA (T05 §4)** | **OPEN — Option 1 selected** — CDN live; citation PENDING (`docs/legal/vendors/bunny-dpa-citation.md`) |
+| **Bunny DPA (T05 §4)** | **CLOSED / CITED** — PDF `docs/legal/vendors/bunny-dpa-2026-08-15.pdf` |
 | **VO moderation** | **STAFFED / keep live** — reviewers **Ibrahim**; **Silvana** (`admin_superadmin`); **0** submissions at decision |
 | **P7 seller experience** | **Partial** — API works; **78%** of published listings have zero metrics |
-| **Partner directory** | **Fixed presentation** in this PR; still no genuine third-party paid partner |
+| **Partner directory** | **Fixed presentation** (K EC 1.56); still no genuine third-party paid partner |
 | Kaizen board codes | **Stale** — invented 1.54/1.55 + PENDING Claude keys |
 
-**EC-S cannot be called fully closed** until the Bunny DPA citation is filed (Option 1), and Claude assigns real Kaizen codes for PK-5–PK-8. VO staffing fork is **closed** (keep live).
+**EC-S ops/legal forks from K EC 1.56:** VO staffing + Bunny DPA **closed**. Remaining: Claude Kaizen codes for PK-5–PK-8; optional P7 empty-state honesty; optional Bunny purge-on-erase eng.
 
 ---
 

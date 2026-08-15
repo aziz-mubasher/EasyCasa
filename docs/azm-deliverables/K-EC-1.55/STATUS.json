@@ -2,7 +2,7 @@
   "bridgeTaskId": "task_pk4_cdn",
   "kaizenCode": "K EC 1.55",
   "polishId": "PK-4",
-  "title": "PK-4 Bunny CDN — MEDIA_CDN_ENABLED + private MinIO dual-store",
+  "title": "PK-4 Bunny CDN \u2014 MEDIA_CDN_ENABLED + private MinIO dual-store",
   "venture": "EasyCasa",
   "lifecycle": "merged",
   "agentStatus": "IDLE",
@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/169",
   "prState": "MERGED",
   "dispatchedAt": "2026-08-15T12:50:43.869Z",
-  "updatedAt": "2026-08-15T18:33:18.369Z",
-  "summary": "PK-4 DPA gap CLOSED via AZM residual-risk acceptance 2026-08-15. CDN stays live; T05 §4 still ☐ until DPA cited.",
-  "nextAction": "Optional file Bunny DPA later; remaining EC-S parked PK-5–PK-8 only.",
+  "updatedAt": "2026-08-15T20:19:21.289255Z",
+  "summary": "PK-4 CDN live; Bunny DPA CITED 2026-08-15 (Mundida\u2194BunnyWay). T05 \u00a74 \u2611. PDF docs/legal/vendors/bunny-dpa-2026-08-15.pdf",
+  "nextAction": "Optional: wire Bunny purge on listing erase",
   "errors": []
 }
