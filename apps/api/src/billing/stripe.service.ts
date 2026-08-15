@@ -1,9 +1,12 @@
-import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import Stripe from 'stripe';
 import { eq } from 'drizzle-orm';
 import {
+  asteCreditPackFallbackCents,
+  asteCreditPackProductName,
   boostFlatPriceCents,
   isBoostDurationDays,
+  type AsteCreditPackSize,
   type BoostDurationDays,
   type SubscriptionStatus,
 } from '@easycasa/shared';
@@ -22,6 +25,7 @@ import {
 } from '../db/schema';
 import { ListingBoostService } from '../listing-boost/listing-boost.service';
 import { SearchService } from '../search/search.service';
+import type { AsteCreditsService } from '../aste/aste-credits.service';
 
 const SELLER_PREMIUM_PLAN_KEY = 'seller_premium';
 const PARTNER_DIRECTORY_PLAN_KEY = 'partner_directory_placement';
@@ -49,6 +53,7 @@ export class StripeService {
     @Inject(APP_CONFIG) private readonly config: ApiConfig,
     private readonly boosts: ListingBoostService,
     private readonly search: SearchService,
+    @Optional() private readonly asteCredits: AsteCreditsService | null = null,
   ) {}
 
   private stripe(): Stripe {
@@ -166,6 +171,58 @@ export class StripeService {
     return session.url ?? '';
   }
 
+  /** EC-27 — Aste full-report credit pack checkout (1/3/10 credits). */
+  async createAsteCreditsCheckout(
+    userId: string,
+    email: string | undefined,
+    pack: AsteCreditPackSize,
+  ): Promise<string> {
+    if (!this.config.ASTE_ANALYSIS_ENABLED || !this.config.PAYMENTS_ENABLED) {
+      throw new NotFoundException('aste credits not available');
+    }
+
+    const priceId = this.resolveAsteCreditPriceId(pack);
+    const lineItem = priceId
+      ? { price: priceId, quantity: 1 as const }
+      : {
+          price_data: {
+            currency: apiConfig.CURRENCY,
+            unit_amount: asteCreditPackFallbackCents(pack),
+            product_data: { name: asteCreditPackProductName(pack) },
+          },
+          quantity: 1 as const,
+        };
+
+    const customerId = await this.ensureCustomer(userId, email);
+    const session = await this.stripe().checkout.sessions.create({
+      mode: 'payment',
+      customer: customerId,
+      line_items: [lineItem],
+      client_reference_id: userId,
+      success_url: apiConfig.BILLING_SUCCESS_URL,
+      cancel_url: apiConfig.BILLING_CANCEL_URL,
+      metadata: {
+        kind: 'aste_credits',
+        userId,
+        credits: String(pack),
+      },
+    });
+    return session.url ?? '';
+  }
+
+  private resolveAsteCreditPriceId(pack: AsteCreditPackSize): string {
+    switch (pack) {
+      case 1:
+        return this.config.STRIPE_PRICE_ASTE_CREDITS_1.trim();
+      case 3:
+        return this.config.STRIPE_PRICE_ASTE_CREDITS_3.trim();
+      case 10:
+        return this.config.STRIPE_PRICE_ASTE_CREDITS_10.trim();
+      default:
+        return '';
+    }
+  }
+
   async createPortalSession(userId: string): Promise<string> {
     const m = await this.db.select().from(memberships).where(eq(memberships.userId, userId)).limit(1);
     const customerId = m[0]?.stripeCustomerId;
@@ -232,6 +289,12 @@ export class StripeService {
         } else if (s.mode === 'payment' && s.metadata?.kind === 'partner_directory') {
           await this.activatePartnerDirectory(
             s.metadata.partnerDirectoryId,
+            (s.payment_intent as string) || s.id,
+          );
+        } else if (s.mode === 'payment' && s.metadata?.kind === 'aste_credits') {
+          await this.grantAsteCredits(
+            s.metadata.userId,
+            Number(s.metadata.credits ?? 0),
             (s.payment_intent as string) || s.id,
           );
         }
@@ -412,6 +475,14 @@ export class StripeService {
       throw new NotFoundException('partner listing not found');
     }
     return row;
+  }
+
+  private async grantAsteCredits(userId: string, credits: number, paymentId: string) {
+    if (!this.asteCredits) {
+      this.logger.warn('aste_credits grant skipped — AsteCreditsService not wired');
+      return;
+    }
+    await this.asteCredits.grantFromStripePurchase(userId, credits, paymentId);
   }
 
   private async activatePartnerDirectory(partnerDirectoryId: string, paymentId: string) {

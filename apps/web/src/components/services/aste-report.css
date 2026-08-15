@@ -27,6 +27,38 @@
   padding: clamp(2rem, 5vw, 3rem) 0;
 }
 
+.ar-unlock {
+  border: 1px solid rgba(44, 110, 155, 0.35);
+  background: rgba(44, 110, 155, 0.06);
+  border-radius: 8px;
+}
+
+.ar-unlock-balance {
+  font-weight: 600;
+}
+
+.ar-unlock-packs-label {
+  margin-top: 1rem;
+}
+
+.ar-unlock-pack-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ar-sem-overall {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.ar-btn--primary {
+  background: var(--ar-azure);
+  color: #fff;
+}
+
 .ar-brand {
   font-family: var(--font-display), system-ui, sans-serif;
   font-size: 1.45rem;

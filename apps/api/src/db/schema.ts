@@ -1001,6 +1001,46 @@ export const asteChatMessages = pgTable('aste_chat_messages', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** EC-27 — per-user Aste full-report credit balance. */
+export const asteCreditBalances = pgTable('aste_credit_balances', {
+  userId: uuid('user_id').primaryKey(),
+  balance: integer('balance').notNull().default(0),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** EC-27 — append-only credit grants/consumptions. */
+export const asteCreditLedger = pgTable(
+  'aste_credit_ledger',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id').notNull(),
+    delta: integer('delta').notNull(),
+    reason: text('reason').notNull(),
+    stripePaymentId: text('stripe_payment_id'),
+    analysisId: uuid('analysis_id'),
+    idempotencyKey: text('idempotency_key').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    idempotencyUniq: uniqueIndex('aste_credit_ledger_idempotency_uniq').on(t.idempotencyKey),
+    userIdx: index('aste_credit_ledger_user_idx').on(t.userId, t.createdAt),
+  }),
+);
+
+/** EC-27 — entitled full-report unlock (re-view free). */
+export const asteReportUnlocks = pgTable(
+  'aste_report_unlocks',
+  {
+    userId: uuid('user_id').notNull(),
+    analysisId: uuid('analysis_id').notNull(),
+    creditLedgerId: uuid('credit_ledger_id'),
+    unlockedAt: timestamp('unlocked_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.analysisId] }),
+  }),
+);
+
 // ---------------- Phase 29 — Viewings & scheduling ----------------
 export const viewingAvailability = pgTable('viewing_availability', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -1320,6 +1360,7 @@ export const schema = {
   paymentIntents, invoices, stripeWebhookEvents,
   omiQuotes, valuationRequests, asteLeads,
   asteAnalyses, asteDocuments, asteDocChunks, asteGlossary, asteChatMessages,
+  asteCreditBalances, asteCreditLedger, asteReportUnlocks,
   viewingAvailability, viewings,
   consentRecords,
   shareLinks, shareLinkViewDedup,

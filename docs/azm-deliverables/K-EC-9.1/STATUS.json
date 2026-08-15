@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_ec27",
+  "kaizenCode": "K EC 9.1",
+  "polishId": "EC-27",
+  "title": "K EC 9.1",
+  "venture": "EasyCasa",
+  "lifecycle": "running",
+  "agentStatus": "RUNNING",
+  "agentBcId": "bc-451e4b9b-1d89-432c-899b-63f27eccfc32",
+  "agentUrl": "https://cursor.com/agents/bc-451e4b9b-1d89-432c-899b-63f27eccfc32",
+  "branch": "cursor/ec27-aste-teaser-credits-fc32",
+  "prNumber": null,
+  "prUrl": null,
+  "prState": null,
+  "dispatchedAt": "2026-08-15T12:59:54.364Z",
+  "updatedAt": "2026-08-15T12:59:54.364Z",
+  "summary": "EC-27 in progress: migration + credits API + teaser split + Stripe packs",
+  "nextAction": "Wait for draft PR",
+  "errors": []
+}

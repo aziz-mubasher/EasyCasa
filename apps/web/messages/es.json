@@ -3147,6 +3147,7 @@
     "fields": {
       "tribunale": "Tribunal",
       "procTipo": "Tipo de procedimiento",
+      "rge": "R.G.E.",
       "lotto": "Lote",
       "data_asta": "Fecha de subasta",
       "termine_offerte": "Plazo de ofertas",
@@ -3231,6 +3232,28 @@
       "load": "No se pudo cargar el informe (no encontrado, no listo o no autorizado).",
       "reprocess": "Esquema de extracción obsoleto — reprocesa el análisis desde la carga de documentos.",
       "profile": "No se pudo guardar el perfil del comprador."
+    },
+    "teaser": {
+      "semaforoOverall": "Estado global: {level}"
+    },
+    "unlock": {
+      "title": "Desbloquear informe completo",
+      "lead": "Economía con referencias de página, tarjetas de problemas, urbanismo, escenarios, chat Q&A y export PDF.",
+      "balance": "Tienes {count, plural, one {# crédito} other {# créditos}}.",
+      "useCredit": "Usar 1 crédito para este informe",
+      "packsLabel": "Comprar packs de créditos",
+      "packs": {
+        "1": "1 crédito de análisis",
+        "3": "3 créditos de análisis",
+        "10": "10 créditos de análisis"
+      },
+      "counselMark": "COUNSEL REVIEW PENDING",
+      "legal": "Un crédito por desbloqueo; volver a ver el informe desbloqueado es gratis. Precios y condiciones en el checkout.",
+      "errors": {
+        "insufficient": "Créditos insuficientes — compra un pack.",
+        "unlock": "No se pudo desbloquear. Inténtalo de nuevo.",
+        "checkout": "No se pudo iniciar el checkout. Inténtalo de nuevo."
+      }
     },
     "chat": {
       "title": "Preguntas sobre los documentos",

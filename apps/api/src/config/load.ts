@@ -282,6 +282,10 @@ const Schema = z
     /** Optional Stripe Price IDs for fixed 7d/30d boost products (flat fee). */
     STRIPE_PRICE_BOOST_7D: z.string().default(''),
     STRIPE_PRICE_BOOST_30D: z.string().default(''),
+    /** EC-27 — optional Stripe Price IDs for Aste credit packs (1/3/10 credits). */
+    STRIPE_PRICE_ASTE_CREDITS_1: z.string().default(''),
+    STRIPE_PRICE_ASTE_CREDITS_3: z.string().default(''),
+    STRIPE_PRICE_ASTE_CREDITS_10: z.string().default(''),
     /**
      * EC-S-T28/T29 — neutral partner directory (notai/geometri/APE/photographers).
      * Default false. Monetised referral variants wait for G3 row 9.

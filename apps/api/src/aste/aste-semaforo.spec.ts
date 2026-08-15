@@ -257,3 +257,20 @@ describe('computeSemaforo', () => {
     expect(s.condizione_immobile).toBe('verify');
   });
 });
+
+describe('aggregateSemaforoLevel (EC-27 teaser)', () => {
+  it('returns worst level across dimensions', async () => {
+    const { aggregateSemaforoLevel } = await import('./aste-semaforo');
+    const level = aggregateSemaforoLevel({
+      vincoli_gravami: 'ok',
+      occupazione: 'verify',
+      conformita_urbanistica: 'critical',
+      conformita_catastale: 'ok',
+      condizione_immobile: 'ok',
+      spese_condominiali: 'unknown',
+      rischio_asta: 'ok',
+      buyer_readiness: 'ok',
+    });
+    expect(level).toBe('critical');
+  });
+});

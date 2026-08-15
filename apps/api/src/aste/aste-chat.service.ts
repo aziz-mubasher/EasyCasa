@@ -18,6 +18,7 @@ import type { Db } from '../db/drizzle';
 import { asteAnalyses, asteChatMessages, asteDocuments, asteGlossary } from '../db/schema';
 import { AsteAiClient } from './aste-ai.client';
 import { AsteChatRetrievalService } from './aste-chat-retrieval.service';
+import { AsteCreditsService } from './aste-credits.service';
 
 const MAX_QUESTION_CHARS = 1000;
 
@@ -33,10 +34,19 @@ export class AsteChatService {
     private readonly retrieval: AsteChatRetrievalService,
     private readonly ai: AsteAiClient,
     private readonly analytics: ProductAnalyticsService,
+    private readonly credits: AsteCreditsService,
   ) {}
+
+  private async requireFullReportEntitlement(userId: string, analysisId: string): Promise<void> {
+    const entitlement = await this.credits.getEntitlement(userId, analysisId);
+    if (entitlement.monetisationEnabled && !entitlement.unlocked) {
+      throw new NotFoundException();
+    }
+  }
 
   async history(userId: string, analysisId: string) {
     await this.requireOwned(userId, analysisId);
+    await this.requireFullReportEntitlement(userId, analysisId);
     const rows = await this.db
       .select()
       .from(asteChatMessages)
@@ -68,6 +78,7 @@ export class AsteChatService {
     input: { question: string; lang: 'it' | 'en' },
   ) {
     const analysis = await this.requireOwnedReady(userId, analysisId);
+    await this.requireFullReportEntitlement(userId, analysisId);
     const question = (input.question ?? '').trim();
     if (!question) {
       throw new HttpException({ message: 'question required' }, HttpStatus.BAD_REQUEST);

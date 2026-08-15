@@ -12,13 +12,14 @@ import {
   type AsteReport,
 } from '@/lib/aste-analysis-api';
 import { AsteReportChat } from '@/components/services/AsteReportChat';
+import { AsteReportUnlockPanel } from '@/components/services/AsteReportUnlockPanel';
 import { AffordThisHomeReferralBlock } from '@/components/financing/AffordThisHomeReferralBlock';
 import {
   asteFinancingPlacement,
   resolveAsteFinancingTrigger,
 } from '@/lib/aste-financing-trigger';
 import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
-import { formatOmiScontoRealePct, formatReportMoney } from '@/lib/aste-report-display';
+import { formatOmiScontoRealePct, formatReportMoney, omiHeadlineRenderable } from '@/lib/aste-report-display';
 import './aste-report.css';
 
 const SEMAFORO_DIMS = [
@@ -234,32 +235,37 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
 
   if (!report) return null;
 
+  const isTeaser = report.viewMode === 'teaser';
   const ex = report.extraction;
   const imm = primaryImmobile(ex.immobili);
   const lottoDisplay =
     report.lottoLabel || ex.meta.lotto?.label || (ex.procedura.lotto as string) || report.lotto;
   const filename = (fileId: string) => report.filenameById[fileId] ?? fileId;
-  const counts = SEMAFORO_DIMS.reduce(
-    (acc, d) => {
-      const lv = report.semaforo[d] ?? 'unknown';
-      acc[lv] = (acc[lv] ?? 0) + 1;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
+  const counts = isTeaser
+    ? null
+    : SEMAFORO_DIMS.reduce(
+        (acc, d) => {
+          const lv = (report.semaforo ?? {})[d] ?? 'unknown';
+          acc[lv] = (acc[lv] ?? 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
 
   const omi = report.omiCheck;
   const purpose = report.buyerProfile?.purpose ?? 'investimento';
   const procTipo = ex.procedura.tipo;
   const procNumero = ex.procedura.numero || ex.procedura.rge || report.rge;
 
-  const financingTrigger = resolveAsteFinancingTrigger({
-    buyerProfile: report.buyerProfile,
-    buyerReadiness: report.buyerReadiness,
-    extraction: ex,
-    fullReportContext: true,
-    reprocessRequired: false,
-  });
+  const financingTrigger = isTeaser
+    ? null
+    : resolveAsteFinancingTrigger({
+        buyerProfile: report.buyerProfile,
+        buyerReadiness: report.buyerReadiness,
+        extraction: ex,
+        fullReportContext: true,
+        reprocessRequired: false,
+      });
   const financingPlacement = financingTrigger
     ? asteFinancingPlacement(financingTrigger)
     : null;
@@ -295,7 +301,7 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
           <strong>{t('counselMark')}</strong> — {t('disclaimer')}
         </p>
 
-        {report.esContentFallback ? (
+        {report.esContentFallback && !isTeaser ? (
           <p className="ar-notice" role="status">
             {t('esNotice')}
           </p>
@@ -307,7 +313,7 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
           </p>
         ) : null}
 
-        {ex.meta.warnings?.length ? (
+        {ex.meta.warnings?.length && !isTeaser ? (
           <section className="ar-section ar-warnings" aria-labelledby={`${id}-warn`}>
             <h2 id={`${id}-warn`}>{t('sections.warnings')}</h2>
             <ul>
@@ -318,6 +324,7 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
           </section>
         ) : null}
 
+        {!isTeaser ? (
         <div className="ar-toolbar no-print">
           <div className="ar-field-inline">
             <label htmlFor={`${id}-reg`}>{t('register.label')}</label>
@@ -335,8 +342,9 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
             {t('print')}
           </button>
         </div>
+        ) : null}
 
-        {showProfile ? (
+        {!isTeaser && showProfile ? (
           <form className="ar-section no-print" onSubmit={onSaveProfile}>
             <h2>{t('buyerForm.title')}</h2>
             <p>{t('buyerForm.sub')}</p>
@@ -448,6 +456,7 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
               <dt>{t('fields.tribunale')}</dt>
               <dd>{(ex.procedura.tribunale as string) || report.tribunale || '—'}</dd>
             </div>
+            {!isTeaser ? (
             <div>
               <dt>{t('fields.procTipo')}</dt>
               <dd>
@@ -456,9 +465,14 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
                   : '—'}
               </dd>
             </div>
+            ) : null}
             <div>
               <dt>
-                <GlossaryTip termKey="rge" glossary={report.glossary} counselLabel={t('counselMark')} />
+                {isTeaser ? (
+                  t('fields.rge')
+                ) : (
+                  <GlossaryTip termKey="rge" glossary={report.glossary} counselLabel={t('counselMark')} />
+                )}
               </dt>
               <dd>{procNumero || '—'}</dd>
             </div>
@@ -470,6 +484,8 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
               <dt>{t('fields.data_asta')}</dt>
               <dd>{(ex.procedura.data_asta as string) || report.dataAsta || '—'}</dd>
             </div>
+            {!isTeaser ? (
+            <>
             <div>
               <dt>{t('fields.termine_offerte')}</dt>
               <dd>
@@ -498,7 +514,11 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
                 {imm?.provincia ? ` (${imm.provincia})` : ''}
               </dd>
             </div>
+            </>
+            ) : null}
           </dl>
+          {!isTeaser ? (
+          <>
           <h3>{t('sections.documents')}</h3>
           <ul className="ar-docs">
             {report.documents.map((d) => (
@@ -507,21 +527,31 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
               </li>
             ))}
           </ul>
+          </>
+          ) : null}
         </section>
 
         <section className="ar-section" aria-labelledby={`${id}-sem`}>
           <h2 id={`${id}-sem`}>{t('sections.semaforo')}</h2>
+          {isTeaser ? (
+            <p className={`ar-aggregate ar-sem-overall ar-sem-overall--${report.semaforoAggregate ?? 'unknown'}`}>
+              {t('teaser.semaforoOverall', {
+                level: t(`semaforo.levels.${report.semaforoAggregate ?? 'unknown'}`),
+              })}
+            </p>
+          ) : (
+          <>
           <p className="ar-aggregate">
             {t('semaforo.aggregate', {
-              ok: counts.ok ?? 0,
-              verify: counts.verify ?? 0,
-              critical: counts.critical ?? 0,
-              unknown: counts.unknown ?? 0,
+              ok: counts!.ok ?? 0,
+              verify: counts!.verify ?? 0,
+              critical: counts!.critical ?? 0,
+              unknown: counts!.unknown ?? 0,
             })}
           </p>
           <ul className="ar-semaforo">
             {SEMAFORO_DIMS.map((dim) => {
-              const level = report.semaforo[dim] ?? 'unknown';
+              const level = (report.semaforo ?? {})[dim] ?? 'unknown';
               return (
                 <li key={dim} className={`ar-sem-item ar-sem-item--${level}`}>
                   <span className="ar-sem-icon" aria-hidden="true">
@@ -533,7 +563,9 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
               );
             })}
           </ul>
-          {!report.buyerProfileSkipped && report.buyerReadiness.checklist.length > 0 ? (
+          </>
+          )}
+          {!isTeaser && !report.buyerProfileSkipped && report.buyerReadiness.checklist.length > 0 ? (
             <div className="ar-checklist">
               <h3>{t('buyerChecklist.title')}</h3>
               <ul>
@@ -550,6 +582,8 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
           {financingPlacement === 'buyer_readiness' ? financingBlock : null}
         </section>
 
+        {!isTeaser ? (
+        <>
         <section className="ar-section" aria-labelledby={`${id}-econ`}>
           <h2 id={`${id}-econ`}>{t('sections.economics')}</h2>
           <ul className="ar-figures">
@@ -749,10 +783,12 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
             ))}
           </ul>
         </section>
+        </>
+        ) : null}
 
         <section className="ar-section" aria-labelledby={`${id}-omi`}>
           <h2 id={`${id}-omi`}>{t('sections.omi')}</h2>
-          {!omi?.available ? (
+          {!omi?.available || !omiHeadlineRenderable(omi) ? (
             <p>{t('omi.unavailable')}</p>
           ) : (
             <>
@@ -775,14 +811,22 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
                 </svg>
               </div>
               <dl className="ar-dl">
+                {!isTeaser ? (
+                <>
                 <div>
                   <dt>{t('omi.unit')}</dt>
                   <dd>{t(`omi.units.${omi.omi_range_unit ?? 'eur_per_mq'}`)}</dd>
                 </div>
+                </>
+                ) : null}
+                {omi.sconto_reale_pct != null ? (
                 <div>
                   <dt>{t('omi.sconto')}</dt>
                   <dd>{formatOmiScontoRealePct(omi.sconto_reale_pct)}</dd>
                 </div>
+                ) : null}
+                {!isTeaser ? (
+                <>
                 <div>
                   <dt>{t('omi.method')}</dt>
                   <dd>
@@ -793,10 +837,12 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
                   <dt>{t('omi.period')}</dt>
                   <dd>{omi.period ?? '—'}</dd>
                 </div>
+                </>
+                ) : null}
               </dl>
             </>
           )}
-          {omi?.warnings?.length ? (
+          {!isTeaser && omi?.warnings?.length ? (
             <ul className="ar-warn">
               {omi.warnings.map((w) => (
                 <li key={w}>{w}</li>
@@ -806,6 +852,17 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
           <p className="ar-attr">{omi?.attribution ?? t('omi.attribution')}</p>
         </section>
 
+        {isTeaser && report.entitlement ? (
+          <AsteReportUnlockPanel
+            analysisId={analysisId}
+            entitlement={report.entitlement}
+            getAccessToken={getAccessToken}
+            onUnlocked={() => load()}
+          />
+        ) : null}
+
+        {!isTeaser ? (
+        <>
         <section className="ar-section" aria-labelledby={`${id}-scen`}>
           <h2 id={`${id}-scen`}>{t('sections.scenari')}</h2>
           <p>{t(`scenari.${purpose === 'prima_casa' ? 'prima_casa' : 'investimento'}`)}</p>
@@ -866,6 +923,8 @@ export function AsteReportPage({ analysisId }: { analysisId: string }) {
         </section>
 
         <AsteReportChat analysisId={analysisId} />
+        </>
+        ) : null}
 
         <p className="ar-disclaimer" role="note">
           <strong>{t('counselMark')}</strong> — {t('disclaimer')}

@@ -118,7 +118,7 @@ export type AsteReport = {
   comune: string | null;
   provincia: string | null;
   extraction: AsteExtractionV2;
-  semaforo: Record<string, string>;
+  semaforo?: Record<string, string>;
   omiCheck: {
     available: boolean;
     method: 'zone' | 'comune' | null;
@@ -158,6 +158,13 @@ export type AsteReport = {
   filenameById: Record<string, string>;
   glossary: Array<{ termKey: string; definition: string; counselReviewed: boolean }>;
   translateCalls?: number;
+  viewMode?: 'teaser' | 'full';
+  semaforoAggregate?: string;
+  entitlement?: {
+    monetisationEnabled: boolean;
+    unlocked: boolean;
+    creditBalance: number;
+  };
 };
 
 export class AsteApiError extends Error {
@@ -291,6 +298,52 @@ export async function getReport(
   const res = await fetchAuth(apiUrl(`/aste/analyses/${id}/report?${q}`), { cache: 'no-store' });
   if (!res.ok) throw await readError(res, `report failed: ${res.status}`);
   return (await res.json()) as AsteReport;
+}
+
+export async function getCreditBalance(getAccessToken: TokenGetter): Promise<{ balance: number }> {
+  const fetchAuth = client(getAccessToken);
+  const res = await fetchAuth(apiUrl('/aste/credits/balance'), { cache: 'no-store' });
+  if (!res.ok) throw await readError(res, `balance failed: ${res.status}`);
+  return (await res.json()) as { balance: number };
+}
+
+export async function listCreditPacks(
+  getAccessToken: TokenGetter,
+): Promise<{ packs: Array<{ credits: number }> }> {
+  const fetchAuth = client(getAccessToken);
+  const res = await fetchAuth(apiUrl('/aste/credits/packs'), { cache: 'no-store' });
+  if (!res.ok) throw await readError(res, `packs failed: ${res.status}`);
+  return (await res.json()) as { packs: Array<{ credits: number }> };
+}
+
+export async function checkoutCreditPack(
+  getAccessToken: TokenGetter,
+  pack: 1 | 3 | 10,
+): Promise<{ url: string }> {
+  const fetchAuth = client(getAccessToken);
+  const res = await fetchAuth(apiUrl('/aste/credits/checkout'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pack }),
+  });
+  if (!res.ok) throw await readError(res, `checkout failed: ${res.status}`);
+  return (await res.json()) as { url: string };
+}
+
+export async function unlockReport(
+  getAccessToken: TokenGetter,
+  analysisId: string,
+): Promise<{ unlocked: boolean; creditBalance: number; alreadyUnlocked: boolean }> {
+  const fetchAuth = client(getAccessToken);
+  const res = await fetchAuth(apiUrl(`/aste/analyses/${analysisId}/unlock`), {
+    method: 'POST',
+  });
+  if (!res.ok) throw await readError(res, `unlock failed: ${res.status}`);
+  return (await res.json()) as {
+    unlocked: boolean;
+    creditBalance: number;
+    alreadyUnlocked: boolean;
+  };
 }
 
 export async function patchAnalysis(
