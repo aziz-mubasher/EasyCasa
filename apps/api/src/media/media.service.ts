@@ -29,6 +29,7 @@ import {
 } from './bunny-http-storage';
 import {
   publicUrlForStorageKey,
+  resolveMinioObjectStorage,
   resolveObjectStorage,
   type ObjectStorageConfig,
 } from './object-storage';
@@ -143,7 +144,12 @@ export function assertSafeMediaKey(key: string): void {
 
 @Injectable()
 export class MediaService {
+  /** Listing origin (Bunny when MEDIA_CDN_ENABLED + MEDIA_ORIGIN=bunny). */
   private readonly storage: ObjectStorageConfig = resolveObjectStorage(apiConfig);
+  /**
+   * Always MinIO — VO/checklist private docs (PK-4: listing CDN must not carry users/).
+   */
+  private readonly privateStorage: ObjectStorageConfig = resolveMinioObjectStorage(apiConfig);
   private readonly bunnyHttp: BunnyHttpStorageConfig | null =
     this.storage.origin === 'bunny'
       ? {
@@ -159,6 +165,15 @@ export class MediaService {
     credentials: {
       accessKeyId: this.storage.accessKeyId,
       secretAccessKey: this.storage.secretAccessKey,
+    },
+  });
+  private readonly privateS3 = new S3Client({
+    endpoint: this.privateStorage.endpoint,
+    region: this.privateStorage.region,
+    forcePathStyle: true,
+    credentials: {
+      accessKeyId: this.privateStorage.accessKeyId,
+      secretAccessKey: this.privateStorage.secretAccessKey,
     },
   });
 
@@ -309,6 +324,20 @@ export class MediaService {
   async getObject(key: string): Promise<{ body: Readable; contentType: string }> {
     assertSafeMediaKey(key);
     try {
+      // Private user docs always live on MinIO, even when listing CDN is Bunny.
+      if (key.startsWith('users/')) {
+        const out = await this.privateS3.send(
+          new GetObjectCommand({
+            Bucket: this.privateStorage.bucket,
+            Key: key,
+          }),
+        );
+        if (!out.Body) throw new NotFoundException('media not found');
+        return {
+          body: out.Body as Readable,
+          contentType: out.ContentType ?? 'application/octet-stream',
+        };
+      }
       if (this.bunnyHttp) {
         const out = await bunnyHttpGet(this.bunnyHttp, key);
         return {
@@ -461,7 +490,7 @@ export class MediaService {
   }
 
   /**
-   * EC-S-T14 — put a private VO/checklist doc (MinIO only; never Bunny).
+   * EC-S-T14 / PK-4 — put a private VO/checklist doc on MinIO only (never Bunny CDN).
    * Caller supplies a key under `users/{id}/docs/…`.
    */
   async putPrivateUserDoc(key: string, body: Buffer, contentType: string): Promise<void> {
@@ -469,20 +498,28 @@ export class MediaService {
     if (!key.startsWith('users/')) {
       throw new BadRequestException('private docs must use users/ prefix');
     }
-    if (this.bunnyHttp || this.storage.origin === 'bunny') {
-      throw new BadRequestException(
-        'Private user docs require MinIO (MEDIA_CDN_ENABLED=false or MEDIA_ORIGIN=minio)',
-      );
-    }
-    await this.putObject(key, body, contentType, 'private, no-store');
+    await this.privateS3.send(
+      new PutObjectCommand({
+        Bucket: this.privateStorage.bucket,
+        Key: key,
+        Body: body,
+        ContentType: contentType,
+        CacheControl: 'private, no-store',
+      }),
+    );
   }
 
-  /** Best-effort delete for erasure / VO resubmit cleanup. */
+  /** Best-effort delete for erasure / VO resubmit cleanup (MinIO only). */
   async deletePrivateUserDoc(key: string): Promise<void> {
     assertSafeMediaKey(key);
     if (!key.startsWith('users/')) return;
     try {
-      await this.deleteObject(key);
+      await this.privateS3.send(
+        new DeleteObjectCommand({
+          Bucket: this.privateStorage.bucket,
+          Key: key,
+        }),
+      );
     } catch {
       // ignore missing
     }

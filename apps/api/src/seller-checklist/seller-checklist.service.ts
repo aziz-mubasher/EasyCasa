@@ -90,7 +90,7 @@ export class SellerChecklistService {
       opts.file.originalname,
       randomUUID(),
     );
-    // MinIO only — MediaService.putPrivateUserDoc refuses Bunny.
+    // Always MinIO — MediaService.putPrivateUserDoc never writes users/ to Bunny CDN.
     await this.media.putPrivateUserDoc(key, opts.file.buffer, mime);
 
     const prev = current.items.find((i) => i.typeCode === opts.typeCode);

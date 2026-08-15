@@ -35,6 +35,26 @@ export function resolveBunnyS3Endpoint(endpoint: string, region: string): string
   return `https://${r}-s3.storage.bunnycdn.com`;
 }
 
+/**
+ * Always-MinIO store for private `users/` docs (VO / checklist).
+ * Listing origin may be Bunny after PK-4; private docs must never go to the public CDN.
+ */
+export function resolveMinioObjectStorage(cfg: ApiConfig): ObjectStorageConfig {
+  const privateBase = (
+    cfg.MEDIA_PRIVATE_BASE.trim() || 'https://easycasaita.com/api/media/file'
+  ).replace(/\/$/, '');
+  return {
+    origin: 'minio',
+    endpoint: cfg.S3_ENDPOINT.replace(/\/$/, ''),
+    region: cfg.S3_REGION,
+    accessKeyId: cfg.MINIO_ROOT_USER,
+    secretAccessKey: cfg.MINIO_ROOT_PASSWORD,
+    bucket: cfg.MINIO_BUCKET,
+    publicBase: cfg.MEDIA_PUBLIC_BASE.replace(/\/$/, ''),
+    privateBase,
+  };
+}
+
 export function resolveObjectStorage(cfg: ApiConfig): ObjectStorageConfig {
   // EC-S-T10: when MEDIA_CDN_ENABLED is false, do not use Bunny even if
   // MEDIA_ORIGIN=bunny is set (common in prod that already migrated). Fall
@@ -73,16 +93,7 @@ export function resolveObjectStorage(cfg: ApiConfig): ObjectStorageConfig {
     };
   }
 
-  return {
-    origin: 'minio',
-    endpoint: cfg.S3_ENDPOINT.replace(/\/$/, ''),
-    region: cfg.S3_REGION,
-    accessKeyId: cfg.MINIO_ROOT_USER,
-    secretAccessKey: cfg.MINIO_ROOT_PASSWORD,
-    bucket: cfg.MINIO_BUCKET,
-    publicBase: cfg.MEDIA_PUBLIC_BASE.replace(/\/$/, ''),
-    privateBase,
-  };
+  return resolveMinioObjectStorage(cfg);
 }
 
 /** Listing images → public CDN; fascicolo / user docs → private API proxy. */

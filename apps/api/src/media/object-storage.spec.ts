@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { publicUrlForStorageKey, resolveObjectStorage } from './object-storage';
+import {
+  publicUrlForStorageKey,
+  resolveMinioObjectStorage,
+  resolveObjectStorage,
+} from './object-storage';
 import type { ApiConfig } from '../config/load';
 
 function baseCfg(over: Partial<ApiConfig> = {}): ApiConfig {
@@ -58,12 +62,13 @@ describe('resolveObjectStorage', () => {
         BUNNY_STORAGE_ZONE: 'easycasaita',
         BUNNY_STORAGE_PASSWORD: 'x',
         BUNNY_CDN_BASE: 'https://cdn.easycasaita.com',
+        MEDIA_PRIVATE_BASE: 'https://easycasaita.com/api/media/file',
       }),
     );
     expect(s.origin).toBe('minio');
     expect(s.endpoint).toBe('http://minio:9000');
     expect(s.bucket).toBe('easycasa-media');
-    expect(s.publicBase).toBe('https://easycasaita.com/api/media/file');
+    expect(s.privateBase).toBe('https://easycasaita.com/api/media/file');
   });
 
   it('falls back via apiConfig-like Proxy without spreading empty ownKeys', () => {
@@ -94,6 +99,25 @@ describe('resolveObjectStorage', () => {
         }),
       ),
     ).toThrow(/BUNNY_STORAGE_PASSWORD/);
+  });
+});
+
+describe('resolveMinioObjectStorage', () => {
+  it('stays MinIO even when listing CDN is on', () => {
+    const s = resolveMinioObjectStorage(
+      baseCfg({
+        MEDIA_ORIGIN: 'bunny',
+        MEDIA_CDN_ENABLED: true,
+        BUNNY_STORAGE_ZONE: 'easycasaita',
+        BUNNY_STORAGE_PASSWORD: 'x',
+        BUNNY_CDN_BASE: 'https://easycasa1.b-cdn.net',
+        MEDIA_PUBLIC_BASE: 'https://easycasa1.b-cdn.net',
+        MEDIA_PRIVATE_BASE: 'https://easycasaita.com/api/media/file',
+      }),
+    );
+    expect(s.origin).toBe('minio');
+    expect(s.bucket).toBe('easycasa-media');
+    expect(s.privateBase).toBe('https://easycasaita.com/api/media/file');
   });
 });
 
