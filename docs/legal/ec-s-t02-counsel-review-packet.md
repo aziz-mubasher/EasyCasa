@@ -1,6 +1,6 @@
 # EC-S-T02 — Counsel Review Packet: "Vendi da privato" Page Claims
 
-**Status:** G1 SIGNED (AZM 2026-08-13) for seller enablement — see `docs/audits/EC-S-g1-signoff-enablement.md`. EUR / portal-not-agent blocks remain **fallback** until a dedicated flip PR.  
+**Status:** G1 SIGNED (AZM 2026-08-13) for seller enablement — see `docs/audits/EC-S-g1-signoff-enablement.md`. Claim 1–2 blocks are **`live`** (AZM product-owner flip 2026-08-13). **PK-7 (2026-08-15):** external counsel countersign **deferred** — residual risk accepted; claims stay on product-owner sign-off (`docs/audits/EC-S-pk7-counsel-countersign-closeout.md`).  
 **Requesting entity:** Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Page under review:** `/{locale}/vendi-da-privato`  
 - IT: https://easycasaita.com/it/vendi-da-privato  
@@ -147,10 +147,11 @@ Step/benefit P3 and how-step `verify` are ledger-`coming` → UI chip **"In arri
 
 | Field | Value |
 |-------|-------|
-| Counsel name / firm | **AZM product-owner authorisation** — G1 2026-08-13; Claim 1–2 flip 2026-08-13 — `docs/audits/EC-S-claim12-g3-enablement.md` |
-| Date | 2026-08-13 |
+| Counsel name / firm | **AZM product-owner authorisation** — G1 2026-08-13; Claim 1–2 flip 2026-08-13 — `docs/audits/EC-S-claim12-g3-enablement.md`. **PK-7 (2026-08-15):** external firm countersign deferred — `docs/audits/EC-S-pk7-counsel-countersign-closeout.md` |
+| Date | 2026-08-13 (live flip) · 2026-08-15 (PK-7 residual close-out) |
 | Claims cleared for `live` | ☑ 1 savingsFigures · ☑ 2 mediazioneCopy · ☑ 3 B4A copy (keep live step) · ☑ 4 coming features (In arrivo OK) · ☐ 5 genuine listings (no new wording) |
-| Attachments returned | Claim 1–2 live + mediation-disclosure portal reconcile |
+| Attachments returned | Claim 1–2 live + mediation-disclosure portal reconcile · **no external counsel PDF countersign (PK-7 deferred)** |
+| External counsel countersign | ☐ deferred — residual risk accepted AZM 2026-08-15 (PK-7) |
 
 **G1 effect:** seller informativa versioning + onboarding/inbox enablement authorised.  
 **Claim 1–2 effect (this flip):** EUR savings figures + portal-not-agent copy **live**; interim guard lifted.

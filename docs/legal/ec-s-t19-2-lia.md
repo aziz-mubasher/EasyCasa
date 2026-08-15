@@ -30,6 +30,6 @@
 |------|----------|
 | LIA for IMAGE_DUPDETECT_ENFORCE | ☑ **accepted** (AZM 2026-08-15) |
 | LIA for manual USER_SUSPEND | ☑ **accepted** (AZM 2026-08-15) |
-| External counsel countersign | ☐ pending (PK-7) |
+| External counsel countersign | ☐ deferred (PK-7 close-out 2026-08-15 — Claim 1–2 residual; not a substitute for a future firm review if engaged) |
 
 *Not legal advice. AZM product-owner interim acceptance mirrors G1 / PK-4 residual-risk pattern.*

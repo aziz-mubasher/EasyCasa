@@ -19,7 +19,7 @@
 | 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ✅ **LIVE** | **V-1** flag + **auth book/confirm smoke PASS 2026-08-15** (`docs/audits/EC-S-v1-viewings-auth-smoke.md`) |
 | 7 | Steer the sale | analytics + price nudges | ✅ **LIVE** | **PK-3 flipped 2026-08-14:** P7 live + `SELLER_ANALYTICS_ENABLED=true`; see `docs/audits/EC-S-pk3-analytics-enablement.md` |
 | 8 | Pay us | boost + premium (Stripe rails live, flags on) | ✅ **LIVE** | **PP-5 merged** — seller listings dashboard + boost buy + premium upsell |
-| 9 | Close | off-platform via partner directory (portal, not mediatore) | ✅ LIVE (by design) | **PP-1 merged** — self-serve Stripe checkout (needs Price ID); PK-8 seeding still optional via admin or self-serve |
+| 9 | Close | off-platform via partner directory (portal, not mediatore) | ✅ LIVE | **PP-1** self-serve Stripe · **PK-8** pilot paid rows seeded (Mundida desk; replace via outreach) |
 
 **Self-serve today:** stages 1, 2, 3, 5, 6, 7 (+9). **Definition of done for this plan:** every stage ✅ or an explicit product decision recorded to keep it dark.
 
@@ -53,8 +53,8 @@
 | PK-4 | Bunny DPA → CDN | Photo delivery — **CLOSED** CDN live + **AZM residual-risk acceptance** (DPA still not evidenced; T05 ☐) — `docs/audits/EC-S-pk4-dpa-gap.md` |
 | PK-5 | T05 §6.5 → T25 messaging | **CLOSED 2026-08-15** |
 | PK-6 | LIA → T19.2 dup-enforce | **CLOSED 2026-08-15** |
-| PK-7 | External counsel countersign | Risk posture on live claims |
-| PK-8 | Seed paid partners | Stage 9 paid directory visible |
+| PK-7 | External counsel countersign | **CLOSED 2026-08-15** (residual / product-owner) |
+| PK-8 | Seed paid partners | **CLOSED 2026-08-15** (pilot Mundida desk) |
 
 ## 3. Journey definition of done (smoke, run after PP-4 + PP-5 + V-1)
 
@@ -71,4 +71,4 @@
 All dispatches follow `docs/ec-s-post-roadmap-polish.md` §C (single agent per code; `NEXT_PUBLIC_*` Docker ARG same-PR; Traefik compose pair; ops-flip vs eng-build stated explicitly; no parked flips bundled; ledger copy only via flip protocol).
 
 ---
-*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-1–PK-6** closed 2026-08-14/15. Next: PK-7/PK-8. Status polls: `docs/runbooks/azm-dev-bridge.md`.*
+*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-1–PK-8** closed 2026-08-14/15. **EC-S polish backlog empty.** Status polls: `docs/runbooks/azm-dev-bridge.md`.*

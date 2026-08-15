@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** · **PK-3 analytics LIVE** · **PK-1 VO LIVE** · **PK-4 Bunny CDN LIVE** (DPA gap closed via residual-risk acceptance) · **PK-5 messaging LIVE** (`SELLER_MESSAGING_ENABLED`) · **PK-6 dup-enforce + suspend LIVE** (`IMAGE_DUPDETECT_ENFORCE`) · **PP-1 partner self-serve checkout LIVE** · **PP-2+PP-3 housekeeping live** · paid directory MVP · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP eng closed** · remaining parked: **PK-7–PK-8**.
+**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-1–PK-6 LIVE** · **PK-7 counsel residual CLOSED** · **PK-8 paid partners seeded** · **PP-1 partner self-serve checkout LIVE** · **PP-2+PP-3 housekeeping live** · paid directory MVP · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP eng closed** · **EC-S polish parked backlog empty**.
 
 ---
 
@@ -39,8 +39,8 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | **CLOSED 2026-08-15** — CDN live; private leak PASS; DPA gap closed via **AZM residual-risk acceptance** (`docs/audits/EC-S-pk4-dpa-gap.md`); T05 §4 still ☐ until DPA cited | done |
 | PK-5 | T25 in-portal messaging | **CLOSED 2026-08-15** — §6.5 hosting carve-out; `SELLER_MESSAGING_ENABLED`; `docs/audits/EC-S-pk5-messaging-enablement.md` | done |
 | PK-6 | T19.2 dup-enforce + suspend UX | **CLOSED 2026-08-15** — LIA accepted; enforce + admin suspend; `docs/audits/EC-S-pk6-dup-enforce-enablement.md` | done |
-| PK-7 | External counsel countersign — Claim 1 EUR figures, Claim 2 wording, packet PDFs | Counsel engagement (recommended: claims are public on product-owner sign-off only) | AZM → counsel |
-| PK-8 | Seed first paid partners (admin marks `paid_placement=true`) | Partner outreach; until then informational banner is correct | AZM |
+| PK-7 | External counsel countersign — Claim 1 EUR figures, Claim 2 wording, packet PDFs | **CLOSED 2026-08-15** — residual risk / product-owner sufficiency; external countersign deferred (`docs/audits/EC-S-pk7-counsel-countersign-closeout.md`) | done |
+| PK-8 | Seed first paid partners (admin marks `paid_placement=true`) | **CLOSED 2026-08-15** — Mundida pilot desk seed (`docs/audits/EC-S-pk8-seed-paid-partners.md`); replace via outreach/PP-1 | done |
 
 ## C. Standing brief rules (bake into every future EC-S dispatch)
 
@@ -91,6 +91,8 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pk4-dpa-residual-risk-closeout.md` | **PK-4** residual-risk close-out R&D feedback |
 | `docs/audits/EC-S-pk4-private-doc-leak-check.md` | **PK-4** VO/checklist stay off CDN (PASS 2026-08-15) |
 | `docs/audits/EC-S-pk4-rnd-report.md` | **PK-4** post-merge/deploy R&D report (for Claude) |
+| `docs/audits/EC-S-pk7-counsel-countersign-closeout.md` | **PK-7** external counsel residual close-out |
+| `docs/audits/EC-S-pk8-seed-paid-partners.md` | **PK-8** paid partner pilot seed |
 | `docs/audits/EC-S-pk5-pk6-completion-feedback.md` | **PK-5/PK-6** post-deploy completion R&D feedback |
 | `docs/audits/EC-S-pk5-pk6-counsel-determinations.md` | **PK-5/PK-6** AZM §6.5 + LIA determinations |
 | `docs/audits/EC-S-pk5-messaging-enablement.md` | **PK-5** T25 messaging enablement |
@@ -108,4 +110,4 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/env.md` | Flag/build-arg documentation |
 
 ---
-*Maintained by Claude (R&D coordination). PP-1–PP-6 closed 2026-08-14. **PK-1–PK-6 closed** (VO + checklist + analytics + CDN + messaging + dup-enforce). Remaining product/counsel: **PK-7–PK-8**. Update on every PK/V closure.*
+*Maintained by Claude (R&D coordination). PP-1–PP-6 closed 2026-08-14. **PK-1–PK-8 closed** 2026-08-14/15. **EC-S post-roadmap polish backlog empty.** Update on every PK/V closure.*
