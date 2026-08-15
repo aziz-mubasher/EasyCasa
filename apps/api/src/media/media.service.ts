@@ -281,6 +281,7 @@ export class MediaService {
           listingId,
           mediaId: match.mediaId,
           actorUserId: ownerUserId ?? null,
+          subjectUserId: ownerUserId ?? null,
           detail: { matchListingId: match.listingId, enforce: apiConfig.IMAGE_DUPDETECT_ENFORCE },
         });
         if (apiConfig.IMAGE_DUPDETECT_ENFORCE) {
@@ -293,6 +294,7 @@ export class MediaService {
           listingId,
           mediaId: match.mediaId,
           actorUserId: ownerUserId ?? null,
+          subjectUserId: ownerUserId ?? null,
           detail: { matchListingId: match.listingId },
         });
       }

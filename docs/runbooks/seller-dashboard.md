@@ -2,8 +2,8 @@
 
 **Audience:** Ops / support / QA operators on EasyCasa ITA (`easycasaita.com`).  
 **Scope:** End-to-end private-seller dashboard: identity → onboarding → list → publish → inbox → viewings → analytics → monetisation.  
-**Not in scope:** Agency `/add` wizard, admin VO queue UI details (see admin pages), T25 in-portal messaging (parked).  
-**Live state (post-roadmap):** onboarding + dual inbox **on**; boost / premium / directory **on**; **checklist + analytics + VO + listing CDN on** (PK-1–PK-4). Canonical open work: `docs/ec-s-post-roadmap-polish.md` (PK-5+).
+**Not in scope:** Agency `/add` wizard, admin VO queue UI details (see admin pages).  
+**Live state (post-roadmap):** onboarding + dual inbox **on**; boost / premium / directory **on**; **checklist + analytics + VO + listing CDN + messaging + dup-enforce on** (PK-1–PK-6). Canonical open work: `docs/ec-s-post-roadmap-polish.md` (PK-7+).
 
 ---
 

@@ -44,6 +44,7 @@ export class MediaController {
     @Headers('accept-language') acceptLanguage?: string,
   ) {
     const me = await this.users.getOrCreate(user);
+    await this.users.assertNotSuspended(me.id);
     await this.quota.assertUploadAllowed(me.id, user, acceptLanguage);
     return this.media.presign(dto.listingId, dto.contentType);
   }
@@ -55,6 +56,7 @@ export class MediaController {
     @Headers('accept-language') acceptLanguage?: string,
   ) {
     const me = await this.users.getOrCreate(user);
+    await this.users.assertNotSuspended(me.id);
     await this.quota.assertUploadAllowed(me.id, user, acceptLanguage);
     return this.media.confirm(dto.listingId, dto.key, dto.alt, me.id);
   }
@@ -85,6 +87,7 @@ export class MediaController {
     if (!listingId?.trim()) throw new BadRequestException('listingId required');
     if (!file?.buffer?.length) throw new BadRequestException('file required');
     const me = await this.users.getOrCreate(user);
+    await this.users.assertNotSuspended(me.id);
     await this.quota.assertUploadAllowed(me.id, user, acceptLanguage);
     return this.media.uploadListingImage(
       listingId.trim(),

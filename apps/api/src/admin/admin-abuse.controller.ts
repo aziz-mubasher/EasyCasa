@@ -1,5 +1,17 @@
-import { Controller, Get, Query, Inject } from '@nestjs/common';
-import { desc, sql } from 'drizzle-orm';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Inject,
+  NotFoundException,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { IsString, MaxLength, MinLength } from 'class-validator';
+import { and, desc, eq, sql } from 'drizzle-orm';
 
 import { RequiresCapability } from '../auth/capability.decorator';
 import { Roles } from '../auth/roles.decorator';
@@ -8,11 +20,20 @@ import type { AuthUser } from '../auth/auth.types';
 import { AdminAuditService } from '../authority/admin-audit.service';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { media } from '../db/schema';
+import { listings, media, users } from '../db/schema';
+import { recordModerationEvent } from '../media/dupdetect.client';
+import { SearchService } from '../search/search.service';
 import { UsersService } from '../users/users.service';
 
+class SuspendDto {
+  @IsString()
+  @MinLength(10)
+  @MaxLength(500)
+  reason!: string;
+}
+
 /**
- * EC-S-T19 stage 1 — manual abuse tooling (flagged media + repeat offenders).
+ * EC-S-T19 — manual abuse tooling (flagged media + repeat offenders + suspend).
  * Capability: vo_moderation (ops) for now; separate abuse_moderation can split later.
  */
 @Controller('admin/abuse')
@@ -22,6 +43,7 @@ export class AdminAbuseController {
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly audit: AdminAuditService,
     private readonly users: UsersService,
+    private readonly search: SearchService,
   ) {}
 
   @Roles('admin')
@@ -84,5 +106,102 @@ export class AdminAbuseController {
       reason: `repeat offenders ${days}d min=${min}`,
     });
     return (rows as unknown as { rows?: unknown[] }).rows ?? rows;
+  }
+
+  /**
+   * EC-S-T19.2 — suspend seller: set suspended_at, unpublish all owned listings, audit + moderation event.
+   */
+  @Roles('admin')
+  @Post('users/:userId/suspend')
+  async suspend(
+    @CurrentUser() user: AuthUser,
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Body() dto: SuspendDto,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    const target = await this.users.findById(userId);
+    if (!target) throw new NotFoundException('user not found');
+    if (target.suspendedAt) {
+      throw new BadRequestException('user already suspended');
+    }
+    const reason = dto.reason.trim();
+    const now = new Date();
+    await this.db
+      .update(users)
+      .set({ suspendedAt: now, suspendReason: reason, updatedAt: now })
+      .where(eq(users.id, userId));
+
+    const owned = await this.db
+      .select({ id: listings.id })
+      .from(listings)
+      .where(and(eq(listings.ownerUserId, userId), eq(listings.status, 'published')));
+
+    for (const row of owned) {
+      await this.db
+        .update(listings)
+        .set({ status: 'unpublished', unpublishedAt: now, updatedAt: now })
+        .where(eq(listings.id, row.id));
+      try {
+        await this.search.remove(row.id);
+      } catch {
+        // fail-soft Meili; listing already unpublished in DB
+      }
+    }
+
+    await recordModerationEvent(this.db, {
+      kind: 'USER_SUSPEND',
+      actorUserId: actor.id,
+      subjectUserId: userId,
+      detail: { reason, unpublishedListingIds: owned.map((r) => r.id) },
+    });
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'suspend',
+      resourceType: 'user',
+      resourceId: userId,
+      subjectUserId: userId,
+      reason,
+    });
+    return {
+      userId,
+      suspendedAt: now.toISOString(),
+      suspendReason: reason,
+      unpublishedCount: owned.length,
+    };
+  }
+
+  @Roles('admin')
+  @Post('users/:userId/unsuspend')
+  async unsuspend(
+    @CurrentUser() user: AuthUser,
+    @Param('userId', ParseUUIDPipe) userId: string,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    const target = await this.users.findById(userId);
+    if (!target) throw new NotFoundException('user not found');
+    if (!target.suspendedAt) {
+      throw new BadRequestException('user is not suspended');
+    }
+    const now = new Date();
+    await this.db
+      .update(users)
+      .set({ suspendedAt: null, suspendReason: null, updatedAt: now })
+      .where(eq(users.id, userId));
+
+    await recordModerationEvent(this.db, {
+      kind: 'USER_UNSUSPEND',
+      actorUserId: actor.id,
+      subjectUserId: userId,
+      detail: {},
+    });
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'unsuspend',
+      resourceType: 'user',
+      resourceId: userId,
+      subjectUserId: userId,
+      reason: 'admin unsuspend',
+    });
+    return { userId, suspendedAt: null };
   }
 }

@@ -15,7 +15,7 @@
 | 2 | Sign up + onboard | OIDC + web onboarding form + `POST /seller/onboarding` + informativa v1.1 | ✅ **LIVE** | **PP-4 merged** — `/seller/onboarding` + wizard gate |
 | 3 | Create listing | `/seller/list` wizard: OMI panel, photos, AI description, autosave, publish, quotas | ✅ LIVE | — |
 | 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | ✅ **LIVE** — checklist PK-2 + VO PK-1 (2026-08-15) | P3 live + `VERIFIED_OWNER_ENABLED=true`; P6 live + checklist on; enablement `docs/audits/EC-S-pk1-vo-enablement.md` |
-| 5 | Receive enquiries | `/seller/enquiries`, Verified Buyer badges, mark-read, **listing title + slug on cards** | ✅ LIVE | (chat = T25, parked PK-5 — by design off-platform for now) |
+| 5 | Receive enquiries | `/seller/enquiries`, Verified Buyer badges, mark-read, **listing title + slug on cards**, **in-portal thread (PK-5)** | ✅ LIVE | T25 messaging via `SELLER_MESSAGING_ENABLED` |
 | 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ✅ **LIVE** | **V-1** flag + **auth book/confirm smoke PASS 2026-08-15** (`docs/audits/EC-S-v1-viewings-auth-smoke.md`) |
 | 7 | Steer the sale | analytics + price nudges | ✅ **LIVE** | **PK-3 flipped 2026-08-14:** P7 live + `SELLER_ANALYTICS_ENABLED=true`; see `docs/audits/EC-S-pk3-analytics-enablement.md` |
 | 8 | Pay us | boost + premium (Stripe rails live, flags on) | ✅ **LIVE** | **PP-5 merged** — seller listings dashboard + boost buy + premium upsell |
@@ -51,8 +51,8 @@
 | PK-1 / PK-2 | VO + checklist flips (after PP-6 merges) | Stage 4: **PK-2 + PK-1 CLOSED** — checklist + VO live (2026-08-14/15) |
 | PK-3 | Analytics flip | Stage 7 **CLOSED 2026-08-14** — P7 live + analytics/nudges API on |
 | PK-4 | Bunny DPA → CDN | Photo delivery — **CLOSED** CDN live + **AZM residual-risk acceptance** (DPA still not evidenced; T05 ☐) — `docs/audits/EC-S-pk4-dpa-gap.md` |
-| PK-5 | T05 §6.5 → T25 messaging | Stage 5 upgrade: enquiries → chat threads |
-| PK-6 | LIA → T19.2 dup-enforce | Abuse hardening |
+| PK-5 | T05 §6.5 → T25 messaging | **CLOSED 2026-08-15** |
+| PK-6 | LIA → T19.2 dup-enforce | **CLOSED 2026-08-15** |
 | PK-7 | External counsel countersign | Risk posture on live claims |
 | PK-8 | Seed paid partners | Stage 9 paid directory visible |
 
@@ -71,4 +71,4 @@
 All dispatches follow `docs/ec-s-post-roadmap-polish.md` §C (single agent per code; `NEXT_PUBLIC_*` Docker ARG same-PR; Traefik compose pair; ops-flip vs eng-build stated explicitly; no parked flips bundled; ledger copy only via flip protocol).
 
 ---
-*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-1–PK-4** closed 2026-08-14/15. **EC-S eng backlog empty.** Next: PK-5+ decisions. Status polls: `docs/runbooks/azm-dev-bridge.md`.*
+*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-1–PK-6** closed 2026-08-14/15. Next: PK-7/PK-8. Status polls: `docs/runbooks/azm-dev-bridge.md`.*

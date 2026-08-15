@@ -186,3 +186,84 @@
   font-weight: 600;
   color: var(--azure, #1a6faa);
 }
+
+.si-card--open {
+  border-color: color-mix(in srgb, var(--azure, #1a6faa) 55%, var(--line, #ddd));
+}
+
+.si-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.si-field--grow {
+  flex: 1 1 12rem;
+}
+
+.si-thread {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line, #ddd);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.si-thread__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
+.si-thread__msg {
+  max-width: 92%;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.55rem;
+  background: color-mix(in srgb, var(--wash, #f3f0ea) 70%, transparent);
+}
+
+.si-thread__msg--mine {
+  align-self: flex-end;
+  background: color-mix(in srgb, var(--azure, #1a6faa) 14%, transparent);
+}
+
+.si-thread__msg--them {
+  align-self: flex-start;
+}
+
+.si-thread__body {
+  margin: 0;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+.si-thread__meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.72rem;
+  color: var(--muted, #5c5c5c);
+  font-family: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+}
+
+.si-thread__composer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: flex-end;
+}
+
+.si-thread__input {
+  width: 100%;
+  font: inherit;
+  border: 1px solid var(--line, #ddd);
+  border-radius: 0.35rem;
+  padding: 0.45rem 0.55rem;
+  background: var(--paper, #faf8f5);
+  color: var(--ink, #1a1a1a);
+  resize: vertical;
+}

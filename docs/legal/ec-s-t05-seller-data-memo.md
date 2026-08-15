@@ -1,6 +1,6 @@
 # EC-S-T05 — Seller-Side Data Protection Memo + Informativa Extension
 
-**Status:** G1 SIGNED (AZM 2026-08-13) — Layer 1 may ship; version `v1.1`. §6.5/T25 remain open. **Bunny.net DPA: not evidenced** — PK-4 CDN ops-live under **AZM residual-risk acceptance** (2026-08-15; `docs/audits/EC-S-pk4-dpa-gap.md`). Do **not** treat T10 as counsel-cleared until a countersigned DPA is cited.  
+**Status:** G1 SIGNED (AZM 2026-08-13) — Layer 1 may ship; version `v1.1`. **§6.5 / §3.1 CLOSED** (AZM 2026-08-15 — hosting carve-out for message content; see below). **Bunny.net DPA: not evidenced** — PK-4 CDN ops-live under **AZM residual-risk acceptance** (2026-08-15; `docs/audits/EC-S-pk4-dpa-gap.md`). Do **not** treat T10 as counsel-cleared until a countersigned DPA is cited.  
 **Entity:** Mundida S.r.l. / Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Lesson applied:** informativa valid and versioned **before** collection begins (Contatta precedent). No seller-side field ships before this memo's informativa section is approved and versioned in the consent ledger (**T30**).
 
@@ -47,7 +47,7 @@
 
 | # | Counsel position |
 |---|------------------|
-| 3.1 Messages | ☐ controller for content · ☐ hosting / Art. 2 hosting carve-out · ☐ other: ___ |
+| 3.1 Messages | ☑ **hosting / Art. 2 hosting carve-out for message content**; EasyCasa **controller for transport metadata** only (AZM 2026-08-15; aligns T04 row 5 — no negotiation intervention beyond abuse/safety). Record: `docs/audits/EC-S-pk5-pk6-counsel-determinations.md` |
 | 3.2 Badge display | ☐ EasyCasa sole · ☐ joint with Banks4All · ☐ Banks4All sole + EasyCasa processor · ☐ other: ___ |
 | 3.3 Visura/docs | ☐ EasyCasa sole controller (proposed) · ☐ amend: ___ |
 
@@ -84,7 +84,7 @@ Sections to add to [`privacy-policy.md`](./privacy-policy.md) (and live `/legal/
 - Seller account and listing publication (6(1)(b))
 - Verification-document handling (private storage, moderation access, never public)
 - Moderation of listings / documents
-- Message retention (pending §3.1 / §6.5)
+- Message retention (transport metadata controller; content under hosting carve-out — §3.1 / §6.5 AZM 2026-08-15)
 - Optional-service payments via Stripe
 - Buyer-badge provenance (Banks4All, gruppo Mundida) when shown to sellers
 - Rights incl. portability of listing data
@@ -110,15 +110,15 @@ This extension **increments the policy version**; acceptance/consent records mus
 2. LIA for fraud-prevention processing — counsel to review the drafted balancing test (to be produced with T12/T19 briefs).
 3. Does document verification (visura) constitute processing of data relating to **third parties** (co-owners appearing in visura)? If so, informativa wording for third-party data.
 4. **DPO requirement** reassessment (Art. 37): does systematic owner-document verification at scale change the prior assessment?
-5. Message-content controllership (§3.1) — position wanted **before T25** build starts.
+5. Message-content controllership (§3.1) — **ANSWERED** (AZM 2026-08-15).
 
 | # | Answer / reference |
 |---|-------------------|
 | 6.1 | |
-| 6.2 | |
+| 6.2 | **T19.2 LIA accepted** (AZM 2026-08-15) — `docs/legal/ec-s-t19-2-lia.md` |
 | 6.3 | ☐ third-party processing · wording: ___ |
 | 6.4 | ☐ DPO still not required · ☐ appoint · ☐ other: ___ |
-| 6.5 | (see §3.1) |
+| 6.5 | ☑ hosting carve-out for **content**; EasyCasa controller for **transport metadata** (see §3.1) — unlocks T25 / PK-5 |
 
 ---
 
@@ -129,7 +129,7 @@ This extension **increments the policy version**; acceptance/consent records mus
 | **T06** seller onboarding | §5 Layer 1 approved + versioned |
 | **T10** media pipeline | Bunny.net DPA executed (§4) |
 | **T14 / T18** documents | §6.3 answered |
-| **T25** messaging | §6.5 / §3.1 answered |
+| **T25** messaging | §6.5 / §3.1 **answered** (AZM 2026-08-15) — eng may proceed under `SELLER_MESSAGING_ENABLED` |
 | **T30** consent ledger seller purposes | This memo + version string |
 
 Engineering must not open seller collection UIs that persist new personal data categories until the relevant gate above is checked in the task PR.
@@ -148,4 +148,4 @@ Engineering must not open seller collection UIs that persist new personal data c
 | Layer 1 may ship in T06 | ☑ yes |
 | Policy version to stamp | `v1.1` |
 
-*Not legal advice. §6.5 / T25 message controllership remains open. Bunny listing CDN is **ops-live (PK-4)** under **AZM residual-risk acceptance** — DPA still **not evidenced**; do not treat the T10 counsel gate as cleared. Private VO/checklist docs stay on MinIO / API proxy (leak-checked 2026-08-15).*
+*Not legal advice. §6.5 / §3.1 **closed** AZM 2026-08-15 (hosting carve-out for content). Bunny listing CDN is **ops-live (PK-4)** under **AZM residual-risk acceptance** — DPA still **not evidenced**; do not treat the T10 counsel gate as cleared. Private VO/checklist docs stay on MinIO / API proxy (leak-checked 2026-08-15).*

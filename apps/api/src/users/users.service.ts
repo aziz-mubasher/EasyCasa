@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, desc, eq, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
@@ -54,6 +54,18 @@ export class UsersService {
   async findById(id: string) {
     const rows = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
     return rows[0] ?? null;
+  }
+
+  /** EC-S-T19.2 — true when admin suspend is active. */
+  isSuspended(row: { suspendedAt: Date | null } | null | undefined): boolean {
+    return row?.suspendedAt != null;
+  }
+
+  async assertNotSuspended(userId: string): Promise<void> {
+    const row = await this.findById(userId);
+    if (this.isSuspended(row)) {
+      throw new ForbiddenException('account suspended');
+    }
   }
 
   async addFavorite(userId: string, listingId: string) {

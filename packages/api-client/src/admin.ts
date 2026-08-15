@@ -197,6 +197,29 @@ export class EasyCasaAdminApi {
     });
   }
 
+  /* EC-S-T19 abuse */
+  listAbuseFlaggedMedia(): Promise<unknown[]> {
+    return this.request('/admin/abuse/flagged-media', z.array(z.unknown()));
+  }
+  listAbuseRepeatOffenders(days?: number, min?: number): Promise<unknown[]> {
+    const q = new URLSearchParams();
+    if (days != null) q.set('days', String(days));
+    if (min != null) q.set('min', String(min));
+    const suffix = q.toString() ? `?${q}` : '';
+    return this.request(`/admin/abuse/repeat-offenders${suffix}`, z.array(z.unknown()));
+  }
+  suspendAbuseUser(userId: string, reason: string): Promise<unknown> {
+    return this.request(`/admin/abuse/users/${encodeURIComponent(userId)}/suspend`, z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  }
+  unsuspendAbuseUser(userId: string): Promise<unknown> {
+    return this.request(`/admin/abuse/users/${encodeURIComponent(userId)}/unsuspend`, z.unknown(), {
+      method: 'POST',
+    });
+  }
+
   /* EC-13 listing reports */
   listListingReports(): Promise<unknown[]> {
     return this.request('/admin/listing-reports', z.array(z.unknown()));

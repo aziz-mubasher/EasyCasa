@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** · **PK-3 analytics LIVE** (auth honesty smoke PASS) · **PK-1 VO LIVE** · **PK-4 Bunny CDN LIVE** (private-doc leak PASS; **DPA gap CLOSED via residual-risk acceptance 2026-08-15**) · **PP-1 partner self-serve checkout LIVE** (Stripe €49) · **PP-2+PP-3 housekeeping live** · paid directory MVP · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP eng closed** · remaining parked: **PK-5–PK-8**.
+**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** · **PK-3 analytics LIVE** · **PK-1 VO LIVE** · **PK-4 Bunny CDN LIVE** (DPA gap closed via residual-risk acceptance) · **PK-5 messaging LIVE** (`SELLER_MESSAGING_ENABLED`) · **PK-6 dup-enforce + suspend LIVE** (`IMAGE_DUPDETECT_ENFORCE`) · **PP-1 partner self-serve checkout LIVE** · **PP-2+PP-3 housekeeping live** · paid directory MVP · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP eng closed** · remaining parked: **PK-7–PK-8**.
 
 ---
 
@@ -37,8 +37,8 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | PK-2 | Checklist flip (`SELLER_CHECKLIST_ENABLED`) → P6 live | **CLOSED 2026-08-14** — K EC 1.52; see `docs/audits/EC-S-pk2-checklist-enablement.md` | done |
 | PK-3 | Analytics flip (`SELLER_ANALYTICS_ENABLED`) → P7 live | **CLOSED 2026-08-14** — K EC 1.53; see `docs/audits/EC-S-pk3-analytics-enablement.md` | done |
 | PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | **CLOSED 2026-08-15** — CDN live; private leak PASS; DPA gap closed via **AZM residual-risk acceptance** (`docs/audits/EC-S-pk4-dpa-gap.md`); T05 §4 still ☐ until DPA cited | done |
-| PK-5 | T25 in-portal messaging | T05 §6.5 controllership determination | Counsel |
-| PK-6 | T19.2 dup-enforce + suspend UX | LIA | Counsel |
+| PK-5 | T25 in-portal messaging | **CLOSED 2026-08-15** — §6.5 hosting carve-out; `SELLER_MESSAGING_ENABLED`; `docs/audits/EC-S-pk5-messaging-enablement.md` | done |
+| PK-6 | T19.2 dup-enforce + suspend UX | **CLOSED 2026-08-15** — LIA accepted; enforce + admin suspend; `docs/audits/EC-S-pk6-dup-enforce-enablement.md` | done |
 | PK-7 | External counsel countersign — Claim 1 EUR figures, Claim 2 wording, packet PDFs | Counsel engagement (recommended: claims are public on product-owner sign-off only) | AZM → counsel |
 | PK-8 | Seed first paid partners (admin marks `paid_placement=true`) | Partner outreach; until then informational banner is correct | AZM |
 
@@ -91,6 +91,10 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pk4-dpa-residual-risk-closeout.md` | **PK-4** residual-risk close-out R&D feedback |
 | `docs/audits/EC-S-pk4-private-doc-leak-check.md` | **PK-4** VO/checklist stay off CDN (PASS 2026-08-15) |
 | `docs/audits/EC-S-pk4-rnd-report.md` | **PK-4** post-merge/deploy R&D report (for Claude) |
+| `docs/audits/EC-S-pk5-pk6-counsel-determinations.md` | **PK-5/PK-6** AZM §6.5 + LIA determinations |
+| `docs/audits/EC-S-pk5-messaging-enablement.md` | **PK-5** T25 messaging enablement |
+| `docs/audits/EC-S-pk6-dup-enforce-enablement.md` | **PK-6** T19.2 enforce + suspend |
+| `docs/legal/ec-s-t19-2-lia.md` | **PK-6** LIA acceptance |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
@@ -103,4 +107,4 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/env.md` | Flag/build-arg documentation |
 
 ---
-*Maintained by Claude (R&D coordination). PP-1–PP-6 closed 2026-08-14. **PK-1/2/3/4 closed** (VO + checklist + analytics + CDN; PK-4 DPA gap → residual-risk acceptance 2026-08-15). **V-1 auth smoke** + **PP-1 Stripe Price** + **PK-3 analytics honesty smoke** 2026-08-14/15. Standing rule §C.14 for CDN/storage briefs. Remaining product/counsel: **PK-5–PK-8**. Update on every PK/V closure.*
+*Maintained by Claude (R&D coordination). PP-1–PP-6 closed 2026-08-14. **PK-1–PK-6 closed** (VO + checklist + analytics + CDN + messaging + dup-enforce). Remaining product/counsel: **PK-7–PK-8**. Update on every PK/V closure.*

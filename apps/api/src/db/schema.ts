@@ -37,6 +37,9 @@ export const users = pgTable('users', {
   avatarUrl: text('avatar_url'),
   bio: text('bio'),
   membershipTier: text('membership_tier'),
+  /** EC-S-T19.2 — admin abuse suspend; blocks upload/publish while set. */
+  suspendedAt: timestamp('suspended_at', { withTimezone: true }),
+  suspendReason: text('suspend_reason'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => ({
@@ -224,6 +227,26 @@ export const enquiries = pgTable(
   },
   (t) => ({
     listingCreatedIdx: index('enquiries_listing_created_idx').on(t.listingId, t.createdAt),
+  }),
+);
+
+/**
+ * EC-S-T25 — seller↔buyer thread replies on an enquiry.
+ * Initial enquiries.message is the seed (not duplicated here).
+ * Controllership: transport metadata = EasyCasa controller; content = hosting carve-out (T05 §3.1).
+ */
+export const enquiryMessages = pgTable(
+  'enquiry_messages',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    enquiryId: uuid('enquiry_id').notNull(),
+    senderUserId: uuid('sender_user_id').notNull(),
+    body: text('body').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    readAt: timestamp('read_at', { withTimezone: true }),
+  },
+  (t) => ({
+    enquiryCreatedIdx: index('enquiry_messages_enquiry_created_idx').on(t.enquiryId, t.createdAt),
   }),
 );
 
@@ -1351,6 +1374,7 @@ export const schema = {
   consentAcceptanceLog,
 
   enquiries,
+  enquiryMessages,
   plans, memberships, sellerSubscription, featuredPlacements, listingBoost, conversations, messages, notifications,
   devices, partnerProfiles, partnerDirectory, leads, payouts,
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,

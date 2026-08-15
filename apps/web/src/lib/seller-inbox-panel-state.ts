@@ -22,6 +22,8 @@ export type SellerInboxListResponse = {
   items: SellerInboxItemWire[];
   unreadTotal: number;
   perListingUnread: Record<string, number>;
+  /** EC-S-T25 — true when SELLER_MESSAGING_ENABLED on API. */
+  messagingEnabled?: boolean;
 };
 
 export type InboxPanelState =

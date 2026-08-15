@@ -1,10 +1,12 @@
-import { Controller, Get, Param, ParseUUIDPipe, Patch, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseUUIDPipe, Patch, Query, UseGuards } from '@nestjs/common';
 import { IsBooleanString, IsIn, IsOptional, IsUUID } from 'class-validator';
 import type { InboxSort } from '@easycasa/shared';
 
 import { Roles } from '../auth/roles.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
+import { APP_CONFIG } from '../config/config.module';
+import type { ApiConfig } from '../config/load';
 import { UsersService } from '../users/users.service';
 import { SellerConsentGuard } from '../seller/seller-consent.guard';
 import { SellerOnboardingEnabledGuard } from '../seller/seller-onboarding.guard';
@@ -35,13 +37,14 @@ export class SellerInboxController {
   constructor(
     private readonly inbox: SellerInboxService,
     private readonly users: UsersService,
+    @Inject(APP_CONFIG) private readonly config: ApiConfig,
   ) {}
 
   @Roles('seller')
   @Get()
   async list(@CurrentUser() user: AuthUser, @Query() q: InboxQueryDto) {
     const me = await this.users.getOrCreate(user);
-    return this.inbox.list(
+    const result = await this.inbox.list(
       me.id,
       {
         listingId: q.listingId,
@@ -50,6 +53,11 @@ export class SellerInboxController {
       },
       q.sort ?? 'newest',
     );
+    return {
+      ...result,
+      /** EC-S-T25 — web composer gates on this (no NEXT_PUBLIC_* required). */
+      messagingEnabled: this.config.SELLER_MESSAGING_ENABLED,
+    };
   }
 
   @Roles('seller')

@@ -116,6 +116,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     VERIFIED_OWNER_VALIDITY_MONTHS: 12,
     SELLER_CHECKLIST_ENABLED: false,
     SELLER_INBOX_ENABLED: false,
+    SELLER_MESSAGING_ENABLED: false,
     SELLER_VIEWINGS_ENABLED: false,
     SELLER_ANALYTICS_ENABLED: false,
     SELLER_PREMIUM_ENABLED: false,

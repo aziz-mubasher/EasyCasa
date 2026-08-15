@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_pk5_pk6",
+  "kaizenCode": "PENDING Claude",
+  "polishId": "PK-5+PK-6",
+  "title": "PK-5 T25 messaging + PK-6 T19.2 dup-enforce/suspend",
+  "venture": "EasyCasa",
+  "lifecycle": "running",
+  "agentStatus": "RUNNING",
+  "agentBcId": "bc-8782c3ec-9c1d-4d1c-abcc-189b87886d4e",
+  "agentUrl": "https://cursor.com/agents/bc-8782c3ec-9c1d-4d1c-abcc-189b87886d4e",
+  "branch": "cursor/pk5-pk6-enablement-6d4e",
+  "prNumber": null,
+  "prUrl": null,
+  "prState": null,
+  "dispatchedAt": "2026-08-15T18:42:33.257Z",
+  "updatedAt": "2026-08-15T18:42:33.257Z",
+  "summary": "PK-5+PK-6 in progress: recording AZM §6.5 + LIA; building T25 messaging + T19.2 enforce/suspend",
+  "nextAction": "Implement eng, open PR, deploy, smoke",
+  "errors": []
+}

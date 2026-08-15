@@ -331,6 +331,9 @@ export class ListingsService {
     const existing = await this.repo.findById(id);
     if (!existing) throw new NotFoundException('listing not found');
     this.assertListingOwner(existing, user, ownerId);
+    if (ownerId) {
+      await this.users.assertNotSuspended(ownerId);
+    }
     if (existing.status === 'sold' || existing.status === 'archived') {
       throw new BadRequestException(`cannot publish listing in status "${existing.status}"`);
     }

@@ -264,6 +264,12 @@ const Schema = z
      */
     SELLER_INBOX_ENABLED: bool(false),
     /**
+     * EC-S-T25 — in-portal enquiry messaging (seller↔buyer thread replies).
+     * Default false until T05 §6.5 answered. Routes 404 when off.
+     * Inbox list exposes messagingEnabled so web needs no NEXT_PUBLIC_* for the composer.
+     */
+    SELLER_MESSAGING_ENABLED: bool(false),
+    /**
      * EC-S-T21/T22 — seller-conducted viewings + open-house capacity.
      * Default false. Seller `/seller/...` viewing routes 404 when off.
      * Existing public/agent viewing routes are unaffected.
