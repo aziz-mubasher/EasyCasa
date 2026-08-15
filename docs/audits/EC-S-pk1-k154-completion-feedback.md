@@ -62,11 +62,11 @@ bridgeTaskId: task_pk1_vo
 kaizenCode: K EC 1.54
 polishId: PK-1
 lifecycle: pr_open
-agentStatus: IDLE
-prUrl: TBD
+agentStatus: RUNNING
+prUrl: https://github.com/aziz-mubasher/EasyCasa/pull/167
 prState: OPEN
-summary: PK-1 DEPLOYED on VPS; docs PR in flight. VO live; P3 Attivo; auth submit→submitted PASS.
-nextAction: Mark Kaizen K EC 1.54 complete; optional admin claim→verify→badge smoke.
+summary: PK-1 VO LIVE on VPS; docs close-out PR #167. P3 Attivo; auth submit→submitted PASS.
+nextAction: Land PR #167 to main; mark Kaizen K EC 1.54 complete; optional admin verify smoke.
 pollUrl: https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json
 <!-- AZM_BRIDGE_STATUS_END -->
 ```
