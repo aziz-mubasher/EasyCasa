@@ -40,6 +40,9 @@ The pipeline's last two runs say **153.850**; the runbook pass bar and the first
 
 ## Action 2 — Counsel packet send (≈15 min)
 
+**Ready-to-send draft (subject + body + attach table):**  
+[`docs/legal/COUNSEL-EMAIL-aste-packet-ready-to-send.md`](../legal/COUNSEL-EMAIL-aste-packet-ready-to-send.md)
+
 **What:** email external counsel the Aste GDPR/legal packet. This ticks the second of three G1 boxes (waitlist already **WAIVED**).
 
 ### Attachments — checklist rows 1–8 (LGL-1 is row 8)
