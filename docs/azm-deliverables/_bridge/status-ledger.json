@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T19:15:07.594Z",
+  "updatedAt": "2026-08-15T19:15:42.680Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -18,8 +18,8 @@
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/commit/decfe5d",
       "prState": "MERGED",
       "dispatchedAt": "2026-08-15T19:08:44.000Z",
-      "updatedAt": "2026-08-15T19:15:07.594Z",
-      "summary": "PK-7 residual risk closed; PK-8 7/7 paid Mundida pilot seeded; tip 0184de3 on main+VPS; feedback docs/audits/EC-S-pk7-pk8-completion-feedback.md",
+      "updatedAt": "2026-08-15T19:15:42.679Z",
+      "summary": "PK-7 residual risk closed; PK-8 7/7 paid Mundida pilots live; tip 232a7f1 on main+VPS; feedback docs/audits/EC-S-pk7-pk8-completion-feedback.md",
       "nextAction": "Claude assign Kaizen codes; optional replace pilots with real partners",
       "errors": []
     },
