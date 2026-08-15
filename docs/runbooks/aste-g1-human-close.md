@@ -40,11 +40,19 @@ The pipeline's last two runs say **153.850**; the runbook pass bar and the first
 
 ## Action 2 — Counsel packet send (≈15 min)
 
+**STATUS (2026-08-15): READY TO SEND — not yet sent**  
+Eval bar already **GREEN (product-accepted)** via EC-G1-LEDGER. This is the **only** open G1 box.  
+Send-ready pack (8 PDFs + filled IT email): Cursor artifacts  
+`/opt/cursor/artifacts/counsel-aste-packet-2026-08-15/` · zip `counsel-aste-packet-2026-08-15.zip` · draft `counsel-email-ready-2026-08-15.md`.
+
+**Suggested dates:** send **2026-08-15** · response by **2026-08-29**.  
+**Attachment count:** **8** (LGL-1 = row 8 — do **not** attach a 9th duplicate).
+
 **What:** email external counsel the Aste GDPR/legal packet. This ticks the second of three G1 boxes (waitlist already **WAIVED**).
 
 ### Attachments — checklist rows 1–8 (LGL-1 is row 8)
 
-Per `docs/legal/counsel-send-checklist.md` (verified present in repo 2026-08-14):
+Per `docs/legal/counsel-send-checklist.md` (verified present in repo 2026-08-14; PDFs exported 2026-08-15):
 
 | # | Document | Path |
 | --- | --- | --- |
