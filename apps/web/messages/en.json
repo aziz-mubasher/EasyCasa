@@ -3421,6 +3421,8 @@
     "informationalLabel": "Informational list — no commission",
     "paidListingLabel": "Directory with paid presence — flat fee",
     "paidBadge": "Paid presence",
+    "operatorManagedBadge": "Operated by EasyCasa",
+    "pilotDeskNote": "Entries marked «Operated by EasyCasa» are internal EasyCasa pilot desks, not independent third-party professionals. The list remains informational — no commission on engagement.",
     "paidLead": "Some professionals pay a flat fee for highlighted placement. EasyCasa does not intermediate and takes no commission on work you hire them for.",
     "orderingNote": "Paid-presence entries appear before others; order does not imply quality or endorsement.",
     "lead": "Curated professionals by province. Direct contact; EasyCasa does not intermediate and takes no commission.",

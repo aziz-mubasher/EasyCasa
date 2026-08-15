@@ -25,6 +25,8 @@ export type PartnerDirectoryWrite = {
   active?: boolean;
   /** G3 row 9 — flat-fee labelled placement. */
   paidPlacement?: boolean;
+  /** EasyCasa-operated pilot desk — not an independent third-party professional. */
+  operatorManaged?: boolean;
 };
 
 @Injectable()
@@ -49,6 +51,7 @@ export class PartnerDirectoryService {
       contact,
       active: input.active !== false,
       paidPlacement: input.paidPlacement === true,
+      operatorManaged: input.operatorManaged === true,
     };
   }
 
@@ -72,6 +75,7 @@ export class PartnerDirectoryService {
         credentials: partnerDirectory.credentials,
         contact: partnerDirectory.contact,
         paidPlacement: partnerDirectory.paidPlacement,
+        operatorManaged: partnerDirectory.operatorManaged,
       })
       .from(partnerDirectory)
       .where(and(...filters))

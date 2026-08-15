@@ -401,6 +401,8 @@ export const partnerDirectory = pgTable('partner_directory', {
   active: boolean('active').notNull().default(true),
   /** G3 row 9 — flat-fee presence; labelled + sorts above unpaid. */
   paidPlacement: boolean('paid_placement').notNull().default(false),
+  /** K EC 1.56 — EasyCasa-operated pilot desk (not independent third-party). */
+  operatorManaged: boolean('operator_managed').notNull().default(false),
   /** PP-1 — claiming partner user (null for admin-seeded rows). */
   userId: uuid('user_id'),
   /** PP-1 — idempotent webhook activation. */

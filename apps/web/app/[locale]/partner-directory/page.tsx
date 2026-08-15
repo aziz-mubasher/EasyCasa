@@ -12,6 +12,7 @@ type DirItem = {
   credentials: string | null;
   contact: string;
   paidPlacement?: boolean;
+  operatorManaged?: boolean;
 };
 
 async function loadDirectory(province?: string, category?: string): Promise<{
@@ -58,6 +59,11 @@ export default async function PartnerDirectoryPage({
       ? 'paidListingLabel'
       : 'informationalLabel';
   const anyPaid = data.items.some((i) => i.paidPlacement === true);
+  const allPaidAreOperatorManaged =
+    anyPaid &&
+    data.items
+      .filter((i) => i.paidPlacement === true)
+      .every((i) => i.operatorManaged === true);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12 space-y-6">
@@ -68,6 +74,14 @@ export default async function PartnerDirectoryPage({
         >
           {t(bannerKey)}
         </p>
+        {allPaidAreOperatorManaged ? (
+          <p
+            className="text-sm text-muted border border-line rounded-sm px-3 py-2 bg-sand/20"
+            data-testid="partner-directory-pilot-note"
+          >
+            {t('pilotDeskNote')}
+          </p>
+        ) : null}
         <h1 className="font-display text-3xl font-semibold text-ink">{t('title')}</h1>
         <p className="text-muted text-sm max-w-2xl">{anyPaid ? t('paidLead') : t('lead')}</p>
         {anyPaid ? (
@@ -98,6 +112,12 @@ export default async function PartnerDirectoryPage({
                     <>
                       {' · '}
                       <span data-testid="partner-paid-badge">{t('paidBadge')}</span>
+                    </>
+                  ) : null}
+                  {item.operatorManaged ? (
+                    <>
+                      {' · '}
+                      <span data-testid="partner-operator-badge">{t('operatorManagedBadge')}</span>
                     </>
                   ) : null}
                 </p>

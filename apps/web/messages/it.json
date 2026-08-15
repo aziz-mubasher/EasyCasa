@@ -3421,6 +3421,8 @@
     "informationalLabel": "Elenco informativo — nessuna commissione",
     "paidListingLabel": "Elenco con presenza a pagamento — tariffa fissa",
     "paidBadge": "Presenza a pagamento",
+    "operatorManagedBadge": "Gestito da EasyCasa",
+    "pilotDeskNote": "Le voci contrassegnate «Gestito da EasyCasa» sono desk pilota interni EasyCasa, non professionisti terzi indipendenti. L'elenco resta informativo — nessuna commissione sull'incarico.",
     "paidLead": "Alcuni professionisti pagano una tariffa fissa per comparire in evidenza nell'elenco. EasyCasa non intermedia e non riceve commissioni sull'incarico con il professionista.",
     "orderingNote": "Le voci con presenza a pagamento compaiono prima delle altre; l'ordine non riflette qualità o raccomandazione.",
     "lead": "Professionisti selezionati per provincia. Contatti diretti; EasyCasa non intermedia e non riceve commissioni.",

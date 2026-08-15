@@ -38,6 +38,7 @@ describe('PartnerDirectoryService — PP-1', () => {
         credentials: null,
         contact: 'a@example.com',
         paidPlacement: false,
+        operatorManaged: false,
       },
       {
         id: 'b',
@@ -47,6 +48,7 @@ describe('PartnerDirectoryService — PP-1', () => {
         credentials: null,
         contact: 'b@example.com',
         paidPlacement: true,
+        operatorManaged: false,
       },
     ];
     const db = {

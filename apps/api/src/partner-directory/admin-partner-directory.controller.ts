@@ -47,6 +47,11 @@ class PartnerDto {
   @IsOptional()
   @IsBoolean()
   paidPlacement?: boolean;
+
+  /** EasyCasa-operated pilot desk row. */
+  @IsOptional()
+  @IsBoolean()
+  operatorManaged?: boolean;
 }
 
 @Controller('admin/partner-directory')

@@ -19,6 +19,8 @@ const KEYS = [
   'informationalLabel',
   'paidListingLabel',
   'paidBadge',
+  'operatorManagedBadge',
+  'pilotDeskNote',
   'paidLead',
   'orderingNote',
   'lead',
