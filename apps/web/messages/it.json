@@ -3147,6 +3147,7 @@
     "fields": {
       "tribunale": "Tribunale",
       "procTipo": "Tipo procedura",
+      "rge": "R.G.E.",
       "lotto": "Lotto",
       "data_asta": "Data asta",
       "termine_offerte": "Termine offerte",
@@ -3231,6 +3232,28 @@
       "load": "Impossibile caricare il report (non trovato, non pronto o non autorizzato).",
       "reprocess": "Schema di estrazione obsoleto — riprocessa l’analisi dal caricamento documenti.",
       "profile": "Salvataggio profilo non riuscito."
+    },
+    "teaser": {
+      "semaforoOverall": "Stato complessivo: {level}"
+    },
+    "unlock": {
+      "title": "Sblocca report completo",
+      "lead": "Economia con riferimenti di pagina, schede criticità, urbanistica, scenari, chat Q&A ed export PDF.",
+      "balance": "Hai {count, plural, one {# credito} other {# crediti}}.",
+      "useCredit": "Usa 1 credito per questo report",
+      "packsLabel": "Acquista pacchetti crediti",
+      "packs": {
+        "1": "1 credito analisi",
+        "3": "3 crediti analisi",
+        "10": "10 crediti analisi"
+      },
+      "counselMark": "COUNSEL REVIEW PENDING",
+      "legal": "Un credito per sblocco report; la rilettura resta gratuita. Prezzi e condizioni al checkout.",
+      "errors": {
+        "insufficient": "Crediti insufficienti — acquista un pacchetto.",
+        "unlock": "Sblocco non riuscito. Riprova.",
+        "checkout": "Checkout non avviato. Riprova."
+      }
     },
     "chat": {
       "title": "Domande sui documenti",

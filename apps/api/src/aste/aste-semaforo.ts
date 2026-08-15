@@ -138,3 +138,29 @@ export function computeSemaforo(extraction: AsteExtractionV2): AsteSemaforo {
     buyer_readiness: 'unknown',
   };
 }
+
+const SEMAFORO_LEVEL_PRIORITY: Record<SemaforoLevel, number> = {
+  ok: 1,
+  unknown: 2,
+  verify: 3,
+  critical: 4,
+};
+
+/** EC-27 teaser — single worst-case level across all dimensions. */
+export function aggregateSemaforoLevel(semaforo: AsteSemaforo): SemaforoLevel {
+  const dims: SemaforoLevel[] = [
+    semaforo.vincoli_gravami,
+    semaforo.occupazione,
+    semaforo.conformita_urbanistica,
+    semaforo.conformita_catastale,
+    semaforo.condizione_immobile,
+    semaforo.spese_condominiali,
+    semaforo.rischio_asta,
+    semaforo.buyer_readiness,
+  ];
+  return dims.reduce(
+    (worst, cur) =>
+      SEMAFORO_LEVEL_PRIORITY[cur] > SEMAFORO_LEVEL_PRIORITY[worst] ? cur : worst,
+    'ok' as SemaforoLevel,
+  );
+}

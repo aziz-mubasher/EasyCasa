@@ -27,6 +27,13 @@ describe('AsteChatService', () => {
       {} as never,
       {} as never,
       { track: vi.fn() } as never,
+      {
+        getEntitlement: vi.fn(async () => ({
+          monetisationEnabled: false,
+          unlocked: true,
+          creditBalance: 0,
+        })),
+      } as never,
     );
     await expect(service.ask('u1', 'a1', { question: 'Ciao?', lang: 'it' })).rejects.toBeInstanceOf(
       ConflictException,
@@ -51,6 +58,13 @@ describe('AsteChatService', () => {
       {} as never,
       {} as never,
       { track: vi.fn() } as never,
+      {
+        getEntitlement: vi.fn(async () => ({
+          monetisationEnabled: false,
+          unlocked: true,
+          creditBalance: 0,
+        })),
+      } as never,
     );
     await expect(service.ask('u1', 'a1', { question: '   ', lang: 'it' })).rejects.toBeInstanceOf(
       HttpException,

@@ -30,6 +30,10 @@ export const PRODUCT_EVENTS = {
    */
   ASTE_FINANCING_BLOCK_SHOWN: 'aste_financing_block_shown',
   ASTE_FINANCING_CTA_CLICKED: 'aste_financing_cta_clicked',
+  /** EC-27 — credit unlock + purchase (ids only; no analysis content). */
+  ASTE_REPORT_UNLOCKED: 'aste.report_unlocked',
+  ASTE_CREDITS_PURCHASED: 'aste.credits_purchased',
+  ASTE_TEASER_VIEWED: 'aste.teaser_viewed',
 } as const;
 
 export type ProductEventName = (typeof PRODUCT_EVENTS)[keyof typeof PRODUCT_EVENTS];

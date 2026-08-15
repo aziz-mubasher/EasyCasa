@@ -134,6 +134,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | GO_LIVE_PAYMENTS_ACK | api | Explicit human ack before accepting `sk_live_*`. Default `false`. |
 | PAYMENTS_SUCCESS_URL / PAYMENTS_CANCEL_URL | api | Redirect targets for embedded checkout return (web success/cancel pages). |
 | NEXT_PUBLIC_PAYMENTS_ENABLED | web (build) | Shows pay path on `/pricing`. Must match API `PAYMENTS_ENABLED`. Rebuild web after changing. |
+| STRIPE_PRICE_ASTE_CREDITS_1 / _3 / _10 | api | EC-27 — optional Stripe Price IDs for Aste credit packs (1/3/10 full-report unlocks). Empty → test-mode `price_data` fallback. Requires **both** `ASTE_ANALYSIS_ENABLED` and `PAYMENTS_ENABLED`. |
 | NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY | web (build) | Stripe `pk_test_*` / `pk_live_*` for Payment Element. Never commit real keys. |
 | BILLING_SUCCESS_URL / BILLING_CANCEL_URL | api | Checkout redirect targets. |
 | CURRENCY | api | Default charge currency (e.g. `eur`). |

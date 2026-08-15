@@ -29,6 +29,8 @@ import {
 } from './aste-free-text';
 import type { AsteOmiCheck } from './aste-omi-check';
 import { AsteOmiCheckService } from './aste-omi-check.service';
+import { AsteCreditsService } from './aste-credits.service';
+import { buildTeaserReportPayload } from './aste-report-teaser';
 import type { AsteExtractionV2, AsteSemaforo } from './extraction-schema';
 
 @Injectable()
@@ -40,6 +42,7 @@ export class AsteReportService {
     private readonly omi: AsteOmiCheckService,
     private readonly ai: AsteAiClient,
     private readonly analytics: ProductAnalyticsService,
+    private readonly credits: AsteCreditsService,
   ) {}
 
   async getReport(
@@ -130,15 +133,43 @@ export class AsteReportService {
 
     const criticita = buildCriticitaCards(semaforo, extraction);
 
+    const entitlement = await this.credits.getEntitlement(userId, analysisId);
+
     this.analytics.track(PRODUCT_EVENTS.ASTE_REPORT_VIEWED, {
       language: opts.lang,
       register: analysis.register,
       report_content_lang: reportLang,
+      view_mode: entitlement.monetisationEnabled && !entitlement.unlocked ? 'teaser' : 'full',
     });
     if (opts.trackPrint) {
+      if (entitlement.monetisationEnabled && !entitlement.unlocked) {
+        throw new BadRequestException('full report not unlocked');
+      }
       this.analytics.track(PRODUCT_EVENTS.ASTE_REPORT_PRINTED, {
         language: opts.lang,
         register: analysis.register,
+      });
+    }
+
+    if (entitlement.monetisationEnabled && !entitlement.unlocked) {
+      this.analytics.track(PRODUCT_EVENTS.ASTE_TEASER_VIEWED, {
+        language: opts.lang,
+        register: analysis.register,
+      });
+      return buildTeaserReportPayload({
+        id: analysis.id,
+        status: analysis.status,
+        language: analysis.language,
+        register: analysis.register,
+        tribunale: analysis.tribunale,
+        rge: analysis.rge,
+        lotto: analysis.lotto,
+        lottoLabel: analysis.lottoLabel,
+        dataAsta: analysis.dataAsta,
+        extraction,
+        semaforo,
+        omiCheck,
+        entitlement,
       });
     }
 
@@ -189,6 +220,8 @@ export class AsteReportService {
         counselReviewed: g.counselReviewed,
       })),
       translateCalls,
+      viewMode: 'full' as const,
+      entitlement,
     };
   }
 

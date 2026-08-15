@@ -3147,6 +3147,7 @@
     "fields": {
       "tribunale": "Court",
       "procTipo": "Procedure type",
+      "rge": "R.G.E.",
       "lotto": "Lot",
       "data_asta": "Auction date",
       "termine_offerte": "Offer deadline",
@@ -3231,6 +3232,28 @@
       "load": "Could not load the report (not found, not ready, or not authorised).",
       "reprocess": "Outdated extraction schema — reprocess the analysis from the upload page.",
       "profile": "Could not save the buyer profile."
+    },
+    "teaser": {
+      "semaforoOverall": "Overall status: {level}"
+    },
+    "unlock": {
+      "title": "Unlock full report",
+      "lead": "See economics with page citations, issue cards, planning detail, scenarios, chat Q&A and PDF export.",
+      "balance": "You have {count, plural, one {# credit} other {# credits}}.",
+      "useCredit": "Use 1 credit for this report",
+      "packsLabel": "Buy credit packs",
+      "packs": {
+        "1": "1 analysis credit",
+        "3": "3 analysis credits",
+        "10": "10 analysis credits"
+      },
+      "counselMark": "COUNSEL REVIEW PENDING",
+      "legal": "Credits are consumed once per report unlock; re-viewing an unlocked report is free. Prices and terms are set at checkout.",
+      "errors": {
+        "insufficient": "Not enough credits — buy a pack below.",
+        "unlock": "Could not unlock the report. Try again.",
+        "checkout": "Could not start checkout. Try again."
+      }
     },
     "chat": {
       "title": "Ask the documents",
