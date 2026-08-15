@@ -1,6 +1,6 @@
 # G1 gate — Analisi Aste (operator checklist)
 
-> **STATUS (2026-08-14, product decision — gate definition unchanged):** Eval pass bar **GREEN — product-accepted** (post-EC-34 live 8/8 + EC-35 VPS smoke Ex2-7 64906/48680). **G1 as a whole is NOT yet green** — counsel packet **NOT SENT** (the only open box). Waitlist **WAIVED** (1 lead, 2026-08-11). Canonical ledger: `docs/audits/aste-g1-hardening-roadmap-ec29-33.md`. Full G1 flips on `packet sent <date>`.
+> **STATUS (2026-08-15):** **G1 FULL GREEN.** Eval pass bar GREEN (product-accepted 2026-08-14) · Counsel **`packet sent 2026-08-15 (response requested by 2026-08-29)`** · Waitlist **WAIVED**. Canonical ledger: `docs/audits/aste-g1-hardening-roadmap-ec29-33.md`. Flags still **off** — G2 / `docs/runbooks/aste-enable.md`. Pre-EC-27: `docs/runbooks/aste-pre-ec27-checklist.md`.
 
 G1 = **eval pass bar** + **counsel packet sent** + **waitlist read** (met or waived).  
 Answers from counsel gate **G2**, not G1. Public flag enable is still `docs/runbooks/aste-enable.md`.

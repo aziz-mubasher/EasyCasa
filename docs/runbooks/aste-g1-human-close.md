@@ -1,9 +1,9 @@
 # G1 — Two human actions to close the gate
 
-**Date:** 2026-08-14 · **Owner:** AZM · **Time needed:** ~10 min (action 1) + ~15 min (action 2)  
-**Context:** Extract set EC-29→34 merged + deployed (`fc64987`). Live 8/8 scored. G1 is blocked on exactly these two items.  
-**Canonical scorecard:** `docs/audits/G1-post-ec34-rnd-report.md`  
-**Reply channel:** paste the one-line replies into Cursor / Claude Desktop; Claude updates the G1 ledger stub.
+**Date:** 2026-08-14 · **Owner:** AZM · **Closed:** 2026-08-15  
+**Context:** Extract set EC-29→35 merged + deployed. Live 8/8 scored. Both human actions **DONE**.  
+**Canonical ledger:** `docs/audits/aste-g1-hardening-roadmap-ec29-33.md` → **G1 FULL GREEN**  
+**Ready-to-send draft (historical):** `docs/legal/COUNSEL-EMAIL-aste-packet-ready-to-send.md`
 
 **Cloud agents cannot perform either action** (Drive PDFs + outbound counsel email stay on AZM Mac / human).
 
@@ -12,7 +12,7 @@
 ## Action 1 — Adjudicate Ex2 lotto 7 (≈10 min)
 
 **STATUS (2026-08-14): DONE — `Ex2-7 = 64906`**  
-AZM confirmed from avviso screenshot (Lotto 7: Prezzo base d'asta €64.906,00 / Offerta minima €48.680,00). Pipeline `153850` is wrong → **EC-35** (lot-association + deterministic lot-section parse). Counsel send (Action 2) still open.
+AZM confirmed from avviso screenshot (Lotto 7: Prezzo base d'asta €64.906,00 / Offerta minima €48.680,00). Pipeline `153850` is wrong → **EC-35** (lot-association + deterministic lot-section parse).
 
 **Question (historical):** what is the CURRENT prezzo base for **lotto 7** in the fourth-sale avviso?  
 The pipeline's last two runs say **153.850**; the runbook pass bar and the first two runs say **64.906**. One of them is another lot's row, an older attempt's price, or a bar error.
@@ -39,6 +39,9 @@ The pipeline's last two runs say **153.850**; the runbook pass bar and the first
 ---
 
 ## Action 2 — Counsel packet send (≈15 min)
+
+**STATUS (2026-08-15): DONE — `packet sent 2026-08-15 (response requested by 2026-08-29)`**  
+Ready-to-send draft: [`docs/legal/COUNSEL-EMAIL-aste-packet-ready-to-send.md`](../legal/COUNSEL-EMAIL-aste-packet-ready-to-send.md)
 
 **What:** email external counsel the Aste GDPR/legal packet. This ticks the second of three G1 boxes (waitlist already **WAIVED**).
 
@@ -77,18 +80,17 @@ Also: request an **explicit response date** (suggest 2 weeks; state the calendar
 packet sent 2026-08-DD (response requested by 2026-08-DD)
 ```
 
-Claude updates the G1 ledger stub. **Counsel's eventual ANSWERS gate G2, not G1** — the send alone closes this G1 box.
+**Recorded:** `packet sent 2026-08-15 (response requested by 2026-08-29)`. Ledger flipped to **G1 FULL GREEN**. Counsel's eventual **ANSWERS** still gate **G2**, not G1.
 
 ---
 
 ## After both actions
 
-| Ex2-7 outcome | Counsel | G1 state |
+| Ex2-7 | Counsel | G1 state |
 |---|---|---|
-| 153850 (bar fix) | sent | **G1 GREEN candidate** → product call (`G1 green` / `stay hardening-first`) + Drive GT true-score as final evidence |
-| 64906 (EC-35) | sent | EC-35 dispatch → merge → one more live 8/8 → then product call |
+| **64906** (EC-35 done) | **sent 2026-08-15** | **G1 FULL GREEN** |
 
-Remaining optional either way: Drive GT true-score vs `EC_Aste_GoldenSet_GroundTruth_v1.md`. Flags stay off; G2 / `aste-enable.md` unaffected until enable checklist.
+Next: `docs/runbooks/aste-pre-ec27-checklist.md`. Flags stay off; G2 / `aste-enable.md` await counsel answers + enable smoke.
 
 ---
 
