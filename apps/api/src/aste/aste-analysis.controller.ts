@@ -85,13 +85,13 @@ export class AsteAnalysisController {
     const me = await this.users.getOrCreate(user);
     const lang = query.lang ?? 'it';
     const trackPrint = query.printed === '1' || query.printed === 'true' || query.printed === 'yes';
-    return this.reports.getReport(me.id, id, { lang, trackPrint });
+    return this.reports.getReport(me.id, id, { lang, trackPrint, email: user.email });
   }
 
   @Get(':id/chat')
   async chatHistory(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     const me = await this.users.getOrCreate(user);
-    return this.chat.history(me.id, id);
+    return this.chat.history(me.id, id, user.email);
   }
 
   @Throttle({ default: { limit: 30, ttl: 60_000 } })
@@ -102,7 +102,7 @@ export class AsteAnalysisController {
     @Body() dto: AsteChatAskDto,
   ) {
     const me = await this.users.getOrCreate(user);
-    return this.chat.ask(me.id, id, { question: dto.question, lang: dto.lang });
+    return this.chat.ask(me.id, id, { question: dto.question, lang: dto.lang }, user.email);
   }
 
   @Get(':id')

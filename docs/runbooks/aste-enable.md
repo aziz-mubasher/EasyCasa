@@ -8,6 +8,53 @@ Also see: `docs/env.md` · Grafana dashboard **EasyCasa — Aste** · alerts gro
 
 ---
 
+## STATUS (2026-08-15 — EC-36)
+
+**Production today:** `ASTE_ANALYSIS_ENABLED=false` · `NEXT_PUBLIC_ASTE_ANALYSIS_ENABLED=false` — public stays dark.
+
+**Internal preview (EC-36, counsel-safe):** AZM may enable allowlist-gated testing on the VPS **without** flipping the public flag:
+
+| Env (api) | Env (web build + runtime) | Purpose |
+|---|---|---|
+| `ASTE_INTERNAL_PREVIEW=true` | `NEXT_PUBLIC_ASTE_INTERNAL_PREVIEW=true` (build ARG) | Mount analisi routes + run pipeline |
+| `ASTE_INTERNAL_PREVIEW_EMAILS=a@x.com,b@y.com` | same values on **web** runtime (server allowlist) | Keycloak email allowlist |
+| `ASTE_ANALYSIS_ENABLED=false` | `NEXT_PUBLIC_ASTE_ANALYSIS_ENABLED=false` | Public semantics unchanged |
+| Stripe **`sk_test_*`** only | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_*` | EC-27 unlock test path; live key refused while public off |
+
+Preview analyses are tagged `internal_preview=true` (migration **0067**) — **purge before G2 public flip** (§5.4 below).
+
+### Remaining G2 items (public enable — do not skip)
+
+1. **Counsel EXTERNAL sign-off** — LGL-1 addendum answers due ~2026-08-29 (retention, claims, subprocessors).
+2. **Observability stack on VPS** (human/ops):
+   ```bash
+   # From repo root with .env containing GRAFANA_ADMIN_PASSWORD + PG_EXPORTER_DSN
+   docker compose -f infra/docker-compose.yml \
+     -f infra/docker-compose.traefik.yml \
+     -f infra/observability/docker-compose.observability.yml \
+     --env-file .env up -d prometheus grafana postgres-exporter
+   ```
+   Verify Grafana dashboard **EasyCasa — Aste** loads; confirm `postgres-exporter` loads `infra/observability/prometheus/postgres-aste.queries.yml`; fire-test alerts in `infra/observability/prometheus/alerts.yml` group `aste`.
+3. **Aste-admin integration tests** — re-run `aste-admin` int specs where Docker is available (CI or VPS).
+4. **Enable smoke** — §2 below (full checklist, not preview-only).
+5. **ECS migrations 0052/0053** — ops decision whether already applied on VPS (unrelated to Aste but ledger hygiene).
+6. **Preview purge** — delete `internal_preview=true` rows + MinIO objects before public flip.
+
+### G2 flip sequence (after counsel + observability)
+
+1. Confirm migration **0066** (EC-27 credits) and **0067** (preview tag) applied.
+2. Set `ASTE_ANALYSIS_ENABLED=true` + `NEXT_PUBLIC_ASTE_ANALYSIS_ENABLED=true`; turn **off** preview envs.
+3. Rebuild/recreate (both compose files — Traefik overlay lesson):
+   ```bash
+   COMPOSE="docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml --env-file .env"
+   $COMPOSE build --no-cache api web ai
+   $COMPOSE up -d --force-recreate api web ai
+   ```
+4. `curl -fsS https://easycasaita.com/api/version` — gitSha matches deploy.
+5. Run §2 smoke checklist.
+
+---
+
 ## 0. Preconditions
 
 ### Migrations (must be applied on VPS)

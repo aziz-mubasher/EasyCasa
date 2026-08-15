@@ -74,6 +74,8 @@ describe('AsteCreditsService (EC-27)', () => {
       db as never,
       {
         ASTE_ANALYSIS_ENABLED: false,
+        ASTE_INTERNAL_PREVIEW: false,
+        ASTE_INTERNAL_PREVIEW_EMAILS: '',
         PAYMENTS_ENABLED: false,
         STRIPE_PRICE_ASTE_CREDITS_1: '',
         STRIPE_PRICE_ASTE_CREDITS_3: '',
@@ -87,14 +89,33 @@ describe('AsteCreditsService (EC-27)', () => {
     expect(ent.unlocked).toBe(true);
   });
 
-  it('monetisationEnabled requires both flags', () => {
+  it('monetisationEnabled requires payments and analysis access', () => {
     const db = { select: vi.fn() };
     const off = new AsteCreditsService(
       db as never,
-      { ASTE_ANALYSIS_ENABLED: true, PAYMENTS_ENABLED: false } as never,
+      {
+        ASTE_ANALYSIS_ENABLED: true,
+        ASTE_INTERNAL_PREVIEW: false,
+        ASTE_INTERNAL_PREVIEW_EMAILS: '',
+        PAYMENTS_ENABLED: false,
+      } as never,
       { record: vi.fn() } as never,
       { track: vi.fn() } as never,
     );
     expect(off.monetisationEnabled()).toBe(false);
+
+    const preview = new AsteCreditsService(
+      db as never,
+      {
+        ASTE_ANALYSIS_ENABLED: false,
+        ASTE_INTERNAL_PREVIEW: true,
+        ASTE_INTERNAL_PREVIEW_EMAILS: 'ops@easycasa.it',
+        PAYMENTS_ENABLED: true,
+      } as never,
+      { record: vi.fn() } as never,
+      { track: vi.fn() } as never,
+    );
+    expect(preview.monetisationEnabled('ops@easycasa.it')).toBe(true);
+    expect(preview.monetisationEnabled('other@x.it')).toBe(false);
   });
 });

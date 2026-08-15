@@ -26,6 +26,9 @@ describe('EC-27 Aste monetisation flag matrix (defaults off)', () => {
       'STRIPE_PRICE_ASTE_CREDITS_1',
       'STRIPE_PRICE_ASTE_CREDITS_3',
       'STRIPE_PRICE_ASTE_CREDITS_10',
+      'ASTE_INTERNAL_PREVIEW',
+      'ASTE_INTERNAL_PREVIEW_EMAILS',
+      'NEXT_PUBLIC_ASTE_INTERNAL_PREVIEW',
     ]) {
       expect(text).toContain(key);
     }

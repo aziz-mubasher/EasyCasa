@@ -37,16 +37,20 @@ export class AsteChatService {
     private readonly credits: AsteCreditsService,
   ) {}
 
-  private async requireFullReportEntitlement(userId: string, analysisId: string): Promise<void> {
-    const entitlement = await this.credits.getEntitlement(userId, analysisId);
+  private async requireFullReportEntitlement(
+    userId: string,
+    analysisId: string,
+    email?: string,
+  ): Promise<void> {
+    const entitlement = await this.credits.getEntitlement(userId, analysisId, email);
     if (entitlement.monetisationEnabled && !entitlement.unlocked) {
       throw new NotFoundException();
     }
   }
 
-  async history(userId: string, analysisId: string) {
+  async history(userId: string, analysisId: string, email?: string) {
     await this.requireOwned(userId, analysisId);
-    await this.requireFullReportEntitlement(userId, analysisId);
+    await this.requireFullReportEntitlement(userId, analysisId, email);
     const rows = await this.db
       .select()
       .from(asteChatMessages)
@@ -76,9 +80,10 @@ export class AsteChatService {
     userId: string,
     analysisId: string,
     input: { question: string; lang: 'it' | 'en' },
+    email?: string,
   ) {
     const analysis = await this.requireOwnedReady(userId, analysisId);
-    await this.requireFullReportEntitlement(userId, analysisId);
+    await this.requireFullReportEntitlement(userId, analysisId, email);
     const question = (input.question ?? '').trim();
     if (!question) {
       throw new HttpException({ message: 'question required' }, HttpStatus.BAD_REQUEST);

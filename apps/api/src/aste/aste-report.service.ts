@@ -48,7 +48,7 @@ export class AsteReportService {
   async getReport(
     userId: string,
     analysisId: string,
-    opts: { lang: 'it' | 'en' | 'es'; trackPrint?: boolean },
+    opts: { lang: 'it' | 'en' | 'es'; trackPrint?: boolean; email?: string },
   ) {
     const analysis = await this.requireOwnedReady(userId, analysisId);
     const extraction = analysis.extraction as AsteExtractionV2 | null;
@@ -133,7 +133,7 @@ export class AsteReportService {
 
     const criticita = buildCriticitaCards(semaforo, extraction);
 
-    const entitlement = await this.credits.getEntitlement(userId, analysisId);
+    const entitlement = await this.credits.getEntitlement(userId, analysisId, opts.email);
 
     this.analytics.track(PRODUCT_EVENTS.ASTE_REPORT_VIEWED, {
       language: opts.lang,

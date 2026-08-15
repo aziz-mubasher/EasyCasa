@@ -11,6 +11,9 @@ import { and, desc, eq, inArray, lt, sql } from 'drizzle-orm';
 import { randomUUID } from 'node:crypto';
 
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
+import { AdminAuditService } from '../authority/admin-audit.service';
+import type { ApiConfig } from '../config';
+import { APP_CONFIG } from '../config/config.module';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { asteAnalyses, asteDocuments } from '../db/schema';
@@ -53,8 +56,10 @@ export class AsteAnalysisService {
 
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
+    @Inject(APP_CONFIG) private readonly config: ApiConfig,
     private readonly storage: AsteStorage,
     private readonly analytics: ProductAnalyticsService,
+    private readonly audit: AdminAuditService,
   ) {}
 
   async create(
@@ -68,6 +73,8 @@ export class AsteAnalysisService {
     const language = input.language ?? 'it';
     const register = input.register ?? 'investor';
     const lottoLabel = input.lottoLabel?.trim() || null;
+    const internalPreview =
+      !this.config.ASTE_ANALYSIS_ENABLED && this.config.ASTE_INTERNAL_PREVIEW;
     const [row] = await this.db
       .insert(asteAnalyses)
       .values({
@@ -76,8 +83,19 @@ export class AsteAnalysisService {
         language,
         register,
         lottoLabel,
+        internalPreview,
       })
       .returning();
+    if (internalPreview) {
+      await this.audit.record({
+        actorUserId: userId,
+        action: 'aste.internal_preview_analysis_created',
+        resourceType: 'aste_analysis',
+        resourceId: row!.id,
+        subjectUserId: userId,
+        reason: 'internal_preview:true',
+      });
+    }
     this.analytics.track(PRODUCT_EVENTS.ASTE_ANALYSIS_CREATED, {
       language,
       register,
@@ -367,6 +385,7 @@ export class AsteAnalysisService {
       buyerProfile: r.buyerProfile,
       failureReason: r.failureReason,
       attempts: r.attempts,
+      internalPreview: r.internalPreview,
       createdAt: r.createdAt.toISOString(),
       updatedAt: r.updatedAt.toISOString(),
     };

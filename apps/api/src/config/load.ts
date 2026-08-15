@@ -169,6 +169,13 @@ const Schema = z
      */
     ASTE_ANALYSIS_ENABLED: bool(false),
     /**
+     * EC-36 — internal preview on production VPS while public flag stays off.
+     * Routes/API work only for authenticated users on ASTE_INTERNAL_PREVIEW_EMAILS.
+     */
+    ASTE_INTERNAL_PREVIEW: bool(false),
+    /** EC-36 — comma-separated Keycloak emails (case-insensitive). Empty ⇒ preview inert. */
+    ASTE_INTERNAL_PREVIEW_EMAILS: z.string().default(''),
+    /**
      * EC-22 — days before submitted/failed aste analyses (and MinIO objects) are purged.
      * Default 365 — COUNSEL PENDING (LGL-1).
      */

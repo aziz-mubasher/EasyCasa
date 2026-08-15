@@ -17,6 +17,7 @@ export * from './upload-quota';
 export * from './seller-entitlements';
 export * from './listing-boost';
 export * from './aste-credits';
+export * from './aste-access';
 export * from './partner-directory';
 export * from './enquiry-inbox';
 export * from './nudges';
