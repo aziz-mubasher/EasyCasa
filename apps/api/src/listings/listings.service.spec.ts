@@ -40,6 +40,8 @@ const valuationBandMock = {
 
 const usersMock = {
   findById: vi.fn().mockResolvedValue(null),
+  assertNotSuspended: vi.fn().mockResolvedValue(undefined),
+  isSuspended: vi.fn().mockReturnValue(false),
 };
 
 function makeService(repo: ListingsRepository) {
