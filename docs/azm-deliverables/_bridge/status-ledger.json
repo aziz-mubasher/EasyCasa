@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T14:35:21.205Z",
+  "updatedAt": "2026-08-15T14:39:31.645Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -149,18 +149,18 @@
       "polishId": "EC-36",
       "title": "EC-G1 — FULL GREEN (counsel packet sent 2026-08-15)",
       "venture": "EasyCasa",
-      "lifecycle": "running",
+      "lifecycle": "pr_open",
       "agentStatus": "RUNNING",
-      "agentBcId": "bc-7fea1533-0af9-41e9-94fd-740e880be431",
-      "agentUrl": "https://cursor.com/agents/bc-7fea1533-0af9-41e9-94fd-740e880be431",
+      "agentBcId": "bc-18a9ed0a-baeb-4e3a-97fc-c180821a6cb3",
+      "agentUrl": "https://cursor.com/agents/bc-18a9ed0a-baeb-4e3a-97fc-c180821a6cb3",
       "branch": "cursor/ec-36-aste-internal-preview-6cb3",
-      "prNumber": 161,
-      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/161",
-      "prState": "MERGED",
+      "prNumber": 172,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/172",
+      "prState": "DRAFT",
       "dispatchedAt": "2026-08-14T20:25:00.000Z",
-      "updatedAt": "2026-08-15T14:35:21.205Z",
-      "summary": "EC-36: implementing allowlist-gated Aste internal preview + G2 runbook prep",
-      "nextAction": "Implement gate logic, tests, docs; open draft PR",
+      "updatedAt": "2026-08-15T14:39:31.645Z",
+      "summary": "EC-36 draft PR #172: allowlist-gated Aste internal preview + G2 runbook STATUS",
+      "nextAction": "Review draft PR #172; AZM sets preview envs + runs 10-step smoke on VPS",
       "errors": []
     },
     {
