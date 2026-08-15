@@ -3,7 +3,7 @@
 **Audience:** Ops / support / QA operators on EasyCasa ITA (`easycasaita.com`).  
 **Scope:** End-to-end private-seller dashboard: identity → onboarding → list → publish → inbox → viewings → analytics → monetisation.  
 **Not in scope:** Agency `/add` wizard, admin VO queue UI details (see admin pages), T25 in-portal messaging (parked).  
-**Live state (post-roadmap):** onboarding + dual inbox **on**; boost / premium / directory **on**; **checklist + analytics + VO on** (PK-1/PK-2/PK-3). Canonical open work: `docs/ec-s-post-roadmap-polish.md` (PK-4+).
+**Live state (post-roadmap):** onboarding + dual inbox **on**; boost / premium / directory **on**; **checklist + analytics + VO + listing CDN on** (PK-1–PK-4). Canonical open work: `docs/ec-s-post-roadmap-polish.md` (PK-5+).
 
 ---
 
@@ -73,7 +73,7 @@ docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml -
 | `SELLER_ANALYTICS_ENABLED` | **`true` (PK-3 flipped 2026-08-14)** | Runtime on VPS; web rebuild for P7 ledger. Page always rendered; seller analytics/nudge APIs live (unauth → 401, not flag-404) |
 | `VERIFIED_OWNER_ENABLED` | `true` (PK-1 / K EC 1.54) | Runbook: `docs/runbooks/ec-s-vo-enablement.md` · audit: `docs/audits/EC-S-pk1-vo-enablement.md` |
 | `SELLER_CHECKLIST_ENABLED` | **`true` (PK-2 flipped 2026-08-14)** | Runtime on VPS; web rebuild for P6 ledger |
-| `MEDIA_CDN_ENABLED` | `false` (parked PK-4) | |
+| `MEDIA_CDN_ENABLED` | `true` (PK-4 / K EC 1.55) | Listing CDN; private docs stay MinIO — `docs/audits/EC-S-pk4-cdn-enablement.md` |
 
 Confirm on VPS:
 
@@ -240,7 +240,7 @@ Unauthenticated probes: **401** (not flag-404) when flags are on.
 - [ ] Viewings list reachable; availability editable when viewings flag on
 - [ ] `POST /api/featured/checkout` (auth) returns Stripe URL when boost on
 - [ ] `GET /api/seller/entitlements` (auth) 200 when premium on
-- [ ] Parked flags still false unless AZM unparked: CDN (VO + checklist + analytics live as of PK-1/PK-2/PK-3)
+- [ ] Parked flags still false unless AZM unparked: none of VO/checklist/analytics/CDN (all live as of PK-1–PK-4); remaining: T25 messaging etc.
 - [ ] Authenticated VO honesty: `POST /api/seller/vo/<id>/submit` → **201** `submitted`; admin `#vo` claim/verify optional follow-up
 - [ ] Authenticated viewings honesty: seller availability → buyer book → seller confirm → `CONFIRMED`
 - [ ] Authenticated analytics honesty: `GET /api/seller/listings/<id>/analytics?window=30d` → **200** with non-zero rollups on a listing that has daily rows

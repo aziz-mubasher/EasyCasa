@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** · **PK-3 analytics LIVE** · **PK-1 VO LIVE** (P3 + auth submit PASS 2026-08-15) · **PP-1 partner self-serve checkout LIVE** (Stripe €49) · **PP-2+PP-3 housekeeping live** · paid directory MVP · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP-1/2/3/4/5/6 eng closed** · **PK-1/2/3 CLOSED** · **EC-S eng backlog empty** — remaining work is PK-4+ decisions (optional admin VO verify smoke; optional partner pay webhook).
+**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-2 checklist LIVE** · **PK-3 analytics LIVE** · **PK-1 VO LIVE** · **PK-4 Bunny CDN LIVE** (2026-08-15) · **PP-1 partner self-serve checkout LIVE** (Stripe €49) · **PP-2+PP-3 housekeeping live** · paid directory MVP · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP-1/2/3/4/5/6 eng closed** · **PK-1/2/3/4 CLOSED** · **EC-S eng backlog empty** — remaining work is PK-5+ decisions (optional admin VO verify smoke; optional partner pay webhook).
 
 ---
 
@@ -36,8 +36,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | PK-1 | VO flip (`VERIFIED_OWNER_ENABLED`) → P3 ledger live | **CLOSED 2026-08-15** — K EC 1.54; `docs/audits/EC-S-pk1-vo-enablement.md` | done |
 | PK-2 | Checklist flip (`SELLER_CHECKLIST_ENABLED`) → P6 live | **CLOSED 2026-08-14** — K EC 1.52; see `docs/audits/EC-S-pk2-checklist-enablement.md` | done |
 | PK-3 | Analytics flip (`SELLER_ANALYTICS_ENABLED`) → P7 live | **CLOSED 2026-08-14** — K EC 1.53; see `docs/audits/EC-S-pk3-analytics-enablement.md` | done |
-| `docs/audits/EC-S-pk3-k153-completion-feedback.md` | **PK-3 / K EC 1.53** post-merge completion R&D feedback |
-| PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | Bunny DPA signed | AZM / DPO |
+| PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | **CLOSED 2026-08-15** — K EC 1.55; `docs/audits/EC-S-pk4-cdn-enablement.md` | done |
 | PK-5 | T25 in-portal messaging | T05 §6.5 controllership determination | Counsel |
 | PK-6 | T19.2 dup-enforce + suspend UX | LIA | Counsel |
 | PK-7 | External counsel countersign — Claim 1 EUR figures, Claim 2 wording, packet PDFs | Counsel engagement (recommended: claims are public on product-owner sign-off only) | AZM → counsel |
@@ -79,6 +78,9 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/audits/EC-S-pk1-k154-completion-feedback.md` | **PK-1 / K EC 1.54** post-merge completion R&D feedback |
 | `docs/audits/EC-S-pk2-k152-completion-feedback.md` | **PK-2 / K EC 1.52** post-merge completion R&D feedback |
 | `docs/audits/EC-S-pk3-analytics-enablement.md` | **PK-3 / K EC 1.53** analytics enablement record |
+| `docs/audits/EC-S-pk3-k153-completion-feedback.md` | **PK-3 / K EC 1.53** post-merge completion R&D feedback |
+| `docs/audits/EC-S-pk4-cdn-enablement.md` | **PK-4 / K EC 1.55** Bunny CDN enablement record |
+| `docs/audits/EC-S-pk4-k155-completion-feedback.md` | **PK-4 / K EC 1.55** post-merge completion R&D feedback |
 | `docs/audits/EC-S-pr151-bridge-feedback-completion.md` | **azm-dev-bridge feedback loop** (#151) completion R&D feedback |
 | `docs/audits/EC-S-azm-bridge-feedback-loop.md` | Bridge loop incident note (superseded by completion feedback above) |
 | `docs/azm-deliverables/EC-S-status/EC-S-EXECUTION-STATUS.md` | K EC 1.44 evidence matrix |
@@ -91,4 +93,4 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | `docs/env.md` | Flag/build-arg documentation |
 
 ---
-*Maintained by Claude (R&D coordination). PP-1–PP-6 closed 2026-08-14. **PK-1/2/3 closed** (VO + checklist + analytics). **V-1 auth smoke** + **PP-1 Stripe Price** 2026-08-15. **EC-S eng backlog empty** — PK-4+ remain. Update on every PK/V closure.*
+*Maintained by Claude (R&D coordination). PP-1–PP-6 closed 2026-08-14. **PK-1/2/3/4 closed** (VO + checklist + analytics + Bunny CDN). **V-1 auth smoke** + **PP-1 Stripe Price** 2026-08-15. **EC-S eng backlog empty** — PK-5+ remain. Update on every PK/V closure.*

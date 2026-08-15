@@ -42,7 +42,7 @@
 | **PP-2** | Housekeeping bundle | Shared Service JSON-LD, service-page i18n, enquiry-card listing titles + slug links | — | **CLOSED 2026-08-14** — K EC 1.51 |
 | **PP-3** | Static lastmod hygiene | CI fingerprint check + manual lastmod bumps | — | **CLOSED 2026-08-14** — folded into K EC 1.51 |
 
-**Suggested dispatch order:** ~~PP-4~~ → ~~**PP-5**~~ → ~~PP-6~~ → ~~PP-1~~ → ~~PP-2~~ (+PP-3). **EC-S eng backlog empty** — remaining work is PK-4+ product decisions.
+**Suggested dispatch order:** ~~PP-4~~ → ~~**PP-5**~~ → ~~PP-6~~ → ~~PP-1~~ → ~~PP-2~~ (+PP-3). **EC-S eng backlog empty** — remaining work is PK-5+ product decisions.
 
 ### 2c. Product/counsel decisions (unchanged from polish backlog — not eng)
 
@@ -50,7 +50,7 @@
 |----|----------|-------------------|
 | PK-1 / PK-2 | VO + checklist flips (after PP-6 merges) | Stage 4: **PK-2 + PK-1 CLOSED** — checklist + VO live (2026-08-14/15) |
 | PK-3 | Analytics flip | Stage 7 **CLOSED 2026-08-14** — P7 live + analytics/nudges API on |
-| PK-4 | Bunny DPA → CDN | Photo delivery performance (non-blocking) |
+| PK-4 | Bunny DPA → CDN | Photo delivery — **CLOSED PK-4 / K EC 1.55** (`MEDIA_CDN_ENABLED=true`; private docs MinIO) |
 | PK-5 | T05 §6.5 → T25 messaging | Stage 5 upgrade: enquiries → chat threads |
 | PK-6 | LIA → T19.2 dup-enforce | Abuse hardening |
 | PK-7 | External counsel countersign | Risk posture on live claims |
@@ -64,11 +64,11 @@
 4. Availability set → buyer books → seller confirms → completes.
 5. Boost purchased in UI → `In evidenza` on card; premium purchased → entitlements raised, quota 429 gone.
 6. No-script HTML on `/vendi-da-privato` still shows Claim 1 EUR + portal copy.
-7. Parked flags still false (CDN) unless PK decisions recorded — **VO + checklist + analytics ON after PK-1/PK-2/PK-3**.
+7. Parked flags still false (T25 etc.) unless PK decisions recorded — **VO + checklist + analytics + listing CDN ON after PK-1–PK-4**.
 
 ## 4. Standing rules
 
 All dispatches follow `docs/ec-s-post-roadmap-polish.md` §C (single agent per code; `NEXT_PUBLIC_*` Docker ARG same-PR; Traefik compose pair; ops-flip vs eng-build stated explicitly; no parked flips bundled; ledger copy only via flip protocol).
 
 ---
-*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-1** + **PK-2** + **PK-3** closed 2026-08-14/15; V-1 auth smoke + PP-1 Price backfill 2026-08-15. **EC-S eng backlog empty.** Next: PK-4+ decisions. Status polls: `docs/runbooks/azm-dev-bridge.md`.*
+*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-1–PK-4** closed 2026-08-14/15. **EC-S eng backlog empty.** Next: PK-5+ decisions. Status polls: `docs/runbooks/azm-dev-bridge.md`.*

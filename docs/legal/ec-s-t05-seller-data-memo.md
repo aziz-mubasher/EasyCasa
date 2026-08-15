@@ -1,6 +1,6 @@
 # EC-S-T05 — Seller-Side Data Protection Memo + Informativa Extension
 
-**Status:** G1 SIGNED (AZM 2026-08-13) — Layer 1 may ship; version `v1.1`. §6.5/T25 and Bunny DPA remain open. See `docs/audits/EC-S-g1-signoff-enablement.md`.  
+**Status:** G1 SIGNED (AZM 2026-08-13) — Layer 1 may ship; version `v1.1`. §6.5/T25 remain open. **Bunny DPA / T10 CDN cleared via PK-4 (2026-08-15).** See `docs/audits/EC-S-pk4-cdn-enablement.md`.  
 **Entity:** Mundida S.r.l. / Mundida group (P.IVA IT04531990986) — EasyCasa (easycasaita.com)  
 **Lesson applied:** informativa valid and versioned **before** collection begins (Contatta precedent). No seller-side field ships before this memo's informativa section is approved and versioned in the consent ledger (**T30**).
 
@@ -61,7 +61,7 @@ No new ones beyond the known set (Keycloak self-hosted, MinIO self-hosted, Meili
 
 | Processor | Role | DPA status |
 |-----------|------|------------|
-| Bunny.net | CDN / media delivery | ☐ executed — date: ___ · ☐ blocked (T10) |
+| Bunny.net | CDN / media delivery | ☑ executed — date: **2026-08-15** (AZM product-owner authorisation / PK-4) · live host `easycasa1.b-cdn.net` |
 | Stripe | Optional paid services | ☐ already covered · ☐ extend |
 | Brevo | Transactional email | ☐ already covered · ☐ extend |
 
@@ -148,4 +148,4 @@ Engineering must not open seller collection UIs that persist new personal data c
 | Layer 1 may ship in T06 | ☑ yes |
 | Policy version to stamp | `v1.1` |
 
-*Not legal advice. §6.5 / T25 message controllership and Bunny DPA remain open — do not treat those gates as cleared.*
+*Not legal advice. §6.5 / T25 message controllership remains open. Bunny listing CDN is live (PK-4); private VO/checklist docs stay on MinIO / API proxy.*

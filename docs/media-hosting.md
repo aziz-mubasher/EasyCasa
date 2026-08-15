@@ -1,6 +1,8 @@
-# Media hosting — Bunny Storage + Pull Zone (pilot)
+# Media hosting — Bunny Storage + Pull Zone
 
-**Status:** Listing uploads validate/strip EXIF and write content-addressed WebP
+**Status:** **LIVE (PK-4 / K EC 1.55, 2026-08-15)** — `MEDIA_CDN_ENABLED=true`, listing masters on Bunny Pull Zone `https://easycasa1.b-cdn.net`. Private `users/` docs stay on MinIO via API proxy. Enablement: `docs/audits/EC-S-pk4-cdn-enablement.md`.
+
+Listing uploads validate/strip EXIF and write content-addressed WebP
 masters. Origin is selectable via env (`minio` default, `bunny` for production CDN).
 Bunny writes use the **Storage HTTP API** (`AccessKey` + PUT) because the zone’s
 S3-compatible API may be disabled (`ServiceUnavailable: S3 API is not enabled`).
@@ -27,7 +29,7 @@ listing images use the CDN.
 | `BUNNY_STORAGE_PASSWORD` | Storage zone access key / FTP password (**rotate if ever pasted in chat**) |
 | `BUNNY_STORAGE_ENDPOINT` | Prefer regional S3 host, e.g. `https://de-s3.storage.bunnycdn.com`. Global `storage.bunnycdn.com` is rewritten using `BUNNY_S3_REGION`. |
 | `BUNNY_S3_REGION` | Zone region hint, e.g. `de` / `uk` |
-| `BUNNY_CDN_BASE` | Pull Zone URL, e.g. `https://cdn.easycasaita.com` |
+| `BUNNY_CDN_BASE` | Pull Zone URL — **live:** `https://easycasa1.b-cdn.net` (custom `cdn.easycasaita.com` SSL not ready) |
 | `MEDIA_PUBLIC_BASE` | Fallback listing URL base (MinIO proxy or CDN) |
 | `MEDIA_PRIVATE_BASE` | Optional; empty + `bunny` → `https://easycasaita.com/api/media/file` |
 
