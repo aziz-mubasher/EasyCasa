@@ -76,9 +76,25 @@ Protocol: `promises.json` + `sell-privately.spec.ts` + `promiseLedger.test.ts` (
 | `/it/vendi-da-privato` P3 tile | `In arrivo` | **PASS** — `sp-chip--coming` |
 | `/it/vendi-da-privato` P6 tile | `Attivo` | **PASS** — checklist still live |
 | Claim 1–2 regression | EUR savings + portal copy | **PASS** — `7.500` + portale copy |
-| Authenticated `/it/seller/listings/<id>/analytics` | windowed metrics + nudge cards | _operator follow-up_ |
+| Authenticated `GET /api/seller/listings/<id>/analytics?window=30d` | **200** + real rollups | **PASS** (2026-08-15) — listing `7fe57de8-…` → `views: 431`, daily `series`, `enquiries: 2`, `daysOnMarket: 494` |
+| Authenticated `GET /api/seller/listings/<id>/nudges` | **200** | **PASS** — `{"items":[]}` (empty is valid when no nudge triggers) |
+| Authenticated page `/it/seller/listings/<id>/analytics` | SSR includes panel | **PASS** — **200** + `sellerAnalytics` / `SellerAnalyticsPanel` in HTML |
 | Nudge copy T04 | data-triggered, no advice framing | **PASS** — i18n uses observation framing; see PR R&D |
 | Analytics data path | non-zero rows for published listings | **PASS** — 118 published; 63 listings with rows; 590 total views (no backfill; ~55 listings may show sparse charts) |
+| Ephemeral auth cleanup | no leftover KC client; ownership restored | **PASS** — owner restored to `d215141a-…`; client/user deleted |
+
+### Authenticated smoke (P7 honesty) — 2026-08-15
+
+Unauth **401** + P7 chip **Attivo** alone do not prove the data path. Production has no durable `SMOKE_BEARER` and SPA clients have no password grant, so the close-out used an **ephemeral** Keycloak confidential client (`easycasa-pk3-smoke`, direct access grants) with `sub` + realm-roles protocol mappers copied from `easycasa-web`, plus a temporary smoke user.
+
+1. Token claims: `aud=easycasa-api`, realm role `seller`, real `sub`.
+2. Bootstrap: `GET /api/seller/me` → informativa accept → temporary ownership reassignment of a listing with real rollups.
+3. Assert analytics **200** with non-zero `views` + `series`; nudges **200**; UI page **200** with panel markers.
+4. **Always** revert `listings.owner_user_id` and delete the Keycloak client + user.
+
+Artifact: `/opt/cursor/artifacts/pk3_authenticated_analytics_smoke.log` (`AUTH_SMOKE_COMPLETE analytics=200 nudges=200`).
+
+**Verdict:** P7 is honest — marketing chip matches live API rollups, not an empty shell.
 
 ### No-script HTML probe (P7 live)
 

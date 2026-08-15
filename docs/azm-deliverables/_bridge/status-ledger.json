@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T05:27:43.738Z",
+  "updatedAt": "2026-08-15T06:51:54.276Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -18,9 +18,9 @@
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/160",
       "prState": "MERGED",
       "dispatchedAt": "2026-08-14T20:25:14.637Z",
-      "updatedAt": "2026-08-15T05:27:43.737Z",
-      "summary": "PK-3 / K EC 1.53 MERGED + DEPLOYED. VPS on main; SELLER_ANALYTICS_ENABLED=true; P7 Attivo; VO dark. Enablement tip 6273684.",
-      "nextAction": "Mark Kaizen K EC 1.53 complete; authenticated analytics/nudges smoke; PK-1 when moderation ready.",
+      "updatedAt": "2026-08-15T06:51:54.275Z",
+      "summary": "PK-3 MERGED+DEPLOYED; authenticated analytics smoke PASS (views 431); P7 honest; VO dark.",
+      "nextAction": "Mark Kaizen K EC 1.53 complete; PK-1 when moderation ready; optional durable SMOKE_BEARER.",
       "errors": []
     },
     {

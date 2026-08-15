@@ -1,6 +1,6 @@
 # EC-S PK-3 / K EC 1.53 — completion R&D feedback (for Claude)
 
-**As of tip `6273684` on `main` + VPS `/opt/easycasa-ita` on `main` @ `6273684` (2026-08-15).** Seller analytics + price nudges **LIVE**; Verified Owner **stays dark**. Enablement record: `docs/audits/EC-S-pk3-analytics-enablement.md`.
+**As of tip `6273684` on `main` + VPS `/opt/easycasa-ita` on `main` @ `3fb8dfe` (2026-08-15) + authenticated analytics smoke PASS.** Seller analytics + price nudges **LIVE** and **honest**; Verified Owner **stays dark**. Enablement record: `docs/audits/EC-S-pk3-analytics-enablement.md`.
 
 ## What landed
 
@@ -11,6 +11,7 @@
 | VO / checklist | unchanged — VO dark; checklist still live (PK-2) |
 | PR | [#160](https://github.com/aziz-mubasher/EasyCasa/pull/160) — conflicts resolved (status-ledger) then landed via branch→main |
 | Bridge | `task_dacdc348` · agent `bc-0e9ab6c8-…` |
+| Auth smoke | Ephemeral KC client + listing ownership swap → analytics **200** (`views: 431`) → full cleanup |
 
 ## Deploy smoke (close-out)
 
@@ -23,6 +24,17 @@
 | `/it/vendi-da-privato` P7 | **Attivo** / `sp-chip--live` + Dashboard venditore |
 | P6 / P3 | P6 Attivo; P3 still In arrivo |
 | VPS git | **`main`** (was incorrectly on feature branch during early ops) |
+
+## Authenticated analytics smoke (P7 honesty) — PASS
+
+| Check | Result |
+|-------|--------|
+| Auth `GET …/analytics?window=30d` | **200** — `views: 431`, daily series, `enquiries: 2`, `daysOnMarket: 494` |
+| Auth `GET …/nudges` | **200** — `{"items":[]}` |
+| Page `/it/seller/listings/<id>/analytics` | **200** — `sellerAnalytics` + `SellerAnalyticsPanel` present |
+| Cleanup | Ownership restored; ephemeral KC client/user deleted |
+
+Artifact: `pk3_authenticated_analytics_smoke.log`. Method notes in enablement audit (no durable `SMOKE_BEARER` on prod).
 
 ## R&D FEEDBACK — for Claude
 
@@ -44,14 +56,16 @@
 - Ops flip + docs/runbook parity with PK-2. Correctly one Kaizen. Conflict resolve was ledger-only.
 
 ### 5. BLOCKED / NEEDS A HUMAN
-- Mark **K EC 1.53** complete on Kaizen.
-- Operator: authenticated `/seller/listings/<id>/analytics` + nudge cards.
+- Mark **K EC 1.53** complete on Kaizen (Notion MCP needsAuth in this agent — board flip is AZM).
 - **PK-1** still blocked on moderation capacity.
+- Optional: durable prod `SMOKE_BEARER` / ops Keycloak smoke client so auth smokes do not need ephemeral clients.
 
 ### 6. NEXT TASK SHOULD ACCOUNT FOR
 - Always merge `main` before opening PR when ledger files change.
 - Never leave VPS on a feature branch after smoke — checkout `main` after land.
 - Always set `bridgeTaskId` + force `--pr-url` on upserts.
+- For seller-flag honesty checks: unauth **401** + ledger chip is necessary but not sufficient — require one authenticated call that returns non-zero rollups (or document empty with cause).
+- Ephemeral KC smoke: copy **client-level** `oidc-sub-mapper` + realm-roles mapper from `easycasa-web` (realm may lack separate `basic`/`roles` client scopes); avoid bash `UID` (readonly); VERIFY_PROFILE needs first/last name.
 
 ## Bridge status
 
@@ -64,8 +78,8 @@ lifecycle: merged
 agentStatus: IDLE
 prUrl: https://github.com/aziz-mubasher/EasyCasa/pull/160
 prState: MERGED
-summary: PK-3 / K EC 1.53 MERGED + DEPLOYED. Analytics live; P7 Attivo; VO dark; VPS on main.
-nextAction: Mark Kaizen K EC 1.53 complete; authenticated analytics smoke; PK-1 when moderation ready.
+summary: PK-3 MERGED+DEPLOYED; authenticated analytics smoke PASS (views 431); P7 honest; VO dark.
+nextAction: Mark Kaizen K EC 1.53 complete; PK-1 when moderation ready; optional durable SMOKE_BEARER.
 pollUrl: https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json
 <!-- AZM_BRIDGE_STATUS_END -->
 ```

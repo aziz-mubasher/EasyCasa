@@ -166,6 +166,10 @@ When `SELLER_ANALYTICS_ENABLED=true`:
 1. Open `/{locale}/seller/listings/<id>/analytics`.
 2. Confirm windowed metrics + nudge cards; dismiss via UI.
 
+**Honesty check (P7):** unauth **401** + sell-privately chip **Attivo** is not enough. Confirm one authenticated `GET /api/seller/listings/<id>/analytics?window=30d` returns **200** with real rollups (`views` / `series`) for a listing that has `listing_analytics_daily` rows. Empty charts on pre-T23 or zero-traffic listings are expected (no historical backfill) — pick a listing with `sum(views) > 0` before declaring a failure.
+
+Prod has no durable `SMOKE_BEARER` by default; PK-3 close-out used an ephemeral Keycloak confidential client + temporary ownership swap (full cleanup required). Record: `docs/audits/EC-S-pk3-analytics-enablement.md` (Authenticated smoke section).
+
 **Do not disable** without product decision (PK-3 closed 2026-08-14 — see `docs/audits/EC-S-pk3-analytics-enablement.md`).
 
 ### Step F — Monetisation (PP-5 web UI live)
@@ -213,6 +217,7 @@ Admin moderation: `https://admin.easycasaita.com/#vo` when VO is on. **Do not fl
 | Boost purchase 404 | `LISTING_BOOST_ENABLED=false` | Flip + recreate api (active boosts still show if any) |
 | Premium checkout “plan not purchasable” | Missing `plans.stripe_price_id` | Backfill Price ID (see stripe-premium enablement audit) |
 | Analytics page empty / errors | `SELLER_ANALYTICS_ENABLED=false` | Expected while parked |
+| Analytics **200** but zeros / empty chart | No `listing_analytics_daily` rows yet | Pick a listing with views; views accrue on public detail fetches only |
 
 **Rule of thumb:** unauth + flag **on** → **401**; flag **off** → **404**.
 
@@ -229,7 +234,8 @@ Admin moderation: `https://admin.easycasaita.com/#vo` when VO is on. **Do not fl
 - [ ] Viewings list reachable; availability editable when viewings flag on
 - [ ] `POST /api/featured/checkout` (auth) returns Stripe URL when boost on
 - [ ] `GET /api/seller/entitlements` (auth) 200 when premium on
-- [ ] Parked flags still false unless AZM unparked: VO, checklist, analytics, CDN
+- [ ] Parked flags still false unless AZM unparked: VO, CDN (checklist + analytics are live as of PK-2/PK-3)
+- [ ] Authenticated analytics honesty: `GET /api/seller/listings/<id>/analytics?window=30d` → **200** with non-zero rollups on a listing that has daily rows
 - [ ] Sell-privately no-script HTML still shows Claim 1 EUR + portal copy (regression)
 
 ---
