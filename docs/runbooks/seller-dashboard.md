@@ -3,7 +3,7 @@
 **Audience:** Ops / support / QA operators on EasyCasa ITA (`easycasaita.com`).  
 **Scope:** End-to-end private-seller dashboard: identity → onboarding → list → publish → inbox → viewings → analytics → monetisation.  
 **Not in scope:** Agency `/add` wizard, admin VO queue UI details (see admin pages), T25 in-portal messaging (parked).  
-**Live state (post-roadmap):** onboarding + dual inbox **on**; boost / premium / directory **on**; **checklist + analytics on** (PK-2/PK-3); VO **parked off**. Canonical open work: `docs/ec-s-post-roadmap-polish.md`.
+**Live state (post-roadmap):** onboarding + dual inbox **on**; boost / premium / directory **on**; **checklist + analytics + VO on** (PK-1/PK-2/PK-3). Canonical open work: `docs/ec-s-post-roadmap-polish.md` (PK-4+).
 
 ---
 
@@ -27,8 +27,8 @@ Locales: `it` (default), `en`, `es`. Paths are **not** rewritten — use `/{loca
 | `/{locale}/seller/onboarding` | Seller profile + informativa first mile (PP-4) | Always (flag-off API → 404 → gate message) | `SELLER_ONBOARDING_ENABLED` |
 | `/{locale}/seller/list` | Listing wizard (create / autosave / publish); embeds onboarding when profile missing | Always | `SELLER_ONBOARDING_ENABLED` |
 | `/{locale}/seller/listings` | Seller listings dashboard + **boost buy** (PP-5) | Always | `SELLER_ONBOARDING_ENABLED` + `LISTING_BOOST_ENABLED` for checkout |
-| `/{locale}/seller/listings/:id/verification` | Verified Owner submit/state (PP-6) | Always (page; APIs dark) | `VERIFIED_OWNER_ENABLED` |
-| `/{locale}/seller/listings/:id/documents` | Document checklist (PP-6) | Always (page; APIs dark) | `SELLER_CHECKLIST_ENABLED` |
+| `/{locale}/seller/listings/:id/verification` | Verified Owner submit/state (PP-6; lit PK-1) | Always (page) | `VERIFIED_OWNER_ENABLED` |
+| `/{locale}/seller/listings/:id/documents` | Document checklist (PP-6; lit PK-2) | Always (page) | `SELLER_CHECKLIST_ENABLED` |
 | `/{locale}/account` | Account / **premium upsell + entitlements** (PP-5) | Always | `SELLER_PREMIUM_ENABLED` for checkout |
 | `/{locale}/seller/enquiries` | Seller inbox (Richieste) | `NEXT_PUBLIC_SELLER_INBOX_ENABLED` | `SELLER_INBOX_ENABLED` |
 | `/{locale}/seller/viewings` | Conducting viewings list | Always (page) | `SELLER_VIEWINGS_ENABLED` |
@@ -71,7 +71,7 @@ docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml -
 | `PARTNER_DIRECTORY_ENABLED` | `true` | Informational + G3 `paid_placement` |
 | `SELLER_VIEWINGS_ENABLED` | **`true` (V-1 flipped 2026-08-14)** | Runtime on VPS; api recreated with Traefik pair. Page always rendered; seller viewing APIs now live (unauth → 401, not flag-404) |
 | `SELLER_ANALYTICS_ENABLED` | **`true` (PK-3 flipped 2026-08-14)** | Runtime on VPS; web rebuild for P7 ledger. Page always rendered; seller analytics/nudge APIs live (unauth → 401, not flag-404) |
-| `VERIFIED_OWNER_ENABLED` | `false` (parked PK-1) | Runbook: `docs/runbooks/ec-s-vo-enablement.md` |
+| `VERIFIED_OWNER_ENABLED` | `true` (PK-1 / K EC 1.54) | Runbook: `docs/runbooks/ec-s-vo-enablement.md` · audit: `docs/audits/EC-S-pk1-vo-enablement.md` |
 | `SELLER_CHECKLIST_ENABLED` | **`true` (PK-2 flipped 2026-08-14)** | Runtime on VPS; web rebuild for P6 ledger |
 | `MEDIA_CDN_ENABLED` | `false` (parked PK-4) | |
 
@@ -194,18 +194,18 @@ Prod has no durable `SMOKE_BEARER` by default; PK-3 close-out used an ephemeral 
 
 Unauthenticated probes: **401** (not flag-404) when flags are on.
 
-### Step G — VO / checklist (PP-6 UI live; checklist lit, VO parked)
+### Step G — VO / checklist (PP-6 UI live; both lit)
 
 **Web (deployed):**
 
 - `/{locale}/seller/listings/<id>/verification` — VO intestatari + multi-file upload + state machine
 - `/{locale}/seller/listings/<id>/documents` — checklist slots + completeness
 
-**API flags (2026-08-14/15):** `SELLER_CHECKLIST_ENABLED=true` → `/api/seller/checklist/*` returns **401** unauth (not flag-404). `VERIFIED_OWNER_ENABLED=false` → `/api/seller/vo/*` still **404** (or JWT-first **401**). Pages always render.
+**API flags (2026-08-15):** `SELLER_CHECKLIST_ENABLED=true` and `VERIFIED_OWNER_ENABLED=true` → unauth probes return **401** (not flag-404). Pages always render.
 
-**Honesty check (P6):** unauth **401** + sell-privately P6 **Attivo** is not enough. Confirm authenticated `POST /api/seller/checklist/<id>/docs` (multipart `typeCode` + PDF/JPEG/PNG) returns score `have≥1`, and `GET /api/seller/listings` card includes `trust.docScore`. Confirm public `/api/listings/<slug>` and listing HTML do **not** contain private `docKey` paths. PK-2 close-out used ephemeral Keycloak (same pattern as PK-3); record: `docs/audits/EC-S-pk2-checklist-enablement.md`.
+**Honesty check (P6):** unauth **401** + sell-privately P6 **Attivo** is not enough. Confirm authenticated `POST /api/seller/checklist/<id>/docs` (multipart `typeCode` + PDF/JPEG/PNG) returns score `have≥1`, and `GET /api/seller/listings` card includes `trust.docScore`. Confirm public `/api/listings/<slug>` and listing HTML do **not** contain private `docKey` paths. PK-2 close-out: `docs/audits/EC-S-pk2-checklist-enablement.md`.
 
-Admin moderation: `https://admin.easycasaita.com/#vo` when VO is on. **Do not flip VO** without AZM (PK-1).
+**Honesty check (P3 / VO):** unauth **401** + sell-privately P3 **Attivo** is not enough. Confirm authenticated `POST /api/seller/vo/<id>/submit` (multipart `files` + `intestatari`) → **201** `submitted`. Admin claim → verify → public badge is the full path (`https://admin.easycasaita.com/#vo`). PK-1 close-out: `docs/audits/EC-S-pk1-vo-enablement.md`.
 
 ---
 
@@ -240,7 +240,8 @@ Admin moderation: `https://admin.easycasaita.com/#vo` when VO is on. **Do not fl
 - [ ] Viewings list reachable; availability editable when viewings flag on
 - [ ] `POST /api/featured/checkout` (auth) returns Stripe URL when boost on
 - [ ] `GET /api/seller/entitlements` (auth) 200 when premium on
-- [ ] Parked flags still false unless AZM unparked: VO, CDN (checklist + analytics are live as of PK-2/PK-3)
+- [ ] Parked flags still false unless AZM unparked: CDN (VO + checklist + analytics live as of PK-1/PK-2/PK-3)
+- [ ] Authenticated VO honesty: `POST /api/seller/vo/<id>/submit` → **201** `submitted`; admin `#vo` claim/verify optional follow-up
 - [ ] Authenticated viewings honesty: seller availability → buyer book → seller confirm → `CONFIRMED`
 - [ ] Authenticated analytics honesty: `GET /api/seller/listings/<id>/analytics?window=30d` → **200** with non-zero rollups on a listing that has daily rows
 - [ ] Authenticated checklist honesty: upload one slot → score `have` increments; seller card `docScore`; public listing has no private `docKey`
@@ -300,7 +301,8 @@ Do **not** flip parked PK flags “to try” — each needs an AZM decision.
 
 1. ~~No first-class web onboarding UI~~ — **CLOSED PP-4 / K EC 1.47** (`/seller/onboarding` + wizard embed).
 2. ~~No boost buy / premium upsell web UI~~ — **CLOSED PP-5 / K EC 1.48** (`/seller/listings` + `/account`).
-3. ~~No seller web UI for VO submit / checklist~~ — **CLOSED PP-6 / K EC 1.49** (UI deployed **dark**; light with PK-1/PK-2).
+3. ~~No seller web UI for VO submit / checklist~~ — **CLOSED PP-6 / K EC 1.49** (UI deployed; lit with PK-1/PK-2).
+4. ~~VO parked pending moderation capacity~~ — **CLOSED PK-1 / K EC 1.54** (`VERIFIED_OWNER_ENABLED=true`, P3 live).
 4. Viewings / analytics **pages** can render while APIs are flag-dark (**V-1:** viewings **on** + auth smoke PASS; **PK-3:** analytics **on** + auth smoke PASS).
 5. T25 messaging **HOLD** (PK-5) — inbox is enquiry list, not chat threads.
 6. Empty partner directory paid catalogue → informational banner is **correct** (PK-8).

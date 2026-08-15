@@ -14,7 +14,7 @@
 | 1 | Discover | `/vendi-da-privato` (IT/EN/ES), Claim 1–2 live, T33 SEO | ✅ LIVE | — |
 | 2 | Sign up + onboard | OIDC + web onboarding form + `POST /seller/onboarding` + informativa v1.1 | ✅ **LIVE** | **PP-4 merged** — `/seller/onboarding` + wizard gate |
 | 3 | Create listing | `/seller/list` wizard: OMI panel, photos, AI description, autosave, publish, quotas | ✅ LIVE | — |
-| 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | **Partial — checklist LIVE (PK-2 2026-08-14); VO dark (PK-1)** | P6 live + `SELLER_CHECKLIST_ENABLED=true`; P3/VO awaiting moderation capacity — runbook `docs/runbooks/ec-s-vo-enablement.md` |
+| 4 | Prove genuineness | VO upload + moderation + checklist + trust badges | ✅ **LIVE** — checklist PK-2 + VO PK-1 (2026-08-15) | P3 live + `VERIFIED_OWNER_ENABLED=true`; P6 live + checklist on; enablement `docs/audits/EC-S-pk1-vo-enablement.md` |
 | 5 | Receive enquiries | `/seller/enquiries`, Verified Buyer badges, mark-read, **listing title + slug on cards** | ✅ LIVE | (chat = T25, parked PK-5 — by design off-platform for now) |
 | 6 | Conduct viewings | availability + open-house + `/seller/viewings` | ✅ **LIVE** | **V-1** flag + **auth book/confirm smoke PASS 2026-08-15** (`docs/audits/EC-S-v1-viewings-auth-smoke.md`) |
 | 7 | Steer the sale | analytics + price nudges | ✅ **LIVE** | **PK-3 flipped 2026-08-14:** P7 live + `SELLER_ANALYTICS_ENABLED=true`; see `docs/audits/EC-S-pk3-analytics-enablement.md` |
@@ -42,13 +42,13 @@
 | **PP-2** | Housekeeping bundle | Shared Service JSON-LD, service-page i18n, enquiry-card listing titles + slug links | — | **CLOSED 2026-08-14** — K EC 1.51 |
 | **PP-3** | Static lastmod hygiene | CI fingerprint check + manual lastmod bumps | — | **CLOSED 2026-08-14** — folded into K EC 1.51 |
 
-**Suggested dispatch order:** ~~PP-4~~ → ~~**PP-5**~~ → ~~PP-6~~ → ~~PP-1~~ → ~~PP-2~~ (+PP-3). **EC-S eng backlog empty** — next work is PK decisions (PK-1 VO when moderation ready).
+**Suggested dispatch order:** ~~PP-4~~ → ~~**PP-5**~~ → ~~PP-6~~ → ~~PP-1~~ → ~~PP-2~~ (+PP-3). **EC-S eng backlog empty** — remaining work is PK-4+ product decisions.
 
 ### 2c. Product/counsel decisions (unchanged from polish backlog — not eng)
 
 | ID | Decision | Effect on journey |
 |----|----------|-------------------|
-| PK-1 / PK-2 | VO + checklist flips (after PP-6 merges) | Stage 4: **PK-2 done** (checklist live); **PK-1** UI + runbook ready — flip when moderation capacity confirmed |
+| PK-1 / PK-2 | VO + checklist flips (after PP-6 merges) | Stage 4: **PK-2 + PK-1 CLOSED** — checklist + VO live (2026-08-14/15) |
 | PK-3 | Analytics flip | Stage 7 **CLOSED 2026-08-14** — P7 live + analytics/nudges API on |
 | PK-4 | Bunny DPA → CDN | Photo delivery performance (non-blocking) |
 | PK-5 | T05 §6.5 → T25 messaging | Stage 5 upgrade: enquiries → chat threads |
@@ -64,11 +64,11 @@
 4. Availability set → buyer books → seller confirms → completes.
 5. Boost purchased in UI → `In evidenza` on card; premium purchased → entitlements raised, quota 429 gone.
 6. No-script HTML on `/vendi-da-privato` still shows Claim 1 EUR + portal copy.
-7. Parked flags still false (VO/CDN) unless PK decisions recorded — **checklist + analytics ON after PK-2/PK-3**.
+7. Parked flags still false (CDN) unless PK decisions recorded — **VO + checklist + analytics ON after PK-1/PK-2/PK-3**.
 
 ## 4. Standing rules
 
 All dispatches follow `docs/ec-s-post-roadmap-polish.md` §C (single agent per code; `NEXT_PUBLIC_*` Docker ARG same-PR; Traefik compose pair; ops-flip vs eng-build stated explicitly; no parked flips bundled; ledger copy only via flip protocol).
 
 ---
-*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-2** + **PK-3** closed 2026-08-14; V-1 auth smoke + PP-1 Price backfill 2026-08-15. **EC-S eng backlog empty.** Next: **PK-1** VO enablement when moderation capacity confirmed. Status polls: `docs/runbooks/azm-dev-bridge.md`.*
+*Maintained by Claude (R&D coordination). PP-4 + PP-5 + PP-6 + PP-1 + PP-2/PP-3 + V-1 + **PK-1** + **PK-2** + **PK-3** closed 2026-08-14/15; V-1 auth smoke + PP-1 Price backfill 2026-08-15. **EC-S eng backlog empty.** Next: PK-4+ decisions. Status polls: `docs/runbooks/azm-dev-bridge.md`.*

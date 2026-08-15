@@ -1,6 +1,6 @@
-# Runbook — EC-S PK-1 Verified Owner enablement (prepare only)
+# Runbook — EC-S PK-1 Verified Owner enablement
 
-**Status:** Prepared 2026-08-14 (K EC 1.52). **Do not execute** until AZM confirms moderation capacity.  
+**Status:** **EXECUTED 2026-08-15** (K EC 1.54). Enablement record: `docs/audits/EC-S-pk1-vo-enablement.md`.  
 **Prerequisite:** PP-6 seller UI merged (#153). PK-2 checklist already live separately.  
 **Goal:** ~10-minute ops flip + smoke when go/no-go is green.
 
@@ -168,4 +168,4 @@ Verified cases remain in DB; badges hidden when flag off (API 404). No automatic
 
 ---
 
-*Maintained by Cursor (K EC 1.52). Execute only after AZM go/no-go on moderation capacity.*
+*Maintained by Cursor (K EC 1.52 prepare / K EC 1.54 execute). Executed 2026-08-15 after AZM moderation-capacity go.*

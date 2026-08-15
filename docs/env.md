@@ -229,8 +229,8 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 ## EC-S Phase 2 — Verified Owner (T14–T16)
 | Variable | Used by | Notes |
 |---|---|---|
-| VERIFIED_OWNER_ENABLED | api | Default `false`. Enable after T05 Layer 1 + §6.3. VO routes 404 when off. |
-| VERIFIED_OWNER_VALIDITY_MONTHS | api | Default `12`. Sets `expires_at` on VERIFY (T05 retention window). |
+| VERIFIED_OWNER_ENABLED | api | Default `false`. VO routes 404 when off. **Live `true` as of PK-1 / K EC 1.54 (2026-08-15)** — see `docs/audits/EC-S-pk1-vo-enablement.md`. |
+| VERIFIED_OWNER_VALIDITY_MONTHS | api | Default `12`. Sets `expires_at` on VERIFY (T05 retention window). Live value: `12`. |
 | SELLER_CHECKLIST_ENABLED | api | Default `false`. T18 private-seller checklist (P6); not fascicolo. |
 
 ## EC-S Phase 3 — seller inbox (T20)

@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T09:49:47.066Z",
+  "updatedAt": "2026-08-15T11:26:03.091Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_pk1_vo",
+      "kaizenCode": "K EC 1.54",
+      "polishId": "PK-1",
+      "title": "PK-1 VO enablement — VERIFIED_OWNER + P3 ledger live",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-8782c3ec-9c1d-4d1c-abcc-189b87886d4e",
+      "agentUrl": "https://cursor.com/agents/bc-8782c3ec-9c1d-4d1c-abcc-189b87886d4e",
+      "branch": "cursor/pk1-vo-enablement-6d4e",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-08-15T11:26:03.091Z",
+      "updatedAt": "2026-08-15T11:26:03.091Z",
+      "summary": "PK-1 VO LIVE on VPS (tip 406538a). Flag true; P3 Attivo; auth submit→submitted PASS. Docs close-out in progress.",
+      "nextAction": "Land enablement audit + R&D feedback docs; open PR; mark Kaizen complete.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_dacdc348",
       "kaizenCode": "K EC 1.53",
