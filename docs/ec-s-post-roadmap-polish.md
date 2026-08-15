@@ -36,6 +36,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | PK-1 | VO flip (`VERIFIED_OWNER_ENABLED`) → P3 ledger live | **UI ready + runbook written** (`docs/runbooks/ec-s-vo-enablement.md`); awaiting **moderation capacity** (named reviewer + SLA) | AZM |
 | PK-2 | Checklist flip (`SELLER_CHECKLIST_ENABLED`) → P6 live | **CLOSED 2026-08-14** — K EC 1.52; see `docs/audits/EC-S-pk2-checklist-enablement.md` | done |
 | PK-3 | Analytics flip (`SELLER_ANALYTICS_ENABLED`) → P7 live | **CLOSED 2026-08-14** — K EC 1.53; see `docs/audits/EC-S-pk3-analytics-enablement.md` | done |
+| `docs/audits/EC-S-pk3-k153-completion-feedback.md` | **PK-3 / K EC 1.53** post-merge completion R&D feedback |
 | PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | Bunny DPA signed | AZM / DPO |
 | PK-5 | T25 in-portal messaging | T05 §6.5 controllership determination | Counsel |
 | PK-6 | T19.2 dup-enforce + suspend UX | LIA | Counsel |
