@@ -2,8 +2,9 @@
 
 **Date:** 2026-08-15  
 **Agent:** https://cursor.com/agents/bc-451e4b9b-1d89-432c-899b-63f27eccfc32  
-**PR:** https://github.com/aziz-mubasher/EasyCasa/pull/171  
-**Flags:** `ASTE_ANALYSIS_ENABLED` and `PAYMENTS_ENABLED` remain **off** (dual-flag dark).  
+**PR:** https://github.com/aziz-mubasher/EasyCasa/pull/171 (squash `66d71b6`)  
+**Deploy:** VPS tip `66d71b6`; migration **0066** applied (`aste_credit_*`, `aste_report_unlocks`); `api` + `web` force-recreated.  
+**Flags:** `ASTE_ANALYSIS_ENABLED` remains **off** (dual-flag dark). `PAYMENTS_ENABLED` may already be true for EC-S — Aste monetisation still gated.  
 **Board:** Kaizen · K EC 9.1 · Operations  
 
 ---
