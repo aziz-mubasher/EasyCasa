@@ -12,12 +12,12 @@
 
 | Surface | Tip / state |
 |---------|-------------|
-| `origin/main` | **`b197d65`** (close-out commits + bridge pr_open sync) |
-| VPS `/opt/easycasa-ita` | **`b197d65`** |
+| `origin/main` | **`e924083`** (close-out + feedback + bridge `merged`) |
+| VPS `/opt/easycasa-ita` | **`e924083`** |
 | Migration `0070` | Applied — **7 / 7** `operator_managed` |
-| API rebuild | **Yes** (`--no-cache` + `--force-recreate`) — `gitSha=b197d65` |
+| API rebuild | **Yes** at eng tip `b197d65` (`--no-cache` + `--force-recreate`) — still live |
 | Web rebuild | **Yes** — live HTML shows **Gestito da EasyCasa** |
-| Draft PR #174 | Open draft at land time (commits already on `main`) |
+| PR #174 | Commits on `main`; GitHub draft may still show open until UI close |
 
 ## Live verification (post-deploy 2026-08-15)
 
