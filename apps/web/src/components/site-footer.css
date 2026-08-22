@@ -144,12 +144,21 @@
   padding-top: 1.8rem;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem 1.5rem;
 }
 
-.sf .sf-entity {
+.sf .sf-legal-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.sf .sf-entity,
+.sf .sf-copyright,
+.sf .sf-dev-credit {
   margin: 0;
   font-family: var(--font-mono);
   font-weight: 500;
@@ -157,6 +166,16 @@
   letter-spacing: 0.04em;
   line-height: 1.7;
   color: rgba(232, 223, 204, 0.78);
+}
+
+.sf .sf-dev-credit a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.sf .sf-dev-credit a:hover {
+  color: var(--paper);
 }
 
 .sf .sf-legal-links {

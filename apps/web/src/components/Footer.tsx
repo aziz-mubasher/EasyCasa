@@ -5,6 +5,7 @@ import { Link, usePathname } from '@/i18n/routing';
 import { isListingLandingPath } from '@/lib/listing-landing';
 import { isMarketingServicePath } from '@/lib/marketing-service';
 import { sellPrivatelyPath } from '@/lib/sell-privately';
+import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import './site-footer.css';
 
 type InternalItem = { key: string; href: string };
@@ -95,7 +96,11 @@ export function Footer() {
         </div>
 
         <div className="sf-legal">
-          <p className="sf-entity">{t('entity')}</p>
+          <div className="sf-legal-meta">
+            <p className="sf-entity">{t('entity')}</p>
+            <p className="sf-copyright">{t('copyright')}</p>
+            <MundidaDevCredit className="sf-dev-credit" />
+          </div>
           <div className="sf-legal-links">
             <Link href="/agenzie">{t('legal.agencies')}</Link>
             <Link href="/banks4all">{t('legal.banks4all')}</Link>

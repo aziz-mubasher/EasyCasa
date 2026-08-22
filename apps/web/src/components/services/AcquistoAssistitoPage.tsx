@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import './acquisto-assistito.css';
 
 const CONTACT_MAILTO = 'mailto:acquisti@easycasaita.com';
@@ -197,6 +198,9 @@ export function AcquistoAssistitoPage() {
           <div className="wrap">
             <div>{t('footer.left')}</div>
             <div>{t('footer.right')}</div>
+          </div>
+          <div className="wrap aa-footer-credit">
+            <MundidaDevCredit />
           </div>
         </footer>
       </div>

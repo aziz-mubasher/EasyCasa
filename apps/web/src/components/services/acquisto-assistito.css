@@ -514,6 +514,24 @@
   flex-wrap: wrap;
 }
 
+.aa .aa-footer-credit {
+  margin-top: 0.75rem;
+}
+
+.aa .aa-footer-credit p {
+  margin: 0;
+}
+
+.aa .aa-footer-credit a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink-soft) 35%, transparent);
+}
+
+.aa .aa-footer-credit a:hover {
+  color: var(--ink);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .aa .reveal {
     opacity: 0;

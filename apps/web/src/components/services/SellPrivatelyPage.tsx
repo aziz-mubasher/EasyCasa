@@ -13,6 +13,7 @@ import {
   showSavingsFigures,
 } from '@/lib/sell-privately';
 import { SellPrivatelySavingsSlider } from './SellPrivatelySavingsSlider';
+import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import './sell-privately.css';
 
 type FaqItem = { q: string; a: string };
@@ -204,6 +205,7 @@ export function SellPrivatelyPage() {
             {t('foot.copyright')} · <Link href="/privacy">{t('foot.myData')}</Link> ·{' '}
             <Link href="/legal/mediation">{t('foot.mediation')}</Link>
           </p>
+          <MundidaDevCredit />
         </div>
       </footer>
     </div>

@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import './for-buyers.css';
 
 type Pillar = {
@@ -203,6 +204,7 @@ export function ForBuyersPage() {
             {t('foot.copyright')} · <Link href="/privacy">{t('foot.privacy')}</Link> ·{' '}
             <Link href="/legal/terms">{t('foot.terms')}</Link>
           </p>
+          <MundidaDevCredit />
         </div>
       </footer>
     </div>
