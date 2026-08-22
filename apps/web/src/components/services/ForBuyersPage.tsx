@@ -201,7 +201,7 @@ export function ForBuyersPage() {
           <p>{t('foot.mundida')}</p>
           <p>{t('foot.omi')}</p>
           <p>
-            {t('foot.copyright')} · <Link href="/privacy">{t('foot.privacy')}</Link> ·{' '}
+            <Link href="/privacy">{t('foot.privacy')}</Link> ·{' '}
             <Link href="/legal/terms">{t('foot.terms')}</Link>
           </p>
           <MundidaDevCredit />

@@ -617,7 +617,6 @@
   "footer": {
     "externalHint": "Opens on {host} in a new tab",
     "entity": "EasyCasa Italia · P.IVA IT04531990986",
-    "copyright": "© 2026 Mundida group",
     "blurb": "EasyCasa is the Italian property portal with no commission for the seller. Every listing has a verified owner. Every valuation rests on official Agenzia delle Entrate data.",
     "columns": {
       "sellers": "For sellers",
@@ -650,9 +649,7 @@
       "transparency": "Transparency",
       "terms": "Terms",
       "myData": "My data",
-      "contacts": "Contacts",
-      "agencies": "For agencies",
-      "banks4all": "Banks4All"
+      "contacts": "Contacts"
     },
     "aboutLink": "Read about EasyCasa →",
     "agencies": "For agencies",
@@ -2600,7 +2597,6 @@
     "foot": {
       "mundida": "EasyCasa and Banks4All are part of the Mundida group (P.IVA IT04531990986). Banks4All financing services are provided by a sister company of EasyCasa within the same group. EasyCasa is a platform connecting private buyers and sellers directly and does not act as a real-estate intermediary.",
       "omi": "Price benchmarks are derived from the OMI dataset published by the Agenzia delle Entrate and are indicative zone-level ranges, not valuations of individual properties.",
-      "copyright": "© 2026 Mundida group",
       "privacy": "Privacy",
       "terms": "Terms"
     }
@@ -2857,7 +2853,6 @@
       "privacyLink": "informativa",
       "privacyAfter": " (version {version}).",
       "privacyVersion": "1.0-draft",
-      "copyright": "© 2026 Mundida group",
       "myData": "My data",
       "mediation": "Mediation"
     }

@@ -98,12 +98,9 @@ export function Footer() {
         <div className="sf-legal">
           <div className="sf-legal-meta">
             <p className="sf-entity">{t('entity')}</p>
-            <p className="sf-copyright">{t('copyright')}</p>
             <MundidaDevCredit className="sf-dev-credit" />
           </div>
           <div className="sf-legal-links">
-            <Link href="/agenzie">{t('legal.agencies')}</Link>
-            <Link href="/banks4all">{t('legal.banks4all')}</Link>
             <Link href="/legal/privacy">{t('legal.privacy')}</Link>
             <Link href="/legal/terms">{t('legal.terms')}</Link>
             <Link href="/legal/mediation">{t('legal.mediation')}</Link>

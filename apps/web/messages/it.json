@@ -617,7 +617,6 @@
   "footer": {
     "externalHint": "Si apre su {host} in una nuova scheda",
     "entity": "EasyCasa Italia · P.IVA IT04531990986",
-    "copyright": "© 2026 gruppo Mundida",
     "blurb": "EasyCasa è il portale immobiliare italiano senza provvigione per il venditore. Ogni annuncio ha un proprietario verificato. Ogni valutazione poggia sui dati ufficiali dell’Agenzia delle Entrate.",
     "columns": {
       "sellers": "Per chi vende",
@@ -650,9 +649,7 @@
       "transparency": "Trasparenza",
       "terms": "Termini",
       "myData": "I miei dati",
-      "contacts": "Contatti",
-      "agencies": "Per le agenzie",
-      "banks4all": "Banks4All"
+      "contacts": "Contatti"
     },
     "aboutLink": "Scopri EasyCasa →",
     "agencies": "Per le agenzie",
@@ -2600,7 +2597,6 @@
     "foot": {
       "mundida": "EasyCasa e Banks4All fanno parte del gruppo Mundida (P.IVA IT04531990986). I servizi di finanziamento Banks4All sono forniti da una società sorella di EasyCasa nello stesso gruppo. EasyCasa è una piattaforma che collega acquirenti e venditori privati in modo diretto e non svolge attività di mediazione immobiliare.",
       "omi": "I benchmark di prezzo derivano dal dataset OMI pubblicato dall’Agenzia delle Entrate e sono fasce zonali indicative, non perizie di singoli immobili.",
-      "copyright": "© 2026 gruppo Mundida",
       "privacy": "Privacy",
       "terms": "Termini"
     }
@@ -2857,7 +2853,6 @@
       "privacyLink": "informativa",
       "privacyAfter": " (versione {version}).",
       "privacyVersion": "1.0-draft",
-      "copyright": "© 2026 gruppo Mundida",
       "myData": "I miei dati",
       "mediation": "Mediazione"
     }
