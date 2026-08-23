@@ -1,0 +1,44 @@
+.alab-entry {
+  background: #14212e;
+  color: #f3ede1;
+  font-family: var(--font-body), Georgia, serif;
+  border-bottom: 1px solid rgba(243, 237, 225, 0.12);
+}
+
+.alab-entry-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0.85rem clamp(1.25rem, 4vw, 1.5rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.alab-entry p {
+  margin: 0;
+  font-size: 0.92rem;
+  max-width: 48ch;
+  color: rgba(243, 237, 225, 0.9);
+}
+
+.alab-entry strong {
+  color: #f3ede1;
+}
+
+.alab-entry-link {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #14212e;
+  background: #f3ede1;
+  text-decoration: none;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.alab-entry-link:hover {
+  background: #fff;
+}

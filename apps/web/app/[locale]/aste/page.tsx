@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AsteLandingPage } from '@/components/services/AsteLandingPage';
+import { AsteLabEntryBanner } from '@/components/services/AsteLabEntryBanner';
 import { routing } from '@/i18n/routing';
+import { asteAnalysisRouteMounted } from '@/lib/aste-analysis-config';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -35,5 +37,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AsteRoute({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <AsteLandingPage />;
+  return (
+    <>
+      {asteAnalysisRouteMounted() ? <AsteLabEntryBanner /> : null}
+      <AsteLandingPage />
+    </>
+  );
 }

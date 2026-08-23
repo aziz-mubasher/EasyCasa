@@ -892,9 +892,18 @@
       "serviceName": "Acquisto Assistito — comprare casa in Italia dall'estero",
       "serviceType": "Supporto all'acquisto immobiliare per acquirenti non residenti",
       "offers": [
-        { "name": "Verifica", "price": "290" },
-        { "name": "Acquisto Assistito", "price": "1490" },
-        { "name": "Trasferimento", "price": "2900" }
+        {
+          "name": "Verifica",
+          "price": "290"
+        },
+        {
+          "name": "Acquisto Assistito",
+          "price": "1490"
+        },
+        {
+          "name": "Trasferimento",
+          "price": "2900"
+        }
       ]
     },
     "hero": {
@@ -3006,6 +3015,73 @@
     "close": "EasyCasa sta costruendo Analisi Aste: carichi i documenti, ricevi l’analisi nella tua lingua.",
     "disclaimer": "EasyCasa fornisce analisi documentali a scopo informativo. Non fornisce consulenza legale, tecnica o perizie ai sensi di legge.",
     "counselMark": "COUNSEL REVIEW PENDING"
+  },
+  "asteLab": {
+    "meta": {
+      "title": "Lab Analisi Aste (interno) | EasyCasa",
+      "description": "Console interna per testare Analisi Aste in anteprima — non pubblica."
+    },
+    "badge": "Lab interno · non pubblico",
+    "title": "Lab di test — Analisi Aste",
+    "lead": "Usa questa pagina per verificare i flag EC-36 e aprire il flusso reale di upload/report senza abilitare il pubblico.",
+    "gate": {
+      "title": "Stato dei flag",
+      "hint": "Nessun segreto o email della allowlist viene mostrato qui.",
+      "public": "ASTE_ANALYSIS_ENABLED (pubblico)",
+      "previewBuild": "NEXT_PUBLIC_ASTE_INTERNAL_PREVIEW (build)",
+      "previewRuntime": "ASTE_INTERNAL_PREVIEW (runtime)",
+      "allowlist": "Allowlist configurata (non vuota)",
+      "signedIn": "Sessione autenticata",
+      "sessionAllowlisted": "Email sessione in allowlist",
+      "canOpenAnalisi": "Può aprire /aste/analisi",
+      "monetisation": "Paywall crediti (pagamenti + route)",
+      "publicWarn": "Il flag pubblico è ON — questa non è più solo anteprima interna. Usa Lane E solo dopo counsel + observability."
+    },
+    "actions": {
+      "title": "Apri il flusso prodotto",
+      "ready": "I gate sono verdi: puoi testare upload → pipeline → report.",
+      "blocked": "Non puoi ancora aprire Analisi. Accedi con un’email in allowlist, oppure completa i flag preview (build + runtime + emails).",
+      "openAnalisi": "Apri Analisi Aste",
+      "signIn": "Accedi per continuare",
+      "backLanding": "Torna a /aste"
+    },
+    "checklist": {
+      "title": "Lane C — smoke (§3.3)",
+      "hint": "Solo dossier PVP pubblici. Non usare documenti con PII private.",
+      "items": [
+        "Anonimo / email non allowlist → /aste/analisi reindirizza a /aste",
+        "Login allowlist → /aste/analisi si apre",
+        "Crea analisi → carica perizia + avviso → invia",
+        "Stato ready (se bloccato: admin #aste / AI_INTERNAL_TOKEN)",
+        "Report: teaser se paywall on, altrimenti report completo",
+        "Chat con citazioni (ES chat resta off)",
+        "DB: internal_preview = true sulla riga"
+      ]
+    },
+    "paywall": {
+      "title": "Lane D — paywall (solo sk_test_*)",
+      "ready": "Monetizzazione attiva su questa build. Verifica teaser → checkout test → unlock.",
+      "off": "Paywall spento (PAYMENTS_ENABLED o route). Accendilo solo con chiavi Stripe di test.",
+      "items": [
+        "Report in teaser finché i crediti sono 0",
+        "Acquista pack con carta 4242… (Stripe test)",
+        "Webhook concede crediti; unlock −1, idempotente",
+        "Chat + stampa solo sul report pieno",
+        "Mai sk_live_* mentre il flag pubblico è off"
+      ]
+    },
+    "outOfScope": {
+      "title": "Fuori scope da questa UI",
+      "laneB": "Lane B (golden eval Mac / Drive GT) — chiedere ad AZM.",
+      "laneE": "Lane E (G2 pubblico) — solo dopo risposte counsel + observability.",
+      "sop": "Dettaglio completo:"
+    },
+    "entry": {
+      "aria": "Accesso lab interno Analisi Aste",
+      "title": "Lab interno",
+      "body": "Anteprima EC-36 montata su questo build — apri la console di test (allowlist).",
+      "cta": "Apri lab di test"
+    }
   },
   "asteAnalisi": {
     "meta": {

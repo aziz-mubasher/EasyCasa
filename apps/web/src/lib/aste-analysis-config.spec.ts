@@ -79,3 +79,39 @@ describe('asteAnalysisServerAccessAllowed', () => {
     expect(await asteAnalysisServerAccessAllowed()).toBe(true);
   });
 });
+
+describe('getAsteLabGateState', () => {
+  const prev = { ...process.env };
+
+  beforeEach(() => {
+    vi.resetModules();
+    delete process.env.NEXT_PUBLIC_ASTE_ANALYSIS_ENABLED;
+    delete process.env.NEXT_PUBLIC_ASTE_INTERNAL_PREVIEW;
+    delete process.env.ASTE_INTERNAL_PREVIEW;
+    delete process.env.ASTE_INTERNAL_PREVIEW_EMAILS;
+    delete process.env.NEXT_PUBLIC_PAYMENTS_ENABLED;
+  });
+
+  afterEach(() => {
+    process.env = { ...prev };
+    vi.doUnmock('next/headers');
+  });
+
+  it('reports preview mounted but analisi blocked without session', async () => {
+    process.env.NEXT_PUBLIC_ASTE_INTERNAL_PREVIEW = 'true';
+    process.env.ASTE_INTERNAL_PREVIEW = 'true';
+    process.env.ASTE_INTERNAL_PREVIEW_EMAILS = 'ops@easycasa.it';
+    vi.doMock('next/headers', () => ({
+      cookies: async () => ({ get: () => undefined }),
+    }));
+    const { getAsteLabGateState } = await import('./aste-access-server');
+    const gate = await getAsteLabGateState();
+    expect(gate.routeMounted).toBe(true);
+    expect(gate.previewBuildMounted).toBe(true);
+    expect(gate.previewRuntimeOn).toBe(true);
+    expect(gate.allowlistConfigured).toBe(true);
+    expect(gate.signedIn).toBe(false);
+    expect(gate.canOpenAnalisi).toBe(false);
+    expect(gate.publicEnabled).toBe(false);
+  });
+});

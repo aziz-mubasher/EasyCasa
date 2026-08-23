@@ -1,6 +1,7 @@
 # EC-27 — Stripe test-mode E2E (Aste credit packs)
 
-**Scope:** Manual verification before any flag enable. Production stays dark (`ASTE_ANALYSIS_ENABLED=false`, `PAYMENTS_ENABLED=false`).
+**Scope:** Manual verification before any flag enable. Production stays dark (`ASTE_ANALYSIS_ENABLED=false`, `PAYMENTS_ENABLED=false`).  
+**How to test (all lanes):** `docs/runbooks/aste-testing-sop.md`.
 
 ## Prerequisites
 
