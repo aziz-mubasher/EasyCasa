@@ -198,13 +198,15 @@ export function ForBuyersPage() {
 
       <footer className="fb-foot">
         <div className="fb-wrap">
-          <p>{t('foot.mundida')}</p>
+          <p>
+            {t('foot.mundida')}
+            <MundidaDevCredit inline leadingMiddot />
+          </p>
           <p>{t('foot.omi')}</p>
           <p>
             <Link href="/privacy">{t('foot.privacy')}</Link> ·{' '}
             <Link href="/legal/terms">{t('foot.terms')}</Link>
           </p>
-          <MundidaDevCredit />
         </div>
       </footer>
     </div>

@@ -4,6 +4,7 @@ import { useEffect, useId, useState, type FormEvent } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { ITALIAN_PROVINCES } from '@easycasa/shared';
 import { Link } from '@/i18n/routing';
+import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import { submitAsteLead } from '@/lib/aste-api';
 import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 import './aste-landing.css';
@@ -268,6 +269,7 @@ export function AsteLandingPage() {
         <div className="aste-wrap">
           <p>{t('disclaimer')}</p>
           <p className="aste-counsel">{t('counselMark')}</p>
+          <MundidaDevCredit />
         </div>
       </footer>
     </div>

@@ -195,7 +195,10 @@ export function SellPrivatelyPage() {
 
       <footer className="sp-foot">
         <div className="sp-wrap">
-          <p>{t('foot.legal')}</p>
+          <p>
+            {t('foot.legal')}
+            <MundidaDevCredit inline leadingMiddot />
+          </p>
           <p>
             {t('foot.privacyBefore')}{' '}
             <Link href="/legal/privacy">{t('foot.privacyLink')}</Link>
@@ -205,7 +208,6 @@ export function SellPrivatelyPage() {
             <Link href="/privacy">{t('foot.myData')}</Link> ·{' '}
             <Link href="/legal/mediation">{t('foot.mediation')}</Link>
           </p>
-          <MundidaDevCredit />
         </div>
       </footer>
     </div>
