@@ -141,16 +141,18 @@ Verify containers see the flags (`printenv` inside `api` / `web`); never paste s
 
 ### 3.3 Ten-step smoke (allowlisted user, **public** PVP dossier only)
 
+**UI entry:** open `/it/aste/lab` (also linked from `/it/aste` when the preview build arg is mounted). The lab shows flag diagnostics (no secrets) and deep-links into `/aste/analisi`.
+
 Use **public court PDFs** only (no private PII packs). Prefer dossiers already used in eval.
 
-1. **Anonymous / non-allowlisted** → `/it/aste/analisi` redirects to `/it/aste`.  
-2. **Allowlisted** Keycloak sign-in → `/it/aste/analisi` loads (SSR gate reads `ec_access` cookie mirrored at login; **API is the security boundary**).  
-3. Create analysis → upload perizia + avviso → submit.  
-4. Status reaches **`ready`** (if stuck: admin `#aste` Failures; check `AI_INTERNAL_TOKEN` match on api+ai).  
-5. Open report → **teaser** when payments+credits path is on; economics/chat locked until unlock.  
-6. **Test unlock** — Stripe **test** checkout or spend 1 credit → full report.  
-7. Full report: IT economics, criticità, OMI panel when zone resolves; EN when enabled.  
-8. **Chat** — one grounded question with citations; ES chat stays disabled.  
+1. Open `/it/aste/lab` → confirm preview build/runtime/allowlist flags; anonymous session shows **can open analisi = off**.  
+2. **Anonymous / non-allowlisted** → `/it/aste/analisi` redirects to `/it/aste`.  
+3. **Allowlisted** Keycloak sign-in → lab flips session allowlisted on; `/it/aste/analisi` loads (SSR gate reads `ec_access` cookie mirrored at login; **API is the security boundary**).  
+4. Create analysis → upload perizia + avviso → submit.  
+5. Status reaches **`ready`** (if stuck: admin `#aste` Failures; check `AI_INTERNAL_TOKEN` match on api+ai).  
+6. Open report → **teaser** when payments+credits path is on; economics/chat locked until unlock.  
+7. **Test unlock** — Stripe **test** checkout or spend 1 credit → full report (Lane D if paywall on).  
+8. Full report: IT economics, criticità, OMI panel when zone resolves; EN when enabled; one grounded **chat** with citations (ES chat stays off).  
 9. **Admin** `#aste` — run visible with masked identity/filenames; optional reveal writes audit rows.  
 10. **DB:** `internal_preview = true` on the new row; audit events for preview create / unlock / checkout.
 
@@ -261,6 +263,6 @@ Do **not** commit real perizie, tokens, or `.env` values.
 
 1. Touched Aste code? → **Lane A**.  
 2. Changed extract / economics? → **Lane B** on Mac (or ask AZM).  
-3. Need prod-like UX without public launch? → **Lane C** (§3.3).  
-4. Testing paywall? → **Lane D** with `sk_test_*` only.  
+3. Need prod-like UX without public launch? → **Lane C** — start at **`/it/aste/lab`**, then §3.3.  
+4. Testing paywall? → **Lane D** with `sk_test_*` only (lab paywall section when monetisation flag is on).  
 5. Counsel answered + observability ready? → **Lane E** only.

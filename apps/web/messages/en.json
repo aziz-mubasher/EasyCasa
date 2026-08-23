@@ -892,9 +892,18 @@
       "serviceName": "Acquisto Assistito — buying property in Italy from abroad",
       "serviceType": "Property purchase support for non-resident buyers",
       "offers": [
-        { "name": "Verifica", "price": "290" },
-        { "name": "Acquisto Assistito", "price": "1490" },
-        { "name": "Trasferimento", "price": "2900" }
+        {
+          "name": "Verifica",
+          "price": "290"
+        },
+        {
+          "name": "Acquisto Assistito",
+          "price": "1490"
+        },
+        {
+          "name": "Trasferimento",
+          "price": "2900"
+        }
       ]
     },
     "hero": {
@@ -3006,6 +3015,73 @@
     "close": "EasyCasa is building Analisi Aste: upload the documents, receive the analysis in your language.",
     "disclaimer": "EasyCasa provides document analysis for information purposes only. It does not provide legal advice, technical advice, or statutory appraisals.",
     "counselMark": "COUNSEL REVIEW PENDING"
+  },
+  "asteLab": {
+    "meta": {
+      "title": "Aste analysis lab (internal) | EasyCasa",
+      "description": "Internal console to test Aste analysis in preview — not public."
+    },
+    "badge": "Internal lab · not public",
+    "title": "Test lab — Aste analysis",
+    "lead": "Use this page to verify EC-36 flags and open the real upload/report flow without enabling the public flag.",
+    "gate": {
+      "title": "Flag status",
+      "hint": "No secrets or allowlist emails are shown here.",
+      "public": "ASTE_ANALYSIS_ENABLED (public)",
+      "previewBuild": "NEXT_PUBLIC_ASTE_INTERNAL_PREVIEW (build)",
+      "previewRuntime": "ASTE_INTERNAL_PREVIEW (runtime)",
+      "allowlist": "Allowlist configured (non-empty)",
+      "signedIn": "Authenticated session",
+      "sessionAllowlisted": "Session email allowlisted",
+      "canOpenAnalisi": "Can open /aste/analisi",
+      "monetisation": "Credits paywall (payments + route)",
+      "publicWarn": "Public flag is ON — this is no longer preview-only. Use Lane E only after counsel + observability."
+    },
+    "actions": {
+      "title": "Open the product flow",
+      "ready": "Gates are green: you can test upload → pipeline → report.",
+      "blocked": "You cannot open Analisi yet. Sign in with an allowlisted email, or finish preview flags (build + runtime + emails).",
+      "openAnalisi": "Open Aste analysis",
+      "signIn": "Sign in to continue",
+      "backLanding": "Back to /aste"
+    },
+    "checklist": {
+      "title": "Lane C — smoke (§3.3)",
+      "hint": "Public PVP dossiers only. Do not use private-PII packs.",
+      "items": [
+        "Anonymous / non-allowlisted → /aste/analisi redirects to /aste",
+        "Allowlisted login → /aste/analisi loads",
+        "Create analysis → upload perizia + avviso → submit",
+        "Status ready (if stuck: admin #aste / AI_INTERNAL_TOKEN)",
+        "Report: teaser if paywall on, else full report",
+        "Chat with citations (ES chat stays off)",
+        "DB: internal_preview = true on the row"
+      ]
+    },
+    "paywall": {
+      "title": "Lane D — paywall (sk_test_* only)",
+      "ready": "Monetisation is on for this build. Verify teaser → test checkout → unlock.",
+      "off": "Paywall off (PAYMENTS_ENABLED or route). Turn it on only with Stripe test keys.",
+      "items": [
+        "Report stays teaser while credits are 0",
+        "Buy pack with card 4242… (Stripe test)",
+        "Webhook grants credits; unlock −1, idempotent",
+        "Chat + print only on full report",
+        "Never sk_live_* while the public flag is off"
+      ]
+    },
+    "outOfScope": {
+      "title": "Out of scope on this UI",
+      "laneB": "Lane B (Mac golden eval / Drive GT) — ask AZM.",
+      "laneE": "Lane E (G2 public) — only after counsel answers + observability.",
+      "sop": "Full detail:"
+    },
+    "entry": {
+      "aria": "Internal Aste analysis lab access",
+      "title": "Internal lab",
+      "body": "EC-36 preview is mounted on this build — open the test console (allowlist).",
+      "cta": "Open test lab"
+    }
   },
   "asteAnalisi": {
     "meta": {

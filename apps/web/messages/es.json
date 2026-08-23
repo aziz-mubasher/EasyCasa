@@ -892,9 +892,18 @@
       "serviceName": "Acquisto Assistito — comprar vivienda en Italia desde el extranjero",
       "serviceType": "Apoyo a la compra inmobiliaria para compradores no residentes",
       "offers": [
-        { "name": "Verifica", "price": "290" },
-        { "name": "Acquisto Assistito", "price": "1490" },
-        { "name": "Trasferimento", "price": "2900" }
+        {
+          "name": "Verifica",
+          "price": "290"
+        },
+        {
+          "name": "Acquisto Assistito",
+          "price": "1490"
+        },
+        {
+          "name": "Trasferimento",
+          "price": "2900"
+        }
       ]
     },
     "hero": {
@@ -3006,6 +3015,73 @@
     "close": "EasyCasa está construyendo Analisi Aste: subes los documentos y recibes el análisis en tu idioma.",
     "disclaimer": "EasyCasa proporciona análisis documentales con fines informativos. No proporciona asesoramiento legal, técnico ni peritajes con efectos legales.",
     "counselMark": "COUNSEL REVIEW PENDING"
+  },
+  "asteLab": {
+    "meta": {
+      "title": "Lab análisis subastas (interno) | EasyCasa",
+      "description": "Consola interna para probar el análisis de subastas en preview — no pública."
+    },
+    "badge": "Lab interno · no público",
+    "title": "Lab de prueba — Análisis Aste",
+    "lead": "Usa esta página para verificar los flags EC-36 y abrir el flujo real de carga/informe sin activar el flag público.",
+    "gate": {
+      "title": "Estado de flags",
+      "hint": "Aquí no se muestran secretos ni emails de la allowlist.",
+      "public": "ASTE_ANALYSIS_ENABLED (público)",
+      "previewBuild": "NEXT_PUBLIC_ASTE_INTERNAL_PREVIEW (build)",
+      "previewRuntime": "ASTE_INTERNAL_PREVIEW (runtime)",
+      "allowlist": "Allowlist configurada (no vacía)",
+      "signedIn": "Sesión autenticada",
+      "sessionAllowlisted": "Email de sesión en allowlist",
+      "canOpenAnalisi": "Puede abrir /aste/analisi",
+      "monetisation": "Paywall de créditos (pagos + ruta)",
+      "publicWarn": "El flag público está ON — ya no es solo preview. Lane E solo tras counsel + observability."
+    },
+    "actions": {
+      "title": "Abrir el flujo de producto",
+      "ready": "Los gates están en verde: puedes probar carga → pipeline → informe.",
+      "blocked": "Aún no puedes abrir Analisi. Inicia sesión con un email en allowlist, o completa los flags de preview.",
+      "openAnalisi": "Abrir Análisis Aste",
+      "signIn": "Iniciar sesión",
+      "backLanding": "Volver a /aste"
+    },
+    "checklist": {
+      "title": "Lane C — smoke (§3.3)",
+      "hint": "Solo dossiers PVP públicos. No uses packs con PII privada.",
+      "items": [
+        "Anónimo / no allowlist → /aste/analisi redirige a /aste",
+        "Login allowlist → /aste/analisi carga",
+        "Crear análisis → subir perizia + avviso → enviar",
+        "Estado ready (si se atasca: admin #aste / AI_INTERNAL_TOKEN)",
+        "Informe: teaser si paywall on, si no informe completo",
+        "Chat con citas (chat ES sigue off)",
+        "DB: internal_preview = true en la fila"
+      ]
+    },
+    "paywall": {
+      "title": "Lane D — paywall (solo sk_test_*)",
+      "ready": "Monetización activa en este build. Verifica teaser → checkout test → unlock.",
+      "off": "Paywall apagado. Actívalo solo con claves Stripe de test.",
+      "items": [
+        "Informe en teaser mientras créditos = 0",
+        "Comprar pack con tarjeta 4242… (Stripe test)",
+        "Webhook otorga créditos; unlock −1, idempotente",
+        "Chat + impresión solo en informe completo",
+        "Nunca sk_live_* con el flag público off"
+      ]
+    },
+    "outOfScope": {
+      "title": "Fuera de alcance en esta UI",
+      "laneB": "Lane B (eval Mac / Drive GT) — pedir a AZM.",
+      "laneE": "Lane E (G2 público) — solo tras respuestas counsel + observability.",
+      "sop": "Detalle completo:"
+    },
+    "entry": {
+      "aria": "Acceso al lab interno de Análisis Aste",
+      "title": "Lab interno",
+      "body": "Preview EC-36 montado en este build — abre la consola de prueba (allowlist).",
+      "cta": "Abrir lab de prueba"
+    }
   },
   "asteAnalisi": {
     "meta": {
