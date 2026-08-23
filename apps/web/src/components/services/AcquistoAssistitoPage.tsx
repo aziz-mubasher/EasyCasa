@@ -196,11 +196,11 @@ export function AcquistoAssistitoPage() {
 
         <footer className="aa-footer">
           <div className="wrap">
-            <div>{t('footer.left')}</div>
+            <div>
+              {t('footer.left')}
+              <MundidaDevCredit inline leadingMiddot />
+            </div>
             <div>{t('footer.right')}</div>
-          </div>
-          <div className="wrap aa-footer-credit">
-            <MundidaDevCredit />
           </div>
         </footer>
       </div>

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 import './aste-guida.css';
 
@@ -47,6 +48,7 @@ export function AsteGuidaPage() {
         <footer className="guida-foot">
           <p>{t('disclaimer')}</p>
           <p className="guida-counsel">{t('counselMark')}</p>
+          <MundidaDevCredit />
         </footer>
       </div>
     </article>
