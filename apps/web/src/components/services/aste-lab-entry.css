@@ -1,8 +1,10 @@
+/* Banner on /aste pointing to internal lab — EasyCasa brand tokens */
+
 .alab-entry {
-  background: #14212e;
-  color: #f3ede1;
+  background: var(--ink);
+  color: var(--paper-deep);
   font-family: var(--font-body), Georgia, serif;
-  border-bottom: 1px solid rgba(243, 237, 225, 0.12);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
 }
 
 .alab-entry-wrap {
@@ -20,25 +22,26 @@
   margin: 0;
   font-size: 0.92rem;
   max-width: 48ch;
-  color: rgba(243, 237, 225, 0.9);
+  color: var(--paper-deep);
 }
 
 .alab-entry strong {
-  color: #f3ede1;
+  color: var(--paper);
 }
 
 .alab-entry-link {
   font-family: var(--font-display), system-ui, sans-serif;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: #14212e;
-  background: #f3ede1;
+  font-weight: 650;
+  color: var(--ink);
+  background: var(--paper);
   text-decoration: none;
   padding: 0.45rem 0.85rem;
-  border-radius: 6px;
+  border-radius: var(--radius-doc);
   white-space: nowrap;
+  transition: background 0.18s ease;
 }
 
 .alab-entry-link:hover {
-  background: #fff;
+  background: var(--azure-pale);
 }
