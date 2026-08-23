@@ -148,6 +148,7 @@ Use **public court PDFs** only (no private PII packs). Prefer dossiers already u
 1. Open `/it/aste/lab` → confirm preview build/runtime/allowlist flags; anonymous session shows **can open analisi = off**.  
 2. **Anonymous / non-allowlisted** → `/it/aste/analisi` redirects to `/it/aste`.  
 3. **Allowlisted** Keycloak sign-in → lab flips session allowlisted on; `/it/aste/analisi` loads (SSR gate reads `ec_access` cookie mirrored at login; **API is the security boundary**).  
+   - If client shows signed-in but **session allowlisted / can open analisi stay off**: access JWT is missing `email`. Fix live Keycloak `email` / `profile` client-scope protocol mappers (`access.token.claim=true`), then **sign out and sign in again** (or force refresh) so a new access token includes `email`. Lab remirrors `ec_access` on hydrate and refreshes RSC props once.  
 4. Create analysis → upload perizia + avviso → submit.  
 5. Status reaches **`ready`** (if stuck: admin `#aste` Failures; check `AI_INTERNAL_TOKEN` match on api+ai).  
 6. Open report → **teaser** when payments+credits path is on; economics/chat locked until unlock.  

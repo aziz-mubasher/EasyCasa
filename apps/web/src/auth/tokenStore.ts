@@ -66,10 +66,13 @@ export const tokenStore = {
     const access = s.getItem(ACCESS_KEY);
     const expiry = s.getItem(EXPIRY_KEY);
     if (!access || !expiry) return null;
+    const expiresAt = Number(expiry);
+    // Remirror SSR cookie on hydrate so server gates (e.g. Aste allowlist) see the session.
+    setAccessCookie(access, expiresAt);
     return {
       accessToken: access,
       refreshToken: s.getItem(REFRESH_KEY),
-      expiresAt: Number(expiry),
+      expiresAt,
     };
   },
 

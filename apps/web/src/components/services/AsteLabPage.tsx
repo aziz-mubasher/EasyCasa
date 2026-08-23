@@ -1,8 +1,11 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import { useAuth } from '@/auth/AuthProvider';
+import { tokenStore } from '@/auth/tokenStore';
 import type { AsteLabGateState } from '@/lib/aste-access-server';
 import './aste-lab.css';
 
@@ -23,7 +26,38 @@ function FlagRow({ on, label }: { on: boolean; label: string }) {
 export function AsteLabPage({ gate }: Props) {
   const t = useTranslations('asteLab');
   const locale = useLocale();
-  const { ready, isAuthenticated, signIn } = useAuth();
+  const router = useRouter();
+  const { ready, isAuthenticated, signIn, getAccessToken } = useAuth();
+  const refreshedForSession = useRef(false);
+
+  // After client login, remirror ec_access and refresh RSC props so gate flags update.
+  // Force one token refresh so Keycloak re-issues claims (email mappers) into the access JWT.
+  useEffect(() => {
+    if (!ready || !isAuthenticated) {
+      refreshedForSession.current = false;
+      return;
+    }
+    if (gate.canOpenAnalisi || gate.sessionAllowlisted) return;
+    if (refreshedForSession.current) return;
+    refreshedForSession.current = true;
+    void (async () => {
+      const stored = tokenStore.getTokens();
+      if (stored?.refreshToken) {
+        // Nudge expiry so getAccessToken refreshes and picks up email claim mappers.
+        tokenStore.setTokens({ ...stored, expiresAt: Date.now() });
+      }
+      await getAccessToken();
+      tokenStore.getTokens();
+      router.refresh();
+    })();
+  }, [
+    ready,
+    isAuthenticated,
+    gate.canOpenAnalisi,
+    gate.sessionAllowlisted,
+    getAccessToken,
+    router,
+  ]);
 
   const checklist = t.raw('checklist.items') as string[];
   const paywallItems = t.raw('paywall.items') as string[];
