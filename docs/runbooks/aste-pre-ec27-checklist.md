@@ -3,7 +3,8 @@
 **Opened:** 2026-08-15 (G1 FULL GREEN flip)  
 **Owner:** R&D / AZM · **Board:** Kaizen K EC 7.3  
 **Canonical G1 ledger:** `docs/audits/aste-g1-hardening-roadmap-ec29-33.md`  
-**G2 / public enable:** still `docs/runbooks/aste-enable.md` (counsel **answers**, not this checklist)
+**G2 / public enable:** still `docs/runbooks/aste-enable.md` (counsel **answers**, not this checklist)  
+**How to test (all lanes):** `docs/runbooks/aste-testing-sop.md`
 
 Do **not** flip `ASTE_ANALYSIS_ENABLED`. Do **not** treat G1 green as G2.
 

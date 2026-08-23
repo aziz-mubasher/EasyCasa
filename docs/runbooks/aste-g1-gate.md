@@ -7,6 +7,8 @@ Answers from counsel gate **G2**, not G1. Public flag enable is still `docs/runb
 
 Cloud agents **cannot** run the golden-set eval (Drive PDFs stay on AZM Mac). This runbook is for the Mac operator.
 
+**All testing lanes (automated / preview / Stripe / G2):** `docs/runbooks/aste-testing-sop.md`.
+
 ---
 
 ## 1. Eval run (decisive)

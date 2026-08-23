@@ -4,7 +4,8 @@
 **Admin** `https://admin.easycasaita.com/#aste` — works regardless of `ASTE_ANALYSIS_ENABLED`.  
 **Flags stay off until this checklist is followed.** Rollback = flag off + redeploy; data retained.
 
-Also see: `docs/env.md` · Grafana dashboard **EasyCasa — Aste** · alerts group `aste` in `infra/observability/prometheus/alerts.yml`.
+Also see: `docs/env.md` · Grafana dashboard **EasyCasa — Aste** · alerts group `aste` in `infra/observability/prometheus/alerts.yml`.  
+**How to test (all lanes):** `docs/runbooks/aste-testing-sop.md`.
 
 ---
 
