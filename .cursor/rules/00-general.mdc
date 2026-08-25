@@ -5,6 +5,9 @@ alwaysApply: true
 
 # EasyCasa — Global Rules
 
+**Before any design/spec/build work, load [`CLAUDE.md`](../../CLAUDE.md)** (venture constraint set)
+and the T04 matrix it cites (`docs/legal/T04_mediazione_boundary.md`). See also `AGENTS.md`.
+
 You are working in a pnpm monorepo that deploys to a single VPS via Docker Compose + Caddy.
 
 ## Structure
@@ -15,6 +18,8 @@ You are working in a pnpm monorepo that deploys to a single VPS via Docker Compo
 - `/migration` — Phase 1 schema SQL + WordPress ETL tooling
 - `/infra` — docker-compose, Caddy/Traefik, deploy & backup scripts
 - `/docs` — specs. Read the relevant `/docs/<feature>.md` BEFORE writing code.
+- `CLAUDE.md` — legal/product constraint delta (mandatory load)
+- `AGENTS.md` — agent entrypoint pointing at `CLAUDE.md` + engineering rules
 
 ## Workflow
 - One feature = one spec in `/docs` = one focused PR.
@@ -26,7 +31,9 @@ You are working in a pnpm monorepo that deploys to a single VPS via Docker Compo
 - NEVER edit `/infra` deploy/secret handling without being explicitly asked.
 - TypeScript is strict. No `any` unless justified with a comment.
 - Prefer shared types from `@easycasa/shared` over duplicating shapes.
+- **Legal floor (CLAUDE.md §9):** refuse T04 rows 10–12; refuse %-of-sale / contingent sale fees; refuse `sanabilità` / generated legal risk conclusions without a countersigning professional; refuse storing unredacted auction debtor PII.
 
 ## Style
 - Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`...).
 - Small pure functions; explicit error handling; no silent catches.
+- Bridge / Claude handoff PRs: append `## R&D FEEDBACK — for Claude` (see `CLAUDE.md` §9).

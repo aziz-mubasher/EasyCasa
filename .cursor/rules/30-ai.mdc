@@ -4,8 +4,19 @@ globs: services/ai/**
 ---
 
 # AI Service (FastAPI) Rules
+
+**Also load repo-root `CLAUDE.md` §2–§3 and §6** before changing prompts, extraction, or Aste report
+generation.
+
 - Keep it small: embeddings, valuation, and assistant endpoints only.
 - Type hints everywhere; pydantic models for request/response.
 - Never call external LLM/embedding APIs without a timeout and error handling.
 - Ground the assistant in real catalogue data (RAG) — never invent listings.
+- **Refuse** price recommendations and negotiation advice (T04 rows 3 / 12) — enforce in prompt
+  constraints + fixtures, not review alone.
+- **Do not emit `sanabilità`** (or equivalent “will be regularisable” conclusions) unless a
+  countersigning *tecnico abilitato* is in the loop (`CLAUDE.md` §3.2).
+- Prefer **extract-and-cite** over assess-and-rate for Aste legal/risk text (`CLAUDE.md` §3.4).
+- Assume auction uploads are PII-contaminated; redaction belongs **at ingest**, before model/index
+  (`CLAUDE.md` §6).
 - Tests with pytest; every endpoint has at least a health/contract test.
