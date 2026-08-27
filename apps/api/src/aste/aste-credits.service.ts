@@ -254,17 +254,17 @@ export class AsteCreditsService {
   }
 
   listPacks(): AsteCreditPackSize[] {
-    return [1, 3, 10];
+    return [1, 5, 20];
   }
 
   resolveStripePriceId(pack: AsteCreditPackSize): string {
     switch (pack) {
       case 1:
         return this.config.STRIPE_PRICE_ASTE_CREDITS_1.trim();
-      case 3:
-        return this.config.STRIPE_PRICE_ASTE_CREDITS_3.trim();
-      case 10:
-        return this.config.STRIPE_PRICE_ASTE_CREDITS_10.trim();
+      case 5:
+        return (this.config.STRIPE_PRICE_ASTE_CREDITS_5 ?? '').trim();
+      case 20:
+        return (this.config.STRIPE_PRICE_ASTE_CREDITS_20 ?? '').trim();
       default:
         return '';
     }
@@ -272,7 +272,7 @@ export class AsteCreditsService {
 
   assertPack(pack: number): AsteCreditPackSize {
     if (!isAsteCreditPackSize(pack)) {
-      throw new BadRequestException('pack must be 1, 3, or 10');
+      throw new BadRequestException('pack must be 1, 5, or 20');
     }
     return pack;
   }

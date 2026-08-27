@@ -22,6 +22,7 @@ import {
   sellerSubscription,
   featuredPlacements,
   partnerDirectory,
+  users,
 } from '../db/schema';
 import { ListingBoostService } from '../listing-boost/listing-boost.service';
 import { SearchService } from '../search/search.service';
@@ -220,10 +221,10 @@ export class StripeService {
     switch (pack) {
       case 1:
         return this.config.STRIPE_PRICE_ASTE_CREDITS_1.trim();
-      case 3:
-        return this.config.STRIPE_PRICE_ASTE_CREDITS_3.trim();
-      case 10:
-        return this.config.STRIPE_PRICE_ASTE_CREDITS_10.trim();
+      case 5:
+        return (this.config.STRIPE_PRICE_ASTE_CREDITS_5 ?? '').trim();
+      case 20:
+        return (this.config.STRIPE_PRICE_ASTE_CREDITS_20 ?? '').trim();
       default:
         return '';
     }
@@ -297,12 +298,11 @@ export class StripeService {
             s.metadata.partnerDirectoryId,
             (s.payment_intent as string) || s.id,
           );
-        } else if (s.mode === 'payment' && s.metadata?.kind === 'aste_credits') {
-          await this.grantAsteCredits(
-            s.metadata.userId,
-            Number(s.metadata.credits ?? 0),
-            (s.payment_intent as string) || s.id,
-          );
+        } else if (
+          s.mode === 'payment' &&
+          (s.metadata?.kind === 'aste_credits' || s.metadata?.product === 'easy-legenda')
+        ) {
+          await this.grantAsteCreditsFromSession(s);
         }
         break;
       }
@@ -481,6 +481,28 @@ export class StripeService {
       throw new NotFoundException('partner listing not found');
     }
     return row;
+  }
+
+  private async grantAsteCreditsFromSession(s: Stripe.Checkout.Session) {
+    const credits = Number(s.metadata?.credits ?? s.metadata?.pack ?? 0);
+    const paymentId = (typeof s.payment_intent === 'string' && s.payment_intent) || s.id;
+    let userId = s.metadata?.userId || s.client_reference_id || '';
+    if (!userId) {
+      const email = s.customer_details?.email || s.customer_email || undefined;
+      if (email) {
+        const [row] = await this.db
+          .select({ id: users.id })
+          .from(users)
+          .where(eq(users.email, email))
+          .limit(1);
+        userId = row?.id ?? '';
+      }
+    }
+    if (!userId) {
+      this.logger.warn(`aste_credits grant skipped — no user for session ${s.id}`);
+      return;
+    }
+    await this.grantAsteCredits(userId, credits, paymentId);
   }
 
   private async grantAsteCredits(userId: string, credits: number, paymentId: string) {

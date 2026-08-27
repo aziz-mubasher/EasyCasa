@@ -15,8 +15,8 @@ import { AsteCreditsService } from './aste-credits.service';
 import { AsteMonetisationEnabledGuard } from './aste-monetisation.guard';
 
 class CreditCheckoutDto {
-  @IsIn([1, 3, 10])
-  pack!: 1 | 3 | 10;
+  @IsIn([1, 5, 20])
+  pack!: 1 | 5 | 20;
 }
 
 @Controller('aste/credits')

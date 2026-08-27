@@ -24,5 +24,6 @@ export function stripeSecretKeyIsLive(secretKey: string): boolean {
 
 /** EC-36 — block accidental real charges during internal preview. */
 export function asteCreditsCheckoutBlockedByLiveKey(config: ApiConfig): boolean {
+  if (config.ASTE_CREDITS_CHECKOUT_ENABLED) return false;
   return !config.ASTE_ANALYSIS_ENABLED && stripeSecretKeyIsLive(config.STRIPE_SECRET_KEY);
 }
