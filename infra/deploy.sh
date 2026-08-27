@@ -20,6 +20,10 @@ EDGE="caddy"
 if docker network inspect root_default >/dev/null 2>&1; then
   echo "==> Traefik network detected — using docker-compose.traefik.yml (no Caddy)"
   COMPOSE="$COMPOSE -f infra/docker-compose.traefik.yml"
+  if [ -f infra/docker-compose.legenda-redirect.yml ]; then
+    echo "==> Including docker-compose.legenda-redirect.yml (apex /aste/lab 301)"
+    COMPOSE="$COMPOSE -f infra/docker-compose.legenda-redirect.yml"
+  fi
   EDGE="traefik"
 else
   COMPOSE="$COMPOSE --profile caddy"
