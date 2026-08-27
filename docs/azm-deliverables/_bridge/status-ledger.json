@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-27T04:22:29.634Z",
+  "updatedAt": "2026-08-27T04:23:59.028Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": null,
       "title": "K EC RENAME-2",
       "venture": "EasyCasa",
-      "lifecycle": "running",
-      "agentStatus": "RUNNING",
+      "lifecycle": "pr_ready",
+      "agentStatus": "IDLE",
       "agentBcId": "bc-a08a766e-5cb9-466d-9f30-f6985c382145",
       "agentUrl": "https://cursor.com/agents/bc-a08a766e-5cb9-466d-9f30-f6985c382145",
       "branch": "cursor/ec-rename-legenda-2145",
-      "prNumber": null,
-      "prUrl": null,
-      "prState": null,
+      "prNumber": 186,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/186",
+      "prState": "DRAFT",
       "dispatchedAt": "2026-08-27T04:21:06.341Z",
-      "updatedAt": "2026-08-27T04:22:11.406Z",
-      "summary": "EC-RENAME-2: Legenda SSOT + surface migration in progress",
-      "nextAction": "Run checks, open draft PR",
+      "updatedAt": "2026-08-27T04:23:59.028Z",
+      "summary": "EC-RENAME-2 ready — PR #186 Legenda SSOT (tests green); #185 closed superseded",
+      "nextAction": "Review/merge PR #186; AZM: trademark, SEO, Meta; open REMED for credit route",
       "errors": []
     },
     {
