@@ -1,0 +1,23 @@
+# Optional overlay — 301 apex /aste/lab → legenda.easycasaita.com
+# Apply only after DNS + /opt/legenda is live:
+#   docker compose -f infra/docker-compose.yml -f infra/docker-compose.traefik.yml \
+#     -f infra/docker-compose.legenda-redirect.yml --env-file .env up -d web
+
+services:
+  web:
+    labels:
+      - "traefik.http.middlewares.easycasa-lab-redirect.redirectregex.regex=^https?://[^/]+/(it|en|es)/aste/lab/?$"
+      - "traefik.http.middlewares.easycasa-lab-redirect.redirectregex.replacement=https://legenda.easycasaita.com/$${1}/aste/lab"
+      - traefik.http.middlewares.easycasa-lab-redirect.redirectregex.permanent=true
+      - traefik.http.routers.easycasa-lab-redir.rule=Host(`${STAGING_DOMAIN}`) && PathRegexp(`^/(it|en|es)/aste/lab/?$`)
+      - traefik.http.routers.easycasa-lab-redir.entrypoints=websecure
+      - traefik.http.routers.easycasa-lab-redir.tls=true
+      - traefik.http.routers.easycasa-lab-redir.tls.certresolver=mytlschallenge
+      - traefik.http.routers.easycasa-lab-redir.priority=50
+      - traefik.http.routers.easycasa-lab-redir.middlewares=easycasa-lab-redirect@docker
+      - traefik.http.routers.easycasa-lab-redir.service=easycasa-web
+      - traefik.http.routers.easycasa-lab-redir-http.rule=Host(`${STAGING_DOMAIN}`) && PathRegexp(`^/(it|en|es)/aste/lab/?$`)
+      - traefik.http.routers.easycasa-lab-redir-http.entrypoints=web
+      - traefik.http.routers.easycasa-lab-redir-http.priority=50
+      - traefik.http.routers.easycasa-lab-redir-http.middlewares=easycasa-lab-redirect@docker
+      - traefik.http.routers.easycasa-lab-redir-http.service=easycasa-web

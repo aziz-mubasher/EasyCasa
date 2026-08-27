@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { redirect as nextRedirect } from 'next/navigation';
 import { redirect } from '@/i18n/routing';
 import { AsteLabPage } from '@/components/services/AsteLabPage';
 import { getAsteLabGateState } from '@/lib/aste-access-server';
@@ -28,6 +29,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AsteLabRoute({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+
+  const labOrigin = (process.env.NEXT_PUBLIC_LEGENDA_LAB_ORIGIN ?? '').replace(/\/$/, '');
+  if (labOrigin) {
+    nextRedirect(`${labOrigin}/${locale}/aste/lab`);
+  }
 
   if (!asteAnalysisRouteMounted()) {
     redirect({ href: '/aste', locale });

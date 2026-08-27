@@ -1,3 +1,5 @@
+import { accessCookieDomainAttr } from './cookieDomain';
+
 const ACCESS_KEY = 'ec.access';
 const ACCESS_COOKIE = 'ec_access';
 const REFRESH_KEY = 'ec.refresh';
@@ -33,12 +35,18 @@ function setAccessCookie(access: string, expiresAt: number): void {
   if (typeof document === 'undefined') return;
   const maxAge = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
   const secure = typeof location !== 'undefined' && location.protocol === 'https:' ? '; Secure' : '';
-  document.cookie = `${ACCESS_COOKIE}=${encodeURIComponent(access)}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secure}`;
+  const domain = accessCookieDomainAttr();
+  document.cookie = `${ACCESS_COOKIE}=${encodeURIComponent(access)}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secure}${domain}`;
 }
 
 function clearAccessCookie(): void {
   if (typeof document === 'undefined') return;
-  document.cookie = `${ACCESS_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax`;
+  const domain = accessCookieDomainAttr();
+  document.cookie = `${ACCESS_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax${domain}`;
+  // Also drop a leftover host-only cookie from before Domain=.easycasaita.com.
+  if (domain) {
+    document.cookie = `${ACCESS_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax`;
+  }
 }
 
 function migrateTokensFromSession(): void {
