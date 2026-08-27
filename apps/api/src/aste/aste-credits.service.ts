@@ -77,6 +77,20 @@ export class AsteCreditsService {
   }
 
   /**
+   * First file free — same ledger as a paid grant, once per account.
+   * Do not fingerprint the uploaded document (third-party PII).
+   */
+  async grantFirstFileFree(userId: string): Promise<{ granted: boolean; balance: number }> {
+    return this.grantCredits({
+      userId,
+      credits: 1,
+      reason: 'first_file_free',
+      idempotencyKey: `grant:first_file:${userId}`,
+      stripePaymentId: null,
+    });
+  }
+
+  /**
    * Grant credits after verified Stripe checkout.session.completed webhook.
    * Idempotent on stripe payment id.
    */
@@ -89,7 +103,26 @@ export class AsteCreditsService {
       this.log.warn('aste credit grant skipped — missing userId/payment/credits');
       return { granted: false, balance: 0 };
     }
-    const idempotencyKey = `grant:stripe:${stripePaymentId}`;
+    return this.grantCredits({
+      userId,
+      credits,
+      reason: 'stripe_purchase',
+      idempotencyKey: `grant:stripe:${stripePaymentId}`,
+      stripePaymentId,
+    });
+  }
+
+  private async grantCredits(input: {
+    userId: string;
+    credits: number;
+    reason: string;
+    idempotencyKey: string;
+    stripePaymentId: string | null;
+  }): Promise<{ granted: boolean; balance: number }> {
+    const { userId, credits, reason, idempotencyKey, stripePaymentId } = input;
+    if (!userId || credits <= 0) {
+      return { granted: false, balance: 0 };
+    }
 
     return this.db.transaction(async (tx) => {
       const inserted = await tx
@@ -97,7 +130,7 @@ export class AsteCreditsService {
         .values({
           userId,
           delta: credits,
-          reason: 'stripe_purchase',
+          reason,
           stripePaymentId,
           idempotencyKey,
         })
@@ -126,17 +159,19 @@ export class AsteCreditsService {
         resourceType: 'aste_credit_balance',
         resourceId: userId,
         subjectUserId: userId,
-        reason: `stripe:${stripePaymentId}:+${credits}`,
+        reason: `${reason}:+${credits}`,
       });
       this.analytics.track(PRODUCT_EVENTS.ASTE_CREDITS_PURCHASED, {
         credits,
         balance,
+        reason,
       });
       this.log.log(
         JSON.stringify({
           event: 'aste.credits_granted',
           userId,
           credits,
+          reason,
           stripePaymentId,
           balance,
         }),

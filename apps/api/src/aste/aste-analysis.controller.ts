@@ -21,6 +21,7 @@ import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 import { AsteAnalysisEnabledGuard } from './aste-analysis.guard';
 import { AsteAnalysisService } from './aste-analysis.service';
+import { AsteCreditsService } from './aste-credits.service';
 import { AsteChatService } from './aste-chat.service';
 import { AsteReportService } from './aste-report.service';
 import {
@@ -57,12 +58,14 @@ export class AsteAnalysisController {
     private readonly reports: AsteReportService,
     private readonly chat: AsteChatService,
     private readonly users: UsersService,
+    private readonly credits: AsteCreditsService,
   ) {}
 
   @Throttle({ default: { limit: 20, ttl: 60_000 } })
   @Post()
   async create(@CurrentUser() user: AuthUser, @Body() dto: CreateAsteAnalysisDto) {
     const me = await this.users.getOrCreate(user);
+    await this.credits.grantFirstFileFree(me.id);
     return this.service.create(me.id, {
       language: dto.language,
       register: dto.register,
