@@ -80,7 +80,9 @@ export function AsteLandingPage() {
       <section className="aste-hero" aria-labelledby={`${id}-hero`}>
         <div className="aste-wrap">
           <p className="aste-brand">EasyCasa</p>
-          <h1 id={`${id}-hero`}>{t('hero.title')}</h1>
+          <p className="aste-product-name">{t('productName')}</p>
+          <p className="aste-ai-disclosure">{t('aiDisclosure')}</p>
+          <h1 id={`${id}-hero`}>{t('tagline')}</h1>
           <p className="aste-lead">{t('hero.sub')}</p>
           <a className="aste-cta" href="#guida">
             {t('hero.cta')}

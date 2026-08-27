@@ -272,12 +272,12 @@ export function asteGuideDelivery(p: AsteGuideParams, locale: Locale = 'it'): Re
       text:
         `Thanks for signing up.\n\n` +
         `Open your free guide here:\n${p.guideUrl}\n\n` +
-        `You're also on the early-access list for ${product} (coming soon) — a structured reading of the public auction file in your language.\n\n` +
+        `You're also on the early-access list for ${product} (coming soon) — an AI assistant that reads the public auction file in your language.\n\n` +
         `You can unsubscribe at any time by replying to this email.\n\n— EasyCasa`,
       html: wrap(
         `<p>Thanks for signing up.</p>` +
           `<p><a href="${esc(p.guideUrl)}">Open your free guide</a></p>` +
-          `<p>You're also on the early-access list for <strong>${esc(product)}</strong> (coming soon) — a structured reading of the public auction file in your language.</p>` +
+          `<p>You're also on the early-access list for <strong>${esc(product)}</strong> (coming soon) — an AI assistant that reads the public auction file in your language.</p>` +
           `<p style="color:#6b6b6b;font-size:13px">You can unsubscribe at any time by replying to this email.</p>`,
       ),
     };
@@ -289,12 +289,12 @@ export function asteGuideDelivery(p: AsteGuideParams, locale: Locale = 'it'): Re
       text:
         `Gracias por registrarte.\n\n` +
         `Abre tu guía gratuita aquí:\n${p.guideUrl}\n\n` +
-        `También estás en la lista de acceso anticipado a ${product} (próximamente) — una lectura estructurada del expediente público de subasta en tu idioma.\n\n` +
+        `También estás en la lista de acceso anticipado a ${product} (próximamente) — un asistente de IA que lee el expediente público de subasta en tu idioma.\n\n` +
         `Puedes darte de baja en cualquier momento respondiendo a este correo.\n\n— EasyCasa`,
       html: wrap(
         `<p>Gracias por registrarte.</p>` +
           `<p><a href="${esc(p.guideUrl)}">Abre tu guía gratuita</a></p>` +
-          `<p>También estás en la lista de acceso anticipado a <strong>${esc(product)}</strong> (próximamente) — una lectura estructurada del expediente público de subasta en tu idioma.</p>` +
+          `<p>También estás en la lista de acceso anticipado a <strong>${esc(product)}</strong> (próximamente) — un asistente de IA que lee el expediente público de subasta en tu idioma.</p>` +
           `<p style="color:#6b6b6b;font-size:13px">Puedes darte de baja en cualquier momento respondiendo a este correo.</p>`,
       ),
     };
@@ -304,12 +304,12 @@ export function asteGuideDelivery(p: AsteGuideParams, locale: Locale = 'it'): Re
     text:
       `Grazie per l'iscrizione.\n\n` +
       `Apri la guida gratuita qui:\n${p.guideUrl}\n\n` +
-      `Sei anche in lista per l'accesso anticipato a ${product} (in arrivo) — una lettura strutturata del fascicolo pubblico d'asta nella tua lingua.\n\n` +
+      `Sei anche in lista per l'accesso anticipato a ${product} (in arrivo) — un assistente AI che legge il fascicolo pubblico d'asta nella tua lingua.\n\n` +
       `Puoi annullare l'iscrizione in ogni momento rispondendo a questa email.\n\n— EasyCasa`,
     html: wrap(
       `<p>Grazie per l'iscrizione.</p>` +
         `<p><a href="${esc(p.guideUrl)}">Apri la guida gratuita</a></p>` +
-        `<p>Sei anche in lista per l'accesso anticipato a <strong>${esc(product)}</strong> (in arrivo) — una lettura strutturata del fascicolo pubblico d'asta nella tua lingua.</p>` +
+        `<p>Sei anche in lista per l'accesso anticipato a <strong>${esc(product)}</strong> (in arrivo) — un assistente AI che legge il fascicolo pubblico d'asta nella tua lingua.</p>` +
         `<p style="color:#6b6b6b;font-size:13px">Puoi annullare l'iscrizione in ogni momento rispondendo a questa email.</p>`,
     ),
   };

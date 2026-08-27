@@ -30,4 +30,4 @@ CREATE INDEX IF NOT EXISTS aste_leads_created_idx
   ON aste_leads (created_at DESC);
 
 COMMENT ON TABLE aste_leads IS
-  'EC-21: Dossier Asta waitlist + guide lead magnet. PII: email + preferences. Consent required.';
+  'EC-21: Legenda waitlist + guide lead magnet. PII: email + preferences. Consent required.';

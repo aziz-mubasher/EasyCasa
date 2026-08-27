@@ -1,40 +1,44 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  ASTE_PRODUCT_AI_DISCLOSURE,
   ASTE_PRODUCT_NAME,
   ASTE_PRODUCT_NAME_LEGACY_BANNED,
+  ASTE_PRODUCT_SLUG,
+  ASTE_PRODUCT_TAGLINE,
   asteCreditPackProductName,
+  asteProductAiDisclosure,
   asteProductDisplayName,
+  asteProductTagline,
 } from '@easycasa/shared';
 
 import { asteGuideDelivery } from './templates';
 
-describe('EC-RENAME-1 aste product naming', () => {
-  it('SSOT display names are Dossier Asta / Auction Dossier / Dossier de Subasta', () => {
-    expect(ASTE_PRODUCT_NAME.it).toBe('Dossier Asta');
-    expect(ASTE_PRODUCT_NAME.en).toBe('Auction Dossier');
-    expect(ASTE_PRODUCT_NAME.es).toBe('Dossier de Subasta');
-    expect(asteProductDisplayName('it')).toBe('Dossier Asta');
+describe('EC-RENAME-2 Legenda product naming', () => {
+  it('SSOT is Legenda across locales with slug and tagline', () => {
+    expect(ASTE_PRODUCT_SLUG).toBe('legenda');
+    expect(ASTE_PRODUCT_NAME.it).toBe('Legenda');
+    expect(ASTE_PRODUCT_NAME.en).toBe('Legenda');
+    expect(ASTE_PRODUCT_NAME.es).toBe('Legenda');
+    expect(asteProductDisplayName('it')).toBe('Legenda');
+    expect(asteProductTagline('it')).toBe(ASTE_PRODUCT_TAGLINE.it);
+    expect(asteProductAiDisclosure('en')).toBe(ASTE_PRODUCT_AI_DISCLOSURE.en);
   });
 
-  it('Stripe credit pack name reads from SSOT (IT canonical)', () => {
-    expect(asteCreditPackProductName(1)).toBe('Dossier Asta — 1 credit');
-    expect(asteCreditPackProductName(3)).toBe('Dossier Asta — 3 credits');
+  it('Stripe credit pack name reads from SSOT', () => {
+    expect(asteCreditPackProductName(1)).toBe('Legenda — 1 credit');
+    expect(asteCreditPackProductName(3)).toBe('Legenda — 3 credits');
   });
 
-  it('guide delivery email embeds locale display name from SSOT', () => {
-    const it = asteGuideDelivery({ guideUrl: 'https://example.com/g', language: 'it' }, 'it');
-    expect(it.text).toContain(ASTE_PRODUCT_NAME.it);
-    expect(it.html).toContain(ASTE_PRODUCT_NAME.it);
-
-    const en = asteGuideDelivery({ guideUrl: 'https://example.com/g', language: 'en' }, 'en');
-    expect(en.text).toContain(ASTE_PRODUCT_NAME.en);
-
-    const es = asteGuideDelivery({ guideUrl: 'https://example.com/g', language: 'es' }, 'es');
-    expect(es.text).toContain(ASTE_PRODUCT_NAME.es);
+  it('guide delivery email embeds Legenda from SSOT', () => {
+    for (const loc of ['it', 'en', 'es'] as const) {
+      const r = asteGuideDelivery({ guideUrl: 'https://example.com/g', language: loc }, loc);
+      expect(r.text).toContain('Legenda');
+      expect(r.html).toContain('Legenda');
+    }
   });
 
-  it('legacy product brand strings do not appear in guide emails or Stripe names', () => {
+  it('legacy product brands do not appear in guide emails or Stripe names', () => {
     const surfaces = [
       asteCreditPackProductName(1),
       asteGuideDelivery({ guideUrl: 'https://x', language: 'it' }, 'it').text,

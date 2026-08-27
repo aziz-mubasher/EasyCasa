@@ -2867,10 +2867,10 @@
     }
   },
   "aste": {
-    "productName": "Auction Dossier",
+    "productName": "Legenda",
     "meta": {
-      "title": "Auction Dossier — Free guide | EasyCasa",
-      "description": "Buying at auction in Italy — and actually understanding what you’re buying. Get the free guide and join early access for Auction Dossier."
+      "title": "Legenda — Free guide | EasyCasa",
+      "description": "Buying at auction in Italy — and actually understanding what you’re buying. Get the free guide and join early access for Legenda."
     },
     "hero": {
       "title": "Buying at auction in Italy — and actually understanding what you’re buying.",
@@ -2898,15 +2898,15 @@
     },
     "coming": {
       "badge": "Coming soon",
-      "title": "Coming soon: EasyCasa Auction Dossier",
-      "body": "Upload the perizia and sale notice, get a structured dossier in your language: what the public file shows, issues cited by page and document, a risk traffic-light, and the starting price compared against official OMI zone values. Sign up for early access.",
+      "title": "Coming soon: EasyCasa Legenda",
+      "body": "Upload the perizia and sale notice: Legenda reads the public file and makes it readable in your language — what the documents show, issues cited by page, a risk traffic-light, and the starting price compared with official OMI zone values. No bid recommendation. Sign up for early access.",
       "semaforoTitle": "Risk traffic-light motif (illustration)",
       "semaforoCaption": "Risk traffic-light — illustration"
     },
     "signup": {
       "kicker": "Free guide",
       "title": "The Auction Guide — 10 essential checks",
-      "sub": "Free on signup. Get the link on screen and by email. You’re also added to the early-access list for Auction Dossier."
+      "sub": "Free on signup. Get the link on screen and by email. You’re also added to the early-access list for Legenda."
     },
     "form": {
       "email": "Email",
@@ -2921,7 +2921,7 @@
       "buyerPrima": "First home",
       "buyerInvest": "Investment",
       "buyerCuriosity": "Just curious",
-      "consentBefore": "I consent to the processing of my data (email and preferences indicated) to receive the guide and updates about the Auction Dossier service, according to the ",
+      "consentBefore": "I consent to the processing of my data (email and preferences indicated) to receive the guide and updates about the Legenda service, according to the ",
       "privacyLink": "privacy notice",
       "consentAfter": ". I can unsubscribe at any time.",
       "counselMark": "COUNSEL REVIEW PENDING",
@@ -2959,7 +2959,9 @@
       ]
     },
     "disclaimer": "EasyCasa provides document analysis for information purposes only. It does not provide legal advice, technical advice, or statutory appraisals.",
-    "counselMark": "COUNSEL REVIEW PENDING"
+    "counselMark": "COUNSEL REVIEW PENDING",
+    "tagline": "Legenda reads the file. In your language.",
+    "aiDisclosure": "Legenda is an AI assistant."
   },
   "asteGuida": {
     "meta": {
@@ -3012,18 +3014,18 @@
         "body": "Pay the balance (saldo prezzo) within the term — missing it forfeits the deposit. Then comes the decreto di trasferimento and voltura (ownership update). If you need financing, it must follow the court’s timeline, not the bank’s: align the loan before you bid."
       }
     ],
-    "closeTitle": "EasyCasa and Auction Dossier",
-    "close": "EasyCasa is building Auction Dossier: upload the documents, receive the dossier in your language.",
+    "closeTitle": "EasyCasa and Legenda",
+    "close": "EasyCasa is building Legenda: upload the documents; Legenda reads them in your language.",
     "disclaimer": "EasyCasa provides document analysis for information purposes only. It does not provide legal advice, technical advice, or statutory appraisals.",
     "counselMark": "COUNSEL REVIEW PENDING"
   },
   "asteLab": {
     "meta": {
-      "title": "Auction Dossier lab (internal) | EasyCasa",
-      "description": "Internal console to test Auction Dossier in preview — not public."
+      "title": "Legenda lab (internal) | EasyCasa",
+      "description": "Internal console to test Legenda in preview — not public."
     },
     "badge": "Internal lab · not public",
-    "title": "Test lab — Auction Dossier",
+    "title": "Test lab — Legenda",
     "lead": "Use this page to verify EC-36 flags and open the real upload/report flow without enabling the public flag.",
     "gate": {
       "title": "Flag status",
@@ -3042,7 +3044,7 @@
       "title": "Open the product flow",
       "ready": "Gates are green: you can test upload → pipeline → report.",
       "blocked": "You cannot open the dossier yet. Sign in with an allowlisted email, or finish preview flags (build + runtime + emails).",
-      "openAnalisi": "Open Auction Dossier",
+      "openAnalisi": "Open Legenda",
       "signIn": "Sign in to continue",
       "backLanding": "Back to /aste"
     },
@@ -3078,7 +3080,7 @@
       "sop": "Full detail:"
     },
     "entry": {
-      "aria": "Internal Auction Dossier lab access",
+      "aria": "Internal Legenda lab access",
       "title": "Internal lab",
       "body": "EC-36 preview is mounted on this build — open the test console (allowlist).",
       "cta": "Open test lab"
@@ -3086,11 +3088,11 @@
   },
   "asteAnalisi": {
     "meta": {
-      "title": "Auction Dossier (preview) | EasyCasa",
+      "title": "Legenda (preview) | EasyCasa",
       "description": "Upload auction documents — internal surface under development."
     },
     "badge": "Internal preview",
-    "title": "Auction Dossier — document upload",
+    "title": "Legenda — document upload",
     "lead": "Test surface: upload the perizia and sale notice. Automated analysis is not live yet.",
     "loading": "Loading…",
     "create": {
@@ -3160,11 +3162,11 @@
   },
   "asteReport": {
     "meta": {
-      "title": "Auction Dossier report | EasyCasa",
+      "title": "Legenda report | EasyCasa",
       "description": "Informational report from auction document analysis."
     },
     "badge": "Internal preview",
-    "title": "Auction Dossier report",
+    "title": "Legenda report",
     "lead": "Cited document summary, risk lights and OMI comparison — informational only.",
     "loading": "Loading report…",
     "print": "Print / Save as PDF",

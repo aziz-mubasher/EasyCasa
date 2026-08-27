@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_ec_rename_2",
+  "kaizenCode": "K EC RENAME-2",
+  "polishId": null,
+  "title": "K EC RENAME-2",
+  "venture": "EasyCasa",
+  "lifecycle": "running",
+  "agentStatus": "RUNNING",
+  "agentBcId": "bc-a08a766e-5cb9-466d-9f30-f6985c382145",
+  "agentUrl": "https://cursor.com/agents/bc-a08a766e-5cb9-466d-9f30-f6985c382145",
+  "branch": "cursor/ec-rename-legenda-2145",
+  "prNumber": null,
+  "prUrl": null,
+  "prState": null,
+  "dispatchedAt": "2026-08-27T04:21:06.341Z",
+  "updatedAt": "2026-08-27T04:22:11.406Z",
+  "summary": "EC-RENAME-2: Legenda SSOT + surface migration in progress",
+  "nextAction": "Run checks, open draft PR",
+  "errors": []
+}

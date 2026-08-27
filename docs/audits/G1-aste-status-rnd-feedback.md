@@ -1,4 +1,4 @@
-# G1 — Dossier Asta status report (for Claude / R&D)
+# G1 — Legenda status report (for Claude / R&D)
 
 > **SUPERSEDED for extract-next / hardening briefs (2026-08-14).**  
 > EC-29→**34** are **merged + deployed** (tip ≥ `fc64987`). Canonical R&D status:  

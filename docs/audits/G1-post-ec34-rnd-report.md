@@ -1,4 +1,4 @@
-# G1 — Dossier Asta R&D report (post EC-34 + live 8/8)
+# G1 — Legenda R&D report (post EC-34 + live 8/8)
 
 **Date:** 2026-08-14 (live verify landed)  
 **Audience:** Claude / R&D (forward via Aziz)  

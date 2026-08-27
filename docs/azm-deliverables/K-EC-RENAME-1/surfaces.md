@@ -1,6 +1,6 @@
 # EC-RENAME-1 — surface inventory
 
-**Product:** Dossier Asta (EN: Auction Dossier · ES: Dossier de Subasta)  
+**Product:** Legenda (EN: Legenda · ES: Legenda)  
 **SSOT:** `packages/shared/src/aste-product/asteProductName.ts`  
 **CI ban:** `pnpm check:aste-product-name` (wired into `pnpm check:counsel-copy`)
 
