@@ -1,4 +1,4 @@
-# LGL-1 — Counsel Packet Addendum: "Analisi Aste" feature
+# LGL-1 — Counsel Packet Addendum: "Dossier Asta" feature
 
 **For:** the GDPR counsel packet currently being bundled (informativa, consent copy IT/EN/ES, data inventory, sub-processors, legal-basis questions, Art. 37 DPO question, controller structure).  
 **From:** EasyCasa R&D · 10 Aug 2026 · Status: to be bundled by AZM with the main packet — one counsel round.  

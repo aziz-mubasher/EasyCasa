@@ -1,4 +1,4 @@
-# G1 gate — Analisi Aste (operator checklist)
+# G1 gate — Dossier Asta (operator checklist)
 
 > **STATUS (2026-08-15):** **G1 FULL GREEN.** Eval pass bar GREEN (product-accepted 2026-08-14) · Counsel **`packet sent 2026-08-15 (response requested by 2026-08-29)`** · Waitlist **WAIVED**. Canonical ledger: `docs/audits/aste-g1-hardening-roadmap-ec29-33.md`. Flags still **off** — G2 / `docs/runbooks/aste-enable.md`. Pre-EC-27: `docs/runbooks/aste-pre-ec27-checklist.md`.
 
@@ -177,7 +177,7 @@ Do **not** attach `.env`, tokens, or DB dumps.
 
 ```
 To: <counsel>
-Subject: EasyCasa — counsel review packet (GDPR + LGL-1 Analisi Aste)
+Subject: EasyCasa — counsel review packet (GDPR + LGL-1 Dossier Asta)
 Requested response by: <DATE>
 
 Attached: instruction letter, COUNSEL-REVIEW-PACKAGE, privacy + mediation drafts,

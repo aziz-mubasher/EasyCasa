@@ -58,7 +58,7 @@ Per `docs/legal/counsel-send-checklist.md` (verified present in repo 2026-08-14)
 | 5 | EC-S-T02 Sell Privately claims packet | `docs/legal/ec-s-t02-counsel-review-packet.md` |
 | 6 | EC-S-T04 Mediazione boundary matrix | `docs/legal/T04_mediazione_boundary.md` |
 | 7 | EC-S-T05 Seller-side data memo | `docs/legal/ec-s-t05-seller-data-memo.md` |
-| 8 | **LGL-1** Analisi Aste addendum (Q-A1–Q-A6) | `docs/legal/aste-counsel-addendum-lgl1.md` |
+| 8 | **LGL-1** Dossier Asta addendum (Q-A1–Q-A6) | `docs/legal/aste-counsel-addendum-lgl1.md` |
 
 Export LGL-1 (and other `.md` as needed) to PDF/DOCX if counsel prefers. **Do not** attach `.env`, tokens, or DB dumps.
 

@@ -1,4 +1,4 @@
-# Pre-EC-27 checklist — Analisi Aste monetization lane
+# Pre-EC-27 checklist — Dossier Asta monetization lane
 
 **Opened:** 2026-08-15 (G1 FULL GREEN flip)  
 **Owner:** R&D / AZM · **Board:** Kaizen K EC 7.3  

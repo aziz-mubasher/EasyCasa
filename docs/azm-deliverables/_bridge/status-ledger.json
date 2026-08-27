@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T20:22:57.385Z",
+  "updatedAt": "2026-08-27T04:11:29.204Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_rename_1",
+      "kaizenCode": "K EC RENAME-1",
+      "polishId": null,
+      "title": "K EC RENAME-1",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-a08a766e-5cb9-466d-9f30-f6985c382145",
+      "agentUrl": "https://cursor.com/agents/bc-a08a766e-5cb9-466d-9f30-f6985c382145",
+      "branch": "cursor/ec-rename-dossier-asta-2145",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-08-27T04:09:56.013Z",
+      "updatedAt": "2026-08-27T04:11:29.204Z",
+      "summary": "EC-RENAME-1: Dossier Asta SSOT + in-repo surface migration",
+      "nextAction": "Finish ban lint, tests, open draft PR",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_s_closeout",
       "kaizenCode": "K EC 1.56",

@@ -164,7 +164,7 @@ const Schema = z
     VALUATION_BAND_ENABLED: bool(false),
 
     /**
-     * EC-22 — Analisi Aste analysis/upload surface. Default false (dark).
+     * EC-22 — Dossier Asta analysis/upload surface. Default false (dark).
      * When false, analysis endpoints return 404.
      */
     ASTE_ANALYSIS_ENABLED: bool(false),

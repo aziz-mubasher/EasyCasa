@@ -14,7 +14,7 @@ Fill `[nome]`, `[email]`, `[phone]`, and timing `[X]` weeks before sending.
 | 5 | **EC-S-T02** Sell Privately claims packet | `docs/legal/ec-s-t02-counsel-review-packet.md` · live page: https://easycasaita.com/it/vendi-da-privato |
 | 6 | **EC-S-T04** Mediazione boundary matrix | `docs/legal/T04_mediazione_boundary.md` |
 | 7 | **EC-S-T05** Seller-side data / informativa extension | `docs/legal/ec-s-t05-seller-data-memo.md` |
-| 8 | **LGL-1** Analisi Aste counsel addendum (Q-A1–Q-A6) | `docs/legal/aste-counsel-addendum-lgl1.md` |
+| 8 | **LGL-1** Dossier Asta counsel addendum (Q-A1–Q-A6) | `docs/legal/aste-counsel-addendum-lgl1.md` |
 
 ## Priority A attachments
 

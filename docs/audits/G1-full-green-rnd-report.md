@@ -49,7 +49,7 @@
 
 ### 6. NEXT TASK SHOULD ACCOUNT FOR
 - First post-G1 engineering brief should be **EC-24 not_found tolerance** (or explicit verify-only) before EC-27 payments build.
-- Do not brief “enable Analisi Aste” as G1 follow-up.
+- Do not brief “enable Dossier Asta” as G1 follow-up.
 - Do not re-open extract field quality unless live regression.
 
 ---

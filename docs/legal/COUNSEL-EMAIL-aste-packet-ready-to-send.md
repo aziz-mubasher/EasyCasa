@@ -30,7 +30,7 @@ Suggested dates (today = 2026-08-15):
 ## 2. Subject (copy)
 
 ```
-EasyCasa (MUNDIDA) — counsel review packet (GDPR core + LGL-1 Analisi Aste)
+EasyCasa (MUNDIDA) — counsel review packet (GDPR core + LGL-1 Dossier Asta)
 ```
 
 ---
@@ -45,9 +45,9 @@ Please find attached the EasyCasa / MUNDIDA counsel review packet for your revie
 This send covers:
 • Core GDPR / product legal package (instruction letter, engineering DPO package,
   privacy + mediation drafts, EC-S Sell Privately T02/T04/T05 materials)
-• LGL-1 addendum for the not-yet-public “Analisi Aste” feature (Q-A1–Q-A6)
+• LGL-1 addendum for the not-yet-public “Dossier Asta” feature (Q-A1–Q-A6)
 
-Context for LGL-1: Analisi Aste lets users upload Italian judicial-auction documents
+Context for LGL-1: Dossier Asta lets users upload Italian judicial-auction documents
 and receive an automated informational analysis. Feature flags remain OFF in
 production until after your review. We are not asking you to green-light a public
 launch in this email — we need your review timeline and answers to the LGL-1
@@ -71,7 +71,7 @@ P.IVA IT04531990986
 Optional Italian subject if counsel prefers IT:
 
 ```
-EasyCasa (MUNDIDA) — pacchetto di revisione legale (GDPR + LGL-1 Analisi Aste)
+EasyCasa (MUNDIDA) — pacchetto di revisione legale (GDPR + LGL-1 Dossier Asta)
 ```
 
 ---
@@ -89,7 +89,7 @@ Paths relative to your local clone (e.g. `/Volumes/Muba/EasyCasa/` or wherever y
 | 5 | EC-S-T02 claims packet | `docs/legal/ec-s-t02-counsel-review-packet.md` | https://github.com/aziz-mubasher/EasyCasa/blob/main/docs/legal/ec-s-t02-counsel-review-packet.md |
 | 6 | EC-S-T04 mediazione matrix | `docs/legal/T04_mediazione_boundary.md` | https://github.com/aziz-mubasher/EasyCasa/blob/main/docs/legal/T04_mediazione_boundary.md |
 | 7 | EC-S-T05 seller-data memo | `docs/legal/ec-s-t05-seller-data-memo.md` | https://github.com/aziz-mubasher/EasyCasa/blob/main/docs/legal/ec-s-t05-seller-data-memo.md |
-| 8 | **LGL-1** Analisi Aste (Q-A1–Q-A6) | `docs/legal/aste-counsel-addendum-lgl1.md` | https://github.com/aziz-mubasher/EasyCasa/blob/main/docs/legal/aste-counsel-addendum-lgl1.md |
+| 8 | **LGL-1** Dossier Asta (Q-A1–Q-A6) | `docs/legal/aste-counsel-addendum-lgl1.md` | https://github.com/aziz-mubasher/EasyCasa/blob/main/docs/legal/aste-counsel-addendum-lgl1.md |
 
 **Mac quick attach** (from repo root):
 

@@ -934,7 +934,7 @@ export const valuationRequests = pgTable('valuation_requests', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-/** EC-21 — Analisi Aste waitlist + guide lead magnet. */
+/** EC-21 — Dossier Asta waitlist + guide lead magnet. */
 export const asteLeads = pgTable('aste_leads', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').notNull(),
