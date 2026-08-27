@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-27T04:23:59.028Z",
+  "updatedAt": "2026-08-27T04:36:49.365Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_legenda_venture",
+      "kaizenCode": "K EC LEGENDA-V",
+      "polishId": null,
+      "title": "K EC LEGENDA-V",
+      "venture": "EasyCasa",
+      "lifecycle": "blocked",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-a08a766e-5cb9-466d-9f30-f6985c382145",
+      "agentUrl": "https://cursor.com/agents/bc-a08a766e-5cb9-466d-9f30-f6985c382145",
+      "branch": "cursor/ec-rename-legenda-2145",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-08-27T04:36:49.364Z",
+      "updatedAt": "2026-08-27T04:36:49.364Z",
+      "summary": "Legenda venture extract ready; blocked on GitHub App access to aziz-mubasher/legenda",
+      "nextAction": "AZM: install Cursor GitHub App on aziz-mubasher/legenda then reply to unblock push",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_rename_2",
       "kaizenCode": "K EC RENAME-2",
