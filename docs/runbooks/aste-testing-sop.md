@@ -1,7 +1,7 @@
-# SOP — How to test Easy Casa Aste (Analisi Aste)
+# SOP — How to test Easy Casa Aste (Legenda)
 
 **Audience:** Ops (AZM), R&D agents, Mac operator.  
-**Product:** Analisi Aste (EC-21…EC-36) — extract → report → chat → credits.  
+**Product:** Legenda (EC-21…EC-36) — extract → report → chat → credits.  
 **Standing rule:** Do **not** flip public `ASTE_ANALYSIS_ENABLED` / `NEXT_PUBLIC_ASTE_ANALYSIS_ENABLED` without the G2 checklist in `docs/runbooks/aste-enable.md`.
 
 This SOP is the **index of how to test**. Deep checklists live in the linked runbooks. If a command here disagrees with `package.json` or `docs/env.md`, trust those.

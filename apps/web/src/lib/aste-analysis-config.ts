@@ -1,4 +1,4 @@
-/** EC-22 / EC-36 — Analisi Aste UI flags (build-time + server runtime). */
+/** EC-22 / EC-36 — Legenda UI flags (build-time + server runtime). */
 
 /** Public G2 switch — when true, all authenticated users see Aste analysis. */
 export function asteAnalysisPublicEnabled(): boolean {

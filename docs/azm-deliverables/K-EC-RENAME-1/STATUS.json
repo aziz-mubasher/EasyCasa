@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_ec_rename_1",
+  "kaizenCode": "K EC RENAME-1",
+  "polishId": null,
+  "title": "K EC RENAME-1",
+  "venture": "EasyCasa",
+  "lifecycle": "cancelled",
+  "agentStatus": "IDLE",
+  "agentBcId": "bc-a08a766e-5cb9-466d-9f30-f6985c382145",
+  "agentUrl": "https://cursor.com/agents/bc-a08a766e-5cb9-466d-9f30-f6985c382145",
+  "branch": "cursor/ec-rename-dossier-asta-2145",
+  "prNumber": 185,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/185",
+  "prState": "DRAFT",
+  "dispatchedAt": "2026-08-27T04:09:56.013Z",
+  "updatedAt": "2026-08-27T04:22:29.634Z",
+  "summary": "Superseded by EC-RENAME-2 (Legenda); do not merge PR #185 as prior brand",
+  "nextAction": "Close PR #185; use Legenda PR instead",
+  "errors": []
+}

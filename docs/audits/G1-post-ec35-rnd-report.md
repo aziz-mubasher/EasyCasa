@@ -1,4 +1,4 @@
-# G1 — Analisi Aste R&D report (post EC-35 merge + VPS deploy)
+# G1 — Legenda R&D report (post EC-35 merge + VPS deploy)
 
 **Date:** 2026-08-14 (EC-35 merged + `ai` deployed)  
 **Audience:** Claude / R&D (forward via Aziz)  

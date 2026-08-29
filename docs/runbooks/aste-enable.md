@@ -1,6 +1,6 @@
 # Aste G2 enable runbook
 
-**Who** Ops (AZM). **Feature** Analisi Aste (EC-21…EC-26).  
+**Who** Ops (AZM). **Feature** Legenda (EC-21…EC-26).  
 **Admin** `https://admin.easycasaita.com/#aste` — works regardless of `ASTE_ANALYSIS_ENABLED`.  
 **Flags stay off until this checklist is followed.** Rollback = flag off + redeploy; data retained.
 

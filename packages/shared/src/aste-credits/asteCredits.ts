@@ -1,5 +1,7 @@
 /** EC-27 — Aste full-report credit pack SKUs (flat fee, not subscription). */
 
+import { ASTE_PRODUCT_NAME } from '../aste-product/asteProductName';
+
 export const ASTE_CREDIT_PACKS = [1, 3, 10] as const;
 export type AsteCreditPackSize = (typeof ASTE_CREDIT_PACKS)[number];
 
@@ -24,6 +26,7 @@ export function asteCreditPackFallbackCents(pack: AsteCreditPackSize): number {
   }
 }
 
+/** Stripe Checkout product_data.name — reads display name from SSOT (IT canonical). */
 export function asteCreditPackProductName(pack: AsteCreditPackSize): string {
-  return `Analisi Aste — ${pack} credit${pack === 1 ? '' : 's'}`;
+  return `${ASTE_PRODUCT_NAME.it} — ${pack} credit${pack === 1 ? '' : 's'}`;
 }

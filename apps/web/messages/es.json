@@ -2869,9 +2869,10 @@
     }
   },
   "aste": {
+    "productName": "Legenda",
     "meta": {
-      "title": "Analisi Aste — Guía gratuita | EasyCasa",
-      "description": "Comprar en subasta en Italia entendiendo de verdad qué compras. Descarga la guía gratuita y únete al acceso anticipado a Analisi Aste."
+      "title": "Legenda — Guía gratuita | EasyCasa",
+      "description": "Comprar en subasta en Italia entendiendo de verdad qué compras. Descarga la guía gratuita y únete al acceso anticipado a Legenda."
     },
     "hero": {
       "title": "Comprar en subasta en Italia — y entender de verdad qué estás comprando.",
@@ -2899,15 +2900,15 @@
     },
     "coming": {
       "badge": "Próximamente",
-      "title": "Próximamente: Analisi Aste de EasyCasa",
-      "body": "Subes la perizia y el aviso de venta, recibes un análisis estructurado en tu idioma: criticidades con referencia a página y documento, semáforo de riesgo, y comparación del precio base con los valores OMI de la zona. Inscríbete para el acceso anticipado.",
+      "title": "Próximamente: Legenda de EasyCasa",
+      "body": "Subes la perizia y el aviso de venta: Legenda lee el expediente público y lo hace legible en tu idioma — lo que muestran los documentos, criticidades con referencia a página, semáforo de riesgo y comparación del precio base con los valores OMI de la zona. Sin recomendación de oferta. Inscríbete para el acceso anticipado.",
       "semaforoTitle": "Motivo de semáforo de riesgo (ilustración)",
       "semaforoCaption": "Semáforo de riesgo — ilustración"
     },
     "signup": {
       "kicker": "Guía gratuita",
       "title": "La Guía de Subastas — 10 controles esenciales",
-      "sub": "Gratis al registrarte. Recibe el enlace al instante y por email. También entras en la lista de acceso anticipado a Analisi Aste."
+      "sub": "Gratis al registrarte. Recibe el enlace al instante y por email. También entras en la lista de acceso anticipado a Legenda."
     },
     "form": {
       "email": "Email",
@@ -2922,7 +2923,7 @@
       "buyerPrima": "Primera vivienda",
       "buyerInvest": "Inversión",
       "buyerCuriosity": "Solo curiosidad",
-      "consentBefore": "Consiento el tratamiento de mis datos (email y preferencias indicadas) para recibir la guía y actualizaciones sobre el servicio Analisi Aste, según la ",
+      "consentBefore": "Consiento el tratamiento de mis datos (email y preferencias indicadas) para recibir la guía y actualizaciones sobre el servicio Legenda, según la ",
       "privacyLink": "política de privacidad",
       "consentAfter": ". Puedo darme de baja en cualquier momento.",
       "counselMark": "COUNSEL REVIEW PENDING",
@@ -2946,12 +2947,12 @@
           "a": "Sí. Solo hace falta el email. Puedes darte de baja en cualquier momento."
         },
         {
-          "q": "¿Cuándo estará disponible el análisis?",
+          "q": "¿Cuándo estará disponible el dossier?",
           "a": "Está en desarrollo; quienes se inscriben reciben acceso anticipado."
         },
         {
-          "q": "¿El análisis sustituirá a un técnico o a un abogado?",
-          "a": "No: solo análisis documental informativo; siempre se recomienda la verificación profesional (COUNSEL REVIEW PENDING)."
+          "q": "¿El dossier sustituirá a un técnico o a un abogado?",
+          "a": "No: solo lectura documental informativa del expediente público; siempre se recomienda la verificación profesional (COUNSEL REVIEW PENDING)."
         },
         {
           "q": "¿En qué idiomas?",
@@ -2960,7 +2961,9 @@
       ]
     },
     "disclaimer": "EasyCasa proporciona análisis documentales con fines informativos. No proporciona asesoramiento legal, técnico ni peritajes con efectos legales.",
-    "counselMark": "COUNSEL REVIEW PENDING"
+    "counselMark": "COUNSEL REVIEW PENDING",
+    "tagline": "Legenda lee el expediente. En tu idioma.",
+    "aiDisclosure": "Legenda es un asistente de IA."
   },
   "asteGuida": {
     "meta": {
@@ -3013,18 +3016,18 @@
         "body": "El saldo del precio (saldo prezzo) debe pagarse en plazo: perderlo hace decaer el depósito. Siguen el decreto di trasferimento y la voltura. Si necesitas financiación, debe seguir los plazos del tribunal, no los del banco."
       }
     ],
-    "closeTitle": "EasyCasa y Analisi Aste",
-    "close": "EasyCasa está construyendo Analisi Aste: subes los documentos y recibes el análisis en tu idioma.",
+    "closeTitle": "EasyCasa y Legenda",
+    "close": "EasyCasa está construyendo Legenda: subes los documentos; Legenda los lee en tu idioma.",
     "disclaimer": "EasyCasa proporciona análisis documentales con fines informativos. No proporciona asesoramiento legal, técnico ni peritajes con efectos legales.",
     "counselMark": "COUNSEL REVIEW PENDING"
   },
   "asteLab": {
     "meta": {
-      "title": "Lab análisis subastas (interno) | EasyCasa",
-      "description": "Consola interna para probar el análisis de subastas en preview — no pública."
+      "title": "Lab Legenda (interno) | EasyCasa",
+      "description": "Consola interna para probar Legenda en preview — no pública."
     },
     "badge": "Lab interno · no público",
-    "title": "Lab de prueba — Análisis Aste",
+    "title": "Lab de prueba — Legenda",
     "lead": "Usa esta página para verificar los flags EC-36 y abrir el flujo real de carga/informe sin activar el flag público.",
     "gate": {
       "title": "Estado de flags",
@@ -3042,8 +3045,8 @@
     "actions": {
       "title": "Abrir el flujo de producto",
       "ready": "Los gates están en verde: puedes probar carga → pipeline → informe.",
-      "blocked": "Aún no puedes abrir Analisi. Inicia sesión con un email en allowlist, o completa los flags de preview.",
-      "openAnalisi": "Abrir Análisis Aste",
+      "blocked": "Aún no puedes abrir el dossier. Inicia sesión con un email en allowlist, o completa los flags de preview.",
+      "openAnalisi": "Abrir Legenda",
       "signIn": "Iniciar sesión",
       "backLanding": "Volver a /aste"
     },
@@ -3079,7 +3082,7 @@
       "sop": "Detalle completo:"
     },
     "entry": {
-      "aria": "Acceso al lab interno de Análisis Aste",
+      "aria": "Acceso al lab interno de Legenda",
       "title": "Lab interno",
       "body": "Preview EC-36 montado en este build — abre la consola de prueba (allowlist).",
       "cta": "Abrir lab de prueba"
@@ -3087,11 +3090,11 @@
   },
   "asteAnalisi": {
     "meta": {
-      "title": "Análisis de subastas (vista previa) | EasyCasa",
+      "title": "Legenda (vista previa) | EasyCasa",
       "description": "Sube documentos de subasta — superficie interna en desarrollo."
     },
     "badge": "Vista previa interna",
-    "title": "Análisis de subastas — carga de documentos",
+    "title": "Legenda — carga de documentos",
     "lead": "Superficie de prueba: sube la perizia y el aviso. El análisis automático aún no está activo.",
     "loading": "Cargando…",
     "create": {
@@ -3161,11 +3164,11 @@
   },
   "asteReport": {
     "meta": {
-      "title": "Informe análisis subastas | EasyCasa",
+      "title": "Informe Legenda | EasyCasa",
       "description": "Informe informativo del análisis documental de subasta."
     },
     "badge": "Vista previa interna",
-    "title": "Informe análisis subastas",
+    "title": "Informe Legenda",
     "lead": "Resumen documental citado, semáforo y comparación OMI — solo informativo.",
     "loading": "Cargando informe…",
     "print": "Imprimir / Guardar como PDF",
