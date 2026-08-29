@@ -13,7 +13,8 @@ export type Banks4AllReferralEntry =
   | 'propertyPlanPortal'
   | 'propertyInvestmentPlan'
   | 'discoveryCall'
-  | 'transparency';
+  | 'transparency'
+  | 'nibProperty';
 
 /** Optional campaign attribution — never include analysis/user/property identifiers. */
 export type Banks4AllReferralUtm = {
@@ -46,6 +47,13 @@ const TRANSPARENCY_PATH: Record<Banks4AllSiteLocale, string> = {
   it: '/it/trasparenza',
   en: '/en/transparency',
   es: '/es/transparencia',
+};
+
+/** NiB Property — Banks4All sister product (locale path as on banks4all.eu). */
+const NIB_PROPERTY_PATH: Record<Banks4AllSiteLocale, string> = {
+  it: '/it/nib',
+  en: '/en/nib',
+  es: '/es/nib',
 };
 
 /** Default outbound entry: free plan request on the Banks4All portal. */
@@ -89,6 +97,8 @@ export function getBanks4AllReferralUrl(
     base = `${BANKS4ALL_SITE_ORIGIN}${DISCOVERY_CALL_PATH[b4aLocale]}`;
   } else if (entry === 'transparency') {
     base = `${BANKS4ALL_SITE_ORIGIN}${TRANSPARENCY_PATH[b4aLocale]}`;
+  } else if (entry === 'nibProperty') {
+    base = `${BANKS4ALL_SITE_ORIGIN}${NIB_PROPERTY_PATH[b4aLocale]}`;
   } else {
     base = `${BANKS4ALL_SITE_ORIGIN}${PROPERTY_INVESTMENT_PLAN_PATH[b4aLocale]}`;
   }

@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
+import { getBanks4AllReferralUrl } from '@/lib/banks4all-referral';
 import { isListingLandingPath } from '@/lib/listing-landing';
 import { isMarketingServicePath } from '@/lib/marketing-service';
 import { sellPrivatelyPath } from '@/lib/sell-privately';
@@ -9,6 +10,9 @@ import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import './site-footer.css';
 
 type InternalItem = { key: string; href: string };
+
+/** Easy Legenda — sister product (production host). */
+const LEGENDA_ORIGIN = 'https://legenda.easycasaita.com' as const;
 
 const SELLER_LINKS_REST: InternalItem[] = [
   { key: 'valutazioneGratuita', href: '/valutazione-gratuita' },
@@ -30,10 +34,8 @@ const BUYER_LINKS: InternalItem[] = [
   { key: 'buyAbroad', href: '/acquisto-assistito' },
 ];
 
-const STAKEHOLDER_LINKS: InternalItem[] = [
-  { key: 'banks4all', href: '/banks4all' },
-  { key: 'agencies', href: '/agenzie' },
-];
+type StakeholderInternal = { key: string; kind: 'internal'; href: string };
+type StakeholderExternal = { key: string; kind: 'external'; href: string; host: string };
 
 export function Footer() {
   const t = useTranslations('footer');
@@ -42,6 +44,14 @@ export function Footer() {
   const sellerLinks: InternalItem[] = [
     { key: 'sellPrivately', href: sellPrivatelyPath(locale) },
     ...SELLER_LINKS_REST,
+  ];
+
+  const nibHref = getBanks4AllReferralUrl(locale, 'nibProperty');
+  const stakeholderLinks: Array<StakeholderInternal | StakeholderExternal> = [
+    { key: 'banks4all', kind: 'internal', href: '/banks4all' },
+    { key: 'easyLegenda', kind: 'external', href: LEGENDA_ORIGIN, host: 'legenda.easycasaita.com' },
+    { key: 'nibProperty', kind: 'external', href: nibHref, host: 'banks4all.eu' },
+    { key: 'agencies', kind: 'internal', href: '/agenzie' },
   ];
 
   if (isListingLandingPath(pathname) || isMarketingServicePath(pathname)) return null;
@@ -86,9 +96,20 @@ export function Footer() {
           <nav aria-labelledby="footer-stakeholders">
             <h2 id="footer-stakeholders">{t('columns.stakeholders')}</h2>
             <ul>
-              {STAKEHOLDER_LINKS.map((item) => (
+              {stakeholderLinks.map((item) => (
                 <li key={item.key}>
-                  <Link href={item.href}>{t(`stakeholders.${item.key}`)}</Link>
+                  {item.kind === 'external' ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${t(`stakeholders.${item.key}`)} — ${t('externalHint', { host: item.host })}`}
+                    >
+                      {t(`stakeholders.${item.key}`)}
+                    </a>
+                  ) : (
+                    <Link href={item.href}>{t(`stakeholders.${item.key}`)}</Link>
+                  )}
                 </li>
               ))}
             </ul>
