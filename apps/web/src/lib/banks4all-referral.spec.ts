@@ -36,6 +36,12 @@ describe('getBanks4AllReferralUrl', () => {
     );
   });
 
+  it('supports NiB Property pages per locale', () => {
+    expect(getBanks4AllReferralUrl('it', 'nibProperty')).toBe(`${BANKS4ALL_SITE_ORIGIN}/it/nib`);
+    expect(getBanks4AllReferralUrl('en', 'nibProperty')).toBe(`${BANKS4ALL_SITE_ORIGIN}/en/nib`);
+    expect(getBanks4AllReferralUrl('es', 'nibProperty')).toBe(`${BANKS4ALL_SITE_ORIGIN}/es/nib`);
+  });
+
   it('EC-28 aste UTM: locale path + campaign params, no identifiers', () => {
     const href = getBanks4AllReferralUrl('it', 'propertyPlanPortal', ASTE_REPORT_BANKS4ALL_UTM);
     const u = new URL(href);
