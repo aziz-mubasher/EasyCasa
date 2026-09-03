@@ -20,7 +20,7 @@ before the first theme recreate.
 | **Image tag** | `quay.io/keycloak/keycloak:26.0` in `infra/docker-compose.yml` | Not in HTTP headers. Login HTML is **keycloak.v2 + PatternFly 5** (`/resources/…/login/keycloak.v2/…`), which is the Keycloak **25–26** hosted theme | *run `docker inspect`* |
 | **Exact version** (`kc.sh --version`) | Tag `26.0` (floating minor) | **Not exposed.** No `Server:` / `X-Keycloak-Version` header | *run `docker exec … /opt/keycloak/bin/kc.sh --version`* |
 | **Compose project / service** | Project **`easycasa-ita`** (`name:` in `infra/docker-compose.yml`). Service **`keycloak`**. Traefik overlay: `infra/docker-compose.traefik.yml` | Host `auth.easycasaita.com` carries the same Traefik middleware as that overlay (`permissions-policy`, HSTS 63072000, `X-XSS-Protection: 0`, `X-Frame-Options: SAMEORIGIN`) | *run `docker inspect … com.docker.compose.project/service`* |
-| **Existing mounts** | **One bind:** `./keycloak/realm-easycasa.json` → `/opt/keycloak/data/import/realm-easycasa.json:ro`. **No theme mount today.** DB is Postgres service `db`, database `${KEYCLOAK_DB:-keycloak}` | Realm `easycasa` is live and serving login. Cookie `AUTH_SESSION_ID` suffix `.c3030e79bf51-47244` looks like a Docker/container node id, not a bare-metal install | *run `docker inspect … '{{json .Mounts}}'`* |
+| **Existing mounts** | Realm import + (after EC-AUTH-1) theme bind `./keycloak/themes/easycasa` → `/opt/keycloak/themes/easycasa:ro`. DB is Postgres service `db`, database `${KEYCLOAK_DB:-keycloak}` | Recreate confirmed 2026-09-03 (`AUTH_SESSION_ID` node `.e22507eb8573-4914`). **Theme files are not in the running container** — see post-recreate probe below | *run `docker inspect … '{{json .Mounts}}'`* |
 
 **Verdict:** production Keycloak is the service in
 `infra/docker-compose.yml` + `infra/docker-compose.traefik.yml`, **not**
@@ -53,7 +53,7 @@ docker inspect "$CID" --format '{{index .Config.Labels "com.docker.compose.proje
 |---|---|
 | `GET https://auth.easycasaita.com/` | `302` → `/admin/` |
 | Issuer | `https://auth.easycasaita.com/realms/easycasa` (`.well-known/openid-configuration`) |
-| Login theme in use | **`keycloak.v2`** (stock). Title `Sign in to easycasa`. No `lang` on `<html>` |
+| Login theme in use | Still **`keycloak.v2`** after recreate (stock PatternFly). Title `Sign in to easycasa`. No `lang` on `<html>` |
 | `ui_locales=it` | Still English. **Internationalization is off** (or only `en`). Locale switcher absent |
 | Registration | On (`Register` link rendered) |
 | Forgot password | On |
@@ -67,6 +67,58 @@ reports **older than 24**, delete `infra/keycloak/themes/easycasa/login/register
 from the deployed theme (it imports `user-profile-commons.ftl` /
 `register-commons.ftl`, which older servers do not have). Everything else still
 works: the design lives in `template.ftl` + the `kc*Class` map.
+
+### Post-recreate probe (2026-09-03, after `easycasa-ita-keycloak-1 Recreated`)
+
+OIDC stayed up. The container is new. **The EasyCasa theme is not loaded.**
+
+| Probe | Result |
+|---|---|
+| Issuer | Still `https://auth.easycasaita.com/realms/easycasa` |
+| Login HTML | Stock `keycloak.v2` + PatternFly 5. No `ec-legal`, no Mundida footer, no `lang` |
+| Cookie node | `AUTH_SESSION_ID=….e22507eb8573-4914` (was `.c3030e79bf51-47244`) — recreate is real |
+| `GET /resources/76c9j/login/easycasa/css/login.css` | `200` **10845** bytes, starts `/* Patternfly CSS places…` — **stock**, not ours |
+| Repo `login.css` | **10413** bytes, starts `/* EasyCasa login theme — system fonts only.` |
+| `GET /resources/76c9j/login/does-not-exist/css/login.css` | Also `200` **10845** bytes, same stock file |
+
+**Do not treat `200` on `/login/easycasa/css/login.css` as proof the theme is mounted.**
+Keycloak 26 serves the parent/default CSS under any unknown theme name. A
+nonsense path (`does-not-exist`) returning the same bytes is the control.
+
+Pass when **all** of these are true:
+
+1. Live CSS starts with `EasyCasa login theme` and contains `.ec-legal`.
+2. `does-not-exist` CSS is still the stock PatternFly file (or 404) — different from (1).
+3. Login HTML uses `/login/easycasa/` resources, has `ec-legal` / Mundida, and
+   (once i18n is on) a `lang` on `<html>`.
+
+Until (1) is true, **do not select the realm Login theme**. Selecting `easycasa`
+while the directory is empty or missing falls through to stock look and is easy
+to misread as “theme is live”.
+
+Most likely cause of this recreate: compose ran **before** the theme tree was
+on disk at `infra/keycloak/themes/easycasa`, or the VPS still has the old
+compose without the theme bind. Docker will create an empty host directory for
+a missing bind source. Confirm on the VPS:
+
+```bash
+# files must exist *next to* infra/docker-compose.yml
+head -1 /opt/easycasa-ita/infra/keycloak/themes/easycasa/login/resources/css/login.css
+# expect: /* EasyCasa login theme — system fonts only. No CDN, no webfont host. */
+
+CID=$(docker ps --format '{{.Names}}' | grep -i keycloak | head -1)
+docker inspect "$CID" --format '{{json .Mounts}}'
+# must include Destination /opt/keycloak/themes/easycasa
+
+docker exec "$CID" head -1 /opt/keycloak/themes/easycasa/login/resources/css/login.css
+# same EasyCasa first line. If this fails, the bind is empty or absent.
+```
+
+If the host file is missing, copy the tree (tarball in “Deploy path” below),
+then restart Keycloak (theme cache is on in production). If `docker inspect`
+has no theme mount, the VPS compose is stale — copy `infra/docker-compose.yml`
+from `main` @ `b6028ce` or later, then recreate with `--no-build --no-deps`
+again. Then Realm → Themes → Login / Email `easycasa`.
 
 ---
 
