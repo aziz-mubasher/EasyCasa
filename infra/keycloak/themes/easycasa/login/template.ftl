@@ -1,13 +1,13 @@
-<#import "footer.ftl" as loginFooter>
 <#macro registrationLayout bodyClass="" displayInfo=false displayMessage=true displayRequiredFields=false>
 <#assign langTag = "it">
 <#if realm.internationalizationEnabled && locale?? && locale.currentLanguageTag?has_content>
     <#assign langTag = locale.currentLanguageTag>
 </#if>
 <#assign siteOrigin = properties.ecSiteOrigin!'https://easycasaita.com'>
+<#assign legendaOrigin = properties.ecLegendaOrigin!'https://legenda.easycasaita.com'>
+<#assign legendaUrl = legendaOrigin + "/" + langTag>
 <#assign privacyUrl = siteOrigin + "/" + langTag + (properties.ecPrivacyPath!'/legal/privacy')>
 <#assign termsUrl = siteOrigin + "/" + langTag + (properties.ecTermsPath!'/legal/terms')>
-<#assign cookieUrl = siteOrigin + "/" + langTag + (properties.ecCookiePath!'/legal/privacy')>
 <!DOCTYPE html>
 <html class="${properties.kcHtmlClass!}" lang="${langTag}" dir="ltr">
 <head>
@@ -19,6 +19,8 @@
         </#list>
     </#if>
     <title>${msg("loginTitle",(realm.displayName!''))}</title>
+    <link rel="icon" href="${url.resourcesPath}/img/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="${url.resourcesPath}/img/favicon.png" sizes="32x32" type="image/png">
     <#if properties.styles?has_content>
         <#list properties.styles?split(' ') as style>
             <link href="${url.resourcesPath}/${style}" rel="stylesheet" />
@@ -28,9 +30,12 @@
 <body class="${properties.kcBodyClass!} ${bodyClass}">
 <div class="${properties.kcLoginClass!}">
     <header id="kc-header" class="${properties.kcHeaderClass!}">
-        <a class="${properties.kcHeaderWrapperClass!}" href="${siteOrigin}/${langTag}">
-            <span class="ec-wordmark">Easy<span>Casa</span></span>
-            <span class="ec-wordmark-sub">${msg("ecBrandKicker")}</span>
+        <a class="${properties.kcHeaderWrapperClass!}" href="${legendaUrl}" aria-label="${msg("ecBrandAria")}">
+            <img class="ec-logo-mark" src="${url.resourcesPath}/img/logo.svg" alt="" width="40" height="40">
+            <span class="ec-wordmark-stack">
+                <span class="ec-wordmark">Easy<span>Casa</span></span>
+                <span class="ec-wordmark-sub">${msg("ecBrandKicker")}</span>
+            </span>
         </a>
     </header>
 
@@ -57,6 +62,7 @@
                     <p class="ec-required-note"><span aria-hidden="true">*</span> ${msg("requiredFields")}</p>
                 </#if>
                 <h1 id="kc-page-title"><#nested "header"></h1>
+                <p class="ec-lead"><#nested "lead"></p>
             <#else>
                 <#nested "show-username">
                 <div id="kc-username" class="${properties.kcFormGroupClass!}">
@@ -64,6 +70,7 @@
                     <a id="reset-login" class="ec-restart" href="${url.loginRestartFlowUrl}">${msg("restartLoginTooltip")}</a>
                 </div>
                 <h1 id="kc-page-title"><#nested "header"></h1>
+                <p class="ec-lead"><#nested "lead"></p>
             </#if>
         </header>
 
@@ -94,21 +101,7 @@
                     </div>
                 </div>
             </#if>
-
-            <#nested "ec-art13">
         </div>
-
-        <footer class="ec-legal" id="ec-legal">
-            <p class="ec-legal-controller">${msg("ecController")}</p>
-            <p class="ec-legal-footer">${msg("ecLegalFooter")}</p>
-            <p class="ec-legal-links">
-                <a href="${privacyUrl}">${msg("ecPrivacyLink")}</a>
-                <a href="${termsUrl}">${msg("ecTermsLink")}</a>
-                <a href="${cookieUrl}">${msg("ecCookieLink")}</a>
-            </p>
-            <p class="ec-legal-meta">${msg("ecPolicyStamp")} ${properties.ecPolicyVersion!}</p>
-        </footer>
-        <@loginFooter.content/>
     </main>
 </div>
 </body>

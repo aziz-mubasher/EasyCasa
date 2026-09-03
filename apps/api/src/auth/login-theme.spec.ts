@@ -52,7 +52,12 @@ describe('easycasa Keycloak login/email theme', () => {
     for (const rel of [
       'login/theme.properties',
       'login/template.ftl',
+      'login/login.ftl',
       'login/register.ftl',
+      'login/terms.ftl',
+      'login/resources/img/favicon.svg',
+      'login/resources/img/favicon.png',
+      'login/resources/img/logo.svg',
       'login/resources/css/login.css',
       'login/resources/js/passwordVisibility.js',
       'login/messages/messages_it.properties',
@@ -104,9 +109,12 @@ describe('easycasa Keycloak login/email theme', () => {
     for (const file of walkFiles(LOGIN, '.ftl')) {
       for (const key of msgKeysInFtl(read(file))) used.add(key);
     }
-    expect(used.has('ecController')).toBe(true);
-    expect(used.has('ecArt13Short')).toBe(true);
-    expect(used.has('ecLegalFooter')).toBe(true);
+    expect(used.has('ecBrandAria')).toBe(true);
+    expect(used.has('ecLoginLead')).toBe(true);
+    expect(used.has('acceptTerms')).toBe(true);
+    expect(used.has('ecController')).toBe(false);
+    expect(used.has('ecArt13Short')).toBe(false);
+    expect(used.has('ecLegalFooter')).toBe(false);
 
     for (const locale of LOCALES) {
       const bundle = parseProperties(read(path.join(LOGIN, `messages/messages_${locale}.properties`)));
@@ -222,15 +230,21 @@ describe('easycasa Keycloak login/email theme', () => {
     expect(profile?.defaultAction).toBe(false);
   });
 
-  it('styles dark mode, reduced motion, and 44px controls without a cookie banner', () => {
+  it('styles a simple always-dark card, reduced motion, and 44px controls without a cookie banner', () => {
     const css = read(path.join(LOGIN, 'resources/css/login.css'));
-    expect(css).toContain('prefers-color-scheme: dark');
+    const template = read(path.join(LOGIN, 'template.ftl'));
+    expect(css).toContain('--ec-paper: #0e141c');
     expect(css).toContain('prefers-reduced-motion: reduce');
     expect(css).toContain('--ec-control: 2.75rem');
     expect(css).toMatch(/outline:\s*var\(--ec-focus\)/);
     expect(css.toLowerCase()).not.toContain('cookie-banner');
-    expect(read(path.join(LOGIN, 'template.ftl'))).not.toMatch(/cookie.?banner/i);
+    expect(template).not.toMatch(/cookie.?banner/i);
+    expect(template).not.toContain('ec-legal');
+    expect(template).toContain('favicon.svg');
+    expect(template).toContain('legenda.easycasaita.com');
     expect(read(path.join(LOGIN, 'register.ftl'))).not.toContain('g-recaptcha');
+    expect(read(path.join(LOGIN, 'register.ftl'))).toContain('termsAccepted');
+    expect(read(path.join(LOGIN, 'register.ftl'))).not.toContain('ec-art13');
     // Username is admin-edit; stock KC only injects password after username
     // or email-as-username. We must still hook the pair to a plain email field.
     expect(read(path.join(LOGIN, 'register.ftl'))).toMatch(
