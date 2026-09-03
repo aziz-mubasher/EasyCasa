@@ -199,7 +199,7 @@ export function App() {
 
   return (
     <LoginGate>
-      <div className="shell">
+      <div className={`shell${activeView === 'whatsapp' ? ' shell--wa' : ''}`}>
         <aside className="sidebar">
           <div className="brand">
             <BrandMark />

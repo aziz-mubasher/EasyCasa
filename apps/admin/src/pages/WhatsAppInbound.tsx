@@ -1,9 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { useApi } from '../api';
 import { Badge } from '../components/ui';
+import {
+  formatClock,
+  formatRemaining,
+  formatThreadWhen,
+  threadPhone,
+} from './whatsapp-inbound-format';
 
 const ThreadSchema = z.object({
   waIdMasked: z.string(),
@@ -70,18 +76,6 @@ type Thread = z.infer<typeof ThreadSchema>;
 type WindowState = Thread['windowState'];
 type TimelineItem = z.infer<typeof TimelineItemSchema>;
 
-function formatRemaining(ms: number): string {
-  if (ms <= 0) return 'closed';
-  const totalMin = Math.floor(ms / 60_000);
-  const h = Math.floor(totalMin / 60);
-  const m = totalMin % 60;
-  return `${h}h ${String(m).padStart(2, '0')}m`;
-}
-
-function formatWhen(iso: string): string {
-  return iso.replace('T', ' ').slice(0, 19);
-}
-
 function WindowCountdown({
   state,
   remainingMs,
@@ -119,31 +113,6 @@ function initialsFromThread(t: Pick<Thread, 'contactName' | 'waIdMasked'>): stri
   return 'EC';
 }
 
-function MessageDetails({ m }: { m: TimelineItem }) {
-  const rows: { label: string; value: string }[] = [];
-  if (m.providerMessageId) rows.push({ label: 'wamid', value: m.providerMessageId });
-  if (m.phoneNumberId) rows.push({ label: 'phone_number_id', value: m.phoneNumberId });
-  if (m.contactName) rows.push({ label: 'contact', value: m.contactName });
-  if (m.windowExpiresAt) rows.push({ label: 'window_expires', value: formatWhen(m.windowExpiresAt) });
-  if (m.autoRepliedAt) rows.push({ label: 'auto_replied', value: formatWhen(m.autoRepliedAt) });
-  if (m.forwardedAt) rows.push({ label: 'ops_forwarded', value: formatWhen(m.forwardedAt) });
-  if (m.forwardError) rows.push({ label: 'forward_error', value: m.forwardError });
-  if (m.createdAt) rows.push({ label: 'stored', value: formatWhen(m.createdAt) });
-  if (m.source) rows.push({ label: 'source', value: m.source });
-  if (m.actorUserId) rows.push({ label: 'actor', value: m.actorUserId });
-  if (!rows.length) return null;
-  return (
-    <dl className="ecwa__details">
-      {rows.map((r) => (
-        <div key={r.label} className="ecwa__details-row">
-          <dt className="mono">{r.label}</dt>
-          <dd className="mono">{r.value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 export function WhatsAppInbound() {
   const api = useApi();
   const qc = useQueryClient();
@@ -151,6 +120,8 @@ export function WhatsAppInbound() {
   const [windowFilter, setWindowFilter] = useState<'all' | 'open' | 'closed'>('all');
   const [replyText, setReplyText] = useState('');
   const [replyError, setReplyError] = useState<string | null>(null);
+  const threadScrollRef = useRef<HTMLDivElement>(null);
+  const stickToBottom = useRef(true);
 
   useEffect(() => {
     if (selectedHandle) {
@@ -163,6 +134,7 @@ export function WhatsAppInbound() {
   useEffect(() => {
     setReplyText('');
     setReplyError(null);
+    stickToBottom.current = true;
   }, [selectedHandle]);
 
   const summary = useQuery({
@@ -207,6 +179,7 @@ export function WhatsAppInbound() {
     onSuccess: async () => {
       setReplyText('');
       setReplyError(null);
+      stickToBottom.current = true;
       await qc.invalidateQueries({ queryKey: ['wa-inbound', selectedHandle, 'messages'] });
       await qc.invalidateQueries({ queryKey: ['wa-inbound'] });
       await qc.invalidateQueries({ queryKey: ['wa-inbound-summary'] });
@@ -236,59 +209,64 @@ export function WhatsAppInbound() {
   const empty = !list.isLoading && !list.isError && threads.length === 0;
   const selectedThread = threads.find((t) => t.waHandle === selectedHandle) ?? null;
   const canReply = Boolean(head?.canReply);
+  const contactTitle =
+    head?.contactName?.trim() ||
+    selectedThread?.contactName?.trim() ||
+    threadPhone({
+      waIdE164: head?.waIdE164,
+      waId: head?.waId,
+      waIdMasked: head?.waIdMasked ?? selectedThread?.waIdMasked,
+    }) ||
+    '…';
+  const contactPhone = threadPhone({
+    waIdE164: head?.waIdE164,
+    waId: head?.waId,
+    waIdMasked: head?.waIdMasked ?? selectedThread?.waIdMasked,
+  });
+
+  useEffect(() => {
+    const el = threadScrollRef.current;
+    if (!el || !stickToBottom.current) return;
+    el.scrollTop = el.scrollHeight;
+  }, [messages, selectedHandle]);
+
+  function sendReply() {
+    const body = replyText.trim();
+    if (!body || !canReply || reply.isPending) return;
+    reply.mutate(body);
+  }
 
   return (
     <section className="ecwa">
-      <header className="ecwa__header">
-        <div>
-          <p className="ecwa__eyebrow mono">Inbound · audited</p>
-          <h1 className="ecwa__title">EC WhatsApp</h1>
-        </div>
-        <div className="ecwa__stats" aria-live="polite">
-          <div className="ecwa__stat">
-            <span className="ecwa__stat-label">Threads</span>
-            <span className="ecwa__stat-value mono tabular-nums">
-              {summary.data?.threadCount ?? '—'}
-            </span>
-          </div>
-          <div className="ecwa__stat">
-            <span className="ecwa__stat-label">Messages</span>
-            <span className="ecwa__stat-value mono tabular-nums">
-              {summary.data?.messageCount ?? '—'}
-            </span>
-          </div>
-          <div className="ecwa__stat">
-            <span className="ecwa__stat-label">Open windows</span>
-            <span className="ecwa__stat-value mono tabular-nums">
-              {summary.data?.openThreadCount ?? '—'}
-            </span>
-          </div>
-        </div>
-      </header>
-
-      <div className="ecwa__toolbar">
-        <div className="ecwa__filters" role="group" aria-label="Window filter">
-          {(
-            [
-              ['all', 'All'],
-              ['open', 'Open window'],
-              ['closed', 'Closed'],
-            ] as const
-          ).map(([key, label]) => (
-            <button
-              key={key}
-              type="button"
-              className={`ecwa__chip${windowFilter === key ? ' ecwa__chip--active' : ''}`}
-              onClick={() => setWindowFilter(key)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       <div className={`ecwa__panes${selectedHandle ? ' ecwa__panes--thread' : ''}`}>
         <aside className="ecwa__list" aria-label="Conversations">
+          <div className="ecwa__list-head">
+            <div className="ecwa__list-title-row">
+              <h1 className="ecwa__title">EC WhatsApp</h1>
+              <span className="ecwa__stat-value mono tabular-nums">
+                {summary.data?.openThreadCount ?? '—'}
+              </span>
+            </div>
+            <div className="ecwa__filters" role="group" aria-label="Window filter">
+              {(
+                [
+                  ['all', 'All'],
+                  ['open', 'Open'],
+                  ['closed', 'Closed'],
+                ] as const
+              ).map(([key, label]) => (
+                <button
+                  key={key}
+                  type="button"
+                  className={`ecwa__chip${windowFilter === key ? ' ecwa__chip--active' : ''}`}
+                  onClick={() => setWindowFilter(key)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {list.isLoading ? <p className="muted ecwa__pad">Loading conversations…</p> : null}
           {list.isError ? (
             <p className="error ecwa__pad">
@@ -318,21 +296,17 @@ export function WhatsAppInbound() {
                     <span className="ecwa__thread-main">
                       <span className="ecwa__thread-top">
                         <span className="ecwa__thread-name">
-                          {t.contactName?.trim() || <span className="mono">{t.waIdMasked}</span>}
+                          {t.contactName?.trim() || t.waIdMasked}
                         </span>
                         <span className="ecwa__thread-time mono tabular-nums">
-                          {formatWhen(t.lastReceivedAt).slice(0, 16)}
+                          {formatThreadWhen(t.lastReceivedAt)}
                         </span>
                       </span>
-                      {t.contactName ? (
-                        <span className="ecwa__thread-phone mono">{t.waIdMasked}</span>
-                      ) : null}
                       <span className="ecwa__thread-preview">
                         {t.preview || <span className="muted">({t.latestMessageType})</span>}
                       </span>
                       <span className="ecwa__thread-meta">
                         <WindowCountdown state={t.windowState} remainingMs={t.windowRemainingMs} />
-                        <span className="mono tabular-nums">{t.messageCount} msg</span>
                         {t.autoRepliedLast24h ? <Badge variant="blue">ack</Badge> : null}
                       </span>
                     </span>
@@ -360,7 +334,7 @@ export function WhatsAppInbound() {
           {!selectedHandle ? (
             <div className="ecwa__detail-empty">
               <p className="ecwa__detail-empty-title">Select a conversation</p>
-              <p className="muted">Opening a thread is audited.</p>
+              <p className="muted">Chat fills this pane, like WhatsApp Web.</p>
             </div>
           ) : (
             <>
@@ -372,113 +346,107 @@ export function WhatsAppInbound() {
                 >
                   ← Inbox
                 </button>
+                <span className="ecwa__avatar" aria-hidden>
+                  {initialsFromThread({
+                    contactName: head?.contactName ?? selectedThread?.contactName,
+                    waIdMasked: head?.waIdMasked ?? selectedThread?.waIdMasked ?? '',
+                  })}
+                </span>
                 <div className="ecwa__detail-identity">
-                  <h2 className="ecwa__detail-title">
-                    {head?.contactName?.trim() ||
-                      head?.waIdMasked ||
-                      selectedThread?.contactName ||
-                      selectedThread?.waIdMasked ||
-                      '…'}
-                  </h2>
-                  <p className="muted mono">
-                    {head?.waIdE164 || (head?.waId ? `+${head.waId}` : null) || '…'}
-                    {head?.waIdMasked ? ` · masked ${head.waIdMasked}` : ''}
-                  </p>
-                  {head ? (
-                    <p className="muted">
-                      Window{' '}
-                      <WindowCountdown
-                        state={head.windowState}
-                        remainingMs={head.windowRemainingMs}
-                      />
-                      {head.windowExpiresAt
-                        ? ` · expires ${formatWhen(head.windowExpiresAt)} UTC`
-                        : ''}
-                      {' · '}
-                      {head.messagesRevealed} revealed
-                    </p>
+                  <h2 className="ecwa__detail-title">{contactTitle}</h2>
+                  {contactPhone && contactPhone !== contactTitle ? (
+                    <p className="ecwa__detail-phone">{contactPhone}</p>
                   ) : null}
                 </div>
+                {head ? (
+                  <WindowCountdown state={head.windowState} remainingMs={head.windowRemainingMs} />
+                ) : null}
               </div>
 
-              <div className="wa-audit-banner" role="status">
-                This view is audited. Free-form reply is available only while the 24h window is open.
-              </div>
-
-              {detail.isLoading ? <p className="muted">Loading messages…</p> : null}
-              {detail.isError ? (
-                <p className="error">Failed to load thread (needs whatsapp:inbound:read).</p>
-              ) : null}
-
-              <ul className="wa-messages ecwa__bubbles">
-                {messages.map((m) => (
-                  <li
-                    key={m.id}
-                    className={`wa-message ecwa__bubble${
-                      m.direction === 'outbound' ? ' ecwa__bubble--out' : ' ecwa__bubble--in'
-                    }`}
+              <div
+                className="ecwa__thread-scroll"
+                ref={threadScrollRef}
+                onScroll={(e) => {
+                  const el = e.currentTarget;
+                  stickToBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+                }}
+              >
+                {detail.hasNextPage ? (
+                  <button
+                    type="button"
+                    className="btn btn--sm ecwa__earlier"
+                    disabled={detail.isFetchingNextPage}
+                    onClick={() => {
+                      stickToBottom.current = false;
+                      void detail.fetchNextPage();
+                    }}
                   >
-                    <div className="wa-message__meta mono tabular-nums">
-                      {formatWhen(m.at)} UTC · {m.direction} · {m.messageType}
-                      {m.source ? ` · ${m.source}` : ''}
-                      {m.autoRepliedAt ? ' · auto-replied' : ''}
-                    </div>
-                    <div className="wa-message__body">
-                      {m.body ?? <span className="muted">(no text — {m.messageType})</span>}
-                    </div>
-                    <MessageDetails m={m} />
-                  </li>
-                ))}
-              </ul>
+                    {detail.isFetchingNextPage ? 'Loading…' : 'Load earlier messages'}
+                  </button>
+                ) : null}
 
-              {detail.hasNextPage ? (
-                <button
-                  type="button"
-                  className="btn btn--sm"
-                  disabled={detail.isFetchingNextPage}
-                  onClick={() => void detail.fetchNextPage()}
-                >
-                  {detail.isFetchingNextPage ? 'Loading…' : 'Load earlier messages'}
-                </button>
-              ) : null}
+                {detail.isLoading ? <p className="muted ecwa__pad">Loading messages…</p> : null}
+                {detail.isError ? (
+                  <p className="error ecwa__pad">
+                    Failed to load thread (needs whatsapp:inbound:read).
+                  </p>
+                ) : null}
+
+                <ul className="wa-messages ecwa__bubbles">
+                  {messages.map((m) => (
+                    <li
+                      key={m.id}
+                      className={`wa-message ecwa__bubble${
+                        m.direction === 'outbound' ? ' ecwa__bubble--out' : ' ecwa__bubble--in'
+                      }`}
+                    >
+                      <div className="wa-message__body">
+                        {m.body ?? <span className="muted">({m.messageType})</span>}
+                      </div>
+                      <time className="wa-message__time mono tabular-nums" dateTime={m.at}>
+                        {formatClock(m.at)}
+                      </time>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
               <form
                 className="ecwa__composer"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  const body = replyText.trim();
-                  if (!body || !canReply || reply.isPending) return;
-                  reply.mutate(body);
+                  sendReply();
                 }}
               >
-                <label className="ecwa__composer-label" htmlFor="ecwa-reply">
-                  Reply on WhatsApp
+                <label className="ec-sr-only" htmlFor="ecwa-reply">
+                  Reply
                 </label>
                 <textarea
                   id="ecwa-reply"
                   className="ecwa__composer-input"
-                  rows={3}
+                  rows={1}
                   maxLength={4096}
                   placeholder={
-                    canReply
-                      ? 'Type a free-form reply…'
-                      : 'Window closed — free-form reply unavailable'
+                    canReply ? 'Type a message' : 'Window closed — reply unavailable'
                   }
                   value={replyText}
                   disabled={!canReply || reply.isPending}
                   onChange={(e) => setReplyText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      sendReply();
+                    }
+                  }}
                 />
-                <div className="ecwa__composer-row">
-                  <span className="muted mono tabular-nums">{replyText.length}/4096</span>
-                  <button
-                    type="submit"
-                    className="btn"
-                    disabled={!canReply || reply.isPending || !replyText.trim()}
-                  >
-                    {reply.isPending ? 'Sending…' : 'Send'}
-                  </button>
-                </div>
-                {replyError ? <p className="error">{replyError}</p> : null}
+                <button
+                  type="submit"
+                  className="btn ecwa__send"
+                  disabled={!canReply || reply.isPending || !replyText.trim()}
+                >
+                  {reply.isPending ? '…' : 'Send'}
+                </button>
+                {replyError ? <p className="error ecwa__composer-error">{replyError}</p> : null}
               </form>
             </>
           )}
