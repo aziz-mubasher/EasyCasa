@@ -66,7 +66,9 @@
     {
       "name": "marketingEmailOptIn",
       "displayName": "${profile.attributes.marketingEmailOptIn}",
-      "validations": {},
+      "validations": {
+        "options": { "options": ["yes"] }
+      },
       "annotations": {
         "inputType": "multiselect-checkboxes",
         "inputOptionLabels": {
