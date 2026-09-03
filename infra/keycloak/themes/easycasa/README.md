@@ -2,10 +2,11 @@
 
 Login + email + a minimal welcome page. Account and Admin themes stay stock.
 
-**Parent:** `base` (Keycloak 24–26). The look lives in `login/template.ftl` and
-the `kc*Class` map in `login/theme.properties`. Inherited pages
-(`login.ftl`, reset, new password, verify-email, terms) render inside that
-layout.
+**Parent:** `base` (Keycloak 24–26). Sign-in is a simple dark card
+(`login/login.ftl` + `template.ftl`). Brand/logo links to
+`https://legenda.easycasaita.com/{locale}`. Favicon lives in
+`login/resources/img/`. Sign-up asks for terms via a required checkbox;
+the Mundida / Art. 13 wall is not on these pages.
 
 If `kc.sh --version` is older than 24, **delete `login/register.ftl`** and
 redeploy. Older servers do not have `user-profile-commons.ftl` /

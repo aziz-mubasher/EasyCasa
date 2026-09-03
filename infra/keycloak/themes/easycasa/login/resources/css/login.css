@@ -1,40 +1,23 @@
-/* EasyCasa login theme — system fonts only. No CDN, no webfont host. */
+/* EasyCasa login theme — system fonts only. No CDN, no webfont host.
+   Always-dark simple card (signin / signup). */
 
 :root {
-  --ec-ink: #14212e;
-  --ec-ink-soft: #4c5d6e;
-  --ec-paper: #f3ede1;
-  --ec-paper-deep: #e8dfcc;
-  --ec-azure: #2c6e9b;
-  --ec-azure-pale: #a9c8dc;
-  --ec-ochre: #c08a1e;
-  --ec-danger: #8b2e2e;
-  --ec-ok: #2f5d3a;
-  --ec-rule: rgba(20, 33, 46, 0.16);
-  --ec-rule-strong: rgba(20, 33, 46, 0.34);
+  --ec-ink: #f4f7fb;
+  --ec-ink-soft: #a8b4c4;
+  --ec-paper: #0e141c;
+  --ec-paper-deep: #1a2330;
+  --ec-azure: #4a90c4;
+  --ec-azure-pale: #2c4a60;
+  --ec-danger: #f0a8a8;
+  --ec-ok: #9dcea8;
+  --ec-rule: rgba(244, 247, 251, 0.14);
+  --ec-rule-strong: rgba(244, 247, 251, 0.28);
   --ec-display: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
-  --ec-body: ui-serif, Georgia, "Times New Roman", serif;
-  --ec-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --ec-body: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
   --ec-focus: 2px solid var(--ec-azure);
   --ec-focus-offset: 3px;
   --ec-control: 2.75rem;
-  --ec-radius: 2px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ec-ink: #f3ede1;
-    --ec-ink-soft: #c5bba6;
-    --ec-paper: #121820;
-    --ec-paper-deep: #1b2430;
-    --ec-azure: #7eb0d2;
-    --ec-azure-pale: #2c4a60;
-    --ec-ochre: #e0b35a;
-    --ec-danger: #f0a8a8;
-    --ec-ok: #9dcea8;
-    --ec-rule: rgba(243, 237, 225, 0.16);
-    --ec-rule-strong: rgba(243, 237, 225, 0.34);
-  }
+  --ec-radius: 14px;
 }
 
 *,
@@ -53,7 +36,7 @@ html.ec-html {
   min-height: 100vh;
   font-family: var(--ec-body);
   font-size: 1rem;
-  line-height: 1.62;
+  line-height: 1.5;
   background: var(--ec-paper);
   color: var(--ec-ink);
 }
@@ -63,74 +46,98 @@ html.ec-html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.25rem 1rem 2rem;
+  justify-content: center;
+  padding: 1.5rem 1rem 2rem;
 }
 
 .ec-brand {
-  width: min(28rem, 100%);
-  margin: 0 0 1.25rem;
+  width: min(26rem, 100%);
+  margin: 0 0 1.35rem;
+  text-align: center;
 }
 
 .ec-brand-mark {
   display: inline-flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
   text-decoration: none;
   color: inherit;
   min-height: var(--ec-control);
-  justify-content: center;
+}
+
+.ec-logo-mark {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.7rem;
+  display: block;
+}
+
+.ec-wordmark-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
 }
 
 .ec-wordmark {
   font-family: var(--ec-display);
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: -0.03em;
-  line-height: 1.1;
+  line-height: 1.05;
+  color: var(--ec-ink);
 }
 
 .ec-wordmark span {
-  color: var(--ec-azure);
+  font-weight: 650;
 }
 
 .ec-wordmark-sub {
-  font-family: var(--ec-mono);
   font-size: 0.68rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ec-azure);
+  color: var(--ec-ink-soft);
 }
 
 .ec-card {
-  width: min(28rem, 100%);
+  width: min(26rem, 100%);
   background: var(--ec-paper-deep);
-  border: 1px solid var(--ec-rule-strong);
+  border: 1px solid var(--ec-rule);
   border-radius: var(--ec-radius);
-  padding: 1.25rem 1.15rem 1.35rem;
+  padding: 1.5rem 1.35rem 1.45rem;
 }
 
 .ec-card-head {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 0.45rem;
+  margin-bottom: 1.1rem;
 }
 
 #kc-page-title {
   margin: 0;
   font-family: var(--ec-display);
-  font-size: 1.55rem;
-  font-weight: 650;
+  font-size: 1.45rem;
+  font-weight: 700;
   letter-spacing: -0.03em;
-  line-height: 1.15;
-  text-wrap: balance;
+  line-height: 1.2;
+}
+
+.ec-lead {
+  margin: 0;
+  color: var(--ec-ink-soft);
+  font-size: 0.95rem;
+}
+
+.ec-lead:empty {
+  display: none;
 }
 
 .ec-required-note {
   margin: 0;
-  font-family: var(--ec-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ec-ink-soft);
 }
@@ -138,9 +145,9 @@ html.ec-html {
 .ec-locales-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.35rem;
   list-style: none;
-  margin: 0;
+  margin: 0 0 0.4rem;
   padding: 0;
 }
 
@@ -148,15 +155,13 @@ html.ec-html {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--ec-control);
-  min-width: var(--ec-control);
-  padding: 0 0.75rem;
+  min-height: 2.25rem;
+  padding: 0 0.7rem;
   border: 1px solid var(--ec-rule-strong);
   border-radius: 999px;
   color: var(--ec-ink);
   text-decoration: none;
-  font-family: var(--ec-display);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .ec-locales-link.is-active {
@@ -172,13 +177,31 @@ html.ec-html {
 #kc-register-form {
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 0.85rem;
+}
+
+#kc-register-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+#kc-register-form > * {
+  grid-column: 1 / -1;
+}
+
+#kc-register-form .ec-field:has(#firstName) {
+  grid-column: 1;
+}
+
+#kc-register-form .ec-field:has(#lastName) {
+  grid-column: 2;
 }
 
 .ec-field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.3rem;
   margin: 0;
 }
 
@@ -187,7 +210,7 @@ html.ec-html {
 .ec-check-label,
 .ec-radio-label {
   font-family: var(--ec-display);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 600;
 }
 
@@ -199,13 +222,16 @@ html.ec-html {
 .ec-input-wrap textarea,
 input.ec-input,
 select.ec-input,
-textarea.ec-input {
+textarea.ec-input,
+#username,
+#password,
+#password-confirm {
   width: 100%;
   min-height: var(--ec-control);
-  padding: 0.6rem 0.75rem;
+  padding: 0.6rem 0.8rem;
   border: 1px solid var(--ec-rule-strong);
-  border-radius: var(--ec-radius);
-  background: var(--ec-paper);
+  border-radius: 10px;
+  background: #121a24;
   color: var(--ec-ink);
   font: inherit;
   font-family: var(--ec-display);
@@ -228,11 +254,9 @@ textarea.ec-input {
   min-height: var(--ec-control);
   padding: 0 0.65rem;
   border: 1px solid var(--ec-rule-strong);
-  border-radius: var(--ec-radius);
-  background: var(--ec-paper);
+  border-radius: 10px;
+  background: #121a24;
   color: var(--ec-ink);
-  font-family: var(--ec-display);
-  font-size: 0.75rem;
   cursor: pointer;
 }
 
@@ -261,17 +285,21 @@ textarea.ec-input {
 #kc-registration-terms-text,
 #kc-terms-text {
   color: var(--ec-ink-soft);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
 }
 
 .ec-help a,
 #kc-registration-terms-text a,
 #kc-terms-text a,
-.ec-legal a,
 .ec-signup a,
 .ec-options a,
-.ec-art13 a {
+.ec-terms a {
   color: var(--ec-azure);
+}
+
+#header-consent,
+#description-consent {
+  display: none;
 }
 
 .ec-settings,
@@ -279,7 +307,7 @@ textarea.ec-input {
 .ec-actions {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .ec-settings {
@@ -299,22 +327,67 @@ textarea.ec-input {
 .ec-check,
 .checkbox input[type="checkbox"],
 input[type="checkbox"] {
-  width: 1.25rem;
-  height: 1.25rem;
-  min-width: 1.25rem;
-  min-height: 1.25rem;
-  margin-top: 0.35rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  min-width: 1.15rem;
+  min-height: 1.15rem;
+  margin-top: 0.2rem;
   accent-color: var(--ec-azure);
 }
 
 .checkbox label,
-label[for="termsAccepted"],
 label[for="rememberMe"],
 label[for="logout-sessions"] {
-  min-height: var(--ec-control);
+  min-height: 2.25rem;
   display: inline-flex;
   align-items: center;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+}
+
+.ec-terms {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding-top: 0.15rem;
+}
+
+.ec-terms-read {
+  color: var(--ec-ink-soft);
+  font-size: 0.9rem;
+}
+
+.ec-terms-read summary {
+  cursor: pointer;
+  color: var(--ec-ink);
+  min-height: 2.25rem;
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.ec-terms-read summary::-webkit-details-marker {
+  display: none;
+}
+
+.ec-terms-read summary::before {
+  content: "▸";
+  display: inline-block;
+  width: 1rem;
+  margin-right: 0.35rem;
+  color: var(--ec-azure);
+}
+
+.ec-terms-read[open] summary::before {
+  content: "▾";
+}
+
+.ec-terms-accept {
+  display: flex;
+  align-items: flex-start;
   gap: 0.65rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .ec-btn,
@@ -333,8 +406,8 @@ button[type="submit"]:not(.ec-linkish) {
   border-radius: 999px;
   border: 1px solid transparent;
   font-family: var(--ec-display);
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 0.98rem;
+  font-weight: 650;
   cursor: pointer;
   text-decoration: none;
 }
@@ -347,7 +420,7 @@ input.ec-btn-primary,
 #kc-passwd-update-form input[type="submit"],
 #kc-accept {
   background: var(--ec-azure);
-  color: var(--ec-paper);
+  color: #f4f7fb;
   border-color: var(--ec-azure);
 }
 
@@ -373,7 +446,6 @@ button.ec-btn-ghost {
   min-height: var(--ec-control);
   color: var(--ec-azure);
   font: inherit;
-  font-family: var(--ec-display);
   cursor: pointer;
   text-decoration: underline;
 }
@@ -381,13 +453,14 @@ button.ec-btn-ghost {
 .ec-signup,
 .ec-info-wrap,
 #kc-registration {
-  margin-top: 0.4rem;
+  margin-top: 0.85rem;
   text-align: center;
+  color: var(--ec-ink-soft);
 }
 
 .ec-alert {
   padding: 0.75rem 0.85rem;
-  border-radius: var(--ec-radius);
+  border-radius: 10px;
   border: 1px solid var(--ec-rule-strong);
   margin-bottom: 0.9rem;
 }
@@ -406,100 +479,18 @@ button.ec-btn-ghost {
   color: var(--ec-ok);
 }
 
-.ec-alert-warning,
-.ec-alert-info {
-  color: var(--ec-ink);
-}
-
-.ec-art13 {
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--ec-rule);
-}
-
-.ec-art13-title {
-  margin: 0 0 0.4rem;
-  font-family: var(--ec-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ec-azure);
-}
-
-.ec-art13 p {
-  margin: 0;
-  color: var(--ec-ink-soft);
-  font-size: 0.92rem;
-}
-
-.ec-legal {
-  margin-top: 1.35rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--ec-rule);
-  color: var(--ec-ink-soft);
-  font-size: 0.82rem;
-}
-
-.ec-legal p {
-  margin: 0 0 0.45rem;
-}
-
-.ec-legal-controller {
-  font-family: var(--ec-display);
-  color: var(--ec-ink);
-}
-
-.ec-legal-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem 1rem;
-}
-
-.ec-legal-links a {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--ec-control);
-}
-
-.ec-legal-meta {
-  font-family: var(--ec-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .ec-attempted {
   margin: 0;
-  font-family: var(--ec-mono);
 }
 
 .ec-restart,
 .ec-options a,
-.ec-signup a {
+.ec-signup a,
+.ec-settings a {
   display: inline-flex;
   align-items: center;
-  min-height: var(--ec-control);
-}
-
-.ec-group-head {
-  font-family: var(--ec-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  min-height: 2.25rem;
   color: var(--ec-azure);
-}
-
-.ec-idp {
-  margin-top: 1rem;
-}
-
-.ec-idp-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 }
 
 .ec-sr-only {
@@ -530,7 +521,12 @@ textarea:focus-visible,
   }
 
   .ec-card {
-    padding: 1rem 0.8rem 1.1rem;
+    padding: 1.1rem 0.9rem 1.15rem;
+  }
+
+  #kc-register-form .ec-field:has(#firstName),
+  #kc-register-form .ec-field:has(#lastName) {
+    grid-column: 1 / -1;
   }
 
   .ec-settings {

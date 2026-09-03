@@ -133,9 +133,28 @@ Empty `import=` in `login/theme.properties` crashes KC 26.0.8
 (`DefaultThemeManager.processImportedTheme` AIOOBE → HTTP 500 on the CSS).
 That line must stay absent.
 
-Still human: export live user-profile before importing
-`user-profile.easycasa.json`; enable `terms_and_conditions`; confirm SMTP
-(`verifyEmail` is already true); 36 null-email users; cookie page.
+### User profile / terms / SMTP (2026-09-03)
+
+Done via `kcadm` after the theme was live. Exports taken **before** the write:
+
+- `infra/keycloak/user-profile.easycasa.live-export-2026-09-03.json`
+- `infra/keycloak/required-actions.live-export-2026-09-03.json`
+- `infra/keycloak/realm-smtp.live-export-2026-09-03.json` (secrets stripped)
+
+| Item | Before | After |
+|---|---|---|
+| Realm SMTP | Empty (`smtpServer: {}`) | Unchanged. **No host / from / auth** |
+| `verifyEmail` | `true` (dead-end) | **`false`**. `VERIFY_EMAIL` action stays enabled, not default |
+| `VERIFY_PROFILE` | Enabled | **Disabled** (brief). Do not turn back on while email is required |
+| User profile | Stock username/email/first/last | `user-profile.easycasa.json` (username admin-edit, marketing opt-in, `ADMIN_EDIT`) |
+| `TERMS_AND_CONDITIONS` | Disabled | **Enabled, default for new users**. Existing users were not assigned it |
+| Live users | **3** (0 null email; 2 unverified) | Still 3. Required-action counts unchanged (`UPDATE_PASSWORD` × 1) |
+
+The brief’s “36/79 null email” figure is **not** this realm today. Rollback for the profile is the live-export JSON.
+
+`register.ftl` must render password after `email` when username is admin-only. Stock KC only hooks password to username / email-as-username.
+
+Still human: set Realm → Email (host + from) before turning `verifyEmail` back on; dedicated cookie page.
 
 ---
 
@@ -243,10 +262,10 @@ The repo JSON is updated for **local first-boot** only. Production is additive.
 
 | Area | Setting | Why |
 |---|---|---|
-| Localization | Internationalization **on**; supported `it`, `en`, `es`; default **`it`** | Without this the language switcher does not render (`template.ftl` guards on `realm.internationalizationEnabled`) and the email theme cannot pick a locale. Live is English-only today |
+| Localization | Internationalization **on**; supported `it`, `en`, `es`; default **`it`** | Live as of 2026-09-03 deploy |
 | Themes | Login `easycasa`, Email `easycasa` | Account / Admin unchanged |
-| User profile | Import `infra/keycloak/user-profile.easycasa.json` | This file **is** the registration form. Future fields go here, never into `register.ftl` |
-| Required actions | Enable `terms_and_conditions` (default for new users). Enable `VERIFY_EMAIL` as default for **new users only**, and **only once SMTP exists**. Leave `VERIFY_PROFILE` **disabled** | `VERIFY_EMAIL` with no SMTP is a dead-end screen. `VERIFY_PROFILE` + required email would lock out the ~36 users with a null e-mail |
+| User profile | Import `infra/keycloak/user-profile.easycasa.json` | **Imported 2026-09-03** after exporting the live JSON. Future fields go here, never into `register.ftl` |
+| Required actions | `TERMS_AND_CONDITIONS` enabled + default for new users. `VERIFY_EMAIL` enabled, **not** default. `VERIFY_PROFILE` **disabled**. Realm `verifyEmail` **off** until SMTP exists | Confirmed 2026-09-03. SMTP is empty. Live user count is 3, not the brief’s 36/79 |
 | Login tab | Registration **on**, Forgot password **on**, Remember me **on**, Login with email **on**, Email as username **off**, Duplicate emails **off** | Email-as-username or required-email-on-existing-accounts locks out roughly half the user base. New registrations still require e-mail via the profile JSON |
 | Security defenses | Brute force **on**, **temporary** lockout, exponential back-off. Not permanent | Permanent lockout + a known address = DoS against one named user |
 | Events | Login events **on**, set an expiration, **turn off “include representation”** on admin events | Login events store IPs. Forever is not a security posture; it is an undeclared processing |

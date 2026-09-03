@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-03T12:33:33.517Z",
+  "updatedAt": "2026-09-03T14:41:19.042Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "EC-AUTH-1",
       "title": "EC-AUTH-1 — EasyCasa Keycloak sign-in / sign-up theme",
       "venture": "EasyCasa",
-      "lifecycle": "merged",
+      "lifecycle": "pr_ready",
       "agentStatus": "IDLE",
       "agentBcId": "bc-e05bf640-1c09-4b65-9071-af4fbf40e167",
       "agentUrl": "https://cursor.com/agents/bc-e05bf640-1c09-4b65-9071-af4fbf40e167",
-      "branch": "cursor/ec-auth-1-import-fix-e167",
-      "prNumber": 189,
-      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/189",
-      "prState": "MERGED",
+      "branch": "cursor/ec-auth-1-simple-signin-e167",
+      "prNumber": 195,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/195",
+      "prState": "OPEN",
       "dispatchedAt": "2026-09-03T11:35:54.041Z",
-      "updatedAt": "2026-09-03T12:33:33.517Z",
-      "summary": "Theme LIVE on auth.easycasaita.com. Merged #189/#191/#192. Login Accedi a easycasa, lang=it, Mundida footer, CSS 10413 EasyCasa. KC 26.0.8. VPS dirty other branch — no git pull.",
-      "nextAction": "Human: export live user-profile before import; enable terms_and_conditions; confirm realm SMTP (verifyEmail already true); 36 null-email users stay sign-inable.",
+      "updatedAt": "2026-09-03T14:41:19.042Z",
+      "summary": "Simple dark sign-in/up live. Logo→legenda.easycasaita.com/it. No Mundida wall. Register requires terms checkbox. Favicon on both.",
+      "nextAction": "Review/merge #195. Realm SMTP still unset.",
       "errors": []
     },
     {

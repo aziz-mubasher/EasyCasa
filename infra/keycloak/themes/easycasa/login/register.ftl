@@ -1,19 +1,25 @@
 <#import "template.ftl" as layout>
 <#import "user-profile-commons.ftl" as userProfileCommons>
-<#import "register-commons.ftl" as registerCommons>
-<@layout.registrationLayout displayMessage=messagesPerField.exists('global') displayRequiredFields=true; section>
+<@layout.registrationLayout displayMessage=messagesPerField.exists('global') displayRequiredFields=false displayInfo=true; section>
     <#if section = "header">
         <#if messageHeader??>
             ${kcSanitize(msg("${messageHeader}"))?no_esc}
         <#else>
             ${msg("registerTitle")}
         </#if>
+    <#elseif section = "lead">
+        ${msg("ecRegisterLead")}
     <#elseif section = "form">
         <form id="kc-register-form" class="${properties.kcFormClass!}" action="${url.registrationAction}" method="post">
 
+            <#-- Password pair is hooked to username (stock) or email-as-username.
+                 Username is admin-edit only on easycasa, so neither hook fires
+                 unless we also treat a plain email field as the hook. -->
+            <#assign passwordFieldsRendered = false>
             <@userProfileCommons.userProfileFormFields; callback, attribute>
                 <#if callback = "afterField">
-                    <#if passwordRequired?? && (attribute.name == 'username' || (attribute.name == 'email' && realm.registrationEmailAsUsername))>
+                    <#if passwordRequired?? && !passwordFieldsRendered && (attribute.name == 'username' || attribute.name == 'email')>
+                        <#assign passwordFieldsRendered = true>
                         <div class="${properties.kcFormGroupClass!}">
                             <div class="${properties.kcLabelWrapperClass!}">
                                 <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label> *
@@ -67,24 +73,36 @@
                 </#if>
             </@userProfileCommons.userProfileFormFields>
 
-            <@registerCommons.termsAcceptance/>
+            <div class="ec-terms" id="ec-terms">
+                <details class="ec-terms-read">
+                    <summary>${msg("ecTermsToggle")}</summary>
+                    <p>${msg("termsText")?no_esc}</p>
+                    <p>
+                        <a href="${properties.ecSiteOrigin!'https://easycasaita.com'}/<#if realm.internationalizationEnabled && locale?? && locale.currentLanguageTag?has_content>${locale.currentLanguageTag}<#else>it</#if>${properties.ecTermsPath!'/legal/terms'}">${msg("ecTermsLink")}</a>
+                        ·
+                        <a href="${properties.ecSiteOrigin!'https://easycasaita.com'}/<#if realm.internationalizationEnabled && locale?? && locale.currentLanguageTag?has_content>${locale.currentLanguageTag}<#else>it</#if>${properties.ecPrivacyPath!'/legal/privacy'}">${msg("ecPrivacyLink")}</a>
+                    </p>
+                </details>
+                <label class="ec-terms-accept" for="termsAccepted">
+                    <input type="checkbox" id="termsAccepted" name="termsAccepted" value="on" required
+                           aria-invalid="<#if messagesPerField.existsError('termsAccepted')>true</#if>">
+                    <span>${msg("acceptTerms")}</span>
+                </label>
+                <#if messagesPerField.existsError('termsAccepted')>
+                    <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
+                        ${kcSanitize(messagesPerField.get('termsAccepted'))?no_esc}
+                    </span>
+                </#if>
+            </div>
 
             <div class="${properties.kcFormGroupClass!}">
-                <div id="kc-form-options" class="${properties.kcFormOptionsClass!}">
-                    <div class="${properties.kcFormOptionsWrapperClass!}">
-                        <span><a href="${url.loginUrl}">${kcSanitize(msg("backToLogin"))?no_esc}</a></span>
-                    </div>
-                </div>
                 <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
                     <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" type="submit" value="${msg("doRegister")}"/>
                 </div>
             </div>
         </form>
         <script type="module" src="${url.resourcesPath}/js/passwordVisibility.js"></script>
-    <#elseif section = "ec-art13">
-        <aside class="ec-art13" aria-label="${msg("ecArt13Heading")}">
-            <h2 class="ec-art13-title">${msg("ecArt13Heading")}</h2>
-            <p>${msg("ecArt13Short")}</p>
-        </aside>
+    <#elseif section = "info">
+        <span>${msg("ecHaveAccount")} <a href="${url.loginUrl}">${msg("doLogIn")}</a></span>
     </#if>
 </@layout.registrationLayout>

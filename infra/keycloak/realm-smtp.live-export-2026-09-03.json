@@ -1,0 +1,25 @@
+{
+  "realm": "easycasa",
+  "verifyEmail": true,
+  "loginTheme": "easycasa",
+  "emailTheme": "easycasa",
+  "internationalizationEnabled": true,
+  "registrationEmailAsUsername": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "smtp": {
+    "keys": [],
+    "host": "",
+    "port": "",
+    "from": "",
+    "fromDisplayName": "",
+    "replyTo": "",
+    "ssl": "",
+    "starttls": "",
+    "auth": "",
+    "user_set": false,
+    "password_set": false,
+    "host_set": false,
+    "from_set": false
+  }
+}
