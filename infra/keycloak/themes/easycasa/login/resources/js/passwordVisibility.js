@@ -1,3 +1,4 @@
+/* global document */
 const toggle = (button) => {
     const passwordElement = document.getElementById(button.getAttribute('aria-controls'));
     if (!passwordElement) {
