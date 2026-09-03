@@ -30,6 +30,7 @@ export async function buildAuthorizeUrl(input: {
     state: input.state,
     code_challenge: input.codeChallenge,
     code_challenge_method: 'S256',
+    ui_locales: 'it',
   });
   return `${discovery.authorization_endpoint}?${params.toString()}`;
 }

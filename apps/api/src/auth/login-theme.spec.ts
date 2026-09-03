@@ -58,6 +58,9 @@ describe('easycasa Keycloak login/email theme', () => {
       'login/resources/img/favicon.svg',
       'login/resources/img/favicon.png',
       'login/resources/img/logo.svg',
+      'login/resources/img/logo-easycasa.png',
+      'login/resources/img/logo-legenda.svg',
+      'login/resources/img/logo-legenda.png',
       'login/resources/css/login.css',
       'login/resources/js/passwordVisibility.js',
       'login/messages/messages_it.properties',
@@ -110,6 +113,8 @@ describe('easycasa Keycloak login/email theme', () => {
       for (const key of msgKeysInFtl(read(file))) used.add(key);
     }
     expect(used.has('ecBrandAria')).toBe(true);
+    expect(used.has('ecLegendaAria')).toBe(true);
+    expect(used.has('ecLegendaName')).toBe(true);
     expect(used.has('ecLoginLead')).toBe(true);
     expect(used.has('acceptTerms')).toBe(true);
     expect(used.has('ecController')).toBe(false);
@@ -241,7 +246,17 @@ describe('easycasa Keycloak login/email theme', () => {
     expect(template).not.toMatch(/cookie.?banner/i);
     expect(template).not.toContain('ec-legal');
     expect(template).toContain('favicon.svg');
+    expect(template).toContain('logo-easycasa.png');
+    expect(template).toContain('logo-legenda.svg');
+    expect(template).toContain('easycasaita.com');
     expect(template).toContain('legenda.easycasaita.com');
+    expect(template).toContain('siteUrl');
+    expect(template).toContain('KEYCLOAK_LOCALE');
+    expect(template).toContain('hreflang="it"');
+    expect(css).toContain('--ec-link: #9ec8ea');
+    expect(read(path.join(LOGIN, 'login.ftl'))).toContain('ec-forgot');
+    expect(read(path.join(ROOT, 'apps/web/src/auth/oidc.ts'))).toContain("ui_locales: 'it'");
+    expect(read(path.join(ROOT, 'apps/admin/src/auth/oidc.ts'))).toContain("ui_locales: 'it'");
     expect(read(path.join(LOGIN, 'register.ftl'))).not.toContain('g-recaptcha');
     expect(read(path.join(LOGIN, 'register.ftl'))).toContain('termsAccepted');
     expect(read(path.join(LOGIN, 'register.ftl'))).not.toContain('ec-art13');
