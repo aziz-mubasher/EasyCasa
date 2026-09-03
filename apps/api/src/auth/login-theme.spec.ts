@@ -157,6 +157,7 @@ describe('easycasa Keycloak login/email theme', () => {
         permissions?: { edit?: string[] };
         group?: string;
         annotations?: { inputType?: string; inputOptionLabels?: Record<string, string> };
+        validations?: { options?: { options?: string[] } };
       }>;
       groups: Array<{ name: string }>;
     };
@@ -176,6 +177,8 @@ describe('easycasa Keycloak login/email theme', () => {
     expect(marketing?.group).toBe('consent');
     expect(marketing?.annotations?.inputType).toBe('multiselect-checkboxes');
     expect(marketing?.annotations?.inputOptionLabels?.yes).toBeDefined();
+    // KC 26 renders no checkbox unless options validation lists the values.
+    expect(marketing?.validations?.options?.options).toEqual(['yes']);
     expect(profile.groups.some((g) => g.name === 'consent')).toBe(true);
   });
 
@@ -228,5 +231,10 @@ describe('easycasa Keycloak login/email theme', () => {
     expect(css.toLowerCase()).not.toContain('cookie-banner');
     expect(read(path.join(LOGIN, 'template.ftl'))).not.toMatch(/cookie.?banner/i);
     expect(read(path.join(LOGIN, 'register.ftl'))).not.toContain('g-recaptcha');
+    // Username is admin-edit; stock KC only injects password after username
+    // or email-as-username. We must still hook the pair to a plain email field.
+    expect(read(path.join(LOGIN, 'register.ftl'))).toMatch(
+      /passwordRequired\?\? && !passwordFieldsRendered && \(attribute\.name == 'username' \|\| attribute\.name == 'email'\)/,
+    );
   });
 });

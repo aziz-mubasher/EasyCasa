@@ -11,9 +11,14 @@
     <#elseif section = "form">
         <form id="kc-register-form" class="${properties.kcFormClass!}" action="${url.registrationAction}" method="post">
 
+            <#-- Password pair is hooked to username (stock) or email-as-username.
+                 Username is admin-edit only on easycasa, so neither hook fires
+                 unless we also treat a plain email field as the hook. -->
+            <#assign passwordFieldsRendered = false>
             <@userProfileCommons.userProfileFormFields; callback, attribute>
                 <#if callback = "afterField">
-                    <#if passwordRequired?? && (attribute.name == 'username' || (attribute.name == 'email' && realm.registrationEmailAsUsername))>
+                    <#if passwordRequired?? && !passwordFieldsRendered && (attribute.name == 'username' || attribute.name == 'email')>
+                        <#assign passwordFieldsRendered = true>
                         <div class="${properties.kcFormGroupClass!}">
                             <div class="${properties.kcLabelWrapperClass!}">
                                 <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label> *
