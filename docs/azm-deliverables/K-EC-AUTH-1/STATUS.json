@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_ec_auth_1",
+  "kaizenCode": "K EC AUTH-1",
+  "polishId": "EC-AUTH-1",
+  "title": "EC-AUTH-1 — EasyCasa Keycloak sign-in / sign-up theme",
+  "venture": "EasyCasa",
+  "lifecycle": "pr_open",
+  "agentStatus": "RUNNING",
+  "agentBcId": "bc-e05bf640-1c09-4b65-9071-af4fbf40e167",
+  "agentUrl": "https://cursor.com/agents/bc-e05bf640-1c09-4b65-9071-af4fbf40e167",
+  "branch": "cursor/ec-auth-1-keycloak-theme-e167",
+  "prNumber": 189,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/189",
+  "prState": "DRAFT",
+  "dispatchedAt": "2026-09-03T11:35:54.041Z",
+  "updatedAt": "2026-09-03T11:35:54.041Z",
+  "summary": "Draft PR #189: easycasa login+email theme + user-profile JSON. Step 0 runbook first. VPS inspect/SMTP/theme select still human.",
+  "nextAction": "Human: paste VPS docker inspect into docs/runbooks/keycloak.md; export live user profile; set realm SMTP before VERIFY_EMAIL; Realm Themes → easycasa after recreate --no-build --no-deps.",
+  "errors": []
+}
