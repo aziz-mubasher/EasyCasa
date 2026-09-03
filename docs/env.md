@@ -173,7 +173,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | AML_SCREENING_URL / AML_SCREENING_KEY | api | PEP/sanctions screening. Empty + `ALLOW_PROVIDER_STUBS` → clean screen; otherwise fails safe (errors). |
 | PSP_API_URL / PSP_SECRET_KEY | api | Phase 17 order PaymentIntents seam. Empty + `ALLOW_PROVIDER_STUBS` → stub client secret. |
 | SDI_CHANNEL_URL / SDI_CHANNEL_KEY | api | Phase 17 SdI fattura transmission. Empty + `ALLOW_PROVIDER_STUBS` → stub protocollo. |
-| EASYCASA_PIVA / EASYCASA_DENOMINAZIONE | api | Cedente on fattura elettronica (defaults to Easy Casa Ita). |
+| EASYCASA_PIVA / EASYCASA_DENOMINAZIONE | api | Cedente on fattura elettronica (defaults to Easy Casa Ita). **Not** the published controller identity — auth theme / live footer use Mundida S.r.l. · IT04531990986 (`docs/runbooks/keycloak.md`). |
 
 ## Phase 22 / 30 — notification seams + ops
 | Variable | Used by | Notes |

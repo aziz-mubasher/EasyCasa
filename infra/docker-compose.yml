@@ -137,8 +137,10 @@ services:
       KC_DB_URL: jdbc:postgresql://db:5432/${KEYCLOAK_DB:-keycloak}
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_SPI_THEME_WELCOME_THEME: easycasa
     volumes:
       - ./keycloak/realm-easycasa.json:/opt/keycloak/data/import/realm-easycasa.json:ro
+      - ./keycloak/themes/easycasa:/opt/keycloak/themes/easycasa:ro
     depends_on:
       db:
         condition: service_healthy
