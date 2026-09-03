@@ -15,12 +15,12 @@ Four answers the brief asked for. Two sources are kept separate on purpose:
 were **not** run. A human on the VPS must fill the “observed on VPS” column
 before the first theme recreate.
 
-| Question | Declared in git | Observed this session | Observed on VPS (human) |
+| Question | Declared in git | Observed this session | Observed on VPS (2026-09-03 deploy) |
 |---|---|---|---|
-| **Image tag** | `quay.io/keycloak/keycloak:26.0` in `infra/docker-compose.yml` | Not in HTTP headers. Login HTML is **keycloak.v2 + PatternFly 5** (`/resources/…/login/keycloak.v2/…`), which is the Keycloak **25–26** hosted theme | *run `docker inspect`* |
-| **Exact version** (`kc.sh --version`) | Tag `26.0` (floating minor) | **Not exposed.** No `Server:` / `X-Keycloak-Version` header | *run `docker exec … /opt/keycloak/bin/kc.sh --version`* |
-| **Compose project / service** | Project **`easycasa-ita`** (`name:` in `infra/docker-compose.yml`). Service **`keycloak`**. Traefik overlay: `infra/docker-compose.traefik.yml` | Host `auth.easycasaita.com` carries the same Traefik middleware as that overlay (`permissions-policy`, HSTS 63072000, `X-XSS-Protection: 0`, `X-Frame-Options: SAMEORIGIN`) | *run `docker inspect … com.docker.compose.project/service`* |
-| **Existing mounts** | Realm import + (after EC-AUTH-1) theme bind `./keycloak/themes/easycasa` → `/opt/keycloak/themes/easycasa:ro`. DB is Postgres service `db`, database `${KEYCLOAK_DB:-keycloak}` | Recreate confirmed 2026-09-03 (`AUTH_SESSION_ID` node `.e22507eb8573-4914`). **Theme files are not in the running container** — see post-recreate probe below | *run `docker inspect … '{{json .Mounts}}'`* |
+| **Image tag** | `quay.io/keycloak/keycloak:26.0` in `infra/docker-compose.yml` | Login HTML after deploy uses `/login/easycasa/` (no PatternFly) | `docker inspect`: `quay.io/keycloak/keycloak:26.0` |
+| **Exact version** (`kc.sh --version`) | Tag `26.0` (floating minor) | Not in HTTP headers | **Keycloak 26.0.8** / JVM 21.0.6 |
+| **Compose project / service** | Project **`easycasa-ita`**. Service **`keycloak`**. Traefik overlay: `infra/docker-compose.traefik.yml` | Traefik headers match that overlay | Labels `easycasa-ita` / `keycloak`. Container `easycasa-ita-keycloak-1` |
+| **Existing mounts** | Realm import + theme bind `./keycloak/themes/easycasa` → `/opt/keycloak/themes/easycasa:ro` | Live CSS is 10413 bytes, EasyCasa header, `.ec-legal` | Realm JSON + theme bind. In-container `head -1` matches repo |
 
 **Verdict:** production Keycloak is the service in
 `infra/docker-compose.yml` + `infra/docker-compose.traefik.yml`, **not**
@@ -53,14 +53,14 @@ docker inspect "$CID" --format '{{index .Config.Labels "com.docker.compose.proje
 |---|---|
 | `GET https://auth.easycasaita.com/` | `302` → `/admin/` |
 | Issuer | `https://auth.easycasaita.com/realms/easycasa` (`.well-known/openid-configuration`) |
-| Login theme in use | Still **`keycloak.v2`** after recreate (stock PatternFly). Title `Sign in to easycasa`. No `lang` on `<html>` |
-| `ui_locales=it` | Still English. **Internationalization is off** (or only `en`). Locale switcher absent |
-| Registration | On (`Register` link rendered) |
+| Login theme in use | **`easycasa`** after 2026-09-03 deploy. Title `Accedi a easycasa`. `<html class="ec-html" lang="it">`. Mundida `ec-legal` footer |
+| `ui_locales` | `it` default (`content-language: it`). `en` → `Sign in to easycasa`. `es` → `Accede a easycasa`. Locale switcher present |
+| Registration | On |
 | Forgot password | On |
-| Remember me | **Off** (checkbox not rendered) |
+| Remember me | **On** (`Ricordami`) |
 | Social IdPs | None rendered |
-| Third-party hosts on login HTML | **None.** CSS/JS are same-origin `/resources/…` |
-| SMTP / verify-email | Not observable from HTTP. Treat as **unset** until a human confirms Realm → Email |
+| Third-party hosts on login HTML | **None.** CSS/JS same-origin `/login/easycasa/`. Legal links to `easycasaita.com` |
+| SMTP / verify-email | Live realm already has **`verifyEmail: true`**. Confirm Realm → Email SMTP before assuming verification works |
 
 Theme target is Keycloak **24–26**. Declared tag is `26.0`. If `kc.sh --version`
 reports **older than 24**, delete `infra/keycloak/themes/easycasa/login/register.ftl`
@@ -119,6 +119,23 @@ then restart Keycloak (theme cache is on in production). If `docker inspect`
 has no theme mount, the VPS compose is stale — copy `infra/docker-compose.yml`
 from `main` @ `b6028ce` or later, then recreate with `--no-build --no-deps`
 again. Then Realm → Themes → Login / Email `easycasa`.
+
+### Deployed (2026-09-03)
+
+Theme is live on `auth.easycasaita.com`. Do **not** `git pull` on the VPS to
+refresh it: `/opt/easycasa-ita` is a dirty checkout of
+`cursor/legenda-subdomain-go-live-ff78` with unrelated local edits. Deploy was
+tarball + a surgical compose patch (theme bind + `KC_SPI_THEME_WELCOME_THEME`)
++ `up -d --no-build --no-deps --force-recreate keycloak`. Compose backup:
+`infra/docker-compose.yml.bak-ec-auth-1-*`.
+
+Empty `import=` in `login/theme.properties` crashes KC 26.0.8
+(`DefaultThemeManager.processImportedTheme` AIOOBE → HTTP 500 on the CSS).
+That line must stay absent.
+
+Still human: export live user-profile before importing
+`user-profile.easycasa.json`; enable `terms_and_conditions`; confirm SMTP
+(`verifyEmail` is already true); 36 null-email users; cookie page.
 
 ---
 

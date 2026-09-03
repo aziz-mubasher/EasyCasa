@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-03T12:23:58.555Z",
+  "updatedAt": "2026-09-03T12:33:33.517Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -13,14 +13,14 @@
       "agentStatus": "IDLE",
       "agentBcId": "bc-e05bf640-1c09-4b65-9071-af4fbf40e167",
       "agentUrl": "https://cursor.com/agents/bc-e05bf640-1c09-4b65-9071-af4fbf40e167",
-      "branch": "cursor/ec-auth-1-recreate-probe-e167",
+      "branch": "cursor/ec-auth-1-import-fix-e167",
       "prNumber": 189,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/189",
       "prState": "MERGED",
       "dispatchedAt": "2026-09-03T11:35:54.041Z",
-      "updatedAt": "2026-09-03T12:23:58.555Z",
-      "summary": "MERGED #189. Recreate confirmed (node e22507eb8573-4914). Theme files NOT on container — live CSS is stock PatternFly; does-not-exist also 200s same file. Realm still keycloak.v2.",
-      "nextAction": "On VPS: confirm infra/keycloak/themes/easycasa/login/resources/css/login.css starts with EasyCasa; docker inspect theme mount; copy tree if empty; restart; then Realm Themes → easycasa.",
+      "updatedAt": "2026-09-03T12:33:33.517Z",
+      "summary": "Theme LIVE on auth.easycasaita.com. Merged #189/#191/#192. Login Accedi a easycasa, lang=it, Mundida footer, CSS 10413 EasyCasa. KC 26.0.8. VPS dirty other branch — no git pull.",
+      "nextAction": "Human: export live user-profile before import; enable terms_and_conditions; confirm realm SMTP (verifyEmail already true); 36 null-email users stay sign-inable.",
       "errors": []
     },
     {
