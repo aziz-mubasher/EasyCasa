@@ -5,6 +5,7 @@
 </#if>
 <#assign siteOrigin = properties.ecSiteOrigin!'https://easycasaita.com'>
 <#assign legendaOrigin = properties.ecLegendaOrigin!'https://legenda.easycasaita.com'>
+<#assign siteUrl = siteOrigin + "/" + langTag>
 <#assign legendaUrl = legendaOrigin + "/" + langTag>
 <#assign privacyUrl = siteOrigin + "/" + langTag + (properties.ecPrivacyPath!'/legal/privacy')>
 <#assign termsUrl = siteOrigin + "/" + langTag + (properties.ecTermsPath!'/legal/terms')>
@@ -30,11 +31,18 @@
 <body class="${properties.kcBodyClass!} ${bodyClass}">
 <div class="${properties.kcLoginClass!}">
     <header id="kc-header" class="${properties.kcHeaderClass!}">
-        <a class="${properties.kcHeaderWrapperClass!}" href="${legendaUrl}" aria-label="${msg("ecBrandAria")}">
-            <img class="ec-logo-mark" src="${url.resourcesPath}/img/logo.svg" alt="" width="40" height="40">
+        <a class="${properties.kcHeaderWrapperClass!}" href="${siteUrl}" aria-label="${msg("ecBrandAria")}">
+            <img class="ec-logo-mark" src="${url.resourcesPath}/img/logo-easycasa.png" alt="" width="40" height="40">
             <span class="ec-wordmark-stack">
                 <span class="ec-wordmark">Easy<span>Casa</span></span>
                 <span class="ec-wordmark-sub">${msg("ecBrandKicker")}</span>
+            </span>
+        </a>
+        <span class="ec-brands-sep" aria-hidden="true"></span>
+        <a class="ec-brand" href="${legendaUrl}" aria-label="${msg("ecLegendaAria")}">
+            <img class="ec-logo-mark" src="${url.resourcesPath}/img/logo-legenda.svg" alt="" width="40" height="40">
+            <span class="ec-wordmark-stack">
+                <span class="ec-wordmark">${msg("ecLegendaName")}</span>
             </span>
         </a>
     </header>
@@ -104,6 +112,21 @@
         </div>
     </main>
 </div>
+<script>
+/* Italian is the product default. Keycloak otherwise prefers Accept-Language
+   over realm defaultLocale, so Chrome en-* would render English first. */
+(function () {
+    var lang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+    if (lang.indexOf('it') === 0) return;
+    var search = window.location.search || '';
+    if (/[?&]kc_locale=/.test(search) || /[?&]ui_locales=/.test(search)) return;
+    if (document.cookie.split(';').some(function (part) {
+        return part.trim().indexOf('KEYCLOAK_LOCALE=') === 0;
+    })) return;
+    var italian = document.querySelector('#kc-locale a[hreflang="it"]');
+    if (italian && italian.href) window.location.replace(italian.href);
+})();
+</script>
 </body>
 </html>
 </#macro>

@@ -103,7 +103,7 @@ a missing bind source. Confirm on the VPS:
 
 ```bash
 # files must exist *next to* infra/docker-compose.yml
-head -1 /opt/easycasa-ita/infra/keycloak/themes/easycasa/login/resources/css/login.css
+head -1 /opt/easycasa-ita/infra/keycloak/themes/easycasa/login/resources/css/login-v2.css
 # expect: /* EasyCasa login theme — system fonts only. No CDN, no webfont host. */
 
 CID=$(docker ps --format '{{.Names}}' | grep -i keycloak | head -1)
