@@ -19,7 +19,7 @@ import { IdentityReview } from './pages/IdentityReview';
 import { VoModeration } from './pages/VoModeration';
 import { AbuseControls } from './pages/AbuseControls';
 import { PartnerDirectoryAdmin } from './pages/PartnerDirectoryAdmin';
-import { WhatsAppInbound } from './pages/WhatsAppInbound';
+import { WhatsAppChannel } from './pages/WhatsAppChannel';
 import { AsteAdmin } from './pages/AsteAdmin';
 import { CrmShell } from './pages/crm/CrmShell';
 
@@ -50,7 +50,7 @@ const NAV: { key: View; label: string; hint: string }[] = [
   { key: 'vo', label: 'Verified Owner', hint: 'VO moderation' },
   { key: 'abuse', label: 'Abuse', hint: 'Dup · suspend' },
   { key: 'partners', label: 'Partners', hint: 'Directory · T28' },
-  { key: 'whatsapp', label: 'EC WhatsApp', hint: 'Inbound · audited' },
+  { key: 'whatsapp', label: 'EC WhatsApp', hint: 'Inbox · API Hub' },
   { key: 'aste', label: 'Aste', hint: 'Analyses · waitlist' },
   { key: 'orchestration', label: 'Orchestration', hint: 'Assign tasks' },
   { key: 'compliance', label: 'Compliance', hint: 'Legal basis' },
@@ -68,7 +68,7 @@ const VIEWS: Record<View, React.ReactNode> = {
   vo: <VoModeration />,
   abuse: <AbuseControls />,
   partners: <PartnerDirectoryAdmin />,
-  whatsapp: <WhatsAppInbound />,
+  whatsapp: <WhatsAppChannel />,
   aste: <AsteAdmin />,
   orchestration: <Orchestration />,
   compliance: <ComplianceConfig />,

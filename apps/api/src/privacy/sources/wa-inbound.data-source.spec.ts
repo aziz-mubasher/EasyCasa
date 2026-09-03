@@ -41,7 +41,13 @@ function makeDb(opts: {
       where: vi.fn(() => ({
         returning: vi.fn(async () => {
           deleteCalls += 1;
-          const n = deleteCalls === 1 ? (opts.deletedOut ?? 0) : (opts.deletedIn ?? 0);
+          // Order: outbound, notes, contacts, inbound (K EC 7.4).
+          const n =
+            deleteCalls === 1
+              ? (opts.deletedOut ?? 0)
+              : deleteCalls === 4
+                ? (opts.deletedIn ?? 0)
+                : 0;
           return Array.from({ length: n }, (_, i) => ({ id: `del-${deleteCalls}-${i}` }));
         }),
       })),

@@ -12,6 +12,8 @@ import {
   type CrmRepository,
   type CrmViewingHookStage,
   type CrmViewingRef,
+  type CrmWhatsAppBriefRef,
+  type CrmWhatsAppRef,
 } from './domain/ports';
 
 /**
@@ -163,6 +165,78 @@ export class CrmHooksService implements CrmHooks {
       });
     } catch (err) {
       this.logger.warn(`CRM onB4aSweepResult failed: ${(err as Error).message}`);
+    }
+  }
+
+  async onWhatsAppInbound(e: CrmWhatsAppRef): Promise<void> {
+    if (!this.enabled()) return;
+    try {
+      const phone = e.waId.replace(/\D/g, '');
+      const e164 = phone ? `+${phone}` : null;
+      let contact = e.matchedUserId ? await this.repo.findContactByUserId(e.matchedUserId) : null;
+      if (!contact && e164) contact = await this.repo.findContactByPhone(e164);
+      const locale = e.locale === 'en' || e.locale === 'es' ? e.locale : 'it';
+      const fullName = e.contactName?.trim() || (e164 ?? 'WhatsApp');
+
+      if (!contact) {
+        contact = await this.repo.createContact({
+          userId: e.matchedUserId,
+          fullName,
+          phone: e164,
+          locale,
+          source: 'whatsapp',
+        });
+        await this.repo.upsertSeeker(contact.id, { stage: 'new_enquiry' });
+      } else {
+        contact = await this.repo.updateContact(contact.id, {
+          userId: contact.userId ?? e.matchedUserId,
+          phone: contact.phone ?? e164,
+          fullName: contact.fullName === 'Seeker' || contact.fullName === 'WhatsApp' ? fullName : contact.fullName,
+          locale: contact.locale || locale,
+        });
+      }
+
+      await this.repo.addActivity({
+        contactId: contact.id,
+        type: 'whatsapp_in',
+        body: e.bodyPreview?.slice(0, 500) || 'WhatsApp inbound',
+        refTable: 'wa_inbound_messages',
+      });
+      await this.repo.audit({
+        actorAdminId: null,
+        action: 'system_whatsapp_upsert',
+        entityType: 'crm_contact',
+        entityId: contact.id,
+        detail: { source: 'whatsapp' },
+      });
+    } catch (err) {
+      this.logger.warn(`CRM onWhatsAppInbound failed: ${(err as Error).message}`);
+    }
+  }
+
+  async onWhatsAppSearchBrief(e: CrmWhatsAppBriefRef): Promise<void> {
+    if (!this.enabled()) return;
+    try {
+      const phone = e.waId.replace(/\D/g, '');
+      const e164 = phone ? `+${phone}` : null;
+      const contact = e164 ? await this.repo.findContactByPhone(e164) : null;
+      if (!contact) return;
+      const existing = await this.repo.getSeeker(contact.id);
+      await this.repo.upsertSeeker(contact.id, {
+        searchIntent: {
+          ...((existing?.searchIntent as Record<string, unknown>) ?? {}),
+          whatsappPreference: e.searchPreference,
+          channel: 'whatsapp',
+        },
+        stage: existing?.stage ?? 'contacted',
+      });
+      await this.repo.addActivity({
+        contactId: contact.id,
+        type: 'whatsapp_in',
+        body: `Search preference: ${e.searchPreference.slice(0, 400)}`,
+      });
+    } catch (err) {
+      this.logger.warn(`CRM onWhatsAppSearchBrief failed: ${(err as Error).message}`);
     }
   }
 }

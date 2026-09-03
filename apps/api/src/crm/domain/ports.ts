@@ -137,15 +137,32 @@ export interface CrmContact360 {
  * §8 CRM_HOOKS — sanctioned integration (no domain EventEmitter).
  * Implementations must be fire-safe (catch internally); callers also use crmFireSafe.
  */
+export interface CrmWhatsAppRef {
+  waId: string;
+  contactName: string | null;
+  locale: string | null;
+  bodyPreview: string | null;
+  matchedUserId: string | null;
+}
+
+export interface CrmWhatsAppBriefRef {
+  waId: string;
+  locale: string;
+  searchPreference: string;
+}
+
 export interface CrmHooks {
   onEnquiryCreated(e: CrmEnquiryRef): Promise<void>;
   onViewingTransition(v: CrmViewingRef, to: CrmViewingHookStage): Promise<void>;
   onB4aSweepResult(r: CrmB4aSweepRow): Promise<void>;
+  onWhatsAppInbound(e: CrmWhatsAppRef): Promise<void>;
+  onWhatsAppSearchBrief(e: CrmWhatsAppBriefRef): Promise<void>;
 }
 
 export interface CrmRepository {
   findContactById(id: string): Promise<CrmContact | null>;
   findContactByEmail(email: string): Promise<CrmContact | null>;
+  findContactByPhone(phone: string): Promise<CrmContact | null>;
   findContactByUserId(userId: string): Promise<CrmContact | null>;
   listContacts(filter: {
     query?: string;

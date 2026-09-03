@@ -12,11 +12,12 @@ import { InjectConfig } from '../config/inject-config.decorator';
 import { AdminAuditService } from '../authority/admin-audit.service';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { adminAuditLog, waInboundMessages, waThreadOutbound } from '../db/schema';
+import { adminAuditLog, waInboundMessages, waThreadNotes, waThreadOutbound } from '../db/schema';
 import { maskWaId, redactPreview } from './redact';
 import { waHandleFor } from './wa-handle';
 import { toE164 } from './whatsapp-inbound.service';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
+import { WhatsAppJourneyService } from './whatsapp-journey.service';
 
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
 const DEFAULT_LIMIT = 25;
@@ -106,6 +107,7 @@ export class WhatsAppInboundAdminService {
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly audit: AdminAuditService,
     private readonly cloud: WhatsAppCloudClient,
+    private readonly journey: WhatsAppJourneyService,
     @InjectConfig() private readonly config: ApiConfig,
   ) {}
 
@@ -400,7 +402,7 @@ export class WhatsAppInboundAdminService {
       forwardedAt: string | null;
       forwardError: string | null;
       createdAt: string | null;
-      source: 'auto_ack' | 'operator' | null;
+      source: 'auto_ack' | 'operator' | 'journey' | null;
       actorUserId: string | null;
     };
 
@@ -436,7 +438,12 @@ export class WhatsAppInboundAdminService {
       forwardedAt: null,
       forwardError: null,
       createdAt: null,
-      source: r.source === 'operator' ? ('operator' as const) : ('auto_ack' as const),
+      source:
+        r.source === 'operator'
+          ? ('operator' as const)
+          : r.source === 'journey'
+            ? ('journey' as const)
+            : ('auto_ack' as const),
       actorUserId: r.actorUserId,
     }));
 
@@ -446,22 +453,77 @@ export class WhatsAppInboundAdminService {
       return a.id.localeCompare(b.id);
     });
 
+    const contact = await this.journey.getByWaId(waId);
+
     return {
       waHandle: handle,
       waId,
       waIdMasked: maskWaId(waId),
       waIdE164: toE164(waId),
       contactName,
-      canReply: windowStateAt(latestExpiry, now) !== 'closed',
+      canReply: windowStateAt(latestExpiry, now) !== 'closed' && !contact?.blockedAt,
       windowState: windowStateAt(latestExpiry, now),
       windowExpiresAt: windowRow[0] ? latestExpiry.toISOString() : null,
       windowRemainingMs: windowRow[0] ? remainingMs(latestExpiry, now) : 0,
+      language: contact?.language ?? null,
+      contactType: contact?.contactType ?? 'lead',
+      journeyStep: contact?.journeyStep ?? 'none',
+      blocked: Boolean(contact?.blockedAt),
+      crmContactId: contact?.crmContactId ?? null,
+      matchedUserId: contact?.matchedUserId ?? null,
       auditId,
       messagesRevealed: page.length + outbound.length,
       items,
       /** @deprecated keep for older clients — same as items filtered to inbound */
       nextCursor,
     };
+  }
+
+  async listNotes(handle: string) {
+    const waId = await this.resolveHandle(handle);
+    const rows = await this.db
+      .select()
+      .from(waThreadNotes)
+      .where(eq(waThreadNotes.waId, waId))
+      .orderBy(desc(waThreadNotes.createdAt));
+    return {
+      items: rows.map((r) => ({
+        id: r.id,
+        body: r.body,
+        actorUserId: r.actorUserId,
+        createdAt: r.createdAt.toISOString(),
+      })),
+    };
+  }
+
+  async addNote(handle: string, actorUserId: string, bodyRaw: string) {
+    const body = bodyRaw.trim();
+    if (!body) throw new BadRequestException('note body required');
+    const waId = await this.resolveHandle(handle);
+    const [row] = await this.db
+      .insert(waThreadNotes)
+      .values({ waId, waHandle: handle, body, actorUserId })
+      .returning();
+    await this.audit.record({
+      actorUserId,
+      action: 'whatsapp_thread_note',
+      resourceType: 'wa_inbound_thread',
+      resourceId: waId,
+      reason: `note ${row!.id}`,
+    });
+    return { id: row!.id, createdAt: row!.createdAt.toISOString() };
+  }
+
+  async setBlocked(handle: string, actorUserId: string, blocked: boolean) {
+    const waId = await this.resolveHandle(handle);
+    const blockedAt = await this.journey.setBlocked(waId, blocked);
+    await this.audit.record({
+      actorUserId,
+      action: blocked ? 'whatsapp_thread_block' : 'whatsapp_thread_unblock',
+      resourceType: 'wa_inbound_thread',
+      resourceId: waId,
+    });
+    return { blocked: Boolean(blockedAt), blockedAt: blockedAt?.toISOString() ?? null };
   }
 
   /**
@@ -489,6 +551,10 @@ export class WhatsAppInboundAdminService {
     const expires = windowRow[0]?.windowExpiresAt;
     if (!expires || windowStateAt(expires, now) === 'closed') {
       throw new BadRequestException('customer service window is closed — free-form reply not allowed');
+    }
+    const contact = await this.journey.getByWaId(waId);
+    if (contact?.blockedAt) {
+      throw new BadRequestException('contact is blocked');
     }
 
     const send = await this.cloud.sendText(toE164(waId), body);

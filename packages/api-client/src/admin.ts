@@ -392,6 +392,50 @@ export class EasyCasaAdminApi {
       { method: 'POST', body: JSON.stringify({ body }) },
     );
   }
+  listWhatsAppNotes(handle: string): Promise<unknown> {
+    return this.request(
+      `/admin/whatsapp/inbound/${encodeURIComponent(handle)}/notes`,
+      z.unknown(),
+    );
+  }
+  addWhatsAppNote(handle: string, body: string): Promise<unknown> {
+    return this.request(
+      `/admin/whatsapp/inbound/${encodeURIComponent(handle)}/notes`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify({ body }) },
+    );
+  }
+  setWhatsAppBlocked(handle: string, blocked: boolean): Promise<unknown> {
+    return this.request(
+      `/admin/whatsapp/inbound/${encodeURIComponent(handle)}/block`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify({ blocked }) },
+    );
+  }
+  getWhatsAppHubConnection(): Promise<unknown> {
+    return this.request('/admin/whatsapp/hub/connection', z.unknown());
+  }
+  getWhatsAppHubTemplates(): Promise<unknown> {
+    return this.request('/admin/whatsapp/hub/templates', z.unknown());
+  }
+  getWhatsAppHubAnalytics(days?: number): Promise<unknown> {
+    const q = days != null ? `?days=${encodeURIComponent(String(days))}` : '';
+    return this.request(`/admin/whatsapp/hub/analytics${q}`, z.unknown());
+  }
+  listWhatsAppCanned(): Promise<unknown> {
+    return this.request('/admin/whatsapp/hub/canned', z.unknown());
+  }
+  createWhatsAppCanned(body: { title: string; body: string; locale?: string }): Promise<unknown> {
+    return this.request('/admin/whatsapp/hub/canned', z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+  deleteWhatsAppCanned(id: string): Promise<unknown> {
+    return this.request(`/admin/whatsapp/hub/canned/${encodeURIComponent(id)}`, z.unknown(), {
+      method: 'DELETE',
+    });
+  }
 
   /* EC-26 — Aste ops admin */
   listAsteAnalyses(params?: {

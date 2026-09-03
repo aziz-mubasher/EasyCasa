@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 
 import { DRIZZLE } from '../../db/db.module';
 import type { Db } from '../../db/drizzle';
-import { users, waInboundMessages, waThreadOutbound } from '../../db/schema';
+import { users, waContacts, waInboundMessages, waThreadNotes, waThreadOutbound } from '../../db/schema';
 import type {
   CollectedData,
   ErasureOutcome,
@@ -89,13 +89,21 @@ export class WaInboundDataSource implements PersonalDataSource {
       .delete(waThreadOutbound)
       .where(eq(waThreadOutbound.waId, waId))
       .returning({ id: waThreadOutbound.id });
+    const deletedNotes = await this.db
+      .delete(waThreadNotes)
+      .where(eq(waThreadNotes.waId, waId))
+      .returning({ id: waThreadNotes.id });
+    const deletedContacts = await this.db
+      .delete(waContacts)
+      .where(eq(waContacts.waId, waId))
+      .returning({ waId: waContacts.waId });
     const deletedIn = await this.db
       .delete(waInboundMessages)
       .where(eq(waInboundMessages.waId, waId))
       .returning({ id: waInboundMessages.id });
     return {
       source: this.source,
-      erased: deletedIn.length + deletedOut.length,
+      erased: deletedIn.length + deletedOut.length + deletedNotes.length + deletedContacts.length,
       retainedUnderLegalHold: 0,
     };
   }

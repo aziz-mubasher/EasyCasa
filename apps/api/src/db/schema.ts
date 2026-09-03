@@ -692,6 +692,56 @@ export const phoneOtpChallenges = pgTable('phone_otp_challenges', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** K EC 7.4 — per-phone journey + CRM link (B4A contact analogue). */
+export const waContacts = pgTable(
+  'wa_contacts',
+  {
+    waId: text('wa_id').primaryKey(),
+    waHandle: text('wa_handle'),
+    language: text('language'),
+    greetingSentAt: timestamp('greeting_sent_at', { withTimezone: true }),
+    lastLanguagePromptAt: timestamp('last_language_prompt_at', { withTimezone: true }),
+    lastInboundAt: timestamp('last_inbound_at', { withTimezone: true }),
+    lastCasualPromptAt: timestamp('last_casual_prompt_at', { withTimezone: true }),
+    journeyStep: text('journey_step').notNull().default('none'),
+    contactType: text('contact_type').notNull().default('lead'),
+    blockedAt: timestamp('blocked_at', { withTimezone: true }),
+    crmContactId: uuid('crm_contact_id'),
+    matchedUserId: uuid('matched_user_id'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    handleIdx: index('wa_contacts_handle_idx').on(t.waHandle),
+  }),
+);
+
+/** K EC 7.4 — operator canned replies (API Hub). */
+export const waCannedReplies = pgTable('wa_canned_replies', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  title: text('title').notNull(),
+  body: text('body').notNull(),
+  locale: text('locale').notNull().default('it'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** K EC 7.4 — staff notes on a WhatsApp thread (not sent to Meta). */
+export const waThreadNotes = pgTable(
+  'wa_thread_notes',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    waId: text('wa_id').notNull(),
+    waHandle: text('wa_handle'),
+    body: text('body').notNull(),
+    actorUserId: uuid('actor_user_id'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    waIdIdx: index('wa_thread_notes_wa_id_idx').on(t.waId, t.createdAt),
+  }),
+);
+
 /** EC-16 — WhatsApp Cloud send/status (no body content). */
 export const whatsappMessages = pgTable('whatsapp_messages', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -1382,7 +1432,8 @@ export const schema = {
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,
-  authorityAuditLog, phoneOtpChallenges, whatsappMessages, adminAuditLog,
+  authorityAuditLog, phoneOtpChallenges, whatsappMessages, waContacts, waCannedReplies,
+  waThreadNotes, adminAuditLog,
   dsarAdminRequests, listingReports, identityReviewRequests,
   leases, kycCases,
   paymentIntents, invoices, stripeWebhookEvents,

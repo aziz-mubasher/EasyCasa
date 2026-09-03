@@ -1,21 +1,20 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { and, eq, gt, isNotNull } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { waInboundMessages, waThreadOutbound } from '../db/schema';
+import { waInboundMessages } from '../db/schema';
 import { EmailService } from '../email/email.service';
 import {
-  whatsappAutoReplySent,
   whatsappAutoReplySuppressed,
   whatsappInboundDuplicate,
   whatsappInboundForwardFailed,
   whatsappInboundReceived,
 } from '../observability/metrics';
 import { waHandleFor } from './wa-handle';
-import { WhatsAppCloudClient } from './whatsapp-cloud.client';
+import { WhatsAppJourneyService } from './whatsapp-journey.service';
 
 const WINDOW_MS = 24 * 60 * 60 * 1000;
 
@@ -34,6 +33,8 @@ export type ParsedInboundMessage = {
   contactName: string | null;
   receivedAt: Date;
   windowExpiresAt: Date;
+  /** Interactive list/button reply id (journey). */
+  interactiveReplyId: string | null;
 };
 
 /**
@@ -46,9 +47,9 @@ export class WhatsAppInboundService {
 
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
-    private readonly cloud: WhatsAppCloudClient,
     private readonly email: EmailService,
     @InjectConfig() private readonly config: ApiConfig,
+    private readonly journey: WhatsAppJourneyService,
   ) {}
 
   /** Insert new messages; return internal ids that need post-response handling. */
@@ -102,59 +103,14 @@ export class WhatsAppInboundService {
     const row = rows[0];
     if (!row) return;
 
-    await this.maybeAutoReply(row);
-    await this.forwardToOps(row);
-  }
-
-  private async maybeAutoReply(row: typeof waInboundMessages.$inferSelect): Promise<void> {
     if (isStopWord(row.body)) {
       whatsappAutoReplySuppressed.inc({ reason: 'stop_word' });
-      return;
-    }
-    if (row.windowExpiresAt.getTime() <= Date.now()) {
+    } else if (row.windowExpiresAt.getTime() <= Date.now()) {
       whatsappAutoReplySuppressed.inc({ reason: 'window_closed' });
-      return;
+    } else {
+      await this.journey.handleInboundRow(id);
     }
-
-    const recent = await this.db
-      .select({ id: waInboundMessages.id })
-      .from(waInboundMessages)
-      .where(
-        and(
-          eq(waInboundMessages.waId, row.waId),
-          isNotNull(waInboundMessages.autoRepliedAt),
-          gt(waInboundMessages.autoRepliedAt, new Date(Date.now() - WINDOW_MS)),
-        ),
-      )
-      .limit(1);
-    if (recent.length) {
-      whatsappAutoReplySuppressed.inc({ reason: 'already_replied' });
-      return;
-    }
-
-    const send = await this.cloud.sendText(toE164(row.waId), AUTO_REPLY_TEXT);
-    if (!send.ok) {
-      whatsappAutoReplySuppressed.inc({ reason: 'send_failed' });
-      this.log.warn(`auto-reply send failed id=${row.id} reason=${send.reason}`);
-      return;
-    }
-
-    const sentAt = new Date();
-    await this.db
-      .update(waInboundMessages)
-      .set({ autoRepliedAt: sentAt })
-      .where(eq(waInboundMessages.id, row.id));
-    await this.db.insert(waThreadOutbound).values({
-      waId: row.waId,
-      waHandle: row.waHandle ?? waHandleFor(row.waId, this.config.WA_HANDLE_SECRET),
-      providerMessageId: send.messageId,
-      body: AUTO_REPLY_TEXT,
-      source: 'auto_ack',
-      actorUserId: null,
-      sentAt,
-    });
-    whatsappAutoReplySent.inc();
-    this.log.log(`auto-reply sent id=${row.id}`);
+    await this.forwardToOps(row);
   }
 
   private async forwardToOps(row: typeof waInboundMessages.$inferSelect): Promise<void> {
@@ -244,7 +200,11 @@ export function extractInboundMessages(payload: unknown): ParsedInboundMessage[]
             video?: { caption?: string; id?: string; mime_type?: string };
             document?: { caption?: string; filename?: string; id?: string; mime_type?: string };
             location?: { latitude?: number; longitude?: number; name?: string; address?: string };
-            interactive?: { type?: string };
+            interactive?: {
+              type?: string;
+              button_reply?: { id?: string; title?: string };
+              list_reply?: { id?: string; title?: string };
+            };
             button?: { text?: string; payload?: string };
           }>;
         };
@@ -270,6 +230,7 @@ export function extractInboundMessages(payload: unknown): ParsedInboundMessage[]
 
         const messageType = (message.type || 'unknown').trim() || 'unknown';
         const body = extractMessageBody(messageType, message);
+        const interactiveReplyId = extractInteractiveReplyId(message);
 
         const tsSec = Number(message.timestamp);
         const receivedAt = Number.isFinite(tsSec) && tsSec > 0 ? new Date(tsSec * 1000) : new Date();
@@ -284,6 +245,7 @@ export function extractInboundMessages(payload: unknown): ParsedInboundMessage[]
           contactName: nameByWaId.get(waId) ?? null,
           receivedAt,
           windowExpiresAt,
+          interactiveReplyId,
         });
       }
     }
@@ -301,6 +263,11 @@ function extractMessageBody(
     document?: { caption?: string; filename?: string; id?: string; mime_type?: string };
     location?: { latitude?: number; longitude?: number; name?: string; address?: string };
     button?: { text?: string; payload?: string };
+    interactive?: {
+      type?: string;
+      button_reply?: { id?: string; title?: string };
+      list_reply?: { id?: string; title?: string };
+    };
   },
 ): string | null {
   if (messageType === 'text') {
@@ -359,6 +326,32 @@ function extractMessageBody(
       Boolean,
     );
     return parts.length ? parts.join(' · ') : null;
+  }
+  if (messageType === 'interactive') {
+    const reply = message.interactive?.button_reply ?? message.interactive?.list_reply;
+    const title = reply?.title?.trim();
+    const id = reply?.id?.trim();
+    const parts = [title ? `reply: ${title}` : null, id ? `id: ${id}` : null].filter(Boolean);
+    return parts.length ? parts.join(' · ') : null;
+  }
+  return null;
+}
+
+export function extractInteractiveReplyId(message: {
+  type?: string;
+  button?: { payload?: string };
+  interactive?: {
+    button_reply?: { id?: string };
+    list_reply?: { id?: string };
+  };
+}): string | null {
+  const fromInteractive =
+    message.interactive?.button_reply?.id?.trim() ||
+    message.interactive?.list_reply?.id?.trim() ||
+    null;
+  if (fromInteractive) return fromInteractive;
+  if (message.type === 'button') {
+    return message.button?.payload?.trim() || null;
   }
   return null;
 }

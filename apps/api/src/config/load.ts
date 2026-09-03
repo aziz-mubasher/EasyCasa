@@ -60,6 +60,10 @@ const Schema = z
     WHATSAPP_VIEWING_CONFIRMED_TEMPLATE: z.string().default(''),
     WHATSAPP_VIEWING_CANCELLED_TEMPLATE: z.string().default(''),
     WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE: z.string().default(''),
+    /** K EC 7.4 — public listing portal CTA (session). Not a Meta secret. */
+    WHATSAPP_PUBLIC_SITE_URL: z.string().default('https://easycasaita.com'),
+    /** Display-only E.164 for the EC number. Empty → Hub hides it. Never reuse B4A's number. */
+    WHATSAPP_BUSINESS_NUMBER: z.string().default(''),
     PHONE_OTP_PEPPER: z.string().min(16).default('dev-phone-otp-pepper-change-me'),
 
     // Billing (Stripe — hosted checkout, no card data on our servers)
