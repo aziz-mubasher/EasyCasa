@@ -76,6 +76,9 @@ describe('easycasa Keycloak login/email theme', () => {
     expect(props.get('ecPolicyVersion')).toBe('2026-09-v1');
     expect(props.get('styles')).toBe('css/login.css');
     expect(props.get('stylesCommon') ?? '').toBe('');
+    // KC 26 DefaultThemeManager.processImportedTheme splits import on "/".
+    // An empty `import=` is a one-element array and throws AIOOBE (HTTP 500 on CSS).
+    expect(props.has('import')).toBe(false);
     expect(read(path.join(THEME, 'POLICY-CHANGELOG.md'))).toContain('2026-09-v1');
   });
 
