@@ -52,7 +52,7 @@ const TimelineItemSchema = z.object({
   forwardedAt: z.string().nullable(),
   forwardError: z.string().nullable(),
   createdAt: z.string().nullable(),
-  source: z.enum(['auto_ack', 'operator']).nullable(),
+  source: z.enum(['auto_ack', 'operator', 'journey']).nullable(),
   actorUserId: z.string().nullable(),
 });
 
@@ -63,6 +63,11 @@ const DetailSchema = z.object({
   waIdE164: z.string().optional(),
   contactName: z.string().nullable().optional(),
   canReply: z.boolean().optional(),
+  language: z.string().nullable().optional(),
+  contactType: z.string().optional(),
+  journeyStep: z.string().optional(),
+  blocked: z.boolean().optional(),
+  crmContactId: z.string().nullable().optional(),
   windowState: z.enum(['open', 'closing_soon', 'closed']),
   windowExpiresAt: z.string().nullable(),
   windowRemainingMs: z.number(),
@@ -120,6 +125,7 @@ export function WhatsAppInbound() {
   const [windowFilter, setWindowFilter] = useState<'all' | 'open' | 'closed'>('all');
   const [replyText, setReplyText] = useState('');
   const [replyError, setReplyError] = useState<string | null>(null);
+  const [noteText, setNoteText] = useState('');
   const threadScrollRef = useRef<HTMLDivElement>(null);
   const stickToBottom = useRef(true);
 
@@ -134,6 +140,7 @@ export function WhatsAppInbound() {
   useEffect(() => {
     setReplyText('');
     setReplyError(null);
+    setNoteText('');
     stickToBottom.current = true;
   }, [selectedHandle]);
 
@@ -169,6 +176,47 @@ export function WhatsAppInbound() {
       );
     },
     getNextPageParam: (last) => last.nextCursor ?? undefined,
+  });
+
+  const notes = useQuery({
+    queryKey: ['wa-inbound', selectedHandle, 'notes'],
+    enabled: Boolean(selectedHandle),
+    queryFn: async () => {
+      if (!selectedHandle) throw new Error('no handle');
+      return z
+        .object({
+          items: z.array(
+            z.object({
+              id: z.string(),
+              body: z.string(),
+              actorUserId: z.string().nullable(),
+              createdAt: z.string(),
+            }),
+          ),
+        })
+        .parse(await api.listWhatsAppNotes(selectedHandle));
+    },
+  });
+
+  const addNote = useMutation({
+    mutationFn: async (body: string) => {
+      if (!selectedHandle) throw new Error('no handle');
+      return api.addWhatsAppNote(selectedHandle, body);
+    },
+    onSuccess: async () => {
+      setNoteText('');
+      await qc.invalidateQueries({ queryKey: ['wa-inbound', selectedHandle, 'notes'] });
+    },
+  });
+
+  const block = useMutation({
+    mutationFn: async (blocked: boolean) => {
+      if (!selectedHandle) throw new Error('no handle');
+      return api.setWhatsAppBlocked(selectedHandle, blocked);
+    },
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ['wa-inbound', selectedHandle, 'messages'] });
+    },
   });
 
   const reply = useMutation({
@@ -361,7 +409,24 @@ export function WhatsAppInbound() {
                 {head ? (
                   <WindowCountdown state={head.windowState} remainingMs={head.windowRemainingMs} />
                 ) : null}
+                <button
+                  type="button"
+                  className="btn btn--sm"
+                  disabled={block.isPending}
+                  onClick={() => block.mutate(!head?.blocked)}
+                >
+                  {head?.blocked ? 'Unblock' : 'Block'}
+                </button>
               </div>
+              {head ? (
+                <p className="ecwa__journey-meta muted">
+                  {head.language ? `${head.language} · ` : ''}
+                  {head.contactType ?? 'lead'}
+                  {head.journeyStep && head.journeyStep !== 'none' ? ` · ${head.journeyStep}` : ''}
+                  {head.blocked ? ' · blocked' : ''}
+                  {head.crmContactId ? ' · CRM linked' : ''}
+                </p>
+              ) : null}
 
               <div
                 className="ecwa__thread-scroll"
@@ -409,6 +474,37 @@ export function WhatsAppInbound() {
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              <div className="ecwa__notes">
+                <p className="ecwa__notes-label muted">Staff notes (not sent to WhatsApp)</p>
+                <ul className="ecwa__notes-list">
+                  {(notes.data?.items ?? []).map((n) => (
+                    <li key={n.id}>
+                      <span className="mono muted">{formatClock(n.createdAt)}</span> {n.body}
+                    </li>
+                  ))}
+                </ul>
+                <form
+                  className="ecwa__notes-form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const body = noteText.trim();
+                    if (!body || addNote.isPending) return;
+                    addNote.mutate(body);
+                  }}
+                >
+                  <input
+                    className="ecwa__composer-input"
+                    placeholder="Add an internal note"
+                    value={noteText}
+                    maxLength={4096}
+                    onChange={(e) => setNoteText(e.target.value)}
+                  />
+                  <button type="submit" className="btn btn--sm" disabled={!noteText.trim() || addNote.isPending}>
+                    Note
+                  </button>
+                </form>
               </div>
 
               <form

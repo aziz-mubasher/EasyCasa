@@ -3,7 +3,7 @@ import { and, isNull, lt, sql } from 'drizzle-orm';
 
 import { DRIZZLE } from '../../db/db.module';
 import type { Db } from '../../db/drizzle';
-import { enquiries, waInboundMessages, waThreadOutbound } from '../../db/schema';
+import { enquiries, waContacts, waInboundMessages, waThreadNotes, waThreadOutbound } from '../../db/schema';
 import type { RetentionSink } from '../retention.service';
 
 /**
@@ -41,10 +41,18 @@ export class DrizzleRetentionSink implements RetentionSink {
       .delete(waThreadOutbound)
       .where(lt(waThreadOutbound.createdAt, cutoff))
       .returning({ id: waThreadOutbound.id });
+    const deletedNotes = await this.db
+      .delete(waThreadNotes)
+      .where(lt(waThreadNotes.createdAt, cutoff))
+      .returning({ id: waThreadNotes.id });
+    const deletedContacts = await this.db
+      .delete(waContacts)
+      .where(lt(waContacts.updatedAt, cutoff))
+      .returning({ waId: waContacts.waId });
     const deletedIn = await this.db
       .delete(waInboundMessages)
       .where(lt(waInboundMessages.createdAt, cutoff))
       .returning({ id: waInboundMessages.id });
-    return deletedIn.length + deletedOut.length;
+    return deletedIn.length + deletedOut.length + deletedNotes.length + deletedContacts.length;
   }
 }

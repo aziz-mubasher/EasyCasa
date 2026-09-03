@@ -40,6 +40,8 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     WHATSAPP_VIEWING_CONFIRMED_TEMPLATE: '',
     WHATSAPP_VIEWING_CANCELLED_TEMPLATE: '',
     WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE: '',
+    WHATSAPP_PUBLIC_SITE_URL: 'https://easycasaita.com',
+    WHATSAPP_BUSINESS_NUMBER: '',
     PHONE_OTP_PEPPER: 'test-phone-otp-pepper-xx',
     STRIPE_SECRET_KEY: '',
     STRIPE_WEBHOOK_SECRET: '',

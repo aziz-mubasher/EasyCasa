@@ -16,7 +16,10 @@ template approval.
 
 Webhook: `https://easycasaita.com/api/whatsapp/webhook`
 
-Admin inbox: `https://admin.easycasaita.com/#whatsapp` (**EC WhatsApp**).
+Admin inbox + Hub: `https://admin.easycasaita.com/#whatsapp` (**EC WhatsApp**).
+Health (no secrets): `https://easycasaita.com/api/whatsapp/webhook/status`
+
+First inbound from a new number now sends the **language list** (not the old email-only ack). Established portal clients skip automation.
 
 **Meta field subscription (2026-08-02):** the app callback URL was active but
 `fields` had **no `messages`** — inbound POSTs never left Meta. Re-subscribe with

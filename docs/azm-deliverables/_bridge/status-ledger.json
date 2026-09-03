@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-03T15:16:58.275Z",
+  "updatedAt": "2026-09-03T19:46:04.116Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_whatsapp_channel",
+      "kaizenCode": "K EC 7.4",
+      "polishId": "EC-21",
+      "title": "K EC 7.4 — EC WhatsApp channel (inbox + API Hub + first-contact)",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-bb45221b-baea-4a36-a15c-841c443a0bb0",
+      "agentUrl": "https://cursor.com/agents/bc-bb45221b-baea-4a36-a15c-841c443a0bb0",
+      "branch": "cursor/ec-whatsapp-channel-hub-0bb0",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-09-03T19:46:04.116Z",
+      "updatedAt": "2026-09-03T19:46:04.116Z",
+      "summary": "Running: copying B4A WhatsApp shape (one webhook, one send, inbox + Hub tabs, language-first journey, CRM phone sync). Own WABA. No credit copy.",
+      "nextAction": "Wait for draft PR; then review Hub + journey copy against T04 rows 4/5.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_auth_1",
       "kaizenCode": "K EC AUTH-1",

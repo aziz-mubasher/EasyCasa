@@ -124,6 +124,38 @@ describe('WhatsApp inbound helpers', () => {
     expect(isStopWord(' basta ')).toBe(true);
     expect(isStopWord('please STOP later')).toBe(false);
   });
+
+  it('extracts interactive list/button reply ids', () => {
+    const payload = {
+      object: 'whatsapp_business_account',
+      entry: [
+        {
+          changes: [
+            {
+              value: {
+                metadata: { phone_number_id: 'pnid' },
+                messages: [
+                  {
+                    id: 'wamid.btn',
+                    from: '393331112233',
+                    timestamp: '1720000000',
+                    type: 'interactive',
+                    interactive: {
+                      type: 'button_reply',
+                      button_reply: { id: 'book_viewing', title: 'Prenota visita' },
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const parsed = extractInboundMessages(payload);
+    expect(parsed[0]!.interactiveReplyId).toBe('book_viewing');
+    expect(parsed[0]!.body).toContain('id: book_viewing');
+  });
 });
 
 describe('WhatsAppService / CloudClient (Phase A + EC-16 + EC-17)', () => {
@@ -323,8 +355,8 @@ describe('WhatsAppInboundService process rules', () => {
       }),
     };
 
-    const cloud = {
-      sendText: vi.fn(),
+    const journey = {
+      handleInboundRow: vi.fn(),
     };
     const email = {
       sendText: vi.fn().mockResolvedValue({ provider: 'smtp', delivered: true }),
@@ -332,12 +364,12 @@ describe('WhatsAppInboundService process rules', () => {
 
     const svc = new WhatsAppInboundService(
       db as never,
-      cloud as never,
       email as never,
       cfg() as never,
+      journey as never,
     );
     await svc.handleAfterPersist(['row-1']);
-    expect(cloud.sendText).not.toHaveBeenCalled();
+    expect(journey.handleInboundRow).not.toHaveBeenCalled();
     expect(email.sendText).toHaveBeenCalledOnce();
     const [, subject, text] = email.sendText.mock.calls[0] as [string, string, string];
     expect(subject).toBe('1 new inbound WhatsApp message');
@@ -377,11 +409,12 @@ describe('WhatsAppInboundService process rules', () => {
     const email = {
       sendText: vi.fn().mockResolvedValue({ provider: 'smtp', delivered: true }),
     };
+    const journey = { handleInboundRow: vi.fn().mockResolvedValue(undefined) };
     const svc = new WhatsAppInboundService(
       db as never,
-      { sendText: vi.fn() } as never,
       email as never,
       cfg({ WA_INBOUND_EMAIL_FORWARD: true }) as never,
+      journey as never,
     );
     await svc.handleAfterPersist(['row-fwd']);
     const [, , text] = email.sendText.mock.calls[0] as [string, string, string];
@@ -422,16 +455,16 @@ describe('WhatsAppInboundService process rules', () => {
       }),
     };
 
-    const cloud = { sendText: vi.fn() };
+    const journey = { handleInboundRow: vi.fn().mockResolvedValue(undefined) };
     const email = {
       sendText: vi.fn().mockRejectedValue(new Error('smtp down')),
     };
 
     const svc = new WhatsAppInboundService(
       db as never,
-      cloud as never,
       email as never,
       cfg() as never,
+      journey as never,
     );
     await expect(svc.handleAfterPersist(['row-2'])).resolves.toBeUndefined();
     expect(sets.some((s) => typeof s.forwardError === 'string')).toBe(true);

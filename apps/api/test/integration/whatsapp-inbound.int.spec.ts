@@ -137,20 +137,13 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
     const from = '393399998888';
     expect((await post(textPayload({ id: 'wamid.ec17.a', from, body: 'one' }))).status).toBe(200);
     await vi.waitFor(async () => expect(await countRows('wamid.ec17.a')).toBe(1));
-    const sendsAfterFirst = fetchMock.mock.calls.filter((c) => {
-      const body = JSON.parse(String(c[1]?.body ?? '{}'));
-      return body.type === 'text';
-    }).length;
+    const sendsAfterFirst = fetchMock.mock.calls.length;
 
     expect((await post(textPayload({ id: 'wamid.ec17.b', from, body: 'two' }))).status).toBe(200);
     await vi.waitFor(async () => expect(await countRows('wamid.ec17.b')).toBe(1));
     await new Promise((r) => setTimeout(r, 300));
 
-    const textSends = fetchMock.mock.calls.filter((c) => {
-      const body = JSON.parse(String(c[1]?.body ?? '{}'));
-      return body.type === 'text';
-    }).length;
-    expect(textSends).toBe(sendsAfterFirst); // second message suppressed
+    expect(fetchMock.mock.calls.length).toBe(sendsAfterFirst); // language cooldown — one journey send
   });
 
   it('6. statuses-only → no inbound row', async () => {

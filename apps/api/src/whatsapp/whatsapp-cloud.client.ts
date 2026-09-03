@@ -91,13 +91,105 @@ export class WhatsAppCloudClient {
     if (!bodyText) return { ok: false, reason: 'not_configured' };
 
     const to = phoneE164.replace(/^\+/, '');
-    const url = `https://graph.facebook.com/${this.config.WHATSAPP_GRAPH_VERSION}/${this.config.WHATSAPP_PHONE_NUMBER_ID}/messages`;
+    const url = this.messagesUrl();
     return this.postMessages(url, {
       messaging_product: 'whatsapp',
       to,
       type: 'text',
       text: { body: bodyText },
     });
+  }
+
+  /** Interactive reply buttons (max 3). Session window only. */
+  async sendInteractiveButtons(
+    phoneE164: string,
+    bodyText: string,
+    buttons: Array<{ id: string; title: string }>,
+  ): Promise<WhatsAppSendResult> {
+    if (!this.configured) return { ok: false, reason: 'not_configured' };
+    const text = bodyText.trim();
+    if (!text || buttons.length === 0) return { ok: false, reason: 'not_configured' };
+    return this.postMessages(this.messagesUrl(), {
+      messaging_product: 'whatsapp',
+      to: phoneE164.replace(/^\+/, ''),
+      type: 'interactive',
+      interactive: {
+        type: 'button',
+        body: { text },
+        action: {
+          buttons: buttons.slice(0, 3).map((b) => ({
+            type: 'reply',
+            reply: { id: b.id, title: b.title.slice(0, 20) },
+          })),
+        },
+      },
+    });
+  }
+
+  /** Interactive list (language picker). Session window only. */
+  async sendInteractiveList(
+    phoneE164: string,
+    bodyText: string,
+    buttonLabel: string,
+    rows: Array<{ id: string; title: string; description?: string }>,
+  ): Promise<WhatsAppSendResult> {
+    if (!this.configured) return { ok: false, reason: 'not_configured' };
+    const text = bodyText.trim();
+    if (!text || rows.length === 0) return { ok: false, reason: 'not_configured' };
+    return this.postMessages(this.messagesUrl(), {
+      messaging_product: 'whatsapp',
+      to: phoneE164.replace(/^\+/, ''),
+      type: 'interactive',
+      interactive: {
+        type: 'list',
+        body: { text },
+        action: {
+          button: buttonLabel.slice(0, 20),
+          sections: [
+            {
+              title: buttonLabel.slice(0, 24),
+              rows: rows.slice(0, 10).map((r) => ({
+                id: r.id,
+                title: r.title.slice(0, 24),
+                ...(r.description ? { description: r.description.slice(0, 72) } : {}),
+              })),
+            },
+          ],
+        },
+      },
+    });
+  }
+
+  /** CTA URL button (session). Used for "open listings" — not a template. */
+  async sendCtaUrl(
+    phoneE164: string,
+    bodyText: string,
+    displayText: string,
+    url: string,
+  ): Promise<WhatsAppSendResult> {
+    if (!this.configured) return { ok: false, reason: 'not_configured' };
+    const text = bodyText.trim();
+    if (!text || !url.trim()) return { ok: false, reason: 'not_configured' };
+    return this.postMessages(this.messagesUrl(), {
+      messaging_product: 'whatsapp',
+      to: phoneE164.replace(/^\+/, ''),
+      type: 'interactive',
+      interactive: {
+        type: 'cta_url',
+        body: { text },
+        action: {
+          name: 'cta_url',
+          parameters: {
+            display_text: displayText.slice(0, 20),
+            url: url.trim(),
+          },
+        },
+      },
+    });
+  }
+
+  private messagesUrl(): string {
+    return `https://graph.facebook.com/${this.config.WHATSAPP_GRAPH_VERSION}/${this.config.WHATSAPP_PHONE_NUMBER_ID}/messages`;
   }
 
   private async postMessages(

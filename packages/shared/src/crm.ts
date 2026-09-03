@@ -43,7 +43,8 @@ export type CrmContactSource =
   | 'manual'
   | 'import'
   | 'b4a_referral'
-  | 'partner_intake';
+  | 'partner_intake'
+  | 'whatsapp';
 
 export type CrmSeekerStage =
   | 'new_enquiry'
@@ -81,7 +82,8 @@ export type CrmActivityType =
   | 'viewing_ref'
   | 'stage_change'
   | 'task_done'
-  | 'system';
+  | 'system'
+  | 'whatsapp_in';
 
 export type CrmTaskStatus = 'open' | 'done' | 'cancelled';
 

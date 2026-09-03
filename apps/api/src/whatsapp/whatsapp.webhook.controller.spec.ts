@@ -34,9 +34,12 @@ describe('WhatsAppWebhookController (EC-17 signature)', () => {
     };
   });
 
+  const hub = { connectionStatus: vi.fn() };
+
   it('rejects when APP_SECRET is empty (fail closed)', async () => {
     controller = new WhatsAppWebhookController(
       whatsapp as unknown as WhatsAppService,
+      hub as never,
       { WHATSAPP_APP_SECRET: '', WHATSAPP_VERIFY_TOKEN: 'v' } as never,
     );
     const raw = Buffer.from('{}');
@@ -50,6 +53,7 @@ describe('WhatsAppWebhookController (EC-17 signature)', () => {
     whatsapp.verifyWebhookSignature.mockReturnValue(false);
     controller = new WhatsAppWebhookController(
       whatsapp as unknown as WhatsAppService,
+      hub as never,
       { WHATSAPP_APP_SECRET: SECRET, WHATSAPP_VERIFY_TOKEN: 'v' } as never,
     );
     const raw = Buffer.from('{"object":"whatsapp_business_account"}');
@@ -62,6 +66,7 @@ describe('WhatsAppWebhookController (EC-17 signature)', () => {
   it('rejects missing raw body', async () => {
     controller = new WhatsAppWebhookController(
       whatsapp as unknown as WhatsAppService,
+      hub as never,
       { WHATSAPP_APP_SECRET: SECRET, WHATSAPP_VERIFY_TOKEN: 'v' } as never,
     );
     await expect(
@@ -72,6 +77,7 @@ describe('WhatsAppWebhookController (EC-17 signature)', () => {
   it('accepts valid signature and returns 200', async () => {
     controller = new WhatsAppWebhookController(
       whatsapp as unknown as WhatsAppService,
+      hub as never,
       { WHATSAPP_APP_SECRET: SECRET, WHATSAPP_VERIFY_TOKEN: 'v' } as never,
     );
     const raw = Buffer.from('{"object":"whatsapp_business_account","entry":[]}');
@@ -84,6 +90,7 @@ describe('WhatsAppWebhookController (EC-17 signature)', () => {
     whatsapp.ingestWebhookPayload.mockResolvedValue(['id-1']);
     controller = new WhatsAppWebhookController(
       whatsapp as unknown as WhatsAppService,
+      hub as never,
       { WHATSAPP_APP_SECRET: SECRET, WHATSAPP_VERIFY_TOKEN: 'v' } as never,
     );
     const raw = Buffer.from('{"entry":[]}');

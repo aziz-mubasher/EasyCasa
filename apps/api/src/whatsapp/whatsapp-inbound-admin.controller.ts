@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import {
+  IsBoolean,
   IsBooleanString,
   IsIn,
   IsInt,
@@ -72,6 +73,11 @@ class ReplyBody {
   body!: string;
 }
 
+class BlockBody {
+  @IsBoolean()
+  blocked!: boolean;
+}
+
 /**
  * EC-19 / EC-20 — EC WhatsApp inbound inbox + windowed operator reply.
  * Class default: read. Reply handler overrides to `whatsapp:inbound:reply`.
@@ -126,5 +132,32 @@ export class WhatsAppInboundAdminController {
   ) {
     const actor = await this.users.getOrCreate(user);
     return this.inboundAdmin.replyToHandle(handle, actor.id, body.body);
+  }
+
+  @Get(':handle/notes')
+  async notes(@Param('handle') handle: string) {
+    return this.inboundAdmin.listNotes(handle);
+  }
+
+  @Post(':handle/notes')
+  @RequiresCapability('whatsapp:inbound:reply')
+  async addNote(
+    @Param('handle') handle: string,
+    @Body() body: ReplyBody,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    return this.inboundAdmin.addNote(handle, actor.id, body.body);
+  }
+
+  @Post(':handle/block')
+  @RequiresCapability('whatsapp:inbound:reply')
+  async block(
+    @Param('handle') handle: string,
+    @Body() body: BlockBody,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    return this.inboundAdmin.setBlocked(handle, actor.id, body.blocked);
   }
 }

@@ -169,6 +169,22 @@ export class DrizzleCrmRepository implements CrmRepository {
     return row ? toContact(row) : null;
   }
 
+  async findContactByPhone(phone: string): Promise<CrmContact | null> {
+    const digits = phone.replace(/\D/g, '');
+    if (!digits) return null;
+    const [row] = await this.db
+      .select()
+      .from(crmContacts)
+      .where(
+        and(
+          isNull(crmContacts.deletedAt),
+          sql`regexp_replace(coalesce(${crmContacts.phone}, ''), '\\D', '', 'g') = ${digits}`,
+        ),
+      )
+      .limit(1);
+    return row ? toContact(row) : null;
+  }
+
   async findContactByUserId(userId: string): Promise<CrmContact | null> {
     const [row] = await this.db
       .select()

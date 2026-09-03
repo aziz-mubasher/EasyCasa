@@ -16,6 +16,7 @@ import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
 import { Public } from '../auth/public.decorator';
 import { whatsappInboundSignatureRejected } from '../observability/metrics';
+import { WhatsAppHubService } from './whatsapp-hub.service';
 import { WhatsAppService } from './whatsapp.service';
 
 /**
@@ -28,8 +29,26 @@ export class WhatsAppWebhookController {
 
   constructor(
     private readonly whatsapp: WhatsAppService,
+    private readonly hub: WhatsAppHubService,
     @InjectConfig() private readonly config: ApiConfig,
   ) {}
+
+  /** Health for ops probes — no secrets. */
+  @Public()
+  @Get('webhook/status')
+  async status() {
+    const connection = await this.hub.connectionStatus();
+    return {
+      ok: true,
+      configured: connection.configured,
+      graphVersion: connection.graphVersion,
+      phoneNumberIdSet: connection.phoneNumberIdSet,
+      appSecretSet: connection.appSecretSet,
+      verifyTokenSet: connection.verifyTokenSet,
+      lastInboundAt: connection.lastInboundAt,
+      signatureRejectedTotal: connection.signatureRejectedTotal,
+    };
+  }
 
   @Public()
   @Get('webhook')
