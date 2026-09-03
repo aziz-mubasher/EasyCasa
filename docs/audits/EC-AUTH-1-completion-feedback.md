@@ -2,6 +2,7 @@
 
 **Date:** 2026-09-03  
 **PR:** https://github.com/aziz-mubasher/EasyCasa/pull/189  
+**Merged:** `b6028ce` (2026-09-03)  
 **Kaizen:** `K EC AUTH-1` (Claude has not assigned a real `K EC x.y`)  
 **Polish:** EC-AUTH-1  
 **Branch:** `cursor/ec-auth-1-keycloak-theme-e167`

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-03T11:37:50.877Z",
+  "updatedAt": "2026-09-03T11:45:26.302Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "EC-AUTH-1",
       "title": "EC-AUTH-1 — EasyCasa Keycloak sign-in / sign-up theme",
       "venture": "EasyCasa",
-      "lifecycle": "pr_open",
+      "lifecycle": "merged",
       "agentStatus": "IDLE",
       "agentBcId": "bc-e05bf640-1c09-4b65-9071-af4fbf40e167",
       "agentUrl": "https://cursor.com/agents/bc-e05bf640-1c09-4b65-9071-af4fbf40e167",
       "branch": "cursor/ec-auth-1-keycloak-theme-e167",
       "prNumber": 189,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/189",
-      "prState": "DRAFT",
+      "prState": "MERGED",
       "dispatchedAt": "2026-09-03T11:35:54.041Z",
-      "updatedAt": "2026-09-03T11:37:50.877Z",
-      "summary": "Draft PR #189 ready for human: theme+profile in git, lint/typecheck/test green. VPS inspect, SMTP, realm theme select still blocked.",
-      "nextAction": "Human: VPS docker inspect into the runbook; export live user profile; realm SMTP; Themes → easycasa after recreate --no-build --no-deps.",
+      "updatedAt": "2026-09-03T11:45:26.301Z",
+      "summary": "MERGED #189 @ b6028ce. Theme+profile+runbook on main. VPS theme not live (no SSH). Realm still keycloak.v2. SMTP still human.",
+      "nextAction": "Human on VPS: inspect Keycloak, tar+scp theme if git fetch is dead, recreate keycloak --no-build --no-deps, Realm Themes → easycasa. Set realm SMTP before VERIFY_EMAIL.",
       "errors": []
     },
     {
