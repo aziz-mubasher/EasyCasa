@@ -7,12 +7,14 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Throttle } from '@nestjs/throttler';
+import { ASTE_REPORT_CONTENT_LANGS } from '@easycasa/shared';
 import { IsIn, IsOptional } from 'class-validator';
 
 import { RequiresAuth } from '../auth/capability.decorator';
@@ -22,6 +24,8 @@ import { UsersService } from '../users/users.service';
 import { AsteAnalysisEnabledGuard } from './aste-analysis.guard';
 import { AsteAnalysisService } from './aste-analysis.service';
 import { AsteCreditsService } from './aste-credits.service';
+import { AsteTrialService } from './aste-trial.service';
+import { hashRequestIp, isAuthEmailVerified } from './aste-trial-request';
 import { AsteChatService } from './aste-chat.service';
 import { AsteReportService } from './aste-report.service';
 import {
@@ -41,8 +45,8 @@ class DocTypeBody {
 
 class ReportQuery {
   @IsOptional()
-  @IsIn(['it', 'en', 'es'])
-  lang?: 'it' | 'en' | 'es';
+  @IsIn([...ASTE_REPORT_CONTENT_LANGS])
+  lang?: (typeof ASTE_REPORT_CONTENT_LANGS)[number];
 
   @IsOptional()
   @IsIn(['1', 'true', 'yes'])
@@ -59,13 +63,24 @@ export class AsteAnalysisController {
     private readonly chat: AsteChatService,
     private readonly users: UsersService,
     private readonly credits: AsteCreditsService,
+    private readonly trial: AsteTrialService,
   ) {}
 
   @Throttle({ default: { limit: 20, ttl: 60_000 } })
   @Post()
-  async create(@CurrentUser() user: AuthUser, @Body() dto: CreateAsteAnalysisDto) {
+  async create(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: CreateAsteAnalysisDto,
+    @Req() req: { ip?: string; headers?: Record<string, string | string[] | undefined> },
+  ) {
     const me = await this.users.getOrCreate(user);
-    await this.credits.grantFirstFileFree(me.id);
+    const { bucketHash } = hashRequestIp(req);
+    await this.trial.ensureFirstFileFree({
+      userId: me.id,
+      email: me.email ?? user.email,
+      emailVerified: isAuthEmailVerified(user),
+      bucketHash,
+    });
     return this.service.create(me.id, {
       language: dto.language,
       register: dto.register,

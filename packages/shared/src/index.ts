@@ -24,3 +24,6 @@ export * from './nudges';
 export * from './consent-versions';
 /** EC-S-T33 — schema.org JSON-LD builders + serializeJsonLd. */
 export * from './structured-data';
+export * from './aste-report-lang';
+export { canonicalEmail, tryCanonicalEmail } from './identity/canonicalEmail';
+export * from './trial';

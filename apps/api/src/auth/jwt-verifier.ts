@@ -43,6 +43,7 @@ export class JwtVerifier {
     return {
       sub: payload.sub,
       email: typeof payload.email === 'string' ? payload.email : undefined,
+      emailVerified: payload.email_verified === true,
       name: typeof payload.name === 'string' ? payload.name : undefined,
       preferredUsername:
         typeof payload.preferred_username === 'string'

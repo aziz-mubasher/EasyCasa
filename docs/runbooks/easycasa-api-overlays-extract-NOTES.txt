@@ -1,0 +1,4 @@
+Live overlay extract 20260903-0721
+Source: easycasa-ita-api-1:/repo + easycasa-ita-ai-1 translate
+Next: copy into a fresh EasyCasa main checkout. Merge schema.ts. Do not compose up the live API.
+See docs/runbooks/easycasa-overlay-extract.md

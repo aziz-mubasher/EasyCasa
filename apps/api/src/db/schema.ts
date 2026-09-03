@@ -1068,6 +1068,46 @@ export const asteReportUnlocks = pgTable(
   }),
 );
 
+/** EC-TRIAL-1 — one row per account for the free-file decision. */
+export const asteTrialGrants = pgTable(
+  'aste_trial_grants',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id').notNull(),
+    emailCanonical: text('email_canonical'),
+    decision: text('decision').notNull().default('ALLOW'),
+    score: integer('score').notNull().default(0),
+    reasons: text('reasons').array().notNull().default([]),
+    grantedAt: timestamp('granted_at', { withTimezone: true }),
+    creditId: uuid('credit_id'),
+    emailVerifiedAt: timestamp('email_verified_at', { withTimezone: true }),
+    reviewedBy: text('reviewed_by'),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
+    overturned: boolean('overturned').notNull().default(false),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    userUniq: uniqueIndex('aste_trial_grants_user_uniq').on(t.userId),
+    canonicalIdx: index('aste_trial_grants_canonical_idx').on(t.emailCanonical),
+  }),
+);
+
+export const asteAbuseCounters = pgTable('aste_abuse_counters', {
+  bucketHash: text('bucket_hash').primaryKey(),
+  windowStart: timestamp('window_start', { withTimezone: true }).notNull(),
+  count: integer('count').notNull().default(1),
+  lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const asteAbuseSalts = pgTable('aste_abuse_salts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  keyId: text('key_id').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  retiredAt: timestamp('retired_at', { withTimezone: true }),
+});
+
+
+
 // ---------------- Phase 29 — Viewings & scheduling ----------------
 export const viewingAvailability = pgTable('viewing_availability', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -1389,6 +1429,7 @@ export const schema = {
   omiQuotes, valuationRequests, asteLeads,
   asteAnalyses, asteDocuments, asteDocChunks, asteGlossary, asteChatMessages,
   asteCreditBalances, asteCreditLedger, asteReportUnlocks,
+  asteTrialGrants, asteAbuseCounters, asteAbuseSalts,
   viewingAvailability, viewings,
   consentRecords,
   shareLinks, shareLinkViewDedup,

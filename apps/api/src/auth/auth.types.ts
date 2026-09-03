@@ -3,6 +3,7 @@ import type { AdminRole, Capability, CrmRole, UserRole } from '@easycasa/shared'
 export interface AuthUser {
   sub: string; // OIDC subject
   email?: string;
+  emailVerified?: boolean;
   name?: string;
   /** Keycloak `preferred_username` (e.g. muba-admin). */
   preferredUsername?: string;

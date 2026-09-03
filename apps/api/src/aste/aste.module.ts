@@ -11,6 +11,8 @@ import { AsteAdminController } from './aste-admin.controller';
 import { AsteAdminService } from './aste-admin.service';
 import { AsteCreditsController, AsteUnlockController } from './aste-credits.controller';
 import { AsteCreditsService } from './aste-credits.service';
+import { AsteTrialService } from './aste-trial.service';
+import { AsteTrialRetentionScheduler } from './aste-trial-retention.scheduler';
 import { AsteAnalysisController } from './aste-analysis.controller';
 import { AsteAnalysisEnabledGuard } from './aste-analysis.guard';
 import { AsteMonetisationEnabledGuard } from './aste-monetisation.guard';
@@ -43,6 +45,8 @@ import { AsteStorage } from './aste-storage';
     AsteAdminService,
     AsteReportService,
     AsteCreditsService,
+    AsteTrialService,
+    AsteTrialRetentionScheduler,
     AsteChatService,
     AsteChatRetrievalService,
     AsteOmiCheckService,
@@ -65,6 +69,7 @@ import { AsteStorage } from './aste-storage';
     AsteReportService,
     AsteChatService,
     AsteCreditsService,
+    AsteTrialService,
   ],
 })
 export class AsteModule {}

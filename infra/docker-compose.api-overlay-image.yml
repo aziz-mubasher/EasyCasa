@@ -1,0 +1,6 @@
+# Recreate API from a committed overlay. Never point this at :latest.
+# VPS copy: /root/azm/docker-compose.api-overlay-image.yml
+# Update the tag when you take a new snapshot. Two copies can drift.
+services:
+  api:
+    image: easycasa-ita-api:overlay-20260902-2003

@@ -6,6 +6,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PRODUCT_EVENTS } from '@easycasa/shared';
+import {
+  asteReportNeedsTranslate,
+  parseAsteReportContentLang,
+} from '@easycasa/shared';
 import { and, eq } from 'drizzle-orm';
 
 import { ProductAnalyticsService } from '../analytics/product-analytics.service';
@@ -48,7 +52,7 @@ export class AsteReportService {
   async getReport(
     userId: string,
     analysisId: string,
-    opts: { lang: 'it' | 'en' | 'es'; trackPrint?: boolean; email?: string },
+    opts: { lang: string; trackPrint?: boolean; email?: string },
   ) {
     const analysis = await this.requireOwnedReady(userId, analysisId);
     const extraction = analysis.extraction as AsteExtractionV2 | null;
@@ -90,40 +94,10 @@ export class AsteReportService {
         .where(eq(asteAnalyses.id, analysisId));
     }
 
-    const reportLang: 'it' | 'en' = opts.lang === 'en' ? 'en' : 'it';
-    const esContentFallback = opts.lang === 'es';
+    const reportLang = parseAsteReportContentLang(opts.lang);
+    const esContentFallback = false;
 
-    let translations: TranslationCache =
-      ((analysis.translations as TranslationCache | null) ?? {}) as TranslationCache;
-    let translateCalls = 0;
-
-    if (reportLang === 'en') {
-      const cached = translations.en;
-      if (!cached || Object.keys(cached).length === 0) {
-        const snippets = collectFreeTextSnippets(extraction);
-        if (snippets.length > 0) {
-          const translated = await this.ai.translate({
-            texts: snippets.map((s) => s.text),
-            target_lang: 'en',
-          });
-          translateCalls = 1;
-          const map = translationMapFromSnippets(snippets, translated);
-          translations = { ...translations, en: map };
-          await this.db
-            .update(asteAnalyses)
-            .set({ translations, updatedAt: new Date() })
-            .where(eq(asteAnalyses.id, analysisId));
-        } else {
-          translations = { ...translations, en: {} };
-          await this.db
-            .update(asteAnalyses)
-            .set({ translations, updatedAt: new Date() })
-            .where(eq(asteAnalyses.id, analysisId));
-        }
-      }
-    }
-
-    const glossaryLang = reportLang;
+    const glossaryLang = reportLang === 'en' ? 'en' : 'it';
     const glossaryRows = await this.db
       .select()
       .from(asteGlossary)
@@ -173,6 +147,53 @@ export class AsteReportService {
       });
     }
 
+    let translations: TranslationCache =
+      ((analysis.translations as TranslationCache | null) ?? {}) as TranslationCache;
+    let translateCalls = 0;
+
+    if (asteReportNeedsTranslate(reportLang)) {
+      const cached = translations[reportLang];
+      if (!cached || Object.keys(cached).length === 0) {
+        const snippets = collectFreeTextSnippets(extraction);
+        if (snippets.length > 0) {
+          try {
+            const texts = snippets.map((x) => x.text);
+            const translated: string[] = [];
+            const batch = 24;
+            for (let i = 0; i < texts.length; i += batch) {
+              const part = await this.ai.translate({
+                texts: texts.slice(i, i + batch),
+                target_lang: reportLang,
+              });
+              translated.push(...part);
+            }
+            translateCalls = 1;
+            const map = translationMapFromSnippets(snippets, translated);
+            translations = { ...translations, [reportLang]: map };
+            await this.db
+              .update(asteAnalyses)
+              .set({ translations, updatedAt: new Date() })
+              .where(eq(asteAnalyses.id, analysisId));
+          } catch (err) {
+            this.log.warn(
+              JSON.stringify({
+                event: 'aste.translate_failed',
+                analysisId,
+                lang: reportLang,
+                message: err instanceof Error ? err.message : 'unknown',
+              }),
+            );
+          }
+        } else {
+          translations = { ...translations, [reportLang]: {} };
+          await this.db
+            .update(asteAnalyses)
+            .set({ translations, updatedAt: new Date() })
+            .where(eq(asteAnalyses.id, analysisId));
+        }
+      }
+    }
+
     this.log.log(
       JSON.stringify({
         event: 'aste.report_viewed',
@@ -203,7 +224,7 @@ export class AsteReportService {
       buyerProfile,
       buyerReadiness: readiness,
       buyerProfileSkipped: isBuyerProfileSkipped(buyerProfile),
-      translations: reportLang === 'en' ? translations.en ?? {} : {},
+      translations: asteReportNeedsTranslate(reportLang) ? translations[reportLang] ?? {} : {},
       reportContentLang: reportLang,
       esContentFallback,
       criticita,

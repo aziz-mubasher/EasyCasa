@@ -14,6 +14,7 @@ export function collectFreeTextSnippets(ex: AsteExtractionV2): FreeTextSnippet[]
     if (t) out.push({ path, text: t });
   };
 
+  add('giuridica.stato_occupazione.stato', ex.giuridica.stato_occupazione.stato);
   add('giuridica.stato_occupazione.dettaglio', ex.giuridica.stato_occupazione.dettaglio);
   add('giuridica.stato_occupazione.opponibilita', ex.giuridica.stato_occupazione.opponibilita);
   add('giuridica.diritto_venduto', ex.giuridica.diritto_venduto);
@@ -27,10 +28,12 @@ export function collectFreeTextSnippets(ex: AsteExtractionV2): FreeTextSnippet[]
     add(`giuridica.formalita.${i}.tipo`, f.tipo);
   });
 
+  add('urbanistica.conformita_urbanistica.stato', ex.urbanistica.conformita_urbanistica.stato);
   add(
     'urbanistica.conformita_urbanistica.dettaglio',
     ex.urbanistica.conformita_urbanistica.dettaglio,
   );
+  add('urbanistica.conformita_catastale.stato', ex.urbanistica.conformita_catastale.stato);
   add(
     'urbanistica.conformita_catastale.dettaglio',
     ex.urbanistica.conformita_catastale.dettaglio,
@@ -68,7 +71,10 @@ export function translationMapFromSnippets(
   const map: Record<string, string> = {};
   snippets.forEach((s, i) => {
     const t = translated[i];
-    if (typeof t === 'string' && t.trim()) map[s.path] = t.trim();
+    if (typeof t === 'string' && t.trim()) {
+      map[s.path] = t.trim();
+      map[s.text] = t.trim();
+    }
   });
   return map;
 }

@@ -77,12 +77,12 @@ export class OmiZoneService {
   }
 
   async resolveAddress(address: string): Promise<OmiZoneHit | null> {
-    const coords = await this.geocode(address);
+    const coords = await this.geocodeAddress(address);
     if (!coords) return null;
     return this.zoneFromPoint(coords.lng, coords.lat);
   }
 
-  private async geocode(address: string): Promise<{ lat: number; lng: number } | null> {
+  async geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
     const q = address.trim();
     if (!q) return null;
 

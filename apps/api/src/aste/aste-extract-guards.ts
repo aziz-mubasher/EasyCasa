@@ -98,9 +98,22 @@ export function assertLotScope(
 
   const norm = (s: string) => s.trim().toLowerCase();
   const match = found.some((f) => norm(f) === norm(label));
-  // If AI found labels and ours isn't among them → not found.
-  if (found.length > 0 && !match) {
-    throw new AsteLotScopeError('lotto_not_found', found);
+  // One lot in the file (often "unico") — a nickname / test label is not a miss.
+  if (found.length === 1 && !match) {
+      const sole = found[0];
+      ex.meta.warnings = [
+          ...(ex.meta.warnings ?? []),
+          `lotto_label "${label}" ignored; using sole lot "${sole}"`,
+      ];
+      if (ex.procedura && !ex.procedura.lotto) ex.procedura.lotto = sole;
+      if (ex.meta.lotto && !ex.meta.lotto.label) {
+          ex.meta.lotto = { ...ex.meta.lotto, label: sole };
+      }
+      return;
+  }
+  // If AI found multiple labels and ours isn't among them → not found.
+  if (found.length > 1 && !match) {
+      throw new AsteLotScopeError('lotto_not_found', found);
   }
   // If AI found nothing but label set — allow through (unico / weak OCR); meta warning.
   if (found.length === 0) {

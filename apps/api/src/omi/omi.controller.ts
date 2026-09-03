@@ -39,8 +39,9 @@ export class OmiController {
   @Throttle({ default: { limit: 20, ttl: 60_000 } })
   @Post('resolve')
   async resolve(@Body() body: ResolveAddressDto) {
-    const zone = await this.zones.resolveAddress(body.address);
-    return { zone };
+    const coords = await this.zones.geocodeAddress(body.address);
+    const zone = coords ? await this.zones.zoneFromPoint(coords.lng, coords.lat) : null;
+    return { zone, lat: coords?.lat ?? null, lng: coords?.lng ?? null };
   }
 
   /** EC-S-T09 — OMI €/m² band for a zone. */
