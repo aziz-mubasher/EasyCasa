@@ -61,7 +61,7 @@ describe('easycasa Keycloak login/email theme', () => {
       'login/resources/img/logo-easycasa.png',
       'login/resources/img/logo-legenda.svg',
       'login/resources/img/logo-legenda.png',
-      'login/resources/css/login.css',
+      'login/resources/css/login-v2.css',
       'login/resources/js/passwordVisibility.js',
       'login/messages/messages_it.properties',
       'login/messages/messages_en.properties',
@@ -82,7 +82,7 @@ describe('easycasa Keycloak login/email theme', () => {
     const props = parseProperties(read(path.join(LOGIN, 'theme.properties')));
     expect(props.get('parent')).toBe('base');
     expect(props.get('ecPolicyVersion')).toBe('2026-09-v1');
-    expect(props.get('styles')).toBe('css/login.css');
+    expect(props.get('styles')).toBe('css/login-v2.css');
     expect(props.get('stylesCommon') ?? '').toBe('');
     // KC 26 DefaultThemeManager.processImportedTheme splits import on "/".
     // An empty `import=` is a one-element array and throws AIOOBE (HTTP 500 on CSS).
@@ -236,7 +236,7 @@ describe('easycasa Keycloak login/email theme', () => {
   });
 
   it('styles a simple always-dark card, reduced motion, and 44px controls without a cookie banner', () => {
-    const css = read(path.join(LOGIN, 'resources/css/login.css'));
+    const css = read(path.join(LOGIN, 'resources/css/login-v2.css'));
     const template = read(path.join(LOGIN, 'template.ftl'));
     expect(css).toContain('--ec-paper: #0e141c');
     expect(css).toContain('prefers-reduced-motion: reduce');
