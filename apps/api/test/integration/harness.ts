@@ -62,9 +62,9 @@ export async function startIntegration(): Promise<IntegrationContext> {
   return {
     app: ctx.app,
     databaseUrl: ctx.databaseUrl,
-    // Keep PG + Meili + AppModule for later files in this vitest worker.
-    // Tearing down between files (fileParallelism: false) made the next
-    // Meili /health wait time out on GH runners.
+    // Keep PG + Meili + MinIO + AppModule for later files in this vitest worker.
+    // Aste specs that need an AI mock must set AI_URL + resetConfigCache()
+    // and must not start a second container stack (that kills shared Meili).
     stop: async () => undefined,
   };
 }

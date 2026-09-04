@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Get,
   Headers,
+  HttpCode,
   Logger,
   Post,
   Query,
@@ -67,6 +68,7 @@ export class WhatsAppWebhookController {
 
   @Public()
   @Post('webhook')
+  @HttpCode(200)
   async receive(
     @Req() req: RawBodyRequest<Request>,
     @Headers('x-hub-signature-256') signature?: string,
