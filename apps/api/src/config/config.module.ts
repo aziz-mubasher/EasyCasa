@@ -12,7 +12,8 @@ export const APP_CONFIG = Symbol('APP_CONFIG');
  * Global config module — Phase 33.
  * Surfaces the already-validated env into Nest DI so seams stop reading
  * `process.env` ad hoc. `main.ts` / boot-check still call `loadApiConfig()`
- * first; the factory returns the memoized instance.
+ * first; the factory returns the live `apiConfig` proxy so `resetConfigCache()`
+ * (integration harness) is visible to `@InjectConfig()` readers.
  */
 @Global()
 @Module({
