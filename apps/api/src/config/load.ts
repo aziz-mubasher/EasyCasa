@@ -7,6 +7,9 @@ const Schema = z
   .object({
     API_PORT: z.coerce.number().default(4000),
     NODE_ENV: z.string().default('production'),
+    /** Baked at image build (`docs/deploy.md`). Empty → `/version` reports unknown. */
+    GIT_SHA: z.string().default(''),
+    BUILD_TIME: z.string().default(''),
     DATABASE_URL: z.string().url(),
 
     // Auth. Header bypass only via EC_TEST_AUTH under NODE_ENV=test.

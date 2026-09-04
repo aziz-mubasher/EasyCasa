@@ -95,7 +95,7 @@ export class JwtAuthGuard implements CanActivate {
   }
 
   private testAuthEnabled(): boolean {
-    return process.env.NODE_ENV === 'test' && this.config.EC_TEST_AUTH === true;
+    return this.config.NODE_ENV === 'test' && this.config.EC_TEST_AUTH === true;
   }
 }
 

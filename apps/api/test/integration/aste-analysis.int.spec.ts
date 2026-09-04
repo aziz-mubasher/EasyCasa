@@ -8,7 +8,7 @@ import request from 'supertest';
 import { GenericContainer, type StartedTestContainer, Wait } from 'testcontainers';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { dockerAvailable } from './harness';
+import { dockerAvailable, ensurePostgresImage } from './harness';
 import { asUser } from './test-auth';
 
 /**
@@ -39,8 +39,7 @@ gate('Aste analysis upload flow (integration)', () => {
   });
 
   beforeAll(async () => {
-    const postgresContext = path.resolve(process.cwd(), '../../infra/postgres');
-    await GenericContainer.fromDockerfile(postgresContext).build('easycasa-postgres-int');
+    ensurePostgresImage();
 
     pg = await new PostgreSqlContainer('easycasa-postgres-int')
       .withDatabase('easycasa_test')

@@ -12,7 +12,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { computeSemaforo } from '../../src/aste/aste-semaforo';
 import { fixtureReadyExtraction } from '../fixtures/aste/ready-extraction';
-import { dockerAvailable } from './harness';
+import { dockerAvailable, ensurePostgresImage } from './harness';
 import { asUser } from './test-auth';
 
 const gate = dockerAvailable() ? describe : describe.skip;
@@ -134,8 +134,7 @@ gate('Aste chat (integration EC-25)', () => {
     await new Promise<void>((resolve) => aiServer.listen(0, '127.0.0.1', () => resolve()));
     const aiPort = (aiServer.address() as { port: number }).port;
 
-    const postgresContext = path.resolve(process.cwd(), '../../infra/postgres');
-    await GenericContainer.fromDockerfile(postgresContext).build('easycasa-postgres-int');
+    ensurePostgresImage();
 
     pg = await new PostgreSqlContainer('easycasa-postgres-int')
       .withDatabase('easycasa_test')

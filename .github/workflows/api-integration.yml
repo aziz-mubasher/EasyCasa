@@ -27,5 +27,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Build shared
         run: pnpm --filter @easycasa/shared build
+      - name: Build PostGIS + pgvector image
+        run: docker build -t easycasa-postgres-int ./infra/postgres
       - name: Integration tests
         run: pnpm --filter @easycasa/api test:int

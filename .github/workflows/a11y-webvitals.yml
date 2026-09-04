@@ -10,6 +10,9 @@ permissions:
   contents: read
 
 jobs:
+  # Hits live easycasaita.com. Chrome on ubuntu-24.04 needs --no-sandbox
+  # (.pa11yci.json). Lighthouse performance/TBT are warn: GH runners are not
+  # a lab device and scores flake vs the 0.9 desktop budget.
   pa11y:
     name: Accessibility (pa11y-ci / axe, WCAG 2.1 AA)
     runs-on: ubuntu-latest
