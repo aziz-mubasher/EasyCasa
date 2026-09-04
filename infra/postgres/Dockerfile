@@ -12,12 +12,22 @@ FROM --platform=$TARGETPLATFORM postgis/postgis:16-3.4
 ARG PGVECTOR_REF=v0.8.0
 
 RUN set -eux; \
-  apt-get update; \
-  apt-get install -y --no-install-recommends \
-    build-essential \
-    ca-certificates \
-    git \
-    postgresql-server-dev-16; \
+  apt_ok=0; \
+  for i in 1 2 3; do \
+    apt-get update; \
+    if apt-get install -y --no-install-recommends \
+        -o Acquire::Retries=3 \
+        build-essential \
+        ca-certificates \
+        git \
+        postgresql-server-dev-16; then \
+      apt_ok=1; \
+      break; \
+    fi; \
+    echo "apt install failed (attempt ${i}); retrying"; \
+    sleep $((i * 4)); \
+  done; \
+  test "${apt_ok}" = 1; \
   git clone --depth 1 --branch "${PGVECTOR_REF}" https://github.com/pgvector/pgvector.git /tmp/pgvector; \
   make -C /tmp/pgvector OPTFLAGS="" with_llvm=no; \
   make -C /tmp/pgvector OPTFLAGS="" with_llvm=no install; \

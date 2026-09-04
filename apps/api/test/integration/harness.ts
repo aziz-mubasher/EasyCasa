@@ -49,7 +49,6 @@ export function ensurePostgresImage(): string {
 
 /** Shared across int specs in one vitest fork (lazy pool + one AppModule boot). */
 let shared: Promise<IntegrationContext> | null = null;
-let refs = 0;
 
 export async function startIntegration(): Promise<IntegrationContext> {
   if (!shared) {
@@ -59,16 +58,13 @@ export async function startIntegration(): Promise<IntegrationContext> {
     });
   }
   const ctx = await shared;
-  refs += 1;
   return {
     app: ctx.app,
     databaseUrl: ctx.databaseUrl,
-    stop: async () => {
-      refs -= 1;
-      // Keep PG + Meili + AppModule for later files in this vitest worker.
-      // Tearing down between files (fileParallelism: false) made the next
-      // Meili /health wait time out on GH runners.
-    },
+    // Keep PG + Meili + AppModule for later files in this vitest worker.
+    // Tearing down between files (fileParallelism: false) made the next
+    // Meili /health wait time out on GH runners.
+    stop: async () => undefined,
   };
 }
 
