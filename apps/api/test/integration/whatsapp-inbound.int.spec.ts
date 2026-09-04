@@ -50,6 +50,7 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
   let ctx: IntegrationContext;
   let db: Db;
   let fetchMock: ReturnType<typeof vi.fn>;
+  let replySeq = 0;
 
   beforeAll(async () => {
     ctx = await startIntegration();
@@ -63,10 +64,11 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
   });
 
   beforeEach(() => {
-    fetchMock = vi.fn().mockResolvedValue({
+    // Unique Graph message ids — wa_thread_outbound.provider_message_id is unique.
+    fetchMock = vi.fn().mockImplementation(async () => ({
       ok: true,
-      json: async () => ({ messages: [{ id: 'wamid.reply' }] }),
-    });
+      json: async () => ({ messages: [{ id: `wamid.reply.${++replySeq}` }] }),
+    }));
     vi.stubGlobal('fetch', fetchMock);
   });
 
