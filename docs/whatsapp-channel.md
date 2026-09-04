@@ -33,7 +33,7 @@ API Hub is **not** a microservice. Staff call `/admin/whatsapp/hub/*`. Meta call
    - `sell_property`
    - `easy_legenda`
    In-flight taps of `book_viewing` / `search_brief` / `open_listings` still resolve.
-5. Phone → CRM contact (`source=whatsapp`) when `CRM_ENABLED`.
+5. Phone → CRM contact (`source=whatsapp`) when `CRM_ENABLED`. Shareable callback links (province + reason) live at `/{locale}/prenota-chiamata` — operators copy them from `#crm/calls` (`docs/call-booking.md`).
 6. Operator Hub: connection (no secrets), templates catalog, canned replies, analytics.
 7. Health: `GET /whatsapp/webhook/status` (no secrets; signature-reject counter).
 

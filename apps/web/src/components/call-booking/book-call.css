@@ -1,0 +1,91 @@
+.book-call {
+  --bc-ink: #14212e;
+  --bc-paper: #f3ede1;
+  --bc-azure: #2c6e9b;
+  color: var(--bc-ink);
+  background: var(--bc-paper);
+  min-height: 70vh;
+  font-family: var(--font-body), Georgia, serif;
+}
+
+.book-call-wrap {
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.book-call h1 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.35rem);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.75rem;
+}
+
+.book-call-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: var(--bc-azure);
+  margin: 0 0 0.5rem;
+}
+
+.book-call-lead,
+.book-call-note,
+.book-call-hint {
+  color: rgba(20, 33, 46, 0.75);
+  margin: 0 0 1rem;
+}
+
+.book-call-chip {
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(20, 33, 46, 0.15);
+  background: #fff;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.9rem;
+}
+
+.book-call-form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.book-call-field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.book-call-field input,
+.book-call-field select {
+  font: inherit;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid rgba(20, 33, 46, 0.2);
+  background: #fff;
+}
+
+.book-call-consent {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem;
+  align-items: start;
+}
+
+.book-call-submit {
+  font: inherit;
+  padding: 0.7rem 1rem;
+  border: 0;
+  background: var(--bc-ink);
+  color: var(--bc-paper);
+  cursor: pointer;
+}
+
+.book-call-submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.book-call-error {
+  color: #8a1f1f;
+  margin: 0;
+}

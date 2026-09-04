@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { crmSourceLabel } from '@easycasa/shared';
+import {
+  CALL_BOOKING_REASONS,
+  ITALIAN_PROVINCES,
+  callBookingTaskTitle,
+  callReasonLabel,
+  type CallBookingReason,
+  crmSourceLabel,
+} from '@easycasa/shared';
 
 import { useApi } from '../../api';
 import { Badge } from '../../components/ui';
@@ -21,10 +28,32 @@ export function CrmContact360({
   const qc = useQueryClient();
   const [note, setNote] = useState('');
   const [noteType, setNoteType] = useState<'note' | 'call' | 'email'>('note');
+  const [callProvince, setCallProvince] = useState('BS');
+  const [callReason, setCallReason] = useState<CallBookingReason>('sell');
+  const [callDue, setCallDue] = useState('');
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['crm', 'contact', contactId],
     queryFn: () => api.crmGetContact(contactId),
+  });
+
+  const schedule = useMutation({
+    mutationFn: () => {
+      const province = ITALIAN_PROVINCES.find((p) => p.slug === callProvince);
+      const title = callBookingTaskTitle({
+        provinceName: province?.name ?? callProvince,
+        reasonLabel: callReasonLabel(callReason, 'en'),
+      });
+      return api.crmCreateTask({
+        contactId,
+        title,
+        dueAt: callDue ? new Date(callDue).toISOString() : undefined,
+      });
+    },
+    onSuccess: () => {
+      setCallDue('');
+      void qc.invalidateQueries({ queryKey: ['crm', 'contact', contactId] });
+    },
   });
 
   const log = useMutation({
@@ -93,6 +122,8 @@ export function CrmContact360({
                       seeker.searchIntent.brand,
                       seeker.searchIntent.channel,
                       seeker.searchIntent.kind,
+                      seeker.searchIntent.province,
+                      seeker.searchIntent.reason,
                       seeker.searchIntent.whatsappLanguage,
                     ]
                       .filter((v): v is string => typeof v === 'string' && v.length > 0)
@@ -183,6 +214,45 @@ export function CrmContact360({
               </li>
             ))}
           </ul>
+          <h2>Schedule a call</h2>
+          <div className="crm-composer">
+            <select
+              className="input"
+              value={callProvince}
+              onChange={(e) => setCallProvince(e.target.value)}
+            >
+              {ITALIAN_PROVINCES.map((p) => (
+                <option key={p.slug} value={p.slug}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            <select
+              className="input"
+              value={callReason}
+              onChange={(e) => setCallReason(e.target.value as CallBookingReason)}
+            >
+              {CALL_BOOKING_REASONS.map((r) => (
+                <option key={r} value={r}>
+                  {callReasonLabel(r, 'en')}
+                </option>
+              ))}
+            </select>
+            <input
+              className="input"
+              type="datetime-local"
+              value={callDue}
+              onChange={(e) => setCallDue(e.target.value)}
+            />
+            <button
+              type="button"
+              className="btn btn--primary btn--sm"
+              disabled={schedule.isPending}
+              onClick={() => schedule.mutate()}
+            >
+              Add scheduled call
+            </button>
+          </div>
           <h2>Open tasks</h2>
           {openTasks.length === 0 ? (
             <p className="muted">No open tasks.</p>

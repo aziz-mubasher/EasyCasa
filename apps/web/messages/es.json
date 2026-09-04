@@ -1818,6 +1818,42 @@
       "footOdrLink": "ec.europa.eu/consumers/odr"
     }
   },
+  "bookCall": {
+    "meta": {
+      "title": "Reservar una llamada — EasyCasa",
+      "description": "Pide una devolución de llamada. Te llama una persona: no negociamos el trato por ti."
+    },
+    "eyebrow": "Llamada",
+    "title": "Reservar una llamada",
+    "lead": "Deja nombre y teléfono. Alguien de EasyCasa te llama sobre la provincia y el motivo de este enlace.",
+    "notAdvice": "Esto no es mediación: no recogemos ofertas, no redactamos propuestas ni recomendamos un precio.",
+    "fields": {
+      "name": "Nombre y apellidos",
+      "email": "Correo",
+      "phone": "Teléfono",
+      "province": "Provincia",
+      "provinceNone": "Elige la provincia",
+      "reason": "Motivo de la llamada",
+      "reasonNone": "Elige un motivo",
+      "when": "Hora preferida (opcional)",
+      "whenHint": "Si lo dejas vacío, te llamamos en 24 horas."
+    },
+    "consent": {
+      "before": "He leído la ",
+      "privacy": "información de privacidad",
+      "after": " y pido que me devuelvan la llamada por esta solicitud."
+    },
+    "submit": "Pedir la llamada",
+    "submitting": "Enviando…",
+    "success": {
+      "title": "Solicitud recibida",
+      "body": "Te llamamos al número indicado. Si elegiste una hora, la respetamos; si no, en 24 horas."
+    },
+    "errors": {
+      "required": "Completa los campos obligatorios y acepta la información de privacidad.",
+      "submit": "No se pudo enviar. Inténtalo de nuevo o escríbenos por WhatsApp."
+    }
+  },
   "termsConditions": {
     "metaTitle": "Términos y condiciones — EasyCasa",
     "metaDescription": "Condiciones de uso de la plataforma EasyCasa: cuenta, anuncios, servicios de pago, desistimiento, responsabilidad y controversias.",

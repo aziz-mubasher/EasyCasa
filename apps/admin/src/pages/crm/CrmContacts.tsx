@@ -48,6 +48,7 @@ export function CrmContacts({ onOpenContact }: { onOpenContact: (id: string) => 
         <select className="input" value={source} onChange={(e) => setSource(e.target.value)}>
           <option value="">All sources</option>
           <option value="aste">Easy Legenda</option>
+          <option value="call_request">Call request</option>
           <option value="whatsapp">WhatsApp</option>
           <option value="enquiry">Enquiry</option>
           <option value="b4a_referral">B4A</option>

@@ -55,6 +55,7 @@ import { PrivacyModule } from './privacy/privacy.module';
 import { PhoneVerifyModule } from './phone-verify/phone-verify.module';
 import { WhatsAppModule } from './whatsapp/whatsapp.module';
 import { ObservabilityModule } from './observability/observability.module';
+import { CallRequestsModule } from './call-requests/call-requests.module';
 import { CrmModule } from './crm/crm.module';
 import { HealthIndicatorRegistry } from './health/health-indicator.registry';
 import { EmailHealthIndicator } from './health/email.health';
@@ -132,6 +133,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     SellerNudgesModule,
     PilotModule,
     DemoModule,
+    CallRequestsModule,
     CrmModule,
   ],
   controllers: [HealthController, ReadinessController, VersionController],

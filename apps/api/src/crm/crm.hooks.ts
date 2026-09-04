@@ -1,5 +1,13 @@
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
-import type { CrmB4aAttestationStatus } from '@easycasa/shared';
+import {
+  callBookingTaskTitle,
+  callReasonLabel,
+  parseCallBookingLocale,
+  parseCallBookingReason,
+  provinceDisplayName,
+  resolveCallDueAt,
+  type CrmB4aAttestationStatus,
+} from '@easycasa/shared';
 
 import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
@@ -14,6 +22,7 @@ import {
   type CrmViewingRef,
   type CrmAsteAnalysisRef,
   type CrmAsteWaitlistRef,
+  type CrmCallRequestRef,
   type CrmWhatsAppBriefRef,
   type CrmWhatsAppRef,
 } from './domain/ports';
@@ -367,6 +376,76 @@ export class CrmHooksService implements CrmHooks {
       });
     } catch (err) {
       this.logger.warn(`CRM onAsteAnalysisCreated failed: ${(err as Error).message}`);
+    }
+  }
+
+  async onCallRequestCreated(e: CrmCallRequestRef): Promise<void> {
+    if (!this.enabled()) return;
+    try {
+      const email = e.email.trim().toLowerCase();
+      const phone = e.phone.trim();
+      const locale = crmLocaleFromAny(e.locale);
+      const reason = parseCallBookingReason(e.reason);
+      const provinceName = provinceDisplayName(e.province) ?? e.province;
+      const reasonLabel = reason
+        ? callReasonLabel(reason, parseCallBookingLocale(e.locale))
+        : e.reason;
+      let contact = email ? await this.repo.findContactByEmail(email) : null;
+      if (!contact && phone) contact = await this.repo.findContactByPhone(phone);
+      const tags = mergeTags(contact?.tags, ['call-request']);
+      const fullName = e.fullName.trim() || email || 'Call request';
+
+      if (!contact) {
+        contact = await this.repo.createContact({
+          fullName,
+          email,
+          phone,
+          locale,
+          source: 'call_request',
+          tags,
+        });
+      } else {
+        contact = await this.repo.updateContact(contact.id, {
+          email: contact.email ?? email,
+          phone: contact.phone ?? phone,
+          fullName:
+            contact.fullName === 'Seeker' || contact.fullName === 'WhatsApp' ? fullName : contact.fullName,
+          tags,
+          locale: contact.locale || locale,
+        });
+      }
+
+      const existing = await this.repo.getSeeker(contact.id);
+      await this.repo.upsertSeeker(contact.id, {
+        stage: existing?.stage ?? 'contacted',
+        searchIntent: {
+          ...((existing?.searchIntent as Record<string, unknown>) ?? {}),
+          channel: 'call_booking',
+          province: e.province,
+          reason: reason ?? e.reason,
+        },
+      });
+
+      const dueAt = resolveCallDueAt(e.preferredAt?.toISOString() ?? null);
+      await this.repo.createTask({
+        contactId: contact.id,
+        title: callBookingTaskTitle({ provinceName, reasonLabel }),
+        dueAt,
+      });
+      await this.repo.addActivity({
+        contactId: contact.id,
+        type: 'system',
+        body: `Call requested · ${provinceName} · ${reasonLabel}`,
+      });
+      await this.repo.audit({
+        actorAdminId: null,
+        action: 'system_call_request',
+        entityType: 'crm_contact',
+        entityId: contact.id,
+        detail: { source: 'call_request', province: e.province, reason: reason ?? e.reason },
+      });
+    } catch (err) {
+      this.logger.warn(`CRM onCallRequestCreated failed: ${(err as Error).message}`);
     }
   }
 }
