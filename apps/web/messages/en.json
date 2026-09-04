@@ -1,4 +1,26 @@
 {
+  "meta": {
+    "template": "%s · EasyCasa",
+    "home": {
+      "title": "EasyCasa — property, without the markup",
+      "description": "Search homes across every Italian region. Pay only for the services you use: à la carte tools to buy, sell and let, with no percentage of the sale."
+    },
+    "search": {
+      "title": "Search properties",
+      "description": "Filter by region, price, type and bedrooms, and search the map across properties available in Italy. Find the home that fits."
+    },
+    "add": {
+      "title": "List your property",
+      "description": "Publish your listing: property details, price and floor area, photos. Fill in the EasyCasa taxonomy so buyers can find you."
+    },
+    "pricing": {
+      "title": "À la carte pricing",
+      "description": "The EasyCasa service price list. Pay only for the services you use — fixed fees, with no percentage of the sale price."
+    },
+    "notFound": {
+      "title": "Page not found"
+    }
+  },
   "brand": {
     "name": "EasyCasa",
     "tagline": "Buy, sell, and rent — pay only for the services you use, from a licensed agency."

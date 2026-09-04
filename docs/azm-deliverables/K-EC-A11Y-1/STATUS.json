@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_ec_a11y_1",
+  "kaizenCode": "K EC A11Y-1",
+  "polishId": "EC-A11Y-1",
+  "title": "EC-A11Y-1 — site-wide document title (layout generateMetadata)",
+  "venture": "EasyCasa",
+  "lifecycle": "pr_ready",
+  "agentStatus": "IDLE",
+  "agentBcId": "bc-f4778576-93df-49c2-8bd6-5b333349c84d",
+  "agentUrl": "https://cursor.com/agents/bc-f4778576-93df-49c2-8bd6-5b333349c84d",
+  "branch": "cursor/ec-a11y-title-pass-c84d",
+  "prNumber": 209,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/209",
+  "prState": "OPEN",
+  "dispatchedAt": "2026-09-04T20:19:21.251Z",
+  "updatedAt": "2026-09-04T20:25:58.806Z",
+  "summary": "PR #209 ready: five distinct titles + pa11y-preview 5/5. #207 not merged (integration red). Live stays c74b0b3 until web deploy.",
+  "nextAction": "Review+merge #209. Deploy apps/web only after an instruction names the merge SHA. #207 still needs a green integration job.",
+  "errors": []
+}

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 
   return {
-    title: t('meta.title'),
+    title: { absolute: t('meta.title') },
     description: t('meta.description'),
     alternates: {
       canonical: `https://easycasaita.com/${locale}/banks4all`,

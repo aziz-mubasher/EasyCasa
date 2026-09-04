@@ -17,7 +17,7 @@ export async function generateMetadata({
   const visitor = jar.get(SMARTLINK_VISITOR_COOKIE)?.value ?? null;
   const { data } = await fetchSmartLinkPublic(token, visitor);
   if (!data) {
-    return { title: 'Easy Casa Italy' };
+    return { title: { absolute: 'Easy Casa Italy' } };
   }
   const l = data.listing;
   const pricePart =
@@ -29,7 +29,7 @@ export async function generateMetadata({
   const image = l.coverUrl ?? l.media[0]?.url ?? undefined;
 
   return {
-    title: `${l.title} · Easy Casa Italy`,
+    title: { absolute: `${l.title} · Easy Casa Italy` },
     description: description || l.title,
     openGraph: {
       title: l.title,
