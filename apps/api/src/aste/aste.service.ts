@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 
-import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { ITALIAN_PROVINCES, PRODUCT_EVENTS, normalizeProvinceSlug } from '@easycasa/shared';
 import { eq, sql } from 'drizzle-orm';
 
@@ -9,6 +9,8 @@ import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { asteLeads } from '../db/schema';
 import { EmailService } from '../email/email.service';
+import { crmFireSafe } from '../crm/crm-fire-safe';
+import { CRM_HOOKS, type CrmHooks } from '../crm/domain/ports';
 import type { CreateAsteLeadDto } from './dto/create-aste-lead.dto';
 
 const PROVINCE_SLUGS = new Set(ITALIAN_PROVINCES.map((p) => p.slug));
@@ -35,6 +37,7 @@ export class AsteService {
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly email: EmailService,
     private readonly analytics: ProductAnalyticsService,
+    @Optional() @Inject(CRM_HOOKS) private readonly crmHooks?: CrmHooks,
   ) {}
 
   async createLead(dto: CreateAsteLeadDto): Promise<{
@@ -71,11 +74,13 @@ export class AsteService {
       .limit(1);
 
     let token: string;
+    let leadId: string;
     let duplicate = false;
 
     if (existing[0]) {
       duplicate = true;
       token = existing[0].guideToken;
+      leadId = existing[0].id;
       await this.db
         .update(asteLeads)
         .set({
@@ -89,15 +94,19 @@ export class AsteService {
         .where(eq(asteLeads.id, existing[0].id));
     } else {
       token = newGuideToken();
-      await this.db.insert(asteLeads).values({
-        email,
-        language,
-        locale,
-        province,
-        buyerType,
-        consent: true,
-        guideToken: token,
-      });
+      const inserted = await this.db
+        .insert(asteLeads)
+        .values({
+          email,
+          language,
+          locale,
+          province,
+          buyerType,
+          consent: true,
+          guideToken: token,
+        })
+        .returning({ id: asteLeads.id });
+      leadId = inserted[0]?.id ?? existing[0]?.id ?? '';
     }
 
     const url = guideUrl(locale, token);
@@ -125,6 +134,22 @@ export class AsteService {
       guideUrl: url,
       language,
     });
+
+    if (leadId) {
+      await crmFireSafe(
+        'onAsteWaitlistLead',
+        this.crmHooks
+          ? () =>
+              this.crmHooks!.onAsteWaitlistLead({
+                asteLeadId: leadId,
+                email,
+                locale: language,
+                province,
+                buyerType,
+              })
+          : undefined,
+      );
+    }
 
     return { ok: true, guideUrl: url, language, duplicate };
   }

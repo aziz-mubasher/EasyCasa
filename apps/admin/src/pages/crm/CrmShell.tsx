@@ -37,7 +37,7 @@ export function CrmShell() {
           <p className="crm__eyebrow">K EC 4.1 · Internal</p>
           <h1>CRM</h1>
           <p className="muted">
-            Seekers, owners, B4A referrals, and partners — one contact, role overlays.
+            Seekers, owners, Easy Legenda (Aste), WhatsApp, B4A referrals, and partners.
           </p>
         </div>
         <nav className="crm__tabs" aria-label="CRM sections">

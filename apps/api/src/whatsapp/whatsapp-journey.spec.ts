@@ -7,10 +7,12 @@ import {
   isCasualHi,
   isJourneyButtonId,
   JOURNEY_BUTTON_IDS,
+  JOURNEY_LOCALES,
   journeyCopy,
   LANGUAGE_COOLDOWN_MS,
   parseLanguageReplyId,
   romeHour,
+  toCrmLocale,
 } from './whatsapp-journey';
 
 const noonUtc = new Date('2026-09-03T10:00:00.000Z'); // 12:00 Rome (CEST)
@@ -20,10 +22,25 @@ describe('whatsapp-journey helpers', () => {
   it('maps language reply ids and rejects credit leftovers', () => {
     expect(parseLanguageReplyId('lang_it')).toBe('it');
     expect(parseLanguageReplyId('lang_en')).toBe('en');
+    expect(parseLanguageReplyId('lang_ur')).toBe('ur');
+    expect(parseLanguageReplyId('lang_hi')).toBe('hi');
+    expect(parseLanguageReplyId('lang_pa')).toBe('pa');
+    expect(parseLanguageReplyId('lang_ar')).toBe('ar');
     expect(parseLanguageReplyId('buying_a_house')).toBeNull();
     expect(isJourneyButtonId('book_viewing')).toBe(true);
     expect(isJourneyButtonId('book_onboarding_call')).toBe(false);
     expect(isJourneyButtonId('plan_mutuo')).toBe(false);
+  });
+
+  it('maps extra WhatsApp locales onto the CRM it/en/es CHECK', () => {
+    expect(toCrmLocale('it')).toBe('it');
+    expect(toCrmLocale('en')).toBe('en');
+    expect(toCrmLocale('es')).toBe('es');
+    expect(toCrmLocale('pt')).toBe('es');
+    expect(toCrmLocale('ur')).toBe('en');
+    expect(toCrmLocale('hi')).toBe('en');
+    expect(toCrmLocale('pa')).toBe('en');
+    expect(toCrmLocale('fr')).toBe('en');
   });
 
   it('Rome business hours are 06:00–22:00', () => {
@@ -39,12 +56,40 @@ describe('whatsapp-journey helpers', () => {
   });
 
   it('IT button titles stay within Meta 20-char limit', () => {
-    for (const locale of ['it', 'en', 'es'] as const) {
+    for (const locale of JOURNEY_LOCALES) {
       for (const b of journeyCopy(locale).buttons) {
         expect(b.title.length).toBeLessThanOrEqual(20);
         expect(Object.values(JOURNEY_BUTTON_IDS)).toContain(b.id);
       }
     }
+  });
+
+  it('language ice-breaker is the 10-row B4A set within Meta list limits', () => {
+    const langs = journeyCopy('it').languages;
+    expect(langs).toHaveLength(10);
+    expect(langs.map((l) => l.id)).toEqual([
+      'lang_it',
+      'lang_en',
+      'lang_es',
+      'lang_fr',
+      'lang_de',
+      'lang_pt',
+      'lang_ur',
+      'lang_hi',
+      'lang_pa',
+      'lang_ar',
+    ]);
+    for (const row of langs) {
+      expect(row.title.length).toBeLessThanOrEqual(24);
+      expect((row.description ?? '').length).toBeLessThanOrEqual(72);
+    }
+  });
+
+  it('casual hi includes B4A neighbour greetings', () => {
+    expect(isCasualHi('bonjour')).toBe(true);
+    expect(isCasualHi('namaste')).toBe(true);
+    expect(isCasualHi('salam')).toBe(true);
+    expect(isCasualHi('hallo')).toBe(true);
   });
 });
 
@@ -111,6 +156,13 @@ describe('decideJourneyAction', () => {
         receivedAt: nightUtc,
       }),
     ).toEqual({ type: 'welcome', locale: 'en', offHours: true });
+    expect(
+      decideJourneyAction(emptyJourneyState(), {
+        text: null,
+        interactiveId: 'lang_ur',
+        receivedAt: noonUtc,
+      }),
+    ).toEqual({ type: 'welcome', locale: 'ur', offHours: false });
   });
 
   it('three EC buttons only after language is saved', () => {

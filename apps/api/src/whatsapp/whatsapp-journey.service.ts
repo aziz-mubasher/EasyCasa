@@ -18,6 +18,7 @@ import {
   decideJourneyAction,
   isJourneyLocale,
   journeyCopy,
+  parseLanguageReplyId,
   type JourneyAction,
   type JourneyState,
   type JourneyStep,
@@ -55,6 +56,9 @@ export class WhatsAppJourneyService {
       return;
     }
 
+    const interactiveReplyId = parseStoredInteractiveId(row.body, row.messageType);
+    const pickedLocale = parseLanguageReplyId(interactiveReplyId);
+    const localeForCrm = pickedLocale ?? (isJourneyLocale(contact.language) ? contact.language : null);
     const hooks = this.crmHooks;
     await crmFireSafe(
       'onWhatsAppInbound',
@@ -63,7 +67,7 @@ export class WhatsAppJourneyService {
             hooks.onWhatsAppInbound({
               waId: row.waId,
               contactName: row.contactName,
-              locale: isJourneyLocale(contact.language) ? contact.language : null,
+              locale: localeForCrm,
               bodyPreview: row.body,
               matchedUserId: contact.matchedUserId,
             })
@@ -74,7 +78,6 @@ export class WhatsAppJourneyService {
       if (linked) await this.linkCrmContact(row.waId, linked.id);
     }
 
-    const interactiveReplyId = parseStoredInteractiveId(row.body, row.messageType);
     const action = decideJourneyAction(toState(contact), {
       text: row.body,
       interactiveId: interactiveReplyId,

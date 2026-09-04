@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { crmSourceLabel } from '@easycasa/shared';
 
 import { useApi } from '../../api';
 import { Badge } from '../../components/ui';
@@ -57,6 +58,10 @@ export function CrmContact360({
             {contact.email ?? '—'} · {contact.phone ?? '—'}
           </p>
           <div className="crm-badges">
+            <Badge variant={contact.source === 'aste' ? 'amber' : 'grey'}>
+              {crmSourceLabel(contact.source)}
+            </Badge>
+            {contact.locale ? <Badge variant="grey">{contact.locale}</Badge> : null}
             {roles.map((r) => (
               <Badge key={r} variant="blue">
                 {r}
@@ -80,6 +85,21 @@ export function CrmContact360({
                 Stage: <Badge variant="amber">{seeker.stage}</Badge>
               </p>
               <p className="muted mono">First enquiry: {seeker.firstEnquiryId ?? '—'}</p>
+              {seeker.searchIntent && Object.keys(seeker.searchIntent).length > 0 ? (
+                <p className="muted">
+                  Intent:{' '}
+                  <span className="mono">
+                    {[
+                      seeker.searchIntent.brand,
+                      seeker.searchIntent.channel,
+                      seeker.searchIntent.kind,
+                      seeker.searchIntent.whatsappLanguage,
+                    ]
+                      .filter((v): v is string => typeof v === 'string' && v.length > 0)
+                      .join(' · ') || '—'}
+                  </span>
+                </p>
+              ) : null}
             </article>
           ) : null}
           {owner ? (

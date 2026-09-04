@@ -12,6 +12,8 @@ import {
   type CrmRepository,
   type CrmViewingHookStage,
   type CrmViewingRef,
+  type CrmAsteAnalysisRef,
+  type CrmAsteWaitlistRef,
   type CrmWhatsAppBriefRef,
   type CrmWhatsAppRef,
 } from './domain/ports';
@@ -175,7 +177,8 @@ export class CrmHooksService implements CrmHooks {
       const e164 = phone ? `+${phone}` : null;
       let contact = e.matchedUserId ? await this.repo.findContactByUserId(e.matchedUserId) : null;
       if (!contact && e164) contact = await this.repo.findContactByPhone(e164);
-      const locale = e.locale === 'en' || e.locale === 'es' ? e.locale : 'it';
+      const locale = crmLocaleFromAny(e.locale);
+      const waLang = e.locale?.trim() || locale;
       const fullName = e.contactName?.trim() || (e164 ?? 'WhatsApp');
 
       if (!contact) {
@@ -192,9 +195,18 @@ export class CrmHooksService implements CrmHooks {
           userId: contact.userId ?? e.matchedUserId,
           phone: contact.phone ?? e164,
           fullName: contact.fullName === 'Seeker' || contact.fullName === 'WhatsApp' ? fullName : contact.fullName,
-          locale: contact.locale || locale,
+          locale,
         });
       }
+      const seeker = await this.repo.getSeeker(contact.id);
+      await this.repo.upsertSeeker(contact.id, {
+        stage: seeker?.stage ?? 'new_enquiry',
+        searchIntent: {
+          ...((seeker?.searchIntent as Record<string, unknown>) ?? {}),
+          channel: 'whatsapp',
+          whatsappLanguage: waLang,
+        },
+      });
 
       await this.repo.addActivity({
         contactId: contact.id,
@@ -239,4 +251,133 @@ export class CrmHooksService implements CrmHooks {
       this.logger.warn(`CRM onWhatsAppSearchBrief failed: ${(err as Error).message}`);
     }
   }
+
+  async onAsteWaitlistLead(e: CrmAsteWaitlistRef): Promise<void> {
+    if (!this.enabled()) return;
+    try {
+      const email = e.email.trim().toLowerCase();
+      if (!email) return;
+      const locale = crmLocaleFromAny(e.locale);
+      let contact = await this.repo.findContactByEmail(email);
+      const tags = mergeTags(contact?.tags, ['easy-legenda', 'aste-waitlist']);
+      if (!contact) {
+        contact = await this.repo.createContact({
+          fullName: email.split('@')[0] || 'Easy Legenda',
+          email,
+          locale,
+          source: 'aste',
+          tags,
+        });
+      } else {
+        contact = await this.repo.updateContact(contact.id, {
+          email: contact.email ?? email,
+          tags,
+          locale: contact.locale || locale,
+        });
+      }
+      const existing = await this.repo.getSeeker(contact.id);
+      await this.repo.upsertSeeker(contact.id, {
+        stage: existing?.stage ?? 'new_enquiry',
+        searchIntent: {
+          ...((existing?.searchIntent as Record<string, unknown>) ?? {}),
+          channel: 'aste',
+          brand: 'easy-legenda',
+          kind: 'waitlist',
+          province: e.province,
+          buyerType: e.buyerType,
+        },
+      });
+      await this.repo.addActivity({
+        contactId: contact.id,
+        type: 'aste_ref',
+        body: 'Easy Legenda waitlist / guida',
+        refTable: 'aste_leads',
+        refId: e.asteLeadId,
+      });
+      await this.repo.audit({
+        actorAdminId: null,
+        action: 'system_aste_waitlist_upsert',
+        entityType: 'crm_contact',
+        entityId: contact.id,
+        detail: { source: 'aste', kind: 'waitlist' },
+      });
+    } catch (err) {
+      this.logger.warn(`CRM onAsteWaitlistLead failed: ${(err as Error).message}`);
+    }
+  }
+
+  async onAsteAnalysisCreated(e: CrmAsteAnalysisRef): Promise<void> {
+    if (!this.enabled()) return;
+    try {
+      const user = this.users ? await this.users.findById(e.userId) : null;
+      const email = user?.email?.trim().toLowerCase() || null;
+      const phone = user?.phone?.trim() || null;
+      const fullName = user?.displayName?.trim() || email || 'Easy Legenda';
+      const locale = crmLocaleFromAny(e.language);
+      let contact = await this.repo.findContactByUserId(e.userId);
+      if (!contact && email) contact = await this.repo.findContactByEmail(email);
+      const tags = mergeTags(contact?.tags, ['easy-legenda', 'aste-analysis']);
+      if (!contact) {
+        contact = await this.repo.createContact({
+          userId: e.userId,
+          fullName,
+          email,
+          phone,
+          locale,
+          source: 'aste',
+          tags,
+        });
+      } else {
+        contact = await this.repo.updateContact(contact.id, {
+          userId: contact.userId ?? e.userId,
+          email: contact.email ?? email,
+          phone: contact.phone ?? phone,
+          fullName: contact.fullName === 'Seeker' || contact.fullName === 'WhatsApp' ? fullName : contact.fullName,
+          tags,
+          locale: contact.locale || locale,
+        });
+      }
+      const existing = await this.repo.getSeeker(contact.id);
+      await this.repo.upsertSeeker(contact.id, {
+        stage: existing?.stage ?? 'new_enquiry',
+        searchIntent: {
+          ...((existing?.searchIntent as Record<string, unknown>) ?? {}),
+          channel: 'aste',
+          brand: 'easy-legenda',
+          kind: 'analysis',
+          register: e.register,
+          lottoLabel: e.lottoLabel,
+        },
+      });
+      await this.repo.addActivity({
+        contactId: contact.id,
+        type: 'aste_ref',
+        body: e.lottoLabel
+          ? `Easy Legenda analysis · ${e.lottoLabel}`
+          : 'Easy Legenda / Aste Analysis started',
+        refTable: 'aste_analyses',
+        refId: e.analysisId,
+      });
+      await this.repo.audit({
+        actorAdminId: null,
+        action: 'system_aste_analysis_upsert',
+        entityType: 'crm_contact',
+        entityId: contact.id,
+        detail: { source: 'aste', kind: 'analysis', analysisId: e.analysisId },
+      });
+    } catch (err) {
+      this.logger.warn(`CRM onAsteAnalysisCreated failed: ${(err as Error).message}`);
+    }
+  }
+}
+
+function crmLocaleFromAny(raw: string | null | undefined): 'it' | 'en' | 'es' {
+  if (raw === 'en' || raw === 'es' || raw === 'it') return raw;
+  if (raw === 'pt') return 'es';
+  if (!raw) return 'it';
+  return 'en';
+}
+
+function mergeTags(existing: string[] | undefined, extra: string[]): string[] {
+  return [...new Set([...(existing ?? []), ...extra])];
 }

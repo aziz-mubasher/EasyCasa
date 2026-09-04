@@ -27,7 +27,7 @@ describe('AsteService', () => {
   };
   const db = {
     select: vi.fn(() => selectChain),
-    insert: vi.fn(() => ({ values: insert })),
+    insert: vi.fn(() => ({ values: vi.fn(() => ({ returning: insert })) })),
     update: vi.fn(() => ({ set: vi.fn(() => ({ where: update })) })),
   };
   const email = { asteGuideDelivery: vi.fn(async () => ({ provider: 'noop', delivered: false })) };
@@ -40,12 +40,27 @@ describe('AsteService', () => {
     selectChain.from.mockReturnValue(selectChain);
     selectChain.where.mockReturnValue(selectChain);
     selectChain.limit.mockResolvedValue([]);
-    insert.mockResolvedValue(undefined);
+    insert.mockResolvedValue([{ id: 'lead-1' }]);
     update.mockResolvedValue(undefined);
     service = new AsteService(
       db as never,
       email as never,
       analytics as never,
+    );
+  });
+
+  it('fires the Easy Legenda CRM waitlist hook with the lead id', async () => {
+    const crmHooks = { onAsteWaitlistLead: vi.fn(async () => undefined) };
+    service = new AsteService(db as never, email as never, analytics as never, crmHooks as never);
+    await service.createLead(dto());
+    expect(crmHooks.onAsteWaitlistLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        asteLeadId: 'lead-1',
+        email: 'buyer@example.it',
+        locale: 'it',
+        province: 'MI',
+        buyerType: 'prima_casa',
+      }),
     );
   });
 

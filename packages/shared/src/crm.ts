@@ -44,7 +44,30 @@ export type CrmContactSource =
   | 'import'
   | 'b4a_referral'
   | 'partner_intake'
-  | 'whatsapp';
+  | 'whatsapp'
+  | 'aste';
+
+/** Operator-facing labels for `#crm` source badges. */
+export function crmSourceLabel(source: CrmContactSource | string): string {
+  switch (source) {
+    case 'aste':
+      return 'Easy Legenda';
+    case 'whatsapp':
+      return 'WhatsApp';
+    case 'enquiry':
+      return 'Enquiry';
+    case 'b4a_referral':
+      return 'B4A';
+    case 'partner_intake':
+      return 'Partner';
+    case 'import':
+      return 'Import';
+    case 'manual':
+      return 'Manual';
+    default:
+      return source;
+  }
+}
 
 export type CrmSeekerStage =
   | 'new_enquiry'
@@ -83,7 +106,8 @@ export type CrmActivityType =
   | 'stage_change'
   | 'task_done'
   | 'system'
-  | 'whatsapp_in';
+  | 'whatsapp_in'
+  | 'aste_ref';
 
 export type CrmTaskStatus = 'open' | 'done' | 'cancelled';
 

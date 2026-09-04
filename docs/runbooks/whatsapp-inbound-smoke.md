@@ -19,7 +19,7 @@ Webhook: `https://easycasaita.com/api/whatsapp/webhook`
 Admin inbox + Hub: `https://admin.easycasaita.com/#whatsapp` (**EC WhatsApp**).
 Health (no secrets): `https://easycasaita.com/api/whatsapp/webhook/status`
 
-First inbound from a new number now sends the **language list** (not the old email-only ack). Established portal clients skip automation.
+First inbound from a new number now sends the **language list** (10 rows: IT EN ES FR DE PT UR HI PA AR — B4A ice-breaker set plus EU/MENA neighbours; not the old email-only ack). Established portal clients skip automation.
 
 **Meta field subscription (2026-08-02):** the app callback URL was active but
 `fields` had **no `messages`** — inbound POSTs never left Meta. Re-subscribe with

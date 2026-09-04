@@ -557,6 +557,7 @@ export class EasyCasaAdminApi {
     query?: string;
     role?: string;
     stage?: string;
+    source?: string;
     owner?: string;
     page?: number;
   }): Promise<{
@@ -575,6 +576,7 @@ export class EasyCasaAdminApi {
     if (params?.query) q.set('query', params.query);
     if (params?.role) q.set('role', params.role);
     if (params?.stage) q.set('stage', params.stage);
+    if (params?.source) q.set('source', params.source);
     if (params?.owner) q.set('owner', params.owner);
     if (params?.page != null) q.set('page', String(params.page));
     const qs = q.toString();
@@ -601,8 +603,13 @@ export class EasyCasaAdminApi {
       tags: string[];
       notesSummary: string | null;
       source: string;
+      locale?: string;
     };
-    seeker: { stage: string; firstEnquiryId: string | null } | null;
+    seeker: {
+      stage: string;
+      firstEnquiryId: string | null;
+      searchIntent?: Record<string, unknown>;
+    } | null;
     owner: {
       stage: string;
       preferredChannel: string;
@@ -687,7 +694,12 @@ export class EasyCasaAdminApi {
     columns: Array<{
       stage: string;
       count: number;
-      cards: Array<{ contactId: string; fullName: string; email: string | null }>;
+      cards: Array<{
+        contactId: string;
+        fullName: string;
+        email: string | null;
+        source?: string;
+      }>;
     }>;
   }> {
     return this.request(`/admin/crm/pipelines/${encodeURIComponent(role)}`, z.unknown()) as Promise<{
@@ -696,7 +708,12 @@ export class EasyCasaAdminApi {
       columns: Array<{
         stage: string;
         count: number;
-        cards: Array<{ contactId: string; fullName: string; email: string | null }>;
+        cards: Array<{
+          contactId: string;
+          fullName: string;
+          email: string | null;
+          source?: string;
+        }>;
       }>;
     }>;
   }

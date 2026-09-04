@@ -70,6 +70,7 @@ export class CrmController {
     @Query('query') query?: string,
     @Query('role') role?: string,
     @Query('stage') stage?: string,
+    @Query('source') source?: string,
     @Query('owner') owner?: string,
     @Query('page') page?: string,
   ) {
@@ -77,6 +78,7 @@ export class CrmController {
       query,
       role,
       stage,
+      source,
       owner,
       page: page ? Number(page) : 1,
     });
