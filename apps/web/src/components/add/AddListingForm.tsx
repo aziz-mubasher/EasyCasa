@@ -38,6 +38,20 @@ const TOTAL = 6;
 const ENERGY_CLASSES = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
 const MAX_IMAGES = 20;
 
+/** Local createObjectURL previews only — never a DOM attribute or remote URL. */
+function blobPreviewSrc(url: string): string | undefined {
+  return url.startsWith('blob:') ? url : undefined;
+}
+
+function LocalImageThumb({ src }: { src: string }) {
+  const safe = blobPreviewSrc(src);
+  if (!safe) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- blob: object URL, not a remote asset
+    <img src={safe} alt="" className="h-full w-full object-cover" />
+  );
+}
+
 type FormState = {
   title: string;
   description: string;
@@ -662,12 +676,12 @@ export function AddListingForm() {
             </Field>
             {images.length > 0 && (
               <ul className="grid grid-cols-3 gap-2">
-                {images.map((img) => (
-                  <li key={img.id} className="relative aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
-                    <img src={img.previewUrl} alt="" className="h-full w-full object-cover" />
+                {images.map((photo) => (
+                  <li key={photo.id} className="relative aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
+                    <LocalImageThumb src={photo.previewUrl} />
                     <button
                       type="button"
-                      onClick={() => removeImage(img.id)}
+                      onClick={() => removeImage(photo.id)}
                       className="absolute top-1 right-1 rounded-full bg-ink/80 text-paper text-xs px-2 py-0.5"
                       aria-label={t('removeImage')}
                     >
@@ -705,9 +719,9 @@ export function AddListingForm() {
 
             {images.length > 0 && (
               <div className="grid grid-cols-3 gap-2">
-                {images.map((img) => (
-                  <div key={img.id} className="aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
-                    <img src={img.previewUrl} alt="" className="h-full w-full object-cover" />
+                {images.map((photo) => (
+                  <div key={photo.id} className="aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
+                    <LocalImageThumb src={photo.previewUrl} />
                   </div>
                 ))}
               </div>
