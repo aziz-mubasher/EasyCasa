@@ -17,6 +17,7 @@ import { WhatsAppCloudClient, type WhatsAppSendResult } from './whatsapp-cloud.c
 import {
   decideJourneyAction,
   isJourneyLocale,
+  JOURNEY_LEGENDA_URL,
   journeyCopy,
   parseLanguageReplyId,
   type JourneyAction,
@@ -198,6 +199,16 @@ export class WhatsAppJourneyService {
       return this.cloud.sendInteractiveButtons(to, body, copy.buttons);
     }
 
+    if (action.type === 'buy_property') {
+      return this.cloud.sendText(to, journeyCopy(action.locale).buyProperty);
+    }
+    if (action.type === 'sell_property') {
+      return this.cloud.sendText(to, journeyCopy(action.locale).sellProperty);
+    }
+    if (action.type === 'easy_legenda') {
+      const copy = journeyCopy(action.locale);
+      return this.cloud.sendCtaUrl(to, copy.easyLegenda, copy.buttons[2]!.title, JOURNEY_LEGENDA_URL);
+    }
     if (action.type === 'book_viewing') {
       return this.cloud.sendText(to, journeyCopy(action.locale).bookViewing);
     }
@@ -206,7 +217,7 @@ export class WhatsAppJourneyService {
     }
     if (action.type === 'open_listings') {
       const copy = journeyCopy(action.locale);
-      return this.cloud.sendCtaUrl(to, copy.openListings, copy.buttons[2]!.title, site);
+      return this.cloud.sendCtaUrl(to, copy.openListings, 'EasyCasa', site);
     }
     if (action.type === 'save_brief') {
       return this.cloud.sendText(to, journeyCopy(action.locale).briefThanks);
@@ -232,6 +243,9 @@ export class WhatsAppJourneyService {
       patch.greetingSentAt = receivedAt;
       patch.journeyStep = 'greeted';
     }
+    if (action.type === 'buy_property') patch.journeyStep = 'book_viewing';
+    if (action.type === 'sell_property') patch.journeyStep = 'greeted';
+    if (action.type === 'easy_legenda') patch.journeyStep = 'open_listings';
     if (action.type === 'book_viewing') patch.journeyStep = 'book_viewing';
     if (action.type === 'search_brief') patch.journeyStep = 'search_brief';
     if (action.type === 'open_listings') patch.journeyStep = 'open_listings';
@@ -306,6 +320,11 @@ function outboundBody(action: JourneyAction, siteUrl: string): string {
   if (action.type === 'welcome') {
     const copy = journeyCopy(action.locale);
     return action.offHours ? copy.offHours : copy.welcome;
+  }
+  if (action.type === 'buy_property') return journeyCopy(action.locale).buyProperty;
+  if (action.type === 'sell_property') return journeyCopy(action.locale).sellProperty;
+  if (action.type === 'easy_legenda') {
+    return `${journeyCopy(action.locale).easyLegenda} ${JOURNEY_LEGENDA_URL}`;
   }
   if (action.type === 'book_viewing') return journeyCopy(action.locale).bookViewing;
   if (action.type === 'search_brief') return journeyCopy(action.locale).searchBrief;

@@ -48,7 +48,7 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | ADMIN_PUBLIC_URL | api | EC-19 base URL for inbound alert links (default `https://admin.easycasaita.com`). |
 | WA_HANDLE_SECRET | api | EC-19a HMAC secret for opaque `wa_handle` routing (min 16). **Required at boot** — no silent fallback. Rotation breaks open `#whatsapp/<handle>` deep-links only — re-open from the list (do not blame the viewer). **Log every rotation** in the table below. |
 | WHATSAPP_VIEWING_*_TEMPLATE / WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE | api | K EC 8.7 Phase C utility templates. Empty name → skip that WhatsApp channel (email/in-app still run). |
-| WHATSAPP_PUBLIC_SITE_URL | api | K EC 7.4 session CTA for “open listings” (default `https://easycasaita.com`). Not a secret. |
+| WHATSAPP_PUBLIC_SITE_URL | api | K EC 7.4 session CTA for leftover `open_listings` taps (default `https://easycasaita.com`). Easy Legenda uses `https://legenda.easycasaita.com`. Not a secret. |
 | WHATSAPP_BUSINESS_NUMBER | api | Optional E.164 display on the Hub Connection tab. Empty hides it. **Never** the Banks4All number. |
 | PHONE_OTP_PEPPER | api | SHA-256 pepper for OTP hashes (min 16 chars). |
 
