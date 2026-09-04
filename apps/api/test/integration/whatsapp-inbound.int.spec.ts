@@ -2,7 +2,7 @@ import { createHmac } from 'node:crypto';
 
 import { eq } from 'drizzle-orm';
 import request from 'supertest';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { APP_CONFIG } from '../../src/config/config.module';
 import { DRIZZLE } from '../../src/db/db.module';
@@ -57,6 +57,7 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
   }, 300_000);
 
   afterAll(async () => {
+    vi.unstubAllGlobals();
     await ctx?.stop();
   });
 
@@ -66,6 +67,10 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
       json: async () => ({ messages: [{ id: 'wamid.reply' }] }),
     });
     vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   async function post(payload: unknown, signature?: string) {
@@ -124,7 +129,10 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
     fetchMock.mockClear();
     const payload = textPayload({ id: 'wamid.ec17.dup', body: 'dup' });
     expect((await post(payload)).status).toBe(200);
-    await vi.waitFor(async () => expect(await countRows('wamid.ec17.dup')).toBe(1));
+    await vi.waitFor(async () => {
+      expect(await countRows('wamid.ec17.dup')).toBe(1);
+      expect(fetchMock.mock.calls.length).toBeGreaterThan(0);
+    });
     const sendsAfterFirst = fetchMock.mock.calls.length;
 
     expect((await post(payload)).status).toBe(200);
@@ -137,7 +145,10 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
     fetchMock.mockClear();
     const from = '393399998888';
     expect((await post(textPayload({ id: 'wamid.ec17.a', from, body: 'one' }))).status).toBe(200);
-    await vi.waitFor(async () => expect(await countRows('wamid.ec17.a')).toBe(1));
+    await vi.waitFor(async () => {
+      expect(await countRows('wamid.ec17.a')).toBe(1);
+      expect(fetchMock.mock.calls.length).toBeGreaterThan(0);
+    });
     const sendsAfterFirst = fetchMock.mock.calls.length;
 
     expect((await post(textPayload({ id: 'wamid.ec17.b', from, body: 'two' }))).status).toBe(200);

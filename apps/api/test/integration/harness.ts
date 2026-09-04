@@ -31,6 +31,14 @@ export const PG_IMAGE = 'easycasa-postgres-int';
 const INT_WA_SECRET = 'int-test-wa-secret';
 const INT_WA_HANDLE_SECRET = 'int-test-wa-handle-secret';
 
+/** Captured before any spec stubs `globalThis.fetch` (Meili + Graph use it). */
+const nativeFetch = globalThis.fetch.bind(globalThis);
+
+/** Undo `vi.stubGlobal('fetch')` so later files can talk to Meili. */
+export function restoreNativeFetch(): void {
+  globalThis.fetch = nativeFetch;
+}
+
 /** Meili on a loaded GH runner often exceeds the 60s default HTTP wait. */
 export function meiliWait() {
   return Wait.forHttp('/health', 7700).withStartupTimeout(120_000);
@@ -52,6 +60,7 @@ export function ensurePostgresImage(): string {
 let shared: Promise<IntegrationContext> | null = null;
 
 export async function startIntegration(): Promise<IntegrationContext> {
+  restoreNativeFetch();
   if (!shared) {
     shared = bootOnce().catch((err) => {
       shared = null;
@@ -125,6 +134,10 @@ async function bootOnce(): Promise<IntegrationContext> {
   // Flag-off 404s stay in AsteAnalysisEnabledGuard unit tests.
   process.env.ASTE_ANALYSIS_ENABLED = 'true';
   process.env.EC_INT_HARNESS = '1';
+  // Do not inherit runner/org mail gateways — inbound tests assert noop
+  // `forward_error`, and HTTP email would also steal the WhatsApp fetch mock.
+  process.env.SMTP_URL = '';
+  process.env.EMAIL_PROVIDER_URL = '';
   // Force test secrets — do not inherit a runner/org WHATSAPP_APP_SECRET.
   process.env.WHATSAPP_APP_SECRET = INT_WA_SECRET;
   process.env.WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN || 'int-tok';
