@@ -29,9 +29,10 @@ API Hub is **not** a microservice. Staff call `/admin/whatsapp/hub/*`. Meta call
    (`lang_*` ids). CRM `contacts.locale` stays `it|en|es` (`pt`→`es`, others→`en`);
    the full WhatsApp code is stored on `wa_contacts.language` and
    `searchIntent.whatsappLanguage`. Then welcome or off-hours (06:00–22:00 Europe/Rome), then three **new** buttons:
-   - `book_viewing`
-   - `search_brief`
-   - `open_listings`
+   - `buy_property`
+   - `sell_property`
+   - `easy_legenda`
+   In-flight taps of `book_viewing` / `search_brief` / `open_listings` still resolve.
 5. Phone → CRM contact (`source=whatsapp`) when `CRM_ENABLED`.
 6. Operator Hub: connection (no secrets), templates catalog, canned replies, analytics.
 7. Health: `GET /whatsapp/webhook/status` (no secrets; signature-reject counter).

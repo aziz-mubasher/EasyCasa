@@ -27,6 +27,9 @@ describe('whatsapp-journey helpers', () => {
     expect(parseLanguageReplyId('lang_pa')).toBe('pa');
     expect(parseLanguageReplyId('lang_ar')).toBe('ar');
     expect(parseLanguageReplyId('buying_a_house')).toBeNull();
+    expect(isJourneyButtonId('buy_property')).toBe(true);
+    expect(isJourneyButtonId('sell_property')).toBe(true);
+    expect(isJourneyButtonId('easy_legenda')).toBe(true);
     expect(isJourneyButtonId('book_viewing')).toBe(true);
     expect(isJourneyButtonId('book_onboarding_call')).toBe(false);
     expect(isJourneyButtonId('plan_mutuo')).toBe(false);
@@ -61,6 +64,32 @@ describe('whatsapp-journey helpers', () => {
         expect(b.title.length).toBeLessThanOrEqual(20);
         expect(Object.values(JOURNEY_BUTTON_IDS)).toContain(b.id);
       }
+    }
+  });
+
+  it('welcome is EasyCasa Italia + buy/sell/asta buttons in every locale', () => {
+    expect(journeyCopy('en').welcome).toBe(
+      'Hi — this is the EasyCasa Italia WhatsApp channel. Choose what you want to do:',
+    );
+    expect(journeyCopy('en').welcome).not.toMatch(/property listing portal/);
+    expect(journeyCopy('en').buttons.map((b) => b.title)).toEqual([
+      'Buying Property',
+      'Selling Property',
+      'Easy Legenda (Asta)',
+    ]);
+    expect(journeyCopy('en').buttons.map((b) => b.id)).toEqual([
+      JOURNEY_BUTTON_IDS.buyProperty,
+      JOURNEY_BUTTON_IDS.sellProperty,
+      JOURNEY_BUTTON_IDS.easyLegenda,
+    ]);
+    for (const locale of JOURNEY_LOCALES) {
+      const copy = journeyCopy(locale);
+      expect(copy.welcome).toMatch(/EasyCasa Italia/);
+      expect(copy.welcome).not.toMatch(
+        /property listing portal|portale di annunci|portal de anuncios|portail d.annonces|Immobilienportal|portal de anúncios|پراپرٹی پورٹل|प्रॉपर्टी पोर्टल|بوابة إعلانات/,
+      );
+      expect(copy.buttons).toHaveLength(3);
+      expect(copy.buttons[2]!.title).toBe('Easy Legenda (Asta)');
     }
   });
 
@@ -170,31 +199,38 @@ describe('decideJourneyAction', () => {
     expect(
       decideJourneyAction(withLang, {
         text: null,
+        interactiveId: 'buy_property',
+        receivedAt: noonUtc,
+      }),
+    ).toEqual({ type: 'buy_property', locale: 'it' });
+    expect(
+      decideJourneyAction(withLang, {
+        text: null,
+        interactiveId: 'sell_property',
+        receivedAt: noonUtc,
+      }),
+    ).toEqual({ type: 'sell_property', locale: 'it' });
+    expect(
+      decideJourneyAction(withLang, {
+        text: null,
+        interactiveId: 'easy_legenda',
+        receivedAt: noonUtc,
+      }),
+    ).toEqual({ type: 'easy_legenda', locale: 'it' });
+    expect(
+      decideJourneyAction(withLang, {
+        text: null,
         interactiveId: 'book_viewing',
         receivedAt: noonUtc,
       }),
     ).toEqual({ type: 'book_viewing', locale: 'it' });
     expect(
-      decideJourneyAction(withLang, {
-        text: null,
-        interactiveId: 'search_brief',
-        receivedAt: noonUtc,
-      }),
-    ).toEqual({ type: 'search_brief', locale: 'it' });
-    expect(
-      decideJourneyAction(withLang, {
-        text: null,
-        interactiveId: 'open_listings',
-        receivedAt: noonUtc,
-      }),
-    ).toEqual({ type: 'open_listings', locale: 'it' });
-    expect(
       decideJourneyAction(emptyJourneyState(), {
         text: null,
-        interactiveId: 'book_viewing',
+        interactiveId: 'buy_property',
         receivedAt: noonUtc,
       }).type,
-    ).not.toBe('book_viewing');
+    ).not.toBe('buy_property');
   });
 
   it('stores search-brief free text as a preference, then waits for a human', () => {
