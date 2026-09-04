@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 
-import { loadApiConfig, type ApiConfig } from './load';
+import { apiConfig, type ApiConfig } from './load';
 
 /**
  * Injection token for the validated, immutable {@link ApiConfig}.
@@ -16,7 +16,7 @@ export const APP_CONFIG = Symbol('APP_CONFIG');
  */
 @Global()
 @Module({
-  providers: [{ provide: APP_CONFIG, useFactory: (): ApiConfig => loadApiConfig() }],
+  providers: [{ provide: APP_CONFIG, useFactory: (): ApiConfig => apiConfig }],
   exports: [APP_CONFIG],
 })
 export class ConfigModule {}
