@@ -15,6 +15,8 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
   return {
     API_PORT: 4000,
     NODE_ENV: 'test',
+    GIT_SHA: 'test',
+    BUILD_TIME: '2026-01-01T00:00:00Z',
     DATABASE_URL: 'postgresql://easycasa:x@localhost:5432/easycasa',
     EC_TEST_AUTH: true,
     ALLOW_PROVIDER_STUBS: true,

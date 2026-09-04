@@ -5,7 +5,10 @@
     "timeout": 30000,
     "ignore": [
       "WCAG2AA.Principle3.Guideline3_2.3_2_2.H32.2"
-    ]
+    ],
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+    }
   },
   "urls": [
     "https://easycasaita.com/it",

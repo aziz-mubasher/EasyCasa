@@ -1,6 +1,8 @@
 import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { sql } from 'drizzle-orm';
 
+import type { ApiConfig } from '../config';
+import { InjectConfig } from '../config/inject-config.decorator';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { whatsappInboundUnmatchedSenders } from '../observability/metrics';
@@ -19,11 +21,14 @@ export class WhatsAppUnmatchedSendersGauge
   private readonly log = new Logger(WhatsAppUnmatchedSendersGauge.name);
   private timer: ReturnType<typeof setInterval> | null = null;
 
-  constructor(@Inject(DRIZZLE) private readonly db: Db) {}
+  constructor(
+    @Inject(DRIZZLE) private readonly db: Db,
+    @InjectConfig() private readonly config: ApiConfig,
+  ) {}
 
   onModuleInit(): void {
     // Skip in unit/boot tests — no real Postgres; a hanging connect would block app.init.
-    if (process.env.NODE_ENV === 'test' || process.env.EC_TEST_AUTH === 'true') {
+    if (this.config.NODE_ENV === 'test' || this.config.EC_TEST_AUTH === true) {
       return;
     }
     this.timer = setInterval(() => {

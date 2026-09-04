@@ -17,8 +17,8 @@ RUN set -eux; \
     git \
     postgresql-server-dev-16; \
   git clone --depth 1 --branch "${PGVECTOR_REF}" https://github.com/pgvector/pgvector.git /tmp/pgvector; \
-  make -C /tmp/pgvector; \
-  make -C /tmp/pgvector install; \
+  make -C /tmp/pgvector OPTFLAGS="" with_llvm=no; \
+  make -C /tmp/pgvector OPTFLAGS="" with_llvm=no install; \
   rm -rf /tmp/pgvector; \
   apt-get purge -y --auto-remove build-essential git postgresql-server-dev-16; \
   rm -rf /var/lib/apt/lists/*

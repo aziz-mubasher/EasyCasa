@@ -21,6 +21,7 @@ tags = ["db", "credential"]
 description = "Non-secret fixtures and examples"
 paths = [
   '''\.env\.example$''',
+  '''\.env\.demo\.example$''',
   '''\.env\.test$''',
   '''(^|/)fixtures/''',
   '''(^|/)__tests__/''',
@@ -37,6 +38,7 @@ regexes = [
   '''postgres:\/\/user:pass@localhost''',
   '''EXAMPLE|PLACEHOLDER|CHANGEME|xxxx''',
   '''change_me(_strong)?@''',
+  '''change_me_demo''',
   '''postgres(?:ql)?://u:p@''',
   '''postgres(?:ql)?://easycasa:easycasa@''',
   '''postgres(?:ql)?://easycasa:x@''',
