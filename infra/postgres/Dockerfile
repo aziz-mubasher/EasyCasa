@@ -3,8 +3,10 @@
 # Build pgvector from source so the .so matches the image arch.
 # Avoid apt postgresql-16-pgvector — it can break pg_trgm.
 #
-# Pin FROM to $TARGETPLATFORM so Docker Desktop does not reuse a cached
-# linux/amd64 postgis layer when building linux/arm64.
+# Pin FROM to TARGETPLATFORM so Docker Desktop does not reuse a cached
+# linux/amd64 postgis layer when building linux/arm64. Default so
+# testcontainers (no BuildKit TARGETPLATFORM) still builds on CI.
+ARG TARGETPLATFORM=linux/amd64
 FROM --platform=$TARGETPLATFORM postgis/postgis:16-3.4
 
 ARG PGVECTOR_REF=v0.8.0

@@ -26,7 +26,19 @@ export interface IntegrationContext {
 }
 
 const MEILI_IMAGE = 'getmeili/meilisearch:v1.10';
-const PG_IMAGE = 'easycasa-postgres-int';
+export const PG_IMAGE = 'easycasa-postgres-int';
+
+/** Same `docker build` path as `.github/workflows/omi-load.yml` (testcontainers fromDockerfile flakes on empty TARGETPLATFORM). */
+export function ensurePostgresImage(): string {
+  try {
+    execFileSync('docker', ['image', 'inspect', PG_IMAGE], { stdio: 'ignore' });
+    return PG_IMAGE;
+  } catch {
+    const postgresContext = path.resolve(process.cwd(), '../../infra/postgres');
+    execFileSync('docker', ['build', '-t', PG_IMAGE, postgresContext], { stdio: 'inherit' });
+    return PG_IMAGE;
+  }
+}
 
 /** Shared across int specs in one vitest fork (lazy pool + one AppModule boot). */
 let shared: Promise<IntegrationContext> | null = null;
@@ -48,8 +60,7 @@ export async function startIntegration(): Promise<IntegrationContext> {
 }
 
 async function bootOnce(): Promise<IntegrationContext> {
-  const postgresContext = path.resolve(process.cwd(), '../../infra/postgres');
-  await GenericContainer.fromDockerfile(postgresContext).build(PG_IMAGE);
+  ensurePostgresImage();
 
   const pg: StartedPostgreSqlContainer = await new PostgreSqlContainer(PG_IMAGE)
     .withDatabase('easycasa_test')

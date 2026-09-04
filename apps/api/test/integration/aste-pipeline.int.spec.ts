@@ -4,7 +4,6 @@ import { Test } from '@nestjs/testing';
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { createServer, type Server } from 'node:http';
 import { execFileSync } from 'node:child_process';
-import path from 'node:path';
 import request from 'supertest';
 import { GenericContainer, type StartedTestContainer, Wait } from 'testcontainers';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -16,7 +15,7 @@ import {
   FIXTURE_NATIVE_PERIZIA,
   TINY_PNG,
 } from '../fixtures/aste/synthetic';
-import { dockerAvailable } from './harness';
+import { dockerAvailable, ensurePostgresImage } from './harness';
 import { asUser } from './test-auth';
 
 const gate = dockerAvailable() ? describe : describe.skip;
@@ -247,8 +246,7 @@ gate('Aste extraction pipeline (integration)', () => {
     if (!addr || typeof addr === 'string') throw new Error('ai port');
     aiPort = addr.port;
 
-    const postgresContext = path.resolve(process.cwd(), '../../infra/postgres');
-    await GenericContainer.fromDockerfile(postgresContext).build('easycasa-postgres-int');
+    ensurePostgresImage();
 
     pg = await new PostgreSqlContainer('easycasa-postgres-int')
       .withDatabase('easycasa_test')

@@ -43,6 +43,7 @@ async function build(
   resolver: JwksResolver,
 ): Promise<INestApplication> {
   const config = {
+    NODE_ENV: 'test',
     OIDC_ISSUER: ISSUER,
     OIDC_AUDIENCE: AUDIENCE,
     OIDC_ROLES_CLAIM: 'realm_access.roles',
