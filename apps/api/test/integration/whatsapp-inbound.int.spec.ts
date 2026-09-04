@@ -7,7 +7,8 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { APP_CONFIG } from '../../src/config/config.module';
 import { DRIZZLE } from '../../src/db/db.module';
 import type { Db } from '../../src/db/drizzle';
-import { waInboundMessages } from '../../src/db/schema';
+import { waContacts, waInboundMessages } from '../../src/db/schema';
+import { EmailService } from '../../src/email/email.service';
 import { dockerAvailable, startIntegration, type IntegrationContext } from './harness';
 
 const SECRET = 'int-test-wa-secret';
@@ -147,9 +148,11 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
     expect((await post(textPayload({ id: 'wamid.ec17.a', from, body: 'one' }))).status).toBe(200);
     await vi.waitFor(async () => {
       expect(await countRows('wamid.ec17.a')).toBe(1);
-      expect(fetchMock.mock.calls.length).toBeGreaterThan(0);
+      const contacts = await db.select().from(waContacts).where(eq(waContacts.waId, from));
+      expect(contacts[0]?.lastLanguagePromptAt).toBeTruthy();
     });
     const sendsAfterFirst = fetchMock.mock.calls.length;
+    expect(sendsAfterFirst).toBeGreaterThan(0);
 
     expect((await post(textPayload({ id: 'wamid.ec17.b', from, body: 'two' }))).status).toBe(200);
     await vi.waitFor(async () => expect(await countRows('wamid.ec17.b')).toBe(1));
@@ -220,18 +223,21 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
   });
 
   it('10. mail failure still returns 200 and sets forward_error', async () => {
-    // Noop/outbox may already mark undelivered; force throw via broken ops email path
-    // by mocking email through failed fetch is N/A — EmailService swallows. Use delivered:false
-    // from noop when SMTP unset (harness has no SMTP) → forward_error set.
-    const payload = textPayload({ id: 'wamid.ec17.mail', from: '393344443333', body: 'mail me' });
-    expect((await post(payload)).status).toBe(200);
-    await vi.waitFor(async () => {
-      const rows = await db
-        .select()
-        .from(waInboundMessages)
-        .where(eq(waInboundMessages.providerMessageId, 'wamid.ec17.mail'));
-      expect(rows).toHaveLength(1);
-      expect(rows[0]!.forwardError).toBeTruthy();
-    }, { timeout: 5000 });
+    const email = ctx.app.get(EmailService);
+    const spy = vi.spyOn(email, 'sendText').mockRejectedValue(new Error('smtp down'));
+    try {
+      const payload = textPayload({ id: 'wamid.ec17.mail', from: '393344443333', body: 'mail me' });
+      expect((await post(payload)).status).toBe(200);
+      await vi.waitFor(async () => {
+        const rows = await db
+          .select()
+          .from(waInboundMessages)
+          .where(eq(waInboundMessages.providerMessageId, 'wamid.ec17.mail'));
+        expect(rows).toHaveLength(1);
+        expect(rows[0]!.forwardError).toBeTruthy();
+      }, { timeout: 5000 });
+    } finally {
+      spy.mockRestore();
+    }
   });
 });
