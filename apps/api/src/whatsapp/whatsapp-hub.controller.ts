@@ -17,7 +17,7 @@ class CannedBody {
   body!: string;
 
   @IsOptional()
-  @IsIn(['it', 'en', 'es'])
+  @IsIn(['it', 'en', 'es', 'ur', 'hi'])
   locale?: string;
 }
 

@@ -3,6 +3,7 @@ export * from './types';
 export * from './authority';
 export * from './crm';
 export * from './call-booking';
+export * from './whatsapp-operator-templates';
 export * from './taxonomy';
 export * from './italian-geography';
 export * from './italy-geo';

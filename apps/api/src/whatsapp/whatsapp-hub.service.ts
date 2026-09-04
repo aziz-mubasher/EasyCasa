@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { desc, eq } from 'drizzle-orm';
 
+import { parseWaOperatorLocale } from '@easycasa/shared';
+
 import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
 import { DRIZZLE } from '../db/db.module';
@@ -136,7 +138,7 @@ export class WhatsAppHubService {
   }
 
   async createCanned(input: { title: string; body: string; locale?: string }) {
-    const locale = input.locale === 'en' || input.locale === 'es' ? input.locale : 'it';
+    const locale = parseWaOperatorLocale(input.locale);
     const [row] = await this.db
       .insert(waCannedReplies)
       .values({

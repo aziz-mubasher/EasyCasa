@@ -28,6 +28,7 @@ describe('whatsapp inbound format', () => {
     expect(PAGE).not.toMatch(/\{m\.(providerMessageId|phoneNumberId|actorUserId|windowExpiresAt)\}/);
     expect(PAGE).toContain('ecwa__composer');
     expect(PAGE).toContain('ecwa__thread-scroll');
+    expect(PAGE).toContain('WhatsAppOperatorDock');
   });
 
   it('threadPhone prefers a single E.164, never stacks masked + raw', () => {
