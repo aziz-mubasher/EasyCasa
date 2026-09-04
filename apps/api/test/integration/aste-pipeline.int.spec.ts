@@ -304,6 +304,8 @@ gate('Aste extraction pipeline (integration)', () => {
     resetConfigCache();
     const { resetDbConnection } = await import('../../src/db/drizzle');
     await resetDbConnection();
+    const { resetMeiliClient } = await import('../../src/search/meili');
+    resetMeiliClient();
 
     execFileSync('pnpm', ['--filter', '@easycasa/migration', 'migrate'], {
       stdio: 'inherit',

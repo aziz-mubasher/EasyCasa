@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { APP_CONFIG } from '../../src/config/config.module';
 import { DRIZZLE } from '../../src/db/db.module';
 import type { Db } from '../../src/db/drizzle';
 import { waInboundMessages } from '../../src/db/schema';
@@ -52,6 +53,7 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
   beforeAll(async () => {
     ctx = await startIntegration();
     db = ctx.app.get(DRIZZLE);
+    expect(ctx.app.get(APP_CONFIG).WHATSAPP_APP_SECRET).toBe(SECRET);
   }, 300_000);
 
   afterAll(async () => {
@@ -67,13 +69,12 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
   });
 
   async function post(payload: unknown, signature?: string) {
-    const raw = Buffer.from(JSON.stringify(payload));
-    const req = request(ctx.app.getHttpServer())
+    const raw = Buffer.from(JSON.stringify(payload), 'utf8');
+    return request(ctx.app.getHttpServer())
       .post('/whatsapp/webhook')
-      .set('Content-Type', 'application/json')
+      .type('application/json')
       .set('x-hub-signature-256', signature ?? sign(raw))
-      .send(raw);
-    return req;
+      .send(raw.toString('utf8'));
   }
 
   async function countRows(providerMessageId?: string): Promise<number> {

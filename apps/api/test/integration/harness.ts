@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 
+import { CreateBucketCommand, HeadBucketCommand, S3Client } from '@aws-sdk/client-s3';
 import { ValidationPipe, type INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
@@ -83,8 +84,32 @@ async function bootOnce(): Promise<IntegrationContext> {
     .withWaitStrategy(meiliWait())
     .start();
 
+  const minio: StartedTestContainer = await new GenericContainer(
+    'minio/minio:RELEASE.2024-12-18T13-15-44Z',
+  )
+    .withEnvironment({
+      MINIO_ROOT_USER: 'easycasa',
+      MINIO_ROOT_PASSWORD: 'change_me_minio',
+    })
+    .withExposedPorts(9000)
+    .withCommand(['server', '/data'])
+    .withWaitStrategy(Wait.forLogMessage(/API:.*/))
+    .start();
+
   const databaseUrl = pg.getConnectionUri();
   const meiliUrl = `http://${meili.getHost()}:${meili.getMappedPort(7700)}`;
+  const minioEndpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
+  const s3 = new S3Client({
+    endpoint: minioEndpoint,
+    region: 'us-east-1',
+    forcePathStyle: true,
+    credentials: { accessKeyId: 'easycasa', secretAccessKey: 'change_me_minio' },
+  });
+  try {
+    await s3.send(new HeadBucketCommand({ Bucket: 'easycasa-media' }));
+  } catch {
+    await s3.send(new CreateBucketCommand({ Bucket: 'easycasa-media' }));
+  }
 
   process.env.NODE_ENV = 'test';
   process.env.ALLOW_PROVIDER_STUBS = 'true';
@@ -93,6 +118,13 @@ async function bootOnce(): Promise<IntegrationContext> {
   process.env.MEILI_URL = meiliUrl;
   process.env.MEILI_MASTER_KEY = 'test';
   process.env.API_PORT = '4000';
+  process.env.S3_ENDPOINT = minioEndpoint;
+  process.env.MINIO_ROOT_USER = 'easycasa';
+  process.env.MINIO_ROOT_PASSWORD = 'change_me_minio';
+  process.env.MINIO_BUCKET = 'easycasa-media';
+  // Flag-off 404s stay in AsteAnalysisEnabledGuard unit tests.
+  process.env.ASTE_ANALYSIS_ENABLED = 'true';
+  process.env.EC_INT_HARNESS = '1';
   // Force test secrets — do not inherit a runner/org WHATSAPP_APP_SECRET.
   process.env.WHATSAPP_APP_SECRET = INT_WA_SECRET;
   process.env.WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN || 'int-tok';
@@ -105,6 +137,8 @@ async function bootOnce(): Promise<IntegrationContext> {
   resetConfigCache();
   const { resetDbConnection } = await import('../../src/db/drizzle');
   await resetDbConnection();
+  const { resetMeiliClient } = await import('../../src/search/meili');
+  resetMeiliClient();
 
   // Real migrations via the repo runner (0001…0019), not a re-implementation.
   const repoRoot = path.resolve(process.cwd(), '../..');
@@ -136,6 +170,7 @@ async function bootOnce(): Promise<IntegrationContext> {
       await app.close().catch(() => undefined);
       await resetDbConnection();
       await meili.stop().catch(() => undefined);
+      await minio.stop().catch(() => undefined);
       await pg.stop().catch(() => undefined);
       shared = null;
     },

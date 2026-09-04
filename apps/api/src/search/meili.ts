@@ -15,6 +15,11 @@ export function getMeili(): MeiliSearch {
   return _client;
 }
 
+/** Drop the cached client after testcontainers rotate MEILI_URL. */
+export function resetMeiliClient(): void {
+  _client = null;
+}
+
 export const LISTINGS_INDEX = 'listings';
 
 export interface ListingDoc {

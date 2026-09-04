@@ -1,28 +1,18 @@
-import { CreateBucketCommand, HeadBucketCommand, S3Client } from '@aws-sdk/client-s3';
-import { ValidationPipe, type INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
-import { execFileSync } from 'node:child_process';
-import path from 'node:path';
+import { type INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { GenericContainer, type StartedTestContainer, Wait } from 'testcontainers';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { dockerAvailable, ensurePostgresImage, meiliWait } from './harness';
+import { dockerAvailable, startIntegration } from './harness';
 import { asUser } from './test-auth';
 
 /**
- * EC-22 — own Postgres + MinIO + Meili so ASTE_ANALYSIS_ENABLED and S3 are set
- * before AppModule boots (shared harness may already be up without them).
- * Flag-off → 404 is covered by AsteAnalysisEnabledGuard unit tests.
+ * EC-22 upload flow on the shared harness (MinIO + ASTE_ANALYSIS_ENABLED
+ * are set before AppModule boots). Flag-off → 404 is unit-tested.
  */
 const gate = dockerAvailable() ? describe : describe.skip;
 
 gate('Aste analysis upload flow (integration)', () => {
   let app: INestApplication;
-  let pg: StartedPostgreSqlContainer;
-  let minio: StartedTestContainer;
-  let meili: StartedTestContainer;
   let stop: (() => Promise<void>) | undefined;
 
   const owner = asUser({
@@ -39,91 +29,12 @@ gate('Aste analysis upload flow (integration)', () => {
   });
 
   beforeAll(async () => {
-    ensurePostgresImage();
-
-    pg = await new PostgreSqlContainer('easycasa-postgres-int')
-      .withDatabase('easycasa_test')
-      .withUsername('easycasa')
-      .withPassword('easycasa')
-      .start();
-
-    minio = await new GenericContainer('minio/minio:RELEASE.2024-12-18T13-15-44Z')
-      .withEnvironment({
-        MINIO_ROOT_USER: 'easycasa',
-        MINIO_ROOT_PASSWORD: 'change_me_minio',
-      })
-      .withExposedPorts(9000)
-      .withCommand(['server', '/data'])
-      .withWaitStrategy(Wait.forLogMessage(/API:.*/))
-      .start();
-
-    meili = await new GenericContainer('getmeili/meilisearch:v1.10')
-      .withEnvironment({ MEILI_MASTER_KEY: 'test', MEILI_ENV: 'development' })
-      .withExposedPorts(7700)
-      .withWaitStrategy(meiliWait())
-      .start();
-
-    const minioEndpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
-    const s3 = new S3Client({
-      endpoint: minioEndpoint,
-      region: 'us-east-1',
-      forcePathStyle: true,
-      credentials: { accessKeyId: 'easycasa', secretAccessKey: 'change_me_minio' },
-    });
-    try {
-      await s3.send(new HeadBucketCommand({ Bucket: 'easycasa-media' }));
-    } catch {
-      await s3.send(new CreateBucketCommand({ Bucket: 'easycasa-media' }));
-    }
-
-    process.env.NODE_ENV = 'test';
-    process.env.ALLOW_PROVIDER_STUBS = 'true';
-    process.env.EC_TEST_AUTH = 'true';
-    process.env.DATABASE_URL = pg.getConnectionUri();
-    process.env.MEILI_URL = `http://${meili.getHost()}:${meili.getMappedPort(7700)}`;
-    process.env.MEILI_MASTER_KEY = 'test';
-    process.env.S3_ENDPOINT = minioEndpoint;
-    process.env.MINIO_ROOT_USER = 'easycasa';
-    process.env.MINIO_ROOT_PASSWORD = 'change_me_minio';
-    process.env.MINIO_BUCKET = 'easycasa-media';
-    process.env.ASTE_ANALYSIS_ENABLED = 'true';
-    process.env.WA_HANDLE_SECRET = 'int-test-wa-handle-secret';
-    process.env.WHATSAPP_APP_SECRET = 'int-test-wa-secret';
-
-    const { resetConfigCache } = await import('../../src/config');
-    resetConfigCache();
-    const { resetDbConnection } = await import('../../src/db/drizzle');
-    await resetDbConnection();
-
-    execFileSync('pnpm', ['--filter', '@easycasa/migration', 'migrate'], {
-      stdio: 'inherit',
-      cwd: path.resolve(process.cwd(), '../..'),
-      env: { ...process.env },
-    });
-
-    const { AppModule } = await import('../../src/app.module');
-    const { JwtAuthGuard } = await import('../../src/auth/jwt.guard');
-    const { TestAuthGuard } = await import('./test-auth');
-
-    const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(JwtAuthGuard)
-      .useClass(TestAuthGuard)
-      .compile();
-
-    app = moduleRef.createNestApplication({ rawBody: true });
-    app.useGlobalPipes(
-      new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }),
-    );
-    await app.init();
-
+    const ctx = await startIntegration();
+    app = ctx.app;
     stop = async () => {
-      await app.close().catch(() => undefined);
-      await resetDbConnection();
-      await meili.stop().catch(() => undefined);
-      await minio.stop().catch(() => undefined);
-      await pg.stop().catch(() => undefined);
+      await ctx.stop();
     };
-  }, 600_000);
+  }, 300_000);
 
   afterAll(async () => {
     await stop?.();
