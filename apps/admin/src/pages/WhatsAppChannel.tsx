@@ -219,8 +219,8 @@ function CannedTab() {
     <section className="ecwa-hub">
       <h2 className="ecwa-hub__title">Canned replies</h2>
       <p className="muted">
-        Operator shortcuts for the inbox. Session window only — paste into the composer, do not
-        broadcast.
+        Operator shortcuts for the inbox (IT EN ES UR HI). Session window only — they also
+        appear as chips on the pinned reply dock. Do not broadcast.
       </p>
       <form
         className="ecwa-hub__form"
@@ -247,9 +247,11 @@ function CannedTab() {
         />
         <div className="ecwa__composer-row">
           <select value={locale} onChange={(e) => setLocale(e.target.value)}>
-            <option value="it">IT</option>
-            <option value="en">EN</option>
-            <option value="es">ES</option>
+            <option value="it">IT — Italiano</option>
+            <option value="en">EN — English</option>
+            <option value="es">ES — Español</option>
+            <option value="ur">UR — اردو</option>
+            <option value="hi">HI — हिन्दी</option>
           </select>
           <button type="submit" className="btn" disabled={create.isPending || !title.trim() || !body.trim()}>
             {create.isPending ? 'Saving…' : 'Add canned'}

@@ -812,6 +812,7 @@ select {
 .ecwa__detail-bar {
   flex: 0 0 auto;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.7rem;
   align-items: center;
   padding: 0.65rem 0.9rem;
@@ -869,12 +870,79 @@ select {
   flex: 1;
 }
 
+.ecwa__dock {
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  margin: 0;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.5rem 0.75rem 0.65rem;
+}
+
+.ecwa__dock-langs,
+.ecwa__dock-templates {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  overflow-x: auto;
+  padding-bottom: 0.1rem;
+}
+
+.ecwa__chip-label {
+  margin-left: 0.3rem;
+  font-family: var(--font-body);
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.72rem;
+}
+
+.ecwa__tpl {
+  display: inline-flex;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.ecwa__tpl-insert,
+.ecwa__tpl-send {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.28rem 0.55rem;
+}
+
+.ecwa__tpl-insert {
+  border-right: 1px solid var(--border);
+}
+
+.ecwa__tpl-send {
+  color: var(--azure-pale);
+  padding-inline: 0.45rem;
+}
+
+.ecwa__tpl-insert:disabled,
+.ecwa__tpl-send:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .ecwa__composer {
   flex: 0 0 auto;
   margin: 0;
-  padding: 0.55rem 0.75rem 0.7rem;
-  border-top: 1px solid var(--border);
-  background: var(--surface);
+  padding: 0;
+  border: 0;
+  background: transparent;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 0.5rem;
@@ -1150,10 +1218,11 @@ select {
 }
 
 .ecwa-tabs {
+  flex: 0 0 auto;
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-  padding: 0 0 0.75rem;
+  padding: 0.55rem 0.75rem 0.45rem;
 }
 
 .ecwa-tabs__btn {
@@ -1234,8 +1303,12 @@ select {
 }
 
 .ecwa__notes {
-  padding: 0.6rem 1rem;
+  flex: 0 1 auto;
+  max-height: 8.5rem;
+  overflow: auto;
+  padding: 0.5rem 1rem;
   border-top: 1px solid var(--border);
+  background: var(--surface);
 }
 
 .ecwa__notes-label {
@@ -1257,12 +1330,18 @@ select {
 }
 
 .ecwa__journey-meta {
+  flex: 0 0 auto;
   margin: 0;
   padding: 0 1rem 0.4rem;
   font-size: 0.78rem;
 }
 
 @media (max-width: 860px) {
+  .shell--wa .content {
+    padding: 0;
+    overflow: hidden;
+  }
+
   .shell {
     grid-template-columns: 1fr;
   }

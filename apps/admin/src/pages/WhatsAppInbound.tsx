@@ -10,6 +10,7 @@ import {
   formatThreadWhen,
   threadPhone,
 } from './whatsapp-inbound-format';
+import { WhatsAppOperatorDock } from './WhatsAppOperatorDock';
 
 const ThreadSchema = z.object({
   waIdMasked: z.string(),
@@ -126,6 +127,7 @@ export function WhatsAppInbound() {
   const [replyText, setReplyText] = useState('');
   const [replyError, setReplyError] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+  const [notesOpen, setNotesOpen] = useState(false);
   const threadScrollRef = useRef<HTMLDivElement>(null);
   const stickToBottom = useRef(true);
 
@@ -141,6 +143,7 @@ export function WhatsAppInbound() {
     setReplyText('');
     setReplyError(null);
     setNoteText('');
+    setNotesOpen(false);
     stickToBottom.current = true;
   }, [selectedHandle]);
 
@@ -176,6 +179,23 @@ export function WhatsAppInbound() {
       );
     },
     getNextPageParam: (last) => last.nextCursor ?? undefined,
+  });
+
+  const canned = useQuery({
+    queryKey: ['wa-hub-canned'],
+    queryFn: async () =>
+      z
+        .object({
+          items: z.array(
+            z.object({
+              id: z.string(),
+              title: z.string(),
+              body: z.string(),
+              locale: z.string(),
+            }),
+          ),
+        })
+        .parse(await api.listWhatsAppCanned()),
   });
 
   const notes = useQuery({
@@ -278,8 +298,8 @@ export function WhatsAppInbound() {
     el.scrollTop = el.scrollHeight;
   }, [messages, selectedHandle]);
 
-  function sendReply() {
-    const body = replyText.trim();
+  function sendReply(override?: string) {
+    const body = (override ?? replyText).trim();
     if (!body || !canReply || reply.isPending) return;
     reply.mutate(body);
   }
@@ -417,6 +437,13 @@ export function WhatsAppInbound() {
                 >
                   {head?.blocked ? 'Unblock' : 'Block'}
                 </button>
+                <button
+                  type="button"
+                  className={`btn btn--sm${notesOpen ? ' ecwa__notes-toggle--on' : ''}`}
+                  onClick={() => setNotesOpen((v) => !v)}
+                >
+                  Notes{(notes.data?.items.length ?? 0) > 0 ? ` (${notes.data?.items.length})` : ''}
+                </button>
               </div>
               {head ? (
                 <p className="ecwa__journey-meta muted">
@@ -476,74 +503,53 @@ export function WhatsAppInbound() {
                 </ul>
               </div>
 
-              <div className="ecwa__notes">
-                <p className="ecwa__notes-label muted">Staff notes (not sent to WhatsApp)</p>
-                <ul className="ecwa__notes-list">
-                  {(notes.data?.items ?? []).map((n) => (
-                    <li key={n.id}>
-                      <span className="mono muted">{formatClock(n.createdAt)}</span> {n.body}
-                    </li>
-                  ))}
-                </ul>
-                <form
-                  className="ecwa__notes-form"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const body = noteText.trim();
-                    if (!body || addNote.isPending) return;
-                    addNote.mutate(body);
-                  }}
-                >
-                  <input
-                    className="ecwa__composer-input"
-                    placeholder="Add an internal note"
-                    value={noteText}
-                    maxLength={4096}
-                    onChange={(e) => setNoteText(e.target.value)}
-                  />
-                  <button type="submit" className="btn btn--sm" disabled={!noteText.trim() || addNote.isPending}>
-                    Note
-                  </button>
-                </form>
-              </div>
-
-              <form
-                className="ecwa__composer"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  sendReply();
-                }}
-              >
-                <label className="ec-sr-only" htmlFor="ecwa-reply">
-                  Reply
-                </label>
-                <textarea
-                  id="ecwa-reply"
-                  className="ecwa__composer-input"
-                  rows={1}
-                  maxLength={4096}
-                  placeholder={
-                    canReply ? 'Type a message' : 'Window closed — reply unavailable'
-                  }
-                  value={replyText}
-                  disabled={!canReply || reply.isPending}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
+              {notesOpen ? (
+                <div className="ecwa__notes">
+                  <p className="ecwa__notes-label muted">Staff notes (not sent to WhatsApp)</p>
+                  <ul className="ecwa__notes-list">
+                    {(notes.data?.items ?? []).map((n) => (
+                      <li key={n.id}>
+                        <span className="mono muted">{formatClock(n.createdAt)}</span> {n.body}
+                      </li>
+                    ))}
+                  </ul>
+                  <form
+                    className="ecwa__notes-form"
+                    onSubmit={(e) => {
                       e.preventDefault();
-                      sendReply();
-                    }
-                  }}
-                />
-                <button
-                  type="submit"
-                  className="btn ecwa__send"
-                  disabled={!canReply || reply.isPending || !replyText.trim()}
-                >
-                  {reply.isPending ? '…' : 'Send'}
-                </button>
-                {replyError ? <p className="error ecwa__composer-error">{replyError}</p> : null}
-              </form>
+                      const body = noteText.trim();
+                      if (!body || addNote.isPending) return;
+                      addNote.mutate(body);
+                    }}
+                  >
+                    <input
+                      className="ecwa__composer-input"
+                      placeholder="Add an internal note"
+                      value={noteText}
+                      maxLength={4096}
+                      onChange={(e) => setNoteText(e.target.value)}
+                    />
+                    <button
+                      type="submit"
+                      className="btn btn--sm"
+                      disabled={!noteText.trim() || addNote.isPending}
+                    >
+                      Note
+                    </button>
+                  </form>
+                </div>
+              ) : null}
+
+              <WhatsAppOperatorDock
+                replyText={replyText}
+                replyError={replyError}
+                canReply={canReply}
+                sending={reply.isPending}
+                contactLanguage={head?.language}
+                customCanned={canned.data?.items ?? []}
+                onReplyText={setReplyText}
+                onSend={sendReply}
+              />
             </>
           )}
         </div>
