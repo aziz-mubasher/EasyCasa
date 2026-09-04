@@ -4,17 +4,36 @@ on:
   pull_request:
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * *" # nightly against staging
+    - cron: "0 6 * * *" # nightly against production
 
 permissions:
   contents: read
 
 jobs:
-  # Hits live easycasaita.com. Chrome on ubuntu-24.04 needs --no-sandbox
-  # (.pa11yci.json). Lighthouse performance/TBT are warn: GH runners are not
-  # a lab device and scores flake vs the 0.9 desktop budget.
-  pa11y:
-    name: Accessibility (pa11y-ci / axe, WCAG 2.1 AA)
+  # PR gate: measures the branch, so a title (or other a11y) fix can go green
+  # before deploy. Production URLs stay on schedule — they only change on VPS.
+  pa11y-preview:
+    name: Accessibility preview (PR)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @easycasa/shared build && pnpm --filter @easycasa/web build
+      - run: npm i -g pa11y-ci wait-on
+      - name: Start web preview
+        run: pnpm --filter @easycasa/web start &
+      - run: npx wait-on http://127.0.0.1:3000/it
+      - run: pa11y-ci --config .pa11yci.preview.json
+
+  pa11y-production:
+    name: Accessibility production
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,8 +43,28 @@ jobs:
       - run: npm i -g pa11y-ci
       - run: pa11y-ci --config .pa11yci.json
 
-  lighthouse:
-    name: Web Vitals (Lighthouse CI)
+  lighthouse-preview:
+    name: Web Vitals preview (PR)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @easycasa/shared build && pnpm --filter @easycasa/web build
+      - run: npm i -g @lhci/cli wait-on
+      - name: Start web preview
+        run: pnpm --filter @easycasa/web start &
+      - run: npx wait-on http://127.0.0.1:3000/it
+      - run: lhci autorun --config=lighthouserc.preview.json
+
+  lighthouse-production:
+    name: Web Vitals production
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

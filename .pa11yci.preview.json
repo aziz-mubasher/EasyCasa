@@ -1,0 +1,20 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "runner": ["axe", "htmlcs"],
+    "timeout": 30000,
+    "ignore": [
+      "WCAG2AA.Principle3.Guideline3_2.3_2_2.H32.2"
+    ],
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+    }
+  },
+  "urls": [
+    "http://127.0.0.1:3000/it",
+    "http://127.0.0.1:3000/it/search",
+    "http://127.0.0.1:3000/it/add",
+    "http://127.0.0.1:3000/en/search",
+    "http://127.0.0.1:3000/es/search"
+  ]
+}
