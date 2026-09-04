@@ -18,7 +18,11 @@ RUN set -eux; \
   . /etc/os-release; \
   echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99snapshot; \
   echo 'Acquire::Retries "5";' > /etc/apt/apt.conf.d/80retries; \
-  rm -f /etc/apt/sources.list.d/*; \
+  # Pin Debian + security only. Keep PGDG — postgresql-server-dev-16 is not in bullseye.
+  for f in /etc/apt/sources.list.d/*; do \
+    [ -e "$f" ] || continue; \
+    case "$f" in *pgdg*) ;; *) rm -f "$f" ;; esac; \
+  done; \
   printf '%s\n' \
     "deb [check-valid-until=no] http://snapshot.debian.org/archive/debian/${DEBIAN_SNAPSHOT} ${VERSION_CODENAME} main" \
     "deb [check-valid-until=no] http://snapshot.debian.org/archive/debian-security/${DEBIAN_SNAPSHOT} ${VERSION_CODENAME}-security main" \
