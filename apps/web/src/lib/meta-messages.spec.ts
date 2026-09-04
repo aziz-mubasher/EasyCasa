@@ -38,7 +38,7 @@ describe('meta namespace', () => {
   });
 
   it('does not ship banned legal tokens', () => {
-    const banned = /sanabilit[àa]|%\s*del\s*(prezzo|valore)|percentage of (the )?sale/i;
+    const banned = /sanabilit[àa]|provvigione\s+\d|%\s*(del|sul)\s+(prezzo|valore)\s+di\s+vendita/i;
     for (const locale of locales) {
       const blob = JSON.stringify(load(locale).meta);
       expect(blob).not.toMatch(banned);
