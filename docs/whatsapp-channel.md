@@ -33,6 +33,8 @@ API Hub is **not** a microservice. Staff call `/admin/whatsapp/hub/*`. Meta call
    - `sell_property`
    - `easy_legenda`
    In-flight taps of `book_viewing` / `search_brief` / `open_listings` still resolve.
+   **Consult KB** for the buy/sell taps (what operators and a later article tree must say):
+   [`docs/ec-consult-knowledge-base.md`](./ec-consult-knowledge-base.md).
 5. Phone → CRM contact (`source=whatsapp`) when `CRM_ENABLED`.
 6. Operator Hub: connection (no secrets), templates catalog, canned replies, analytics.
 7. Health: `GET /whatsapp/webhook/status` (no secrets; signature-reject counter).
