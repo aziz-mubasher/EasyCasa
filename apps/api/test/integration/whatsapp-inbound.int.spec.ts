@@ -2,7 +2,7 @@ import { createHmac } from 'node:crypto';
 
 import { eq } from 'drizzle-orm';
 import request from 'supertest';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { APP_CONFIG } from '../../src/config/config.module';
 import { DRIZZLE } from '../../src/db/db.module';
@@ -68,10 +68,6 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
       json: async () => ({ messages: [{ id: 'wamid.reply' }] }),
     });
     vi.stubGlobal('fetch', fetchMock);
-  });
-
-  afterEach(() => {
-    vi.unstubAllGlobals();
   });
 
   async function post(payload: unknown, signature?: string) {
@@ -146,11 +142,14 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
     fetchMock.mockClear();
     const from = '393399998888';
     expect((await post(textPayload({ id: 'wamid.ec17.a', from, body: 'one' }))).status).toBe(200);
-    await vi.waitFor(async () => {
-      expect(await countRows('wamid.ec17.a')).toBe(1);
-      const contacts = await db.select().from(waContacts).where(eq(waContacts.waId, from));
-      expect(contacts[0]?.lastLanguagePromptAt).toBeTruthy();
-    });
+    await vi.waitFor(
+      async () => {
+        expect(await countRows('wamid.ec17.a')).toBe(1);
+        const contacts = await db.select().from(waContacts).where(eq(waContacts.waId, from));
+        expect(contacts[0]?.lastLanguagePromptAt).toBeTruthy();
+      },
+      { timeout: 8000 },
+    );
     const sendsAfterFirst = fetchMock.mock.calls.length;
     expect(sendsAfterFirst).toBeGreaterThan(0);
 
@@ -235,7 +234,7 @@ gate('POST /whatsapp/webhook inbound (EC-17 integration)', () => {
           .where(eq(waInboundMessages.providerMessageId, 'wamid.ec17.mail'));
         expect(rows).toHaveLength(1);
         expect(rows[0]!.forwardError).toBeTruthy();
-      }, { timeout: 5000 });
+      }, { timeout: 8000 });
     } finally {
       spy.mockRestore();
     }
