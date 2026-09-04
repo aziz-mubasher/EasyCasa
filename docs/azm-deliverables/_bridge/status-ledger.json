@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-03T20:20:56.870Z",
+  "updatedAt": "2026-09-04T20:19:21.252Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_a11y_1",
+      "kaizenCode": "K EC A11Y-1",
+      "polishId": "EC-A11Y-1",
+      "title": "EC-A11Y-1 — site-wide document title (layout generateMetadata)",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-f4778576-93df-49c2-8bd6-5b333349c84d",
+      "agentUrl": "https://cursor.com/agents/bc-f4778576-93df-49c2-8bd6-5b333349c84d",
+      "branch": "cursor/ec-a11y-title-pass-c84d",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-09-04T20:19:21.251Z",
+      "updatedAt": "2026-09-04T20:19:21.251Z",
+      "summary": "Title pass in progress. #207 not merged: integration still red (WhatsApp HMAC 403 + /health 120s). Live stays c74b0b3.",
+      "nextAction": "Open PR for layout metadata + preview pa11y gate. Do not deploy until instructed.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_whatsapp_channel",
       "kaizenCode": "K EC 7.4",
