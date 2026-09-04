@@ -92,6 +92,7 @@ describe('AsteAnalysisService.create', () => {
     const storage = { buildKey: vi.fn(), putObject: vi.fn(), deleteObject: vi.fn() };
     const analytics = { track: vi.fn() };
     const audit = { record: vi.fn(async () => ({ id: 'audit-1' })) };
+    const crmHooks = { onAsteAnalysisCreated: vi.fn() };
     const service = new AsteAnalysisService(
       db as never,
       {
@@ -101,6 +102,7 @@ describe('AsteAnalysisService.create', () => {
       storage as never,
       analytics as never,
       audit as never,
+      crmHooks as never,
     );
     const row = await service.create('u1', { language: 'es', register: 'first_buyer' });
     expect(row.id).toBe('a1');
@@ -115,5 +117,15 @@ describe('AsteAnalysisService.create', () => {
     expect(audit.record).toHaveBeenCalledWith(
       expect.objectContaining({ action: 'aste.internal_preview_analysis_created' }),
     );
+    expect(crmHooks.onAsteAnalysisCreated).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: 'u1',
+        analysisId: 'a1',
+        language: 'es',
+        register: 'first_buyer',
+      }),
+    );
+    const hookArg = crmHooks.onAsteAnalysisCreated.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(JSON.stringify(hookArg)).not.toMatch(/codice.?fiscale|debitore|buyer_profile/i);
   });
 });

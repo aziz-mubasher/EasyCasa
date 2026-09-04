@@ -199,12 +199,16 @@ export class DrizzleCrmRepository implements CrmRepository {
     role?: string;
     stage?: string;
     ownerAdminId?: string;
+    source?: string;
     page: number;
     pageSize: number;
     seekerUserIds?: string[];
   }): Promise<{ items: CrmContact[]; total: number }> {
     const offset = Math.max(0, (filter.page - 1) * filter.pageSize);
     const conds = [isNull(crmContacts.deletedAt)];
+    if (filter.source?.trim()) {
+      conds.push(eq(crmContacts.source, filter.source.trim()));
+    }
     if (filter.query?.trim()) {
       const q = `%${filter.query.trim()}%`;
       conds.push(
@@ -642,7 +646,15 @@ export class DrizzleCrmRepository implements CrmRepository {
 
   async pipelineCards(
     role: 'seeker' | 'owner' | 'b4a' | 'partner',
-  ): Promise<Array<{ stage: string; contactId: string; fullName: string; email: string | null }>> {
+  ): Promise<
+    Array<{
+      stage: string;
+      contactId: string;
+      fullName: string;
+      email: string | null;
+      source: string;
+    }>
+  > {
     if (role === 'seeker') {
       const rows = await this.db
         .select({
@@ -650,6 +662,7 @@ export class DrizzleCrmRepository implements CrmRepository {
           contactId: crmContacts.id,
           fullName: crmContacts.fullName,
           email: crmContacts.email,
+          source: crmContacts.source,
         })
         .from(crmSeekerProfiles)
         .innerJoin(crmContacts, eq(crmContacts.id, crmSeekerProfiles.contactId))
@@ -663,6 +676,7 @@ export class DrizzleCrmRepository implements CrmRepository {
           contactId: crmContacts.id,
           fullName: crmContacts.fullName,
           email: crmContacts.email,
+          source: crmContacts.source,
         })
         .from(crmOwnerProfiles)
         .innerJoin(crmContacts, eq(crmContacts.id, crmOwnerProfiles.contactId))
@@ -676,6 +690,7 @@ export class DrizzleCrmRepository implements CrmRepository {
           contactId: crmContacts.id,
           fullName: crmContacts.fullName,
           email: crmContacts.email,
+          source: crmContacts.source,
         })
         .from(crmPartnerProfiles)
         .innerJoin(crmContacts, eq(crmContacts.id, crmPartnerProfiles.contactId))
@@ -688,6 +703,7 @@ export class DrizzleCrmRepository implements CrmRepository {
         contactId: crmContacts.id,
         fullName: crmContacts.fullName,
         email: crmContacts.email,
+        source: crmContacts.source,
       })
       .from(crmB4aReferrals)
       .innerJoin(crmContacts, eq(crmContacts.id, crmB4aReferrals.contactId))
@@ -702,6 +718,7 @@ export class DrizzleCrmRepository implements CrmRepository {
       contactId: r.contactId,
       fullName: r.fullName,
       email: r.email,
+      source: r.source,
     }));
   }
 

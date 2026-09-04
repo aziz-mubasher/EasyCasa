@@ -5,6 +5,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { PRODUCT_EVENTS } from '@easycasa/shared';
 import { and, desc, eq, inArray, lt, sql } from 'drizzle-orm';
@@ -17,6 +18,8 @@ import { APP_CONFIG } from '../config/config.module';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { asteAnalyses, asteDocuments } from '../db/schema';
+import { crmFireSafe } from '../crm/crm-fire-safe';
+import { CRM_HOOKS, type CrmHooks } from '../crm/domain/ports';
 import { AsteStorage } from './aste-storage';
 import type { AsteDocType } from './dto/create-aste-analysis.dto';
 
@@ -60,6 +63,7 @@ export class AsteAnalysisService {
     private readonly storage: AsteStorage,
     private readonly analytics: ProductAnalyticsService,
     private readonly audit: AdminAuditService,
+    @Optional() @Inject(CRM_HOOKS) private readonly crmHooks?: CrmHooks,
   ) {}
 
   async create(
@@ -101,6 +105,19 @@ export class AsteAnalysisService {
       register,
     });
     this.log.log(JSON.stringify({ event: 'aste.analysis_created', analysisId: row!.id }));
+    await crmFireSafe(
+      'onAsteAnalysisCreated',
+      this.crmHooks
+        ? () =>
+            this.crmHooks!.onAsteAnalysisCreated({
+              userId,
+              analysisId: row!.id,
+              language,
+              register,
+              lottoLabel,
+            })
+        : undefined,
+    );
     return this.toAnalysisDto(row!);
   }
 

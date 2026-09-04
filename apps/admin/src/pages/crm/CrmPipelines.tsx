@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { crmSourceLabel } from '@easycasa/shared';
 
 import { useApi } from '../../api';
 
@@ -58,6 +59,9 @@ export function CrmPipelines({ onOpenContact }: { onOpenContact: (id: string) =>
                   <button type="button" className="linkish" onClick={() => onOpenContact(card.contactId)}>
                     {card.fullName}
                   </button>
+                  {card.source ? (
+                    <span className="muted crm-kanban__source">{crmSourceLabel(card.source)}</span>
+                  ) : null}
                   {!data?.readOnly && role === 'seeker' ? (
                     <button
                       type="button"

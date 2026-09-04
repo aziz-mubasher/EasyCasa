@@ -191,6 +191,8 @@ export function App() {
       } else if (next === 'aste') {
         const cur = window.location.hash.replace(/^#/, '');
         if (!cur.startsWith('aste')) window.location.hash = 'aste';
+      } else if (next === 'crm') {
+        window.location.hash = 'crm';
       } else {
         window.location.hash = '';
       }

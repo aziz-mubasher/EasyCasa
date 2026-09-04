@@ -34,6 +34,10 @@ interface CrmHooks {
   onEnquiryCreated(e: CrmEnquiryRef): Promise<void>;
   onViewingTransition(v: CrmViewingRef, to: CrmViewingHookStage): Promise<void>;
   onB4aSweepResult(r: CrmB4aSweepRow): Promise<void>;
+  onWhatsAppInbound(e: CrmWhatsAppRef): Promise<void>;
+  onWhatsAppSearchBrief(e: CrmWhatsAppBriefRef): Promise<void>;
+  onAsteWaitlistLead(e: CrmAsteWaitlistRef): Promise<void>;
+  onAsteAnalysisCreated(e: CrmAsteAnalysisRef): Promise<void>;
 }
 ```
 
@@ -46,6 +50,12 @@ Call points:
 | `ViewingsService.transition` CONFIRM | after notify | `onViewingTransition(..., 'viewing_confirmed')` |
 | `ViewingsService.transition` COMPLETE | after status | `onViewingTransition(..., 'viewing_done')` |
 | `Banks4AllAttestationSweep.runOnce` | after clear/refresh | `onB4aSweepResult` |
+| `WhatsAppJourneyService.handleInboundRow` | after persist | `onWhatsAppInbound` (`source=whatsapp`) |
+| `WhatsAppJourneyService` search brief | after save | `onWhatsAppSearchBrief` |
+| `AsteService.createLead` | after persist (new + duplicate) | `onAsteWaitlistLead` (`source=aste`, badge **Easy Legenda**) |
+| `AsteAnalysisService.create` | after draft insert | `onAsteAnalysisCreated` (`source=aste`, badge **Easy Legenda**) |
+
+Easy Legenda contacts land on the seeker pipeline at `new_enquiry`. Existing contacts keep their original `source`; tags `easy-legenda` + `aste-waitlist` / `aste-analysis` are merged. Do **not** store CF, debtor names, or `buyer_profile` PII. Filter `#crm` contacts with `?source=aste`. Backfill: `migration/sql/0072_ec_crm_aste_wa_langs.sql`.
 
 Marketing follow-up beyond Art. 6(1)(b) links `crm.contacts.marketing_consent_id` → existing `consent_records` (`purpose='marketing'`, `granted=true`). No new consent table.
 

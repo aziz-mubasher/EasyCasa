@@ -24,7 +24,11 @@ API Hub is **not** a microservice. Staff call `/admin/whatsapp/hub/*`. Meta call
 1. One public webhook host, HMAC fail-closed, 200-then-process.
 2. One send path (`WhatsAppCloudClient`) — session text / buttons / list / CTA URL inside 24h; utility templates outside.
 3. One inbox; humans take over. Established portal clients (`contact_type=client`) skip the journey.
-4. Language first (IT / EN / ES — CRM locale set), then welcome or off-hours (06:00–22:00 Europe/Rome), then three **new** buttons:
+4. Language first — B4A ice-breaker set (Meta list max **10** rows):
+   `it` / `en` / `es` / `fr` / `de` / `pt` / `ur` / `hi` / `pa` / `ar`
+   (`lang_*` ids). CRM `contacts.locale` stays `it|en|es` (`pt`→`es`, others→`en`);
+   the full WhatsApp code is stored on `wa_contacts.language` and
+   `searchIntent.whatsappLanguage`. Then welcome or off-hours (06:00–22:00 Europe/Rome), then three **new** buttons:
    - `book_viewing`
    - `search_brief`
    - `open_listings`

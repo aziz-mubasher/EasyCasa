@@ -151,12 +151,35 @@ export interface CrmWhatsAppBriefRef {
   searchPreference: string;
 }
 
+/** Easy Legenda waitlist (`aste_leads`) — email only, no phone. */
+export interface CrmAsteWaitlistRef {
+  asteLeadId: string;
+  email: string;
+  locale: string | null;
+  province: string | null;
+  buyerType: string | null;
+}
+
+/**
+ * Easy Legenda / Aste Analysis — authenticated user.
+ * Do not pass CF, debtor names, or buyer_profile PII.
+ */
+export interface CrmAsteAnalysisRef {
+  userId: string;
+  analysisId: string;
+  language: string | null;
+  register: string | null;
+  lottoLabel: string | null;
+}
+
 export interface CrmHooks {
   onEnquiryCreated(e: CrmEnquiryRef): Promise<void>;
   onViewingTransition(v: CrmViewingRef, to: CrmViewingHookStage): Promise<void>;
   onB4aSweepResult(r: CrmB4aSweepRow): Promise<void>;
   onWhatsAppInbound(e: CrmWhatsAppRef): Promise<void>;
   onWhatsAppSearchBrief(e: CrmWhatsAppBriefRef): Promise<void>;
+  onAsteWaitlistLead(e: CrmAsteWaitlistRef): Promise<void>;
+  onAsteAnalysisCreated(e: CrmAsteAnalysisRef): Promise<void>;
 }
 
 export interface CrmRepository {
@@ -168,6 +191,7 @@ export interface CrmRepository {
     query?: string;
     role?: string;
     stage?: string;
+    source?: string;
     ownerAdminId?: string;
     page: number;
     pageSize: number;
@@ -280,7 +304,15 @@ export interface CrmRepository {
   getTask(id: string): Promise<CrmTask | null>;
   pipelineCards(
     role: 'seeker' | 'owner' | 'b4a' | 'partner',
-  ): Promise<Array<{ stage: string; contactId: string; fullName: string; email: string | null }>>;
+  ): Promise<
+    Array<{
+      stage: string;
+      contactId: string;
+      fullName: string;
+      email: string | null;
+      source: string;
+    }>
+  >;
   dashboardMetrics(): Promise<{
     enquiryToViewingRate: number | null;
     medianFirstResponseMinutes: number | null;

@@ -44,6 +44,7 @@ export class CrmService {
       query?: string;
       role?: string;
       stage?: string;
+      source?: string;
       owner?: string;
       page?: number;
     },
@@ -57,6 +58,7 @@ export class CrmService {
       query: filter.query,
       role: filter.role,
       stage: filter.stage,
+      source: filter.source,
       ownerAdminId: filter.owner,
       page,
       pageSize: 50,
@@ -459,6 +461,7 @@ export class CrmService {
           contactId: c.contactId,
           fullName: c.fullName,
           email: isMarketingOnly(roles) ? null : c.email,
+          source: c.source,
         })),
       })),
     };
