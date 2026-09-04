@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getListing } from '@/lib/api';
@@ -13,52 +14,31 @@ import { ListingValuationGate } from '@/components/listings/ListingValuationGate
 import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 import { MapView } from '@/components/search/MapView';
 import { listingShowsSale } from '@/lib/listing-detail';
-import { buildListingMetaDescription, buildListingMetaTitle } from '@/lib/listing-meta';
 import { formatProvinceName } from '@/lib/province-display';
-import { routing } from '@/i18n/routing';
 import type { ListingSummary } from '@easycasa/shared';
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://easycasaita.com';
+const getListingCached = cache(getListing);
 
 type PageParams = { params: Promise<{ slug: string; locale: string }> };
 
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const { slug, locale } = await params;
-  const raw = await getListing(slug);
-  if (!raw) return { title: 'EasyCasa' };
-
+  const t = await getTranslations({ locale, namespace: 'meta' });
+  const raw = await getListingCached(slug).catch(() => null);
+  if (!raw) return { title: t('notFound.title') };
   const listing = parseListingDetail(raw, slug);
-  const t = await getTranslations({ locale, namespace: 'listingDetail' });
-  const city = listing.city?.trim() || t('meta.cityFallback');
-  const description = buildListingMetaDescription({
-    title: listing.title,
-    description: listing.description,
-    city: listing.city,
-    descriptionFallback: t('meta.descriptionFallback', { city }),
-  });
-  const title = buildListingMetaTitle(listing.title);
-  const canonical = `${SITE}/${locale}/listings/${listing.slug}`;
-  const languages = Object.fromEntries(
-    routing.locales.map((l) => [l, `${SITE}/${l}/listings/${listing.slug}`]),
-  );
-
   return {
-    title,
-    description,
-    alternates: { canonical, languages },
-    openGraph: {
-      title,
-      description,
-      type: 'website',
-      url: canonical,
-      locale: locale === 'it' ? 'it_IT' : locale === 'es' ? 'es_ES' : 'en_GB',
-    },
+    title: String(listing.title),
+    description: listing.description
+      ? String(listing.description).slice(0, 155)
+      : t('home.description'),
+    alternates: { canonical: `/${locale}/listings/${slug}` },
   };
 }
 
 export default async function ListingPage({ params }: PageParams) {
   const { slug, locale } = await params;
-  const raw = await getListing(slug);
+  const raw = await getListingCached(slug);
   if (!raw) notFound();
 
   const listing = parseListingDetail(raw, slug);

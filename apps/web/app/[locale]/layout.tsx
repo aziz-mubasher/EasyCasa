@@ -1,6 +1,7 @@
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Bricolage_Grotesque, Newsreader, IBM_Plex_Mono } from 'next/font/google';
 import { routing } from '@/i18n/routing';
@@ -26,6 +27,23 @@ const mono = IBM_Plex_Mono({
   variable: '--font-mono',
   display: 'swap',
 });
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'meta' });
+  return {
+    title: { default: t('home.title') },
+    description: t('home.description'),
+    alternates: {
+      canonical: `/${locale}`,
+      languages: { it: '/it', en: '/en', es: '/es' },
+    },
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

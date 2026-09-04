@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 import { searchListings, listRegions, listCategories, listProvinces } from '@/lib/api';
@@ -7,6 +8,20 @@ import { ActiveFilterChips } from '@/components/search/ActiveFilterChips';
 import { SearchResultsPanel } from '@/components/search/SearchResultsPanel';
 import { SaveSearchButton } from '@/components/search/SaveSearchButton';
 import { ITALIAN_PROVINCES, type ListingSummary } from '@easycasa/shared';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'meta' });
+  return {
+    title: t('search.title'),
+    description: t('search.description'),
+    alternates: { canonical: `/${locale}/search` },
+  };
+}
 
 export default async function SearchPage({
   searchParams,
@@ -18,9 +33,9 @@ export default async function SearchPage({
 
   const [data, regions, categories, provincesFromApi] = await Promise.all([
     searchListings(sp).catch(() => ({ items: [], total: 0, page: 1, pageSize: 24, facets: {} })),
-    listRegions(),
-    listCategories(),
-    listProvinces(),
+    listRegions().catch(() => []),
+    listCategories().catch(() => []),
+    listProvinces().catch(() => []),
   ]);
 
   // Prefer API/DB list; fall back to shared ISTAT provinces so the filter never renders empty.

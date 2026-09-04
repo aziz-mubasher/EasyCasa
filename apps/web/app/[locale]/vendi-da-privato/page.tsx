@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonical = sellPrivatelyAbsoluteUrl(locale, SITE);
 
   return {
-    title: t('meta.title'),
+    title: { absolute: t('meta.title') },
     description: t('meta.description'),
     keywords: t.raw('meta.keywords') as string[],
     alternates: {

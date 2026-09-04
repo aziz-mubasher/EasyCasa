@@ -1,4 +1,26 @@
 {
+  "meta": {
+    "template": "%s · EasyCasa",
+    "home": {
+      "title": "EasyCasa — la casa, senza sovrapprezzo",
+      "description": "Cerca casa in tutte le regioni italiane. Paghi solo i servizi che usi: un listino à la carte per comprare, vendere e affittare."
+    },
+    "search": {
+      "title": "Cerca immobili",
+      "description": "Filtra per regione, prezzo, tipologia e camere, e cerca sulla mappa tra gli immobili disponibili in Italia. Trova quello che ti serve."
+    },
+    "add": {
+      "title": "Pubblica il tuo immobile",
+      "description": "Pubblica il tuo annuncio: dati dell'immobile, prezzo e superficie, foto. Compila la tassonomia EasyCasa così i compratori possono trovarti."
+    },
+    "pricing": {
+      "title": "Prezzi à la carte",
+      "description": "Il listino dei servizi EasyCasa. Paghi solo i servizi che usi — tariffe fisse, senza percentuale sul prezzo di vendita."
+    },
+    "notFound": {
+      "title": "Pagina non trovata"
+    }
+  },
   "brand": {
     "name": "EasyCasa",
     "tagline": "Compra, vendi e affitta — paghi solo i servizi che usi, con un'agenzia regolare."

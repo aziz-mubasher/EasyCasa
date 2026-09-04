@@ -1,4 +1,26 @@
 {
+  "meta": {
+    "template": "%s · EasyCasa",
+    "home": {
+      "title": "EasyCasa — la vivienda, sin sobreprecio",
+      "description": "Busca vivienda en todas las regiones italianas. Pagas solo los servicios que usas: herramientas à la carte para comprar, vender y alquilar."
+    },
+    "search": {
+      "title": "Buscar inmuebles",
+      "description": "Filtra por región, precio, tipo y habitaciones, y busca en el mapa entre los inmuebles disponibles en Italia. Encuentra el que necesitas."
+    },
+    "add": {
+      "title": "Publica tu inmueble",
+      "description": "Publica tu anuncio: datos del inmueble, precio y superficie, fotos. Completa la taxonomía EasyCasa para que los compradores te encuentren."
+    },
+    "pricing": {
+      "title": "Precios à la carte",
+      "description": "El listado de servicios de EasyCasa. Pagas solo los servicios que usas: tarifas fijas, sin porcentaje sobre el precio de venta."
+    },
+    "notFound": {
+      "title": "Página no encontrada"
+    }
+  },
   "brand": {
     "name": "EasyCasa",
     "tagline": "Compra, vende y alquila — paga solo por los servicios que usas, con una agencia regulada."
