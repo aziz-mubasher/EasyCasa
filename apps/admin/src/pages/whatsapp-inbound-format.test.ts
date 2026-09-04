@@ -10,6 +10,11 @@ const PAGE = readFileSync(
   'utf8',
 );
 
+const CSS = readFileSync(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'styles.css'),
+  'utf8',
+);
+
 describe('whatsapp inbound format', () => {
   it('formatRemaining', () => {
     expect(formatRemaining(0)).toBe('closed');
@@ -28,7 +33,17 @@ describe('whatsapp inbound format', () => {
     expect(PAGE).not.toMatch(/\{m\.(providerMessageId|phoneNumberId|actorUserId|windowExpiresAt)\}/);
     expect(PAGE).toContain('ecwa__composer');
     expect(PAGE).toContain('ecwa__thread-scroll');
+    expect(PAGE).toContain('ecwa__list-body');
     expect(PAGE).toContain('WhatsAppOperatorDock');
+  });
+
+  it('locks the WhatsApp view to the viewport so only list and thread panes scroll', () => {
+    expect(CSS).toContain('html:has(.shell--wa) #root');
+    expect(CSS).toContain('overscroll-behavior: contain');
+    expect(CSS).toMatch(/\.ecwa__thread-scroll\s*\{[^}]*overflow-y:\s*auto/s);
+    expect(CSS).toMatch(/\.ecwa__list-body\s*\{[^}]*overflow-y:\s*auto/s);
+    expect(CSS).toMatch(/\.ecwa__dock\s*\{[^}]*flex:\s*0 0 auto/s);
+    expect(CSS).toMatch(/\.shell--wa\s*\{[^}]*overflow:\s*hidden/s);
   });
 
   it('threadPhone prefers a single E.164, never stacks masked + raw', () => {

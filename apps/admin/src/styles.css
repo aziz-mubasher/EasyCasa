@@ -52,21 +52,44 @@ body {
   min-height: 100vh;
 }
 
+/* WhatsApp Web layout: lock the viewport so only list + thread panes scroll. */
 html:has(.shell--wa),
-html:has(.shell--wa) body {
+html:has(.shell--wa) body,
+html:has(.shell--wa) #root {
   height: 100%;
+  max-height: 100dvh;
   overflow: hidden;
 }
 
+html:has(.shell--wa) body {
+  min-height: 0;
+  overscroll-behavior: none;
+}
+
+html:has(.shell--wa) #root {
+  display: flex;
+  flex-direction: column;
+}
+
 .shell--wa {
+  flex: 1 1 auto;
   height: 100%;
-  min-height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+.shell--wa .sidebar {
+  min-height: 0;
+  overflow: auto;
 }
 
 .shell--wa .content {
   padding: 0;
   overflow: hidden;
   min-height: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -622,6 +645,7 @@ select {
 .ecwa {
   flex: 1;
   min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -665,8 +689,10 @@ select {
 .ecwa__panes {
   flex: 1;
   min-height: 0;
+  overflow: hidden;
   display: grid;
   grid-template-columns: minmax(240px, 320px) 1fr;
+  grid-template-rows: minmax(0, 1fr);
   background: var(--surface);
 }
 
@@ -674,14 +700,14 @@ select {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  max-height: 100%;
   border-right: 1px solid var(--border);
   background: var(--surface);
-  overflow: auto;
+  overflow: hidden;
 }
 
 .ecwa__list-head {
-  position: sticky;
-  top: 0;
+  flex: 0 0 auto;
   z-index: 1;
   padding: 0.85rem 0.95rem 0.7rem;
   border-bottom: 1px solid var(--border);
@@ -701,6 +727,7 @@ select {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  max-height: 100%;
   overflow: hidden;
   padding: 0;
   background:
@@ -710,6 +737,14 @@ select {
 
 .ecwa__pad {
   padding: 1rem 1.1rem;
+}
+
+.ecwa__list-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .ecwa__threads {
@@ -839,7 +874,10 @@ select {
 .ecwa__thread-scroll {
   flex: 1 1 auto;
   min-height: 0;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ecwa__earlier {
@@ -872,8 +910,7 @@ select {
 
 .ecwa__dock {
   flex: 0 0 auto;
-  position: sticky;
-  bottom: 0;
+  position: relative;
   z-index: 3;
   margin: 0;
   border-top: 1px solid var(--border);
@@ -1213,6 +1250,7 @@ select {
 .ecwa-shell {
   flex: 1;
   min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -1239,9 +1277,15 @@ select {
 }
 
 .ecwa-hub {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
   display: grid;
+  align-content: start;
   gap: 0.85rem;
   max-width: 52rem;
+  padding: 0 1.1rem 1.5rem;
 }
 
 .ecwa-hub__title {
@@ -1337,6 +1381,15 @@ select {
 }
 
 @media (max-width: 860px) {
+  .shell--wa {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .shell--wa .sidebar {
+    max-height: 7.5rem;
+  }
+
   .shell--wa .content {
     padding: 0;
     overflow: hidden;

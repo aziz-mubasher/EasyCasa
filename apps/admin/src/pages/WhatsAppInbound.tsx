@@ -335,6 +335,7 @@ export function WhatsAppInbound() {
             </div>
           </div>
 
+          <div className="ecwa__list-body">
           {list.isLoading ? <p className="muted ecwa__pad">Loading conversations…</p> : null}
           {list.isError ? (
             <p className="error ecwa__pad">
@@ -396,6 +397,7 @@ export function WhatsAppInbound() {
               </button>
             </div>
           ) : null}
+          </div>
         </aside>
 
         <div className="ecwa__detail" aria-label="Thread">
