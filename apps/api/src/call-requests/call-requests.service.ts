@@ -29,8 +29,9 @@ export class CallRequestsService {
     const preferredAt = dto.preferredAt ? new Date(dto.preferredAt) : null;
     const dueAt = resolveCallDueAt(dto.preferredAt ?? null);
 
-    await crmFireSafe('onCallRequestCreated', () =>
-      this.crmHooks?.onCallRequestCreated({
+    await crmFireSafe('onCallRequestCreated', async () => {
+      if (!this.crmHooks) return;
+      await this.crmHooks.onCallRequestCreated({
         fullName: dto.fullName.trim(),
         email: dto.email.trim().toLowerCase(),
         phone,
@@ -39,8 +40,8 @@ export class CallRequestsService {
         reason,
         preferredAt:
           preferredAt && !Number.isNaN(preferredAt.getTime()) ? preferredAt : null,
-      }),
-    );
+      });
+    });
 
     return { ok: true, dueAt: dueAt.toISOString() };
   }
