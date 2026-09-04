@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import {
   ASSET_CLASS_SLUGS,
@@ -38,17 +38,23 @@ const TOTAL = 6;
 const ENERGY_CLASSES = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
 const MAX_IMAGES = 20;
 
-/** Local createObjectURL previews only — never a DOM attribute or remote URL. */
-function blobPreviewSrc(url: string): string | undefined {
-  return url.startsWith('blob:') ? url : undefined;
-}
-
-function LocalImageThumb({ src }: { src: string }) {
-  const safe = blobPreviewSrc(src);
-  if (!safe) return null;
+function LocalImageThumb({ file }: { file: File }) {
+  const [objectUrl, setObjectUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!file.type.startsWith('image/')) return;
+    const next = URL.createObjectURL(file);
+    setObjectUrl(next);
+    return () => URL.revokeObjectURL(next);
+  }, [file]);
+  if (!objectUrl) return <div className="h-full w-full bg-sand" aria-hidden />;
+  // CSS background, not an HTML src attribute — avoids js/xss-through-dom on <img src>.
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- blob: object URL, not a remote asset
-    <img src={safe} alt="" className="h-full w-full object-cover" />
+    <div
+      role="img"
+      aria-hidden
+      className="h-full w-full bg-cover bg-center"
+      style={{ backgroundImage: `url(${JSON.stringify(objectUrl)})` }}
+    />
   );
 }
 
@@ -77,7 +83,7 @@ type FormState = {
   videoUrl: string;
 };
 
-type LocalImage = { id: string; file: File; previewUrl: string };
+type LocalImage = { id: string; file: File };
 
 const initialForm: FormState = {
   title: '',
@@ -163,15 +169,6 @@ export function AddListingForm() {
   const includesRent = form.transactionTypes.includes('rent');
   const primaryTx = primaryTransactionType(form.transactionTypes);
 
-  const imagesRef = useRef(images);
-  imagesRef.current = images;
-
-  useEffect(() => {
-    return () => {
-      for (const img of imagesRef.current) URL.revokeObjectURL(img.previewUrl);
-    };
-  }, []);
-
   const set =
     (key: keyof FormState) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -229,7 +226,6 @@ export function AddListingForm() {
       const next = files.slice(0, room).map((file) => ({
         id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
         file,
-        previewUrl: URL.createObjectURL(file),
       }));
       return [...prev, ...next];
     });
@@ -237,11 +233,7 @@ export function AddListingForm() {
   };
 
   const removeImage = (id: string) => {
-    setImages((prev) => {
-      const target = prev.find((i) => i.id === id);
-      if (target) URL.revokeObjectURL(target.previewUrl);
-      return prev.filter((i) => i.id !== id);
-    });
+    setImages((prev) => prev.filter((i) => i.id !== id));
   };
 
   const validateStep = (n: number): string | null => {
@@ -282,7 +274,6 @@ export function AddListingForm() {
   };
 
   const resetAll = () => {
-    for (const img of images) URL.revokeObjectURL(img.previewUrl);
     setImages([]);
     setForm(initialForm);
     setAvailabilityWindows(defaultAvailabilityWindows());
@@ -678,7 +669,7 @@ export function AddListingForm() {
               <ul className="grid grid-cols-3 gap-2">
                 {images.map((photo) => (
                   <li key={photo.id} className="relative aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
-                    <LocalImageThumb src={photo.previewUrl} />
+                    <LocalImageThumb file={photo.file} />
                     <button
                       type="button"
                       onClick={() => removeImage(photo.id)}
@@ -721,7 +712,7 @@ export function AddListingForm() {
               <div className="grid grid-cols-3 gap-2">
                 {images.map((photo) => (
                   <div key={photo.id} className="aspect-[4/3] rounded-lg overflow-hidden border border-line bg-sand">
-                    <LocalImageThumb src={photo.previewUrl} />
+                    <LocalImageThumb file={photo.file} />
                   </div>
                 ))}
               </div>
