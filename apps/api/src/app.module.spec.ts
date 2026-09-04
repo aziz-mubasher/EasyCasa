@@ -47,6 +47,7 @@ import { ObservabilityModule } from './observability/observability.module';
 import { PhoneVerifyModule } from './phone-verify/phone-verify.module';
 import { WhatsAppModule } from './whatsapp/whatsapp.module';
 import { DemoModule } from './demo/demo.module';
+import { CallRequestsModule } from './call-requests/call-requests.module';
 import { CrmModule } from './crm/crm.module';
 import { ListingDraftsModule } from './listing-drafts/listing-drafts.module';
 import { OmiModule } from './omi/omi.module';
@@ -113,6 +114,7 @@ const REQUIRED_STATIC = [
   SellerNudgesModule,
   PilotModule,
   DemoModule,
+  CallRequestsModule,
   CrmModule,
 ] as const;
 
