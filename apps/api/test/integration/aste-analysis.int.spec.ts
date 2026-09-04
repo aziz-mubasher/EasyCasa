@@ -8,7 +8,7 @@ import request from 'supertest';
 import { GenericContainer, type StartedTestContainer, Wait } from 'testcontainers';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { dockerAvailable, ensurePostgresImage } from './harness';
+import { dockerAvailable, ensurePostgresImage, meiliWait } from './harness';
 import { asUser } from './test-auth';
 
 /**
@@ -60,7 +60,7 @@ gate('Aste analysis upload flow (integration)', () => {
     meili = await new GenericContainer('getmeili/meilisearch:v1.10')
       .withEnvironment({ MEILI_MASTER_KEY: 'test', MEILI_ENV: 'development' })
       .withExposedPorts(7700)
-      .withWaitStrategy(Wait.forHttp('/health', 7700))
+      .withWaitStrategy(meiliWait())
       .start();
 
     const minioEndpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;

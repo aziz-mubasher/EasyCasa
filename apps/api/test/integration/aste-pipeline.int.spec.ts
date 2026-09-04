@@ -15,8 +15,8 @@ import {
   FIXTURE_NATIVE_PERIZIA,
   TINY_PNG,
 } from '../fixtures/aste/synthetic';
-import { dockerAvailable, ensurePostgresImage } from './harness';
-import { asUser } from './test-auth';
+import { dockerAvailable, ensurePostgresImage, meiliWait } from './harness';
+import { TestAuthGuard, asUser } from './test-auth';
 
 const gate = dockerAvailable() ? describe : describe.skip;
 
@@ -267,7 +267,7 @@ gate('Aste extraction pipeline (integration)', () => {
     meili = await new GenericContainer('getmeili/meilisearch:v1.10')
       .withEnvironment({ MEILI_MASTER_KEY: 'test', MEILI_ENV: 'development' })
       .withExposedPorts(7700)
-      .withWaitStrategy(Wait.forHttp('/health', 7700))
+      .withWaitStrategy(meiliWait())
       .start();
 
     const minioEndpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
@@ -311,8 +311,12 @@ gate('Aste extraction pipeline (integration)', () => {
     });
 
     const { AppModule } = await import('../../src/app.module');
-    const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
-    app = moduleRef.createNestApplication();
+    const { JwtAuthGuard } = await import('../../src/auth/jwt.guard');
+    const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
+      .overrideProvider(JwtAuthGuard)
+      .useClass(TestAuthGuard)
+      .compile();
+    app = moduleRef.createNestApplication({ rawBody: true });
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
     await app.init();
     stop = async () => {

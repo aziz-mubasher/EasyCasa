@@ -98,7 +98,7 @@ gate('GET /admin/whatsapp/inbound (EC-19 / EC-19a)', () => {
   it('2–3. list has no waId key and no E.164; preview redacts PII', async () => {
     await seedThread({
       waId: '393331112233',
-      bodies: [PII_BODY, 'second'],
+      bodies: ['second', PII_BODY],
       autoRepliedAt: new Date(),
     });
     await seedThread({

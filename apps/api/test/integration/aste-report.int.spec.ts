@@ -13,7 +13,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { computeSemaforo } from '../../src/aste/aste-semaforo';
 import { fixtureReadyExtraction } from '../fixtures/aste/ready-extraction';
 import { fixtureEx2NoPeriziaLotto7 } from '../../src/aste/stima-not-found.fixtures';
-import { dockerAvailable, ensurePostgresImage } from './harness';
+import { dockerAvailable, ensurePostgresImage, meiliWait } from './harness';
 import { asUser } from './test-auth';
 
 const gate = dockerAvailable() ? describe : describe.skip;
@@ -91,7 +91,7 @@ gate('Aste report (integration EC-24)', () => {
     meili = await new GenericContainer('getmeili/meilisearch:v1.10')
       .withEnvironment({ MEILI_MASTER_KEY: 'test', MEILI_ENV: 'development' })
       .withExposedPorts(7700)
-      .withWaitStrategy(Wait.forHttp('/health', 7700))
+      .withWaitStrategy(meiliWait())
       .start();
 
     const minioEndpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;

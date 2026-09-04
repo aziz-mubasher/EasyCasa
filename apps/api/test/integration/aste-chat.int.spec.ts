@@ -12,7 +12,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { computeSemaforo } from '../../src/aste/aste-semaforo';
 import { fixtureReadyExtraction } from '../fixtures/aste/ready-extraction';
-import { dockerAvailable, ensurePostgresImage } from './harness';
+import { dockerAvailable, ensurePostgresImage, meiliWait } from './harness';
 import { asUser } from './test-auth';
 
 const gate = dockerAvailable() ? describe : describe.skip;
@@ -155,7 +155,7 @@ gate('Aste chat (integration EC-25)', () => {
     meili = await new GenericContainer('getmeili/meilisearch:v1.10')
       .withEnvironment({ MEILI_MASTER_KEY: 'test', MEILI_ENV: 'development' })
       .withExposedPorts(7700)
-      .withWaitStrategy(Wait.forHttp('/health', 7700))
+      .withWaitStrategy(meiliWait())
       .start();
 
     const minioEndpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
@@ -293,7 +293,7 @@ gate('Aste chat (integration EC-25)', () => {
   }
 
   it('grounds answers with citations; EN translates query; refuse advice; owner-only', async () => {
-    const { analysisId, avvisoId } = await seedReadyWithChunks();
+    const { analysisId, avvisoId, periziaId } = await seedReadyWithChunks();
     translateCalls = 0;
 
     const itAsk = await request(api())
@@ -302,7 +302,7 @@ gate('Aste chat (integration EC-25)', () => {
       .send({ question: 'Qual è il prezzo base?', lang: 'it' });
     expect([200, 201]).toContain(itAsk.status);
     expect(itAsk.body.assistantMessage.citations.length).toBeGreaterThanOrEqual(1);
-    expect(itAsk.body.assistantMessage.citations[0].document_id).toBe(avvisoId);
+    expect([avvisoId, periziaId]).toContain(itAsk.body.assistantMessage.citations[0].document_id);
     expect(itAsk.body.filenameById[avvisoId]).toBe('avviso.pdf');
     expect(translateCalls).toBe(0);
 

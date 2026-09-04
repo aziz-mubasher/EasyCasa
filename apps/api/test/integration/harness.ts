@@ -27,6 +27,13 @@ export interface IntegrationContext {
 
 const MEILI_IMAGE = 'getmeili/meilisearch:v1.10';
 export const PG_IMAGE = 'easycasa-postgres-int';
+const INT_WA_SECRET = 'int-test-wa-secret';
+const INT_WA_HANDLE_SECRET = 'int-test-wa-handle-secret';
+
+/** Meili on a loaded GH runner often exceeds the 60s default HTTP wait. */
+export function meiliWait() {
+  return Wait.forHttp('/health', 7700).withStartupTimeout(120_000);
+}
 
 /** Same `docker build` path as `.github/workflows/omi-load.yml` (testcontainers fromDockerfile flakes on empty TARGETPLATFORM). */
 export function ensurePostgresImage(): string {
@@ -45,7 +52,12 @@ let shared: Promise<IntegrationContext> | null = null;
 let refs = 0;
 
 export async function startIntegration(): Promise<IntegrationContext> {
-  if (!shared) shared = bootOnce();
+  if (!shared) {
+    shared = bootOnce().catch((err) => {
+      shared = null;
+      throw err;
+    });
+  }
   const ctx = await shared;
   refs += 1;
   return {
@@ -53,8 +65,9 @@ export async function startIntegration(): Promise<IntegrationContext> {
     databaseUrl: ctx.databaseUrl,
     stop: async () => {
       refs -= 1;
-      if (refs > 0) return;
-      await ctx.stop();
+      // Keep PG + Meili + AppModule for later files in this vitest worker.
+      // Tearing down between files (fileParallelism: false) made the next
+      // Meili /health wait time out on GH runners.
     },
   };
 }
@@ -71,7 +84,7 @@ async function bootOnce(): Promise<IntegrationContext> {
   const meili: StartedTestContainer = await new GenericContainer(MEILI_IMAGE)
     .withEnvironment({ MEILI_MASTER_KEY: 'test', MEILI_ENV: 'development' })
     .withExposedPorts(7700)
-    .withWaitStrategy(Wait.forHttp('/health', 7700))
+    .withWaitStrategy(meiliWait())
     .start();
 
   const databaseUrl = pg.getConnectionUri();
@@ -79,18 +92,18 @@ async function bootOnce(): Promise<IntegrationContext> {
 
   process.env.NODE_ENV = 'test';
   process.env.ALLOW_PROVIDER_STUBS = 'true';
+  process.env.EC_TEST_AUTH = 'true';
   process.env.DATABASE_URL = databaseUrl;
   process.env.MEILI_URL = meiliUrl;
   process.env.MEILI_MASTER_KEY = 'test';
   process.env.API_PORT = '4000';
-  // EC-17 — fail-closed signature on webhook; enable Cloud client for auto-reply tests.
-  process.env.WHATSAPP_APP_SECRET = process.env.WHATSAPP_APP_SECRET || 'int-test-wa-secret';
+  // Force test secrets — do not inherit a runner/org WHATSAPP_APP_SECRET.
+  process.env.WHATSAPP_APP_SECRET = INT_WA_SECRET;
   process.env.WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN || 'int-tok';
   process.env.WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID || 'int-pnid';
   process.env.WHATSAPP_INBOUND_OPS_EMAIL =
     process.env.WHATSAPP_INBOUND_OPS_EMAIL || 'ops@example.com';
-  process.env.WA_HANDLE_SECRET =
-    process.env.WA_HANDLE_SECRET || 'int-test-wa-handle-secret';
+  process.env.WA_HANDLE_SECRET = INT_WA_HANDLE_SECRET;
 
   const { resetConfigCache } = await import('../../src/config');
   resetConfigCache();
