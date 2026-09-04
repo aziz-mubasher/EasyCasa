@@ -5,7 +5,8 @@
 **Venture:** EasyCasa Italia · easycasaita.com · Mundida S.r.l. (P.IVA IT04531990986)  
 **Channel this answers:** WhatsApp welcome buttons `sell_property` / `buy_property` (live on `main` @ `4ffd1fe`) and any later Consult / FAQ / canned-reply surface that uses the same two intents.  
 **T04 rows:** 1–9 (portal tools + flat-fee options). **Rows 10–12 stay prohibited.**  
-**Sign-off capacity:** product-owner copy (AZM). Not external counsel. Do not tell a consumer that a lawyer approved EasyCasa’s regulatory status.
+**Sign-off capacity:** product-owner copy (AZM). Not external counsel. Do not tell a consumer that a lawyer approved EasyCasa’s regulatory status.  
+**Mundida ingest (2026-09-04):** copied to mundida.com as `docs/ec-consult/KB-v1.md` (agent copy `src/lib/agents/ec-consult/kb.md`). Clean PR: https://github.com/aziz-mubasher/mundida.com/pull/106. Live on VPS `/opt/mundida` and inside `mundida-web`.
 
 This file is the knowledge base. When someone taps **Selling a property** or **Buying a property**, humans and any future auto-reply must explain EasyCasa from here — not from Banks4All Consult, not from the seed mediation catalog, and not from the brand tagline *“agenzia regolare”*.
 
