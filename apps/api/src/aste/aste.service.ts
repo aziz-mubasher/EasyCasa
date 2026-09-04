@@ -106,7 +106,7 @@ export class AsteService {
           guideToken: token,
         })
         .returning({ id: asteLeads.id });
-      leadId = inserted[0]?.id ?? existing[0]?.id ?? '';
+      leadId = inserted[0]?.id ?? '';
     }
 
     const url = guideUrl(locale, token);

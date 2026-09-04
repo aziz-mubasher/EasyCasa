@@ -25,19 +25,19 @@ function contact(over: Record<string, unknown> = {}) {
 
 function mockRepo() {
   return {
-    findContactByUserId: vi.fn(async () => null),
-    findContactByEmail: vi.fn(async () => null),
-    findContactByPhone: vi.fn(async () => null),
+    findContactByUserId: vi.fn().mockResolvedValue(null),
+    findContactByEmail: vi.fn().mockResolvedValue(null),
+    findContactByPhone: vi.fn().mockResolvedValue(null),
     createContact: vi.fn(async (input: { source: string; tags?: string[]; locale?: string }) =>
       contact({ id: 'new-1', source: input.source, tags: input.tags ?? [], locale: input.locale ?? 'it' }),
     ),
     updateContact: vi.fn(async (id: string, patch: Record<string, unknown>) =>
       contact({ id, ...patch }),
     ),
-    getSeeker: vi.fn(async () => null),
-    upsertSeeker: vi.fn(async () => ({ stage: 'new_enquiry' })),
-    addActivity: vi.fn(async () => ({ id: 'act-1' })),
-    audit: vi.fn(async () => undefined),
+    getSeeker: vi.fn().mockResolvedValue(null),
+    upsertSeeker: vi.fn().mockResolvedValue({ stage: 'new_enquiry' }),
+    addActivity: vi.fn().mockResolvedValue({ id: 'act-1' }),
+    audit: vi.fn().mockResolvedValue(undefined),
   };
 }
 
@@ -50,7 +50,7 @@ describe('crmSourceLabel', () => {
 
 describe('CrmHooksService Easy Legenda + WhatsApp locale', () => {
   const repo = mockRepo();
-  const users = { findById: vi.fn(async () => null) };
+  const users = { findById: vi.fn().mockResolvedValue(null) };
   let hooks: CrmHooksService;
 
   beforeEach(() => {
