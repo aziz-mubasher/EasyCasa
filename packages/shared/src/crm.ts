@@ -45,13 +45,16 @@ export type CrmContactSource =
   | 'b4a_referral'
   | 'partner_intake'
   | 'whatsapp'
-  | 'aste';
+  | 'aste'
+  | 'call_request';
 
 /** Operator-facing labels for `#crm` source badges. */
 export function crmSourceLabel(source: CrmContactSource | string): string {
   switch (source) {
     case 'aste':
       return 'Easy Legenda';
+    case 'call_request':
+      return 'Call request';
     case 'whatsapp':
       return 'WhatsApp';
     case 'enquiry':

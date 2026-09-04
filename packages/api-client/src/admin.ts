@@ -678,6 +678,18 @@ export class EasyCasaAdminApi {
     }>;
   }
 
+  crmCreateTask(body: {
+    contactId: string;
+    title: string;
+    dueAt?: string;
+    assigneeAdminId?: string;
+  }): Promise<{ id: string; title: string; dueAt: string | null; status: string }> {
+    return this.request('/admin/crm/tasks', z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }) as Promise<{ id: string; title: string; dueAt: string | null; status: string }>;
+  }
+
   crmPatchTask(
     id: string,
     body: { title?: string; status?: string; dueAt?: string | null },

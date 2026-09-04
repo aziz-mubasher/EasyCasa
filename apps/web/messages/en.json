@@ -1818,6 +1818,42 @@
       "footOdrLink": "ec.europa.eu/consumers/odr"
     }
   },
+  "bookCall": {
+    "meta": {
+      "title": "Book a call — EasyCasa",
+      "description": "Request a callback. A person calls you — we do not negotiate the deal for you."
+    },
+    "eyebrow": "Callback",
+    "title": "Book a call",
+    "lead": "Leave your name and number. Someone at EasyCasa will call you about the province and reason on this link.",
+    "notAdvice": "This is not brokerage: we do not collect offers, draft proposals, or recommend a price.",
+    "fields": {
+      "name": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "province": "Province",
+      "provinceNone": "Choose the province",
+      "reason": "Reason for the call",
+      "reasonNone": "Choose a reason",
+      "when": "Preferred time (optional)",
+      "whenHint": "If you leave this empty, we call within 24 hours."
+    },
+    "consent": {
+      "before": "I have read the ",
+      "privacy": "privacy notice",
+      "after": " and I ask to be called back about this request."
+    },
+    "submit": "Request the call",
+    "submitting": "Sending…",
+    "success": {
+      "title": "Request received",
+      "body": "We will call the number you gave. If you picked a time we will use it; otherwise within 24 hours."
+    },
+    "errors": {
+      "required": "Fill the required fields and accept the privacy notice.",
+      "submit": "Could not send. Try again or write on WhatsApp."
+    }
+  },
   "termsConditions": {
     "metaTitle": "Terms and conditions — EasyCasa",
     "metaDescription": "Terms of use for the EasyCasa platform: accounts, listings, paid services, withdrawal, liability and disputes.",

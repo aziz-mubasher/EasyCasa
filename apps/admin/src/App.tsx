@@ -172,7 +172,7 @@ export function App() {
       const h = window.location.hash.replace(/^#/, '');
       if (h === 'whatsapp' || h.startsWith('whatsapp/')) return 'whatsapp';
       if (h === 'aste' || h.startsWith('aste/')) return 'aste';
-      if (h === 'crm') return 'crm';
+      if (h === 'crm' || h.startsWith('crm/')) return 'crm';
     }
     return 'credentials';
   })();
@@ -192,7 +192,8 @@ export function App() {
         const cur = window.location.hash.replace(/^#/, '');
         if (!cur.startsWith('aste')) window.location.hash = 'aste';
       } else if (next === 'crm') {
-        window.location.hash = 'crm';
+        const cur = window.location.hash.replace(/^#/, '');
+        if (!cur.startsWith('crm')) window.location.hash = 'crm';
       } else {
         window.location.hash = '';
       }

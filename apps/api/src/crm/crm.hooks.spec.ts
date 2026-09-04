@@ -37,6 +37,7 @@ function mockRepo() {
     getSeeker: vi.fn().mockResolvedValue(null),
     upsertSeeker: vi.fn().mockResolvedValue({ stage: 'new_enquiry' }),
     addActivity: vi.fn().mockResolvedValue({ id: 'act-1' }),
+    createTask: vi.fn().mockResolvedValue({ id: 'task-1' }),
     audit: vi.fn().mockResolvedValue(undefined),
   };
 }
@@ -156,6 +157,48 @@ describe('CrmHooksService Easy Legenda + WhatsApp locale', () => {
         }),
       }),
     );
+  });
+
+  it('creates a scheduled Call task from a public booking request', async () => {
+    const preferred = new Date(Date.now() + 48 * 60 * 60 * 1000);
+    await hooks.onCallRequestCreated({
+      fullName: 'Ada Lovelace',
+      email: 'Ada@Example.IT',
+      phone: '+393331112233',
+      locale: 'it',
+      province: 'BS',
+      reason: 'vendere',
+      preferredAt: preferred,
+    });
+    expect(repo.createContact).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: 'ada@example.it',
+        source: 'call_request',
+        tags: ['call-request'],
+      }),
+    );
+    expect(repo.upsertSeeker).toHaveBeenCalledWith(
+      'new-1',
+      expect.objectContaining({
+        stage: 'contacted',
+        searchIntent: expect.objectContaining({
+          channel: 'call_booking',
+          province: 'BS',
+          reason: 'sell',
+        }),
+      }),
+    );
+    expect(repo.createTask).toHaveBeenCalledWith(
+      expect.objectContaining({
+        contactId: 'new-1',
+        title: 'Call · Brescia · Vendita immobile',
+        dueAt: preferred,
+      }),
+    );
+  });
+
+  it('labels call_request source', () => {
+    expect(crmSourceLabel('call_request')).toBe('Call request');
   });
 
   it('is a no-op when CRM_ENABLED is false', async () => {

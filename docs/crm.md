@@ -38,6 +38,7 @@ interface CrmHooks {
   onWhatsAppSearchBrief(e: CrmWhatsAppBriefRef): Promise<void>;
   onAsteWaitlistLead(e: CrmAsteWaitlistRef): Promise<void>;
   onAsteAnalysisCreated(e: CrmAsteAnalysisRef): Promise<void>;
+  onCallRequestCreated(e: CrmCallRequestRef): Promise<void>;
 }
 ```
 
@@ -54,6 +55,9 @@ Call points:
 | `WhatsAppJourneyService` search brief | after save | `onWhatsAppSearchBrief` |
 | `AsteService.createLead` | after persist (new + duplicate) | `onAsteWaitlistLead` (`source=aste`, badge **Easy Legenda**) |
 | `AsteAnalysisService.create` | after draft insert | `onAsteAnalysisCreated` (`source=aste`, badge **Easy Legenda**) |
+| `CallRequestsService.create` | after validate | `onCallRequestCreated` (`source=call_request`, scheduled **Call** task) |
+
+Shareable callback links (province + reason): `docs/call-booking.md`. Admin: `#crm` → **Call links**. Public: `/{locale}/prenota-chiamata`.
 
 Easy Legenda contacts land on the seeker pipeline at `new_enquiry`. Existing contacts keep their original `source`; tags `easy-legenda` + `aste-waitlist` / `aste-analysis` are merged. Do **not** store CF, debtor names, or `buyer_profile` PII. Filter `#crm` contacts with `?source=aste`. Backfill: `migration/sql/0072_ec_crm_aste_wa_langs.sql`.
 

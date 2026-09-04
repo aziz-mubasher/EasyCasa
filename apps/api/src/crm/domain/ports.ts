@@ -172,6 +172,17 @@ export interface CrmAsteAnalysisRef {
   lottoLabel: string | null;
 }
 
+/** Public /prenota-chiamata — province + reason, no offer fields. */
+export interface CrmCallRequestRef {
+  fullName: string;
+  email: string;
+  phone: string;
+  locale: string;
+  province: string;
+  reason: string;
+  preferredAt: Date | null;
+}
+
 export interface CrmHooks {
   onEnquiryCreated(e: CrmEnquiryRef): Promise<void>;
   onViewingTransition(v: CrmViewingRef, to: CrmViewingHookStage): Promise<void>;
@@ -180,6 +191,7 @@ export interface CrmHooks {
   onWhatsAppSearchBrief(e: CrmWhatsAppBriefRef): Promise<void>;
   onAsteWaitlistLead(e: CrmAsteWaitlistRef): Promise<void>;
   onAsteAnalysisCreated(e: CrmAsteAnalysisRef): Promise<void>;
+  onCallRequestCreated(e: CrmCallRequestRef): Promise<void>;
 }
 
 export interface CrmRepository {

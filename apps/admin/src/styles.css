@@ -1014,6 +1014,18 @@ select {
   margin-bottom: 1rem;
 }
 
+.crm-call-links__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.4rem 0 1rem;
+}
+
+.crm-call-links__row .input {
+  flex: 1 1 16rem;
+}
+
 .crm-tag {
   display: inline-block;
   margin-right: 0.35rem;
