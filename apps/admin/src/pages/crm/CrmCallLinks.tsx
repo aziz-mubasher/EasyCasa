@@ -92,13 +92,13 @@ export function CrmCallLinks() {
       </div>
 
       <label className="muted" htmlFor="crm-call-guest">
-        Guest name (for the invitation)
+        Client name (form first; WhatsApp if the form is empty)
       </label>
       <input
         id="crm-call-guest"
         className="input"
         value={guestName}
-        placeholder="name"
+        placeholder="Leave empty if unknown"
         autoComplete="name"
         onChange={(e) => setGuestName(e.target.value)}
       />

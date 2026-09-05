@@ -220,19 +220,41 @@ export const CALL_BOOKING_INVITE_BODY: Readonly<Record<CallBookingLocale, string
   hi: 'अपनी भाषा में हमारे साथ 15 मिनट की डिस्कवरी कॉल बुक करें। पसंदीदा दिन और समय चुनने के लिए नीचे क्लिक करें। पुष्टि WhatsApp और ईमेल से भेजी जाएगी।',
 };
 
+const PLACEHOLDER_INVITE_NAMES = new Set(['name', 'whatsapp', 'seeker', 'call request']);
+
+function usableInviteName(raw?: string | null): string {
+  const trimmed = raw?.trim() ?? '';
+  if (!trimmed) return '';
+  if (PLACEHOLDER_INVITE_NAMES.has(trimmed.toLowerCase())) return '';
+  return trimmed;
+}
+
+/**
+ * Form-filled name is source of truth. WhatsApp profile name is the fallback.
+ * If both are missing, the greeting variable stays empty (no "name" stub).
+ */
+export function resolveCallInviteName(input: {
+  formName?: string | null;
+  whatsappName?: string | null;
+}): string {
+  return usableInviteName(input.formName) || usableInviteName(input.whatsappName);
+}
+
 export function callBookingInviteName(name?: string | null): string {
-  const trimmed = name?.trim();
-  return trimmed && trimmed.length > 0 ? trimmed : 'name';
+  return resolveCallInviteName({ formName: name });
 }
 
 /** WhatsApp / email invitation EC Consult pastes when sending a shareable slot link. */
 export function buildCallBookingInvite(input: {
   locale: CallBookingLocale;
   name?: string | null;
+  whatsappName?: string | null;
   url: string;
 }): string {
-  const who = callBookingInviteName(input.name);
-  const greeting = `${CALL_BOOKING_INVITE_GREETING[input.locale]}, ${who}`;
+  const who = resolveCallInviteName({ formName: input.name, whatsappName: input.whatsappName });
+  const greeting = who
+    ? `${CALL_BOOKING_INVITE_GREETING[input.locale]}, ${who}`
+    : `${CALL_BOOKING_INVITE_GREETING[input.locale]},`;
   return `${greeting}\n${CALL_BOOKING_INVITE_BODY[input.locale]}\n${input.url}`;
 }
 

@@ -4,10 +4,7 @@
  * T04 rows 4–5 only — no offer / proposta / caparra / negotiation / credit copy.
  */
 
-import {
-  CALL_BOOKING_INVITE_BODY,
-  CALL_BOOKING_INVITE_GREETING,
-} from './call-booking';
+import { buildCallBookingInvite } from './call-booking';
 
 export const WA_OPERATOR_LOCALES = ['it', 'en', 'es', 'ur', 'hi'] as const;
 export type WaOperatorLocale = (typeof WA_OPERATOR_LOCALES)[number];
@@ -47,8 +44,8 @@ const CALL: Record<WaOperatorLocale, string> = {
   hi: `${PORTAL}/hi/prenota-chiamata`,
 };
 
-function callInvite(locale: WaOperatorLocale): string {
-  return `${CALL_BOOKING_INVITE_GREETING[locale]}, name\n${CALL_BOOKING_INVITE_BODY[locale]}\n${CALL[locale]}`;
+function callInvite(locale: WaOperatorLocale, name?: string | null): string {
+  return buildCallBookingInvite({ locale, name, url: CALL[locale] });
 }
 
 export const WA_OPERATOR_TEMPLATES: readonly WaOperatorTemplate[] = [
@@ -176,7 +173,9 @@ export function waOperatorTextDirection(locale: WaOperatorLocale): 'ltr' | 'rtl'
 export function waOperatorTemplateBody(
   id: WaOperatorTemplateId,
   locale: WaOperatorLocale,
+  vars?: { name?: string | null },
 ): string {
+  if (id === 'call') return callInvite(locale, vars?.name);
   const row = WA_OPERATOR_TEMPLATES.find((t) => t.id === id);
   if (!row) throw new Error(`unknown operator template: ${id}`);
   return row.body[locale];

@@ -8,7 +8,12 @@
 
 Operators build links in admin `#crm` → **Call links** (`IT` `EN` `ES` `UR` `HI`).
 EC Consult copies the invitation (greeting + 15-minute discovery-call body + link) in the
-guest’s language — same pattern in every locale.
+guest’s language — same pattern in every locale. The `{name}` after the greeting is the
+**form-filled client name** (source of truth). If that is empty, the WhatsApp profile name
+is used. If both are missing the name stays blank (`Salam o alaikum,` — no stub `name`).
+
+Every inbound EasyCasa WhatsApp lead upserts a CRM contact (`source=whatsapp`), including
+STOP / closed-window / blocked threads. The journey auto-reply is separate.
 
 ```
 https://easycasaita.com/{locale}/prenota-chiamata?provincia=Brescia&motivo=vendere

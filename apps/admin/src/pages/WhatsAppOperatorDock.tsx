@@ -4,6 +4,8 @@ import {
   WA_OPERATOR_LOCALES,
   WA_OPERATOR_TEMPLATES,
   parseWaOperatorLocale,
+  resolveCallInviteName,
+  waOperatorTemplateBody,
   waOperatorTextDirection,
   type WaOperatorLocale,
 } from '@easycasa/shared';
@@ -21,6 +23,8 @@ export function WhatsAppOperatorDock({
   canReply,
   sending,
   contactLanguage,
+  formName,
+  whatsappName,
   customCanned,
   onReplyText,
   onSend,
@@ -30,10 +34,13 @@ export function WhatsAppOperatorDock({
   canReply: boolean;
   sending: boolean;
   contactLanguage?: string | null;
+  formName?: string | null;
+  whatsappName?: string | null;
   customCanned: CustomCanned[];
   onReplyText: (next: string) => void;
   onSend: (body?: string) => void;
 }) {
+  const clientName = resolveCallInviteName({ formName, whatsappName });
   const [locale, setLocale] = React.useState<WaOperatorLocale>(() =>
     parseWaOperatorLocale(contactLanguage),
   );
@@ -73,17 +80,21 @@ export function WhatsAppOperatorDock({
         ))}
       </div>
       <div className="ecwa__dock-templates" aria-label="Quick replies">
-        {WA_OPERATOR_TEMPLATES.map((t) => (
-          <TemplateChip
-            key={t.id}
-            title={t.title[locale]}
-            body={t.body[locale]}
-            canReply={canReply}
-            sending={sending}
-            onInsert={insert}
-            onSend={sendTemplate}
-          />
-        ))}
+        {WA_OPERATOR_TEMPLATES.map((t) => {
+          const body =
+            t.id === 'call' ? waOperatorTemplateBody('call', locale, { name: clientName }) : t.body[locale];
+          return (
+            <TemplateChip
+              key={t.id}
+              title={t.title[locale]}
+              body={body}
+              canReply={canReply}
+              sending={sending}
+              onInsert={insert}
+              onSend={sendTemplate}
+            />
+          );
+        })}
         {saved.map((c) => (
           <TemplateChip
             key={c.id}

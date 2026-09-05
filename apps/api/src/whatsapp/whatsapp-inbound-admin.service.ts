@@ -454,6 +454,7 @@ export class WhatsAppInboundAdminService {
     });
 
     const contact = await this.journey.getByWaId(waId);
+    const crmFullName = await this.journey.crmFormName(waId);
 
     return {
       waHandle: handle,
@@ -461,6 +462,7 @@ export class WhatsAppInboundAdminService {
       waIdMasked: maskWaId(waId),
       waIdE164: toE164(waId),
       contactName,
+      crmFullName,
       canReply: windowStateAt(latestExpiry, now) !== 'closed' && !contact?.blockedAt,
       windowState: windowStateAt(latestExpiry, now),
       windowExpiresAt: windowRow[0] ? latestExpiry.toISOString() : null,

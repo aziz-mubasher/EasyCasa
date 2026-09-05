@@ -41,7 +41,9 @@ describe('WhatsApp operator templates', () => {
     expect(waOperatorTemplateBody('call', 'ur')).toContain(
       'اپنی زبان میں ہمارے ساتھ 15 منٹ کی دریافت کال بک کریں',
     );
-    expect(waOperatorTemplateBody('call', 'ur')).toContain('Salam o alaikum, name');
+    expect(waOperatorTemplateBody('call', 'ur')).toContain('Salam o alaikum,');
+    expect(waOperatorTemplateBody('call', 'ur')).not.toContain('Salam o alaikum, name');
+    expect(waOperatorTemplateBody('call', 'ur', { name: 'Ahmed' })).toContain('Salam o alaikum, Ahmed');
     expect(waOperatorTemplateBody('legenda', 'it')).toContain('legenda.easycasaita.com');
   });
 
@@ -49,5 +51,7 @@ describe('WhatsApp operator templates', () => {
     expect(DOCK).toContain('ecwa__dock');
     expect(DOCK).toContain('Send ${title}');
     expect(DOCK).toContain('onInsert');
+    expect(DOCK).toContain('resolveCallInviteName');
+    expect(DOCK).toContain('formName');
   });
 });

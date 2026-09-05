@@ -188,7 +188,8 @@ export class CrmHooksService implements CrmHooks {
       if (!contact && e164) contact = await this.repo.findContactByPhone(e164);
       const locale = crmLocaleFromAny(e.locale);
       const waLang = e.locale?.trim() || locale;
-      const fullName = e.contactName?.trim() || (e164 ?? 'WhatsApp');
+      const waName = e.contactName?.trim() || '';
+      const fullName = waName || e164 || '';
 
       if (!contact) {
         contact = await this.repo.createContact({
@@ -200,10 +201,15 @@ export class CrmHooksService implements CrmHooks {
         });
         await this.repo.upsertSeeker(contact.id, { stage: 'new_enquiry' });
       } else {
+        const keepFormName =
+          contact.fullName.trim() &&
+          contact.fullName !== 'Seeker' &&
+          contact.fullName !== 'WhatsApp' &&
+          contact.fullName !== e164;
         contact = await this.repo.updateContact(contact.id, {
           userId: contact.userId ?? e.matchedUserId,
           phone: contact.phone ?? e164,
-          fullName: contact.fullName === 'Seeker' || contact.fullName === 'WhatsApp' ? fullName : contact.fullName,
+          fullName: keepFormName ? contact.fullName : fullName || contact.fullName,
           locale,
         });
       }

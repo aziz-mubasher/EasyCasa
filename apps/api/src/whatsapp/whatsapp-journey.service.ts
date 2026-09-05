@@ -42,7 +42,11 @@ export class WhatsAppJourneyService {
     @Optional() @Inject(CRM_REPOSITORY) private readonly crmRepo?: CrmRepository,
   ) {}
 
-  async handleInboundRow(id: string): Promise<void> {
+  /**
+   * Every inbound lead — including STOP / closed-window / blocked — upserts CRM.
+   * Journey auto-replies stay in handleInboundRow.
+   */
+  async recordInboundLead(id: string): Promise<void> {
     const rows = await this.db
       .select()
       .from(waInboundMessages)
@@ -52,11 +56,6 @@ export class WhatsAppJourneyService {
     if (!row) return;
 
     const contact = await this.upsertContact(row);
-    if (contact.blockedAt) {
-      whatsappAutoReplySuppressed.inc({ reason: 'blocked' });
-      return;
-    }
-
     const interactiveReplyId = parseStoredInteractiveId(row.body, row.messageType);
     const pickedLocale = parseLanguageReplyId(interactiveReplyId);
     const localeForCrm = pickedLocale ?? (isJourneyLocale(contact.language) ? contact.language : null);
@@ -78,7 +77,24 @@ export class WhatsAppJourneyService {
       const linked = await this.crmRepo.findContactByPhone(toE164(row.waId));
       if (linked) await this.linkCrmContact(row.waId, linked.id);
     }
+  }
 
+  async handleInboundRow(id: string): Promise<void> {
+    const rows = await this.db
+      .select()
+      .from(waInboundMessages)
+      .where(eq(waInboundMessages.id, id))
+      .limit(1);
+    const row = rows[0];
+    if (!row) return;
+
+    const contact = await this.upsertContact(row);
+    if (contact.blockedAt) {
+      whatsappAutoReplySuppressed.inc({ reason: 'blocked' });
+      return;
+    }
+
+    const interactiveReplyId = parseStoredInteractiveId(row.body, row.messageType);
     const action = decideJourneyAction(toState(contact), {
       text: row.body,
       interactiveId: interactiveReplyId,
@@ -291,6 +307,16 @@ export class WhatsAppJourneyService {
   async getByWaId(waId: string) {
     const rows = await this.db.select().from(waContacts).where(eq(waContacts.waId, waId)).limit(1);
     return rows[0] ?? null;
+  }
+
+  /** Form-filled CRM name when linked; otherwise null. */
+  async crmFormName(waId: string): Promise<string | null> {
+    if (!this.crmRepo) return null;
+    const local = await this.getByWaId(waId);
+    const byId = local?.crmContactId ? await this.crmRepo.findContactById(local.crmContactId) : null;
+    const byPhone = byId ?? (await this.crmRepo.findContactByPhone(toE164(waId)));
+    const name = byPhone?.fullName?.trim() || null;
+    return name;
   }
 
   async linkCrmContact(waId: string, crmContactId: string | null): Promise<void> {
