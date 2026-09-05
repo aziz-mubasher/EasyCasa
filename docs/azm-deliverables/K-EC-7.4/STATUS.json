@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/200",
   "prState": "MERGED",
   "dispatchedAt": "2026-09-03T19:46:04.116Z",
-  "updatedAt": "2026-09-03T20:20:56.870Z",
-  "summary": "MERGED #200 + DEPLOYED VPS @ f8b0504. Migration 0071 applied. Hub/inbox live. Own WABA. No credit copy.",
-  "nextAction": "Aziz: live boards K EC 7.4 + Startup Phase 3. Confirm Meta messages subscription if inbound is quiet. Phone smoke: language list then three estate buttons.",
+  "updatedAt": "2026-09-05T04:54:11.587Z",
+  "summary": "MERGED #200 + follow-up #207 MERGED+DEPLOYED API @ 33858db (builtAt 2026-09-05T04:48:20Z). Webhook POST @HttpCode(200). CI api-integration green. Admin still a3bd3d2 (#208).",
+  "nextAction": "Aziz: live boards K EC 7.4 if still open. Phone smoke inbound — Meta now gets 200 on signed POST. Do not flip ASTE_ANALYSIS_ENABLED.",
   "errors": []
 }
