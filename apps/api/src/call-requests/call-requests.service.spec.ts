@@ -10,6 +10,12 @@ describe('call booking links', () => {
     expect(buildCallBookingPath({ locale: 'it', province: 'BS', reason: 'sell' })).toBe(
       '/it/prenota-chiamata?provincia=Brescia&motivo=vendere',
     );
+    expect(buildCallBookingPath({ locale: 'ur', province: 'BS', reason: 'sell' })).toBe(
+      '/ur/prenota-chiamata?provincia=Brescia&motivo=vendere',
+    );
+    expect(buildCallBookingPath({ locale: 'hi', province: 'MI', reason: 'buy' })).toBe(
+      '/hi/prenota-chiamata?provincia=Milano&motivo=comprare',
+    );
   });
 
   it('parses name or sigla and motivo aliases', () => {

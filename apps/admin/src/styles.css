@@ -1131,6 +1131,15 @@ select {
   flex: 1 1 16rem;
 }
 
+.crm-call-links__invite {
+  width: 100%;
+  min-height: 8.5rem;
+  resize: vertical;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  margin: 0.4rem 0 0.5rem;
+}
+
 .crm-tag {
   display: inline-block;
   margin-right: 0.35rem;

@@ -36,6 +36,12 @@ describe('WhatsApp operator templates', () => {
       }
     }
     expect(waOperatorTemplateBody('call', 'en')).toContain('/en/prenota-chiamata');
+    expect(waOperatorTemplateBody('call', 'ur')).toContain('/ur/prenota-chiamata');
+    expect(waOperatorTemplateBody('call', 'hi')).toContain('/hi/prenota-chiamata');
+    expect(waOperatorTemplateBody('call', 'ur')).toContain(
+      'اپنی زبان میں ہمارے ساتھ 15 منٹ کی دریافت کال بک کریں',
+    );
+    expect(waOperatorTemplateBody('call', 'ur')).toContain('Salam o alaikum, name');
     expect(waOperatorTemplateBody('legenda', 'it')).toContain('legenda.easycasaita.com');
   });
 

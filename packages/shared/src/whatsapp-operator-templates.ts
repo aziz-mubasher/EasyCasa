@@ -4,6 +4,11 @@
  * T04 rows 4–5 only — no offer / proposta / caparra / negotiation / credit copy.
  */
 
+import {
+  CALL_BOOKING_INVITE_BODY,
+  CALL_BOOKING_INVITE_GREETING,
+} from './call-booking';
+
 export const WA_OPERATOR_LOCALES = ['it', 'en', 'es', 'ur', 'hi'] as const;
 export type WaOperatorLocale = (typeof WA_OPERATOR_LOCALES)[number];
 
@@ -38,9 +43,13 @@ const CALL: Record<WaOperatorLocale, string> = {
   it: `${PORTAL}/it/prenota-chiamata`,
   en: `${PORTAL}/en/prenota-chiamata`,
   es: `${PORTAL}/es/prenota-chiamata`,
-  ur: `${PORTAL}/en/prenota-chiamata`,
-  hi: `${PORTAL}/en/prenota-chiamata`,
+  ur: `${PORTAL}/ur/prenota-chiamata`,
+  hi: `${PORTAL}/hi/prenota-chiamata`,
 };
+
+function callInvite(locale: WaOperatorLocale): string {
+  return `${CALL_BOOKING_INVITE_GREETING[locale]}, name\n${CALL_BOOKING_INVITE_BODY[locale]}\n${CALL[locale]}`;
+}
 
 export const WA_OPERATOR_TEMPLATES: readonly WaOperatorTemplate[] = [
   {
@@ -104,11 +113,11 @@ export const WA_OPERATOR_TEMPLATES: readonly WaOperatorTemplate[] = [
       hi: 'कॉल',
     },
     body: {
-      it: `Per una richiamata, lascia nome e recapito sul modulo (non raccogliamo offerte e non consigliamo un prezzo): ${CALL.it}`,
-      en: `To ask for a callback, leave your name and number on the form (we do not collect offers or recommend a price): ${CALL.en}`,
-      es: `Para una llamada, deja nombre y teléfono en el formulario (no recogemos ofertas ni recomendamos un precio): ${CALL.es}`,
-      ur: `کال بیک کے لیے فارم پر نام اور نمبر لکھیں (ہم آفر نہیں لیتے اور قیمت تجویز نہیں کرتے): ${CALL.ur}`,
-      hi: `कॉलबैक के लिए फ़ॉर्म पर नाम और नंबर लिखें (हम ऑफ़र नहीं लेते और कीमत नहीं सुझाते): ${CALL.hi}`,
+      it: callInvite('it'),
+      en: callInvite('en'),
+      es: callInvite('es'),
+      ur: callInvite('ur'),
+      hi: callInvite('hi'),
     },
   },
   {
