@@ -103,6 +103,7 @@ export class WhatsAppInboundService {
     const row = rows[0];
     if (!row) return;
 
+    await this.journey.recordInboundLead(id);
     if (isStopWord(row.body)) {
       whatsappAutoReplySuppressed.inc({ reason: 'stop_word' });
     } else if (row.windowExpiresAt.getTime() <= Date.now()) {

@@ -357,6 +357,7 @@ describe('WhatsAppInboundService process rules', () => {
 
     const journey = {
       handleInboundRow: vi.fn(),
+      recordInboundLead: vi.fn().mockResolvedValue(undefined),
     };
     const email = {
       sendText: vi.fn().mockResolvedValue({ provider: 'smtp', delivered: true }),
@@ -369,6 +370,7 @@ describe('WhatsAppInboundService process rules', () => {
       journey as never,
     );
     await svc.handleAfterPersist(['row-1']);
+    expect(journey.recordInboundLead).toHaveBeenCalledWith('row-1');
     expect(journey.handleInboundRow).not.toHaveBeenCalled();
     expect(email.sendText).toHaveBeenCalledOnce();
     const [, subject, text] = email.sendText.mock.calls[0] as [string, string, string];
@@ -409,7 +411,10 @@ describe('WhatsAppInboundService process rules', () => {
     const email = {
       sendText: vi.fn().mockResolvedValue({ provider: 'smtp', delivered: true }),
     };
-    const journey = { handleInboundRow: vi.fn().mockResolvedValue(undefined) };
+    const journey = {
+      handleInboundRow: vi.fn().mockResolvedValue(undefined),
+      recordInboundLead: vi.fn().mockResolvedValue(undefined),
+    };
     const svc = new WhatsAppInboundService(
       db as never,
       email as never,
@@ -455,7 +460,10 @@ describe('WhatsAppInboundService process rules', () => {
       }),
     };
 
-    const journey = { handleInboundRow: vi.fn().mockResolvedValue(undefined) };
+    const journey = {
+      handleInboundRow: vi.fn().mockResolvedValue(undefined),
+      recordInboundLead: vi.fn().mockResolvedValue(undefined),
+    };
     const email = {
       sendText: vi.fn().mockRejectedValue(new Error('smtp down')),
     };

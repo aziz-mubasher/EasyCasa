@@ -48,7 +48,15 @@ describe('CRM shareable call links — desk languages', () => {
       expect(text).toContain(', Ada');
       expect(text).toContain(url);
     }
-    expect(buildCallBookingInvite({ locale: 'en', url })).toContain('Hello, name');
+    expect(buildCallBookingInvite({ locale: 'en', url })).toBe(
+      ['Hello,', 'Book a 15-minute discovery call with us in your language. Click below to choose your preferred day and time. Confirmation will be sent on WhatsApp and by email.', url].join('\n'),
+    );
+    expect(buildCallBookingInvite({ locale: 'ur', whatsappName: 'Ali', url })).toContain(
+      'Salam o alaikum, Ali',
+    );
+    expect(buildCallBookingInvite({ locale: 'ur', name: 'Ahmed', whatsappName: 'Ali', url })).toContain(
+      'Salam o alaikum, Ahmed',
+    );
     expect(buildCallBookingInvite({ locale: 'hi', name: 'Priya', url })).toContain('Namaste, Priya');
     expect(buildCallBookingInvite({ locale: 'hi', name: 'Priya', url })).toContain(
       '15 मिनट की डिस्कवरी कॉल',

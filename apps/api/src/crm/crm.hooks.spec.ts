@@ -146,6 +146,7 @@ describe('CrmHooksService Easy Legenda + WhatsApp locale', () => {
         source: 'whatsapp',
         locale: 'en',
         phone: '+393791112233',
+        fullName: 'Ali',
       }),
     );
     expect(repo.upsertSeeker).toHaveBeenCalledWith(
@@ -155,6 +156,26 @@ describe('CrmHooksService Easy Legenda + WhatsApp locale', () => {
           channel: 'whatsapp',
           whatsappLanguage: 'ur',
         }),
+      }),
+    );
+  });
+
+  it('keeps a form-filled CRM name when a later WhatsApp ping arrives', async () => {
+    repo.findContactByPhone.mockResolvedValueOnce(
+      contact({ id: 'exist-wa', fullName: 'Ahmed Khan', source: 'call_request', phone: '+393791112233' }),
+    );
+    await hooks.onWhatsAppInbound({
+      waId: '393791112233',
+      contactName: 'Ali',
+      locale: 'ur',
+      bodyPreview: 'hi',
+      matchedUserId: null,
+    });
+    expect(repo.createContact).not.toHaveBeenCalled();
+    expect(repo.updateContact).toHaveBeenCalledWith(
+      'exist-wa',
+      expect.objectContaining({
+        fullName: 'Ahmed Khan',
       }),
     );
   });

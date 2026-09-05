@@ -69,6 +69,7 @@ const DetailSchema = z.object({
   journeyStep: z.string().optional(),
   blocked: z.boolean().optional(),
   crmContactId: z.string().nullable().optional(),
+  crmFullName: z.string().nullable().optional(),
   windowState: z.enum(['open', 'closing_soon', 'closed']),
   windowExpiresAt: z.string().nullable(),
   windowRemainingMs: z.number(),
@@ -548,6 +549,8 @@ export function WhatsAppInbound() {
                 canReply={canReply}
                 sending={reply.isPending}
                 contactLanguage={head?.language}
+                formName={head?.crmFullName}
+                whatsappName={head?.contactName ?? selectedThread?.contactName}
                 customCanned={canned.data?.items ?? []}
                 onReplyText={setReplyText}
                 onSend={sendReply}
