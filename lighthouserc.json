@@ -7,7 +7,10 @@
         "https://easycasaita.com/it/listings/appartamento-trilocale-ristrutturato-con-box-privato"
       ],
       "numberOfRuns": 3,
-      "settings": { "preset": "desktop" }
+      "settings": {
+        "preset": "desktop",
+        "chromeFlags": "--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage"
+      }
     },
     "assert": {
       "assertions": {
