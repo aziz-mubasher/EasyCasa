@@ -11,7 +11,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-const LOCALES = ['it', 'en', 'es'] as const;
+const LOCALES = ['it', 'en', 'es', 'ur', 'hi'] as const;
 
 export class CreateCallRequestDto {
   @IsString()

@@ -185,6 +185,7 @@ describe('CrmHooksService Easy Legenda + WhatsApp locale', () => {
           channel: 'call_booking',
           province: 'BS',
           reason: 'sell',
+          language: 'it',
         }),
       }),
     );
@@ -193,6 +194,39 @@ describe('CrmHooksService Easy Legenda + WhatsApp locale', () => {
         contactId: 'new-1',
         title: 'Call · Brescia · Vendita immobile',
         dueAt: preferred,
+      }),
+    );
+  });
+
+  it('keeps Urdu as search language and maps CRM contact locale to en', async () => {
+    await hooks.onCallRequestCreated({
+      fullName: 'Ahmed',
+      email: 'ahmed@example.com',
+      phone: '+393331112244',
+      locale: 'ur',
+      province: 'BS',
+      reason: 'comprare',
+      preferredAt: null,
+    });
+    expect(repo.createContact).toHaveBeenCalledWith(
+      expect.objectContaining({
+        locale: 'en',
+        source: 'call_request',
+      }),
+    );
+    expect(repo.upsertSeeker).toHaveBeenCalledWith(
+      'new-1',
+      expect.objectContaining({
+        searchIntent: expect.objectContaining({
+          channel: 'call_booking',
+          language: 'ur',
+          reason: 'buy',
+        }),
+      }),
+    );
+    expect(repo.createTask).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Call · Brescia · جائیداد خریداری',
       }),
     );
   });

@@ -89,3 +89,15 @@
   color: #8a1f1f;
   margin: 0;
 }
+
+.book-call[dir='rtl'] {
+  text-align: right;
+}
+
+.book-call[lang='ur'] {
+  font-family: 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', var(--font-body), Georgia, serif;
+}
+
+.book-call[lang='hi'] {
+  font-family: 'Noto Sans Devanagari', var(--font-body), Georgia, serif;
+}

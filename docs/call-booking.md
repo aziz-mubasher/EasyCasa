@@ -6,11 +6,15 @@
 
 ## Shareable URL
 
-Operators build links in admin `#crm` → **Call links**:
+Operators build links in admin `#crm` → **Call links** (`IT` `EN` `ES` `UR` `HI`).
+EC Consult copies the invitation (greeting + 15-minute discovery-call body + link) in the
+guest’s language — same pattern in every locale.
 
 ```
 https://easycasaita.com/{locale}/prenota-chiamata?provincia=Brescia&motivo=vendere
 ```
+
+`ur` and `hi` are desk locales for this form only (not full-site next-intl locales).
 
 | Query | Accepts | Canonical |
 |-------|---------|-----------|

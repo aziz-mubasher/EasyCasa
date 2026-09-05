@@ -5,5 +5,7 @@ export default createMiddleware(routing);
 
 export const config = {
   // Skip locale rewrite for API/auth, static assets (*.*), and Next metadata icons.
-  matcher: ['/((?!api|auth|_next|_vercel|icon|apple-icon|.*\\..*).*)'],
+  matcher: [
+    '/((?!api|auth|_next|_vercel|icon|apple-icon|ur/prenota-chiamata|hi/prenota-chiamata|.*\\..*).*)',
+  ],
 };

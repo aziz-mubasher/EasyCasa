@@ -423,6 +423,7 @@ export class CrmHooksService implements CrmHooks {
           channel: 'call_booking',
           province: e.province,
           reason: reason ?? e.reason,
+          language: e.locale,
         },
       });
 

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import {
   CALL_BOOKING_REASONS,
   ITALIAN_PROVINCES,
+  callBookingTextDirection,
   callReasonLabel,
   parseCallBookingQuery,
   type CallBookingLocale,
@@ -67,9 +68,12 @@ export function BookCallForm({ locale, initialProvince, initialReason }: Props) 
     }
   }
 
+  const dir = callBookingTextDirection(locale);
+  const privacyHref = locale === 'ur' || locale === 'hi' ? '/en/legal/privacy' : null;
+
   if (done) {
     return (
-      <div className="book-call" data-testid="book-call-success">
+      <div className="book-call" data-testid="book-call-success" lang={locale} dir={dir}>
         <div className="book-call-wrap">
           <h1>{t('success.title')}</h1>
           <p>{t('success.body')}</p>
@@ -79,7 +83,7 @@ export function BookCallForm({ locale, initialProvince, initialReason }: Props) 
   }
 
   return (
-    <div className="book-call">
+    <div className="book-call" lang={locale} dir={dir}>
       <div className="book-call-wrap">
         <p className="book-call-eyebrow">{t('eyebrow')}</p>
         <h1>{t('title')}</h1>
@@ -187,7 +191,11 @@ export function BookCallForm({ locale, initialProvince, initialReason }: Props) 
             />
             <label htmlFor={`${id}-consent`}>
               {t('consent.before')}
-              <Link href="/legal/privacy">{t('consent.privacy')}</Link>
+              {privacyHref ? (
+                <a href={privacyHref}>{t('consent.privacy')}</a>
+              ) : (
+                <Link href="/legal/privacy">{t('consent.privacy')}</Link>
+              )}
               {t('consent.after')}
             </label>
           </div>

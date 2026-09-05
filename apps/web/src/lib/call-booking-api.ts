@@ -5,7 +5,7 @@ export type CallRequestPayload = {
   province: string;
   reason: string;
   preferredAt?: string | null;
-  locale: 'it' | 'en' | 'es';
+  locale: 'it' | 'en' | 'es' | 'ur' | 'hi';
   consent: true;
 };
 
