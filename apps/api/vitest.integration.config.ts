@@ -16,6 +16,10 @@ export default defineConfig({
     pool: 'forks',
     poolOptions: { forks: { singleFork: true } },
     fileParallelism: false,
+    // Keep `harness.shared` + the PG/Meili stack. Default isolate resets
+    // module state between files, so stop()-as-no-op leaked containers and
+    // the next file's Meili /health wait timed out.
+    isolate: false,
   },
   plugins: [swc.vite({ module: { type: 'es6' } })],
 });

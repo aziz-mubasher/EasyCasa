@@ -10,14 +10,38 @@ ARG TARGETPLATFORM=linux/amd64
 FROM --platform=$TARGETPLATFORM postgis/postgis:16-3.4
 
 ARG PGVECTOR_REF=v0.8.0
+# Pin Debian indexes. deb.debian.org/security regularly 404s mid-transition
+# (libssl1.1_1.1.1w-0+deb11u8 vanished from Fastly while Packages still listed it).
+ARG DEBIAN_SNAPSHOT=20260801T000000Z
 
 RUN set -eux; \
-  apt-get update; \
-  apt-get install -y --no-install-recommends \
-    build-essential \
-    ca-certificates \
-    git \
-    postgresql-server-dev-16; \
+  . /etc/os-release; \
+  echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99snapshot; \
+  echo 'Acquire::Retries "5";' > /etc/apt/apt.conf.d/80retries; \
+  # Pin Debian + security only. Keep PGDG — postgresql-server-dev-16 is not in bullseye.
+  for f in /etc/apt/sources.list.d/*; do \
+    [ -e "$f" ] || continue; \
+    case "$f" in *pgdg*) ;; *) rm -f "$f" ;; esac; \
+  done; \
+  printf '%s\n' \
+    "deb [check-valid-until=no] http://snapshot.debian.org/archive/debian/${DEBIAN_SNAPSHOT} ${VERSION_CODENAME} main" \
+    "deb [check-valid-until=no] http://snapshot.debian.org/archive/debian-security/${DEBIAN_SNAPSHOT} ${VERSION_CODENAME}-security main" \
+    > /etc/apt/sources.list; \
+  apt_ok=0; \
+  for i in 1 2 3 4 5; do \
+    apt-get update; \
+    if apt-get install -y --no-install-recommends --fix-missing \
+        build-essential \
+        ca-certificates \
+        git \
+        postgresql-server-dev-16; then \
+      apt_ok=1; \
+      break; \
+    fi; \
+    echo "apt install failed (attempt ${i}); retrying"; \
+    sleep $((i * 4)); \
+  done; \
+  test "${apt_ok}" = 1; \
   git clone --depth 1 --branch "${PGVECTOR_REF}" https://github.com/pgvector/pgvector.git /tmp/pgvector; \
   make -C /tmp/pgvector OPTFLAGS="" with_llvm=no; \
   make -C /tmp/pgvector OPTFLAGS="" with_llvm=no install; \

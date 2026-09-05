@@ -3,6 +3,7 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
+import { HTTP_CODE_METADATA } from '@nestjs/common/constants';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
@@ -83,6 +84,9 @@ describe('WhatsAppWebhookController (EC-17 signature)', () => {
     const raw = Buffer.from('{"object":"whatsapp_business_account","entry":[]}');
     const res = await controller.receive(req(raw), sign(raw));
     expect(res).toEqual({ received: true });
+    expect(Reflect.getMetadata(HTTP_CODE_METADATA, WhatsAppWebhookController.prototype.receive)).toBe(
+      200,
+    );
     expect(whatsapp.ingestWebhookPayload).toHaveBeenCalledOnce();
   });
 

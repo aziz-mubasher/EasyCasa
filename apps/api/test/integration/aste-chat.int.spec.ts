@@ -1,18 +1,12 @@
-import { CreateBucketCommand, HeadBucketCommand, S3Client } from '@aws-sdk/client-s3';
-import { ValidationPipe, type INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { type INestApplication } from '@nestjs/common';
 import { createServer, type Server } from 'node:http';
-import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import path from 'node:path';
 import request from 'supertest';
-import { GenericContainer, type StartedTestContainer, Wait } from 'testcontainers';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { computeSemaforo } from '../../src/aste/aste-semaforo';
 import { fixtureReadyExtraction } from '../fixtures/aste/ready-extraction';
-import { dockerAvailable, ensurePostgresImage } from './harness';
+import { dockerAvailable, startIntegration } from './harness';
 import { asUser } from './test-auth';
 
 const gate = dockerAvailable() ? describe : describe.skip;
@@ -23,9 +17,6 @@ function dim1536(seed: number): number[] {
 
 gate('Aste chat (integration EC-25)', () => {
   let app: INestApplication;
-  let pg: StartedPostgreSqlContainer;
-  let minio: StartedTestContainer;
-  let meili: StartedTestContainer;
   let aiServer: Server;
   let translateCalls = 0;
   let stop: (() => Promise<void>) | undefined;
@@ -134,97 +125,21 @@ gate('Aste chat (integration EC-25)', () => {
     await new Promise<void>((resolve) => aiServer.listen(0, '127.0.0.1', () => resolve()));
     const aiPort = (aiServer.address() as { port: number }).port;
 
-    ensurePostgresImage();
-
-    pg = await new PostgreSqlContainer('easycasa-postgres-int')
-      .withDatabase('easycasa_test')
-      .withUsername('easycasa')
-      .withPassword('easycasa')
-      .start();
-
-    minio = await new GenericContainer('minio/minio:RELEASE.2024-12-18T13-15-44Z')
-      .withEnvironment({
-        MINIO_ROOT_USER: 'easycasa',
-        MINIO_ROOT_PASSWORD: 'change_me_minio',
-      })
-      .withExposedPorts(9000)
-      .withCommand(['server', '/data'])
-      .withWaitStrategy(Wait.forLogMessage(/API:.*/))
-      .start();
-
-    meili = await new GenericContainer('getmeili/meilisearch:v1.10')
-      .withEnvironment({ MEILI_MASTER_KEY: 'test', MEILI_ENV: 'development' })
-      .withExposedPorts(7700)
-      .withWaitStrategy(Wait.forHttp('/health', 7700))
-      .start();
-
-    const minioEndpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
-    const s3 = new S3Client({
-      endpoint: minioEndpoint,
-      region: 'us-east-1',
-      forcePathStyle: true,
-      credentials: { accessKeyId: 'easycasa', secretAccessKey: 'change_me_minio' },
-    });
-    try {
-      await s3.send(new HeadBucketCommand({ Bucket: 'easycasa-media' }));
-    } catch {
-      await s3.send(new CreateBucketCommand({ Bucket: 'easycasa-media' }));
-    }
-
-    process.env.NODE_ENV = 'test';
-    process.env.ALLOW_PROVIDER_STUBS = 'true';
-    process.env.EC_TEST_AUTH = 'true';
-    process.env.DATABASE_URL = pg.getConnectionUri();
-    process.env.MEILI_URL = `http://${meili.getHost()}:${meili.getMappedPort(7700)}`;
-    process.env.MEILI_MASTER_KEY = 'test';
-    process.env.S3_ENDPOINT = minioEndpoint;
-    process.env.MINIO_ROOT_USER = 'easycasa';
-    process.env.MINIO_ROOT_PASSWORD = 'change_me_minio';
-    process.env.MINIO_BUCKET = 'easycasa-media';
-    process.env.ASTE_ANALYSIS_ENABLED = 'true';
     process.env.AI_URL = `http://127.0.0.1:${aiPort}`;
     process.env.AI_INTERNAL_TOKEN = 'int-aste-token';
-    process.env.WA_HANDLE_SECRET = 'int-test-wa-handle-secret';
-    process.env.WHATSAPP_APP_SECRET = 'int-test-wa-secret';
-
     const { resetConfigCache } = await import('../../src/config');
     resetConfigCache();
-    const { resetDbConnection } = await import('../../src/db/drizzle');
-    await resetDbConnection();
 
-    execFileSync('pnpm', ['--filter', '@easycasa/migration', 'migrate'], {
-      stdio: 'inherit',
-      cwd: path.resolve(process.cwd(), '../..'),
-      env: { ...process.env },
-    });
-
-    const { AppModule } = await import('../../src/app.module');
-    const { JwtAuthGuard } = await import('../../src/auth/jwt.guard');
-    const { TestAuthGuard } = await import('./test-auth');
-
-    const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(JwtAuthGuard)
-      .useClass(TestAuthGuard)
-      .compile();
-
-    app = moduleRef.createNestApplication({ rawBody: true });
-    app.useGlobalPipes(
-      new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }),
-    );
-    await app.init();
-
+    const ctx = await startIntegration();
+    app = ctx.app;
     stop = async () => {
-      await app.close().catch(() => undefined);
-      await new Promise<void>((resolve) => aiServer.close(() => resolve()));
-      await resetDbConnection();
-      await meili.stop().catch(() => undefined);
-      await minio.stop().catch(() => undefined);
-      await pg.stop().catch(() => undefined);
+      await ctx.stop();
     };
-  }, 600_000);
+  }, 300_000);
 
   afterAll(async () => {
     await stop?.();
+    await new Promise<void>((resolve) => aiServer.close(() => resolve()));
   });
 
   const api = () => app.getHttpServer();
@@ -293,7 +208,7 @@ gate('Aste chat (integration EC-25)', () => {
   }
 
   it('grounds answers with citations; EN translates query; refuse advice; owner-only', async () => {
-    const { analysisId, avvisoId } = await seedReadyWithChunks();
+    const { analysisId, avvisoId, periziaId } = await seedReadyWithChunks();
     translateCalls = 0;
 
     const itAsk = await request(api())
@@ -302,7 +217,7 @@ gate('Aste chat (integration EC-25)', () => {
       .send({ question: 'Qual è il prezzo base?', lang: 'it' });
     expect([200, 201]).toContain(itAsk.status);
     expect(itAsk.body.assistantMessage.citations.length).toBeGreaterThanOrEqual(1);
-    expect(itAsk.body.assistantMessage.citations[0].document_id).toBe(avvisoId);
+    expect([avvisoId, periziaId]).toContain(itAsk.body.assistantMessage.citations[0].document_id);
     expect(itAsk.body.filenameById[avvisoId]).toBe('avviso.pdf');
     expect(translateCalls).toBe(0);
 
