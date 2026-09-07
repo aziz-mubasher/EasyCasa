@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-07T20:13:15.192Z",
+  "updatedAt": "2026-09-07T20:13:51.002Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "EC-S-34",
       "title": "EC-S-34 — /vendi-da-privato honesty pass",
       "venture": "EasyCasa",
-      "lifecycle": "running",
+      "lifecycle": "pr_open",
       "agentStatus": "RUNNING",
       "agentBcId": "bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
       "agentUrl": "https://cursor.com/agents/bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
       "branch": "cursor/ecs-34-honesty-pass-6ade",
-      "prNumber": null,
-      "prUrl": null,
-      "prState": null,
+      "prNumber": 221,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/221",
+      "prState": "DRAFT",
       "dispatchedAt": "2026-09-07T20:13:15.191Z",
-      "updatedAt": "2026-09-07T20:13:15.191Z",
-      "summary": "Honesty pass in progress: retract P1/savings/mediazioneCopy/P8, rewrite P2/P3, P4 coming. No flags, no catalogue edits.",
-      "nextAction": "Wait for draft PR #1 of three (honesty copy). Claims register and lead-routing census are separate PRs.",
+      "updatedAt": "2026-09-07T20:13:51.002Z",
+      "summary": "Draft PR #221: honesty pass. P1/P8/savings/mediazioneCopy hidden; P2/P3 rewritten; P4 coming. No flags.",
+      "nextAction": "Review #221. Claims register and K EC 7.7 census are separate PRs.",
       "errors": []
     },
     {
