@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-04T20:47:19.357Z",
+  "updatedAt": "2026-09-07T20:15:58.308Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ecs_36",
+      "kaizenCode": "K EC 7.7",
+      "polishId": "EC-S-36",
+      "title": "EC-S-36 — lead-routing census",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
+      "agentUrl": "https://cursor.com/agents/bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
+      "branch": "cursor/ecs-36-lead-routing-census-6ade",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-09-07T20:15:58.307Z",
+      "updatedAt": "2026-09-07T20:15:58.307Z",
+      "summary": "Read-only census: POST /conversations is live unflagged; routeLead never fired; agency plan not purchasable.",
+      "nextAction": "Wait for draft census PR. Removal is a later decision, not this PR.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_a11y_1",
       "kaizenCode": "K EC A11Y-1",
