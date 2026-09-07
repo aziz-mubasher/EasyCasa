@@ -3,16 +3,20 @@
 **33 numbered tasks.** Source of truth for promise-ledger flips.  
 Page/spec implementation: `docs/sell-privately.md` · ledger: `apps/web/src/config/sell-privately/promises.json`.
 
-## Status delta — 2026-08-13
+## Status delta — 2026-09-07
+
+**Accomplishment report (for Cursor):** [`docs/audits/EC-S-roadmap-v2-accomplishment-2026-09-07.md`](./audits/EC-S-roadmap-v2-accomplishment-2026-09-07.md) — do not re-implement T01–T33.
 
 | Item | Status |
 |------|--------|
 | **Engineering Phases 0–4 + T33** | ✅ On `main` + VPS — roadmap v2 **COMPLETE** at `b88ec82` |
 | **G1 / Claims 7–8 / Stripe-premium / Claim 1–2 / G3** | ✅ Closed — see audits under `docs/audits/EC-S-*` |
 | **Ledger Claim 1–2** | ✅ `savingsFigures` + `mediazioneCopy` **live** |
+| **Ledger P1–P8** | ✅ All **live** (P3/P6/P7 flipped 2026-08-14/15) |
 | **Monetisation flags (VPS)** | boost / premium / directory **true**; paid directory MVP (`0064`) |
-| **T19.2 / T25** | ⛔ Parked — see polish backlog |
-| **Open EC-S work** | **Polish + parked only** → [`docs/ec-s-post-roadmap-polish.md`](./ec-s-post-roadmap-polish.md) |
+| **T19.2 / T25** | ✅ Closed 2026-08-15 (PK-6 / PK-5) — no longer parked |
+| **PP-1–PP-6 + PK-1–PK-8 + V-1** | ✅ Closed — [`docs/ec-s-post-roadmap-polish.md`](./ec-s-post-roadmap-polish.md) |
+| **Open EC-S work** | Residuals only (P7 empty-state, Bunny purge, genuine partners, board codes) — not missing T-tasks |
 
 **Rule:** the page may promise only what the ledger marks `live`. Flip a flag only when its tasks pass validation gates. Never bundle parked (PK) flips into polish (PP) PRs.
 

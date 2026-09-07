@@ -1,5 +1,7 @@
 # EC-S Private Seller Roadmap — Execution Status Audit
 
+> **STALE (2026-08-12).** Do not dispatch from this matrix. Current accomplishment: [`docs/audits/EC-S-roadmap-v2-accomplishment-2026-09-07.md`](../../audits/EC-S-roadmap-v2-accomplishment-2026-09-07.md). T20 UI, T25, T19.2, T33, and all PK/PP items later shipped.
+
 **Task:** K EC 1.44 · EC-S Private Seller roadmap — execution status audit (report only)  
 **Audit date:** 2026-08-12  
 **Repo tip audited:** `051bcfe518096ec50787c7244741f86c921cbf9e` (`main`)  
