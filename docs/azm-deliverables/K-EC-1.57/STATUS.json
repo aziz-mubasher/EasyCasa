@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/217",
   "prState": "MERGED",
   "dispatchedAt": "2026-09-07T18:58:29.031Z",
-  "updatedAt": "2026-09-07T19:38:53.414Z",
-  "summary": "MERGED #217+#218 @ c90e579. Web deploy in progress on VPS (no-cache web only). Catalogue/P04 untouched.",
-  "nextAction": "Confirm live /{it,en,es}/for-buyers after web Recreated. Do not flip P04 or G1.",
+  "updatedAt": "2026-09-07T19:45:33.286Z",
+  "summary": "MERGED #217+#218 and DEPLOYED apps/web @ c90e579 (PRs 217+218). Live /for-buyers titles are honesty-pass copy. API untouched @ 3cc5099. P04/G1 not flipped.",
+  "nextAction": "Claude can quote merged+deployed. Boards K EC 1.57 / S EC 1.57 at 100%. Do not flip P04 or G1.",
   "errors": []
 }
