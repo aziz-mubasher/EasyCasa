@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-07T20:13:51.002Z",
+  "updatedAt": "2026-09-07T20:53:09.671Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -17,10 +17,30 @@
       "prNumber": 221,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/221",
       "prState": "DRAFT",
-      "dispatchedAt": "2026-09-07T20:13:15.191Z",
-      "updatedAt": "2026-09-07T20:13:51.002Z",
-      "summary": "Draft PR #221: honesty pass. P1/P8/savings/mediazioneCopy hidden; P2/P3 rewritten; P4 coming. No flags.",
-      "nextAction": "Review #221. Claims register and K EC 7.7 census are separate PRs.",
+      "dispatchedAt": "2026-09-07T20:53:09.671Z",
+      "updatedAt": "2026-09-07T20:53:09.671Z",
+      "summary": "Merging onto main: honesty #221 + register #223. Deploy web after land.",
+      "nextAction": "Merge #221 then #223. Census #222 is separate.",
+      "errors": []
+    },
+    {
+      "bridgeTaskId": null,
+      "kaizenCode": "K EC 1.57",
+      "polishId": null,
+      "title": "EC-B-08 /for-buyers honesty pass",
+      "venture": "EasyCasa",
+      "lifecycle": "merged",
+      "agentStatus": "IDLE",
+      "agentBcId": "bc-8f45d416-f823-462e-afef-522ac15c61f7",
+      "agentUrl": "https://cursor.com/agents/bc-8f45d416-f823-462e-afef-522ac15c61f7",
+      "branch": "cursor/ec-b-08-honesty-pass-61f7",
+      "prNumber": 217,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/217",
+      "prState": "MERGED",
+      "dispatchedAt": "2026-09-07T18:58:29.031Z",
+      "updatedAt": "2026-09-07T19:45:33.286Z",
+      "summary": "MERGED #217+#218 and DEPLOYED apps/web @ c90e579 (PRs 217+218). Live /for-buyers titles are honesty-pass copy. API untouched @ 3cc5099. P04/G1 not flipped.",
+      "nextAction": "Claude can quote merged+deployed. Boards K EC 1.57 / S EC 1.57 at 100%. Do not flip P04 or G1.",
       "errors": []
     },
     {

@@ -50,7 +50,7 @@ export function Footer() {
   const stakeholderLinks: Array<StakeholderInternal | StakeholderExternal> = [
     { key: 'banks4all', kind: 'internal', href: '/banks4all' },
     { key: 'easyLegenda', kind: 'external', href: LEGENDA_ORIGIN, host: 'legenda.easycasaita.com' },
-    { key: 'nibProperty', kind: 'external', href: nibHref, host: 'banks4all.eu' },
+    { key: 'nibProperty', kind: 'external', href: nibHref, host: 'nib.banks4all.eu' },
     { key: 'agencies', kind: 'internal', href: '/agenzie' },
   ];
 
