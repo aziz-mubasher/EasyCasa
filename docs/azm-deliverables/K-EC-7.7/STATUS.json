@@ -11,10 +11,10 @@
   "branch": "cursor/ecs-36-lead-routing-census-6ade",
   "prNumber": 222,
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/222",
-  "prState": "DRAFT",
-  "dispatchedAt": "2026-09-07T20:53:23.314Z",
-  "updatedAt": "2026-09-07T20:53:23.314Z",
-  "summary": "Draft PR #222 ready to merge: routeLead never fired; POST /conversations live unflagged.",
-  "nextAction": "Merge #222. Removal is a later brief.",
+  "prState": "OPEN",
+  "dispatchedAt": "2026-09-07T20:57:49.522Z",
+  "updatedAt": "2026-09-07T20:57:49.522Z",
+  "summary": "PR #222 merge after #221 land. Read-only census.",
+  "nextAction": "Merge #222.",
   "errors": []
 }

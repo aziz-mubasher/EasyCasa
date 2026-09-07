@@ -1,14 +1,14 @@
 {
   "$schema": "./promises.schema.json",
   "version": 1,
-  "updatedAt": "2026-08-15",
+  "updatedAt": "2026-09-07",
   "promises": {
     "P1": {
-      "state": "live",
+      "state": "hidden",
       "tasks": [
         "T01"
       ],
-      "note": "Zero commission \u2014 true at launch; sustained by T26-T27"
+      "note": "EC-S-34 honesty pass — retracted (register). Contradicted by FULL_MEDIATION and T26/T27; blocked by G1. Retracted state lands in EC-S-35."
     },
     "P2": {
       "state": "live",
@@ -16,7 +16,7 @@
         "T08",
         "T09"
       ],
-      "note": "OMI price guidance \u2014 live after T08+T09"
+      "note": "EC-S-34 — live, rewritten: published OMI zone range only. Deviation flag is EC-S-41."
     },
     "P3": {
       "state": "live",
@@ -26,14 +26,14 @@
         "T16",
         "T17"
       ],
-      "note": "Verified Owner — live 2026-08-15 (AZM PK-1); VERIFIED_OWNER_ENABLED; moderation capacity confirmed"
+      "note": "EC-S-34 — live, scoped: documents received and owner name matched. Not a publish gate. VO staffing is EC-S-44."
     },
     "P4": {
-      "state": "live",
+      "state": "coming",
       "tasks": [
         "EC-1"
       ],
-      "note": "Verified buyers \u2014 buyer-side live; seller inbox after T20"
+      "note": "EC-S-34 — coming, matching buyer page. BANKS4ALL_PARTNER_TOKEN empty; fail-soft. Reconciliation is EC-B-17."
     },
     "P5": {
       "state": "live",
@@ -44,7 +44,7 @@
         "EC-6",
         "EC-7"
       ],
-      "note": "Viewing scheduler \u2014 core live; seller-conducted after T21"
+      "note": "Viewing scheduler — core live; seller-conducted after T21"
     },
     "P6": {
       "state": "live",
@@ -58,27 +58,27 @@
       "tasks": [
         "T23"
       ],
-      "note": "Seller dashboard analytics — live 2026-08-14 (AZM PK-3); SELLER_ANALYTICS_ENABLED"
+      "note": "Seller dashboard analytics — live 2026-08-14 (AZM PK-3); SELLER_ANALYTICS_ENABLED. Empty-state copy is EC-S-39."
     },
     "P8": {
-      "state": "live",
+      "state": "hidden",
       "tasks": [
         "T05",
         "T06"
       ],
-      "note": "Control & data protection \u2014 informativa gate applies"
+      "note": "EC-S-34 honesty pass — retracted (register). Informativa v1.1 vs LEGAL_ENTITY PRE_INCORPORATION. Consent recording unchanged. Retracted state lands in EC-S-35."
     }
   },
   "blocks": {
     "savingsFigures": {
-      "state": "live",
+      "state": "hidden",
       "gate": "T02",
-      "note": "Claim 1 live 2026-08-13 (AZM) — EUR comparison + slider; see T02 packet."
+      "note": "EC-S-34 — retracted with P1. Derived from a commission the catalogue also sells. Retracted state lands in EC-S-35."
     },
     "mediazioneCopy": {
-      "state": "live",
+      "state": "hidden",
       "gate": "T04",
-      "note": "Claim 2 live 2026-08-13 (AZM) — portal copy; mediation-disclosure.md reconciled to portal framing."
+      "note": "EC-S-34 — retracted. Portal framing contradicts brand.tagline / home.subtitle / footer.disclosure. Neither claim is available in PONTE. brand.tagline left rendering (roadmap §11.3). Retracted state lands in EC-S-35."
     }
   }
 }

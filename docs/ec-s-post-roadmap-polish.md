@@ -4,7 +4,7 @@
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
 **Repo home:** `docs/ec-s-post-roadmap-polish.md`
-**Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-1–PK-6 LIVE on VPS** · **PK-7 counsel residual CLOSED (product-owner)** · **PK-8 paid pilot partners seeded** · **PP-1 partner self-serve checkout LIVE** · **PP-2+PP-3 housekeeping live** · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP eng closed** · **EC-S polish eng backlog empty** · **VO staffed** (Ibrahim; Silvana / `admin_superadmin`) · **Bunny DPA CITED** (T05 §4 ☑) · P7 sparse dashboards — see `docs/audits/EC-S-closeout-2026-08-15.md`.
+**Live state recap:** EC-S-34 honesty pass (2026-09-07) retracted P1 / savingsFigures / mediazioneCopy / P8 on the seller page (`hidden` until EC-S-35 adds `retracted`) · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-1–PK-6 LIVE on VPS** · **PK-7 REOPENED** (`counsel_status: not-reviewed`) · **PK-8 paid pilot partners seeded** · **PP-1 partner self-serve checkout LIVE** · **PP-2+PP-3 housekeeping live** · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **VO staffed** (Ibrahim; Silvana / `admin_superadmin`) · **Bunny DPA CITED** (T05 §4 ☑) · P7 sparse dashboards — see `docs/audits/EC-S-closeout-2026-08-15.md`.
 
 ---
 
@@ -39,7 +39,7 @@ _All PP items closed 2026-08-14. Section intentionally empty — no further eng 
 | PK-4 | Bunny CDN (`MEDIA_CDN_ENABLED`) | **CDN LIVE** · **DPA CITED** — T05 §4 ☑ · `docs/legal/vendors/bunny-dpa-2026-08-15.pdf` | done |
 | PK-5 | T25 in-portal messaging | **CLOSED 2026-08-15** — §6.5 hosting carve-out; `SELLER_MESSAGING_ENABLED`; `docs/audits/EC-S-pk5-messaging-enablement.md` | done |
 | PK-6 | T19.2 dup-enforce + suspend UX | **CLOSED 2026-08-15** — LIA accepted; enforce + admin suspend; `docs/audits/EC-S-pk6-dup-enforce-enablement.md` | done |
-| PK-7 | External counsel countersign — Claim 1 EUR figures, Claim 2 wording, packet PDFs | **CLOSED 2026-08-15** — residual risk / product-owner sufficiency; external countersign deferred (`docs/audits/EC-S-pk7-counsel-countersign-closeout.md`) | done |
+| PK-7 | External counsel countersign — Claim 1 EUR figures, Claim 2 wording, packet PDFs | **REOPENED 2026-09-07 (EC-S-34)** — `counsel_status: not-reviewed`. Product-owner sign-off is not counsel (`CLAUDE.md` §4). Homepal makes the live-copy posture material. Close-out `docs/audits/EC-S-pk7-counsel-countersign-closeout.md` stands as history; do not invent a new Kaizen code. | open |
 | PK-8 | Seed first paid partners (admin marks `paid_placement=true`) | **CLOSED 2026-08-15** — Mundida pilot desk seed (`docs/audits/EC-S-pk8-seed-paid-partners.md`); replace via outreach/PP-1 | done |
 
 ## C. Standing brief rules (bake into every future EC-S dispatch)
