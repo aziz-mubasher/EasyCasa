@@ -2729,19 +2729,18 @@
   },
   "sellPrivately": {
     "meta": {
-      "title": "Sell your home privately without an agency | EasyCasa",
-      "description": "List your home on EasyCasa for free — no commission, no exclusivity, no contract. Tools private sellers need: verified buyers, viewing scheduler, and honest market context.",
+      "title": "Sell your home privately | EasyCasa",
+      "description": "List your home on EasyCasa. Tools private sellers use: a viewing scheduler and official OMI zone ranges.",
       "keywords": [
         "sell home privately Italy",
         "sell house without agency",
-        "how much does an estate agent cost Italy",
         "private seller listing"
       ]
     },
     "schema": {
       "serviceName": "Sell privately on EasyCasa",
-      "serviceType": "Private property listing portal",
-      "offerDescription": "Free private listing — no seller commission on the sale"
+      "serviceType": "Private property listings",
+      "offerDescription": "Publish your private listing on EasyCasa"
     },
     "counselTemplate": "Counsel-review template — not final legal wording (T02 / T04)",
     "tags": {
@@ -2750,22 +2749,22 @@
     },
     "hero": {
       "title": "Sell your home yourself — without selling yourself short.",
-      "lead": "EasyCasa gives private sellers the tools an agency has, with none of the commission. No fees, no exclusivity, no contract. Just a genuine listing, seen by genuine buyers.",
+      "lead": "Publish a genuine listing, seen by genuine buyers. No exclusivity, no contract.",
       "ctaPrimary": "Create your free listing",
       "ctaSecondary": "How it works ↓"
     },
     "savings": {
-      "kicker": "The savings",
-      "title": "What agencies customarily take — and what you keep.",
-      "bodyBefore": "Agencies in Italy customarily charge around 3% + IVA per side. On a €250,000 sale that is",
-      "figure": "€7,500–€9,150",
-      "bodyAfter": ". On EasyCasa, listing, enquiries and viewing tools are free — that money stays yours.",
-      "footnote": "Italian law sets no minimum commission; customary rates vary by province (rif. AGCM provv. 13035/2004).",
-      "sliderLabel": "Sale price (estimate)",
-      "sliderResultBefore": "Estimated customary agency fee on your side:",
-      "sliderResultAfter": ".",
-      "neutralTitle": "List free. Keep what you earn from the sale.",
-      "neutralBody": "On EasyCasa, listing, enquiries and viewing tools are free for private sellers. Optional services are priced separately — never as a percentage of your sale price."
+      "kicker": "Listing",
+      "title": "Publish your listing.",
+      "bodyBefore": "On EasyCasa you can publish your property.",
+      "figure": "",
+      "bodyAfter": "",
+      "footnote": "",
+      "sliderLabel": "Asking price",
+      "sliderResultBefore": "",
+      "sliderResultAfter": "",
+      "neutralTitle": "Publish your listing.",
+      "neutralBody": "Listing, enquiries and viewing tools stay available to you."
     },
     "how": {
       "kicker": "How it works",
@@ -2776,16 +2775,16 @@
           "body": "Guided wizard: enter your address and we pre-fill the market context."
         },
         "price": {
-          "title": "Price with real data",
-          "body": "Official OMI ranges for your exact zone, so your asking price stands on evidence, not guesswork."
+          "title": "Official OMI ranges",
+          "body": "Official OMI ranges for your exact zone — the figure published by the Agenzia delle Entrate."
         },
         "verify": {
           "title": "Prove it's genuine",
-          "body": "Upload your visura and earn the Verified Owner badge buyers trust."
+          "body": "Upload your visura: the Verified Owner badge means documents were received and the owner name matched."
         },
         "buyers": {
           "title": "Meet real buyers",
-          "body": "Enquiries can carry a Verified Buyer financial badge from Banks4All (Mundida group), so you know who is serious before you open your door."
+          "body": "Enquiries will be able to carry a Verified Buyer financial badge from Banks4All."
         },
         "viewings": {
           "title": "Run viewings like a pro",
@@ -2799,16 +2798,16 @@
       "sub": "Each tile reflects the live product ledger. Coming-soon items are labelled honestly; nothing here is sold as available before it ships.",
       "items": {
         "P1": {
-          "title": "Zero commission",
-          "body": "Free to list. Free to sell. We earn from optional services, never from your sale."
+          "title": "Listing",
+          "body": "Publish your property on EasyCasa."
         },
         "P2": {
-          "title": "OMI price guidance",
-          "body": "Official market data for your zone — see where your price sits before you publish."
+          "title": "OMI zone ranges",
+          "body": "Official market data for your zone: the published OMI range."
         },
         "P3": {
           "title": "Verified Owner badge",
-          "body": "Show buyers your listing is real, yours, and documented."
+          "body": "Documents received and owner name matched. It is not a requirement to publish."
         },
         "P4": {
           "title": "Verified buyers",
@@ -2827,33 +2826,29 @@
           "body": "Views, saves, enquiry rate, and how your price compares over time."
         },
         "P8": {
-          "title": "You stay in control",
-          "body": "No exclusivity, no mandate, direct contact with buyers, GDPR-protected data."
+          "title": "You publish",
+          "body": "No exclusivity, no mandate. You decide when to publish."
         }
       }
     },
     "not": {
-      "kicker": "Trust through honesty",
-      "title": "What EasyCasa is not",
-      "body": "We are a portal, not an estate agent. We don't negotiate for you, don't handle offers, and don't take a percentage. Decisions — and savings — stay yours.",
+      "kicker": "Transparency",
+      "title": "Clear rules",
+      "body": "EasyCasa publishes the rules for listings and optional services in the terms.",
       "fallbackTitle": "Clear roles, clear documents",
-      "fallbackBody": "EasyCasa publishes the rules that apply to listings, optional services, and your data in the terms and privacy notice. Legal classifications are confirmed with counsel before we publish definitive wording here."
+      "fallbackBody": "EasyCasa publishes the rules that apply to listings, optional services, and your data in the terms and privacy notice."
     },
     "faq": {
       "kicker": "FAQ",
       "title": "Questions private sellers ask",
       "items": [
         {
-          "q": "Is it really free?",
-          "a": "Listing, enquiries and viewing tools are free. EasyCasa earns from optional paid services you choose — never a percentage of your sale price."
-        },
-        {
           "q": "What documents do I need?",
           "a": "Typically an energy certificate (APE), floor plan (planimetria) and ownership extract (visura). A checklist on the platform will tell you what is needed for your case and keep uploads private."
         },
         {
           "q": "How does Verified Owner work?",
-          "a": "When available, you upload ownership documentation (e.g. visura). After checks, your listing can show a Verified Owner badge so buyers know the listing is genuine and yours."
+          "a": "You upload ownership documentation (e.g. visura). After checks, if the documents were received and the name matches, the listing can show the badge. It is not a requirement to publish."
         },
         {
           "q": "Who sees my documents?",
@@ -2861,29 +2856,23 @@
         },
         {
           "q": "What is the Verified Buyer badge and who provides it?",
-          "a": "It is a financial affordability badge buyers can attach to enquiries. It is provided by Banks4All, a company in the Mundida group alongside EasyCasa — not an independent third party."
+          "a": "It is a financial affordability badge buyers will be able to attach to enquiries. It is provided by Banks4All. Coming soon — the same wording as on the buyer page."
         },
         {
           "q": "Can I also list with an agency?",
           "a": "Yes. There is no exclusivity and no mandate required to publish on EasyCasa."
-        },
-        {
-          "q": "How is my data protected?",
-          "a": "We process data to run your listing and connect you with genuine buyers under GDPR. See the privacy notice for purposes, bases and your rights. Version references appear in the page footer."
         }
       ]
     },
     "final": {
       "title": "Ready when you are.",
-      "body": "Create a free listing. No fees, no exclusivity, no contract.",
+      "body": "Create a listing. No exclusivity, no contract.",
       "cta": "Create your free listing"
     },
     "foot": {
-      "legal": "EasyCasa is operated by MUNDIDA S.r.l. (P.IVA IT04531990986). EasyCasa and Banks4All are part of the Mundida group.",
       "privacyBefore": "Privacy notice:",
       "privacyLink": "informativa",
-      "privacyAfter": " (version {version}).",
-      "privacyVersion": "1.0-draft",
+      "privacyAfter": ".",
       "myData": "My data",
       "mediation": "Mediation"
     }

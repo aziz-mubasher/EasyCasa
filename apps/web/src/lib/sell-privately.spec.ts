@@ -17,7 +17,14 @@ describe('sell-privately ledger', () => {
   it('loads nested promises and derived how-it-works steps', () => {
     const ledger = getSellPrivatelyLedger();
     expect(Object.keys(ledger.promises)).toHaveLength(8);
-    expect(getSellPrivatelyBenefits(ledger)).toHaveLength(8);
+    expect(getSellPrivatelyBenefits(ledger).map((b) => b.id)).toEqual([
+      'P2',
+      'P3',
+      'P4',
+      'P5',
+      'P6',
+      'P7',
+    ]);
     expect(getSellPrivatelySteps(ledger).map((s) => s.id)).toEqual([
       'list',
       'price',
@@ -30,29 +37,29 @@ describe('sell-privately ledger', () => {
     }
   });
 
-  it('exposes Claim 1–2 counsel blocks as live after T02/T04 flip', () => {
+  it('EC-S-34: Claim 1–2 counsel blocks are hidden (register = retracted)', () => {
     const { blocks } = getSellPrivatelyLedger();
-    expect(blocks.savingsFigures.state).toBe('live');
-    expect(blocks.mediazioneCopy.state).toBe('live');
+    expect(blocks.savingsFigures.state).toBe('hidden');
+    expect(blocks.mediazioneCopy.state).toBe('hidden');
     expect(blocks.savingsFigures.gate).toBe('T02');
     expect(blocks.mediazioneCopy.gate).toBe('T04');
-    expect(showSavingsFigures()).toBe(true);
+    expect(showSavingsFigures()).toBe(false);
     expect(showSavingsFallback()).toBe(false);
     expect(showMediazioneFallback()).toBe(false);
   });
 
-  it('PK-1 exit: P1–P8 all live', () => {
+  it('EC-S-34 honesty pass: retract P1/P8, scope P2/P3, P4 coming, P5–P7 live', () => {
     const byId = Object.fromEntries(
       Object.entries(getSellPrivatelyLedger().promises).map(([id, p]) => [id, p.state]),
     );
-    expect(byId.P1).toBe('live');
+    expect(byId.P1).toBe('hidden');
     expect(byId.P2).toBe('live');
     expect(byId.P3).toBe('live');
-    expect(byId.P4).toBe('live');
+    expect(byId.P4).toBe('coming');
     expect(byId.P5).toBe('live');
     expect(byId.P6).toBe('live');
     expect(byId.P7).toBe('live');
-    expect(byId.P8).toBe('live');
+    expect(byId.P8).toBe('hidden');
   });
 
   it('omits hidden entries from visible lists', () => {

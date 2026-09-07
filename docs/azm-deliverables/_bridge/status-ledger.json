@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-07T19:45:33.286Z",
+  "updatedAt": "2026-09-07T20:53:09.671Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ecs_34",
+      "kaizenCode": "K EC 1.59",
+      "polishId": "EC-S-34",
+      "title": "EC-S-34 — /vendi-da-privato honesty pass",
+      "venture": "EasyCasa",
+      "lifecycle": "pr_open",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
+      "agentUrl": "https://cursor.com/agents/bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
+      "branch": "cursor/ecs-34-honesty-pass-6ade",
+      "prNumber": 221,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/221",
+      "prState": "DRAFT",
+      "dispatchedAt": "2026-09-07T20:53:09.671Z",
+      "updatedAt": "2026-09-07T20:53:09.671Z",
+      "summary": "Merging onto main: honesty #221 + register #223. Deploy web after land.",
+      "nextAction": "Merge #221 then #223. Census #222 is separate.",
+      "errors": []
+    },
     {
       "bridgeTaskId": null,
       "kaizenCode": "K EC 1.57",
