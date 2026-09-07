@@ -29,4 +29,4 @@ How-it-works step chips are **derived** in `getSellPrivatelySteps()` (list→com
 
 ## Acceptance (verification pack)
 
-See `docs/audits/T01/REPORT.md`. Performance ≥90 mobile **PASS**. SEO category blocked by VPS `NEXT_PUBLIC_DEMO_MODE=true` (`noindex`) — ops gate, not assertion-weakened.
+See `docs/audits/T01/REPORT.md`. Performance ≥90 mobile **PASS**. G7 unset demo mode; T33 wired (`serializeJsonLd` / Lighthouse SEO 100 — `docs/audits/EC-S-t33-lighthouse-scores.md`). Current T01–T33 status: `docs/audits/EC-S-roadmap-v2-accomplishment-2026-09-07.md`.

@@ -3,7 +3,8 @@
 **Status:** Roadmap v2 (T01–T33) COMPLETE as of `main @ b88ec82` / VPS tip `4879928` (2026-08-13).
 **This doc:** polish items (PP), ops verifications (V), and parked gates (PK). Nothing here blocks live operation of stages already lit.
 **Companion:** journey experience plan → [`docs/ec-s-seller-journey-completion.md`](./ec-s-seller-journey-completion.md) (PP-4/5/6 + V-1).
-**Repo home:** `docs/ec-s-post-roadmap-polish.md`
+**Repo home:** `docs/ec-s-post-roadmap-polish.md`  
+**Cursor accomplishment report (2026-09-07):** [`docs/audits/EC-S-roadmap-v2-accomplishment-2026-09-07.md`](./audits/EC-S-roadmap-v2-accomplishment-2026-09-07.md)
 **Live state recap:** ledger claims 1–2 live · seller onboarding **API + web form** + dual inbox on · boost/premium/directory on · **PP-5 monetisation UI live** · **PP-6 VO/checklist UI deployed** · **PK-1–PK-6 LIVE on VPS** · **PK-7 counsel residual CLOSED (product-owner)** · **PK-8 paid pilot partners seeded** · **PP-1 partner self-serve checkout LIVE** · **PP-2+PP-3 housekeeping live** · Claims 7–8 + G1 + G3 closed · **viewings LIVE (V-1)** · **PP eng closed** · **EC-S polish eng backlog empty** · **VO staffed** (Ibrahim; Silvana / `admin_superadmin`) · **Bunny DPA CITED** (T05 §4 ☑) · P7 sparse dashboards — see `docs/audits/EC-S-closeout-2026-08-15.md`.
 
 ---
