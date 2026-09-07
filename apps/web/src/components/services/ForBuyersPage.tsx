@@ -16,14 +16,14 @@ type Pillar = {
   href?: string;
 };
 
-type TrustItem = { title: string; body: string };
+type TrustItem = { title: string; body: string; tag?: 'live' | 'soon' };
 type Step = { title: string; body: string };
 type CompareRow = {
   label: string;
   agency: string;
   easycasa: string;
-  agencyKind?: 'money-cost' | 'no';
-  easycasaKind?: 'money-zero' | 'yes';
+  agencyKind?: 'no';
+  easycasaKind?: 'yes';
 };
 
 export function ForBuyersPage() {
@@ -44,13 +44,6 @@ export function ForBuyersPage() {
             <em>{t('hero.titleEm')}</em>
           </h1>
           <p className="fb-lead">{t('hero.lead')}</p>
-          <div className="fb-figure">
-            <span className="num est">{t('hero.figure')}</span>
-            <span className="lbl">
-              {t('hero.figureLabel')}
-              <sup>1</sup>
-            </span>
-          </div>
           <div className="fb-actions">
             <Link className="fb-btn fb-btn--primary" href="/search">
               {t('hero.ctaPrimary')}
@@ -94,6 +87,11 @@ export function ForBuyersPage() {
           <div className="fb-trust-grid">
             {trust.map((item) => (
               <div key={item.title} className="fb-trust-item">
+                {item.tag ? (
+                  <span className={`fb-tag fb-tag--${item.tag}`}>
+                    {item.tag === 'live' ? t('tags.live') : t('tags.soon')}
+                  </span>
+                ) : null}
                 <h4>{item.title}</h4>
                 <p>{item.body}</p>
               </div>
@@ -114,16 +112,6 @@ export function ForBuyersPage() {
               </div>
             ))}
           </div>
-          <div className="fb-privacy">
-            <div className="icon" aria-hidden>
-              ⬢
-            </div>
-            <p>
-              <strong>{t('how.privacyStrong')} </strong>
-              {t('how.privacyBody')}{' '}
-              <Link href="/privacy">{t('how.privacyLink')}</Link>.
-            </p>
-          </div>
         </div>
       </section>
 
@@ -143,28 +131,15 @@ export function ForBuyersPage() {
               <tbody>
                 {compare.map((row) => (
                   <tr key={row.label}>
+                    <td>{row.label}</td>
                     <td>
-                      {row.label}
-                      {row.agencyKind === 'money-cost' ? <sup>1</sup> : null}
-                    </td>
-                    <td
-                      className={
-                        row.agencyKind === 'money-cost'
-                          ? 'money cost'
-                          : undefined
-                      }
-                    >
                       {row.agencyKind === 'no' ? (
                         <span className="no">{row.agency}</span>
                       ) : (
                         row.agency
                       )}
                     </td>
-                    <td
-                      className={
-                        row.easycasaKind === 'money-zero' ? 'money zero' : undefined
-                      }
-                    >
+                    <td>
                       {row.easycasaKind === 'yes' ? (
                         <span className="yes">{row.easycasa}</span>
                       ) : (
@@ -176,9 +151,6 @@ export function ForBuyersPage() {
               </tbody>
             </table>
           </div>
-          <p className="fb-fn">
-            <sup>1</sup> {t('compare.footnote')}
-          </p>
         </div>
       </section>
 

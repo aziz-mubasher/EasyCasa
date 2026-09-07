@@ -2492,17 +2492,15 @@
   },
   "forBuyers": {
     "meta": {
-      "title": "For Buyers — EasyCasa · Buy directly. Keep the commission.",
-      "description": "Buy directly from private owners in Italy — zero buyer commission, OMI fair-price checks, structured viewings. Free for buyers."
+      "title": "For Buyers — EasyCasa · Buy directly from the owner.",
+      "description": "Buy from private owners in Italy — OMI zone ranges after you sign in, direct enquiries, and structured viewing slots."
     },
     "hero": {
       "kicker": "For buyers · Compravendita tra privati",
       "title": "Buy the same house.",
-      "titleEm": "Keep the commission.",
-      "lead": "EasyCasa connects you directly with private owners across Italy — with official market data, verified counterparts, and viewings you book like a table at a restaurant. No agency in the middle. No buyer-side fee. Ever.",
-      "figure": "≈ €9.150",
-      "figureLabel": "typical buyer-side agency fee avoided on a €250.000 purchase",
-      "ctaPrimary": "Start searching — it's free",
+      "titleEm": "From the owner.",
+      "lead": "EasyCasa connects you directly with private owners across Italy — with official market data, verified counterparts, and viewings you book like a table at a restaurant.",
+      "ctaPrimary": "Start searching",
       "ctaSecondary": "How it works"
     },
     "tags": {
@@ -2511,23 +2509,15 @@
     },
     "services": {
       "kicker": "What you get",
-      "title": "Four services that change how buying a home in Italy feels",
-      "sub": "Everything on this page is free for buyers. EasyCasa never charges you a commission — that is the point of the platform, not a promotion."
+      "title": "What is on the platform today",
+      "sub": "Search private listings, check official zone data after you sign in, write to the owner, and book a viewing slot."
     },
     "pillars": [
-      {
-        "idx": "01 / SAVE",
-        "tag": "live",
-        "title": "Zero buyer commission",
-        "body": "You deal directly with the owner. There is no agency fee on your side of the transaction — the money that would normally go to intermediation stays in your renovation budget, your furniture, your life.",
-        "fig": "€0",
-        "figNote": "our fee to you, on every purchase"
-      },
       {
         "idx": "02 / KNOW",
         "tag": "live",
         "title": "Fair-price check on every listing",
-        "body": "Each listing is benchmarked against the official OMI market data of the Agenzia delle Entrate — over 157.000 zone-level price ranges, nationwide. You see whether an asking price sits inside, above, or below its zone before you even enquire.",
+        "body": "Each listing can be checked against official OMI zone ranges from the Agenzia delle Entrate — over 157.000 zone-level price ranges, nationwide. Sign in to see where the asking price sits in that zone range.",
         "fig": "OMI H2 2025",
         "figNote": "the same dataset the tax authority uses",
         "figEst": true
@@ -2536,7 +2526,7 @@
         "idx": "03 / MOVE",
         "tag": "live",
         "title": "Direct contact, structured viewings",
-        "body": "No gatekeeping, no phone tag. Send your enquiry to the owner, pick a viewing slot from their real availability, get a confirmation — and afterwards, both sides report how it went. Buying at the speed of the internet, not the speed of an agency's callback list.",
+        "body": "No gatekeeping, no phone tag. Send your enquiry to the owner, pick a viewing slot from their real availability, and get a confirmation. Buying at the speed of the internet, not the speed of an agency's callback list.",
         "fig": "Online booking",
         "figNote": "confirmed slots, not phone tag"
       },
@@ -2544,7 +2534,7 @@
         "idx": "04 / WIN",
         "tag": "soon",
         "title": "Verified Buyer Badge",
-        "body": "Get a financing attestation through Banks4All, our sister company in the Mundida group, and attach it to your enquiries. Owners see a verified budget band next to your name — and verified buyers get answered first. Show up serious, negotiate stronger.",
+        "body": "Get a financing attestation through Banks4All, our sister company in the Mundida group, and attach it to your enquiries. Owners see a verified budget band next to your name.",
         "fig": "Banks4All",
         "figNote": "sister company, separate entity",
         "href": "/banks4all"
@@ -2553,31 +2543,21 @@
     "trust": {
       "kicker": "Why you can trust what you see",
       "title": "Genuine homes, genuine owners",
-      "sub": "A commission-free marketplace only works if every listing is real. So we make sellers earn their place on it.",
+      "sub": "Sellers earn their place on the platform. Verified Owner is a badge, not a gate on publishing.",
       "items": [
         {
           "title": "Identity-verified sellers",
-          "body": "Private sellers verify who they are before they can publish. Verified owners are marked on every listing."
-        },
-        {
-          "title": "Ownership checks",
-          "body": "Listings carry cadastral identifiers, and ownership documentation is checked against the seller's verified identity."
-        },
-        {
-          "title": "Price-anomaly screening",
-          "body": "Listings priced far outside their official OMI zone range are flagged and reviewed — bait pricing doesn't survive here."
-        },
-        {
-          "title": "Privates only, enforced",
-          "body": "Agencies posing as private sellers are detected and removed. When you write to an owner on EasyCasa, it's the owner who answers."
+          "body": "Sellers who complete identity verification are marked Verified Owner on their listings."
         },
         {
           "title": "Accountability after every viewing",
-          "body": "After each visit, buyers confirm the home matched the listing. Sellers who mislead lose their badge — and their place on the platform."
+          "body": "After each visit, buyers will confirm the home matched the listing.",
+          "tag": "soon"
         },
         {
           "title": "One-tap reporting",
-          "body": "Something off? Report it in one tap. Every report is reviewed by a person, not a queue."
+          "body": "Something off? Report it in one tap. Every report is reviewed by a person, not a queue.",
+          "tag": "soon"
         }
       ]
     },
@@ -2587,11 +2567,11 @@
       "steps": [
         {
           "title": "Search",
-          "body": "Browse verified private listings across Italy. Filter by zone, price, type — no duplicates, no ghost listings."
+          "body": "Browse private listings across Italy. Filter by zone, price, type."
         },
         {
           "title": "Check the price",
-          "body": "Open any listing and see where the asking price sits against its official OMI zone range. Decide with data, not gut feeling."
+          "body": "Sign in on any listing to see where the asking price sits against its official OMI zone range."
         },
         {
           "title": "Enquire directly",
@@ -2599,12 +2579,9 @@
         },
         {
           "title": "Book your viewing",
-          "body": "Pick a slot from the owner's real availability and get a confirmation. Visit, then tell us how it went."
+          "body": "Pick a slot from the owner's real availability and get a confirmation."
         }
-      ],
-      "privacyStrong": "Your data books your viewing. Nothing else.",
-      "privacyBody": "We process your details to connect you with the owner and manage your visit — we do not resell your contact information as a \"lead\" to agencies, banks, or anyone else. Full details in our",
-      "privacyLink": "privacy notice"
+      ]
     },
     "compare": {
       "kicker": "The difference, in one table",
@@ -2612,13 +2589,6 @@
       "agency": "Traditional agency",
       "easycasa": "EasyCasa",
       "rows": [
-        {
-          "label": "Buyer-side fee on a €250.000 home",
-          "agency": "≈ €9.150",
-          "easycasa": "€0",
-          "agencyKind": "money-cost",
-          "easycasaKind": "money-zero"
-        },
         {
           "label": "Who answers your questions",
           "agency": "The agent",
@@ -2629,7 +2599,7 @@
         {
           "label": "Official OMI price benchmark shown",
           "agency": "Rarely",
-          "easycasa": "On every listing",
+          "easycasa": "After you sign in",
           "agencyKind": "no",
           "easycasaKind": "yes"
         },
@@ -2646,21 +2616,13 @@
           "easycasa": "Verified Buyer Badge (coming soon)",
           "agencyKind": "no",
           "easycasaKind": "yes"
-        },
-        {
-          "label": "Your contact data resold as leads",
-          "agency": "Often",
-          "easycasa": "Never",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
         }
-      ],
-      "footnote": "Estimate based on a customary agency fee of 3% + IVA on the purchase price. Italian law does not set a minimum agency commission; fees are freely negotiable and vary by agency and region. Actual savings depend on the fee you would otherwise have agreed."
+      ]
     },
     "final": {
       "title": "The house is the same.",
       "titleLine2": "The experience isn't.",
-      "body": "Search thousands of private listings across Italy. Free for buyers — today, tomorrow, always.",
+      "body": "Search private listings across Italy.",
       "cta": "Find your home"
     },
     "foot": {
