@@ -19,7 +19,7 @@ export const STATIC_PAGE_LASTMOD: Record<string, string> = {
   '/for-buyers': '2026-08-02',
   '/about': '2026-08-02',
   '/valutazione-gratuita': '2026-08-14',
-  '/vendi-da-privato': '2026-08-10',
+  '/vendi-da-privato': '2026-09-07',
   '/legal/privacy': '2026-07-29',
   '/legal/terms': '2026-07-29',
   '/legal/mediation': '2026-07-29',

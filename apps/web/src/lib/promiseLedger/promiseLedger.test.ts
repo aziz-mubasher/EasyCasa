@@ -27,13 +27,21 @@ const validBase: PromiseLedger = {
 };
 
 describe('promiseLedger.validateLedger', () => {
-  it('accepts the shipped promises.json with Claim 1–2 live', () => {
+  it('accepts the shipped promises.json after EC-S-34 honesty pass', () => {
     const ledger = validateLedger(rawLedger);
-    expect(ledger.blocks.savingsFigures.state).toBe('live');
-    expect(ledger.blocks.mediazioneCopy.state).toBe('live');
+    expect(ledger.blocks.savingsFigures.state).toBe('hidden');
+    expect(ledger.blocks.mediazioneCopy.state).toBe('hidden');
     expect(ledger.blocks.savingsFigures.gate).toBe('T02');
     expect(ledger.blocks.mediazioneCopy.gate).toBe('T04');
     expect(promiseEntries(ledger)).toHaveLength(8);
+    expect(visiblePromiseEntries(promiseEntries(ledger)).map((e) => e.id)).toEqual([
+      'P2',
+      'P3',
+      'P4',
+      'P5',
+      'P6',
+      'P7',
+    ]);
   });
 
   it('accepts live counsel blocks by default (interim lifted 2026-08-13)', () => {

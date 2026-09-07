@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_ecs_34",
+  "kaizenCode": "K EC 1.59",
+  "polishId": "EC-S-34",
+  "title": "EC-S-34 — /vendi-da-privato honesty pass",
+  "venture": "EasyCasa",
+  "lifecycle": "running",
+  "agentStatus": "RUNNING",
+  "agentBcId": "bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
+  "agentUrl": "https://cursor.com/agents/bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
+  "branch": "cursor/ecs-34-honesty-pass-6ade",
+  "prNumber": null,
+  "prUrl": null,
+  "prState": null,
+  "dispatchedAt": "2026-09-07T20:13:15.191Z",
+  "updatedAt": "2026-09-07T20:13:15.191Z",
+  "summary": "Honesty pass in progress: retract P1/savings/mediazioneCopy/P8, rewrite P2/P3, P4 coming. No flags, no catalogue edits.",
+  "nextAction": "Wait for draft PR #1 of three (honesty copy). Claims register and lead-routing census are separate PRs.",
+  "errors": []
+}
