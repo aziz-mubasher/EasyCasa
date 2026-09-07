@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-07T19:29:05.449Z",
+  "updatedAt": "2026-09-07T19:38:53.415Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": null,
       "title": "EC-B-08 /for-buyers honesty pass",
       "venture": "EasyCasa",
-      "lifecycle": "pr_ready",
+      "lifecycle": "merged",
       "agentStatus": "IDLE",
       "agentBcId": "bc-8f45d416-f823-462e-afef-522ac15c61f7",
       "agentUrl": "https://cursor.com/agents/bc-8f45d416-f823-462e-afef-522ac15c61f7",
       "branch": "cursor/ec-b-08-honesty-pass-61f7",
       "prNumber": 217,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/217",
-      "prState": "OPEN",
+      "prState": "MERGED",
       "dispatchedAt": "2026-09-07T18:58:29.031Z",
-      "updatedAt": "2026-09-07T19:29:05.449Z",
-      "summary": "PRs ready: #217 retracts unbacked /for-buyers claims (it/en/es); #218 is the claims register. Pillar 04 stays soon. Catalogue untouched.",
-      "nextAction": "Review and merge #217 first, then #218. Do not flip P04 or G1. Deploy web only after SHA is on main.",
+      "updatedAt": "2026-09-07T19:38:53.414Z",
+      "summary": "MERGED #217+#218 @ c90e579. Web deploy in progress on VPS (no-cache web only). Catalogue/P04 untouched.",
+      "nextAction": "Confirm live /{it,en,es}/for-buyers after web Recreated. Do not flip P04 or G1.",
       "errors": []
     },
     {
