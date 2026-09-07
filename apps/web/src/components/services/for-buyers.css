@@ -239,6 +239,11 @@
   padding-left: 18px;
 }
 
+.fb-trust-item .fb-tag {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
 .fb-trust-item h4 {
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
