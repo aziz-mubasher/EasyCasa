@@ -4,6 +4,7 @@ import {
   BANKS4ALL_PORTAL_ORIGIN,
   BANKS4ALL_SITE_ORIGIN,
   DEFAULT_BANKS4ALL_REFERRAL_ENTRY,
+  NIB_SITE_ORIGIN,
   getBanks4AllReferralUrl,
 } from './banks4all-referral';
 
@@ -36,10 +37,11 @@ describe('getBanks4AllReferralUrl', () => {
     );
   });
 
-  it('supports NiB Property pages per locale', () => {
-    expect(getBanks4AllReferralUrl('it', 'nibProperty')).toBe(`${BANKS4ALL_SITE_ORIGIN}/it/nib`);
-    expect(getBanks4AllReferralUrl('en', 'nibProperty')).toBe(`${BANKS4ALL_SITE_ORIGIN}/en/nib`);
-    expect(getBanks4AllReferralUrl('es', 'nibProperty')).toBe(`${BANKS4ALL_SITE_ORIGIN}/es/nib`);
+  it('points NiB at the Non Interest Buying origin for every locale', () => {
+    expect(getBanks4AllReferralUrl('it', 'nibProperty')).toBe(NIB_SITE_ORIGIN);
+    expect(getBanks4AllReferralUrl('en', 'nibProperty')).toBe(NIB_SITE_ORIGIN);
+    expect(getBanks4AllReferralUrl('es', 'nibProperty')).toBe(NIB_SITE_ORIGIN);
+    expect(NIB_SITE_ORIGIN).toBe('https://nib.banks4all.eu');
   });
 
   it('EC-28 aste UTM: locale path + campaign params, no identifiers', () => {
