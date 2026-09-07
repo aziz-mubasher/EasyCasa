@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-07T20:15:58.308Z",
+  "updatedAt": "2026-09-07T20:16:16.416Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "EC-S-36",
       "title": "EC-S-36 — lead-routing census",
       "venture": "EasyCasa",
-      "lifecycle": "running",
+      "lifecycle": "pr_open",
       "agentStatus": "RUNNING",
       "agentBcId": "bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
       "agentUrl": "https://cursor.com/agents/bc-54c2f7a2-0d31-48b6-a15c-1fe2a9536ade",
       "branch": "cursor/ecs-36-lead-routing-census-6ade",
-      "prNumber": null,
-      "prUrl": null,
-      "prState": null,
+      "prNumber": 222,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/222",
+      "prState": "DRAFT",
       "dispatchedAt": "2026-09-07T20:15:58.307Z",
-      "updatedAt": "2026-09-07T20:15:58.307Z",
-      "summary": "Read-only census: POST /conversations is live unflagged; routeLead never fired; agency plan not purchasable.",
-      "nextAction": "Wait for draft census PR. Removal is a later decision, not this PR.",
+      "updatedAt": "2026-09-07T20:16:16.416Z",
+      "summary": "Draft PR #222: routeLead never fired; POST /conversations live unflagged; agency plan not purchasable.",
+      "nextAction": "Read #222. Removal is roadmap §11.2, a later brief.",
       "errors": []
     },
     {
