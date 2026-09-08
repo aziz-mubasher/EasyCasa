@@ -14,7 +14,7 @@ describe('sitemap (T33 honesty + sell-privately locales)', () => {
     const home = staticPageLastModified('');
     const sell = staticPageLastModified('/vendi-da-privato');
     expect(home.toISOString()).toBe('2026-08-12T00:00:00.000Z');
-    expect(sell.toISOString()).toBe('2026-09-07T00:00:00.000Z');
+    expect(sell.toISOString()).toBe('2026-09-08T00:00:00.000Z');
   });
 
   it('includes localized sell-privately paths per locale', () => {
@@ -32,7 +32,7 @@ describe('sitemap (T33 honesty + sell-privately locales)', () => {
     for (const entry of entries) {
       const last = entry.lastModified;
       const iso = last instanceof Date ? last.toISOString() : String(last);
-      expect(iso).toBe('2026-09-07T00:00:00.000Z');
+      expect(iso).toBe('2026-09-08T00:00:00.000Z');
     }
   });
 

@@ -2753,6 +2753,27 @@
       "ctaPrimary": "Crea il tuo annuncio gratis",
       "ctaSecondary": "Come funziona ↓"
     },
+    "intro": {
+      "kicker": "Video",
+      "title": "Guarda come funziona",
+      "body": "Dall'annuncio alle visite: gli strumenti che usi tu, in un minuto e mezzo.",
+      "caption": "Introduzione per chi vende da privato su EasyCasa.",
+      "videoAria": "Video introduttivo: vendere da privato su EasyCasa",
+      "captionsLabel": "Italiano",
+      "transcriptToggle": "Trascrizione",
+      "transcript": [
+        "EasyCasa. Vendi casa da solo, senza venderti a sconto.",
+        "Pubblichi un annuncio vero, visto da acquirenti veri. Niente esclusiva, niente incarico.",
+        "Come funziona, in cinque passi.",
+        "Primo. Pubblichi in pochi minuti. Inserisci l'indirizzo: il wizard precompila il contesto di mercato.",
+        "Secondo. Vedi le fasce OMI ufficiali per la tua zona: il dato pubblicato dall'Agenzia delle Entrate.",
+        "Terzo. Dimostri che è genuino. Carichi la visura. Il badge Proprietario verificato indica che i documenti sono arrivati e il nome coincide. Non è obbligatorio per pubblicare.",
+        "Quarto, in arrivo. Le richieste potranno portare un badge finanziario Acquirente verificato di Banks4All.",
+        "Quinto. Gestisci le visite: pubblichi gli slot, confermi le richieste. Niente telefonate a vuoto.",
+        "Dalla tua area venditore tieni in ordine documenti, richieste e andamento dell'annuncio.",
+        "Quando sei pronto, crea un annuncio. Niente esclusiva, niente incarico."
+      ]
+    },
     "savings": {
       "kicker": "Pubblicazione",
       "title": "Pubblica il tuo annuncio.",

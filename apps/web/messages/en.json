@@ -2753,6 +2753,27 @@
       "ctaPrimary": "Create your free listing",
       "ctaSecondary": "How it works ↓"
     },
+    "intro": {
+      "kicker": "Video",
+      "title": "See how it works",
+      "body": "From listing to viewings: the tools you use, in about ninety seconds.",
+      "caption": "Introduction for private sellers on EasyCasa.",
+      "videoAria": "Introductory video: selling privately on EasyCasa",
+      "captionsLabel": "Italian",
+      "transcriptToggle": "Transcript",
+      "transcript": [
+        "EasyCasa. Sell your home yourself, without selling yourself short.",
+        "You publish a genuine listing, seen by genuine buyers. No exclusivity, no contract.",
+        "How it works, in five steps.",
+        "First. You list in minutes. Enter the address: the wizard pre-fills the market context.",
+        "Second. You see official OMI ranges for your zone: the figure published by the Agenzia delle Entrate.",
+        "Third. You prove it is genuine. You upload the visura. The Verified Owner badge means documents were received and the owner name matched. It is not required to publish.",
+        "Fourth, coming soon. Enquiries will be able to carry a Verified Buyer financial badge from Banks4All.",
+        "Fifth. You run viewings: you publish your slots and confirm requests. No phone-tag.",
+        "From your seller area you keep documents, enquiries and listing activity in one place.",
+        "When you are ready, create a listing. No exclusivity, no contract."
+      ]
+    },
     "savings": {
       "kicker": "Listing",
       "title": "Publish your listing.",

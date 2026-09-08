@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <title>EasyCasa — intro venditore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #14212e;
+      --parchment: #f3ede1;
+      --parchment-deep: #e8dfcc;
+      --azure: #2c6e9b;
+      --ochre: #c08a1e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--ink);
+      color: var(--parchment);
+      font-family: Newsreader, Georgia, serif;
+    }
+    .stage {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      background:
+        radial-gradient(ellipse 80% 55% at 8% 0%, rgba(44, 110, 155, 0.28), transparent 55%),
+        radial-gradient(ellipse 55% 45% at 92% 18%, rgba(192, 138, 30, 0.16), transparent 50%),
+        linear-gradient(165deg, #101821 0%, #14212e 55%, #1a3044 100%);
+    }
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.07;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .frame {
+      position: absolute;
+      inset: 48px;
+      border: 1px solid rgba(243, 237, 225, 0.12);
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      padding: 72px 80px;
+      gap: 56px;
+    }
+    .frame.full { grid-template-columns: 1fr; }
+    .brand {
+      position: absolute;
+      top: 72px;
+      left: 128px;
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-weight: 720;
+      font-size: 34px;
+      letter-spacing: -0.04em;
+      z-index: 2;
+    }
+    .url {
+      position: absolute;
+      bottom: 72px;
+      right: 128px;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      color: rgba(243, 237, 225, 0.55);
+      z-index: 2;
+    }
+    .copy { align-self: center; max-width: 22ch; }
+    .frame.full .copy { max-width: 28ch; }
+    .kicker {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 18px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8eb6d4;
+      margin-bottom: 22px;
+    }
+    .num {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 22px;
+      letter-spacing: 0.16em;
+      color: var(--ochre);
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-variation-settings: "wdth" 90;
+      font-weight: 720;
+      font-size: 64px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+    .frame.full h1 { font-size: 72px; max-width: 26ch; }
+    .body {
+      margin-top: 28px;
+      font-size: 32px;
+      line-height: 1.35;
+      color: rgba(243, 237, 225, 0.78);
+      max-width: 22ch;
+    }
+    .chip {
+      display: inline-block;
+      margin-top: 28px;
+      padding: 8px 14px;
+      border: 1px solid rgba(192, 138, 30, 0.45);
+      color: var(--ochre);
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 16px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .visual {
+      align-self: center;
+      justify-self: end;
+      width: 720px;
+    }
+    .card {
+      background: var(--parchment);
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 36px 40px;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+    }
+    .card h2 {
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+      margin-bottom: 22px;
+    }
+    .field {
+      border: 1px solid rgba(20, 33, 46, 0.16);
+      background: #fffdf8;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+    .field label {
+      display: block;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--azure);
+      margin-bottom: 6px;
+    }
+    .field span { font-size: 22px; }
+    .pills { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .pill {
+      background: rgba(44, 110, 155, 0.1);
+      color: var(--azure);
+      padding: 6px 10px;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 14px;
+    }
+    .omi-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .omi-ask { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 40px; font-weight: 500; }
+    .omi-bar {
+      margin: 22px 0 12px;
+      height: 10px;
+      background: rgba(20, 33, 46, 0.1);
+      position: relative;
+    }
+    .omi-fill {
+      position: absolute;
+      left: 18%;
+      width: 46%;
+      top: 0;
+      bottom: 0;
+      background: var(--azure);
+    }
+    .omi-dot {
+      position: absolute;
+      left: 34%;
+      top: -6px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--ochre);
+    }
+    .omi-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 14px;
+      color: rgba(20, 33, 46, 0.62);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(44, 110, 155, 0.12);
+      color: var(--azure);
+      padding: 8px 12px;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+    .badge i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--azure);
+      display: inline-block;
+    }
+    .doc {
+      border: 1px dashed rgba(20, 33, 46, 0.28);
+      padding: 16px 18px;
+      margin: 16px 0 20px;
+      font-size: 20px;
+    }
+    .enquiry {
+      border-top: 1px solid rgba(20, 33, 46, 0.12);
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+    .enquiry strong { display: block; font-size: 22px; margin-bottom: 6px; }
+    .cal { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .slot {
+      border: 1px solid rgba(20, 33, 46, 0.14);
+      padding: 14px 12px;
+      text-align: center;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 15px;
+    }
+    .slot.on { background: rgba(192, 138, 30, 0.16); border-color: var(--ochre); }
+    .dash { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat {
+      background: #fffdf8;
+      border: 1px solid rgba(20, 33, 46, 0.1);
+      padding: 16px;
+    }
+    .stat b {
+      display: block;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 28px;
+      margin-top: 6px;
+    }
+    .cta-card {
+      background: transparent;
+      border: 1px solid rgba(243, 237, 225, 0.2);
+      color: var(--parchment);
+      padding: 36px 40px;
+    }
+    .cta-btn {
+      display: inline-block;
+      margin-top: 22px;
+      background: var(--ochre);
+      color: var(--ink);
+      padding: 16px 22px;
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+    }
+    .steps {
+      display: grid;
+      gap: 14px;
+      width: 640px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 18px;
+      border: 1px solid rgba(243, 237, 225, 0.14);
+    }
+    .step span {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      color: var(--ochre);
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage"></div>
+  <script>
+    const SCENES = __SCENES__;
+    const params = new URLSearchParams(location.search);
+    const scene = SCENES[Number(params.get("scene") || 0)] || SCENES[0];
+
+    const visuals = {
+      wizard: `
+        <div class="card">
+          <h2>Nuovo annuncio</h2>
+          <div class="field"><label>Indirizzo</label><span>Via Roma 14, Brescia</span></div>
+          <div class="field"><label>Tipologia</label><span>Appartamento</span></div>
+          <div class="pills">
+            <span class="pill">Contesto di zona</span>
+            <span class="pill">Superficie</span>
+            <span class="pill">Foto</span>
+          </div>
+        </div>`,
+      omi: `
+        <div class="card">
+          <h2>Prezzo e fascia OMI</h2>
+          <div class="omi-row">
+            <div>Prezzo richiesto</div>
+            <div class="omi-ask">285.000 €</div>
+          </div>
+          <div class="omi-bar"><div class="omi-fill"></div><div class="omi-dot"></div></div>
+          <div class="omi-meta"><span>Fascia OMI di zona</span><span>dato Agenzia delle Entrate</span></div>
+        </div>`,
+      verify: `
+        <div class="card">
+          <h2>Proprietario verificato</h2>
+          <div class="doc">Visura catastale — caricata</div>
+          <div class="badge"><i></i> Documenti ricevuti · nome coincidente</div>
+        </div>`,
+      buyers: `
+        <div class="card">
+          <h2>Richiesta ricevuta</h2>
+          <div class="enquiry">
+            <strong>M. R.</strong>
+            <div class="badge"><i></i> In arrivo · Acquirente verificato</div>
+          </div>
+        </div>`,
+      calendar: `
+        <div class="card">
+          <h2>I tuoi slot</h2>
+          <div class="cal">
+            <div class="slot on">Sab 10:00</div>
+            <div class="slot on">Sab 11:30</div>
+            <div class="slot">Sab 15:00</div>
+            <div class="slot on">Dom 10:30</div>
+            <div class="slot">Dom 12:00</div>
+            <div class="slot on">Dom 16:00</div>
+          </div>
+        </div>`,
+      dashboard: `
+        <div class="card">
+          <h2>Il tuo annuncio</h2>
+          <div class="dash">
+            <div class="stat">Visualizzazioni<b>128</b></div>
+            <div class="stat">Richieste<b>6</b></div>
+            <div class="stat">Documenti<b>APE · visura</b></div>
+            <div class="stat">Visite<b>3 confermate</b></div>
+          </div>
+        </div>`,
+      cta: `
+        <div class="cta-card">
+          <h2 style="font-family:'Bricolage Grotesque',system-ui;font-size:36px;margin-bottom:8px">Crea il tuo annuncio</h2>
+          <p style="font-size:22px;color:rgba(243,237,225,.75)">Gratis. Niente esclusiva, niente incarico.</p>
+          <div class="cta-btn">easycasaita.com</div>
+        </div>`,
+      how: `
+        <div class="steps">
+          <div class="step"><span>01</span>Pubblica</div>
+          <div class="step"><span>02</span>Fasce OMI</div>
+          <div class="step"><span>03</span>Genuinità</div>
+          <div class="step"><span>04</span>Richieste</div>
+          <div class="step"><span>05</span>Visite</div>
+        </div>`,
+    };
+
+    const full = !scene.visual || scene.visual === "title" || scene.visual === "promise";
+    const visualHtml = visuals[scene.visual] || "";
+    document.getElementById("stage").innerHTML = `
+      <div class="brand">EasyCasa</div>
+      <div class="frame ${full ? "full" : ""}">
+        <div class="copy">
+          ${scene.num ? `<div class="num">${scene.num}</div>` : ""}
+          <div class="kicker">${scene.kicker || ""}</div>
+          <h1>${scene.title}</h1>
+          ${scene.body ? `<p class="body">${scene.body}</p>` : ""}
+          ${scene.status === "coming" ? `<div class="chip">In arrivo</div>` : ""}
+        </div>
+        ${visualHtml ? `<div class="visual">${visualHtml}</div>` : ""}
+      </div>
+      <div class="url">easycasaita.com</div>
+    `;
+  </script>
+</body>
+</html>

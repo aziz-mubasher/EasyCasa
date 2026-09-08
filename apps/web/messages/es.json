@@ -2753,6 +2753,27 @@
       "ctaPrimary": "Crea tu anuncio gratis",
       "ctaSecondary": "Cómo funciona ↓"
     },
+    "intro": {
+      "kicker": "Vídeo",
+      "title": "Mira cómo funciona",
+      "body": "Del anuncio a las visitas: las herramientas que usas tú, en un minuto y medio.",
+      "caption": "Introducción para quien vende como particular en EasyCasa.",
+      "videoAria": "Vídeo introductorio: vender como particular en EasyCasa",
+      "captionsLabel": "Italiano",
+      "transcriptToggle": "Transcripción",
+      "transcript": [
+        "EasyCasa. Vende tu casa tú mismo, sin venderte barato.",
+        "Publicas un anuncio genuino, visto por compradores genuinos. Sin exclusividad, sin contrato.",
+        "Cómo funciona, en cinco pasos.",
+        "Primero. Publicas en pocos minutos. Introduces la dirección: el asistente rellena el contexto de mercado.",
+        "Segundo. Ves las franjas OMI oficiales de tu zona: el dato publicado por la Agenzia delle Entrate.",
+        "Tercero. Demuestras que es genuino. Subes la visura. La insignia de propietario verificado indica que llegaron los documentos y el nombre coincide. No es obligatorio para publicar.",
+        "Cuarto, próximamente. Las solicitudes podrán llevar una insignia financiera de comprador verificado de Banks4All.",
+        "Quinto. Gestionas las visitas: publicas los huecos y confirmas las solicitudes. Sin llamadas en vacío.",
+        "Desde tu área de vendedor mantienes en orden documentos, solicitudes y la actividad del anuncio.",
+        "Cuando estés listo, crea un anuncio. Sin exclusividad, sin contrato."
+      ]
+    },
     "savings": {
       "kicker": "Publicación",
       "title": "Publica tu anuncio.",

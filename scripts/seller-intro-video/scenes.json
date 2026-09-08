@@ -1,0 +1,103 @@
+{
+  "locale": "it",
+  "voice": "it-IT-IsabellaNeural",
+  "rate": "-8%",
+  "width": 1920,
+  "height": 1080,
+  "legal": {
+    "t04": "Copy describes tools the seller uses (T04 engineering rule 2). No %/contingent fees. No mediazione claim. P4 labelled coming.",
+    "honesty": "EC-S-34: no savings figures, no retracted portal/mediazione block."
+  },
+  "scenes": [
+    {
+      "id": "title",
+      "kicker": "Per chi vende da privato",
+      "title": "Vendi casa da solo — senza venderti a sconto.",
+      "body": "",
+      "voice": "EasyCasa. Vendi casa da solo, senza venderti a sconto.",
+      "visual": "title"
+    },
+    {
+      "id": "promise",
+      "kicker": "EasyCasa",
+      "title": "Un annuncio vero, visto da acquirenti veri.",
+      "body": "Niente esclusiva. Niente incarico.",
+      "voice": "Pubblichi un annuncio vero, visto da acquirenti veri. Niente esclusiva, niente incarico.",
+      "visual": "promise"
+    },
+    {
+      "id": "how",
+      "kicker": "Come funziona",
+      "title": "Cinque passi dall'annuncio alle visite.",
+      "body": "Tu pubblichi. Tu confermi. Tu gestisci.",
+      "voice": "Come funziona, in cinque passi.",
+      "visual": "how"
+    },
+    {
+      "id": "list",
+      "num": "01",
+      "kicker": "Pubblica",
+      "title": "Pubblica in pochi minuti",
+      "body": "Inserisci l'indirizzo. Il wizard precompila il contesto di mercato.",
+      "voice": "Primo. Pubblichi in pochi minuti. Inserisci l'indirizzo: il wizard precompila il contesto di mercato.",
+      "visual": "wizard",
+      "status": "live"
+    },
+    {
+      "id": "price",
+      "num": "02",
+      "kicker": "Mercato",
+      "title": "Fasce OMI ufficiali",
+      "body": "La fascia della tua zona esatta — il dato pubblicato dall'Agenzia delle Entrate.",
+      "voice": "Secondo. Vedi le fasce OMI ufficiali per la tua zona: il dato pubblicato dall'Agenzia delle Entrate.",
+      "visual": "omi",
+      "status": "live"
+    },
+    {
+      "id": "verify",
+      "num": "03",
+      "kicker": "Genuinità",
+      "title": "Dimostra che è genuino",
+      "body": "Carichi la visura. Il badge indica che i documenti sono arrivati e il nome coincide. Non è obbligatorio per pubblicare.",
+      "voice": "Terzo. Dimostri che è genuino. Carichi la visura. Il badge Proprietario verificato indica che i documenti sono arrivati e il nome coincide. Non è obbligatorio per pubblicare.",
+      "visual": "verify",
+      "status": "live"
+    },
+    {
+      "id": "buyers",
+      "num": "04",
+      "kicker": "Richieste",
+      "title": "Incontra acquirenti seri",
+      "body": "Le richieste potranno portare un badge finanziario Acquirente verificato di Banks4All.",
+      "voice": "Quarto, in arrivo. Le richieste potranno portare un badge finanziario Acquirente verificato di Banks4All.",
+      "visual": "buyers",
+      "status": "coming"
+    },
+    {
+      "id": "viewings",
+      "num": "05",
+      "kicker": "Visite",
+      "title": "Gestisci le visite",
+      "body": "Pubblichi gli slot. Confermi le richieste. Niente telefonate a vuoto.",
+      "voice": "Quinto. Gestisci le visite: pubblichi gli slot, confermi le richieste. Niente telefonate a vuoto.",
+      "visual": "calendar",
+      "status": "live"
+    },
+    {
+      "id": "dashboard",
+      "kicker": "Area venditore",
+      "title": "Richieste, documenti, andamento.",
+      "body": "Tieni in ordine APE, planimetria e visura. Vedi visualizzazioni e richieste del tuo annuncio.",
+      "voice": "Dalla tua area venditore tieni in ordine documenti, richieste e andamento dell'annuncio.",
+      "visual": "dashboard"
+    },
+    {
+      "id": "cta",
+      "kicker": "EasyCasa",
+      "title": "Quando sei pronto.",
+      "body": "Crea un annuncio. Niente esclusiva, niente incarico.",
+      "voice": "Quando sei pronto, crea un annuncio. Niente esclusiva, niente incarico.",
+      "visual": "cta"
+    }
+  ]
+}

@@ -163,6 +163,49 @@
   border-top: 1px solid var(--sp-rule);
 }
 
+.sp-intro-player {
+  margin: 2rem 0 0;
+  max-width: 52rem;
+}
+
+.sp-intro-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--sp-ink);
+  border: 1px solid var(--sp-rule);
+}
+
+.sp-intro-caption {
+  margin-top: 0.7rem;
+  font-size: 0.92rem;
+  color: var(--sp-ink-70);
+}
+
+.sp-intro-transcript {
+  margin-top: 1.5rem;
+  max-width: 40rem;
+}
+
+.sp-intro-transcript summary {
+  cursor: pointer;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sp-azure);
+}
+
+.sp-intro-transcript ol {
+  margin: 0.9rem 0 0;
+  padding-left: 1.2rem;
+  color: var(--sp-ink-70);
+}
+
+.sp-intro-transcript li + li {
+  margin-top: 0.55rem;
+}
+
 .sp-section .sp-display {
   font-size: clamp(1.75rem, 3.4vw, 2.5rem);
   max-width: 22ch;

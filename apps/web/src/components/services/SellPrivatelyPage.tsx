@@ -12,6 +12,7 @@ import {
   showSavingsFallback,
   showSavingsFigures,
 } from '@/lib/sell-privately';
+import { SellPrivatelyIntro } from './SellPrivatelyIntro';
 import { SellPrivatelySavingsSlider } from './SellPrivatelySavingsSlider';
 import './sell-privately.css';
 
@@ -57,12 +58,14 @@ export function SellPrivatelyPage() {
             <Link className="sp-btn sp-btn--primary" href="/add">
               {t('hero.ctaPrimary')}
             </Link>
-            <a className="sp-btn sp-btn--ghost" href="#how">
+            <a className="sp-btn sp-btn--ghost" href="#intro">
               {t('hero.ctaSecondary')}
             </a>
           </div>
         </div>
       </header>
+
+      <SellPrivatelyIntro />
 
       {figuresLive || figuresFallback ? (
         <section className="sp-section sp-savings" aria-labelledby="sp-savings-title">
