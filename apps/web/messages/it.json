@@ -2492,16 +2492,16 @@
   },
   "forBuyers": {
     "meta": {
-      "title": "Per acquirenti — EasyCasa · Compra diretto dal proprietario.",
-      "description": "Compra da privati in Italia — fasce OMI dopo l’accesso, richieste dirette e slot visita strutturati."
+      "title": "Per acquirenti — EasyCasa · Privati e agenzie.",
+      "description": "Cerca case in Italia pubblicate da privati e da agenzie. Fasce OMI ufficiali dopo l’accesso, scrivi a chi ha pubblicato, prenota uno slot visita."
     },
     "hero": {
-      "kicker": "Per acquirenti · Compravendita tra privati",
+      "kicker": "Per acquirenti · Privati e agenzie",
       "title": "La stessa casa.",
-      "titleEm": "Dal proprietario.",
-      "lead": "EasyCasa ti mette in contatto diretto con proprietari privati in tutta Italia — con dati ufficiali di mercato, controparti verificate e visite che prenoti come un tavolo al ristorante.",
+      "titleEm": "Dal proprietario, o in agenzia.",
+      "lead": "Cerca case pubblicate da proprietari privati e da agenzie immobiliari. Dopo l’accesso puoi consultare i dati ufficiali di zona, scrivere a chi ha pubblicato l’annuncio e prenotare una visita dalla disponibilità reale.",
       "ctaPrimary": "Inizia a cercare",
-      "ctaSecondary": "Come funziona"
+      "ctaSecondary": "Guarda come funziona"
     },
     "tags": {
       "live": "Disponibile",
@@ -2510,7 +2510,7 @@
     "services": {
       "kicker": "Cosa ottieni",
       "title": "Cosa c’è sulla piattaforma oggi",
-      "sub": "Cerca annunci di privati, consulta i dati ufficiali di zona dopo l’accesso, scrivi al proprietario e prenota uno slot visita."
+      "sub": "Cerca annunci di privati e di agenzie, consulta i dati ufficiali di zona dopo l’accesso, scrivi a chi ha pubblicato e prenota uno slot visita."
     },
     "pillars": [
       {
@@ -2526,7 +2526,7 @@
         "idx": "03 / AGISCI",
         "tag": "live",
         "title": "Contatto diretto, visite strutturate",
-        "body": "Niente filtri, niente telefonate a vuoto. Scrivi al proprietario, scegli uno slot dalla sua disponibilità reale e ricevi conferma. Comprare alla velocità di internet, non della lista di richiami dell’agenzia.",
+        "body": "Niente rincorse al telefono. Invia la richiesta a chi ha pubblicato l’annuncio — il proprietario o l’agenzia — scegli uno slot dalla disponibilità reale e ricevi conferma.",
         "fig": "Prenotazione online",
         "figNote": "slot confermati, non rincorse al telefono"
       },
@@ -2567,7 +2567,7 @@
       "steps": [
         {
           "title": "Cerca",
-          "body": "Sfoglia annunci di privati in Italia. Filtra per zona, prezzo, tipologia."
+          "body": "Sfoglia gli annunci in Italia. Filtra per zona, prezzo, tipologia — e per privato o agenzia."
         },
         {
           "title": "Controlla il prezzo",
@@ -2575,54 +2575,97 @@
         },
         {
           "title": "Scrivi direttamente",
-          "body": "Contatta il proprietario — con il Verified Buyer Badge allegato se ce l’hai. Il messaggio arriva a chi decide, a nessun altro."
+          "body": "Scrivi a chi ha pubblicato — il proprietario o l’agenzia. Allega il Verified Buyer Badge se ce l’hai."
         },
         {
           "title": "Prenota la visita",
-          "body": "Scegli uno slot dalla disponibilità reale del proprietario e ricevi conferma."
+          "body": "Scegli uno slot dalla disponibilità reale e ricevi conferma."
         }
       ]
     },
     "compare": {
-      "kicker": "La differenza, in una tabella",
-      "title": "Comprare in agenzia vs. comprare su EasyCasa",
-      "agency": "Agenzia tradizionale",
-      "easycasa": "EasyCasa",
+      "kicker": "Stesso portale, due controparti",
+      "title": "Privato o agenzia — gli strumenti restano gli stessi",
+      "private": "Venditore privato",
+      "agency": "Agenzia",
       "rows": [
         {
           "label": "Chi risponde alle tue domande",
-          "agency": "L’agente",
-          "easycasa": "Il proprietario",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "private": "Il proprietario",
+          "agency": "L’agenzia"
         },
         {
           "label": "Benchmark prezzo OMI ufficiale",
-          "agency": "Raramente",
-          "easycasa": "Dopo l’accesso",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "private": "Dopo l’accesso",
+          "agency": "Dopo l’accesso"
         },
         {
           "label": "Prenotazione visita",
-          "agency": "Rincorse al telefono",
-          "easycasa": "Slot online, confermato",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "private": "Slot online, confermato",
+          "agency": "Slot online, confermato"
         },
         {
-          "label": "Prova che sei un acquirente serio",
-          "agency": "La tua parola",
-          "easycasa": "Verified Buyer Badge (in arrivo)",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "label": "Filtro di ricerca",
+          "private": "Venditore → Privato",
+          "agency": "Venditore → Agenzia"
+        }
+      ]
+    },
+    "film": {
+      "kicker": "Intro · Per acquirenti",
+      "title": "Come funziona l’acquisto su EasyCasa",
+      "play": "Riproduci",
+      "pause": "Pausa",
+      "replay": "Rivedi",
+      "skip": "Leggi i passi",
+      "sceneOf": "Scena {n} di {total}",
+      "scenes": [
+        {
+          "kicker": "EasyCasa",
+          "title": "Comprare casa in Italia.",
+          "body": "Un portale. Case pubblicate da privati e da agenzie immobiliari."
+        },
+        {
+          "kicker": "Due controparti",
+          "title": "Venditore privato, o agenzia.",
+          "body": "Ogni annuncio dice chi l’ha pubblicato. Scegli con chi vuoi parlare."
+        },
+        {
+          "kicker": "01 · Cerca",
+          "title": "Sfoglia, poi filtra.",
+          "body": "Cerca per zona, prezzo e tipologia. Usa Privato o Agenzia quando vuoi una sola strada."
+        },
+        {
+          "kicker": "02 · L’annuncio",
+          "title": "Vedi la casa. Vedi chi l’ha messa.",
+          "body": "Foto, dati, prezzo richiesto — e chi ha pubblicato è chiaro: il proprietario, o l’agenzia."
+        },
+        {
+          "kicker": "03 · I dati di prezzo",
+          "title": "Fasce ufficiali di zona, dopo l’accesso.",
+          "body": "Le fasce OMI dell’Agenzia delle Entrate stanno accanto al prezzo richiesto. Sono dati di zona, non una perizia di questa casa."
+        },
+        {
+          "kicker": "04 · La richiesta",
+          "title": "Scrivi a chi ha pubblicato.",
+          "body": "Il messaggio arriva a chi ha messo l’annuncio — il proprietario o l’agenzia. EasyCasa trasporta il messaggio. Non tratta."
+        },
+        {
+          "kicker": "05 · La visita",
+          "title": "Scegli uno slot. Ricevi conferma.",
+          "body": "Prenota dalla disponibilità reale, come un tavolo al ristorante. Confermano loro. Tu visiti."
+        },
+        {
+          "kicker": "easycasaita.com",
+          "title": "La casa è la stessa.",
+          "body": "Cerca case di privati e di agenzie — poi fai tu il passo successivo."
         }
       ]
     },
     "final": {
       "title": "La casa è la stessa.",
       "titleLine2": "L’esperienza no.",
-      "body": "Cerca annunci di privati in Italia.",
+      "body": "Cerca case pubblicate da privati e da agenzie in Italia.",
       "cta": "Trova la tua casa"
     },
     "foot": {
