@@ -40,6 +40,13 @@ function collectRenderedStrings(locale: keyof typeof LOCALES): string[] {
     t('hero.lead'),
     t('hero.ctaPrimary'),
     t('hero.ctaSecondary'),
+    t('intro.kicker'),
+    t('intro.title'),
+    t('intro.body'),
+    t('intro.caption'),
+    t('intro.videoAria'),
+    t('intro.captionsLabel'),
+    t('intro.transcriptToggle'),
     t('how.kicker'),
     t('how.title'),
     t('benefits.kicker'),
@@ -68,6 +75,7 @@ function collectRenderedStrings(locale: keyof typeof LOCALES): string[] {
   for (const item of t.raw('faq.items') as Array<{ q: string; a: string }>) {
     out.push(item.q, item.a);
   }
+  for (const line of t.raw('intro.transcript') as string[]) out.push(line);
   if (showSavingsFigures(ledger) || showSavingsFallback(ledger)) {
     out.push(t('savings.kicker'), t('savings.title'), t('savings.neutralTitle'), t('savings.neutralBody'));
   }
