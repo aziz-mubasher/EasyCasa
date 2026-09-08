@@ -25,7 +25,11 @@ type ForBuyers = {
   hero: Record<string, string>;
   how: { steps: Array<{ title: string; body: string }> };
   compare: { private: string; agency: string; rows: Array<{ label: string; private: string; agency: string }> };
-  film: { scenes: Array<{ kicker: string; title: string; body: string }> };
+  film: {
+    fullscreen: string;
+    closeFullscreen: string;
+    scenes: Array<{ kicker: string; title: string; body: string }>;
+  };
 };
 
 function load(locale: (typeof locales)[number]) {
@@ -139,7 +143,7 @@ describe('forBuyers honesty (EC-B-08)', () => {
     expect(buyerIntroFullscreenSrc('es')).toBe('/for-buyers/film/intro.html?lang=es&record=1');
     expect(buyerIntroFullscreenSrc('de')).toBe('/for-buyers/film/intro.html?lang=it&record=1');
     for (const locale of locales) {
-      const film = load(locale).forBuyers.film as { fullscreen: string; closeFullscreen: string };
+      const film = load(locale).forBuyers.film;
       expect(film.fullscreen.length).toBeGreaterThan(0);
       expect(film.closeFullscreen.length).toBeGreaterThan(0);
     }
