@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/221",
   "prState": "MERGED",
   "dispatchedAt": "2026-09-07T20:53:09.671Z",
-  "updatedAt": "2026-09-07T20:57:49.544Z",
-  "summary": "MERGED #221+#223. Deploying apps/web.",
-  "nextAction": "Confirm live /vendi-da-privato after web deploy.",
+  "updatedAt": "2026-09-07T21:06:04.183Z",
+  "summary": "MERGED #221+#223 and deployed web@792effa. Live /vendi-da-privato dropped Zero provvigione, €7.500, Siamo un portale. API left at 3cc5099.",
+  "nextAction": "Aziz: Kaizen K EC 1.59 Sales/Improve → done. PK-7 still counsel_status:not-reviewed.",
   "errors": []
 }
