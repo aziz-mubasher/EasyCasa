@@ -2797,7 +2797,8 @@
       "title": "Sell your home yourself — without selling yourself short.",
       "lead": "Publish a genuine listing, seen by genuine buyers. No exclusivity, no contract.",
       "ctaPrimary": "Create your free listing",
-      "ctaSecondary": "How it works ↓"
+      "ctaSecondary": "How it works ↓",
+      "ctaFilm": "Watch how it works"
     },
     "savings": {
       "kicker": "Listing",
@@ -2907,6 +2908,60 @@
         {
           "q": "Can I also list with an agency?",
           "a": "Yes. There is no exclusivity and no mandate required to publish on EasyCasa."
+        }
+      ]
+    },
+    "film": {
+      "kicker": "Intro · For private sellers",
+      "title": "How selling works on EasyCasa",
+      "play": "Play",
+      "pause": "Pause",
+      "replay": "Replay",
+      "skip": "Read the steps",
+      "fullscreen": "Watch fullscreen",
+      "closeFullscreen": "Close",
+      "iframeTitle": "EasyCasa seller intro — how selling privately works",
+      "sceneOf": "Scene {n} of {total}",
+      "scenes": [
+        {
+          "kicker": "For private sellers",
+          "title": "You sell the home.",
+          "body": "You publish the listing. The tools stay yours. No mandate, no exclusivity."
+        },
+        {
+          "kicker": "01 · The listing",
+          "title": "You write it.",
+          "body": "Photos, facts, asking price. A wizard guides you. You publish when you are ready."
+        },
+        {
+          "kicker": "02 · Zone data",
+          "title": "Official ranges, after you sign in.",
+          "body": "OMI figures from the Agenzia delle Entrate for your zone. They are zone data, not a valuation of this home."
+        },
+        {
+          "kicker": "03 · Enquiries",
+          "title": "They come to you.",
+          "body": "Interested people write to you. EasyCasa carries the message. It does not negotiate."
+        },
+        {
+          "kicker": "04 · Viewings",
+          "title": "You publish the slots. You confirm.",
+          "body": "Your calendar. They pick. You confirm. The way you book a table."
+        },
+        {
+          "kicker": "05 · Documents",
+          "title": "A checklist, and an optional badge.",
+          "body": "APE, floor plan, visura: you keep them organised. The Verified Owner badge is not a requirement to publish."
+        },
+        {
+          "kicker": "06 · Dashboard",
+          "title": "See how the listing moves.",
+          "body": "Views, saves, enquiries. Data on your listing, not a verdict on the price."
+        },
+        {
+          "kicker": "easycasaita.com",
+          "title": "The house is yours.",
+          "body": "Publish, reply, set the viewings. You take the next step."
         }
       ]
     },

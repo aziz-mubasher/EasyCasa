@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import {
@@ -13,6 +14,7 @@ import {
   showSavingsFigures,
 } from '@/lib/sell-privately';
 import { SellPrivatelySavingsSlider } from './SellPrivatelySavingsSlider';
+import { SellerIntroFilm } from './SellerIntroFilm';
 import './sell-privately.css';
 
 type FaqItem = { q: string; a: string };
@@ -37,6 +39,7 @@ function StatusChip({ status, liveLabel, comingLabel }: {
 
 export function SellPrivatelyPage() {
   const t = useTranslations('sellPrivately');
+  const [filmOpen, setFilmOpen] = useState(false);
   const ledger = getSellPrivatelyLedger();
   const steps = getSellPrivatelySteps(ledger);
   const benefits = getSellPrivatelyBenefits(ledger);
@@ -57,12 +60,25 @@ export function SellPrivatelyPage() {
             <Link className="sp-btn sp-btn--primary" href="/add">
               {t('hero.ctaPrimary')}
             </Link>
+            <button type="button" className="sp-btn sp-btn--ghost" onClick={() => setFilmOpen(true)}>
+              {t('hero.ctaFilm')}
+            </button>
             <a className="sp-btn sp-btn--ghost" href="#how">
               {t('hero.ctaSecondary')}
             </a>
           </div>
         </div>
       </header>
+
+      <section id="intro" className="sp-section sp-film-section" aria-labelledby="sp-film-title">
+        <div className="sp-wrap">
+          <p className="sp-kicker">{t('film.kicker')}</p>
+          <h2 id="sp-film-title" className="sp-display">
+            {t('film.title')}
+          </h2>
+          <SellerIntroFilm fullscreenOpen={filmOpen} onFullscreenOpenChange={setFilmOpen} />
+        </div>
+      </section>
 
       {figuresLive || figuresFallback ? (
         <section className="sp-section sp-savings" aria-labelledby="sp-savings-title">

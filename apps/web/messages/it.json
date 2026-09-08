@@ -2797,7 +2797,8 @@
       "title": "Vendi casa da solo — senza venderti a sconto.",
       "lead": "Pubblica un annuncio vero, visto da acquirenti veri. Niente esclusiva, niente incarico.",
       "ctaPrimary": "Crea il tuo annuncio gratis",
-      "ctaSecondary": "Come funziona ↓"
+      "ctaSecondary": "Come funziona ↓",
+      "ctaFilm": "Guarda come funziona"
     },
     "savings": {
       "kicker": "Pubblicazione",
@@ -2907,6 +2908,60 @@
         {
           "q": "Posso pubblicare anche con un’agenzia?",
           "a": "Sì. Non c’è esclusiva né mandato obbligatorio per pubblicare su EasyCasa."
+        }
+      ]
+    },
+    "film": {
+      "kicker": "Intro · Per chi vende da privato",
+      "title": "Come funziona la vendita su EasyCasa",
+      "play": "Riproduci",
+      "pause": "Pausa",
+      "replay": "Rivedi",
+      "skip": "Leggi i passi",
+      "fullscreen": "Schermo intero",
+      "closeFullscreen": "Chiudi",
+      "iframeTitle": "Intro EasyCasa per chi vende da privato — come funziona la vendita",
+      "sceneOf": "Scena {n} di {total}",
+      "scenes": [
+        {
+          "kicker": "Per chi vende da privato",
+          "title": "Vendi casa tu.",
+          "body": "Pubblichi l’annuncio. Gli strumenti restano tuoi. Niente incarico, niente esclusiva."
+        },
+        {
+          "kicker": "01 · L’annuncio",
+          "title": "Lo scrivi tu.",
+          "body": "Foto, dati, prezzo richiesto. Un wizard ti guida. Pubblichi quando sei pronto."
+        },
+        {
+          "kicker": "02 · I dati di zona",
+          "title": "Fasce ufficiali, dopo l’accesso.",
+          "body": "Le fasce OMI dell’Agenzia delle Entrate per la tua zona. Sono dati di zona, non una perizia di questa casa."
+        },
+        {
+          "kicker": "03 · Le richieste",
+          "title": "Arrivano a te.",
+          "body": "Chi è interessato ti scrive. EasyCasa trasporta il messaggio. Non tratta."
+        },
+        {
+          "kicker": "04 · Le visite",
+          "title": "Pubblichi gli slot. Confermi tu.",
+          "body": "Il tuo calendario. Loro scelgono. Tu confermi. Come un tavolo al ristorante."
+        },
+        {
+          "kicker": "05 · I documenti",
+          "title": "Checklist, e un badge opzionale.",
+          "body": "APE, planimetria, visura: li tieni organizzati. Il badge Proprietario verificato non è un requisito per pubblicare."
+        },
+        {
+          "kicker": "06 · La dashboard",
+          "title": "Vedi come si muove l’annuncio.",
+          "body": "Visualizzazioni, salvataggi, richieste. Dati sul tuo annuncio, non un verdetto sul prezzo."
+        },
+        {
+          "kicker": "easycasaita.com",
+          "title": "La casa è la tua.",
+          "body": "Pubblica, rispondi, fissa le visite. Il passo successivo lo fai tu."
         }
       ]
     },
