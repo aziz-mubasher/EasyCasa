@@ -2492,16 +2492,16 @@
   },
   "forBuyers": {
     "meta": {
-      "title": "Para compradores — EasyCasa · Compra directo al propietario.",
-      "description": "Compra a particulares en Italia — rangos OMI tras iniciar sesión, consultas directas y huecos de visita estructurados."
+      "title": "Para compradores — EasyCasa · Particulares y agencias.",
+      "description": "Busca casas en Italia publicadas por particulares y por agencias. Rangos OMI oficiales tras iniciar sesión, escribe a quien publicó, reserva un hueco de visita."
     },
     "hero": {
-      "kicker": "Para compradores · Compraventa entre particulares",
+      "kicker": "Para compradores · Particulares y agencias",
       "title": "La misma casa.",
-      "titleEm": "Del propietario.",
-      "lead": "EasyCasa te conecta directamente con propietarios particulares en toda Italia — con datos oficiales de mercado, contrapartes verificadas y visitas que reservas como una mesa en un restaurante.",
+      "titleEm": "Del propietario, o de una agencia.",
+      "lead": "Busca casas publicadas por propietarios particulares y por agencias inmobiliarias. Tras iniciar sesión puedes consultar los datos oficiales de zona, escribir a quien publicó el anuncio y reservar una visita desde su disponibilidad real.",
       "ctaPrimary": "Empieza a buscar",
-      "ctaSecondary": "Cómo funciona"
+      "ctaSecondary": "Mira cómo funciona"
     },
     "tags": {
       "live": "Disponible",
@@ -2510,7 +2510,7 @@
     "services": {
       "kicker": "Qué obtienes",
       "title": "Qué hay hoy en la plataforma",
-      "sub": "Busca anuncios de particulares, consulta los datos oficiales de zona tras iniciar sesión, escribe al propietario y reserva un hueco de visita."
+      "sub": "Busca anuncios de particulares y de agencias, consulta los datos oficiales de zona tras iniciar sesión, escribe a quien publicó y reserva un hueco de visita."
     },
     "pillars": [
       {
@@ -2526,7 +2526,7 @@
         "idx": "03 / AVANZAS",
         "tag": "live",
         "title": "Contacto directo, visitas estructuradas",
-        "body": "Sin filtros, sin llamadas perdidas. Escribe al propietario, elige un hueco de su disponibilidad real y recibe confirmación. Comprar a la velocidad de internet, no a la de la lista de devoluciones de llamada de una agencia.",
+        "body": "Sin persecuciones telefónicas. Envía la consulta a quien publicó el anuncio — el propietario o la agencia — elige un hueco de su disponibilidad real y recibe confirmación.",
         "fig": "Reserva online",
         "figNote": "huecos confirmados, no persecuciones telefónicas"
       },
@@ -2567,7 +2567,7 @@
       "steps": [
         {
           "title": "Busca",
-          "body": "Explora anuncios de particulares en Italia. Filtra por zona, precio, tipo."
+          "body": "Explora anuncios en Italia. Filtra por zona, precio, tipo — y por particular o agencia."
         },
         {
           "title": "Comprueba el precio",
@@ -2575,54 +2575,97 @@
         },
         {
           "title": "Pregunta directamente",
-          "body": "Escribe al propietario — con tu Verified Buyer Badge adjunto si lo tienes. Tu mensaje llega a quien decide, a nadie más."
+          "body": "Escribe a quien publicó — el propietario o la agencia. Adjunta el Verified Buyer Badge si lo tienes."
         },
         {
           "title": "Reserva tu visita",
-          "body": "Elige un hueco de la disponibilidad real del propietario y recibe confirmación."
+          "body": "Elige un hueco de su disponibilidad real y recibe confirmación."
         }
       ]
     },
     "compare": {
-      "kicker": "La diferencia, en una tabla",
-      "title": "Comprar con agencia vs. comprar en EasyCasa",
-      "agency": "Agencia tradicional",
-      "easycasa": "EasyCasa",
+      "kicker": "Mismo portal, dos contrapartes",
+      "title": "Particular o agencia — las herramientas no cambian",
+      "private": "Vendedor particular",
+      "agency": "Agencia",
       "rows": [
         {
           "label": "Quién responde a tus preguntas",
-          "agency": "El agente",
-          "easycasa": "El propietario",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "private": "El propietario",
+          "agency": "La agencia"
         },
         {
           "label": "Benchmark de precio OMI oficial",
-          "agency": "Rara vez",
-          "easycasa": "Tras iniciar sesión",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "private": "Tras iniciar sesión",
+          "agency": "Tras iniciar sesión"
         },
         {
           "label": "Reserva de visita",
-          "agency": "Persecución telefónica",
-          "easycasa": "Selector de huecos online, confirmado",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "private": "Selector de huecos online, confirmado",
+          "agency": "Selector de huecos online, confirmado"
         },
         {
-          "label": "Prueba de que eres un comprador serio",
-          "agency": "Tu palabra",
-          "easycasa": "Verified Buyer Badge (próximamente)",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "label": "Filtro de búsqueda",
+          "private": "Vendedor → Particular",
+          "agency": "Vendedor → Agencia"
+        }
+      ]
+    },
+    "film": {
+      "kicker": "Intro · Para compradores",
+      "title": "Cómo se compra en EasyCasa",
+      "play": "Reproducir",
+      "pause": "Pausa",
+      "replay": "Volver a ver",
+      "skip": "Leer los pasos",
+      "sceneOf": "Escena {n} de {total}",
+      "scenes": [
+        {
+          "kicker": "Para compradores",
+          "title": "Comprar casa en Italia.",
+          "body": "Un portal. Casas publicadas por particulares y por agencias inmobiliarias."
+        },
+        {
+          "kicker": "Dos contrapartes",
+          "title": "Vendedor particular, o agencia.",
+          "body": "Cada anuncio dice quién lo publicó. Tú eliges con quién quieres hablar."
+        },
+        {
+          "kicker": "01 · Busca",
+          "title": "Explora, luego filtra.",
+          "body": "Busca por zona, precio y tipo. Usa Particular o Agencia cuando quieras un solo camino."
+        },
+        {
+          "kicker": "02 · El anuncio",
+          "title": "Mira la casa. Mira quién la publicó.",
+          "body": "Fotos, datos, precio pedido — y un publicador claro: el propietario, o la agencia."
+        },
+        {
+          "kicker": "03 · Datos de precio",
+          "title": "Rangos oficiales de zona, tras iniciar sesión.",
+          "body": "Las cifras OMI de la Agenzia delle Entrate van junto al precio pedido. Son datos de zona, no una tasación de esta casa."
+        },
+        {
+          "kicker": "04 · La consulta",
+          "title": "Escribe a quien publicó.",
+          "body": "Tu mensaje llega a quien puso el anuncio — el propietario o la agencia. EasyCasa transporta el mensaje. No negocia."
+        },
+        {
+          "kicker": "05 · La visita",
+          "title": "Elige un hueco. Recibe confirmación.",
+          "body": "Reserva desde su disponibilidad real, como una mesa. Ellos confirman. Tú visitas."
+        },
+        {
+          "kicker": "easycasaita.com",
+          "title": "La casa es la misma.",
+          "body": "Busca casas de particulares y de agencias — luego da tú el siguiente paso."
         }
       ]
     },
     "final": {
       "title": "La casa es la misma.",
       "titleLine2": "La experiencia no.",
-      "body": "Busca anuncios de particulares en Italia.",
+      "body": "Busca casas publicadas por particulares y por agencias en Italia.",
       "cta": "Encuentra tu casa"
     },
     "foot": {

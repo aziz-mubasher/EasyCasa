@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
+import { BuyerIntroFilm } from './BuyerIntroFilm';
 import './for-buyers.css';
 
 type Pillar = {
@@ -20,10 +21,8 @@ type TrustItem = { title: string; body: string; tag?: 'live' | 'soon' };
 type Step = { title: string; body: string };
 type CompareRow = {
   label: string;
+  private: string;
   agency: string;
-  easycasa: string;
-  agencyKind?: 'no';
-  easycasaKind?: 'yes';
 };
 
 export function ForBuyersPage() {
@@ -48,12 +47,20 @@ export function ForBuyersPage() {
             <Link className="fb-btn fb-btn--primary" href="/search">
               {t('hero.ctaPrimary')}
             </Link>
-            <a className="fb-btn fb-btn--ghost" href="#how">
+            <a className="fb-btn fb-btn--ghost" href="#intro">
               {t('hero.ctaSecondary')}
             </a>
           </div>
         </div>
       </header>
+
+      <section id="intro" className="fb-section fb-film-section">
+        <div className="fb-wrap">
+          <p className="fb-kicker fb-kicker--ink">{t('film.kicker')}</p>
+          <h2>{t('film.title')}</h2>
+          <BuyerIntroFilm />
+        </div>
+      </section>
 
       <section id="services" className="fb-section">
         <div className="fb-wrap">
@@ -124,28 +131,16 @@ export function ForBuyersPage() {
               <thead>
                 <tr>
                   <th scope="col" />
+                  <th scope="col">{t('compare.private')}</th>
                   <th scope="col">{t('compare.agency')}</th>
-                  <th scope="col">{t('compare.easycasa')}</th>
                 </tr>
               </thead>
               <tbody>
                 {compare.map((row) => (
                   <tr key={row.label}>
                     <td>{row.label}</td>
-                    <td>
-                      {row.agencyKind === 'no' ? (
-                        <span className="no">{row.agency}</span>
-                      ) : (
-                        row.agency
-                      )}
-                    </td>
-                    <td>
-                      {row.easycasaKind === 'yes' ? (
-                        <span className="yes">{row.easycasa}</span>
-                      ) : (
-                        row.easycasa
-                      )}
-                    </td>
+                    <td>{row.private}</td>
+                    <td>{row.agency}</td>
                   </tr>
                 ))}
               </tbody>

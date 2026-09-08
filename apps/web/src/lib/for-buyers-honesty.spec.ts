@@ -2,21 +2,29 @@
  * EC-B-08 — /for-buyers honesty pass.
  * Keys must stay symmetric across it/en/es. Retracted fee / matching / GDPR
  * claims must not remain in the forBuyers namespace.
+ * Dual-channel (private + agency) is the live buyer story — do not revert
+ * the page to «privates only» or «agency vs EasyCasa».
  */
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import {
+  BUYER_INTRO_FRAME_FILES,
+  BUYER_INTRO_FRAMES,
+} from '../components/services/buyer-intro-film';
 
 const locales = ['it', 'en', 'es'] as const;
 const root = join(dirname(fileURLToPath(import.meta.url)), '../../messages');
+const publicFilm = join(dirname(fileURLToPath(import.meta.url)), '../../public/for-buyers/film');
 
 type ForBuyers = {
   pillars: Array<{ idx: string; tag: 'live' | 'soon'; title: string; body: string }>;
   trust: { items: Array<{ title: string; body: string; tag?: 'live' | 'soon' }> };
   hero: Record<string, string>;
   how: { steps: Array<{ title: string; body: string }> };
-  compare: { rows: Array<{ label: string; agency: string; easycasa: string }> };
+  compare: { private: string; agency: string; rows: Array<{ label: string; private: string; agency: string }> };
+  film: { scenes: Array<{ kicker: string; title: string; body: string }> };
 };
 
 function load(locale: (typeof locales)[number]) {
@@ -79,9 +87,9 @@ describe('forBuyers honesty (EC-B-08)', () => {
       const fb = load(locale).forBuyers;
       expect(fb.hero).not.toHaveProperty('figure');
       expect(fb.hero).not.toHaveProperty('figureLabel');
-      expect(fb.compare.rows.some((r) => /9\.150|€0/.test(`${r.label}${r.agency}${r.easycasa}`))).toBe(
-        false,
-      );
+      expect(
+        fb.compare.rows.some((r) => /9\.150|€0/.test(`${r.label}${r.private}${r.agency}`)),
+      ).toBe(false);
     }
   });
 
@@ -90,8 +98,37 @@ describe('forBuyers honesty (EC-B-08)', () => {
       const fb = load(locale).forBuyers;
       const omi = fb.pillars[0];
       expect(omi?.tag).toBe('live');
-      const hay = `${omi?.body} ${fb.how.steps[1]?.body} ${fb.compare.rows.map((r) => r.easycasa).join(' ')}`;
+      const hay = `${omi?.body} ${fb.how.steps[1]?.body} ${fb.compare.rows.map((r) => `${r.private} ${r.agency}`).join(' ')} ${fb.film.scenes.map((s) => `${s.title} ${s.body}`).join(' ')}`;
       expect(hay.toLowerCase()).toMatch(/sign in|accedi|iniciar sesi[oó]n|dopo l|after you|tras iniciar/);
+    }
+  });
+
+  it('describes both private sellers and agencies on the live path', () => {
+    for (const locale of locales) {
+      const fb = load(locale).forBuyers;
+      const hay = `${fb.hero.lead} ${fb.hero.titleEm} ${fb.how.steps[0]?.body} ${fb.film.scenes.map((s) => s.body).join(' ')}`;
+      expect(hay, locale).toMatch(/private|privato|privati|particular/i);
+      expect(hay, locale).toMatch(/agency|agenzia|agenzie|agencia/i);
+    }
+  });
+
+  it('compares private vs agency on EasyCasa, not agency vs the portal', () => {
+    for (const locale of locales) {
+      const fb = load(locale).forBuyers;
+      expect(fb.compare).toHaveProperty('private');
+      expect(fb.compare).toHaveProperty('agency');
+      expect(fb.compare).not.toHaveProperty('easycasa');
+      expect(fb.compare.rows).toHaveLength(4);
+    }
+  });
+
+  it('ships an 8-scene intro film with frames on disk', () => {
+    expect(BUYER_INTRO_FRAMES).toHaveLength(8);
+    for (const locale of locales) {
+      expect(load(locale).forBuyers.film.scenes).toHaveLength(8);
+    }
+    for (const file of BUYER_INTRO_FRAME_FILES) {
+      expect(existsSync(join(publicFilm, file)), file).toBe(true);
     }
   });
 });

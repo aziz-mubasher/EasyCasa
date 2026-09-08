@@ -2492,16 +2492,16 @@
   },
   "forBuyers": {
     "meta": {
-      "title": "For Buyers — EasyCasa · Buy directly from the owner.",
-      "description": "Buy from private owners in Italy — OMI zone ranges after you sign in, direct enquiries, and structured viewing slots."
+      "title": "For Buyers — EasyCasa · Private sellers and agencies.",
+      "description": "Search homes in Italy listed by private owners and by agencies. Official OMI zone ranges after you sign in, write to the publisher, book a viewing slot."
     },
     "hero": {
-      "kicker": "For buyers · Compravendita tra privati",
+      "kicker": "For buyers · Private sellers and agencies",
       "title": "Buy the same house.",
-      "titleEm": "From the owner.",
-      "lead": "EasyCasa connects you directly with private owners across Italy — with official market data, verified counterparts, and viewings you book like a table at a restaurant.",
+      "titleEm": "From the owner, or an agency.",
+      "lead": "Search homes listed by private owners and by real-estate agencies. After you sign in you can check official zone data, write to whoever published the listing, and book a viewing from their real availability.",
       "ctaPrimary": "Start searching",
-      "ctaSecondary": "How it works"
+      "ctaSecondary": "Watch how it works"
     },
     "tags": {
       "live": "Live",
@@ -2510,7 +2510,7 @@
     "services": {
       "kicker": "What you get",
       "title": "What is on the platform today",
-      "sub": "Search private listings, check official zone data after you sign in, write to the owner, and book a viewing slot."
+      "sub": "Search listings from private owners and from agencies, check official zone data after you sign in, write to the publisher, and book a viewing slot."
     },
     "pillars": [
       {
@@ -2526,7 +2526,7 @@
         "idx": "03 / MOVE",
         "tag": "live",
         "title": "Direct contact, structured viewings",
-        "body": "No gatekeeping, no phone tag. Send your enquiry to the owner, pick a viewing slot from their real availability, and get a confirmation. Buying at the speed of the internet, not the speed of an agency's callback list.",
+        "body": "No phone tag. Send your enquiry to whoever published the listing — the owner or the agency — pick a viewing slot from their real availability, and get a confirmation.",
         "fig": "Online booking",
         "figNote": "confirmed slots, not phone tag"
       },
@@ -2567,7 +2567,7 @@
       "steps": [
         {
           "title": "Search",
-          "body": "Browse private listings across Italy. Filter by zone, price, type."
+          "body": "Browse listings across Italy. Filter by zone, price, type — and by private seller or agency."
         },
         {
           "title": "Check the price",
@@ -2575,54 +2575,97 @@
         },
         {
           "title": "Enquire directly",
-          "body": "Write to the owner — with your Verified Buyer Badge attached if you have one. Your message reaches the decision-maker, nobody else."
+          "body": "Write to the publisher — the owner or the agency. Attach a Verified Buyer Badge if you have one."
         },
         {
           "title": "Book your viewing",
-          "body": "Pick a slot from the owner's real availability and get a confirmation."
+          "body": "Pick a slot from their real availability and get a confirmation."
         }
       ]
     },
     "compare": {
-      "kicker": "The difference, in one table",
-      "title": "Buying through an agency vs. buying on EasyCasa",
-      "agency": "Traditional agency",
-      "easycasa": "EasyCasa",
+      "kicker": "Same portal, two counterparties",
+      "title": "Private seller or agency — the tools stay the same",
+      "private": "Private seller",
+      "agency": "Agency",
       "rows": [
         {
           "label": "Who answers your questions",
-          "agency": "The agent",
-          "easycasa": "The owner",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "private": "The owner",
+          "agency": "The agency"
         },
         {
           "label": "Official OMI price benchmark shown",
-          "agency": "Rarely",
-          "easycasa": "After you sign in",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "private": "After you sign in",
+          "agency": "After you sign in"
         },
         {
           "label": "Viewing booking",
-          "agency": "Phone tag",
-          "easycasa": "Online slot picker, confirmed",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "private": "Online slot picker, confirmed",
+          "agency": "Online slot picker, confirmed"
         },
         {
-          "label": "Proof you're a serious buyer",
-          "agency": "Your word",
-          "easycasa": "Verified Buyer Badge (coming soon)",
-          "agencyKind": "no",
-          "easycasaKind": "yes"
+          "label": "Search filter",
+          "private": "Seller → Private",
+          "agency": "Seller → Agency"
+        }
+      ]
+    },
+    "film": {
+      "kicker": "Intro · For buyers",
+      "title": "How buying works on EasyCasa",
+      "play": "Play",
+      "pause": "Pause",
+      "replay": "Replay",
+      "skip": "Read the steps",
+      "sceneOf": "Scene {n} of {total}",
+      "scenes": [
+        {
+          "kicker": "For buyers",
+          "title": "Buy a home in Italy.",
+          "body": "One portal. Homes listed by private owners and by real-estate agencies."
+        },
+        {
+          "kicker": "Two counterparties",
+          "title": "Private seller, or agency.",
+          "body": "Every listing says who published it. You choose who you want to deal with."
+        },
+        {
+          "kicker": "01 · Search",
+          "title": "Browse, then filter.",
+          "body": "Search by zone, price and type. Use Private or Agency when you want one path only."
+        },
+        {
+          "kicker": "02 · The listing",
+          "title": "See the home. See who listed it.",
+          "body": "Photos, facts, asking price — and a clear publisher: the owner, or the agency."
+        },
+        {
+          "kicker": "03 · Price data",
+          "title": "Official zone ranges, after you sign in.",
+          "body": "OMI figures from the Agenzia delle Entrate sit next to the asking price. They are zone data, not a valuation of this home."
+        },
+        {
+          "kicker": "04 · Enquire",
+          "title": "Write to the publisher.",
+          "body": "Your message goes to whoever listed the home — the owner or the agency. EasyCasa carries the message. It does not negotiate."
+        },
+        {
+          "kicker": "05 · Viewing",
+          "title": "Pick a slot. Get a confirmation.",
+          "body": "Book from their real availability, the way you book a table. They confirm. You visit."
+        },
+        {
+          "kicker": "easycasaita.com",
+          "title": "The house is the same.",
+          "body": "Search homes listed by owners and by agencies — then take the next step yourself."
         }
       ]
     },
     "final": {
       "title": "The house is the same.",
       "titleLine2": "The experience isn't.",
-      "body": "Search private listings across Italy.",
+      "body": "Search homes listed by owners and by agencies across Italy.",
       "cta": "Find your home"
     },
     "foot": {

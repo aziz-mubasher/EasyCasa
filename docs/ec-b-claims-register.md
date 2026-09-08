@@ -131,3 +131,18 @@ These strings must not reappear on `/for-buyers` without a flip PR that cites ev
 - Not counsel sign-off. `counsel_status` stays not-reviewed. `signed_by` capacity is not recorded here.
 
 *Written against `forBuyers` in `apps/web/messages/{it,en,es}.json` after EC-B-08 PR 1. Test: `apps/web/src/lib/for-buyers-honesty.spec.ts`.*
+
+---
+
+## E. Dual-channel intro (2026-09-08)
+
+Product feedback: buyers may purchase from a **private seller** or through a **real-estate agency**. The live `/for-buyers` story and the intro film (`forBuyers.film` + `BuyerIntroFilm` + `public/for-buyers/film/`) follow that. Spec: `docs/design/buyer-intro-video.md`.
+
+| Change | Why |
+|---|---|
+| Hero / how / services / final no longer «privates only» | Search `sellerType` is `private \| agency`; listing contact is «publisher» |
+| Compare columns are **Private seller** vs **Agency** (both on EasyCasa) | Replaces «traditional agency vs EasyCasa» |
+| Intro film 8 scenes | Same tools; labelled counterparty; OMI after sign-in; transport-only enquiry; slot booking |
+| Still retracted | Fee / €9.150 / «answered first» / rows 10–12 |
+
+T04: rows **2, 4, 5**. Film line «EasyCasa carries the message. It does not negotiate.» is row 5 + row 12 refusal, not a matching claim.
