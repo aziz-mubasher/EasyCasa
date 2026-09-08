@@ -4,29 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EasyCasa — Come funziona per chi compra</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#14212E; --parchment:#F3EDE1; --azure:#2C6E9B; --ochre:#C08A1E;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;background:#000;overflow:hidden}
-  body{font-family:Newsreader,Georgia,serif;color:var(--parchment)}
+  body{font-family:Georgia,"Times New Roman",serif;color:var(--parchment)}
   .stage{position:relative;width:100vw;height:100vh;background:var(--ink)}
   .frame{position:absolute;inset:-3%;background-size:cover;background-position:center;opacity:0;transform:scale(1.08)}
   .frame.on{opacity:1;animation:ken 12s ease-out forwards}
   .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,33,46,.16) 0%,rgba(20,33,46,.4) 46%,rgba(20,33,46,.84) 100%)}
   .copy{position:absolute;left:0;right:0;bottom:0;padding:72px 80px 88px;max-width:1180px}
-  .brand{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:22px;letter-spacing:-.02em;margin-bottom:22px}
+  .brand{font-family:system-ui,-apple-system,sans-serif;font-weight:800;font-size:22px;letter-spacing:-.02em;margin-bottom:22px}
   .brand span{color:var(--ochre)}
-  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#7FB2D6;margin-bottom:16px}
-  h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:64px;line-height:1.05;letter-spacing:-.03em;margin-bottom:18px}
+  .kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#7FB2D6;margin-bottom:16px}
+  h1{font-family:system-ui,-apple-system,sans-serif;font-weight:800;font-size:64px;line-height:1.05;letter-spacing:-.03em;margin-bottom:18px}
   .body{font-size:28px;line-height:1.4;color:rgba(243,237,225,.9);max-width:38ch}
   .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(243,237,225,.16)}
   .bar>i{display:block;height:100%;width:0;background:var(--ochre)}
-  .hud{position:absolute;top:28px;right:36px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;letter-spacing:.08em;color:rgba(243,237,225,.55)}
+  .hud{position:absolute;top:28px;right:36px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;letter-spacing:.08em;color:rgba(243,237,225,.55)}
   .record .hud{display:none}
   @keyframes ken{from{transform:scale(1.08)}to{transform:scale(1)}}
   @media (prefers-reduced-motion:reduce){.frame.on{animation:none;transform:none}}
@@ -55,7 +52,7 @@
 <script>
 const COPY = {
   it: [
-    ["EasyCasa","Comprare casa in Italia.","Un portale. Case pubblicate da privati e da agenzie immobiliari."],
+    ["Per acquirenti","Comprare casa in Italia.","Un portale. Case pubblicate da privati e da agenzie immobiliari."],
     ["Due controparti","Venditore privato, o agenzia.","Ogni annuncio dice chi l’ha pubblicato. Scegli con chi vuoi parlare."],
     ["01 · Cerca","Sfoglia, poi filtra.","Cerca per zona, prezzo e tipologia. Usa Privato o Agenzia quando vuoi una sola strada."],
     ["02 · L’annuncio","Vedi la casa. Vedi chi l’ha messa.","Foto, dati, prezzo richiesto — e chi ha pubblicato è chiaro: il proprietario, o l’agenzia."],
@@ -65,7 +62,7 @@ const COPY = {
     ["easycasaita.com","La casa è la stessa.","Cerca case di privati e di agenzie — poi fai tu il passo successivo."]
   ],
   en: [
-    ["EasyCasa","Buy a home in Italy.","One portal. Homes listed by private owners and by real-estate agencies."],
+    ["For buyers","Buy a home in Italy.","One portal. Homes listed by private owners and by real-estate agencies."],
     ["Two counterparties","Private seller, or agency.","Every listing says who published it. You choose who you want to deal with."],
     ["01 · Search","Browse, then filter.","Search by zone, price and type. Use Private or Agency when you want one path only."],
     ["02 · The listing","See the home. See who listed it.","Photos, facts, asking price — and a clear publisher: the owner, or the agency."],
@@ -75,7 +72,7 @@ const COPY = {
     ["easycasaita.com","The house is the same.","Search homes listed by owners and by agencies — then take the next step yourself."]
   ],
   es: [
-    ["EasyCasa","Comprar casa en Italia.","Un portal. Casas publicadas por particulares y por agencias inmobiliarias."],
+    ["Para compradores","Comprar casa en Italia.","Un portal. Casas publicadas por particulares y por agencias inmobiliarias."],
     ["Dos contrapartes","Vendedor particular, o agencia.","Cada anuncio dice quién lo publicó. Tú eliges con quién quieres hablar."],
     ["01 · Busca","Explora, luego filtra.","Busca por zona, precio y tipo. Usa Particular o Agencia cuando quieras un solo camino."],
     ["02 · El anuncio","Mira la casa. Mira quién la publicó.","Fotos, datos, precio pedido — y un publicador claro: el propietario, o la agencia."],

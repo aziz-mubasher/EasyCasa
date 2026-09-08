@@ -18,11 +18,19 @@ sleep 0.4
 
 CHROME="${CHROME:-google-chrome}"
 for i in 0 1 2 3 4 5 6 7; do
-  "$CHROME" --headless=new --disable-gpu --hide-scrollbars \
+  DATA="$(mktemp -d)"
+  timeout 25s "$CHROME" \
+    --headless=new --no-sandbox --disable-gpu --hide-scrollbars \
+    --disable-dev-shm-usage --no-first-run --disable-background-networking \
+    --disable-extensions --disable-sync --disable-default-apps \
+    --virtual-time-budget=4000 \
+    --user-data-dir="$DATA" \
     --window-size=1920,1080 \
     --screenshot="$STILLS/s$i.png" \
     "http://127.0.0.1:${PORT}/intro.html?lang=it&record=1&still=1&scene=$i" \
-    >/tmp/buyer-intro-chrome.log 2>&1
+    >/tmp/buyer-intro-chrome.log 2>&1 || true
+  rm -rf "$DATA"
+  test -s "$STILLS/s$i.png"
 done
 
 # Hold each still for the scene duration, then concat.
