@@ -2,6 +2,7 @@
 
 **Status:** draft for production (IT master).  
 **Page:** `/{it,en,es}/for-buyers` → `#intro` (`BuyerIntroFilm`).  
+**Fullscreen popup:** same page opens `/for-buyers/film/intro.html?lang={it|en|es}&record=1` in a viewport-covering dialog (hero «Watch how it works» + Schermo intero).  
 **Recording sibling:** `apps/web/public/for-buyers/film/intro.html`  
 **T04 rows:** 2 (OMI as zone data), 4 (viewing slots), 5 (message transport). **Refuse** rows 10–12.
 

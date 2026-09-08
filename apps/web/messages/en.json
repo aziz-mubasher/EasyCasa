@@ -2618,6 +2618,9 @@
       "pause": "Pause",
       "replay": "Replay",
       "skip": "Read the steps",
+      "fullscreen": "Watch fullscreen",
+      "closeFullscreen": "Close",
+      "iframeTitle": "EasyCasa buyer intro — how buying works",
       "sceneOf": "Scene {n} of {total}",
       "scenes": [
         {
