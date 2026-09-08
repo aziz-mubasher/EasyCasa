@@ -2797,7 +2797,8 @@
       "title": "Vende tu casa tú mismo — sin venderte barato.",
       "lead": "Publica un anuncio genuino, visto por compradores genuinos. Sin exclusividad, sin contrato.",
       "ctaPrimary": "Crea tu anuncio gratis",
-      "ctaSecondary": "Cómo funciona ↓"
+      "ctaSecondary": "Cómo funciona ↓",
+      "ctaFilm": "Mira cómo funciona"
     },
     "savings": {
       "kicker": "Publicación",
@@ -2907,6 +2908,60 @@
         {
           "q": "¿Puedo anunciar también con una agencia?",
           "a": "Sí. No hay exclusividad ni mandato obligatorio para publicar en EasyCasa."
+        }
+      ]
+    },
+    "film": {
+      "kicker": "Intro · Para quien vende como particular",
+      "title": "Cómo funciona la venta en EasyCasa",
+      "play": "Reproducir",
+      "pause": "Pausa",
+      "replay": "Volver a ver",
+      "skip": "Lee los pasos",
+      "fullscreen": "Pantalla completa",
+      "closeFullscreen": "Cerrar",
+      "iframeTitle": "Intro EasyCasa para particulares — cómo funciona la venta",
+      "sceneOf": "Escena {n} de {total}",
+      "scenes": [
+        {
+          "kicker": "Para quien vende como particular",
+          "title": "Tú vendes la casa.",
+          "body": "Tú publicas el anuncio. Las herramientas son tuyas. Sin mandato, sin exclusividad."
+        },
+        {
+          "kicker": "01 · El anuncio",
+          "title": "Lo escribes tú.",
+          "body": "Fotos, datos, precio pedido. Un asistente te guía. Publicas cuando estás listo."
+        },
+        {
+          "kicker": "02 · Datos de zona",
+          "title": "Rangos oficiales, tras iniciar sesión.",
+          "body": "Las cifras OMI de la Agenzia delle Entrate para tu zona. Son datos de zona, no una tasación de esta casa."
+        },
+        {
+          "kicker": "03 · Las consultas",
+          "title": "Llegan a ti.",
+          "body": "Quien está interesado te escribe. EasyCasa transporta el mensaje. No negocia."
+        },
+        {
+          "kicker": "04 · Las visitas",
+          "title": "Publicas los huecos. Confirmas tú.",
+          "body": "Tu calendario. Ellos eligen. Tú confirmas. Como reservar una mesa."
+        },
+        {
+          "kicker": "05 · Los documentos",
+          "title": "Lista, y una insignia opcional.",
+          "body": "APE, plano, visura: los mantienes organizados. La insignia Propietario verificado no es un requisito para publicar."
+        },
+        {
+          "kicker": "06 · El panel",
+          "title": "Mira cómo se mueve el anuncio.",
+          "body": "Vistas, guardados, consultas. Datos de tu anuncio, no un veredicto sobre el precio."
+        },
+        {
+          "kicker": "easycasaita.com",
+          "title": "La casa es tuya.",
+          "body": "Publica, responde, fija las visitas. El siguiente paso lo das tú."
         }
       ]
     },

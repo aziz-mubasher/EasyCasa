@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EasyCasa — Come funziona per chi vende da privato</title>
+<style>
+  :root{
+    --ink:#14212E; --parchment:#F3EDE1; --azure:#2C6E9B; --ochre:#C08A1E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#000;overflow:hidden}
+  body{font-family:Georgia,"Times New Roman",serif;color:var(--parchment)}
+  .stage{position:relative;width:100vw;height:100vh;background:var(--ink)}
+  .frame{position:absolute;inset:-3%;background-size:cover;background-position:center;opacity:0;transform:scale(1.08)}
+  .frame.on{opacity:1;animation:ken 12s ease-out forwards}
+  .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,33,46,.16) 0%,rgba(20,33,46,.4) 46%,rgba(20,33,46,.84) 100%)}
+  .copy{position:absolute;left:0;right:0;bottom:0;padding:72px 80px 88px;max-width:1180px}
+  .brand{font-family:system-ui,-apple-system,sans-serif;font-weight:800;font-size:22px;letter-spacing:-.02em;margin-bottom:22px}
+  .brand span{color:var(--ochre)}
+  .kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#7FB2D6;margin-bottom:16px}
+  h1{font-family:system-ui,-apple-system,sans-serif;font-weight:800;font-size:64px;line-height:1.05;letter-spacing:-.03em;margin-bottom:18px}
+  .body{font-size:28px;line-height:1.4;color:rgba(243,237,225,.9);max-width:38ch}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(243,237,225,.16)}
+  .bar>i{display:block;height:100%;width:0;background:var(--ochre)}
+  .hud{position:absolute;top:28px;right:36px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;letter-spacing:.08em;color:rgba(243,237,225,.55)}
+  .record .hud{display:none}
+  @keyframes ken{from{transform:scale(1.08)}to{transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){.frame.on{animation:none;transform:none}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="frame" data-i="0" style="background-image:url('01-open.webp')"></div>
+  <div class="frame" data-i="1" style="background-image:url('02-publish.webp')"></div>
+  <div class="frame" data-i="2" style="background-image:url('03-omi.webp')"></div>
+  <div class="frame" data-i="3" style="background-image:url('04-inbox.webp')"></div>
+  <div class="frame" data-i="4" style="background-image:url('05-viewing.webp')"></div>
+  <div class="frame" data-i="5" style="background-image:url('06-docs.webp')"></div>
+  <div class="frame" data-i="6" style="background-image:url('07-dashboard.webp')"></div>
+  <div class="frame" data-i="7" style="background-image:url('08-close.webp')"></div>
+  <div class="shade"></div>
+  <div class="copy">
+    <p class="brand">easy<span>casa</span></p>
+    <p class="kicker" id="kicker"></p>
+    <h1 id="title"></h1>
+    <p class="body" id="body"></p>
+  </div>
+  <div class="hud" id="hud"></div>
+  <div class="bar"><i id="prog"></i></div>
+</div>
+<script>
+const COPY = {
+  it: [
+    ["Per chi vende da privato","Vendi casa tu.","Pubblichi l’annuncio. Gli strumenti restano tuoi. Niente incarico, niente esclusiva."],
+    ["01 · L’annuncio","Lo scrivi tu.","Foto, dati, prezzo richiesto. Un wizard ti guida. Pubblichi quando sei pronto."],
+    ["02 · I dati di zona","Fasce ufficiali, dopo l’accesso.","Le fasce OMI dell’Agenzia delle Entrate per la tua zona. Sono dati di zona, non una perizia di questa casa."],
+    ["03 · Le richieste","Arrivano a te.","Chi è interessato ti scrive. EasyCasa trasporta il messaggio. Non tratta."],
+    ["04 · Le visite","Pubblichi gli slot. Confermi tu.","Il tuo calendario. Loro scelgono. Tu confermi. Come un tavolo al ristorante."],
+    ["05 · I documenti","Checklist, e un badge opzionale.","APE, planimetria, visura: li tieni organizzati. Il badge Proprietario verificato non è un requisito per pubblicare."],
+    ["06 · La dashboard","Vedi come si muove l’annuncio.","Visualizzazioni, salvataggi, richieste. Dati sul tuo annuncio, non un verdetto sul prezzo."],
+    ["easycasaita.com","La casa è la tua.","Pubblica, rispondi, fissa le visite. Il passo successivo lo fai tu."]
+  ],
+  en: [
+    ["For private sellers","You sell the home.","You publish the listing. The tools stay yours. No mandate, no exclusivity."],
+    ["01 · The listing","You write it.","Photos, facts, asking price. A wizard guides you. You publish when you are ready."],
+    ["02 · Zone data","Official ranges, after you sign in.","OMI figures from the Agenzia delle Entrate for your zone. They are zone data, not a valuation of this home."],
+    ["03 · Enquiries","They come to you.","Interested people write to you. EasyCasa carries the message. It does not negotiate."],
+    ["04 · Viewings","You publish the slots. You confirm.","Your calendar. They pick. You confirm. The way you book a table."],
+    ["05 · Documents","A checklist, and an optional badge.","APE, floor plan, visura: you keep them organised. The Verified Owner badge is not a requirement to publish."],
+    ["06 · Dashboard","See how the listing moves.","Views, saves, enquiries. Data on your listing, not a verdict on the price."],
+    ["easycasaita.com","The house is yours.","Publish, reply, set the viewings. You take the next step."]
+  ],
+  es: [
+    ["Para quien vende como particular","Tú vendes la casa.","Tú publicas el anuncio. Las herramientas son tuyas. Sin mandato, sin exclusividad."],
+    ["01 · El anuncio","Lo escribes tú.","Fotos, datos, precio pedido. Un asistente te guía. Publicas cuando estás listo."],
+    ["02 · Datos de zona","Rangos oficiales, tras iniciar sesión.","Las cifras OMI de la Agenzia delle Entrate para tu zona. Son datos de zona, no una tasación de esta casa."],
+    ["03 · Las consultas","Llegan a ti.","Quien está interesado te escribe. EasyCasa transporta el mensaje. No negocia."],
+    ["04 · Las visitas","Publicas los huecos. Confirmas tú.","Tu calendario. Ellos eligen. Tú confirmas. Como reservar una mesa."],
+    ["05 · Los documentos","Lista, y una insignia opcional.","APE, plano, visura: los mantienes organizados. La insignia Propietario verificado no es un requisito para publicar."],
+    ["06 · El panel","Mira cómo se mueve el anuncio.","Vistas, guardados, consultas. Datos de tu anuncio, no un veredicto sobre el precio."],
+    ["easycasaita.com","La casa es tuya.","Publica, responde, fija las visitas. El siguiente paso lo das tú."]
+  ]
+};
+const MS = [8000,10000,10000,10000,10000,10000,10000,9000];
+const q = new URLSearchParams(location.search);
+const lang = COPY[q.get("lang")] ? q.get("lang") : "it";
+const still = q.has("still");
+const start = Math.max(0, Math.min(Number(q.get("scene")||0), 7));
+document.documentElement.lang = lang;
+if (q.has("record")) document.body.classList.add("record");
+const frames = [...document.querySelectorAll(".frame")];
+const kicker = document.getElementById("kicker");
+const title = document.getElementById("title");
+const body = document.getElementById("body");
+const hud = document.getElementById("hud");
+const prog = document.getElementById("prog");
+const copy = COPY[lang];
+let i = start;
+function paint(n){
+  frames.forEach((el, idx) => el.classList.toggle("on", idx === n));
+  kicker.textContent = copy[n][0];
+  title.textContent = copy[n][1];
+  body.textContent = copy[n][2];
+  hud.textContent = (n+1) + " / 8";
+}
+paint(i);
+if (still) {
+  const prior = MS.slice(0, i).reduce((a,b)=>a+b,0);
+  const total = MS.reduce((a,b)=>a+b,0);
+  prog.style.width = ((prior + MS[i]) / total * 100) + "%";
+} else {
+  const t0 = performance.now();
+  const prior0 = MS.slice(0, i).reduce((a,b)=>a+b,0);
+  const total = MS.reduce((a,b)=>a+b,0);
+  let acc = 0;
+  function tick(now){
+    const elapsed = now - t0 - acc;
+    if (elapsed >= MS[i]) {
+      acc += MS[i];
+      if (i >= 7) { prog.style.width = "100%"; return; }
+      i += 1;
+      paint(i);
+    }
+    prog.style.width = ((prior0 + (now - t0)) / total * 100) + "%";
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+</script>
+</body>
+</html>

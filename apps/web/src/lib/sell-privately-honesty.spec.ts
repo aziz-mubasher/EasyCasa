@@ -8,6 +8,14 @@ import { describe, expect, it } from 'vitest';
 import enMessages from '../../messages/en.json';
 import esMessages from '../../messages/es.json';
 import itMessages from '../../messages/it.json';
+import { existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import {
+  SELLER_INTRO_FRAME_FILES,
+  SELLER_INTRO_FRAMES,
+  sellerIntroFullscreenSrc,
+} from '../components/services/seller-intro-film';
 import {
   getSellPrivatelyBenefits,
   getSellPrivatelyLedger,
@@ -17,6 +25,8 @@ import {
   showSavingsFallback,
   showSavingsFigures,
 } from './sell-privately';
+
+const publicFilm = join(dirname(fileURLToPath(import.meta.url)), '../../public/vendi-da-privato/film');
 
 const LOCALES = {
   it: itMessages as unknown as AbstractIntlMessages,
@@ -40,6 +50,16 @@ function collectRenderedStrings(locale: keyof typeof LOCALES): string[] {
     t('hero.lead'),
     t('hero.ctaPrimary'),
     t('hero.ctaSecondary'),
+    t('hero.ctaFilm'),
+    t('film.kicker'),
+    t('film.title'),
+    t('film.play'),
+    t('film.pause'),
+    t('film.replay'),
+    t('film.skip'),
+    t('film.fullscreen'),
+    t('film.closeFullscreen'),
+    t('film.iframeTitle'),
     t('how.kicker'),
     t('how.title'),
     t('benefits.kicker'),
@@ -67,6 +87,9 @@ function collectRenderedStrings(locale: keyof typeof LOCALES): string[] {
   }
   for (const item of t.raw('faq.items') as Array<{ q: string; a: string }>) {
     out.push(item.q, item.a);
+  }
+  for (const scene of t.raw('film.scenes') as Array<{ kicker: string; title: string; body: string }>) {
+    out.push(scene.kicker, scene.title, scene.body);
   }
   if (showSavingsFigures(ledger) || showSavingsFallback(ledger)) {
     out.push(t('savings.kicker'), t('savings.title'), t('savings.neutralTitle'), t('savings.neutralBody'));
@@ -113,4 +136,33 @@ describe('EC-S-34 sell-privately honesty', () => {
       }
     },
   );
+
+  it('ships an 8-scene seller intro film with frames on disk', () => {
+    expect(SELLER_INTRO_FRAMES).toHaveLength(8);
+    for (const locale of Object.keys(LOCALES) as Array<keyof typeof LOCALES>) {
+      const t = createTranslator({ locale, messages: LOCALES[locale], namespace: 'sellPrivately' });
+      expect((t.raw('film.scenes') as unknown[]).length).toBe(8);
+    }
+    for (const file of SELLER_INTRO_FRAME_FILES) {
+      expect(existsSync(join(publicFilm, file)), file).toBe(true);
+    }
+  });
+
+  it('opens the 16:9 intro.html master in the locale of the page', () => {
+    expect(sellerIntroFullscreenSrc('it')).toBe('/vendi-da-privato/film/intro.html?lang=it&record=1');
+    expect(sellerIntroFullscreenSrc('en')).toBe('/vendi-da-privato/film/intro.html?lang=en&record=1');
+    expect(sellerIntroFullscreenSrc('es')).toBe('/vendi-da-privato/film/intro.html?lang=es&record=1');
+    expect(sellerIntroFullscreenSrc('de')).toBe('/vendi-da-privato/film/intro.html?lang=it&record=1');
+  });
+
+  it('keeps OMI as zone data after sign-in and VO off the publish gate', () => {
+    for (const locale of Object.keys(LOCALES) as Array<keyof typeof LOCALES>) {
+      const t = createTranslator({ locale, messages: LOCALES[locale], namespace: 'sellPrivately' });
+      const scenes = t.raw('film.scenes') as Array<{ title: string; body: string }>;
+      const hay = scenes.map((s) => `${s.title} ${s.body}`).join(' ');
+      expect(hay.toLowerCase()).toMatch(/sign in|accedi|iniciar sesi[oó]n|dopo l|after you|tras iniciar/);
+      expect(hay.toLowerCase()).toMatch(/not a requirement|non è un requisito|no es un requisito/);
+      expect(hay).not.toMatch(/Banks4All|acquirente verificato|verified buyer/i);
+    }
+  });
 });
