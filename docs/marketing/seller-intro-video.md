@@ -30,10 +30,9 @@ The live seller journey, phrased as things the seller does (T04 engineering rule
 
 See `sellPrivately.intro.transcript` in `apps/web/messages/it.json`.
 
-## Feedback we need
+## Script brief for Claude (v1.1)
 
-1. Length — keep ~90s or cut to 45s?  
-2. Voice — Isabella neural is a stand-in; record a human VO?  
-3. Picture — branded slides vs. live product screen-capture?  
-4. EN/ES — same Italian film, or local voiceovers?  
-5. Hosting — keep the MP4 in the web image, or move to Bunny/YouTube after sign-off?
+v0 was cut from marketing copy. The website path is different (7-step wizard, OMI after publish, photo URLs, P4 still coming).
+
+**Claude: write the next script from** `docs/marketing/seller-intro-video-script-brief.md`.  
+Cursor will film v1.1 from that script. Do not invent screens.
