@@ -15,3 +15,11 @@ export const BUYER_INTRO_FRAME_FILES = BUYER_INTRO_FRAMES.map((f) =>
 );
 
 export const BUYER_INTRO_TOTAL_MS = BUYER_INTRO_FRAMES.reduce((sum, frame) => sum + frame.ms, 0);
+
+const FILM_LANGS = new Set(['it', 'en', 'es']);
+
+/** Fullscreen 16:9 master served from `public/for-buyers/film/intro.html`. */
+export function buyerIntroFullscreenSrc(locale: string): string {
+  const lang = FILM_LANGS.has(locale) ? locale : 'it';
+  return `/for-buyers/film/intro.html?lang=${lang}&record=1`;
+}

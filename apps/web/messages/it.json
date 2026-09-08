@@ -2618,6 +2618,9 @@
       "pause": "Pausa",
       "replay": "Rivedi",
       "skip": "Leggi i passi",
+      "fullscreen": "Schermo intero",
+      "closeFullscreen": "Chiudi",
+      "iframeTitle": "Intro EasyCasa per acquirenti — come funziona l’acquisto",
       "sceneOf": "Scena {n} di {total}",
       "scenes": [
         {

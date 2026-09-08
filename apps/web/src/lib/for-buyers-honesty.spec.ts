@@ -12,6 +12,7 @@ import { describe, expect, it } from 'vitest';
 import {
   BUYER_INTRO_FRAME_FILES,
   BUYER_INTRO_FRAMES,
+  buyerIntroFullscreenSrc,
 } from '../components/services/buyer-intro-film';
 
 const locales = ['it', 'en', 'es'] as const;
@@ -24,7 +25,11 @@ type ForBuyers = {
   hero: Record<string, string>;
   how: { steps: Array<{ title: string; body: string }> };
   compare: { private: string; agency: string; rows: Array<{ label: string; private: string; agency: string }> };
-  film: { scenes: Array<{ kicker: string; title: string; body: string }> };
+  film: {
+    fullscreen: string;
+    closeFullscreen: string;
+    scenes: Array<{ kicker: string; title: string; body: string }>;
+  };
 };
 
 function load(locale: (typeof locales)[number]) {
@@ -129,6 +134,18 @@ describe('forBuyers honesty (EC-B-08)', () => {
     }
     for (const file of BUYER_INTRO_FRAME_FILES) {
       expect(existsSync(join(publicFilm, file)), file).toBe(true);
+    }
+  });
+
+  it('opens the 16:9 intro.html master in the locale of the page', () => {
+    expect(buyerIntroFullscreenSrc('it')).toBe('/for-buyers/film/intro.html?lang=it&record=1');
+    expect(buyerIntroFullscreenSrc('en')).toBe('/for-buyers/film/intro.html?lang=en&record=1');
+    expect(buyerIntroFullscreenSrc('es')).toBe('/for-buyers/film/intro.html?lang=es&record=1');
+    expect(buyerIntroFullscreenSrc('de')).toBe('/for-buyers/film/intro.html?lang=it&record=1');
+    for (const locale of locales) {
+      const film = load(locale).forBuyers.film;
+      expect(film.fullscreen.length).toBeGreaterThan(0);
+      expect(film.closeFullscreen.length).toBeGreaterThan(0);
     }
   });
 });

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
@@ -27,6 +28,7 @@ type CompareRow = {
 
 export function ForBuyersPage() {
   const t = useTranslations('forBuyers');
+  const [filmOpen, setFilmOpen] = useState(false);
   const pillars = t.raw('pillars') as Pillar[];
   const trust = t.raw('trust.items') as TrustItem[];
   const steps = t.raw('how.steps') as Step[];
@@ -47,9 +49,9 @@ export function ForBuyersPage() {
             <Link className="fb-btn fb-btn--primary" href="/search">
               {t('hero.ctaPrimary')}
             </Link>
-            <a className="fb-btn fb-btn--ghost" href="#intro">
+            <button type="button" className="fb-btn fb-btn--ghost" onClick={() => setFilmOpen(true)}>
               {t('hero.ctaSecondary')}
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -58,7 +60,7 @@ export function ForBuyersPage() {
         <div className="fb-wrap">
           <p className="fb-kicker fb-kicker--ink">{t('film.kicker')}</p>
           <h2>{t('film.title')}</h2>
-          <BuyerIntroFilm />
+          <BuyerIntroFilm fullscreenOpen={filmOpen} onFullscreenOpenChange={setFilmOpen} />
         </div>
       </section>
 
