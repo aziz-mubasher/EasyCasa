@@ -72,4 +72,19 @@ jobs:
         with:
           node-version: 20
       - run: npm i -g @lhci/cli
-      - run: lhci autorun --config=lighthouserc.json
+      # Remote collect against production flakes as NO_FCP / PROTOCOL_TIMEOUT
+      # on GitHub-hosted Chrome (small /dev/shm, CDP hang). Retry that once;
+      # assertion failures still fail the job.
+      - name: Lighthouse CI against production
+        run: |
+          set -o pipefail
+          log="$(mktemp)"
+          if lhci autorun --config=lighthouserc.json 2>&1 | tee "$log"; then
+            exit 0
+          fi
+          if grep -Eq 'NO_FCP|PROTOCOL_TIMEOUT' "$log"; then
+            echo "::warning::LHCI collect flake (NO_FCP/PROTOCOL_TIMEOUT); retrying once"
+            lhci autorun --config=lighthouserc.json
+          else
+            exit 1
+          fi
