@@ -35,6 +35,10 @@ describe('whatsapp inbound format', () => {
     expect(PAGE).toContain('ecwa__thread-scroll');
     expect(PAGE).toContain('ecwa__list-body');
     expect(PAGE).toContain('WhatsAppOperatorDock');
+    expect(PAGE).toContain('composeWhatsAppAi');
+    expect(PAGE).toContain('translateWhatsAppAi');
+    expect(PAGE).toContain('Simple English');
+    expect(PAGE).not.toContain('autoSend: true');
   });
 
   it('locks the WhatsApp view to the viewport so only list and thread panes scroll', () => {
@@ -43,6 +47,8 @@ describe('whatsapp inbound format', () => {
     expect(CSS).toMatch(/\.ecwa__thread-scroll\s*\{[^}]*overflow-y:\s*auto/s);
     expect(CSS).toMatch(/\.ecwa__list-body\s*\{[^}]*overflow-y:\s*auto/s);
     expect(CSS).toMatch(/\.ecwa__dock\s*\{[^}]*flex:\s*0 0 auto/s);
+    expect(CSS).toContain('.ecwa__ai');
+    expect(CSS).toContain('.ecwa__en-translation');
     expect(CSS).toMatch(/\.shell--wa\s*\{[^}]*overflow:\s*hidden/s);
   });
 

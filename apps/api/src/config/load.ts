@@ -68,6 +68,13 @@ const Schema = z
     /** Display-only E.164 for the EC number. Empty → Hub hides it. Never reuse B4A's number. */
     WHATSAPP_BUSINESS_NUMBER: z.string().default(''),
     PHONE_OTP_PEPPER: z.string().min(16).default('dev-phone-otp-pepper-change-me'),
+    /**
+     * K EC 7.3 — Claude operator assist on #whatsapp (draft + inbound EN translate).
+     * Empty key → feature off (503). Never auto-sends. Not a Nest boot secret.
+     */
+    ANTHROPIC_API_KEY: z.string().default(''),
+    ANTHROPIC_MODEL: z.string().default('claude-sonnet-4-5'),
+    ANTHROPIC_BASE_URL: z.string().default('https://api.anthropic.com'),
 
     // Billing (Stripe — hosted checkout, no card data on our servers)
     STRIPE_SECRET_KEY: z.string().default(''),

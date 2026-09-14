@@ -3,6 +3,9 @@ import { Global, Module } from '@nestjs/common';
 import { AuthorityModule } from '../authority/authority.module';
 import { UsersModule } from '../users/users.module';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
+import { WhatsAppAiController } from './whatsapp-ai.controller';
+import { WhatsAppAiService } from './whatsapp-ai.service';
+import { WhatsAppClaudeClient } from './whatsapp-claude.client';
 import { WhatsAppHubController } from './whatsapp-hub.controller';
 import { WhatsAppHubService } from './whatsapp-hub.service';
 import { WhatsAppInboundAdminController } from './whatsapp-inbound-admin.controller';
@@ -14,13 +17,20 @@ import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppUnmatchedSendersGauge } from './whatsapp-unmatched-senders.gauge';
 import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
 
-/** K EC 7.1 + EC-16 + EC-17 inbound + EC-19 viewer + K EC 7.4 channel / Hub. */
+/** K EC 7.1 + EC-16 + EC-17 inbound + EC-19 viewer + K EC 7.4 channel / Hub + K EC 7.3 Claude assist. */
 @Global()
 @Module({
   imports: [AuthorityModule, UsersModule],
-  controllers: [WhatsAppWebhookController, WhatsAppInboundAdminController, WhatsAppHubController],
+  controllers: [
+    WhatsAppWebhookController,
+    WhatsAppInboundAdminController,
+    WhatsAppAiController,
+    WhatsAppHubController,
+  ],
   providers: [
     WhatsAppCloudClient,
+    WhatsAppClaudeClient,
+    WhatsAppAiService,
     WhatsAppMessagesStore,
     WhatsAppInboundService,
     WhatsAppInboundAdminService,

@@ -39,6 +39,29 @@ const SummarySchema = z.object({
   lastReceivedAt: z.string().nullable(),
 });
 
+const AiStatusSchema = z.object({
+  configured: z.boolean(),
+  model: z.string(),
+  autoSend: z.boolean().optional(),
+});
+
+const AiComposeSchema = z.object({
+  refused: z.boolean(),
+  draft: z.string().nullable(),
+  reason: z.string().nullable(),
+  locale: z.string(),
+  model: z.string(),
+});
+
+const AiTranslateSchema = z.object({
+  isEnglish: z.boolean(),
+  detectedLanguage: z.string(),
+  translation: z.string(),
+  model: z.string(),
+});
+
+type InboundTranslation = z.infer<typeof AiTranslateSchema>;
+
 const TimelineItemSchema = z.object({
   direction: z.enum(['inbound', 'outbound']),
   id: z.string(),
@@ -127,6 +150,9 @@ export function WhatsAppInbound() {
   const [windowFilter, setWindowFilter] = useState<'all' | 'open' | 'closed'>('all');
   const [replyText, setReplyText] = useState('');
   const [replyError, setReplyError] = useState<string | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [translations, setTranslations] = useState<Record<string, InboundTranslation>>({});
+  const [translatingId, setTranslatingId] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
   const [notesOpen, setNotesOpen] = useState(false);
   const threadScrollRef = useRef<HTMLDivElement>(null);
@@ -143,6 +169,8 @@ export function WhatsAppInbound() {
   useEffect(() => {
     setReplyText('');
     setReplyError(null);
+    setAiError(null);
+    setTranslations({});
     setNoteText('');
     setNotesOpen(false);
     stickToBottom.current = true;
@@ -237,6 +265,61 @@ export function WhatsAppInbound() {
     },
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['wa-inbound', selectedHandle, 'messages'] });
+    },
+  });
+
+  const aiStatus = useQuery({
+    queryKey: ['wa-ai-status'],
+    queryFn: async () => AiStatusSchema.parse(await api.getWhatsAppAiStatus()),
+    staleTime: 60_000,
+  });
+
+  const composeAi = useMutation({
+    mutationFn: async (input: { prompt: string; locale: string }) => {
+      if (!selectedHandle) throw new Error('no handle');
+      return AiComposeSchema.parse(
+        await api.composeWhatsAppAi(selectedHandle, {
+          prompt: input.prompt,
+          locale: input.locale,
+          includeThread: true,
+        }),
+      );
+    },
+    onSuccess: (data) => {
+      if (data.refused || !data.draft) {
+        setAiError(data.reason || 'Claude refused this draft (T04 / reserved activity).');
+        return;
+      }
+      setAiError(null);
+      setReplyText(data.draft);
+    },
+    onError: (err: unknown) => {
+      setAiError(err instanceof Error ? err.message : 'Claude draft failed');
+    },
+  });
+
+  const translateAi = useMutation({
+    mutationFn: async (input: { messageId?: string; text?: string; cacheKey: string }) => {
+      if (!selectedHandle) throw new Error('no handle');
+      setTranslatingId(input.cacheKey);
+      return {
+        cacheKey: input.cacheKey,
+        result: AiTranslateSchema.parse(
+          await api.translateWhatsAppAi(selectedHandle, {
+            messageId: input.messageId,
+            text: input.text,
+          }),
+        ),
+      };
+    },
+    onSuccess: ({ cacheKey, result }) => {
+      setAiError(null);
+      setTranslations((prev) => ({ ...prev, [cacheKey]: result }));
+      setTranslatingId(null);
+    },
+    onError: (err: unknown) => {
+      setTranslatingId(null);
+      setAiError(err instanceof Error ? err.message : 'Translate failed');
     },
   });
 
@@ -488,7 +571,10 @@ export function WhatsAppInbound() {
                 ) : null}
 
                 <ul className="wa-messages ecwa__bubbles">
-                  {messages.map((m) => (
+                  {messages.map((m) => {
+                    const translation = translations[m.id];
+                    const canTranslate = m.direction === 'inbound' && Boolean(m.body?.trim());
+                    return (
                     <li
                       key={m.id}
                       className={`wa-message ecwa__bubble${
@@ -498,11 +584,44 @@ export function WhatsAppInbound() {
                       <div className="wa-message__body">
                         {m.body ?? <span className="muted">({m.messageType})</span>}
                       </div>
+                      {canTranslate ? (
+                        <div className="ecwa__bubble-ai">
+                          {translation ? (
+                            <p className="ecwa__en-translation">
+                              <span className="ecwa__en-label">
+                                EN
+                                {translation.detectedLanguage !== 'en'
+                                  ? ` · ${translation.detectedLanguage}`
+                                  : translation.isEnglish
+                                    ? ' · already English'
+                                    : ''}
+                              </span>
+                              {translation.translation}
+                            </p>
+                          ) : (
+                            <button
+                              type="button"
+                              className="ecwa__translate"
+                              disabled={!aiStatus.data?.configured || translatingId === m.id}
+                              onClick={() =>
+                                translateAi.mutate({
+                                  messageId: m.id,
+                                  text: m.body ?? undefined,
+                                  cacheKey: m.id,
+                                })
+                              }
+                            >
+                              {translatingId === m.id ? 'Translating…' : 'Simple English'}
+                            </button>
+                          )}
+                        </div>
+                      ) : null}
                       <time className="wa-message__time mono tabular-nums" dateTime={m.at}>
                         {formatClock(m.at)}
                       </time>
                     </li>
-                  ))}
+                    );
+                  })}
                 </ul>
               </div>
 
@@ -552,8 +671,26 @@ export function WhatsAppInbound() {
                 formName={head?.crmFullName}
                 whatsappName={head?.contactName ?? selectedThread?.contactName}
                 customCanned={canned.data?.items ?? []}
+                aiEnabled={Boolean(aiStatus.data?.configured)}
+                aiBusy={composeAi.isPending || translateAi.isPending}
+                aiError={aiError}
                 onReplyText={setReplyText}
                 onSend={sendReply}
+                onCompose={(prompt, locale) => composeAi.mutate({ prompt, locale })}
+                onTranslateLatest={() => {
+                  const latest = [...messages]
+                    .reverse()
+                    .find((m) => m.direction === 'inbound' && m.body?.trim());
+                  if (!latest?.body) {
+                    setAiError('No inbound text to translate');
+                    return;
+                  }
+                  translateAi.mutate({
+                    messageId: latest.id,
+                    text: latest.body,
+                    cacheKey: latest.id,
+                  });
+                }}
               />
             </>
           )}

@@ -44,7 +44,7 @@ NestJS WhatsAppService
 | **C** | Utility templates + wire viewing/enquiry notifiers | A | Done (`#67`) |
 | **EC-16** | Meta template pack (human) + `whatsapp_messages` + no-show metrics | C | This work (`#68`) |
 | **D** | Admin Support queue (`support` role) | EC-14 Part 2 (done) | **Partial:** EC-19 read-only inbound viewer. Reply = EC-20. Full queue still deferred |
-| **E** | AI triage → queue drafts (no autonomous send) | A, D | Deferred |
+| **E** | AI triage → queue drafts (no autonomous send) | A, D | **Partial:** operator Claude compose + inbound EN translate on `#whatsapp` (human send only). Full triage still deferred |
 | **F** | Grounded assistant | E + real conversation data | Deferred |
 
 ## Phase C acceptance
@@ -63,6 +63,18 @@ NestJS WhatsAppService
 - Auth + Utility templates only — **no marketing templates**.
 - AI never auto-sends; never answers privacy/DSAR, complaints, listing reports, or mediation advice.
 - AI is an audited API actor (EC-11 gates), not a DB process.
+
+## Phase E — operator Claude assist (K EC 7.3)
+
+Desk-only. T04 rows **5** (transport) and **12** (no negotiation advice). Rows 10–11 stay refused in prompt + post-filter.
+
+1. **Draft** — operator writes a prompt (usually English) and picks IT / EN / ES / FR / DE / PT / UR / HI / PA / AR. `POST /admin/whatsapp/ai/:handle/compose` asks Claude for a WhatsApp-length reply. The draft lands in the composer. A human still taps **Send**.
+2. **Translate** — inbound bubbles get **Simple English**. `POST /admin/whatsapp/ai/:handle/translate` returns plain English plus a detected language code. Already-English text is labelled, not re-authored unless Claude simplifies it.
+3. **Off switch** — empty `ANTHROPIC_API_KEY` → Connection tab shows off; compose/translate return 503. Demo mode also disables Claude.
+4. **Audit** — `whatsapp_ai_compose` / `whatsapp_ai_translate` (no message bodies in the reason).
+5. **Never** auto-reply, never send, never emit `sanabilità` / proposta / caparra / % of sale.
+
+Ops: set `ANTHROPIC_API_KEY` on the API env (same `.env` as Nest). Rebuild/restart **api** only — admin is a static SPA already calling the new routes.
 
 ## What to measure (Phase C+)
 

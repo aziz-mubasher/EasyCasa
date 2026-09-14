@@ -9,6 +9,7 @@ import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { waCannedReplies, waInboundMessages } from '../db/schema';
 import { whatsappInboundSignatureRejected } from '../observability/metrics';
+import { WhatsAppClaudeClient } from './whatsapp-claude.client';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
 import { WhatsAppMessagesStore } from './whatsapp-messages.store';
 
@@ -21,6 +22,7 @@ export class WhatsAppHubService {
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly cloud: WhatsAppCloudClient,
+    private readonly claude: WhatsAppClaudeClient,
     private readonly messages: WhatsAppMessagesStore,
     @InjectConfig() private readonly config: ApiConfig,
   ) {}
@@ -46,6 +48,8 @@ export class WhatsAppHubService {
       appSecretSet: Boolean(this.config.WHATSAPP_APP_SECRET.trim()),
       verifyTokenSet: Boolean(this.config.WHATSAPP_VERIFY_TOKEN.trim()),
       handleSecretSet: Boolean(this.config.WA_HANDLE_SECRET.trim()),
+      claudeConfigured: this.claude.configured,
+      claudeModel: this.claude.model,
       publicWebhookPath: '/whatsapp/webhook',
       publicWebhookStatusPath: '/whatsapp/webhook/status',
       businessNumber: this.config.WHATSAPP_BUSINESS_NUMBER.trim() || null,
@@ -57,6 +61,7 @@ export class WhatsAppHubService {
         'EasyCasa uses its own WABA and phone — do not share Banks4All’s portfolio.',
         'Session text inside 24h; utility templates outside 24h. No marketing templates.',
         'API Hub is this admin console, not a second Meta callback.',
+        'Claude drafts replies in the selected language and translates inbound to simple English. A human always sends.',
       ],
     };
   }

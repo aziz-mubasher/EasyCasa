@@ -51,6 +51,9 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WHATSAPP_PUBLIC_SITE_URL | api | K EC 7.4 session CTA for leftover `open_listings` taps (default `https://easycasaita.com`). Easy Legenda uses `https://legenda.easycasaita.com`. Not a secret. |
 | WHATSAPP_BUSINESS_NUMBER | api | Optional E.164 display on the Hub Connection tab. Empty hides it. **Never** the Banks4All number. |
 | PHONE_OTP_PEPPER | api | SHA-256 pepper for OTP hashes (min 16 chars). |
+| ANTHROPIC_API_KEY | api | K EC 7.3 — Claude Messages API for `#whatsapp` drafts + inbound simple-English translate. Empty → feature off (503). **Never auto-sends.** Not a Nest boot secret. |
+| ANTHROPIC_MODEL | api | Default `claude-sonnet-4-5`. Override only if Anthropic retires the alias. |
+| ANTHROPIC_BASE_URL | api | Default `https://api.anthropic.com`. |
 
 ### WhatsApp Nest secrets (ops preflight — six)
 

@@ -221,6 +221,7 @@ Response: `{ fullyErased: boolean, outcomes[] }`.
 | **Redis** | Cache/queues | Possibly session/cache payloads | N/A | VPS |
 | **Stripe** | Payments (if enabled) | Billing identifiers | **UNKNOWN** | Likely non-EU SCCs — **confirm** |
 | **OpenAI** (optional AI) | Embeddings/chat if `EMBEDDING_PROVIDER=openai` / `CHAT_PROVIDER=openai`; **EC-23 aste extract** (`CHAT_MODEL`, default `gpt-4o-mini`) and aste embeddings when openai provider enabled | Listing text; user queries; **auction document page text** (no person-name fields in schema) | **UNKNOWN** | **UNKNOWN** — LGL-1 Q-A6 |
+| **Anthropic** (optional WhatsApp desk) | K EC 7.3 — Claude Messages API when `ANTHROPIC_API_KEY` is set. Staff-triggered compose/translate only; **never auto-sends** | Operator prompt + recent WhatsApp thread snippets the staff member already opened | **UNKNOWN** | **UNKNOWN** — DPA / region to confirm before production key |
 
 ---
 

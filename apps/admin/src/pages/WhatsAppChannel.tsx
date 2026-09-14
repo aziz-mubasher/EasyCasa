@@ -36,6 +36,8 @@ const ConnectionSchema = z.object({
   lastInboundAt: z.string().nullable(),
   signatureRejectedTotal: z.number(),
   ownWaba: z.boolean(),
+  claudeConfigured: z.boolean().optional(),
+  claudeModel: z.string().optional(),
   notes: z.array(z.string()),
 });
 
@@ -138,6 +140,14 @@ function ConnectionTab() {
             <div>
               <dt>Own WABA</dt>
               <dd>{d.ownWaba ? 'yes — do not share Banks4All’s portfolio' : 'no'}</dd>
+            </div>
+            <div>
+              <dt>Claude drafts</dt>
+              <dd className="mono">
+                {d.claudeConfigured
+                  ? `ready · ${d.claudeModel ?? 'claude-sonnet-4-5'} · human send only`
+                  : 'off — set ANTHROPIC_API_KEY'}
+              </dd>
             </div>
           </dl>
           <ul className="ecwa-hub__notes">
