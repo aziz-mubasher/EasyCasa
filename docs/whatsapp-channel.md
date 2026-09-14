@@ -37,7 +37,10 @@ API Hub is **not** a microservice. Staff call `/admin/whatsapp/hub/*`. Meta call
 6. Operator Hub: connection (no secrets), templates catalog, canned replies, analytics.
    Inbox reply dock is **pinned** to the bottom of `#whatsapp/`. One-tap session
    templates in **IT / EN / ES / UR / HI** (insert or send). Custom canned may use
-   the same five locales. Still session-window only — not Meta marketing templates.
+   the same five locales. Claude drafts (K EC 7.3) use the full ice-breaker set
+   (IT EN ES FR DE PT UR HI PA AR) and never send — operator reviews, then Send.
+   Inbound **Simple English** is on-demand translate. Still session-window only —
+   not Meta marketing templates.
 7. Health: `GET /whatsapp/webhook/status` (no secrets; signature-reject counter).
 
 ## What we did not copy

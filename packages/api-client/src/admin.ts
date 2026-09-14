@@ -392,6 +392,29 @@ export class EasyCasaAdminApi {
       { method: 'POST', body: JSON.stringify({ body }) },
     );
   }
+  getWhatsAppAiStatus(): Promise<unknown> {
+    return this.request('/admin/whatsapp/ai/status', z.unknown());
+  }
+  composeWhatsAppAi(
+    handle: string,
+    body: { prompt: string; locale?: string; includeThread?: boolean },
+  ): Promise<unknown> {
+    return this.request(
+      `/admin/whatsapp/ai/${encodeURIComponent(handle)}/compose`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify(body) },
+    );
+  }
+  translateWhatsAppAi(
+    handle: string,
+    body: { text?: string; messageId?: string },
+  ): Promise<unknown> {
+    return this.request(
+      `/admin/whatsapp/ai/${encodeURIComponent(handle)}/translate`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify(body) },
+    );
+  }
   listWhatsAppNotes(handle: string): Promise<unknown> {
     return this.request(
       `/admin/whatsapp/inbound/${encodeURIComponent(handle)}/notes`,

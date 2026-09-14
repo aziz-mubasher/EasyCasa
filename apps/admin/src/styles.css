@@ -898,6 +898,46 @@ select {
   border-color: rgba(61, 154, 122, 0.28);
 }
 
+.ecwa__bubble-ai {
+  margin-top: 0.35rem;
+}
+
+.ecwa__translate {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--azure-pale);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0;
+}
+
+.ecwa__translate:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ecwa__en-translation {
+  margin: 0;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--paper);
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.ecwa__en-label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--azure-pale);
+}
+
 .ecwa__thread-name {
   font-family: var(--font-display);
   font-weight: 560;
@@ -972,6 +1012,32 @@ select {
 .ecwa__tpl-send:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.ecwa__ai {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.4rem 0.5rem;
+  align-items: end;
+  padding: 0.35rem 0 0.15rem;
+  border-top: 1px dashed var(--border);
+}
+
+.ecwa__ai-input {
+  min-height: 2.5rem;
+  border-style: dashed;
+}
+
+.ecwa__ai-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ecwa__ai-hint,
+.ecwa__ai .ecwa__composer-error {
+  grid-column: 1 / -1;
+  margin: 0;
 }
 
 .ecwa__composer {

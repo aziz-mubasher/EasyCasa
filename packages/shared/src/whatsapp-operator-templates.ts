@@ -17,6 +17,36 @@ export const WA_OPERATOR_LOCALE_LABEL: Readonly<Record<WaOperatorLocale, string>
   hi: 'हिन्दी',
 };
 
+/** First-contact ice-breaker set — Claude drafts in any of these. */
+export const WA_AI_LOCALES = ['it', 'en', 'es', 'fr', 'de', 'pt', 'ur', 'hi', 'pa', 'ar'] as const;
+export type WaAiLocale = (typeof WA_AI_LOCALES)[number];
+
+export const WA_AI_LOCALE_LABEL: Readonly<Record<WaAiLocale, string>> = {
+  it: 'Italiano',
+  en: 'English',
+  es: 'Español',
+  fr: 'Français',
+  de: 'Deutsch',
+  pt: 'Português',
+  ur: 'اردو',
+  hi: 'हिन्दी',
+  pa: 'ਪੰਜਾਬੀ',
+  ar: 'العربية',
+};
+
+export const WA_AI_LOCALE_ENGLISH: Readonly<Record<WaAiLocale, string>> = {
+  it: 'Italian',
+  en: 'English',
+  es: 'Spanish',
+  fr: 'French',
+  de: 'German',
+  pt: 'Portuguese',
+  ur: 'Urdu',
+  hi: 'Hindi',
+  pa: 'Punjabi (Gurmukhi)',
+  ar: 'Arabic',
+};
+
 export const WA_OPERATOR_TEMPLATE_IDS = [
   'viewing',
   'search',
@@ -154,9 +184,14 @@ export const WA_OPERATOR_TEMPLATES: readonly WaOperatorTemplate[] = [
 ];
 
 const LOCALE_SET = new Set<string>(WA_OPERATOR_LOCALES);
+const AI_LOCALE_SET = new Set<string>(WA_AI_LOCALES);
 
 export function isWaOperatorLocale(value: string | null | undefined): value is WaOperatorLocale {
   return !!value && LOCALE_SET.has(value);
+}
+
+export function isWaAiLocale(value: string | null | undefined): value is WaAiLocale {
+  return !!value && AI_LOCALE_SET.has(value);
 }
 
 /** Desk default is Italian. Portal extras map to the nearest of the five. */
@@ -166,8 +201,18 @@ export function parseWaOperatorLocale(raw: string | null | undefined): WaOperato
   return 'it';
 }
 
+/** Keep the ice-breaker code when Claude is drafting (pt/fr/de/pa/ar stay themselves). */
+export function parseWaAiLocale(raw: string | null | undefined): WaAiLocale {
+  if (isWaAiLocale(raw)) return raw;
+  return parseWaOperatorLocale(raw);
+}
+
 export function waOperatorTextDirection(locale: WaOperatorLocale): 'ltr' | 'rtl' {
   return locale === 'ur' ? 'rtl' : 'ltr';
+}
+
+export function waAiTextDirection(locale: WaAiLocale): 'ltr' | 'rtl' {
+  return locale === 'ur' || locale === 'ar' ? 'rtl' : 'ltr';
 }
 
 export function waOperatorTemplateBody(

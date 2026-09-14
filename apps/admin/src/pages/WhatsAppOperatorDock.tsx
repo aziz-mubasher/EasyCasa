@@ -1,13 +1,15 @@
 import React from 'react';
 import {
-  WA_OPERATOR_LOCALE_LABEL,
-  WA_OPERATOR_LOCALES,
+  WA_AI_LOCALE_LABEL,
+  WA_AI_LOCALES,
   WA_OPERATOR_TEMPLATES,
+  isWaOperatorLocale,
+  parseWaAiLocale,
   parseWaOperatorLocale,
   resolveCallInviteName,
+  waAiTextDirection,
   waOperatorTemplateBody,
-  waOperatorTextDirection,
-  type WaOperatorLocale,
+  type WaAiLocale,
 } from '@easycasa/shared';
 
 type CustomCanned = {
@@ -26,8 +28,13 @@ export function WhatsAppOperatorDock({
   formName,
   whatsappName,
   customCanned,
+  aiEnabled,
+  aiBusy,
+  aiError,
   onReplyText,
   onSend,
+  onCompose,
+  onTranslateLatest,
 }: {
   replyText: string;
   replyError: string | null;
@@ -37,20 +44,28 @@ export function WhatsAppOperatorDock({
   formName?: string | null;
   whatsappName?: string | null;
   customCanned: CustomCanned[];
+  aiEnabled: boolean;
+  aiBusy: boolean;
+  aiError: string | null;
   onReplyText: (next: string) => void;
   onSend: (body?: string) => void;
+  onCompose: (prompt: string, locale: WaAiLocale) => void;
+  onTranslateLatest: () => void;
 }) {
   const clientName = resolveCallInviteName({ formName, whatsappName });
-  const [locale, setLocale] = React.useState<WaOperatorLocale>(() =>
-    parseWaOperatorLocale(contactLanguage),
-  );
+  const [locale, setLocale] = React.useState<WaAiLocale>(() => parseWaAiLocale(contactLanguage));
+  const [prompt, setPrompt] = React.useState('');
 
   React.useEffect(() => {
-    setLocale(parseWaOperatorLocale(contactLanguage));
+    setLocale(parseWaAiLocale(contactLanguage));
   }, [contactLanguage]);
 
-  const dir = waOperatorTextDirection(locale);
-  const saved = customCanned.filter((c) => parseWaOperatorLocale(c.locale) === locale);
+  const dir = waAiTextDirection(locale);
+  const cannedLocale = isWaOperatorLocale(locale) ? locale : null;
+  const saved = cannedLocale
+    ? customCanned.filter((c) => parseWaOperatorLocale(c.locale) === cannedLocale)
+    : [];
+  const languageName = WA_AI_LOCALE_LABEL[locale];
 
   function insert(body: string) {
     onReplyText(body);
@@ -62,10 +77,16 @@ export function WhatsAppOperatorDock({
     onSend(body);
   }
 
+  function draft() {
+    const next = prompt.trim();
+    if (!next || !aiEnabled || aiBusy) return;
+    onCompose(next, locale);
+  }
+
   return (
     <div className="ecwa__dock">
       <div className="ecwa__dock-langs" role="tablist" aria-label="Reply language">
-        {WA_OPERATOR_LOCALES.map((code) => (
+        {WA_AI_LOCALES.map((code) => (
           <button
             key={code}
             type="button"
@@ -75,18 +96,21 @@ export function WhatsAppOperatorDock({
             onClick={() => setLocale(code)}
           >
             {code.toUpperCase()}
-            <span className="ecwa__chip-label">{WA_OPERATOR_LOCALE_LABEL[code]}</span>
+            <span className="ecwa__chip-label">{WA_AI_LOCALE_LABEL[code]}</span>
           </button>
         ))}
       </div>
       <div className="ecwa__dock-templates" aria-label="Quick replies">
-        {WA_OPERATOR_TEMPLATES.map((t) => {
+        {cannedLocale
+          ? WA_OPERATOR_TEMPLATES.map((t) => {
           const body =
-            t.id === 'call' ? waOperatorTemplateBody('call', locale, { name: clientName }) : t.body[locale];
+            t.id === 'call'
+              ? waOperatorTemplateBody('call', cannedLocale, { name: clientName })
+              : t.body[cannedLocale];
           return (
             <TemplateChip
               key={t.id}
-              title={t.title[locale]}
+              title={t.title[cannedLocale]}
               body={body}
               canReply={canReply}
               sending={sending}
@@ -94,7 +118,8 @@ export function WhatsAppOperatorDock({
               onSend={sendTemplate}
             />
           );
-        })}
+        })
+          : null}
         {saved.map((c) => (
           <TemplateChip
             key={c.id}
@@ -107,6 +132,59 @@ export function WhatsAppOperatorDock({
           />
         ))}
       </div>
+      <form
+        className="ecwa__ai"
+        onSubmit={(e) => {
+          e.preventDefault();
+          draft();
+        }}
+      >
+        <label className="ec-sr-only" htmlFor="ecwa-ai-prompt">
+          Claude prompt
+        </label>
+        <textarea
+          id="ecwa-ai-prompt"
+          className="ecwa__composer-input ecwa__ai-input"
+          rows={2}
+          maxLength={2000}
+          placeholder={
+            aiEnabled
+              ? `Describe the reply in English — Claude writes it in ${languageName}`
+              : 'Claude unavailable — set ANTHROPIC_API_KEY on the API'
+          }
+          value={prompt}
+          disabled={!aiEnabled || aiBusy}
+          onChange={(e) => setPrompt(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              draft();
+            }
+          }}
+        />
+        <div className="ecwa__ai-actions">
+          <button
+            type="submit"
+            className="btn btn--sm"
+            disabled={!aiEnabled || aiBusy || !prompt.trim()}
+          >
+            {aiBusy ? 'Drafting…' : `Draft in ${languageName}`}
+          </button>
+          <button
+            type="button"
+            className="btn btn--sm"
+            disabled={!aiEnabled || aiBusy}
+            onClick={onTranslateLatest}
+          >
+            Latest → EN
+          </button>
+        </div>
+        {aiError ? <p className="error ecwa__composer-error">{aiError}</p> : null}
+        <p className="muted ecwa__ai-hint">
+          Review the draft, then Send. Claude never sends on its own. No offers, caparra, or price
+          advice.
+        </p>
+      </form>
       <form
         className="ecwa__composer"
         onSubmit={(e) => {

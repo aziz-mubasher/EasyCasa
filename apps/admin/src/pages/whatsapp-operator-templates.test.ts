@@ -4,9 +4,12 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
+  WA_AI_LOCALES,
   WA_OPERATOR_LOCALES,
   WA_OPERATOR_TEMPLATES,
+  parseWaAiLocale,
   parseWaOperatorLocale,
+  waAiTextDirection,
   waOperatorTemplateBody,
   waOperatorTextDirection,
 } from '@easycasa/shared';
@@ -24,6 +27,15 @@ describe('WhatsApp operator templates', () => {
     expect(parseWaOperatorLocale('pt')).toBe('es');
     expect(waOperatorTextDirection('ur')).toBe('rtl');
     expect(waOperatorTextDirection('hi')).toBe('ltr');
+  });
+
+  it('Claude drafts keep the ten ice-breaker locales', () => {
+    expect([...WA_AI_LOCALES]).toEqual(['it', 'en', 'es', 'fr', 'de', 'pt', 'ur', 'hi', 'pa', 'ar']);
+    expect(parseWaAiLocale('pt')).toBe('pt');
+    expect(parseWaAiLocale('ar')).toBe('ar');
+    expect(parseWaAiLocale('xx')).toBe('it');
+    expect(waAiTextDirection('ar')).toBe('rtl');
+    expect(waAiTextDirection('pa')).toBe('ltr');
   });
 
   it('has a body in every locale and stays T04-safe', () => {
@@ -53,5 +65,9 @@ describe('WhatsApp operator templates', () => {
     expect(DOCK).toContain('onInsert');
     expect(DOCK).toContain('resolveCallInviteName');
     expect(DOCK).toContain('formName');
+    expect(DOCK).toContain('onCompose');
+    expect(DOCK).toContain('Draft in ${languageName}');
+    expect(DOCK).toContain('Latest → EN');
+    expect(DOCK).toContain('Claude never sends');
   });
 });

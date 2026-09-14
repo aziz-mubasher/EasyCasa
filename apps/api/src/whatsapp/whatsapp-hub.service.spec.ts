@@ -8,6 +8,7 @@ describe('WhatsAppHubService.templatesCatalog', () => {
     const hub = new WhatsAppHubService(
       { select: vi.fn() } as never,
       { configured: true } as never,
+      { configured: false, model: 'claude-sonnet-4-5' } as never,
       { measurementSummary: vi.fn() } as never,
       {
         WHATSAPP_OTP_TEMPLATE: 'easycasa_otp',
@@ -53,6 +54,7 @@ describe('WhatsAppHubService.createCanned locales', () => {
         }),
       } as never,
       { configured: true } as never,
+      { configured: false, model: 'claude-sonnet-4-5' } as never,
       { measurementSummary: vi.fn() } as never,
       {} as never,
     );

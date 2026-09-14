@@ -57,4 +57,11 @@ describe('loadApiConfig', () => {
     expect(cfg.EMAIL_PROVIDER_URL).toBe('');
     expect(cfg.REDIS_URL).toBe('');
   });
+
+  it('keeps Claude optional at boot (K EC 7.3 desk assist)', () => {
+    const cfg = loadApiConfig({ ...base, ALLOW_PROVIDER_STUBS: 'true', EC_TEST_AUTH: 'true' });
+    expect(cfg.ANTHROPIC_API_KEY).toBe('');
+    expect(cfg.ANTHROPIC_MODEL).toBe('claude-sonnet-4-5');
+    expect(cfg.ANTHROPIC_BASE_URL).toBe('https://api.anthropic.com');
+  });
 });
