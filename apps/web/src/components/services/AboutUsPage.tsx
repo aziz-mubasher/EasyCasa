@@ -1,7 +1,8 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { contactPath, localizeSiteHref } from '@/lib/site-paths';
 import './about-us.css';
 
 type Pillar = { num: string; title: string; body: string };
@@ -10,6 +11,7 @@ type ExploreCol = { title: string; links: ExploreLink[] };
 
 export function AboutUsPage() {
   const t = useTranslations('aboutUs');
+  const locale = useLocale();
   const pillars = t.raw('pillars') as Pillar[];
   const explore = t.raw('explore.cols') as ExploreCol[];
 
@@ -20,6 +22,7 @@ export function AboutUsPage() {
           <p className="au-kicker">{t('hero.kicker')}</p>
           <h1>{t('hero.title')}</h1>
           <p className="au-lede">{t('hero.lede')}</p>
+          <p className="au-status">{t('hero.status')}</p>
         </header>
 
         <section className="au-section" aria-labelledby="au-how-title">
@@ -35,6 +38,7 @@ export function AboutUsPage() {
               </article>
             ))}
           </div>
+          <p className="au-close">{t('hero.close')}</p>
         </section>
 
         <section className="au-section" aria-labelledby="au-explore-title">
@@ -48,13 +52,14 @@ export function AboutUsPage() {
                 <ul>
                   {col.links.map((link) => (
                     <li key={link.href + link.label}>
-                      <Link href={link.href}>{link.label}</Link>
+                      <Link href={localizeSiteHref(link.href, locale)}>{link.label}</Link>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
+          <p className="au-group">{t('groupNote')}</p>
         </section>
 
         <section className="au-section">
@@ -68,7 +73,7 @@ export function AboutUsPage() {
                 <span className="label">{t('contact.emailLabel')}</span>
                 <span className="value">info@easycasaita.com</span>
               </a>
-              <Link href="/contatti">
+              <Link href={contactPath(locale)}>
                 <span className="label">{t('contact.formLabel')}</span>
                 <span className="value">{t('contact.formValue')}</span>
               </Link>

@@ -707,8 +707,16 @@
 }
 
 .pd .pd-route .a.todo,
-.pd .pd-ident dd.todo {
+.pd .pd-ident dd.todo,
+.pd .pd-ident span.todo {
   color: var(--ochre);
+}
+
+.pd .pd-ident span.todo {
+  display: inline;
+  padding: 0.05rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(192, 138, 30, 0.22);
 }
 
 .pd .pd-note {

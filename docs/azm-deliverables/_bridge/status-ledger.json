@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T11:37:15.200Z",
+  "updatedAt": "2026-09-15T15:06:49.334Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_about_15sep",
+      "kaizenCode": "K EC ABOUT",
+      "polishId": "PP-ABOUT",
+      "title": "K EC ABOUT",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-b8598c85-da4c-4760-8cbf-46f45386740a",
+      "agentUrl": "https://cursor.com/agents/bc-b8598c85-da4c-4760-8cbf-46f45386740a",
+      "branch": "cursor/about-honesty-pass-740a",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-09-15T15:06:49.334Z",
+      "updatedAt": "2026-09-15T15:06:49.334Z",
+      "summary": "Rewriting /about: shared layout, retract G1/C2/C4 claims, pricing identity hole.",
+      "nextAction": "Open draft PR vs main; run honesty tests.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_for_buyers_15sep",
       "kaizenCode": "K EC FOR-BUYERS",

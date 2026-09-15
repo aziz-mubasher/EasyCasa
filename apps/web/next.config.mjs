@@ -23,12 +23,20 @@ const nextConfig = {
         destination: '/es/vender-entre-particulares',
         permanent: true,
       },
+      { source: '/en/trasparenza', destination: '/en/transparency', permanent: true },
+      { source: '/it/transparency', destination: '/it/trasparenza', permanent: true },
+      { source: '/es/transparency', destination: '/es/trasparenza', permanent: true },
+      { source: '/en/contatti', destination: '/en/contact', permanent: true },
+      { source: '/it/contact', destination: '/it/contatti', permanent: true },
+      { source: '/es/contact', destination: '/es/contatti', permanent: true },
     ];
   },
   async rewrites() {
     return [
       { source: '/en/sell-privately', destination: '/en/vendi-da-privato' },
       { source: '/es/vender-entre-particulares', destination: '/es/vendi-da-privato' },
+      { source: '/en/transparency', destination: '/en/trasparenza' },
+      { source: '/en/contact', destination: '/en/contatti' },
     ];
   },
 };

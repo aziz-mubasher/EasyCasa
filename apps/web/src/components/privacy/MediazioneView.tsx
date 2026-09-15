@@ -1,11 +1,13 @@
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
+import { contactPath, transparencyPath } from '@/lib/site-paths';
 import './privacy-doc.css';
 
 type CheckItem = { title: string; body: string };
 type OursRow = { label: string; value: string };
 
 export async function MediazioneView() {
+  const locale = await getLocale();
   const t = await getTranslations('mediationPage');
   const lawLines = t.raw('law.lines') as string[];
   const trapParas = t.raw('trap.paras') as string[];
@@ -104,9 +106,13 @@ export async function MediazioneView() {
         </section>
 
         <div className="pd-med-ident">
-          {t('ident.line1')}
+          {t('ident.entity')}{' '}
+          <span className="todo">{t('ident.placeholder')}</span>
+          {t('ident.entityAfter')}
           <br />
-          {t('ident.line2Before')} <span className="todo">{t('ident.regTodo')}</span>
+          <br />
+          {t('ident.enrollment')}
+          <br />
           <br />
           {t('ident.omi')}
           <br />
@@ -114,11 +120,11 @@ export async function MediazioneView() {
           {t('ident.banks')}
           <br />
           <br />
-          <Link href="/trasparenza">{t('ident.linkTransparency')}</Link>
+          <Link href={transparencyPath(locale)}>{t('ident.linkTransparency')}</Link>
           {' · '}
           <Link href="/legal/terms">{t('ident.linkTerms')}</Link>
           {' · '}
-          <Link href="/contatti">{t('ident.linkContacts')}</Link>
+          <Link href={contactPath(locale)}>{t('ident.linkContacts')}</Link>
         </div>
       </div>
     </div>

@@ -12,9 +12,9 @@ describe('isMarketingServicePath', () => {
     expect(isMarketingServicePath('/for-buyers/')).toBe(true);
   });
 
-  it('matches about landing', () => {
-    expect(isMarketingServicePath('/about')).toBe(true);
-    expect(isMarketingServicePath('/about/')).toBe(true);
+  it('does not treat about as marketing chrome', () => {
+    expect(isMarketingServicePath('/about')).toBe(false);
+    expect(isMarketingServicePath('/about/')).toBe(false);
   });
 
   it('matches aste landing, guide, and dark analisi route', () => {

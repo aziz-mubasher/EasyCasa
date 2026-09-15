@@ -25,14 +25,21 @@
       "forBuyers"
     ],
     "lastmod": "2026-09-15",
-    "contentFingerprint": "cd4b1033296baab17f2ebedba55dcd6db41be030e5eadcdab997599425eb4af4"
+    "contentFingerprint": "db0269fed50694b73251b0d0324bfac270e52f26d4e8fc3517b6c4fcd8882dce"
   },
   "/about": {
     "namespaces": [
       "aboutUs"
     ],
-    "lastmod": "2026-08-02",
-    "contentFingerprint": "ae3af8c8e84c3232230a0f5b7551982ff8403c8e136e4c57b396015833f3b288"
+    "lastmod": "2026-09-15",
+    "contentFingerprint": "07f7f99a8330c91a682e18a1c16a9694bbd6e2952beaab528acb0d90b5adc93e"
+  },
+  "/trasparenza": {
+    "namespaces": [
+      "transparencyPage"
+    ],
+    "lastmod": "2026-09-15",
+    "contentFingerprint": "9ca1d1da5a967e2bde92087f774f0fd3b6c0331eea7b426e5fcc72efae876b13"
   },
   "/valutazione-gratuita": {
     "namespaces": [

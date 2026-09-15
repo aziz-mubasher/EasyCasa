@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { sellPrivatelyPath } from '@/lib/sell-privately';
 import { sellerInboxEnabled } from '@/lib/seller-inbox-config';
+import { contactPath, transparencyPath } from '@/lib/site-paths';
 
 const LOCALES = ['it', 'en', 'es'] as const;
 
@@ -17,15 +18,15 @@ export const STATIC_PAGE_LASTMOD: Record<string, string> = {
   '/pricing': '2026-09-15',
   '/acquisto-assistito': '2026-08-14',
   '/for-buyers': '2026-09-15',
-  '/about': '2026-08-02',
+  '/about': '2026-09-15',
   '/valutazione-gratuita': '2026-08-14',
   '/vendi-da-privato': '2026-09-08',
   '/legal/privacy': '2026-07-29',
   '/legal/terms': '2026-07-29',
   '/legal/mediation': '2026-07-29',
   '/privacy': '2026-07-29',
-  '/contatti': '2026-07-29',
-  '/trasparenza': '2026-07-29',
+  '/contatti': '2026-09-15',
+  '/trasparenza': '2026-09-15',
   '/agenzie': '2026-07-29',
   '/banks4all': '2026-08-02',
 };
@@ -52,8 +53,12 @@ export function buildStaticSitemapEntries(site: string): MetadataRoute.Sitemap {
     staticPaths
       .filter((p) => !isSitemapExcludedPath(p))
       .map((p) => {
-        const pathFor = (l: (typeof LOCALES)[number]) =>
-          p === '/vendi-da-privato' ? sellPrivatelyPath(l) : p;
+        const pathFor = (l: (typeof LOCALES)[number]) => {
+          if (p === '/vendi-da-privato') return sellPrivatelyPath(l);
+          if (p === '/trasparenza') return transparencyPath(l);
+          if (p === '/contatti') return contactPath(l);
+          return p;
+        };
         return {
           url: `${site}/${loc}${pathFor(loc)}`,
           lastModified: staticPageLastModified(p),

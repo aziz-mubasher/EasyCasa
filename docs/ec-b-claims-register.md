@@ -73,7 +73,7 @@ Same keys in `it.json` / `en.json` / `es.json`. Proven by `apps/web/src/lib/for-
 | `forBuyers.final.titleLine2` | `live` | all | — | Chrome. |
 | `forBuyers.final.body` | `live` | all | search | Fee / «always free» removed. |
 | `forBuyers.final.cta` | `live` | all | — | Links `/search`. |
-| `forBuyers.foot.mundida` | `live` (inherited) | counsel-open | Claim 2 / sell-privately | P.IVA line **unchanged** (15 Sep §3 waits on visura). Sister-company *financing services* sentence **removed** so the page no longer attributes a reserved act to Banks4All. |
+| `forBuyers.foot.mundida` | `live` | counsel-open | PRE_INCORPORATION | 15 Sep About pass: Mundida P.IVA no longer presented as EasyCasa’s. Same `/pricing` named hole + non-enrolment sentence. “Directly” removed (G4 / `routeLead`). |
 | `forBuyers.foot.omi` | `live` | all | T04 row 2 | Attribution; «not valuations». |
 | `forBuyers.foot.privacy` | `live` | all | — | Nav label only. Not a processing claim. |
 | `forBuyers.foot.terms` | `live` | all | — | Nav label only. |
@@ -107,7 +107,7 @@ These strings must not reappear on `/for-buyers` without a flip PR that cites ev
 | Pillar `04 / WIN` Verified Buyer Badge + Banks4All sister-company body | Reserved-act attribution + group routing + person-badge; *coming soon* made it worse | OAM / art. 22 GDPR / T04 row 6 | Credit Prime delibera (not a badge) after DPIA |
 | «Fair-price check» / «Controllo prezzo equo» / «precio justo» | Verdict next to a price (T04 row 2; same rule as Legenda semaforo) | — | Keep factual OMI title |
 | How step «Attach a Verified Buyer Badge if you have one» | Same badge | — | — |
-| `foot.mundida` «financing services … sister company» | Reserved act + declared group link | OAM | P.IVA line left pending visura |
+| `foot.mundida` «financing services … sister company» | Reserved act + declared group link | OAM | Retracted 15 Sep. Identity now the `/pricing` hole, not Mundida’s P.IVA. |
 
 ---
 
