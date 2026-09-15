@@ -20,6 +20,7 @@ export async function TrasparenzaView() {
     <div className="pd pd-tx">
       <div className="pd-wrap pd-tx-head">
         <p className="pd-eyebrow">{t('eyebrow')}</p>
+        <p className="pd-tx-updated">{t('lastUpdated')}</p>
         <h1>
           {t('titleBefore')}
           <br />
@@ -31,6 +32,8 @@ export async function TrasparenzaView() {
       <section className="pd-band">
         <div className="pd-wrap">
           <p className="pd-kicker">{t('model.kicker')}</p>
+          <p className="pd-tx-ponte">{t('model.ponte')}</p>
+          <p className="pd-tx-state">{t('model.stateBound')}</p>
           <h2>{t('model.title')}</h2>
           <div className="pd-three">
             {pillars.map((col) => (
@@ -121,6 +124,22 @@ export async function TrasparenzaView() {
               <li key={item.slice(0, 40)}>{item}</li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      <section className="pd-band">
+        <div className="pd-wrap">
+          <p className="pd-kicker">{t('consumer.kicker')}</p>
+          <h2>{t('consumer.title')}</h2>
+          <p className="pd-lede">{t('consumer.withdrawal')}</p>
+          <p className="pd-lede">{t('consumer.earlyStart')}</p>
+          <p>
+            {t('consumer.odrBefore')}{' '}
+            <a href={t('consumer.odrLink')} rel="noopener noreferrer">
+              {t('consumer.odrLabel')}
+            </a>
+            . {t('consumer.complaints')}
+          </p>
         </div>
       </section>
 

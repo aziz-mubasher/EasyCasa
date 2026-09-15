@@ -2294,37 +2294,40 @@
   },
   "transparencyPage": {
     "metaTitle": "Trasparenza — EasyCasa",
-    "metaDescription": "Come guadagna EasyCasa, chi ci paga e chi no. Nessuna provvigione dal venditore, prezzi fissi indicati prima dell'ordine.",
+    "metaDescription": "Come viene pagata EasyCasa: lavoro a prezzo fisso sul listino pubblico, chi paga €0, e cosa resta inattivo nel catalogo sorgente.",
     "eyebrow": "Trasparenza",
+    "lastUpdated": "Ultimo aggiornamento 15 settembre 2026 · stato: PONTE · titolare del riesame: AZM product-owner (non counsel)",
     "titleBefore": "Chi ci paga,",
     "titleEm": "e chi no.",
-    "sub": "Il modo più rapido per capire di chi fidarsi in questo settore è sapere come guadagna. Ecco il nostro, per intero.",
+    "sub": "Il modo più rapido per capire di chi fidarsi in questo settore è sapere come guadagna. Ecco il nostro, eccezioni comprese.",
     "model": {
       "kicker": "Il modello",
+      "ponte": "Non siamo iscritti come agenti d’affari in mediazione, quindi non possiamo essere pagati sull’esito di una vendita. Tutto in questa pagina segue da quel vincolo: è la tesi, non una disclaimer a piè di pagina.",
+      "stateBound": "L’informativa sulla mediazione è vera di questo stato PONTE e sarà riscritta quando saremo iscritti.",
       "title": "Tre gruppi di servizi, tre regole diverse",
       "pillars": [
         {
           "tag": "Per chi vende",
-          "title": "Nessuna provvigione dal venditore",
+          "title": "Nessuna provvigione sul listino pubblico",
           "paras": [
-            "Non prendiamo una percentuale sul prezzo di vendita. Mai, in nessuna forma.",
-            "I servizi che puoi aggiungere — foto, APE, verifica documenti — hanno un prezzo fisso, indicato prima dell'ordine, uguale su una casa da 150.000 € e su una da 800.000 €."
+            "Il listino pubblico è lavoro a prezzo fisso, dovuto alla consegna. Che l’immobile si venda, e a quale prezzo, non cambia quei prezzi.",
+            "Il catalogo sorgente contiene ancora due voci di mediazione inattive al 2,49%: Mediazione completa (lato venditore) e Mediazione lato acquirente. Non sono in vendita su /pricing. Le stiamo togliendo. Finché restano nel file sorgente, questa pagina le nomina invece di usare un assoluto."
           ]
         },
         {
           "tag": "Per chi compra",
-          "title": "Ricerca e visite sempre gratuite",
+          "title": "Cercare e prenotare una visita è gratis",
           "paras": [
-            "Cercare, salvare ricerche, contattare i proprietari e prenotare visite non costa nulla e non costerà nulla.",
-            "I servizi di verifica — visure, conformità, condominio, assistenza alla proposta — sono facoltativi. Puoi usare la piattaforma senza acquistarne nessuno."
+            "Cercare, salvare ricerche, contattare i proprietari e prenotare una visita non costa nulla.",
+            "Essere accompagnati a una visita è un’altra voce (Accompagnamento visita, €49 + IVA). Redigere una proposta d’acquisto è un’altra voce (Redazione proposta, €99 + IVA). Entrambe sono inattive nel catalogo sorgente e non sono sul listino pubblico. La redazione della proposta è lavoro da avvocato; non la vendiamo finché resta sottoposta a counsel."
           ]
         },
         {
           "tag": "Finanziamento",
-          "title": "Servizi di Banks4All",
+          "title": "Banks4All e Credit Prime",
           "paras": [
-            "Consulenza indipendente sulla sostenibilità dell'acquisto. Banks4All non è un istituto di credito: non eroga finanziamenti e non garantisce approvazioni.",
-            "La mediazione creditizia è svolta da operatori iscritti negli albi obbligatori."
+            "Banks4All è una società distinta. Non è un istituto di credito e non garantisce approvazioni.",
+            "La mediazione creditizia è svolta da Credit Prime, operatore iscritto OAM. Sei cliente loro, non nostro. Non riceviamo nulla per quell’invio (art. 128-sexies c. 1-bis TUB)."
           ]
         }
       ]
@@ -2332,19 +2335,19 @@
     "pay": {
       "kicker": "Chi ci paga",
       "title": "L'elenco completo",
-      "lede": "Se un soggetto non compare in questa lista, non ci versa denaro in nessuna forma — né commissioni, né retrocessioni, né compensi indiretti.",
+      "lede": "Se un soggetto non compare in questa lista, non ci versa denaro — salvo le voci inattive del catalogo nominate sotto Il modello.",
       "rows": [
         {
           "who": "Chi acquista un servizio a prezzo fisso",
           "amt": "prezzo di listino"
         },
         {
-          "who": "Il venditore, sul prezzo dell'immobile",
+          "who": "Il venditore, sul prezzo dell'immobile (listino pubblico)",
           "amt": "€ 0",
           "zero": true
         },
         {
-          "who": "Agenzie immobiliari",
+          "who": "Agenzie immobiliari (durante il pilota a €0; data di fine non fissata)",
           "amt": "€ 0",
           "zero": true
         },
@@ -2354,7 +2357,7 @@
           "zero": true
         },
         {
-          "who": "Banks4All o altre società del gruppo",
+          "who": "Banks4All",
           "amt": "€ 0",
           "zero": true
         },
@@ -2364,59 +2367,59 @@
           "zero": true
         },
         {
-          "who": "Inserzionisti pubblicitari",
+          "who": "Inserzionisti terzi",
           "amt": "€ 0",
           "zero": true
         }
       ],
       "noteTag": "Costi di terzi",
-      "note": "Notaio, imposte, diritti catastali, traduzioni e perizie te li giriamo al costo, con la ricevuta allegata. Non ci applichiamo un ricarico."
+      "note": "Notaio, imposte, diritti catastali, traduzioni, perizie e i compensi dell’avvocato o del commercialista che incarichi tu (compresa la redazione di proposta / compromesso e il parere prima casa) te li giriamo al costo, con la ricevuta allegata. Non ci applichiamo un ricarico."
     },
     "rules": {
       "kicker": "Cosa non facciamo",
       "title": "Le cose che in questo settore si fanno, e noi no",
-      "lede": "Non è una promessa di buone intenzioni: sono conseguenze dirette del fatto che non guadagniamo sulla vendita.",
+      "lede": "Seguono dal fatto che non possiamo guadagnare sulla vendita — e dalle eccezioni già nominate in questa pagina.",
       "items": [
         {
           "title": "Non gonfiamo le valutazioni",
-          "body": "Chi guadagna solo se firmi l'incarico ha interesse a prometterti un prezzo alto. Noi no, quindi partiamo dai valori ufficiali dell'Agenzia delle Entrate e ti mostriamo il calcolo."
+          "body": "Pubblichiamo la fascia OMI ufficiale della zona e il semestre di riferimento. Ti mostriamo la fonte e il semestre. Non produciamo il valore del tuo immobile; per una perizia serve un tecnico abilitato."
         },
         {
           "title": "Non vendiamo i tuoi contatti",
-          "body": "Non esiste una rete di agenzie che compra i nominativi raccolti qui. Se chiedi una valutazione, nessuno ti richiama."
+          "body": "L’assegnazione di un contatto a un partner di zona (routeLead) è spenta in PONTE. Il censimento EC-S-36 non ha trovato righe di partner, lead o payout. Se un giorno dovesse cambiare, lo scriveremo qui prima."
         },
         {
           "title": "Non prendiamo compensi per indirizzarti",
-          "body": "Quando ti suggeriamo un tecnico, un notaio o un servizio, non riceviamo nulla da chi lo eroga. Se un giorno dovesse cambiare, lo scriveremo qui prima di farlo."
+          "body": "Quando ti suggeriamo un tecnico, un notaio o un servizio, non riceviamo nulla da chi lo eroga. L’invio a Credit Prime non è remunerato. Se un giorno dovesse cambiare, lo scriveremo qui prima."
         },
         {
-          "title": "Non vincoliamo con l'esclusiva",
-          "body": "Il tuo annuncio resta tuo. Puoi ritirarlo quando vuoi, senza penali e senza periodi minimi."
+          "title": "Non richiediamo l’esclusiva per pubblicare",
+          "body": "Un annuncio privato resta tuo. Puoi ritirarlo. Non applichiamo una penale di recesso. Nel codice esiste un flag di esclusiva su un oggetto mandato; non è un vincolo live di questo portale."
         },
         {
-          "title": "Non mostriamo pubblicità",
-          "body": "Nessuno può pagare per comparire più in alto nei risultati di ricerca."
+          "title": "La visibilità in evidenza è etichettata e a tariffa fissa",
+          "body": "Chi vende può acquistare un posizionamento in evidenza / boost etichettato. Finché è attivo, quell’annuncio può salire in classifica. Nessuno paga una percentuale sulla vendita per posizionarsi. Gli inserzionisti terzi non possono comprare un ranking silenzioso."
         }
       ]
     },
     "sources": {
       "kicker": "Da dove arrivano i numeri",
       "title": "Fonti dei dati di mercato",
-      "lede": "Le valutazioni e le bande di prezzo che mostriamo poggiano sull'Osservatorio del Mercato Immobiliare dell'Agenzia delle Entrate, che pubblica ogni sei mesi i valori registrati per ogni microzona di ogni comune italiano.",
+      "lede": "Le bande di prezzo che mostriamo poggiano sull'Osservatorio del Mercato Immobiliare dell'Agenzia delle Entrate, che pubblica ogni sei mesi i valori registrati per ogni microzona di ogni comune italiano.",
       "noteTag": "Fonte",
-      "note": "Agenzia Entrate — OMI, semestre 2025/2. Copertura nazionale: 7.866 comuni. Indichiamo sempre il semestre di riferimento accanto a ogni cifra derivata da questi dati.",
+      "note": "Agenzia Entrate — OMI. Ogni cifra mostra il proprio semestre dalla release caricata (il seed nazionale di questo prodotto è oggi H2 2025). Il numero di comuni è quello della release OMI, non un dato che teniamo noi.",
       "aside": "I valori OMI sono ufficiali ma per definizione approssimativi: indicano la banda di una microzona, non il valore di uno specifico immobile. Per una perizia serve un tecnico abilitato, e lo diciamo apertamente invece di far finta che un algoritmo basti."
     },
     "banks": {
       "kicker": "Struttura societaria",
-      "title": "Il rapporto con Banks4All",
-      "lede": "Banks4All ed EasyCasa sono società distinte del gruppo Mundida. Lo scriviamo qui perché la trasparenza sui rapporti vale quanto quella sui compensi — e perché troverai link a Banks4All su questo sito.",
+      "title": "Chi è EasyCasa, e Banks4All",
+      "lede": "EasyCasa è un prodotto, non una società sorella di Banks4All. La società operativa è in costituzione: per questo i campi di identità qui sotto sono un buco visibile e non un numero. Mundida detiene la piattaforma e la concede in licenza a canone fisso.",
       "items": [
-        "Banks4All non percepisce compensi da EasyCasa, da agenzie o da venditori.",
+        "Banks4All è una società distinta. Non percepisce compensi da EasyCasa, da agenzie o da venditori.",
         "EasyCasa non percepisce compensi da Banks4All.",
         "Nessuno dei due influenza le raccomandazioni dell'altro.",
         "Usare Banks4All non è mai una condizione per usare EasyCasa: non è richiesto per cercare casa, contattare un proprietario o prenotare una visita.",
-        "La mediazione creditizia non è svolta da Banks4All ma da operatori iscritti negli albi obbligatori."
+        "La mediazione creditizia è svolta da Credit Prime (OAM). Non riceviamo nulla per l’invio."
       ]
     },
     "limits": {
@@ -2431,14 +2434,24 @@
         "Non controlliamo i tempi di notai, banche o uffici pubblici."
       ]
     },
+    "consumer": {
+      "kicker": "Se ci paghi",
+      "title": "Quattordici giorni per ripensarci",
+      "withdrawal": "Le vendite a distanza ai consumatori hanno un diritto di recesso di 14 giorni ai sensi dell’art. 52 del Codice del consumo (D.lgs. 206/2005), senza indicare il motivo.",
+      "earlyStart": "Se iniziamo il lavoro in quella finestra, ci servono la tua richiesta espressa e il riconoscimento che perdi il diritto a prestazione interamente eseguita (art. 59 lett. a). Le informazioni precontrattuali (art. 49) sono nei termini.",
+      "odrBefore": "Se non riusciamo a risolvere una controversia, puoi usare la piattaforma europea ODR:",
+      "odrLink": "https://ec.europa.eu/consumers/odr",
+      "odrLabel": "ec.europa.eu/consumers/odr",
+      "complaints": "Scrivi a info@easycasaita.com o usa la pagina contatti."
+    },
     "ident": {
       "title": "Dati dell'operatore",
       "entity": "Easy Casa Italia è un servizio di",
       "placeholder": "[denominazione — P.IVA — REA — sede: da pubblicare alla costituzione]",
       "entityAfter": ", Brescia. Piattaforma e software concessi in licenza da Mundida.",
       "enrollment": "Easy Casa Italia non è iscritta come agente d’affari in mediazione e non svolge attività di mediazione immobiliare.",
-      "omi": "Dati di mercato: Agenzia Entrate — OMI, semestre 2025/2",
-      "banks": "Banks4All ed EasyCasa sono società distinte. Banks4All non percepisce compensi da EasyCasa, da agenzie o da venditori. La mediazione creditizia è svolta da operatori iscritti negli albi obbligatori.",
+      "omi": "Dati di mercato: Agenzia Entrate — OMI; il semestre è indicato su ogni cifra (seed attuale H2 2025).",
+      "banks": "Banks4All è una società distinta. Credit Prime svolge la mediazione creditizia; non riceviamo nulla per l’invio.",
       "linkMediation": "Mediazione e provvigione →",
       "linkTerms": "Termini",
       "linkPrivacy": "Privacy",

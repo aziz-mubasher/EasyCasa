@@ -2294,37 +2294,40 @@
   },
   "transparencyPage": {
     "metaTitle": "Transparency — EasyCasa",
-    "metaDescription": "How EasyCasa earns, who pays us and who does not. No seller commission, fixed prices shown before you order.",
+    "metaDescription": "How EasyCasa is paid: named fixed-price work on the public list, who pays €0, and what still sits inactive in the source catalogue.",
     "eyebrow": "Transparency",
+    "lastUpdated": "Last updated 15 September 2026 · state: PONTE · review owner: AZM product-owner (not counsel)",
     "titleBefore": "Who pays us,",
     "titleEm": "and who does not.",
-    "sub": "The fastest way to know whom to trust in this sector is to know how they earn. Here is ours, in full.",
+    "sub": "The fastest way to know whom to trust in this sector is to know how they earn. Here is ours, including the exceptions.",
     "model": {
       "kicker": "The model",
+      "ponte": "We are not enrolled as agenti d’affari in mediazione, so we cannot lawfully be paid on the outcome of a sale. Everything on this page follows from that constraint — it is the thesis, not a footer disclaimer.",
+      "stateBound": "The mediation disclosure is true of this PONTE state and will be rewritten when we are enrolled.",
       "title": "Three service groups, three different rules",
       "pillars": [
         {
           "tag": "For sellers",
-          "title": "No commission from the seller",
+          "title": "No commission on the public price list",
           "paras": [
-            "We do not take a percentage of the sale price. Ever, in any form.",
-            "Add-on services — photos, EPC, document checks — have a fixed price, shown before you order, the same on a €150,000 home and an €800,000 one."
+            "The public price list is fixed-price work, due when the service is delivered. Whether the property sells, and for how much, does not change those prices.",
+            "The source catalogue still contains two inactive 2.49% mediation items: Full mediation (seller side) and Buyer-side mediation. They are not sold on /pricing. They are being removed. Until they are gone from the source file, this page names them instead of using an absolute."
           ]
         },
         {
           "tag": "For buyers",
-          "title": "Search and viewings always free",
+          "title": "Search and booking a viewing are free",
           "paras": [
-            "Searching, saving searches, contacting owners and booking viewings costs nothing and will stay free.",
-            "Verification services — title, compliance, condominium, offer support — are optional. You can use the platform without buying any."
+            "Searching, saving searches, contacting owners and booking a viewing cost nothing.",
+            "Being accompanied to a viewing is a different item (Viewing accompaniment, €49 + IVA). Drafting a purchase offer is a different item (Offer drafting / redazione proposta, €99 + IVA). Both sit inactive in the source catalogue and are not on the public list. Offer drafting is work for an avvocato; we do not sell it while it remains counsel-gated."
           ]
         },
         {
           "tag": "Financing",
-          "title": "Banks4All services",
+          "title": "Banks4All and Credit Prime",
           "paras": [
-            "Independent advice on whether the purchase is sustainable. Banks4All is not a lender: it does not grant loans and does not guarantee approvals.",
-            "Credit mediation is carried out by operators registered in the mandatory registers."
+            "Banks4All is a separate company. It is not a lender and does not guarantee approvals.",
+            "Credit mediation is carried out by Credit Prime, an OAM-enrolled operator. You are their client, not ours. We are paid nothing for that referral (art. 128-sexies c. 1-bis TUB)."
           ]
         }
       ]
@@ -2332,19 +2335,19 @@
     "pay": {
       "kicker": "Who pays us",
       "title": "The full list",
-      "lede": "If a party is not on this list, they do not pay us in any form — not commissions, kickbacks or indirect fees.",
+      "lede": "If a party is not on this list, they do not pay us — except the inactive catalogue items named under The model.",
       "rows": [
         {
           "who": "Anyone who buys a fixed-price service",
           "amt": "list price"
         },
         {
-          "who": "The seller, on the property price",
+          "who": "The seller, on the property price (public list)",
           "amt": "€ 0",
           "zero": true
         },
         {
-          "who": "Estate agencies",
+          "who": "Estate agencies (during the €0 pilot; end date not set)",
           "amt": "€ 0",
           "zero": true
         },
@@ -2354,7 +2357,7 @@
           "zero": true
         },
         {
-          "who": "Banks4All or other group companies",
+          "who": "Banks4All",
           "amt": "€ 0",
           "zero": true
         },
@@ -2364,59 +2367,59 @@
           "zero": true
         },
         {
-          "who": "Advertisers",
+          "who": "Third-party advertisers",
           "amt": "€ 0",
           "zero": true
         }
       ],
       "noteTag": "Third-party costs",
-      "note": "Notary, taxes, cadastral fees, translations and surveys are passed through at cost, with the receipt attached. We do not add a markup."
+      "note": "Notary, taxes, cadastral fees, translations, surveys, and fees of the lawyer or tax professional you instruct (including proposta / compromesso drafting and prima casa eligibility) are passed through at cost, with the receipt attached. We do not add a markup."
     },
     "rules": {
       "kicker": "What we do not do",
       "title": "Things common in this sector that we do not do",
-      "lede": "This is not a promise of good intentions: these are direct consequences of not earning on the sale.",
+      "lede": "These follow from not being able to earn on the sale — and from the exceptions this page already named.",
       "items": [
         {
           "title": "We do not inflate valuations",
-          "body": "Anyone who earns only if you sign a mandate has an interest in promising a high price. We do not, so we start from official Agenzia delle Entrate values and show you the calculation."
+          "body": "We publish the official OMI range for the zone and the semester it refers to. We show you the source and the semester. We do not produce a value for your property; a survey needs a licensed technician."
         },
         {
           "title": "We do not sell your contacts",
-          "body": "There is no agency network buying leads collected here. If you ask for a valuation, nobody calls you back."
+          "body": "Lead assignment to a region-matched partner (routeLead) is off in PONTE. The EC-S-36 census found no partner, lead or payout rows. If that ever changes, we will write it here first."
         },
         {
           "title": "We take no fees for referrals",
-          "body": "When we suggest a technician, notary or service, we receive nothing from the provider. If that ever changes, we will write it here first."
+          "body": "When we suggest a technician, notary or service, we receive nothing from the provider. The Credit Prime referral is unremunerated. If that ever changes, we will write it here first."
         },
         {
-          "title": "We do not lock you into exclusivity",
-          "body": "Your listing stays yours. You can withdraw it whenever you want, with no penalties and no minimum periods."
+          "title": "We do not require exclusivity to publish",
+          "body": "A private listing stays yours. You can withdraw it. We do not charge a penalty for withdrawing. The codebase has an exclusivity flag on a mandate object; it is not a live EasyCasa lock-in on this portal."
         },
         {
-          "title": "We do not show ads",
-          "body": "Nobody can pay to rank higher in search results."
+          "title": "Featured placement is labelled and flat-fee",
+          "body": "A seller can buy labelled featured / boost placement. While it is active, that listing can rank higher in search. Nobody pays a percentage of a sale to rank. Third-party advertisers cannot buy silent ranking."
         }
       ]
     },
     "sources": {
       "kicker": "Where the numbers come from",
       "title": "Market data sources",
-      "lede": "The valuations and price bands we show rest on the Real Estate Market Observatory of the Agenzia delle Entrate, which publishes every six months the recorded values for every micro-zone of every Italian municipality.",
+      "lede": "The price bands we show rest on the Real Estate Market Observatory of the Agenzia delle Entrate, which publishes every six months the recorded values for every micro-zone of every Italian municipality.",
       "noteTag": "Source",
-      "note": "Agenzia Entrate — OMI, H2 2025. National coverage: 7,866 municipalities. We always show the reference semester next to every figure derived from this data.",
+      "note": "Agenzia Entrate — OMI. Each figure shows its own semester from the loaded release (the national seed in this product is currently H2 2025). Municipality count is that of the OMI release, not a number we maintain.",
       "aside": "OMI values are official but by definition approximate: they indicate a micro-zone band, not the value of a specific property. A survey needs a licensed technician, and we say so plainly instead of pretending an algorithm is enough."
     },
     "banks": {
       "kicker": "Corporate structure",
-      "title": "The relationship with Banks4All",
-      "lede": "Banks4All and EasyCasa are separate companies in the Mundida group. We write it here because transparency on relationships matters as much as transparency on fees — and because you will find Banks4All links on this site.",
+      "title": "Who EasyCasa is, and Banks4All",
+      "lede": "EasyCasa is a product, not a sister company of Banks4All. The operating company is being incorporated — that is why the identity fields below are a visible hole rather than a number. Mundida owns the platform and licenses it at a fixed canone.",
       "items": [
-        "Banks4All does not receive fees from EasyCasa, agencies or sellers.",
+        "Banks4All is a separate company. It does not receive fees from EasyCasa, agencies or sellers.",
         "EasyCasa does not receive fees from Banks4All.",
         "Neither influences the other's recommendations.",
         "Using Banks4All is never a condition for using EasyCasa: it is not required to search, contact an owner or book a viewing.",
-        "Credit mediation is not carried out by Banks4All but by operators registered in the mandatory registers."
+        "Credit mediation is carried out by Credit Prime (OAM). We are paid nothing for the referral."
       ]
     },
     "limits": {
@@ -2431,14 +2434,24 @@
         "We do not control the timelines of notaries, banks or public offices."
       ]
     },
+    "consumer": {
+      "kicker": "If you pay us",
+      "title": "Fourteen days to change your mind",
+      "withdrawal": "Distance sales to consumers carry a 14-day withdrawal right under art. 52 of the Consumer Code (D.lgs. 206/2005), without giving a reason.",
+      "earlyStart": "If we start work inside that window, we need your express request and your acknowledgement that you lose the right once the service is fully performed (art. 59 lett. a). Pre-contract information (art. 49) is in the terms.",
+      "odrBefore": "If we cannot settle a dispute, you may use the European ODR platform:",
+      "odrLink": "https://ec.europa.eu/consumers/odr",
+      "odrLabel": "ec.europa.eu/consumers/odr",
+      "complaints": "Write to info@easycasaita.com or use the contact page."
+    },
     "ident": {
       "title": "Operator details",
       "entity": "Easy Casa Italia is a service of",
       "placeholder": "[denominazione — P.IVA — REA — sede: to be published at incorporation]",
       "entityAfter": ", Brescia. Platform and software licensed from Mundida.",
       "enrollment": "Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation.",
-      "omi": "Market data: Agenzia Entrate — OMI, H2 2025",
-      "banks": "Banks4All and EasyCasa are separate companies. Banks4All does not receive fees from EasyCasa, agencies or sellers. Credit mediation is carried out by operators registered in the mandatory registers.",
+      "omi": "Market data: Agenzia Entrate — OMI; semester shown on each figure (seed currently H2 2025).",
+      "banks": "Banks4All is a separate company. Credit Prime carries out credit mediation; we are paid nothing for the referral.",
       "linkMediation": "Mediation and commission →",
       "linkTerms": "Terms",
       "linkPrivacy": "Privacy",
