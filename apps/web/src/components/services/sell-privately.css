@@ -893,7 +893,7 @@
 .sp-never {
   background: var(--sp-ink);
   color: var(--sp-parchment);
-  padding: clamp(2.4rem, 6vw, 3.4rem) clamp(1.3rem, 4vw, 2.2rem);
+  padding: clamp(2.4rem, 6vw, 3.4rem) 0;
   margin: 0;
 }
 

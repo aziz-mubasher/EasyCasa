@@ -172,18 +172,20 @@ export function SellPrivatelyPage() {
       </section>
 
       <section className="sp-never" aria-labelledby="sp-never-title">
-        <p className="sp-kicker">{t('never.kicker')}</p>
-        <h2 id="sp-never-title" className="sp-display">
-          {t('never.title')}
-        </h2>
-        <ul>
-          {neverItems.map((item) => (
-            <li key={item.title}>
-              {item.title}
-              <span>{item.body}</span>
-            </li>
-          ))}
-        </ul>
+        <div className="sp-wrap">
+          <p className="sp-kicker">{t('never.kicker')}</p>
+          <h2 id="sp-never-title" className="sp-display">
+            {t('never.title')}
+          </h2>
+          <ul>
+            {neverItems.map((item) => (
+              <li key={item.title}>
+                {item.title}
+                <span>{item.body}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       {energyLive ? (
