@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-07T20:57:49.544Z",
+  "updatedAt": "2026-09-15T07:18:20.394Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_pricing_final",
+      "kaizenCode": "K EC PRICING",
+      "polishId": "EC-PRICING-FINAL",
+      "title": "EC-PRICING-FINAL — PONTE price list",
+      "venture": "EasyCasa",
+      "lifecycle": "pr_open",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-9f454520-4fd5-4046-9da5-655c8535ec0c",
+      "agentUrl": "https://cursor.com/agents/bc-9f454520-4fd5-4046-9da5-655c8535ec0c",
+      "branch": "cursor/ec-pricing-final-ec0c",
+      "prNumber": 231,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/231",
+      "prState": "DRAFT",
+      "dispatchedAt": "2026-09-15T07:18:20.393Z",
+      "updatedAt": "2026-09-15T07:18:20.393Z",
+      "summary": "Draft PR #231: PONTE catalog gates + 11-block pricing page. PR E (delibera) not built.",
+      "nextAction": "Review draft PR #231; AZM to confirm D10 and commercial prices. Do not build PR E until Credit Prime issues the delibera to the buyer.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ecs_36",
       "kaizenCode": "K EC 7.7",
