@@ -439,6 +439,7 @@ export function PricingCatalogSections({
 
       <footer className="mt-14 border-t border-line pt-5 text-[12.5px] text-muted leading-relaxed space-y-2">
         <p className="m-0">{t('pageFooter.iva')}</p>
+        <p className="m-0">{t('pageFooter.withdrawal')}</p>
         <p className="m-0">
           {t('pageFooter.entity')}{' '}
           <span className="font-mono text-xs bg-sand text-clay px-1.5 py-0.5 rounded-sm">
@@ -447,6 +448,12 @@ export function PricingCatalogSections({
           {t('pageFooter.entityAfter')}
         </p>
         <p className="m-0 font-medium text-ink">{t('pageFooter.enrollment')}</p>
+        <p className="m-0">
+          {t('pageFooter.odrBefore')}{' '}
+          <a href="https://ec.europa.eu/consumers/odr" rel="noopener noreferrer" target="_blank">
+            {t('pageFooter.odrLink')}
+          </a>
+        </p>
       </footer>
     </>
   );

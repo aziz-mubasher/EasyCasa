@@ -11,7 +11,8 @@ Standalone marketing page for fixed-fee purchase support aimed at non-resident b
 ## Chrome
 
 - Minimal masthead (brand + locale) — `isMarketingServicePath`
-- App footer hidden; page ships its own mono footer
+- App footer hidden; page ships its own identity footer (same `/pricing` named hole + non-enrolment)
+- Consumer block: art. 52 / 59 / 49 + ODR before the mailto CTA
 - CTAs: `mailto:acquisti@easycasaita.com`
 
 ## Pricing (catalog snapshot)

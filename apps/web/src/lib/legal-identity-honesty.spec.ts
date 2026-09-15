@@ -17,6 +17,9 @@ type Messages = {
   transparencyPage: { ident: Record<string, string> };
   mediationPage: { ident: Record<string, string> };
   pricing: { pageFooter: { entity: string; placeholder: string; entityAfter: string; enrollment: string } };
+  acquistoAssistito: {
+    footer: { entity: string; placeholder: string; entityAfter: string; enrollment: string };
+  };
 };
 
 function load(locale: (typeof locales)[number]): Messages {
@@ -53,6 +56,7 @@ describe('legal identity honesty (PRE_INCORPORATION)', () => {
         m.footer.placeholder,
         m.footer.entityAfter,
         m.forBuyers.foot.mundida,
+        JSON.stringify(m.acquistoAssistito.footer),
         JSON.stringify(m.transparencyPage.ident),
         JSON.stringify(m.mediationPage.ident),
       ].join('\n');
@@ -61,7 +65,7 @@ describe('legal identity honesty (PRE_INCORPORATION)', () => {
     }
   });
 
-  it('uses the /pricing named hole on footer, transparency, mediation, and for-buyers', () => {
+  it('uses the /pricing named hole on footer, transparency, mediation, for-buyers, and acquisto-assistito', () => {
     for (const locale of locales) {
       const m = load(locale);
       const hole = m.pricing.pageFooter.placeholder;
@@ -70,6 +74,10 @@ describe('legal identity honesty (PRE_INCORPORATION)', () => {
       expect(m.transparencyPage.ident.placeholder).toBe(hole);
       expect(m.mediationPage.ident.placeholder).toBe(hole);
       expect(m.forBuyers.foot.mundida).toContain(hole);
+      expect(m.acquistoAssistito.footer.placeholder).toBe(hole);
+      expect(m.acquistoAssistito.footer.entity).toBe(m.pricing.pageFooter.entity);
+      expect(m.acquistoAssistito.footer.entityAfter).toBe(m.pricing.pageFooter.entityAfter);
+      expect(m.acquistoAssistito.footer.enrollment).toBe(m.pricing.pageFooter.enrollment);
       expect(m.footer.entity).toBe(m.pricing.pageFooter.entity);
       expect(m.footer.entityAfter).toBe(m.pricing.pageFooter.entityAfter);
       expect(m.footer.enrollment).toBe(m.pricing.pageFooter.enrollment);

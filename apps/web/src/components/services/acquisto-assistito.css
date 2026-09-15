@@ -412,38 +412,23 @@
   margin-bottom: 0.9rem;
 }
 
-.aa .compare {
-  display: grid;
-  gap: 1px;
-  background: var(--line-strong);
-  border: 1px solid var(--line-strong);
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+.aa .scheda--inline {
+  max-width: 28rem;
+  margin-top: 0.5rem;
+}
+
+.aa .aa-entity-hole {
   font-family: var(--font-mono);
+  background: color-mix(in srgb, var(--sand, #f4efe6) 80%, white);
+  color: var(--clay, #9a4a32);
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
 }
-.aa .compare > div {
-  background: var(--paper);
-  padding: 1.4rem 1.5rem;
-}
-.aa .compare .lbl {
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  margin: 0 0 0.6rem;
-}
-.aa .compare .amt {
-  font-size: 1.5rem;
-  margin: 0;
-  letter-spacing: -0.02em;
-}
-.aa .compare .amt.zero {
-  color: var(--azure);
-}
-.aa .compare .sub {
-  font-size: 0.72rem;
-  color: var(--ink-soft);
-  margin: 0.45rem 0 0;
-  line-height: 1.5;
+
+.aa .aa-enrollment {
+  margin: 0.4rem 0 0;
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .aa .faq {

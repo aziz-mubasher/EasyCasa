@@ -15,7 +15,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '../../messages');
 
 type AboutUs = {
   meta: { title: string; description: string };
-  hero: { kicker: string; title: string; lede: string; status: string; close: string };
+  hero: { kicker: string; title: string; lede: string; status: string };
   how: { title: string };
   pillars: Array<{ num: string; title: string; body: string }>;
   explore: { title: string; cols: Array<{ title: string; links: Array<{ label: string; href: string }> }> };
@@ -52,6 +52,9 @@ const bannedDirect =
 const bannedEnergyGate =
   /cannot go live without (its )?energy|non può andare online senza|no puede publicarse sin/i;
 
+const bannedG1Commission =
+  /Sellers pay no commission|Chi vende non paga commissioni|El vendedor no paga comisión|We do not take a percentage of the sale price|Non prendiamo una percentuale del prezzo|No tomamos un porcentaje del precio|Everyone else in this transaction is paid when it closes|Tutti gli altri in questa transazione sono pagati alla chiusura|Todos los demás en esta transacción cobran al cerrarla/i;
+
 describe('aboutUs honesty (15 Sep)', () => {
   it('keeps the same leaf keys in it/en/es', () => {
     const [it, en, es] = locales.map((l) => leafKeys(load(l).aboutUs).sort());
@@ -59,33 +62,34 @@ describe('aboutUs honesty (15 Sep)', () => {
     expect(es).toEqual(en);
   });
 
-  it('ships three cards (OMI, seller-side fixed prices, agencies) and no verify card', () => {
+  it('ships three cards (OMI, fixed prices, agencies) and no verify card', () => {
     for (const locale of locales) {
       const { pillars } = load(locale).aboutUs;
       expect(pillars).toHaveLength(3);
       expect(pillars.map((p) => p.num)).toEqual(['01', '02', '03']);
       expect(pillars[0]?.body).toMatch(/OMI/);
-      expect(pillars[1]?.body.toLowerCase()).toMatch(/seller|chi vende|el vendedor/);
+      expect(pillars[1]?.body.toLowerCase()).toMatch(/fixed price|prezzo fisso|precio fijo/);
       expect(pillars[2]?.body.toLowerCase()).toMatch(/agency|agenzia|agencia/);
     }
   });
 
-  it('states PONTE and the appalto line; close is paid-on-delivery', () => {
+  it('states PONTE and the appalto line; no G1 closing line', () => {
     for (const locale of locales) {
       const { hero } = load(locale).aboutUs;
       expect(hero.status).toMatch(/agente d.affari in mediazione|mediación inmobiliaria/i);
       expect(hero.lede.toLowerCase()).toMatch(/fixed sum|somma fissa|suma fija/);
-      expect(hero.close.toLowerCase()).toMatch(/on delivery|alla consegna|a la entrega/);
+      expect(hero).not.toHaveProperty('close');
     }
   });
 
-  it('does not ship retracted headline, verify, direct-deal, or energy-gate claims', () => {
+  it('does not ship retracted headline, verify, direct-deal, energy-gate, or G1 commission claims', () => {
     for (const locale of locales) {
       const blob = JSON.stringify(load(locale).aboutUs);
       expect(blob, locale).not.toMatch(bannedHeadline);
       expect(blob, locale).not.toMatch(bannedVerify);
       expect(blob, locale).not.toMatch(bannedDirect);
       expect(blob, locale).not.toMatch(bannedEnergyGate);
+      expect(blob, locale).not.toMatch(bannedG1Commission);
     }
   });
 

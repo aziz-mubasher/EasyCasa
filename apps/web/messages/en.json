@@ -718,7 +718,7 @@
       },
       "withdrawal": {
         "title": "Fourteen days to change your mind",
-        "body": "The withdrawal right under art. 52 of the consumer code applies, and we tell you before you start what you owe if work has begun."
+        "body": "The 14-day withdrawal right under art. 52 of the Consumer Code applies. If you ask us to start inside that window, we record your express request and your acknowledgement that you lose the right once the service is fully performed (art. 59 lett. a)."
       }
     },
     "paths": {
@@ -883,7 +883,10 @@
       "entity": "Easy Casa Italia is a service of",
       "placeholder": "[denominazione — P.IVA — REA — sede: to be published at incorporation]",
       "entityAfter": ", Brescia. Platform and software licensed from Mundida.",
-      "enrollment": "Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation."
+      "enrollment": "Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation.",
+      "withdrawal": "Distance sales to consumers: 14-day withdrawal (art. 52 Cod. Cons.). Work that starts inside that window needs your express request and acknowledgement that you lose the right on full performance (art. 59 lett. a). Pre-contract information (art. 49) is in the terms. The contracting entity is the named hole below until incorporation.",
+      "odrBefore": "European ODR platform:",
+      "odrLink": "ec.europa.eu/consumers/odr"
     },
     "coverage": {
       "provinceLabel": "Property province",
@@ -929,7 +932,9 @@
       "failed": "Payment failed",
       "signInRequired": "Sign in to pay for services.",
       "stripeMissing": "Stripe publishable key is not configured.",
-      "invalidSession": "Missing checkout session — return to pricing and try again."
+      "invalidSession": "Missing checkout session — return to pricing and try again.",
+      "earlyStartAck": "I ask you to start this service during the 14-day withdrawal period and I acknowledge that I lose the right of withdrawal once the service is fully performed (art. 59 lett. a Cod. Cons.).",
+      "earlyStartRequired": "Confirm the early-start acknowledgement to pay."
     },
     "paymentResult": {
       "successTitle": "Payment received",
@@ -1117,7 +1122,7 @@
           "dd": "IT · EN · ES"
         }
       ],
-      "seal": "Rate agreed in writing before any work begins, as required for a mediation mandate under art. 6, L. 39/1989."
+      "seal": "Fee agreed in writing before any work begins. A fixed sum for a defined service (art. 1655 c.c.), due on delivery."
     },
     "trapsSection": {
       "kicker": "Where it goes wrong",
@@ -1138,7 +1143,7 @@
       {
         "term": "Conformità catastale",
         "title": "The floor plan must match the building",
-        "body": "If the registered plan doesn't match what's actually built, the deed can be challenged and mortgage lending refused. Unpermitted verandas are everywhere."
+        "body": "If the registered plan doesn't match what's actually built, the deed is null under art. 29 c. 1-bis L. 52/1985, and mortgage lending is refused. Unpermitted verandas are everywhere."
       },
       {
         "term": "Caparra confirmatoria",
@@ -1149,7 +1154,7 @@
     "path": {
       "kicker": "Il percorso",
       "title": "Every step, who does it, how long it takes",
-      "lede": "This is the actual sequence of an Italian purchase. Steps marked in gold are where money is most often lost."
+      "lede": "This is the actual sequence of an Italian purchase. Durations are typical elapsed times we have observed — we do not control notaries, banks or public offices. Steps marked in gold are where money is most often lost."
     },
     "steps": [
       {
@@ -1157,14 +1162,14 @@
         "it": "Codice fiscale",
         "en": "Tax code",
         "what": "Your Italian tax identity. Nothing — no offer, no bank account, no utility contract — happens without it. We obtain it through the consulate or Agenzia delle Entrate.",
-        "when": "1–3 days"
+        "when": "Typically 1–3 days"
       },
       {
         "no": "02",
         "it": "Visura ipocatastale",
         "en": "Title & charges search",
         "what": "We pull the ownership chain, mortgages, liens and seizures registered against the property, plus the cadastral plan. Done before you offer, not after.",
-        "when": "3–5 days",
+        "when": "Typically 3–5 days",
         "flag": true
       },
       {
@@ -1172,7 +1177,7 @@
         "it": "Proposta d'acquisto",
         "en": "Written offer",
         "what": "Drafted with the conditions that protect you — mortgage clause, conformity clause, deadline. Binding on acceptance, so the wording is the whole game.",
-        "when": "Same week",
+        "when": "Typically Same week",
         "flag": true
       },
       {
@@ -1180,21 +1185,21 @@
         "it": "Compromesso",
         "en": "Preliminary contract",
         "what": "The real contract. We register it at the Agenzia delle Entrate and, where your deposit warrants it, transcribe it at the Conservatoria so no one can sell the property twice.",
-        "when": "2–6 weeks"
+        "when": "Typically 2–6 weeks"
       },
       {
         "no": "05",
         "it": "Conto corrente",
         "en": "Italian bank account",
         "what": "Required to issue the assegni circolari used at completion. Opening one as a non-resident is slower than you expect; we start it in parallel at step 01.",
-        "when": "2–5 weeks"
+        "when": "Typically 2–5 weeks"
       },
       {
         "no": "06",
         "it": "Rogito notarile",
         "en": "Completion deed",
         "what": "Signed before the notaio. If you can't attend, we arrange a procura speciale so someone signs on your behalf — legalised and apostilled in your country first.",
-        "when": "30–90 days",
+        "when": "Typically 30–90 days",
         "flag": true
       },
       {
@@ -1202,7 +1207,7 @@
         "it": "Volture e utenze",
         "en": "Transfers & utilities",
         "what": "Cadastral transfer, electricity, gas, water, waste tax and the condominium register moved into your name. The unglamorous part where foreign owners get stuck for months.",
-        "when": "2–4 weeks"
+        "when": "Typically 2–4 weeks"
       }
     ],
     "tiersSection": {
@@ -1237,7 +1242,7 @@
           "Codice fiscale and bank introduction",
           "Offer and compromesso drafted with you",
           "Independent lawyer review included",
-          "Notary selection and coordination",
+          "A shortlist of notaries; you appoint. We receive nothing from any professional we suggest.",
           "Named contact through completion"
         ]
       },
@@ -1254,32 +1259,6 @@
           "Healthcare enrolment and school guidance",
           "First-home tax relief eligibility review"
         ]
-      }
-    ],
-    "commission": {
-      "kicker": "On commission",
-      "title": "What a €300,000 purchase actually costs you",
-      "lede": "Italian agencies conventionally charge a percentage to both sides of the same transaction. We charge the buyer a fixed fee and take nothing from the seller, so nobody on our side is paid more when you pay more.",
-      "srcLead": "Where 3% comes from.",
-      "srcBody": "No Italian law sets a minimum commission — the Antitrust authority confirmed in 2004 that tariffs do not apply to this sector, and art. 6 of L. 39/1989 leaves the rate to agreement between the parties. The 3% figure is the customary rate recorded in Chamber of Commerce usage tables, which apply only where the parties agreed nothing in writing. That is the trap: an unsigned or silent mandate can be back-filled at the local customary rate. Ours states the fee before work starts."
-    },
-    "compare": [
-      {
-        "lbl": "Customary agency rate · buyer's side",
-        "amt": "€10,980",
-        "sub": "3% + IVA. The seller is customarily charged the same again on the same sale."
-      },
-      {
-        "lbl": "EasyCasa · Acquisto Assistito",
-        "amt": "€1,818",
-        "sub": "Fixed fee incl. IVA. Identical on a €300,000 flat or a €900,000 villa.",
-        "zero": true
-      },
-      {
-        "lbl": "Paid to us by the seller",
-        "amt": "€0",
-        "sub": "Always. It's the reason we can tell you to walk away from a property.",
-        "zero": true
       }
     ],
     "faqSection": {
@@ -1305,7 +1284,7 @@
       },
       {
         "q": "An agent told me 3% is fixed by law. Is it?",
-        "a": "No. There is no legal minimum commission in Italy. Rates are freely negotiable and have been since the sector was liberalised. The 3% you'll hear quoted is the customary figure recorded by local Chambers of Commerce, and it applies as a fallback only when the parties never agreed anything in writing — which is exactly why you should never sign a mandate that leaves the rate blank."
+        "a": "No. There is no legal minimum commission in Italy. Article 6 of Law 39/1989 leaves the rate to agreement between the parties. The 3% figure is the customary rate recorded by local Chambers of Commerce, and it applies as a fallback only when the parties never agreed anything in writing — which is why the amount should be written down before work starts."
       },
       {
         "q": "Which languages do you work in?",
@@ -1320,8 +1299,26 @@
       "ctaNote": "Or write to acquisti@easycasaita.com"
     },
     "footer": {
-      "left": "EasyCasa Italia · P.IVA IT04531990986",
-      "right": "Property data: Agenzia Entrate — OMI"
+      "entity": "Easy Casa Italia is a service of",
+      "placeholder": "[denominazione — P.IVA — REA — sede: to be published at incorporation]",
+      "entityAfter": ", Brescia. Platform and software licensed from Mundida.",
+      "enrollment": "Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation.",
+      "omi": "Property data: Agenzia Entrate — OMI"
+    },
+    "terms": {
+      "kicker": "The fee",
+      "title": "What you pay us, and what you do not",
+      "lede": "The same terms as the card at the top of this page. They are about our fee, not about anyone else’s."
+    },
+    "consumer": {
+      "kicker": "Distance contracts",
+      "title": "Fourteen days to change your mind",
+      "withdrawal": "These packages are sold at a distance to consumers. You have 14 days to withdraw under art. 52 of the Consumer Code (D.lgs. 206/2005), without giving a reason.",
+      "earlyStart": "Codice fiscale and title checks typically begin within 1–3 days, so work starts inside that window. Before we begin we will ask for your express request to start and your acknowledgement that you lose the right of withdrawal once the service is fully performed (art. 59 lett. a). Without that confirmation we wait.",
+      "precontract": "Who contracts with you will be the incorporated entity named below — the fields are a marked hole until incorporation. Prices, duration and what is included are on this page. Full pre-contract information required by art. 49 is in the terms.",
+      "odrBefore": "If we cannot settle a dispute, you may use the European ODR platform:",
+      "odrLink": "ec.europa.eu/consumers/odr",
+      "termsLink": "Terms and withdrawal"
     }
   },
   "viewings": {
@@ -2828,8 +2825,7 @@
       "kicker": "About us",
       "title": "We are paid for the work, not for the deal.",
       "lede": "Selling a home in Italy usually means handing a percentage of its value to an intermediary. Easy Casa Italia is paid a fixed sum for a defined service, due when the service is delivered. Whether the property sells, and for how much, does not change what we are paid.",
-      "status": "Today we are a service company, not an estate agency. We are not enrolled as an agente d’affari in mediazione and we do not carry out property mediation. We intend to apply. Until we are enrolled, there are things on this site we do not do, and we say so where they would otherwise be expected.",
-      "close": "Everyone else in this transaction is paid when it closes. We are paid on delivery."
+      "status": "Today we are a service company, not an estate agency. We are not enrolled as an agente d’affari in mediazione and we do not carry out property mediation. We intend to apply. Until we are enrolled, there are things on this site we do not do, and we say so where they would otherwise be expected."
     },
     "how": {
       "title": "How we do it"
@@ -2843,7 +2839,7 @@
       {
         "num": "02",
         "title": "Fixed prices, not percentages",
-        "body": "Sellers pay no commission. We do not take a percentage of the sale price. Photos, the energy certificate (APE), document checks, assistance: each has a fixed price, shown before you order, the same on a €150,000 home and an €800,000 one."
+        "body": "Photos, the energy certificate (APE), document checks, assistance: each has a fixed price, shown before you order, the same on a €150,000 home and an €800,000 one."
       },
       {
         "num": "03",

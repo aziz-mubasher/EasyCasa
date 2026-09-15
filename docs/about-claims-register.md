@@ -13,9 +13,8 @@ Licence column is whether the **claim** is lawful to make, not whether EasyCasa 
 |---|---|---|---|
 | `aboutUs.hero.title` / `lede` | `live` | Paid a fixed sum for a defined service, due on delivery. Sale / price do not change the fee. | `appalto di servizi` framing already on `/pricing`. Catalogue items used here are flat seller-side services. |
 | `aboutUs.hero.status` | `live` | Service company, not enrolled, intend to apply; we say what we do not do. | Same non-enrolment sentence as `footer.enrollment` / `pricing.pageFooter.enrollment`. Positioning call (fuller PONTE), not a new legal fact. |
-| `aboutUs.hero.close` | `live` | Paid on delivery, not on close. | G1 cleared for this wording by EC-PRICING-1 PR A (`#231`): it is not a no-commission-for-both-sides claim. |
 | `aboutUs.pillars[0]` | `live` | Publish the OMI range + semester; do not say whether a price is good. | T04 row 2 / row 3. Not a *stima*. |
-| `aboutUs.pillars[1]` | `live` | **Sellers** pay no commission; fixed prices, same on €150k and €800k. | Scoped. Buyer-side catalogue SKUs are out of this sentence. |
+| `aboutUs.pillars[1]` | `live` | Fixed prices, same on €150k and €800k. **No zero-commission sentence.** | G1 correction: “Sellers pay no commission” / “we do not take a percentage” cannot be said while %-of-sale SKUs remain in `catalog.ts`. |
 | `aboutUs.pillars[2]` | `live` | Agency fee stays with the agency; never per lead, never per deal. | Same rule as the agencies honesty pass. |
 | `aboutUs.explore` | `live` | Index includes agencies. OMI link → `/for-buyers`, not `/valutazione-gratuita`. | Avoids promising a *valutazione* (ATECO 68.31) from About. |
 | `aboutUs.groupNote` | `live` | Easy Legenda + NIB named so the page matches the footer stakeholders. | Labels only. |
@@ -28,7 +27,9 @@ Licence column is whether the **claim** is lawful to make, not whether EasyCasa 
 
 | Former claim | Why | Next |
 |---|---|---|
-| “Direct buying and selling, with no commission.” | G1. Catalogue still has buyer-side % SKUs; agency listings carry the agency’s commission. Card 03 already scoped sellers. | Do not soften to “almost” or “no commission from us”. |
+| “Direct buying and selling, with no commission.” | G1. Catalogue still has %-of-sale SKUs; agency listings carry the agency’s commission. | Do not soften to “almost” or “no commission from us”. |
+| “Sellers pay no commission” / “We do not take a percentage of the sale price.” | G1 correction (acquisto-assistito check §9). False while `FULL_MEDIATION` / `BUYER_MEDIATION` remain in the TypeScript catalog. | G1 adds the percentage denial back after PR A is true in the served catalogue. |
+| “Everyone else in this transaction is paid when it closes. We are paid on delivery.” | Same G1 gate. | Restore with the percentage denial. |
 | “Every listing is published by an identity-verified person… not after something goes wrong.” | False (`verified_owner_case = 0`; Keycloak does not verify email). Assumes a check that does not run. | **No replacement card.** `[[BUCO: cosa viene effettivamente verificato al publish — EC-S-36]]` |
 | “owners and buyers can deal with each other directly” | G4. `PartnersService.routeLead` still scores and assigns. | Census, then `routeLead` off. |
 | Energy-class publish gate | 92/118 live adverts lack class + index. | Write only after the invariant is real. |

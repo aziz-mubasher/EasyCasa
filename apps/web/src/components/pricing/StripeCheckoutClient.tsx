@@ -25,9 +25,14 @@ function PayForm({ locale, orderId, amountCents }: Omit<Props, 'clientSecret'>) 
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [earlyStartAck, setEarlyStartAck] = useState(false);
 
   const onPay = async () => {
     if (!stripe || !elements) return;
+    if (!earlyStartAck) {
+      setError(t('earlyStartRequired'));
+      return;
+    }
     setBusy(true);
     setError(null);
     const returnUrl = `${window.location.origin}/${locale}/pagamento/successo?orderId=${encodeURIComponent(orderId)}`;
@@ -55,9 +60,18 @@ function PayForm({ locale, orderId, amountCents }: Omit<Props, 'clientSecret'>) 
           {error}
         </p>
       ) : null}
+      <label className="flex items-start gap-2 text-sm text-ink leading-relaxed">
+        <input
+          type="checkbox"
+          className="mt-1 shrink-0"
+          checked={earlyStartAck}
+          onChange={(e) => setEarlyStartAck(e.target.checked)}
+        />
+        <span>{t('earlyStartAck')}</span>
+      </label>
       <button
         type="button"
-        disabled={!stripe || busy}
+        disabled={!stripe || busy || !earlyStartAck}
         onClick={() => void onPay()}
         className="inline-flex w-full items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium font-[var(--font-display)] bg-azure text-paper hover:brightness-110 disabled:opacity-60"
       >

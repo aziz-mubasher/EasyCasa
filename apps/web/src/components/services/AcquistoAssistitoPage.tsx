@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import './acquisto-assistito.css';
 
@@ -18,7 +19,6 @@ type Tier = {
   pick?: boolean;
   pill?: string;
 };
-type Compare = { lbl: string; amt: string; sub: string; zero?: boolean };
 type Faq = { q: string; a: string };
 type SchedaRow = { dt: string; dd: string; hi?: boolean };
 
@@ -27,7 +27,6 @@ export function AcquistoAssistitoPage() {
   const traps = t.raw('traps') as Trap[];
   const steps = t.raw('steps') as Step[];
   const tiers = t.raw('tiers') as Tier[];
-  const compare = t.raw('compare') as Compare[];
   const faq = t.raw('faq') as Faq[];
   const scheda = t.raw('scheda.rows') as SchedaRow[];
 
@@ -149,21 +148,21 @@ export function AcquistoAssistitoPage() {
 
         <section className="band">
           <div className="wrap">
-            <p className="kicker">{t('commission.kicker')}</p>
-            <h2>{t('commission.title')}</h2>
-            <p className="lede">{t('commission.lede')}</p>
-            <div className="compare">
-              {compare.map((row) => (
-                <div key={row.lbl}>
-                  <p className="lbl">{row.lbl}</p>
-                  <p className={`amt${row.zero ? ' zero' : ''}`}>{row.amt}</p>
-                  <p className="sub">{row.sub}</p>
-                </div>
-              ))}
-            </div>
-            <p className="src">
-              <b>{t('commission.srcLead')}</b> {t('commission.srcBody')}
-            </p>
+            <p className="kicker">{t('terms.kicker')}</p>
+            <h2>{t('terms.title')}</h2>
+            <p className="lede">{t('terms.lede')}</p>
+            <aside className="scheda scheda--inline">
+              <h2>{t('scheda.title')}</h2>
+              <dl>
+                {scheda.map((row) => (
+                  <div key={`terms-${row.dt}`}>
+                    <dt>{row.dt}</dt>
+                    <dd className={row.hi ? 'hi' : undefined}>{row.dd}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="seal">{t('scheda.seal')}</p>
+            </aside>
           </div>
         </section>
 
@@ -182,6 +181,24 @@ export function AcquistoAssistitoPage() {
           </div>
         </section>
 
+        <section className="band" id="consumer">
+          <div className="wrap">
+            <p className="kicker">{t('consumer.kicker')}</p>
+            <h2>{t('consumer.title')}</h2>
+            <p className="lede">{t('consumer.withdrawal')}</p>
+            <p className="lede">{t('consumer.earlyStart')}</p>
+            <p className="lede">{t('consumer.precontract')}</p>
+            <p className="lede">
+              {t('consumer.odrBefore')}{' '}
+              <a href="https://ec.europa.eu/consumers/odr" rel="noopener noreferrer" target="_blank">
+                {t('consumer.odrLink')}
+              </a>
+              {'. '}
+              <Link href="/legal/terms">{t('consumer.termsLink')}</Link>
+            </p>
+          </div>
+        </section>
+
         <section className="band close" id="start">
           <div className="wrap">
             <p className="kicker">{t('close.kicker')}</p>
@@ -197,10 +214,15 @@ export function AcquistoAssistitoPage() {
         <footer className="aa-footer">
           <div className="wrap">
             <div>
-              {t('footer.left')}
+              <p>
+                {t('footer.entity')}{' '}
+                <span className="aa-entity-hole">{t('footer.placeholder')}</span>
+                {t('footer.entityAfter')}
+              </p>
+              <p className="aa-enrollment">{t('footer.enrollment')}</p>
               <MundidaDevCredit inline leadingMiddot />
             </div>
-            <div>{t('footer.right')}</div>
+            <div>{t('footer.omi')}</div>
           </div>
         </footer>
       </div>

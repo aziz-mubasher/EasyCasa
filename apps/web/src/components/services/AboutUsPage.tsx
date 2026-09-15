@@ -38,7 +38,6 @@ export function AboutUsPage() {
               </article>
             ))}
           </div>
-          <p className="au-close">{t('hero.close')}</p>
         </section>
 
         <section className="au-section" aria-labelledby="au-explore-title">
