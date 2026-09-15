@@ -642,8 +642,10 @@
   },
   "footer": {
     "externalHint": "Opens on {host} in a new tab",
-    "entity": "Easy Casa Italia · part of Ayni Group",
-    "blurb": "EasyCasa is the Italian property portal. We sell preparation and documents, never the deal. Every listing is checked as a property — documents, not people.",
+    "entity": "Easy Casa Italia is a service of",
+    "placeholder": "[denominazione — P.IVA — REA — sede: to be published at incorporation]",
+    "entityAfter": ", Brescia. Platform and software licensed from Mundida.",
+    "blurb": "EasyCasa is the Italian property portal. We sell preparation and documents, never the deal.",
     "columns": {
       "sellers": "For sellers",
       "buyers": "For buyers",
@@ -2282,11 +2284,12 @@
       "after": ". We reply even if you are not our client."
     },
     "ident": {
-      "line1": "EasyCasa Italia · P.IVA IT04531990986",
-      "line2Before": "Estate mediation activity — registration",
-      "regTodo": "[—]",
+      "entity": "Easy Casa Italia is a service of",
+      "placeholder": "[denominazione — P.IVA — REA — sede: to be published at incorporation]",
+      "entityAfter": ", Brescia. Platform and software licensed from Mundida.",
+      "enrollment": "Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation.",
       "omi": "Market data: Agenzia Entrate — OMI, H2 2025",
-      "banks": "Banks4All and EasyCasa are separate companies in the Mundida group. Banks4All does not receive fees from EasyCasa, agencies or sellers. Credit mediation is carried out by operators registered in the mandatory registers.",
+      "banks": "Banks4All and EasyCasa are separate companies. Banks4All does not receive fees from EasyCasa, agencies or sellers. Credit mediation is carried out by operators registered in the mandatory registers.",
       "linkTransparency": "Transparency",
       "linkTerms": "Terms",
       "linkContacts": "Contact"
@@ -2433,15 +2436,12 @@
     },
     "ident": {
       "title": "Operator details",
-      "line1": "EasyCasa Italia · P.IVA IT04531990986",
-      "line2Before": "Estate mediation activity — registration",
-      "regTodo": "[—]",
-      "sedeBefore": "Registered office",
-      "reaBefore": "REA",
-      "pecBefore": "PEC",
-      "todo": "[—]",
+      "entity": "Easy Casa Italia is a service of",
+      "placeholder": "[denominazione — P.IVA — REA — sede: to be published at incorporation]",
+      "entityAfter": ", Brescia. Platform and software licensed from Mundida.",
+      "enrollment": "Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation.",
       "omi": "Market data: Agenzia Entrate — OMI, H2 2025",
-      "banks": "Banks4All and EasyCasa are separate companies in the Mundida group. Banks4All does not receive fees from EasyCasa, agencies or sellers. Credit mediation is carried out by operators registered in the mandatory registers.",
+      "banks": "Banks4All and EasyCasa are separate companies. Banks4All does not receive fees from EasyCasa, agencies or sellers. Credit mediation is carried out by operators registered in the mandatory registers.",
       "linkMediation": "Mediation and commission →",
       "linkTerms": "Terms",
       "linkPrivacy": "Privacy",
@@ -2813,7 +2813,7 @@
       "cta": "Find your home"
     },
     "foot": {
-      "mundida": "EasyCasa and Banks4All are part of the Mundida group (P.IVA IT04531990986). EasyCasa is a platform connecting private buyers and sellers directly and does not act as a real-estate intermediary.",
+      "mundida": "Easy Casa Italia is a service of [denominazione — P.IVA — REA — sede: to be published at incorporation], Brescia. Platform and software licensed from Mundida. Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation.",
       "omi": "Price benchmarks are derived from the OMI dataset published by the Agenzia delle Entrate and are indicative zone-level ranges, not valuations of individual properties.",
       "privacy": "Privacy",
       "terms": "Terms"
@@ -2822,12 +2822,14 @@
   "aboutUs": {
     "meta": {
       "title": "About us — EasyCasa",
-      "description": "Direct buying and selling in Italy with no seller commission. Identity-verified listings, official OMI market values, and fixed-price services."
+      "description": "Easy Casa Italia is paid a fixed sum for a defined service. Official OMI zone ranges, seller-side fixed prices, and agencies keep their own fee."
     },
     "hero": {
       "kicker": "About us",
-      "title": "Direct buying and selling, with no commission.",
-      "lede": "Selling a home in Italy usually means handing a percentage of its value to an intermediary. EasyCasa was built on a different idea: owners and buyers can deal with each other directly when the platform does the work that actually needs doing."
+      "title": "We are paid for the work, not for the deal.",
+      "lede": "Selling a home in Italy usually means handing a percentage of its value to an intermediary. Easy Casa Italia is paid a fixed sum for a defined service, due when the service is delivered. Whether the property sells, and for how much, does not change what we are paid.",
+      "status": "Today we are a service company, not an estate agency. We are not enrolled as an agente d’affari in mediazione and we do not carry out property mediation. We intend to apply. Until we are enrolled, there are things on this site we do not do, and we say so where they would otherwise be expected.",
+      "close": "Everyone else in this transaction is paid when it closes. We are paid on delivery."
     },
     "how": {
       "title": "How we do it"
@@ -2835,18 +2837,18 @@
     "pillars": [
       {
         "num": "01",
-        "title": "Verification before publication",
-        "body": "Every listing is published by an identity-verified person. We check who you're dealing with before a listing goes live, not after something goes wrong."
+        "title": "Transparent values",
+        "body": "Next to every asking price we show the official market value range for the zone, from the OMI data of the Agenzia delle Entrate, with the semester it refers to. We publish the range. We do not tell you whether a price is good — that is a valuation, and it takes a licensed technician."
       },
       {
         "num": "02",
-        "title": "Transparent values",
-        "body": "Next to every asking price we show the official market value range for the zone, drawn from the OMI data of the Agenzia delle Entrate. You see how a price compares to the market before you enquire."
+        "title": "Fixed prices, not percentages",
+        "body": "Sellers pay no commission. We do not take a percentage of the sale price. Photos, the energy certificate (APE), document checks, assistance: each has a fixed price, shown before you order, the same on a €150,000 home and an €800,000 one."
       },
       {
         "num": "03",
-        "title": "Fixed prices, not percentages",
-        "body": "Sellers pay no commission. Professional photos, the energy certificate (APE), document checks, assistance: each service has a fixed price shown before you order."
+        "title": "Agencies keep their fee",
+        "body": "Agencies are welcome, and their fee is theirs. If a property is with an agency, the agency’s commission stays with the agency. We are never paid per lead and never paid per deal."
       }
     ],
     "explore": {
@@ -2865,7 +2867,7 @@
             },
             {
               "label": "Market values (OMI)",
-              "href": "/valutazione-gratuita"
+              "href": "/for-buyers"
             }
           ]
         },
@@ -2883,6 +2885,15 @@
             {
               "label": "Pricing",
               "href": "/pricing"
+            }
+          ]
+        },
+        {
+          "title": "For agencies",
+          "links": [
+            {
+              "label": "Property agencies",
+              "href": "/agenzie"
             }
           ]
         },
@@ -2905,6 +2916,7 @@
         }
       ]
     },
+    "groupNote": "The site footer also lists Easy Legenda and Non Interest Buying (NIB) among the group’s stakeholders, together with Banks4All and property agencies.",
     "contact": {
       "title": "Contact us",
       "body": "Questions about a listing, a service or the platform? We reply in Italian, English and Spanish.",

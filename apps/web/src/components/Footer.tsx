@@ -6,6 +6,7 @@ import { getBanks4AllReferralUrl } from '@/lib/banks4all-referral';
 import { isListingLandingPath } from '@/lib/listing-landing';
 import { isMarketingServicePath } from '@/lib/marketing-service';
 import { sellPrivatelyPath } from '@/lib/sell-privately';
+import { contactPath, transparencyPath } from '@/lib/site-paths';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import './site-footer.css';
 
@@ -119,7 +120,9 @@ export function Footer() {
         <div className="sf-legal">
           <div className="sf-legal-meta">
             <p className="sf-entity">
-              {t('entity')}
+              {t('entity')}{' '}
+              <span className="sf-entity-hole">{t('placeholder')}</span>
+              {t('entityAfter')}
               <MundidaDevCredit className="sf-dev-credit" inline leadingMiddot />
             </p>
             <p className="sf-enrollment">{t('enrollment')}</p>
@@ -128,9 +131,9 @@ export function Footer() {
             <Link href="/legal/privacy">{t('legal.privacy')}</Link>
             <Link href="/legal/terms">{t('legal.terms')}</Link>
             <Link href="/legal/mediation">{t('legal.mediation')}</Link>
-            <Link href="/trasparenza">{t('legal.transparency')}</Link>
+            <Link href={transparencyPath(locale)}>{t('legal.transparency')}</Link>
             <Link href="/privacy">{t('legal.myData')}</Link>
-            <Link href="/contatti">{t('legal.contacts')}</Link>
+            <Link href={contactPath(locale)}>{t('legal.contacts')}</Link>
           </div>
         </div>
       </div>

@@ -51,6 +51,20 @@ describe('sitemap (T33 honesty + sell-privately locales)', () => {
     expect(isSitemapExcludedPath('/search')).toBe(false);
   });
 
+  it('uses English slugs for transparency and contact', () => {
+    const entries = buildStaticSitemapEntries(site);
+    expect(entries.some((e) => e.url === `${site}/en/transparency`)).toBe(true);
+    expect(entries.some((e) => e.url === `${site}/en/contact`)).toBe(true);
+    expect(entries.some((e) => e.url === `${site}/en/trasparenza`)).toBe(false);
+    expect(entries.some((e) => e.url === `${site}/en/contatti`)).toBe(false);
+    expect(entries.some((e) => e.url === `${site}/it/trasparenza`)).toBe(true);
+    expect(entries.some((e) => e.url === `${site}/it/contatti`)).toBe(true);
+    const about = entries.find((e) => e.url === `${site}/en/about`);
+    const last = about?.lastModified;
+    const iso = last instanceof Date ? last.toISOString() : String(last);
+    expect(iso).toBe('2026-09-15T00:00:00.000Z');
+  });
+
   it('hreflang alternates match sellPrivatelyLanguageAlternates (incl. x-default)', () => {
     const entry = buildStaticSitemapEntries(site).find((e) => e.url.endsWith('/it/vendi-da-privato'));
     expect(entry?.alternates?.languages).toEqual({

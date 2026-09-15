@@ -642,8 +642,10 @@
   },
   "footer": {
     "externalHint": "Si apre su {host} in una nuova scheda",
-    "entity": "Easy Casa Italia · parte di Ayni Group",
-    "blurb": "EasyCasa è il portale immobiliare italiano. Vendiamo preparazione e documenti, mai l’affare. La verifica è sull’immobile e sulle sue carte, non sulle persone.",
+    "entity": "Easy Casa Italia è un servizio di",
+    "placeholder": "[denominazione — P.IVA — REA — sede: da pubblicare alla costituzione]",
+    "entityAfter": ", Brescia. Piattaforma e software concessi in licenza da Mundida.",
+    "blurb": "EasyCasa è il portale immobiliare italiano. Vendiamo preparazione e documenti, mai l’affare.",
     "columns": {
       "sellers": "Per chi vende",
       "buyers": "Per chi compra",
@@ -2282,11 +2284,12 @@
       "after": ". Ti rispondiamo anche se non sei nostro cliente."
     },
     "ident": {
-      "line1": "EasyCasa Italia · P.IVA IT04531990986",
-      "line2Before": "Attività di mediazione immobiliare — iscrizione",
-      "regTodo": "[—]",
+      "entity": "Easy Casa Italia è un servizio di",
+      "placeholder": "[denominazione — P.IVA — REA — sede: da pubblicare alla costituzione]",
+      "entityAfter": ", Brescia. Piattaforma e software concessi in licenza da Mundida.",
+      "enrollment": "Easy Casa Italia non è iscritta come agente d’affari in mediazione e non svolge attività di mediazione immobiliare.",
       "omi": "Dati di mercato: Agenzia Entrate — OMI, semestre 2025/2",
-      "banks": "Banks4All ed EasyCasa sono società distinte del gruppo Mundida. Banks4All non percepisce compensi da EasyCasa, da agenzie o da venditori. La mediazione creditizia è svolta da operatori iscritti negli albi obbligatori.",
+      "banks": "Banks4All ed EasyCasa sono società distinte. Banks4All non percepisce compensi da EasyCasa, da agenzie o da venditori. La mediazione creditizia è svolta da operatori iscritti negli albi obbligatori.",
       "linkTransparency": "Trasparenza",
       "linkTerms": "Termini",
       "linkContacts": "Contatti"
@@ -2433,15 +2436,12 @@
     },
     "ident": {
       "title": "Dati dell'operatore",
-      "line1": "EasyCasa Italia · P.IVA IT04531990986",
-      "line2Before": "Attività di mediazione immobiliare — iscrizione",
-      "regTodo": "[—]",
-      "sedeBefore": "Sede legale",
-      "reaBefore": "REA",
-      "pecBefore": "PEC",
-      "todo": "[—]",
+      "entity": "Easy Casa Italia è un servizio di",
+      "placeholder": "[denominazione — P.IVA — REA — sede: da pubblicare alla costituzione]",
+      "entityAfter": ", Brescia. Piattaforma e software concessi in licenza da Mundida.",
+      "enrollment": "Easy Casa Italia non è iscritta come agente d’affari in mediazione e non svolge attività di mediazione immobiliare.",
       "omi": "Dati di mercato: Agenzia Entrate — OMI, semestre 2025/2",
-      "banks": "Banks4All ed EasyCasa sono società distinte del gruppo Mundida. Banks4All non percepisce compensi da EasyCasa, da agenzie o da venditori. La mediazione creditizia è svolta da operatori iscritti negli albi obbligatori.",
+      "banks": "Banks4All ed EasyCasa sono società distinte. Banks4All non percepisce compensi da EasyCasa, da agenzie o da venditori. La mediazione creditizia è svolta da operatori iscritti negli albi obbligatori.",
       "linkMediation": "Mediazione e provvigione →",
       "linkTerms": "Termini",
       "linkPrivacy": "Privacy",
@@ -2813,7 +2813,7 @@
       "cta": "Trova la tua casa"
     },
     "foot": {
-      "mundida": "EasyCasa e Banks4All fanno parte del gruppo Mundida (P.IVA IT04531990986). EasyCasa è una piattaforma che collega acquirenti e venditori privati in modo diretto e non svolge attività di mediazione immobiliare.",
+      "mundida": "Easy Casa Italia è un servizio di [denominazione — P.IVA — REA — sede: da pubblicare alla costituzione], Brescia. Piattaforma e software concessi in licenza da Mundida. Easy Casa Italia non è iscritta come agente d’affari in mediazione e non svolge attività di mediazione immobiliare.",
       "omi": "I benchmark di prezzo derivano dal dataset OMI pubblicato dall’Agenzia delle Entrate e sono fasce zonali indicative, non perizie di singoli immobili.",
       "privacy": "Privacy",
       "terms": "Termini"
@@ -2822,12 +2822,14 @@
   "aboutUs": {
     "meta": {
       "title": "Chi siamo — EasyCasa",
-      "description": "Compravendita diretta in Italia senza commissioni dal venditore. Annunci con identità verificata, valori OMI ufficiali e servizi a prezzo fisso."
+      "description": "Easy Casa Italia è pagata una somma fissa per un servizio definito. Fasce OMI ufficiali, prezzi fissi per chi vende, e la provvigione delle agenzie resta loro."
     },
     "hero": {
       "kicker": "Chi siamo",
-      "title": "Compravendita diretta, senza commissioni.",
-      "lede": "Vendere casa in Italia significa quasi sempre cedere una percentuale del suo valore a un intermediario. EasyCasa nasce da un'idea diversa: proprietari e acquirenti possono trattare direttamente, quando la piattaforma fa il lavoro che serve davvero."
+      "title": "Ci pagano per il lavoro, non per l’affare.",
+      "lede": "Vendere casa in Italia significa quasi sempre cedere una percentuale del suo valore a un intermediario. Easy Casa Italia è pagata una somma fissa per un servizio definito, dovuta alla consegna. Che l’immobile si venda, e a quanto, non cambia quanto ci pagano.",
+      "status": "Oggi siamo una società di servizi, non un’agenzia immobiliare. Non siamo iscritti come agente d’affari in mediazione e non svolgiamo attività di mediazione immobiliare. Intendiamo iscriverci. Finché non lo siamo, ci sono cose che su questo sito non facciamo, e lo diciamo dove altrimenti le si aspetterebbe.",
+      "close": "Tutti gli altri in questa transazione sono pagati alla chiusura. Noi siamo pagati alla consegna."
     },
     "how": {
       "title": "Come lo facciamo"
@@ -2835,18 +2837,18 @@
     "pillars": [
       {
         "num": "01",
-        "title": "Verifica prima della pubblicazione",
-        "body": "Ogni annuncio è pubblicato da una persona con identità verificata. Controlliamo chi hai di fronte prima che l'annuncio vada online, non dopo che qualcosa è andato storto."
+        "title": "Valori trasparenti",
+        "body": "Accanto a ogni prezzo mostriamo la fascia di valore di mercato ufficiale della zona, dai dati OMI dell’Agenzia delle Entrate, con il semestre di riferimento. Pubblichiamo la fascia. Non diciamo se un prezzo è buono — quella è una stima, e la fa un tecnico abilitato."
       },
       {
         "num": "02",
-        "title": "Valori trasparenti",
-        "body": "Accanto a ogni prezzo mostriamo la fascia di valore di mercato ufficiale della zona, basata sui dati OMI dell'Agenzia delle Entrate. Vedi come il prezzo si colloca rispetto al mercato prima di contattare."
+        "title": "Prezzi fissi, non percentuali",
+        "body": "Chi vende non paga commissioni. Non prendiamo una percentuale del prezzo di vendita. Foto, certificato energetico (APE), controlli documentali, assistenza: ciascuno ha un prezzo fisso, indicato prima dell’ordine, uguale su una casa da 150.000 € e su una da 800.000 €."
       },
       {
         "num": "03",
-        "title": "Prezzi fissi, non percentuali",
-        "body": "Chi vende non paga commissioni. Foto professionali, certificato energetico (APE), verifica dei documenti, assistenza: ogni servizio ha un prezzo fisso indicato prima dell'ordine."
+        "title": "La provvigione delle agenzie resta loro",
+        "body": "Le agenzie sono benvenute, e la loro provvigione resta loro. Se un immobile è in agenzia, la commissione dell’agenzia resta dell’agenzia. Non siamo mai pagati per contatto e mai pagati per affare."
       }
     ],
     "explore": {
@@ -2865,7 +2867,7 @@
             },
             {
               "label": "Valori di mercato (OMI)",
-              "href": "/valutazione-gratuita"
+              "href": "/for-buyers"
             }
           ]
         },
@@ -2883,6 +2885,15 @@
             {
               "label": "Prezzi",
               "href": "/pricing"
+            }
+          ]
+        },
+        {
+          "title": "Per le agenzie",
+          "links": [
+            {
+              "label": "Agenzie immobiliari",
+              "href": "/agenzie"
             }
           ]
         },
@@ -2905,6 +2916,7 @@
         }
       ]
     },
+    "groupNote": "Il piè di pagina del sito elenca anche Easy Legenda e Non Interest Buying (NIB) tra gli stakeholder del gruppo, insieme a Banks4All e alle agenzie immobiliari.",
     "contact": {
       "title": "Contattaci",
       "body": "Domande su un annuncio, un servizio o la piattaforma? Rispondiamo in italiano, inglese e spagnolo.",

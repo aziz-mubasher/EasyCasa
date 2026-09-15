@@ -166,6 +166,14 @@
   color: rgba(232, 223, 204, 0.78);
 }
 
+.sf .sf-entity-hole {
+  display: inline;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  background: rgba(192, 138, 30, 0.18);
+  color: #e8c56a;
+}
+
 .sf .sf-enrollment {
   margin: 0.35rem 0 0;
   max-width: 36rem;

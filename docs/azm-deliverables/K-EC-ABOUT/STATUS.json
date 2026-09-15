@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_ec_about_15sep",
+  "kaizenCode": "K EC ABOUT",
+  "polishId": "PP-ABOUT",
+  "title": "K EC ABOUT",
+  "venture": "EasyCasa",
+  "lifecycle": "pr_ready",
+  "agentStatus": "IDLE",
+  "agentBcId": "bc-b8598c85-da4c-4760-8cbf-46f45386740a",
+  "agentUrl": "https://cursor.com/agents/bc-b8598c85-da4c-4760-8cbf-46f45386740a",
+  "branch": "cursor/about-honesty-pass-740a",
+  "prNumber": 238,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/238",
+  "prState": "OPEN",
+  "dispatchedAt": "2026-09-15T15:06:49.334Z",
+  "updatedAt": "2026-09-15T15:27:49.207Z",
+  "summary": "PR #238 ready: /about on shared layout; appalto hero; card 01 removed; pricing identity hole; mediation-registration line deleted.",
+  "nextAction": "AZM review + merge. Kaizen Operations + Startup Phase 3 need a human board write. EC-S-36 still gates any publish-verification card or “directly”.",
+  "errors": []
+}

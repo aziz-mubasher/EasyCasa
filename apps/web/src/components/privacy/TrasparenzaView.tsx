@@ -1,5 +1,6 @@
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
+import { contactPath } from '@/lib/site-paths';
 import './privacy-doc.css';
 
 type Pillar = { tag: string; title: string; paras: string[] };
@@ -7,6 +8,7 @@ type PayRow = { who: string; amt: string; zero?: boolean };
 type Rule = { title: string; body: string };
 
 export async function TrasparenzaView() {
+  const locale = await getLocale();
   const t = await getTranslations('transparencyPage');
   const pillars = t.raw('model.pillars') as Pillar[];
   const payRows = t.raw('pay.rows') as PayRow[];
@@ -126,16 +128,11 @@ export async function TrasparenzaView() {
         <div className="pd-ident">
           <h2>{t('ident.title')}</h2>
           <p>
-            {t('ident.line1')}
-            <br />
-            {t('ident.line2Before')} <span className="todo">{t('ident.regTodo')}</span>
-            <br />
-            {t('ident.sedeBefore')} <span className="todo">{t('ident.todo')}</span>
-            {' · '}
-            {t('ident.reaBefore')} <span className="todo">{t('ident.todo')}</span>
-            {' · '}
-            {t('ident.pecBefore')} <span className="todo">{t('ident.todo')}</span>
+            {t('ident.entity')}{' '}
+            <span className="todo">{t('ident.placeholder')}</span>
+            {t('ident.entityAfter')}
           </p>
+          <p>{t('ident.enrollment')}</p>
           <p>{t('ident.omi')}</p>
           <p>{t('ident.banks')}</p>
           <p>
@@ -145,7 +142,7 @@ export async function TrasparenzaView() {
             {' · '}
             <Link href="/legal/privacy">{t('ident.linkPrivacy')}</Link>
             {' · '}
-            <Link href="/contatti">{t('ident.linkContacts')}</Link>
+            <Link href={contactPath(locale)}>{t('ident.linkContacts')}</Link>
           </p>
         </div>
       </div>
