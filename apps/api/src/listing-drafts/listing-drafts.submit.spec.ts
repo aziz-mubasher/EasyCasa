@@ -15,6 +15,8 @@ const readyDraft = {
   sqm: 65,
   rooms: 2,
   bathrooms: 1,
+  energyClass: 'G',
+  energyPerformanceKwhM2Y: 180,
   price: 320000,
   photoUrls: ['https://cdn.example/a.webp', 'https://cdn.example/b.webp', 'https://cdn.example/c.webp'],
   description: 'A'.repeat(50),
