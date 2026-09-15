@@ -343,3 +343,72 @@
   font-size: 0.9375rem;
   color: var(--azure);
 }
+
+.ag .apply .counterpart {
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--ink);
+  max-width: 56ch;
+}
+
+.ag .claims {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.ag .claim {
+  background: #fff;
+  border: 1px solid var(--ag-ink-12);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.ag .claim-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ag .claim-id {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  color: var(--azure);
+}
+
+.ag .claim h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.ag .claim p {
+  font-size: 0.9375rem;
+  color: var(--ag-ink-70);
+  margin: 0;
+}
+
+.ag-chip {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+}
+
+.ag-chip--live {
+  background: #d6e6f0;
+  color: #163a56;
+  border: 1px solid rgba(22, 58, 86, 0.28);
+}
+
+.ag-chip--coming {
+  background: #f3e6c8;
+  color: #6b4a0c;
+  border: 1px solid rgba(107, 74, 12, 0.35);
+}

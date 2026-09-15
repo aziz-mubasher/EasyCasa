@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T11:37:15.200Z",
+  "updatedAt": "2026-09-15T12:04:22.026Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_agenzie_15sep",
+      "kaizenCode": "K EC AGENZIE",
+      "polishId": "PP-AGENZIE",
+      "title": "/agenzie honesty pass — retract budget, never-per-contact, ledger labels",
+      "venture": "EasyCasa",
+      "lifecycle": "pr_ready",
+      "agentStatus": "IDLE",
+      "agentBcId": "bc-b8598c85-da4c-4760-8cbf-46f45386740a",
+      "agentUrl": "https://cursor.com/agents/bc-b8598c85-da4c-4760-8cbf-46f45386740a",
+      "branch": "cursor/agenzie-honesty-pass-740a",
+      "prNumber": 237,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/237",
+      "prState": "OPEN",
+      "dispatchedAt": "2026-09-15T11:41:23.939Z",
+      "updatedAt": "2026-09-15T12:04:22.026Z",
+      "summary": "PR #237 ready for review. Honesty pass live in branch: budget block gone, never-per-contact, A1–A4 coming, /en/for-agencies 301.",
+      "nextAction": "Merge PR #237. AZM sets the pilot end date and Homio contract form. Do not rebuild a person-badge.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_for_buyers_15sep",
       "kaizenCode": "K EC FOR-BUYERS",

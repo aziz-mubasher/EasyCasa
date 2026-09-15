@@ -10,6 +10,7 @@ import {
   JOURNEY_ITEM_CODES,
   type PricingJourney,
 } from '@/lib/pricing-config';
+import { agenziePath } from '@/lib/agenzie';
 import { catalogLabel, formatEuroCents, packageLabel } from '@/lib/pricing-display';
 import { Button } from '@/components/ui/Button';
 
@@ -414,7 +415,7 @@ export function PricingCatalogSections({
           <p className="text-[14.5px] text-muted mb-3">
             {t.rich('agency.p2', {
               directory: (chunks) => (
-                <Link href="/agenzie" className="text-azure underline">
+                <Link href={agenziePath(locale)} className="text-azure underline">
                   {chunks}
                 </Link>
               ),

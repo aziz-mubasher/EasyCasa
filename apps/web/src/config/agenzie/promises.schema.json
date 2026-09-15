@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://easycasaita.com/schemas/agenzie-promises.json",
+  "title": "EasyCasa /agenzie promise ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "updatedAt", "promises"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "updatedAt": { "type": "string", "minLength": 1 },
+    "promises": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["A1", "A2", "A3", "A4"],
+      "properties": {
+        "A1": { "$ref": "#/$defs/promise" },
+        "A2": { "$ref": "#/$defs/promise" },
+        "A3": { "$ref": "#/$defs/promise" },
+        "A4": { "$ref": "#/$defs/promise" }
+      }
+    }
+  },
+  "$defs": {
+    "promiseState": {
+      "type": "string",
+      "enum": ["live", "coming", "hidden"]
+    },
+    "promise": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "tasks"],
+      "properties": {
+        "state": { "$ref": "#/$defs/promiseState" },
+        "tasks": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

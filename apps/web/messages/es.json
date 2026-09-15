@@ -2451,17 +2451,21 @@
   "agenzie": {
     "meta": {
       "title": "Para agencias — EasyCasa Italia",
-      "description": "Publica gratis durante el piloto EasyCasa: importación automática, compradores con verificación de presupuesto, solo anuncios auténticos."
+      "description": "Publica gratis durante el piloto EasyCasa: importación XML, nunca un coste por contacto, NIF/IVA y REA en cada agencia. Nosotros no entramos en la negociación."
+    },
+    "tags": {
+      "live": "Live",
+      "coming": "Próximamente"
     },
     "hero": {
       "kicker": "Para agencias inmobiliarias",
       "title": "Vender casas de forma auténtica. Juntos.",
-      "lead": "EasyCasa es el portal italiano donde cada anuncio está verificado y cada agencia está identificada. Durante el piloto publicar es gratis: sin suscripción, sin renovación automática, sin exclusividad. Tu comisión sigue siendo tuya — nosotros no entramos en la negociación.",
+      "lead": "EasyCasa es el portal italiano donde cada agencia está identificada — NIF/IVA y REA visibles en la página. Durante el piloto publicar es gratis: sin suscripción, sin renovación automática, sin exclusividad. Tu comisión sigue siendo tuya — nosotros no entramos en la negociación.",
       "cta": "Presenta tu agencia",
       "ctaSecondary": "Cómo funciona",
       "pills": [
         "€ 0 durante el piloto",
-        "Importación XML automática",
+        "Nunca por contacto",
         "Sin renovación automática",
         "Sin exclusividad"
       ]
@@ -2472,34 +2476,40 @@
       "sub": "Construimos el portal alrededor de los problemas reales de las agencias independientes: costes de portales al alza, leads que hacen perder tiempo, anuncios serios enterrados bajo anuncios fantasma.",
       "items": [
         {
+          "id": "free",
           "num": "01",
           "title": "Gratis durante el piloto",
-          "body": "Sin canon, sin tramos de anuncios, sin sorpresas en la renovación. Cuando introduzcamos servicios de pago, los socios fundadores mantendrán condiciones reservadas — y lo decimos hoy, por escrito."
+          "body": "Sin canon, sin tramos de anuncios, sin sorpresas en la renovación. El piloto tiene plazo: la fecha de cierre, y qué ocurre al día siguiente, llegarán por escrito antes de cualquier cargo."
         },
         {
+          "id": "xml",
           "num": "02",
           "title": "Sin doble trabajo",
           "body": "Importamos tus anuncios del feed XML que ya usas en otros portales. Configuración una sola vez, sincronización automática, informe de importación legible tras cada actualización."
         },
         {
+          "id": "noPerContact",
           "num": "03",
-          "title": "Compradores con presupuesto verificado",
-          "body": "Las solicitudes pueden llegar con una acreditación de capacidad financiera: estado, franja de presupuesto y validez. Haz visitas solo con quien puede comprar de verdad."
+          "title": "Nunca por contacto ni por operación",
+          "body": "Nunca os cobraremos por contacto ni por operación cerrada. Si un día cobramos, será una cuota fija, igual para todos, publicada."
         },
         {
+          "id": "diary",
           "num": "04",
           "title": "Agenda de visitas integrada",
           "body": "Propuesta de horarios, confirmación y registro del resultado en un solo flujo. Menos llamadas, menos no-show, un historial ordenado por cada inmueble."
         },
         {
+          "id": "identified",
           "num": "05",
-          "title": "Solo anuncios auténticos",
-          "body": "Cada agencia está verificada (NIF/IVA y número REA visibles), cada anuncio declara un encargo real, se bloquean duplicados. Tus anuncios no compiten con anuncios fantasma."
+          "title": "NIF/IVA y REA en cada agencia",
+          "body": "Cada agencia está identificada: NIF/IVA y número REA en la página. Eso está live. Los filtros de autenticidad del anuncio se etiquetan abajo — ninguno se vende como live hasta que lo sea."
         },
         {
+          "id": "brand",
           "num": "06",
           "title": "Tu marca, siempre",
-          "body": "Logo, nombre y contactos de tu agencia en cada anuncio y en una página de agencia dedicada. Los clientes son tuyos: somos el canal, no el intermediario."
+          "body": "Logo, nombre y contactos de tu agencia en cada anuncio y en una página de agencia dedicada. Los clientes son tuyos desde el primer contacto: somos el canal, no el intermediario."
         }
       ]
     },
@@ -2534,9 +2544,32 @@
         "Respondes a las solicitudes en 48 horas.",
         "Retiras el anuncio en 5 días tras la venta o la revocación del encargo.",
         "Confirmas la disponibilidad de los anuncios con un clic cada 30 días (automático si usas el feed).",
-        "Gestionas las visitas de clientes EasyCasa en la agenda integrada."
+        "Gestionas las visitas reservadas a través de EasyCasa en la agenda integrada."
       ],
       "disclose": "Los criterios de visibilidad y las reglas de suspensión están documentados y son transparentes: ninguna penalización sin motivación escrita y posibilidad de réplica."
+    },
+    "claims": {
+      "kicker": "Qué está live, qué está por llegar",
+      "title": "Cuatro promesas, etiquetadas",
+      "sub": "Una agencia las comprueba en los primeros diez minutos. Una promesa marcada «próximamente» es aceptable. Una falsa no.",
+      "items": {
+        "A1": {
+          "title": "Cada anuncio está verificado",
+          "body": "La verificación del propietario existe como flujo. Ningún anuncio live la lleva, y publicar no depende de ella."
+        },
+        "A2": {
+          "title": "Cada anuncio declara un encargo real",
+          "body": "El pacto sigue pidiendo que publiques solo con un encargo real. Un campo de mandato no es un filtro de publicación hoy."
+        },
+        "A3": {
+          "title": "Se bloquean duplicados",
+          "body": "La detección de imágenes duplicadas existe en la vía del particular. Los duplicados de anuncio a nivel de portal no son un bloqueo firme en los feeds de agencia."
+        },
+        "A4": {
+          "title": "Clase e índice energético en cada anuncio",
+          "body": "Los anuncios aún pueden publicarse sin ambos datos. Cuando el filtro llegue, bloqueará esos anuncios — es una protección para ti, no una norma que debas recordar."
+        }
+      }
     },
     "honest": {
       "kicker": "Hablemos claro",
@@ -2547,12 +2580,12 @@
           "body": "El tráfico de compradores crece zona a zona: por eso el piloto es gratis y concentrado geográficamente. Arriesgas un feed XML, no una suscripción."
         },
         {
-          "title": "2 · La acreditación financiera es de nuestro grupo.",
-          "body": "La verificación de presupuesto la aporta Banks4All, sociedad del grupo Mundida como EasyCasa. Ningún documento financiero del comprador llega a ti ni a nosotros: solo estado, franja y validez."
+          "title": "2 · Contratas con Mundida.",
+          "body": "El portal es de Mundida S.r.l. (IVA IT04531990986, Brescia). Ayni es la consultora. Esta candidatura es hacia Mundida. Si un día hay una cuota, es una licencia de software a canon fijo de Mundida a la agencia."
         },
         {
-          "title": "3 · Un día ganaremos.",
-          "body": "Tras el piloto introduciremos servicios opcionales de pago. Las condiciones para socios fundadores se comunicarán antes, por escrito, sin renovaciones automáticas."
+          "title": "3 · Nunca cobraremos por contacto.",
+          "body": "Ni por solicitud, ni por operación cerrada. Si un día introducimos un precio, será una cuota fija, igual para todos, publicada. Las condiciones para socios fundadores llegarán antes, por escrito, sin renovaciones automáticas."
         }
       ]
     },
@@ -2570,6 +2603,7 @@
       "gestionalePlaceholder": "ej. Getrix",
       "submit": "Enviar candidatura",
       "sent": "Se abre tu cliente de correo con la candidatura lista. Envía el mensaje para terminar.",
+      "counterpart": "La contraparte es Mundida S.r.l., IVA IT04531990986. Esta candidatura no crea exclusividad ni una renovación automática.",
       "note": "Los datos se tratan para gestionar tu candidatura al piloto (art. 6(1)(b) RGPD). <privacy>Aviso de privacidad</privacy>.",
       "mailSubject": "Candidatura piloto agencia — {agency}",
       "mailAgency": "Agencia: {agency}",

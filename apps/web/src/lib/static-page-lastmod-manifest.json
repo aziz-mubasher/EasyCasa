@@ -47,5 +47,12 @@
     ],
     "lastmod": "2026-09-08",
     "contentFingerprint": "d6ab7834f58a95eb5cc1f5296dde40e8a861acffeecfd7a14592718f1174b61e"
+  },
+  "/agenzie": {
+    "namespaces": [
+      "agenzie"
+    ],
+    "lastmod": "2026-09-15",
+    "contentFingerprint": "c67d43feba68fe6ce70fef1d2ddb3fe3aa1888d062ccf9832191d4ec18edb95a"
   }
 }
