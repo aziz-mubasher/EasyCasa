@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T15:50:28.613Z",
+  "updatedAt": "2026-09-15T17:41:37.186Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_acquisto_15sep",
+      "kaizenCode": "K EC ACQUISTO",
+      "polishId": "PP-ACQUISTO",
+      "title": "acquisto-assistito 15 Sep honesty + G1 /about correction",
+      "venture": "EasyCasa",
+      "lifecycle": "merged",
+      "agentStatus": "IDLE",
+      "agentBcId": "bc-bb45221b-baea-4a36-a15c-841c443a0bb0",
+      "agentUrl": "https://cursor.com/agents/bc-bb45221b-baea-4a36-a15c-841c443a0bb0",
+      "branch": "cursor/acquisto-about-honesty-0bb0",
+      "prNumber": 240,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/240",
+      "prState": "MERGED",
+      "dispatchedAt": "2026-09-15T17:41:37.162Z",
+      "updatedAt": "2026-09-15T17:41:37.162Z",
+      "summary": "PR #240 merged and web deployed (6139cd7). Live /en /it /es acquisto-assistito: spec table, art. 1655, art. 52/59 + ODR, denominazione hole, no €10,980. Live /en/about G1: no sellers-pay-no-commission / close line. Pricing footer has withdrawal + ODR. API untouched.",
+      "nextAction": "AZM: visura / incorporation fields. Counsel before rewriting steps 03/04 or dropping OFFER_DRAFTING. Do not restore G1 percentage denial while FULL_MEDIATION / BUYER_MEDIATION remain in catalog.ts. Kaizen Operations + Startup Phase 3 need a human board write.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_about_15sep",
       "kaizenCode": "K EC ABOUT",
@@ -18,8 +38,8 @@
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/238",
       "prState": "MERGED",
       "dispatchedAt": "2026-09-15T15:06:49.334Z",
-      "updatedAt": "2026-09-15T15:50:28.613Z",
-      "summary": "PR #238 merged and web deployed (31c2717). Live /en/about: appalto hero, no verify card, pricing identity hole; /en/transparency 308 from /en/trasparenza.",
+      "updatedAt": "2026-09-15T17:41:37.186Z",
+      "summary": "PR #238 merged+deployed (31c2717). G1 correction shipped in PR #240 / 6139cd7 (live): /en/about no longer says sellers pay no commission or ‘we do not take a percentage’. Identity hole unchanged.",
       "nextAction": "AZM: visura / incorporation fields. EC-S-36 before any publish-verification card or “directly”. Kaizen Operations + Startup Phase 3 need a human board write.",
       "errors": []
     },
