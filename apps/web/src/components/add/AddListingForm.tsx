@@ -14,6 +14,7 @@ import {
   TRANSACTION_TYPE_SLUGS,
   comuniForProvince,
   defaultAvailabilityWindows,
+  hasPublishEnergyFigures,
   primaryTransactionType,
   type AvailabilityWindow,
   type FeatureSlug,
@@ -80,6 +81,7 @@ type FormState = {
   yearBuilt: string;
   yearRenovated: string;
   energyClass: string;
+  energyPerformanceKwhM2Y: string;
   videoUrl: string;
 };
 
@@ -107,6 +109,7 @@ const initialForm: FormState = {
   yearBuilt: '',
   yearRenovated: '',
   energyClass: '',
+  energyPerformanceKwhM2Y: '',
   videoUrl: '',
 };
 
@@ -252,6 +255,14 @@ export function AddListingForm() {
     }
     if (n === 3) {
       if (!form.yearBuilt.trim()) return t('errors.yearBuilt');
+      if (
+        !hasPublishEnergyFigures({
+          energyClass: form.energyClass,
+          energyPerformanceKwhM2Y: form.energyPerformanceKwhM2Y,
+        })
+      ) {
+        return t('errors.energyRequired');
+      }
     }
     if (n === 4 && form.videoUrl.trim()) {
       try {
@@ -319,6 +330,9 @@ export function AddListingForm() {
         yearBuilt: form.yearBuilt ? Number(form.yearBuilt) : undefined,
         yearRenovated: form.yearRenovated ? Number(form.yearRenovated) : undefined,
         energyClass: form.energyClass || undefined,
+        energyPerformanceKwhM2Y: form.energyPerformanceKwhM2Y
+          ? Number(form.energyPerformanceKwhM2Y)
+          : undefined,
         videoUrl: form.videoUrl.trim() || undefined,
       };
 
@@ -605,16 +619,28 @@ export function AddListingForm() {
                 <Input type="number" min={0} value={form.bathrooms} onChange={set('bathrooms')} />
               </Field>
             </div>
-            <Field label={tf('energy')}>
-              <Select value={form.energyClass} onChange={set('energyClass')}>
-                <option value="">{t('choose')}</option>
-                {ENERGY_CLASSES.map((ec) => (
-                  <option key={ec} value={ec}>
-                    {ec}
-                  </option>
-                ))}
-              </Select>
-            </Field>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field label={t('fields.energyClass')} required>
+                <Select value={form.energyClass} onChange={set('energyClass')}>
+                  <option value="">{t('choose')}</option>
+                  {ENERGY_CLASSES.map((ec) => (
+                    <option key={ec} value={ec}>
+                      {ec}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field label={t('fields.energyPerformance')} required>
+                <Input
+                  type="number"
+                  min={0.01}
+                  step="0.01"
+                  value={form.energyPerformanceKwhM2Y}
+                  onChange={set('energyPerformanceKwhM2Y')}
+                />
+              </Field>
+            </div>
+            <p className="text-xs text-muted -mt-2">{t('hints.energyRequired')}</p>
 
             <fieldset>
               <legend className="eyebrow mb-2">{t('fields.characteristics')}</legend>
@@ -808,8 +834,14 @@ export function AddListingForm() {
                 </div>
                 {form.energyClass ? (
                   <div>
-                    <dt className="text-muted">{tf('energy')}</dt>
+                    <dt className="text-muted">{t('fields.energyClass')}</dt>
                     <dd>{form.energyClass}</dd>
+                  </div>
+                ) : null}
+                {form.energyPerformanceKwhM2Y ? (
+                  <div>
+                    <dt className="text-muted">{t('fields.energyPerformance')}</dt>
+                    <dd>{form.energyPerformanceKwhM2Y}</dd>
                   </div>
                 ) : null}
               </dl>

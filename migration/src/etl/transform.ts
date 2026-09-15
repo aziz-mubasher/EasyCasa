@@ -18,6 +18,7 @@ export interface ListingRow {
   floor: string | null;
   year_built: number | null;
   energy_class: string | null;
+  energy_performance_kwh_m2_y: number | null;
   condition: string | null;
   address: string | null;
   city: string | null;
@@ -87,6 +88,7 @@ export function transformListing(post: RawPost, meta: MetaBag): ListingRow {
     floor: str(meta[META.floor]),
     year_built: int(meta[META.yearBuilt]),
     energy_class: str(meta[META.energyClass]),
+    energy_performance_kwh_m2_y: num(meta[META.energyPerformance]),
     condition: str(meta[META.condition]),
     address: str(meta[META.address]),
     city: str(meta[META.city]),

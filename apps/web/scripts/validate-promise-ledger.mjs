@@ -3,9 +3,10 @@
  * Keep rules in sync with `src/lib/promiseLedger/index.ts`.
  */
 
-const PROMISE_STATUSES = new Set(['live', 'coming', 'hidden']);
-const BLOCK_STATES = new Set(['live', 'fallback', 'hidden']);
-const REQUIRED_PROMISES = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'];
+const PROMISE_STATUSES = new Set(['live', 'coming', 'hidden', 'retracted']);
+const LICENCE_STATES = new Set(['ponte', 'agente', 'oam']);
+const BLOCK_STATES = new Set(['live', 'fallback', 'hidden', 'retracted']);
+const REQUIRED_PROMISES = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12'];
 const REQUIRED_BLOCK_GATES = {
   savingsFigures: 'T02',
   mediazioneCopy: 'T04',
@@ -35,6 +36,9 @@ export function validateLedger(raw, opts = {}) {
   if (typeof raw.updatedAt !== 'string' || !raw.updatedAt) {
     throw new LedgerValidationError('updatedAt: non-empty string required');
   }
+  if (!LICENCE_STATES.has(raw.companyLicenceState)) {
+    throw new LedgerValidationError('companyLicenceState: ponte|agente|oam required');
+  }
   if (!isRecord(raw.promises)) throw new LedgerValidationError('promises: object required');
   if (!isRecord(raw.blocks)) throw new LedgerValidationError('blocks: object required');
 
@@ -45,6 +49,16 @@ export function validateLedger(raw, opts = {}) {
     }
     if (!Array.isArray(p.tasks) || p.tasks.length === 0 || p.tasks.some((t) => typeof t !== 'string' || !t)) {
       throw new LedgerValidationError(`promises.${id}.tasks: non-empty string array required`);
+    }
+    if (
+      !Array.isArray(p.licence_state) ||
+      p.licence_state.length === 0 ||
+      p.licence_state.some((s) => !LICENCE_STATES.has(s))
+    ) {
+      throw new LedgerValidationError(`promises.${id}.licence_state: non-empty ponte|agente|oam[] required`);
+    }
+    if (id === 'P4' && p.state === 'retracted' && typeof p.retractedReason !== 'string') {
+      throw new LedgerValidationError('promises.P4.retractedReason: required when retracted');
     }
   }
 
@@ -58,7 +72,6 @@ export function validateLedger(raw, opts = {}) {
     }
   }
 
-  // Claim 1–2 cleared 2026-08-13 — interim no longer blocks `live`.
   void enforceCounselInterim;
 
   return raw;

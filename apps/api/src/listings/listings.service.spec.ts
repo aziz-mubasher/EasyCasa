@@ -126,6 +126,8 @@ describe('ListingsService', () => {
       firstPublishedAt: null,
       publishedAt: null,
       unpublishedAt: null,
+      energyClass: 'D',
+      energyPerformanceKwhM2Y: '142.5',
     });
     const listMedia = vi.fn().mockResolvedValue([
       { type: 'video', url: 'https://example.com/v.mp4' },
@@ -150,7 +152,8 @@ describe('ListingsService', () => {
       bathrooms: 1,
       rooms: 1,
       sizeSqm: '50',
-      energyClass: null,
+      energyClass: 'D',
+      energyPerformanceKwhM2Y: '142.5',
       latitude: null,
       longitude: null,
       publishedAt: new Date('2026-01-01T00:00:00Z'),
@@ -201,6 +204,8 @@ describe('ListingsService', () => {
         firstPublishedAt: first,
         publishedAt: first,
         unpublishedAt: new Date('2026-06-01T09:00:00Z'),
+        energyClass: 'D',
+        energyPerformanceKwhM2Y: '142.5',
       });
     const update = vi
       .fn()
@@ -232,7 +237,8 @@ describe('ListingsService', () => {
         surfaceSqm: null,
         yearBuilt: null,
         yearRenovated: null,
-        energyClass: null,
+        energyClass: 'D',
+        energyPerformanceKwhM2Y: '142.5',
         features: [],
         latitude: null,
         longitude: null,
@@ -253,5 +259,26 @@ describe('ListingsService', () => {
     await svc.publish('l1', user, 'me');
     expect(update.mock.calls[1][1].firstPublishedAt).toEqual(first);
     expect(searchMock.indexListing).toHaveBeenCalled();
+  });
+
+  it('R4: refuses publish without energy class and index (API / owner / web / admin path)', async () => {
+    const findById = vi.fn().mockResolvedValue({
+      id: 'l1',
+      agentId: 'me',
+      ownerUserId: 'me',
+      mediatorUserId: null,
+      status: 'draft',
+      firstPublishedAt: null,
+      publishedAt: null,
+      unpublishedAt: null,
+      energyClass: 'G',
+      energyPerformanceKwhM2Y: null,
+    });
+    const update = vi.fn();
+    const svc = makeService(makeRepo({ findById, update }));
+    const user: AuthUser = { sub: 'u', roles: ['seller'] };
+
+    await expect(svc.publish('l1', user, 'me')).rejects.toThrow(/energy class and energy performance/);
+    expect(update).not.toHaveBeenCalled();
   });
 });

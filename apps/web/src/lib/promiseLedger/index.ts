@@ -1,12 +1,17 @@
 /**
  * Promise ledger — honesty mechanic for Sell Privately (EC-S-T03).
  * Nested schema: promises.P* + counsel blocks with state/gate/note.
+ *
+ * EC-SELL-PRIVATELY-1 / EC-S-35: `retracted` + `licence_state[]`.
+ * PERIMETER (EC-AYNI-1 PR 2) is not in the repo yet — company state is
+ * `companyLicenceState` on the ledger document (currently `ponte`).
  */
 
-export type PromiseStatus = 'live' | 'coming' | 'hidden';
+export type PromiseStatus = 'live' | 'coming' | 'hidden' | 'retracted';
+export type LicenceState = 'ponte' | 'agente' | 'oam';
 
 /** Counsel-gated page blocks (T02 / T04). */
-export type BlockState = 'live' | 'fallback' | 'hidden';
+export type BlockState = 'live' | 'fallback' | 'hidden' | 'retracted';
 
 export const REQUIRED_PROMISE_IDS = [
   'P1',
@@ -17,6 +22,10 @@ export const REQUIRED_PROMISE_IDS = [
   'P6',
   'P7',
   'P8',
+  'P9',
+  'P10',
+  'P11',
+  'P12',
 ] as const;
 
 export type PromiseId = (typeof REQUIRED_PROMISE_IDS)[number];
@@ -24,7 +33,9 @@ export type PromiseId = (typeof REQUIRED_PROMISE_IDS)[number];
 export type PromiseRecord = {
   state: PromiseStatus;
   tasks: string[];
+  licence_state: LicenceState[];
   note?: string;
+  retractedReason?: string;
 };
 
 export type CounselBlock = {
@@ -36,7 +47,7 @@ export type CounselBlock = {
 export type CounselBlocks = {
   /** € savings figures + AGCM footnote + slider. */
   savingsFigures: CounselBlock;
-  /** “What EasyCasa is not” / mediazione boundary copy. */
+  /** Legacy counsel-gated “what EasyCasa is not” tile. */
   mediazioneCopy: CounselBlock;
 };
 
@@ -44,6 +55,7 @@ export type PromiseLedger = {
   version: number;
   updatedAt: string;
   $schema?: string;
+  companyLicenceState: LicenceState;
   promises: Record<PromiseId, PromiseRecord>;
   blocks: CounselBlocks;
 };
@@ -56,8 +68,9 @@ export type PromiseEntry = {
   note?: string;
 };
 
-const PROMISE_STATUSES: readonly PromiseStatus[] = ['live', 'coming', 'hidden'];
-const BLOCK_STATES: readonly BlockState[] = ['live', 'fallback', 'hidden'];
+const PROMISE_STATUSES: readonly PromiseStatus[] = ['live', 'coming', 'hidden', 'retracted'];
+const LICENCE_STATES: readonly LicenceState[] = ['ponte', 'agente', 'oam'];
+const BLOCK_STATES: readonly BlockState[] = ['live', 'fallback', 'hidden', 'retracted'];
 
 /** Expected counsel gates — wrong gate ids fail validation. */
 const REQUIRED_BLOCK_GATES = {
@@ -82,10 +95,28 @@ function assertStatus(value: unknown, path: string): asserts value is PromiseSta
   }
 }
 
+function assertLicenceState(value: unknown, path: string): asserts value is LicenceState {
+  if (typeof value !== 'string' || !LICENCE_STATES.includes(value as LicenceState)) {
+    throw new LedgerValidationError(`${path}: must be one of ${LICENCE_STATES.join('|')}`);
+  }
+}
+
 function assertBlockState(value: unknown, path: string): asserts value is BlockState {
   if (typeof value !== 'string' || !BLOCK_STATES.includes(value as BlockState)) {
     throw new LedgerValidationError(`${path}: must be one of ${BLOCK_STATES.join('|')}`);
   }
+}
+
+function parseLicenceStates(raw: unknown, path: string): LicenceState[] {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    throw new LedgerValidationError(`${path}: non-empty licence_state[] required`);
+  }
+  const out: LicenceState[] = [];
+  for (const [i, item] of raw.entries()) {
+    assertLicenceState(item, `${path}[${i}]`);
+    if (!out.includes(item)) out.push(item);
+  }
+  return out;
 }
 
 function parsePromise(raw: unknown, path: string): PromiseRecord {
@@ -102,10 +133,18 @@ function parsePromise(raw: unknown, path: string): PromiseRecord {
   if (raw.note !== undefined && typeof raw.note !== 'string') {
     throw new LedgerValidationError(`${path}.note: string required when present`);
   }
+  if (raw.retractedReason !== undefined && typeof raw.retractedReason !== 'string') {
+    throw new LedgerValidationError(`${path}.retractedReason: string required when present`);
+  }
+  if (raw.state === 'retracted' && typeof raw.retractedReason !== 'string' && path.endsWith('.P4')) {
+    throw new LedgerValidationError(`${path}.retractedReason: required when retracting P4`);
+  }
   return {
     state: raw.state,
     tasks: raw.tasks as string[],
+    licence_state: parseLicenceStates(raw.licence_state, `${path}.licence_state`),
     note: typeof raw.note === 'string' ? raw.note : undefined,
+    retractedReason: typeof raw.retractedReason === 'string' ? raw.retractedReason : undefined,
   };
 }
 
@@ -130,8 +169,7 @@ function parseCounselBlock(raw: unknown, path: string, expectedGate: string): Co
 
 /**
  * Validate a ledger document. Throws {@link LedgerValidationError} on failure.
- * Enforces T02/T04 interim: savingsFigures and mediazioneCopy must not be `live`
- * until counsel flips them (CI guard — do not weaken).
+ * `enforceCounselInterim` retained for callers/tests but is a no-op.
  */
 export function validateLedger(
   raw: unknown,
@@ -145,6 +183,7 @@ export function validateLedger(
   if (typeof raw.updatedAt !== 'string' || raw.updatedAt.length === 0) {
     throw new LedgerValidationError('updatedAt: non-empty string required');
   }
+  assertLicenceState(raw.companyLicenceState, 'companyLicenceState');
   if (!isRecord(raw.promises)) throw new LedgerValidationError('promises: object required');
   if (!isRecord(raw.blocks)) throw new LedgerValidationError('blocks: object required');
 
@@ -169,20 +208,19 @@ export function validateLedger(
     ),
   };
 
-  // Claim 1–2 cleared 2026-08-13 — interim no longer blocks `live`.
-  // `enforceCounselInterim` retained for callers/tests but is a no-op.
   void enforceCounselInterim;
 
   return {
     version: raw.version,
     updatedAt: raw.updatedAt,
     $schema: typeof raw.$schema === 'string' ? raw.$schema : undefined,
+    companyLicenceState: raw.companyLicenceState,
     promises,
     blocks,
   };
 }
 
-/** Ordered P1–P8 entries for UI chips / FAQ filters. */
+/** Ordered P1–P12 entries for UI chips / FAQ filters. */
 export function promiseEntries(ledger: PromiseLedger): PromiseEntry[] {
   return REQUIRED_PROMISE_IDS.map((id) => {
     const p = ledger.promises[id];
@@ -195,8 +233,22 @@ export function promiseEntries(ledger: PromiseLedger): PromiseEntry[] {
   });
 }
 
-export function visiblePromiseEntries(entries: PromiseEntry[]): PromiseEntry[] {
-  return entries.filter((e) => e.status !== 'hidden');
+function allowedInCompanyState(record: PromiseRecord, company: LicenceState): boolean {
+  return record.licence_state.includes(company);
+}
+
+/** Visible = not hidden, not retracted, and permitted in the current licence state. */
+export function visiblePromiseEntries(
+  entries: PromiseEntry[],
+  ledger?: PromiseLedger,
+): PromiseEntry[] {
+  return entries.filter((e) => {
+    if (e.status === 'hidden' || e.status === 'retracted') return false;
+    if (!ledger) return true;
+    const rec = ledger.promises[e.id as PromiseId];
+    if (!rec) return true;
+    return allowedInCompanyState(rec, ledger.companyLicenceState);
+  });
 }
 
 export function isBlockLive(block: CounselBlock | BlockState): boolean {
@@ -208,5 +260,6 @@ export function isBlockFallback(block: CounselBlock | BlockState): boolean {
 }
 
 export function isBlockHidden(block: CounselBlock | BlockState): boolean {
-  return (typeof block === 'string' ? block : block.state) === 'hidden';
+  const state = typeof block === 'string' ? block : block.state;
+  return state === 'hidden' || state === 'retracted';
 }

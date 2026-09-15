@@ -7,6 +7,7 @@ import {
   getSellPrivatelyBenefits,
   sellPrivatelyAbsoluteUrl,
   sellPrivatelyLanguageAlternates,
+  sellPrivatelyOgLocale,
 } from '@/lib/sell-privately';
 import { buildSellPrivatelyFaqLd, buildSellPrivatelyServiceLd } from '@/lib/sell-privately-schema';
 
@@ -26,7 +27,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: { absolute: t('meta.title') },
     description: t('meta.description'),
-    keywords: t.raw('meta.keywords') as string[],
     alternates: {
       canonical,
       languages: sellPrivatelyLanguageAlternates(SITE),
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: t('meta.description'),
       type: 'website',
       url: canonical,
-      locale: locale === 'it' ? 'it_IT' : locale === 'es' ? 'es_ES' : 'en_GB',
+      locale: sellPrivatelyOgLocale(locale),
     },
   };
 }

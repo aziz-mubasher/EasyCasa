@@ -1,84 +1,93 @@
 {
   "$schema": "./promises.schema.json",
-  "version": 1,
-  "updatedAt": "2026-09-07",
+  "version": 2,
+  "updatedAt": "2026-09-15",
+  "companyLicenceState": "ponte",
   "promises": {
     "P1": {
-      "state": "hidden",
-      "tasks": [
-        "T01"
-      ],
-      "note": "EC-S-34 honesty pass — retracted (register). Contradicted by FULL_MEDIATION and T26/T27; blocked by G1. Retracted state lands in EC-S-35."
+      "state": "retracted",
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["T01"],
+      "note": "EC-S-34 honesty pass — retracted. Contradicted by FULL_MEDIATION and T26/T27; blocked by G1. Replaced in PONTE by P9 (publishing is free) + P10 (no commission either side)."
     },
     "P2": {
       "state": "live",
-      "tasks": [
-        "T08",
-        "T09"
-      ],
-      "note": "EC-S-34 — live, rewritten: published OMI zone range only. Deviation flag is EC-S-41."
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["T08", "T09"],
+      "note": "Official OMI zone ranges only. Never a sotto-mercato verdict. Deviation flag is EC-S-41."
     },
     "P3": {
       "state": "live",
-      "tasks": [
-        "T14",
-        "T15",
-        "T16",
-        "T17"
-      ],
-      "note": "EC-S-34 — live, scoped: documents received and owner name matched. Not a publish gate. VO staffing is EC-S-44."
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["T14", "T15", "T16", "T17"],
+      "note": "Renamed ownership checked (R5): documents received and owner name matched. Optional. Not a publish gate. VO staffing is EC-S-44."
     },
     "P4": {
-      "state": "coming",
-      "tasks": [
-        "EC-1"
-      ],
-      "note": "EC-S-34 — coming, matching buyer page. BANKS4ALL_PARTNER_TOKEN empty; fail-soft. Reconciliation is EC-B-17."
+      "state": "retracted",
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["EC-1"],
+      "retractedReason": "Verified Buyer / financial badge / Banks4All naming is not shippable: reserved sustainability analysis (OAM Com. 29/22), GDPR art. 22 merit judgement, and a human label EasyCasa would grant. Replacement is P12 (buyer's own pre-approval) — stays coming until Credit Prime confirms issuance to the buyer as their client + DPIA.",
+      "note": "EC-SELL-PRIVATELY-1 — retracted, not delayed. Do not re-label as coming soon."
     },
     "P5": {
       "state": "live",
-      "tasks": [
-        "EC-3",
-        "EC-4",
-        "EC-5",
-        "EC-6",
-        "EC-7"
-      ],
-      "note": "Viewing scheduler — core live; seller-conducted after T21"
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["EC-3", "EC-4", "EC-5", "EC-6", "EC-7"],
+      "note": "Viewing scheduler — central product. Seller-conducted viewings. T21/T22."
     },
     "P6": {
       "state": "live",
-      "tasks": [
-        "T18"
-      ],
-      "note": "Document checklist — live 2026-08-14 (AZM PK-2); SELLER_CHECKLIST_ENABLED"
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["T18"],
+      "note": "Document checklist — live 2026-08-14 (AZM PK-2); SELLER_CHECKLIST_ENABLED. Links to paid DOC_CHECKUP."
     },
     "P7": {
       "state": "live",
-      "tasks": [
-        "T23"
-      ],
-      "note": "Seller dashboard analytics — live 2026-08-14 (AZM PK-3); SELLER_ANALYTICS_ENABLED. Empty-state copy is EC-S-39."
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["T23"],
+      "note": "Seller dashboard analytics — live 2026-08-14 (AZM PK-3). No metric that judges a person."
     },
     "P8": {
-      "state": "hidden",
-      "tasks": [
-        "T05",
-        "T06"
-      ],
-      "note": "EC-S-34 honesty pass — retracted (register). Informativa v1.1 vs LEGAL_ENTITY PRE_INCORPORATION. Consent recording unchanged. Retracted state lands in EC-S-35."
+      "state": "retracted",
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["T05", "T06"],
+      "note": "EC-S-34 — retracted. Informativa v1.1 vs LEGAL_ENTITY PRE_INCORPORATION. Consent recording unchanged."
+    },
+    "P9": {
+      "state": "live",
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["EC-SELL-PRIVATELY-1"],
+      "note": "Publishing is free. Always. LISTING_PUBLICATION amountCents=0."
+    },
+    "P10": {
+      "state": "live",
+      "licence_state": ["ponte"],
+      "tasks": ["EC-SELL-PRIVATELY-1"],
+      "note": "No commission either side. PONTE-only. Review at month 12 on licence_state change — do not auto-retract. Catalog FULL_MEDIATION / BUYER_MEDIATION remain a separate AYNI contradiction."
+    },
+    "P11": {
+      "state": "live",
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["EC-SELL-PRIVATELY-1", "R4"],
+      "note": "Energy class + index required to publish. Live only because R4 ships in the same PR. [[BUCO: elenco cause di esenzione APE]]."
+    },
+    "P12": {
+      "state": "coming",
+      "licence_state": ["ponte", "agente", "oam"],
+      "tasks": ["EC-SELL-PRIVATELY-1", "PR-D"],
+      "note": "Buyer's own pre-approval / delibera reddituale. Stays coming until Credit Prime confirms issuance to the buyer as their client + DPIA. Never a person badge."
     }
   },
   "blocks": {
     "savingsFigures": {
-      "state": "hidden",
+      "state": "retracted",
       "gate": "T02",
-      "note": "EC-S-34 — retracted with P1. Derived from a commission the catalogue also sells. Retracted state lands in EC-S-35."
+      "note": "EC-S-34 — retracted with P1. Derived from a commission the catalogue also sells."
     },
     "mediazioneCopy": {
-      "state": "hidden",
+      "state": "retracted",
       "gate": "T04",
-      "note": "EC-S-34 — retracted. Portal framing contradicts brand.tagline / home.subtitle / footer.disclosure. Neither claim is available in PONTE. brand.tagline left rendering (roadmap §11.3). Retracted state lands in EC-S-35."
+      "note": "EC-S-34 counsel block retracted as a gated tile. Perimeter copy now lives in-page (never / footer) under EC-SELL-PRIVATELY-1 — not this counsel-block flip."
     }
   }
 }

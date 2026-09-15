@@ -1,5 +1,5 @@
 /**
- * EC-S-34 — rendered /vendi-da-privato surface must stay honest in PONTE.
+ * EC-SELL-PRIVATELY-1 — rendered /vendi-da-privato surface.
  * Work from keys (text-transform can uppercase labels in the DOM).
  */
 import { createTranslator, type AbstractIntlMessages } from 'next-intl';
@@ -20,6 +20,8 @@ import {
   getSellPrivatelyBenefits,
   getSellPrivatelyLedger,
   getSellPrivatelySteps,
+  showBuyerPreapprovalComing,
+  showEnergyRequiredLive,
   showMediazioneBoundary,
   showMediazioneFallback,
   showSavingsFallback,
@@ -34,8 +36,11 @@ const LOCALES = {
   es: esMessages as unknown as AbstractIntlMessages,
 } as const;
 
-const FORBIDDEN =
-  /provvigione|commission|comisi[oó]n|percentuale|percentage|porcentaje|\b\d+\s*%|sanabilit|\+\s*\/\s*-\s*20|above\s+market|below\s+market|sopra\s+mercato|sotto\s+mercato|mundida|m\.?iva|p\.?\s*iva|s\.r\.l|titolare|controller/i;
+const FORBIDDEN_ON_PAGE =
+  /verified buyer|financial badge|banks4all|acquirente verificato|distintivo financiero|comprador verificado|badge finanziario/i;
+
+const PERSON_LABEL =
+  /\b(verificato|qualificato|affidabile|verified|qualified|reliable|verificado|cualificado|fiable)\b/i;
 
 function collectRenderedStrings(locale: keyof typeof LOCALES): string[] {
   const t = createTranslator({ locale, messages: LOCALES[locale], namespace: 'sellPrivately' });
@@ -46,11 +51,13 @@ function collectRenderedStrings(locale: keyof typeof LOCALES): string[] {
     t('schema.serviceName'),
     t('schema.serviceType'),
     t('schema.offerDescription'),
+    t('hero.kicker'),
     t('hero.title'),
     t('hero.lead'),
     t('hero.ctaPrimary'),
     t('hero.ctaSecondary'),
     t('hero.ctaFilm'),
+    t('hero.freeAlways'),
     t('film.kicker'),
     t('film.title'),
     t('film.play'),
@@ -62,21 +69,31 @@ function collectRenderedStrings(locale: keyof typeof LOCALES): string[] {
     t('film.iframeTitle'),
     t('how.kicker'),
     t('how.title'),
-    t('benefits.kicker'),
-    t('benefits.title'),
-    t('benefits.sub'),
-    t('faq.kicker'),
+    t('how.sub'),
+    t('never.kicker'),
+    t('never.title'),
+    t('costs.title'),
+    t('costs.sub'),
+    t('agency.title'),
+    t('agency.body'),
     t('faq.title'),
     t('final.title'),
     t('final.body'),
     t('final.cta'),
+    t('foot.notEnrolled'),
+    t('foot.mediation'),
     t('foot.privacyBefore'),
     t('foot.privacyLink'),
-    t('foot.privacyAfter'),
     t('foot.myData'),
-    t('foot.mediation'),
   ];
-  for (const kw of t.raw('meta.keywords') as string[]) out.push(kw);
+  for (const item of t.raw('money.items') as Array<{ figure: string; title: string; body: string }>) {
+    out.push(item.figure, item.title, item.body);
+  }
+  for (const item of t.raw('split.youItems') as Array<{ text: string }>) out.push(item.text);
+  for (const item of t.raw('split.weItems') as Array<{ text: string }>) out.push(item.text);
+  for (const item of t.raw('never.items') as Array<{ title: string; body: string }>) {
+    out.push(item.title, item.body);
+  }
   for (const step of getSellPrivatelySteps(ledger)) {
     out.push(t(`how.steps.${step.id}.title`));
     out.push(t(`how.steps.${step.id}.body`));
@@ -91,6 +108,15 @@ function collectRenderedStrings(locale: keyof typeof LOCALES): string[] {
   for (const scene of t.raw('film.scenes') as Array<{ kicker: string; title: string; body: string }>) {
     out.push(scene.kicker, scene.title, scene.body);
   }
+  if (showEnergyRequiredLive(ledger)) {
+    out.push(t('ape.title'), t('ape.body'), t('ape.cite'));
+    for (const item of t.raw('ape.pairs') as Array<{ title: string; body: string }>) {
+      out.push(item.title, item.body);
+    }
+  }
+  if (showBuyerPreapprovalComing(ledger)) {
+    out.push(t('ready.title'), t('ready.bodyComing'), t('ready.footComing'));
+  }
   if (showSavingsFigures(ledger) || showSavingsFallback(ledger)) {
     out.push(t('savings.kicker'), t('savings.title'), t('savings.neutralTitle'), t('savings.neutralBody'));
   }
@@ -100,8 +126,8 @@ function collectRenderedStrings(locale: keyof typeof LOCALES): string[] {
   return out;
 }
 
-describe('EC-S-34 sell-privately honesty', () => {
-  it('does not render savings or mediazione blocks', () => {
+describe('EC-SELL-PRIVATELY-1 sell-privately honesty', () => {
+  it('does not render savings or legacy mediazione counsel blocks', () => {
     expect(showSavingsFigures()).toBe(false);
     expect(showSavingsFallback()).toBe(false);
     expect(showMediazioneBoundary()).toBe(false);
@@ -129,13 +155,48 @@ describe('EC-S-34 sell-privately honesty', () => {
   });
 
   it.each(Object.keys(LOCALES) as Array<keyof typeof LOCALES>)(
-    '%s rendered copy has no fee, market verdict, or legal-entity string',
+    '%s sellPrivately namespace has no Verified Buyer / financial badge / Banks4All',
     (locale) => {
-      for (const text of collectRenderedStrings(locale)) {
-        expect(text, text).not.toMatch(FORBIDDEN);
+      const blob = JSON.stringify((LOCALES[locale] as { sellPrivately: unknown }).sellPrivately);
+      expect(blob, locale).not.toMatch(FORBIDDEN_ON_PAGE);
+      expect((LOCALES[locale] as { sellPrivately: { meta?: { keywords?: unknown } } }).sellPrivately.meta?.keywords).toBeUndefined();
+    },
+  );
+
+  it.each(Object.keys(LOCALES) as Array<keyof typeof LOCALES>)(
+    '%s rendered copy has no person-merit label and no retracted P4',
+    (locale) => {
+      const rendered = collectRenderedStrings(locale);
+      const blob = rendered.join('\n');
+      expect(blob, locale).not.toMatch(FORBIDDEN_ON_PAGE);
+      expect(blob.toLowerCase()).not.toMatch(/p4/);
+      for (const text of rendered) {
+        if (PERSON_LABEL.test(text) && /buyer|acquirent|comprador|persona|person|human/i.test(text)) {
+          throw new Error(`person-merit label in: ${text}`);
+        }
       }
     },
   );
+
+  it('ships the non-enrolment sentence in the footer in it/en/es', () => {
+    for (const locale of Object.keys(LOCALES) as Array<keyof typeof LOCALES>) {
+      const t = createTranslator({ locale, messages: LOCALES[locale], namespace: 'sellPrivately' });
+      expect(t('foot.notEnrolled')).toMatch(/mediazion|mediaci[oó]n|not enrolled/i);
+    }
+  });
+
+  it('does not render retracted ledger rows as tiles or steps', () => {
+    const ledger = getSellPrivatelyLedger();
+    expect(ledger.promises.P4.state).toBe('retracted');
+    expect(getSellPrivatelyBenefits(ledger).map((b) => b.status)).not.toContain('retracted');
+    expect(getSellPrivatelySteps(ledger).map((s) => s.id)).not.toContain('buyers');
+  });
+
+  it('site chrome tagline no longer claims a licensed agency', () => {
+    expect(itMessages.brand.tagline).not.toMatch(/agenzia regolare/i);
+    expect(enMessages.brand.tagline).not.toMatch(/licensed agency/i);
+    expect(esMessages.brand.tagline).not.toMatch(/agencia regulada/i);
+  });
 
   it('ships an 8-scene seller intro film with frames on disk', () => {
     expect(SELLER_INTRO_FRAMES).toHaveLength(8);
@@ -155,14 +216,14 @@ describe('EC-S-34 sell-privately honesty', () => {
     expect(sellerIntroFullscreenSrc('de')).toBe('/vendi-da-privato/film/intro.html?lang=it&record=1');
   });
 
-  it('keeps OMI as zone data after sign-in and VO off the publish gate', () => {
+  it('keeps OMI as zone data after sign-in and ownership check off the publish gate', () => {
     for (const locale of Object.keys(LOCALES) as Array<keyof typeof LOCALES>) {
       const t = createTranslator({ locale, messages: LOCALES[locale], namespace: 'sellPrivately' });
       const scenes = t.raw('film.scenes') as Array<{ title: string; body: string }>;
       const hay = scenes.map((s) => `${s.title} ${s.body}`).join(' ');
       expect(hay.toLowerCase()).toMatch(/sign in|accedi|iniciar sesi[oó]n|dopo l|after you|tras iniciar/);
       expect(hay.toLowerCase()).toMatch(/not a requirement|non è un requisito|no es un requisito/);
-      expect(hay).not.toMatch(/Banks4All|acquirente verificato|verified buyer/i);
+      expect(hay).not.toMatch(FORBIDDEN_ON_PAGE);
     }
   });
 });

@@ -38,7 +38,12 @@ describe('demo PRNG + inventory (EC-15)', () => {
       expect(l.eurPerSqm).toBeGreaterThanOrEqual(l.omiMinEurSqm);
       expect(l.eurPerSqm).toBeLessThanOrEqual(l.omiMaxEurSqm);
       expect(l.imageDemoFlag).toBe(true);
+      if (l.status === 'published') {
+        expect(l.energyClass).toBeTruthy();
+        expect(l.energyPerformanceKwhM2Y).toBeGreaterThan(0);
+      }
     }
+    expect(x.find((l) => l.ref === 'DEMO-SC2-BLOCKED')?.energyPerformanceKwhM2Y).toBeNull();
   });
 
   it('scenario seeker emails are stable for the demo script', () => {

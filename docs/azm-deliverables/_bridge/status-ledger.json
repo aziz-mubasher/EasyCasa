@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-07T20:57:49.544Z",
+  "updatedAt": "2026-09-15T07:31:08.410Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_sell_privately_1",
+      "kaizenCode": "K EC SELL-1",
+      "polishId": "EC-SELL-PRIVATELY-1",
+      "title": "EC-SELL-PRIVATELY-1 — redesign /vendi-da-privato",
+      "venture": "EasyCasa",
+      "lifecycle": "pr_open",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-c5448296-87cd-448b-bd8a-6d3db89512f8",
+      "agentUrl": "https://cursor.com/agents/bc-c5448296-87cd-448b-bd8a-6d3db89512f8",
+      "branch": "cursor/ec-sell-privately-redesign-12f8",
+      "prNumber": 232,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/232",
+      "prState": "DRAFT",
+      "dispatchedAt": "2026-09-15T07:31:08.410Z",
+      "updatedAt": "2026-09-15T07:31:08.410Z",
+      "summary": "Draft PR #232: sell-privately redesigned; P4 retracted; R4+APE together; P12 stays coming.",
+      "nextAction": "Review #232. Do not flip P12. Run energy-gap SQL on VPS (count only).",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ecs_36",
       "kaizenCode": "K EC 7.7",
