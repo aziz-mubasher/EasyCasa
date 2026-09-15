@@ -15,6 +15,8 @@ export const META = {
   floor: 'property_floor',
   yearBuilt: 'property_year',
   energyClass: 'property_energy_class',
+  /** [[BUCO: WP meta key for IPE kWh/m²·year]] — not in the 2026 audit map. */
+  energyPerformance: 'property_energy_index',
   condition: 'property_condition',
   transactionType: 'status', // PremiumPress status codes; normalizeTransaction may return null
   address: 'map-location',

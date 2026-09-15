@@ -23,7 +23,7 @@
   },
   "brand": {
     "name": "EasyCasa",
-    "tagline": "Compra, vende y alquila — paga solo por los servicios que usas, con una agencia regulada."
+    "tagline": "Compra, vende y alquila — paga solo por los servicios que usas."
   },
   "errors": {
     "quota": {
@@ -565,7 +565,9 @@
       "bedrooms": "Habitaciones",
       "bathrooms": "Baños",
       "images": "Fotos",
-      "videoUrl": "Enlace de vídeo"
+      "videoUrl": "Enlace de vídeo",
+      "energyClass": "Clase energética",
+      "energyPerformance": "Índice (kWh/m²·año)"
     },
     "hints": {
       "province": "Elige primero la provincia y luego el municipio de la lista.",
@@ -575,7 +577,8 @@
       "leaseType": "Obligatorio en alquiler — afecta el contrato y RLI.",
       "characteristics": "Opcional. Marca las características que aplican al inmueble.",
       "images": "Hasta 20 imágenes (JPEG/PNG/WebP). Se suben al publicar.",
-      "videoUrl": "Opcional: YouTube, Vimeo o URL de vídeo directa."
+      "videoUrl": "Opcional: YouTube, Vimeo o URL de vídeo directa.",
+      "energyRequired": "Hacen falta las dos cifras: la clase y el índice en kWh/m²·año. Sin ellas el anuncio no puede publicarse — la sanción (500–3.000 €) recae en ti."
     },
     "errors": {
       "title": "Introduce un título (al menos 3 caracteres).",
@@ -592,6 +595,7 @@
       "videoUrl": "Introduce una URL de vídeo válida (o déjalo vacío).",
       "signInRequired": "Inicia sesión para publicar el anuncio.",
       "publishFailed": "Guardado como borrador, pero falló la publicación. Revisa el rol de la cuenta.",
+      "energyRequired": "Introduce la clase energética y el índice en kWh/m²·año. Ambos son obligatorios para publicar.",
       "network": "No se pudo contactar el servidor. Revisa tu conexión e inténtalo de nuevo.",
       "generic": "Algo salió mal. Inténtalo de nuevo."
     },
@@ -2776,34 +2780,95 @@
   "sellPrivately": {
     "meta": {
       "title": "Vender casa como particular | EasyCasa",
-      "description": "Publica tu vivienda en EasyCasa. Herramientas para particulares: agenda de visitas y rangos OMI oficiales de zona.",
-      "keywords": [
-        "vender casa como particular",
-        "vender casa sin agencia",
-        "anuncio particular inmobiliario"
-      ]
+      "description": "Tú publicas el anuncio. Quien está interesado te escribe. Las visitas las haces tú. Publicar es gratis. Sin comisión de ninguna de las dos partes."
     },
     "schema": {
       "serviceName": "Vender como particular en EasyCasa",
       "serviceType": "Anuncios inmobiliarios entre particulares",
-      "offerDescription": "Publica tu anuncio particular en EasyCasa"
+      "offerDescription": "Publica tu anuncio a tu nombre. La publicación es gratis."
     },
     "counselTemplate": "Plantilla en revisión legal — texto no definitivo (T02 / T04)",
     "tags": {
       "live": "Activo",
-      "coming": "Próximamente"
+      "coming": "Próximamente",
+      "you": "Tú"
     },
     "hero": {
+      "kicker": "Easy Casa Italia · para particulares",
       "title": "Vende tu casa tú mismo — sin venderte barato.",
-      "lead": "Publica un anuncio genuino, visto por compradores genuinos. Sin exclusividad, sin contrato.",
+      "lead": "Tú publicas el anuncio. Quien está interesado te escribe. Las visitas las haces tú, y decides tú a quién dejar entrar. Nosotros te dejamos listo, y que el anuncio sea lícito. Sin encargo, sin exclusividad, sin contrato, sin comisión.",
       "ctaPrimary": "Crea tu anuncio gratis",
       "ctaSecondary": "Cómo funciona ↓",
-      "ctaFilm": "Mira cómo funciona"
+      "ctaFilm": "Mira cómo funciona",
+      "freeAlways": "Publicar es gratis. Siempre."
+    },
+    "money": {
+      "items": [
+        {
+          "figure": "€0",
+          "title": "Publicar no cuesta nada.",
+          "body": "Sin tarifa de inserción, sin renovación, sin “destacado” para que te vean."
+        },
+        {
+          "figure": "0%",
+          "title": "Ninguna comisión, de ninguna de las dos partes.",
+          "body": "No la cobramos de ti ni de quien compra. En este oficio no hay un porcentaje."
+        },
+        {
+          "figure": "Al entregar",
+          "title": "Se paga el documento, no el trato.",
+          "body": "Lo que vendemos es un entregable a precio fijo: te lo quedas aunque la casa no se venda."
+        }
+      ]
+    },
+    "split": {
+      "youTitle": "Lo que haces tú",
+      "weTitle": "Lo que hacemos nosotros",
+      "youItems": [
+        {
+          "text": "Escribes y publicas el anuncio, a tu nombre"
+        },
+        {
+          "text": "Respondes a quien te escribe — en directo"
+        },
+        {
+          "text": "Muestras la casa, en tu calendario"
+        },
+        {
+          "text": "Decides a quién dejar entrar, y cuándo"
+        },
+        {
+          "text": "Negocias el precio tú"
+        },
+        {
+          "text": "Eliges el notario"
+        }
+      ],
+      "weItems": [
+        {
+          "text": "Te decimos lo que vende de verdad tu zona, con datos OMI publicados"
+        },
+        {
+          "text": "Revisamos los documentos y te decimos qué detendría la escritura"
+        },
+        {
+          "text": "Encargamos al técnico, a nuestro nombre, cuando hace falta"
+        },
+        {
+          "text": "Fotografiamos el inmueble y dibujamos el plano"
+        },
+        {
+          "text": "Te damos la agenda, las listas y la guía de seguridad"
+        },
+        {
+          "text": "Te impedimos publicar un anuncio ilegal"
+        }
+      ]
     },
     "savings": {
       "kicker": "Publicación",
       "title": "Publica tu anuncio.",
-      "bodyBefore": "En EasyCasa puedes publicar tu inmueble.",
+      "bodyBefore": "En EasyCasa puedes publicar tu vivienda.",
       "figure": "",
       "bodyAfter": "",
       "footnote": "",
@@ -2811,152 +2876,290 @@
       "sliderResultBefore": "",
       "sliderResultAfter": "",
       "neutralTitle": "Publica tu anuncio.",
-      "neutralBody": "El anuncio, las consultas y las herramientas de visita siguen a tu disposición."
+      "neutralBody": "Anuncio, consultas y herramientas de visita siguen a tu disposición."
     },
     "how": {
-      "kicker": "Cómo funciona",
-      "title": "Cinco pasos del anuncio a las visitas",
+      "kicker": "Cómo va",
+      "title": "Cómo va",
+      "sub": "Seis pasos. Los marcados tú son tuyos por diseño, no porque falte una función.",
       "steps": {
-        "list": {
-          "title": "Publica en minutos",
-          "body": "Asistente guiado: introduces la dirección y rellenamos el contexto de mercado."
-        },
         "price": {
-          "title": "Rangos OMI oficiales",
-          "body": "Rangos OMI oficiales de tu zona exacta — el dato publicado por la Agenzia delle Entrate."
+          "title": "Averigua lo que vale",
+          "body": "Los rangos OMI oficiales de tu zona — la cifra publicada por la Agenzia delle Entrate — y compraventas comparables. Te mostramos los números del mercado. Nunca te decimos que tu casa vale más o menos que lo que pide alguien."
+        },
+        "docs": {
+          "title": "Pon en orden los documentos",
+          "body": "Visura, plano, APE, procedencia, papeles de la comunidad. La lista te dice qué necesita tu caso; la revisión documental te dice qué falta y qué detendría la escritura. Es aquí donde las ventas entre particulares se atascan de verdad."
         },
         "verify": {
-          "title": "Demuestra que es genuino",
-          "body": "Sube la visura: el distintivo Propietario verificado indica que los documentos llegaron y el nombre del propietario coincide."
+          "title": "Demuestra que el anuncio es genuino",
+          "body": "Sube la visura. Si llegan los documentos y el nombre del titular coincide, el anuncio lleva la marca titularidad comprobada. Es un control sobre el anuncio, nunca un juicio sobre ti, y es facultativo."
         },
-        "buyers": {
-          "title": "Conoce compradores reales",
-          "body": "Las consultas podrán llevar un distintivo financiero Comprador verificado de Banks4All."
+        "list": {
+          "title": "Escribe el anuncio — y publícalo tú",
+          "body": "Preparamos un borrador con lo que nos has dado; lo lees, cambias lo que quieras y lo publicas a tu nombre. La ley hace responsable a quien publica, así que la última palabra tiene que ser tuya. El formulario no te deja publicar sin las cifras energéticas — véase abajo."
+        },
+        "meet": {
+          "title": "Encuentras a quien está interesado",
+          "body": "Las consultas llegan directas a ti. No las leemos, no las valoramos, no las ordenamos ni se las pasamos a nadie. Quien compra podrá, cuando esté listo, adjuntar la prueba de que su financiación se sostiene — y decides tú qué peso darle."
         },
         "viewings": {
-          "title": "Gestiona visitas como un profesional",
-          "body": "Agenda integrada: publicas huecos, confirmas solicitudes, sin llamadas perdidas."
+          "title": "Haces las visitas tú",
+          "body": "Publicas los huecos, confirmas las peticiones, sin persecución telefónica — con la lista de lo que hay que tener listo y una guía breve para recibir desconocidos en casa. Muestras tú la casa, porque nadie la conoce como tú."
         }
       }
     },
     "benefits": {
       "kicker": "Qué obtienes",
       "title": "Promesas que cumplimos — y las que aún llegan",
-      "sub": "Cada bloque refleja el registro del producto. Lo próximo se etiqueta con honestidad; nada se presenta como disponible antes de existir.",
+      "sub": "Cada voz refleja el registro de producto. Nada retirado se muestra como si estuviera en camino.",
       "items": {
         "P1": {
-          "title": "Anuncio",
-          "body": "Publica tu inmueble en EasyCasa."
+          "title": "Publicación",
+          "body": "Publica tu vivienda en EasyCasa."
         },
         "P2": {
-          "title": "Rangos OMI",
-          "body": "Datos oficiales de mercado de tu zona: el rango OMI publicado."
+          "title": "Rangos OMI de zona",
+          "body": "Datos oficiales de mercado para tu zona: el rango OMI publicado."
         },
         "P3": {
-          "title": "Distintivo Propietario verificado",
-          "body": "Documentos recibidos y nombre del propietario coincidente. No es un requisito para publicar."
+          "title": "Titularidad comprobada",
+          "body": "Documentos recibidos y nombre del titular coincidente. Facultativo: no es un requisito para publicar."
         },
         "P4": {
-          "title": "Compradores verificados",
-          "body": "Distintivos financieros en las consultas — menos tiempo perdido, menos ausencias."
+          "title": "Retirada",
+          "body": "Voz retirada. No se construye de esta forma."
         },
         "P5": {
           "title": "Agenda de visitas",
-          "body": "Tu calendario, tus huecos, visitas confirmadas — incluso modo open house."
+          "body": "Tu calendario, tus huecos, visitas confirmadas. Muestras tú la casa."
         },
         "P6": {
           "title": "Lista de documentos",
-          "body": "APE, plano, visura — te decimos qué hace falta y lo mantenemos organizado y privado."
+          "body": "APE, plano, visura — te decimos qué hace falta y lo guardas en privado. Enlazada a la revisión documental de pago."
         },
         "P7": {
           "title": "Panel del vendedor",
-          "body": "Vistas, guardados, tasa de consultas y cómo evoluciona tu precio."
+          "body": "Vistas, guardados, consultas. Datos del anuncio, no un juicio sobre una persona."
         },
         "P8": {
           "title": "Publicas tú",
-          "body": "Sin exclusividad, sin mandato. Tú decides cuándo publicar."
+          "body": "Sin exclusividad, sin encargo. Decides tú cuándo publicar."
+        },
+        "P9": {
+          "title": "Publicar es gratis",
+          "body": "Sin tarifa de inserción. Siempre."
+        },
+        "P10": {
+          "title": "Ninguna comisión",
+          "body": "De ninguna de las dos partes. Vale en el estado PONTE; se revisa al cambiar de estado, no se retira sola."
+        },
+        "P11": {
+          "title": "Cifras energéticas obligatorias",
+          "body": "Clase e índice en kWh/m²·año: sin ambos el anuncio no pasa a publicado."
+        },
+        "P12": {
+          "title": "Preaprobación del comprador",
+          "body": "El comprador obtiene el documento de su propio banco o de un mediador inscrito. Próximamente."
         }
       }
+    },
+    "never": {
+      "kicker": "Para que no haya confusión",
+      "title": "Lo que nunca haremos por ti — a ningún precio.",
+      "items": [
+        {
+          "title": "No te encontramos al comprador.",
+          "body": "Publicamos lo que escribes y nos apartamos. Encontrar y emparejar es trabajo de un agente inscrito, y nosotros no lo somos."
+        },
+        {
+          "title": "No negociamos tu precio.",
+          "body": "Ni por teléfono, ni por mensaje, ni «solo para tantear»."
+        },
+        {
+          "title": "No redactamos la propuesta de compra.",
+          "body": "Explicamos en palabras llanas cómo funciona, gratis, antes de que estés en una negociación. Nunca la rellenaremos."
+        },
+        {
+          "title": "No guardamos las llaves ni hacemos las visitas por ti.",
+          "body": "Las llaves se quedan contigo, y contigo la decisión de quién entra."
+        },
+        {
+          "title": "No cobramos comisión — ni de ti ni de quien compra.",
+          "body": "No hay success fee ni porcentaje. Si algún día quisiéramos una, tendríamos que ser otra empresa."
+        },
+        {
+          "title": "No juzgamos a las personas que te contactan.",
+          "body": "Sin puntuación, sin etiqueta, sin semáforo sobre un ser humano. Revisamos documentos; a las personas las lees tú."
+        }
+      ]
+    },
+    "ape": {
+      "kicker": "Lo que pilla a contrapié",
+      "title": "El anuncio debe llevar las cifras energéticas",
+      "body": "La ley italiana obliga a todo anuncio comercial a indicar el índice de prestación energética y la clase. No es un trámite: la sanción es de 500 a 3.000 euros por anuncio, y recae en quien es responsable de publicarlo — que, en un anuncio de particular, eres tú.",
+      "cite": "art. 6 c. 8 D.lgs. 192/2005 · art. 15",
+      "pairs": [
+        {
+          "title": "Las dos cifras, no una",
+          "body": "La letra sola no basta. También hace falta el índice en kWh/m²·año."
+        },
+        {
+          "title": "Bloqueamos la publicación",
+          "body": "El formulario no deja salir el anuncio sin ellas, y te dice por qué. Es una protección para ti antes que para nosotros."
+        },
+        {
+          "title": "El APE lo encargas tú",
+          "body": "El certificador tiene que ser independiente de las partes, así que no podemos producirlo. Lo recibimos, lo comprobamos y te decimos si está caducado."
+        }
+      ]
+    },
+    "ready": {
+      "kicker": "Facultativo, y enteramente del comprador",
+      "kickerComing": "Próximamente — aún no está en producción",
+      "title": "Saber quién va en serio",
+      "body": "Te llegarán mensajes de quien está listo y de quien está soñando, y distinguirlos es el coste real de vender por tu cuenta. La señal más sólida que un comprador puede enviarte es un documento de su propio banco o de un mediador inscrito de que su financiación se sostiene. Ese documento es suyo — nosotros no lo emitimos ni leemos un veredicto.",
+      "bodyComing": "El mecanismo — una preaprobación a nombre del comprador, adjuntada si él quiere, leída por ti — se enciende solo tras la confirmación de Credit Prime y la DPIA. Mientras no esté, no lo prometemos como si ya circulase.",
+      "steps": [
+        {
+          "title": "El comprador obtiene el documento",
+          "body": "De su propio banco, o de un mediador crediticio inscrito como Credit Prime. Es cliente de aquel, no nuestro, y el documento va a su nombre."
+        },
+        {
+          "title": "Elige si adjuntarlo",
+          "body": "Nada en este sitio lo exige, y ningún anuncio se oculta a quien no lo tiene."
+        },
+        {
+          "title": "Decides tú",
+          "body": "Ves que hay un documento de un emisor nombrado, con su fecha. Lo que te valga es tu decisión — nunca la nuestra."
+        }
+      ],
+      "foot": "Aceptamos una delibera reddituale o una preaprobación de cualquier banco o mediador inscrito, y la prueba de fondos de quien no pide hipoteca. No nos paga ninguno de ellos por enviarle un comprador.",
+      "footComing": "[[BUCO: confirmación Credit Prime — preaprobación al comprador como cliente propio + DPIA]]. Mientras el hueco esté abierto, el bloque sigue en próximamente."
+    },
+    "costs": {
+      "title": "Cuánto cuesta",
+      "sub": "Precios fijos, acordados antes de empezar, debidos al entregar. Nunca un porcentaje.",
+      "items": [
+        {
+          "title": "Publicar el anuncio",
+          "body": "Tu anuncio, a tu nombre, el tiempo que lo necesites.",
+          "price": "Gratis",
+          "free": true
+        },
+        {
+          "title": "Valoración",
+          "body": "Rangos OMI publicados y compraventas comparables de tu zona, por escrito.",
+          "price": "€99",
+          "free": false
+        },
+        {
+          "title": "Revisión documental",
+          "body": "Lo que tienes, lo que falta, lo que detendría la escritura, y cuánto cuesta cada arreglo.",
+          "price": "€149",
+          "free": false
+        },
+        {
+          "title": "Kit de visitas",
+          "body": "Página de reserva sobre tu disponibilidad, listas y guía de seguridad.",
+          "price": "€39",
+          "free": false
+        }
+      ],
+      "noteBefore": "Fotos y plano, verificación de conformidad, tour virtual y el curso «Véndela tú» están en la",
+      "noteLink": "lista de precios completa",
+      "noteAfter": ", junto con los paquetes."
+    },
+    "agency": {
+      "title": "Y si prefieres una agencia",
+      "body": "Es una decisión legítima, y nada aquí está hecho para atraparte. No hay exclusividad ni encargo, así que puedes publicar aquí y trabajar con una agencia al mismo tiempo, o parar cuando quieras.",
+      "dirBefore": "Nuestro",
+      "dirLink": "directorio de agencias inscritas",
+      "dirAfter": " las enumera con su número REA, para que las compruebes tú. Sin ranking, sin «recomendado», y tus datos no se venden a nadie. Su comisión está en su propio encargo y se la pagas a ellas — EasyCasa no cobra nada de esa suma."
     },
     "not": {
       "kicker": "Transparencia",
       "title": "Reglas claras",
-      "body": "EasyCasa publica las reglas sobre anuncios y servicios opcionales en las condiciones.",
+      "body": "EasyCasa publica las reglas de los anuncios y de los servicios opcionales en los términos.",
       "fallbackTitle": "Roles claros, documentos claros",
-      "fallbackBody": "EasyCasa publica en los términos y el aviso de privacidad las reglas sobre anuncios, servicios opcionales y datos."
+      "fallbackBody": "EasyCasa publica las reglas que valen para anuncios, servicios opcionales y tus datos en los términos y el aviso de privacidad."
     },
     "faq": {
-      "kicker": "FAQ",
-      "title": "Preguntas de quien vende como particular",
+      "kicker": "Preguntas",
+      "title": "Lo que preguntan los particulares",
       "items": [
         {
           "q": "¿Qué documentos necesito?",
-          "a": "Suele hacer falta certificado energético (APE), plano y extracto de propiedad (visura). Una lista en la plataforma indicará qué necesitas y mantendrá las subidas privadas."
-        },
-        {
-          "q": "¿Cómo funciona Propietario verificado?",
-          "a": "Subes documentación de propiedad (p. ej. visura). Tras las comprobaciones, si los documentos llegaron y el nombre coincide, el anuncio puede mostrar el distintivo. No es un requisito para publicar."
+          "a": "Suele ser el APE, el plano y la visura — más procedencia y papeles de la comunidad para la escritura. La lista de la plataforma te dice qué necesita tu caso y guarda las subidas en privado."
         },
         {
           "q": "¿Quién ve mis documentos?",
-          "a": "Solo moderación — nunca el público. Los documentos de verificación del propietario no se muestran en la página del anuncio."
+          "a": "Solo la moderación, nunca el público. Los documentos usados para comprobar la titularidad no aparecen en la página del anuncio."
         },
         {
-          "q": "¿Qué es el distintivo Comprador verificado y quién lo proporciona?",
-          "a": "Es un distintivo de capacidad financiera que los compradores podrán adjuntar a las consultas. Lo proporciona Banks4All. Próximamente — el mismo texto que en la página de compradores."
+          "q": "¿Tengo que demostrar que soy el titular?",
+          "a": "No. El control de titularidad es facultativo y puedes publicar sin él. Existe porque quien compra en este sitio espera anuncios reales, y es un control sobre el anuncio — no un juicio sobre ti."
         },
         {
-          "q": "¿Puedo anunciar también con una agencia?",
-          "a": "Sí. No hay exclusividad ni mandato obligatorio para publicar en EasyCasa."
+          "q": "¿Puede un comprador mostrarme que su financiación se sostiene?",
+          "a": "Podrá adjuntar una preaprobación de su propio banco o de un mediador inscrito, cuando ese mecanismo esté en producción. Te mostraremos el emisor y la fecha. No la valoramos, no etiquetamos a nadie y no filtramos las consultas por ella. Hoy el bloque está en próximamente."
+        },
+        {
+          "q": "¿Puedo publicar también con una agencia?",
+          "a": "Sí. No hay exclusividad ni encargo para publicar aquí. En el directorio de agencias inscritas están los números REA, sin ranking y sin captura de contacto. Su comisión se la pagas a ellas: de esa suma EasyCasa no cobra nada."
+        },
+        {
+          "q": "¿Os lleváis algo cuando vendo?",
+          "a": "No. Ni comisión, ni success fee, ni porcentaje — de ti o de quien compra. Pagas los entregables que pides, y nada más llega a deberse."
         }
       ]
     },
     "film": {
-      "kicker": "Intro · Para quien vende como particular",
-      "title": "Cómo funciona la venta en EasyCasa",
+      "kicker": "Intro · Para particulares",
+      "title": "Cómo se vende en EasyCasa",
       "play": "Reproducir",
       "pause": "Pausa",
-      "replay": "Volver a ver",
+      "replay": "Repetir",
       "skip": "Lee los pasos",
-      "fullscreen": "Pantalla completa",
+      "fullscreen": "Ver a pantalla completa",
       "closeFullscreen": "Cerrar",
-      "iframeTitle": "Intro EasyCasa para particulares — cómo funciona la venta",
+      "iframeTitle": "Intro EasyCasa — cómo se vende como particular",
       "sceneOf": "Escena {n} de {total}",
       "scenes": [
         {
           "kicker": "Para quien vende como particular",
-          "title": "Tú vendes la casa.",
-          "body": "Tú publicas el anuncio. Las herramientas son tuyas. Sin mandato, sin exclusividad."
+          "title": "La casa la vendes tú.",
+          "body": "Publicas el anuncio. Los mensajes llegan a ti. Las visitas las haces tú. Sin encargo, sin exclusividad."
         },
         {
           "kicker": "01 · El anuncio",
           "title": "Lo escribes tú.",
-          "body": "Fotos, datos, precio pedido. Un asistente te guía. Publicas cuando estás listo."
+          "body": "Borrador asistido, revisión tuya, publicado a tu nombre. La última palabra es tuya porque la ley la pone en quien publica."
         },
         {
           "kicker": "02 · Datos de zona",
           "title": "Rangos oficiales, tras iniciar sesión.",
-          "body": "Las cifras OMI de la Agenzia delle Entrate para tu zona. Son datos de zona, no una tasación de esta casa."
+          "body": "Cifras OMI de la Agenzia delle Entrate para tu zona. Son datos de zona, no una tasación de esta casa."
         },
         {
-          "kicker": "03 · Las consultas",
+          "kicker": "03 · Consultas",
           "title": "Llegan a ti.",
-          "body": "Quien está interesado te escribe. EasyCasa transporta el mensaje. No negocia."
+          "body": "Quien está interesado te escribe. EasyCasa transporta el mensaje. No lo lee, no lo puntúa, no lo asigna."
         },
         {
-          "kicker": "04 · Las visitas",
+          "kicker": "04 · Visitas",
           "title": "Publicas los huecos. Confirmas tú.",
-          "body": "Tu calendario. Ellos eligen. Tú confirmas. Como reservar una mesa."
+          "body": "Tu calendario. Ellos eligen. Tú confirmas. Como se reserva una mesa."
         },
         {
-          "kicker": "05 · Los documentos",
-          "title": "Lista, y una insignia opcional.",
-          "body": "APE, plano, visura: los mantienes organizados. La insignia Propietario verificado no es un requisito para publicar."
+          "kicker": "05 · Documentos",
+          "title": "Una lista, y un control opcional.",
+          "body": "APE, plano, visura: los tienes en orden. La marca de titularidad comprobada no es un requisito para publicar."
         },
         {
-          "kicker": "06 · El panel",
-          "title": "Mira cómo se mueve el anuncio.",
-          "body": "Vistas, guardados, consultas. Datos de tu anuncio, no un veredicto sobre el precio."
+          "kicker": "06 · Panel",
+          "title": "Ves cómo se mueve el anuncio.",
+          "body": "Vistas, guardados, consultas. Datos del anuncio, no un juicio sobre el precio ni sobre una persona."
         },
         {
           "kicker": "easycasaita.com",
@@ -2966,16 +3169,22 @@
       ]
     },
     "final": {
-      "title": "Cuando quieras.",
+      "title": "Cuando estés listo.",
       "body": "Crea un anuncio. Sin exclusividad, sin contrato.",
       "cta": "Crea tu anuncio gratis"
     },
     "foot": {
-      "privacyBefore": "Aviso de privacidad:",
+      "entityBefore": "Easy Casa Italia es un servicio de",
+      "entityHole": "[denominación — P.IVA — REA — sede: a publicar en la constitución]",
+      "entityAfter": ", Brescia, parte de Ayni Group. Plataforma y software licenciados por Mundida.",
+      "notEnrolled": "Easy Casa Italia no está inscrita como agente de negocios en mediación y no realiza mediación inmobiliaria.",
+      "mediationBefore": "Lo que eso significa en la práctica está en el",
+      "mediation": "aviso de mediación",
+      "mediationAfter": ".",
+      "privacyBefore": "Privacidad:",
       "privacyLink": "informativa",
-      "privacyAfter": ".",
-      "myData": "Mis datos",
-      "mediation": "Mediación"
+      "privacyAfter": " ·",
+      "myData": "Mis datos"
     }
   },
   "aste": {

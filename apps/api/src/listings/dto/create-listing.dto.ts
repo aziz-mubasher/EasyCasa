@@ -109,6 +109,10 @@ export class CreateListingDto {
   @IsOptional() @IsString()
   energyClass?: string;
 
+  /** Energy performance index (kWh/m²·year). Required with class at publish (R4). */
+  @IsOptional() @IsNumber() @Min(0.01)
+  energyPerformanceKwhM2Y?: number;
+
   /** External video URL (YouTube, Vimeo, direct mp4, etc.). Stored as media type=video. */
   @IsOptional() @IsUrl({ require_tld: false })
   videoUrl?: string;

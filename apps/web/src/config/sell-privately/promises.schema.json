@@ -1,18 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://easycasaita.com/schemas/sell-privately-promises.json",
-  "title": "EasyCasa Sell Privately promise ledger (EC-S-T03)",
+  "title": "EasyCasa Sell Privately promise ledger (EC-S-T03 / EC-SELL-PRIVATELY-1)",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "updatedAt", "promises", "blocks"],
+  "required": ["version", "updatedAt", "companyLicenceState", "promises", "blocks"],
   "properties": {
     "$schema": { "type": "string" },
     "version": { "type": "integer", "minimum": 1 },
     "updatedAt": { "type": "string", "minLength": 1 },
+    "companyLicenceState": { "$ref": "#/$defs/licenceState" },
     "promises": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"],
+      "required": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11", "P12"],
       "properties": {
         "P1": { "$ref": "#/$defs/promise" },
         "P2": { "$ref": "#/$defs/promise" },
@@ -21,7 +22,11 @@
         "P5": { "$ref": "#/$defs/promise" },
         "P6": { "$ref": "#/$defs/promise" },
         "P7": { "$ref": "#/$defs/promise" },
-        "P8": { "$ref": "#/$defs/promise" }
+        "P8": { "$ref": "#/$defs/promise" },
+        "P9": { "$ref": "#/$defs/promise" },
+        "P10": { "$ref": "#/$defs/promise" },
+        "P11": { "$ref": "#/$defs/promise" },
+        "P12": { "$ref": "#/$defs/promise" }
       }
     },
     "blocks": {
@@ -35,26 +40,37 @@
     }
   },
   "$defs": {
+    "licenceState": {
+      "type": "string",
+      "enum": ["ponte", "agente", "oam"]
+    },
     "promiseState": {
       "type": "string",
-      "enum": ["live", "coming", "hidden"]
+      "enum": ["live", "coming", "hidden", "retracted"]
     },
     "blockState": {
       "type": "string",
-      "enum": ["live", "fallback", "hidden"]
+      "enum": ["live", "fallback", "hidden", "retracted"]
     },
     "promise": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["state", "tasks"],
+      "required": ["state", "tasks", "licence_state"],
       "properties": {
         "state": { "$ref": "#/$defs/promiseState" },
+        "licence_state": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/licenceState" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
         "tasks": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 },
           "minItems": 1
         },
-        "note": { "type": "string" }
+        "note": { "type": "string" },
+        "retractedReason": { "type": "string" }
       }
     },
     "counselBlock": {

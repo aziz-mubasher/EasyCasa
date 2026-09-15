@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { normalizeProvinceSlug } from '@easycasa/shared';
+import { assertPublishEnergyFigures, normalizeProvinceSlug } from '@easycasa/shared';
 import { eq, sql } from 'drizzle-orm';
 
 import { DRIZZLE } from '../../db/db.module';
@@ -81,6 +81,13 @@ export class DemoListingSink {
       condoFeeEur: listing.condoFeeEur,
       zoneId: listing.zoneId,
     };
+    if (listing.status === 'published') {
+      assertPublishEnergyFigures({
+        energyClass: listing.energyClass,
+        energyPerformanceKwhM2Y: listing.energyPerformanceKwhM2Y,
+      });
+    }
+
     const values = {
       wpPostId,
       slug: listing.slug,
@@ -94,6 +101,8 @@ export class DemoListingSink {
       rooms: listing.rooms,
       sizeSqm: String(listing.sqm),
       energyClass: listing.energyClass || null,
+      energyPerformanceKwhM2Y:
+        listing.energyPerformanceKwhM2Y != null ? String(listing.energyPerformanceKwhM2Y) : null,
       propertyType: 'apartment',
       address: listing.address,
       city: listing.city,
@@ -123,6 +132,7 @@ export class DemoListingSink {
           rooms: values.rooms,
           sizeSqm: values.sizeSqm,
           energyClass: values.energyClass,
+          energyPerformanceKwhM2Y: values.energyPerformanceKwhM2Y,
           address: values.address,
           city: values.city,
           province: values.province,

@@ -30,6 +30,18 @@ export const DEMO_ZONES: readonly DemoZone[] = [
 ];
 
 const ENERGY = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F'] as const;
+const ENERGY_INDEX: Record<(typeof ENERGY)[number] | 'G', number> = {
+  A4: 15,
+  A3: 25,
+  A2: 40,
+  A1: 55,
+  B: 75,
+  C: 110,
+  D: 150,
+  E: 190,
+  F: 240,
+  G: 290,
+};
 const STREETS = [
   'Via Roma',
   'Via Dante',
@@ -60,6 +72,7 @@ export type DemoListingSeed = {
   floor: number;
   yearBuilt: number;
   energyClass: string;
+  energyPerformanceKwhM2Y: number | null;
   condoFeeEur: number;
   priceEur: number;
   omiMinEurSqm: number;
@@ -151,7 +164,7 @@ export function buildDemoListings(count = 120): DemoListingSeed[] {
     energyClass: '',
     responseRatePct: 70,
     medianResponseHours: 8,
-    status: 'published',
+    status: 'draft',
     scenario: 'cremona_ape_unavailable',
     apeAvailable: false,
     bandT: 0.4,
@@ -183,6 +196,7 @@ export function buildDemoListings(count = 120): DemoListingSeed[] {
     const n = i + 1;
     const street = pick(rng, STREETS);
     const civic = intBetween(rng, 1, 120);
+    const energyClass = pick(rng, ENERGY);
     out.push({
       ref: `DEMO-${String(n).padStart(3, '0')}`,
       wpKey: `demo-${zone.id}-${String(n).padStart(3, '0')}`,
@@ -199,7 +213,8 @@ export function buildDemoListings(count = 120): DemoListingSeed[] {
       rooms,
       floor: intBetween(rng, 0, 7),
       yearBuilt: intBetween(rng, 1955, 2019),
-      energyClass: pick(rng, ENERGY),
+      energyClass,
+      energyPerformanceKwhM2Y: ENERGY_INDEX[energyClass],
       condoFeeEur: intBetween(rng, 60, 280),
       priceEur,
       omiMinEurSqm: zone.omiMinEurSqm,
@@ -252,6 +267,10 @@ function makeScenarioListing(p: {
     floor: 3,
     yearBuilt: 1988,
     energyClass: p.energyClass || 'G',
+    energyPerformanceKwhM2Y:
+      p.status === 'published' && p.energyClass
+        ? ENERGY_INDEX[(p.energyClass as keyof typeof ENERGY_INDEX) || 'G'] ?? 150
+        : null,
     condoFeeEur: 140,
     priceEur,
     omiMinEurSqm: p.zone.omiMinEurSqm,

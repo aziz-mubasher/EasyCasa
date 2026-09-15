@@ -23,7 +23,7 @@
   },
   "brand": {
     "name": "EasyCasa",
-    "tagline": "Buy, sell, and rent — pay only for the services you use, from a licensed agency."
+    "tagline": "Buy, sell, and rent — pay only for the services you use."
   },
   "errors": {
     "quota": {
@@ -565,7 +565,9 @@
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",
       "images": "Photos",
-      "videoUrl": "Video link"
+      "videoUrl": "Video link",
+      "energyClass": "Energy class",
+      "energyPerformance": "Index (kWh/m²·year)"
     },
     "hints": {
       "province": "Select the province first, then the municipality from the list.",
@@ -575,7 +577,8 @@
       "leaseType": "Required for rentals — drives contract and RLI rules.",
       "characteristics": "Optional. Select amenities that apply to this property.",
       "images": "Up to 20 images (JPEG/PNG/WebP). Uploaded when you publish.",
-      "videoUrl": "Optional YouTube, Vimeo, or direct video URL."
+      "videoUrl": "Optional YouTube, Vimeo, or direct video URL.",
+      "energyRequired": "Both figures are required: the class letter and the index in kWh/m²·year. Without them the listing cannot be published — the €500–€3,000 penalty falls on you."
     },
     "errors": {
       "title": "Enter a title (at least 3 characters).",
@@ -592,6 +595,7 @@
       "videoUrl": "Enter a valid video URL (or leave empty).",
       "signInRequired": "Sign in to publish your listing.",
       "publishFailed": "Saved as draft, but publish failed. Check your account role.",
+      "energyRequired": "Enter the energy class and the index in kWh/m²·year. Both are required to publish.",
       "network": "Could not reach the server. Check your connection and try again.",
       "generic": "Something went wrong. Try again."
     },
@@ -2776,29 +2780,90 @@
   "sellPrivately": {
     "meta": {
       "title": "Sell your home privately | EasyCasa",
-      "description": "List your home on EasyCasa. Tools private sellers use: a viewing scheduler and official OMI zone ranges.",
-      "keywords": [
-        "sell home privately Italy",
-        "sell house without agency",
-        "private seller listing"
-      ]
+      "description": "You publish the listing. Buyers write to you. You show the house. Publishing is free. No commission from either side."
     },
     "schema": {
       "serviceName": "Sell privately on EasyCasa",
       "serviceType": "Private property listings",
-      "offerDescription": "Publish your private listing on EasyCasa"
+      "offerDescription": "Publish your listing in your own name. Publishing is free."
     },
     "counselTemplate": "Counsel-review template — not final legal wording (T02 / T04)",
     "tags": {
       "live": "Live",
-      "coming": "Coming soon"
+      "coming": "Coming soon",
+      "you": "You"
     },
     "hero": {
+      "kicker": "Easy Casa Italia · for private sellers",
       "title": "Sell your home yourself — without selling yourself short.",
-      "lead": "Publish a genuine listing, seen by genuine buyers. No exclusivity, no contract.",
+      "lead": "You publish the listing. Buyers write to you. You show the house and you decide who to let in. We make sure you are ready, and that your listing is lawful. No mandate, no exclusivity, no contract, no commission.",
       "ctaPrimary": "Create your free listing",
       "ctaSecondary": "How it works ↓",
-      "ctaFilm": "Watch how it works"
+      "ctaFilm": "Watch how it works",
+      "freeAlways": "Publishing is free. Always."
+    },
+    "money": {
+      "items": [
+        {
+          "figure": "€0",
+          "title": "Publishing costs nothing.",
+          "body": "No listing fee, no renewal, no “featured” upsell to be seen."
+        },
+        {
+          "figure": "0%",
+          "title": "No commission, ever.",
+          "body": "Not from you, not from your buyer. There is no percentage anywhere in this business."
+        },
+        {
+          "figure": "Due on delivery",
+          "title": "You pay for documents, not for the deal.",
+          "body": "Everything we sell is a fixed-price deliverable you keep whether or not you ever sell."
+        }
+      ]
+    },
+    "split": {
+      "youTitle": "What you do",
+      "weTitle": "What we do",
+      "youItems": [
+        {
+          "text": "Write and publish your listing, in your own name"
+        },
+        {
+          "text": "Answer the buyers who write to you — directly"
+        },
+        {
+          "text": "Show the house, on your own calendar"
+        },
+        {
+          "text": "Decide who to let in, and when"
+        },
+        {
+          "text": "Negotiate your own price"
+        },
+        {
+          "text": "Choose your notary"
+        }
+      ],
+      "weItems": [
+        {
+          "text": "Tell you what your zone actually sells for, from published OMI data"
+        },
+        {
+          "text": "Check your documents and tell you what would stop the deed"
+        },
+        {
+          "text": "Engage the surveyor, in our own name, when one is needed"
+        },
+        {
+          "text": "Photograph the property and draw the floor plan"
+        },
+        {
+          "text": "Give you the scheduler, the checklists and the safety guide"
+        },
+        {
+          "text": "Stop you from publishing an advert that breaks the law"
+        }
+      ]
     },
     "savings": {
       "kicker": "Listing",
@@ -2814,35 +2879,40 @@
       "neutralBody": "Listing, enquiries and viewing tools stay available to you."
     },
     "how": {
-      "kicker": "How it works",
-      "title": "Five steps from listing to viewings",
+      "kicker": "How it goes",
+      "title": "How it goes",
+      "sub": "Six steps. The ones marked you are yours by design, not because a feature is missing.",
       "steps": {
-        "list": {
-          "title": "List in minutes",
-          "body": "Guided wizard: enter your address and we pre-fill the market context."
-        },
         "price": {
-          "title": "Official OMI ranges",
-          "body": "Official OMI ranges for your exact zone — the figure published by the Agenzia delle Entrate."
+          "title": "Find out what it's worth",
+          "body": "Official OMI ranges for your exact zone — the figure published by the Agenzia delle Entrate — plus comparable sales. We show you the market's numbers. We never tell you your home is worth more or less than someone's asking."
+        },
+        "docs": {
+          "title": "Get your documents straight",
+          "body": "Visura, planimetria, APE, provenance, condominium papers. The checklist tells you what your case needs; the document check-up tells you what is missing and what would stop the deed. This is where most private sales actually fail."
         },
         "verify": {
-          "title": "Prove it's genuine",
-          "body": "Upload your visura: the Verified Owner badge means documents were received and the owner name matched."
+          "title": "Prove the listing is genuine",
+          "body": "Upload your visura. If the documents arrive and the owner name matches, the listing carries an ownership checked mark. It is a check on the listing, never a rating of you, and it is not required to publish."
         },
-        "buyers": {
-          "title": "Meet real buyers",
-          "body": "Enquiries will be able to carry a Verified Buyer financial badge from Banks4All."
+        "list": {
+          "title": "Write the advert — and publish it yourself",
+          "body": "We prepare a draft from what you have given us; you read it, change what you want, and publish it under your own name. The law makes whoever publishes an advert answerable for it, so the last word has to be yours. The form will not let you publish without the energy figures — see below."
+        },
+        "meet": {
+          "title": "Meet buyers",
+          "body": "Enquiries go straight to you. We do not read them, score them, rank them or pass them to anyone. A buyer may later choose to attach proof that their financing stands up — and you decide what to make of it."
         },
         "viewings": {
-          "title": "Run viewings like a pro",
-          "body": "Built-in scheduler: publish your slots, confirm requests, no phone-tag."
+          "title": "Run the viewings",
+          "body": "Publish your slots, confirm requests, no phone-tag — with a checklist of what to have ready and a short guide to receiving strangers at home safely. You show the house, because nobody knows it like you do."
         }
       }
     },
     "benefits": {
       "kicker": "What you get",
       "title": "Promises we keep — and ones still on the way",
-      "sub": "Each tile reflects the live product ledger. Coming-soon items are labelled honestly; nothing here is sold as available before it ships.",
+      "sub": "Each item reflects the live product ledger. Retracted items are not shown as coming soon.",
       "items": {
         "P1": {
           "title": "Listing",
@@ -2853,30 +2923,159 @@
           "body": "Official market data for your zone: the published OMI range."
         },
         "P3": {
-          "title": "Verified Owner badge",
-          "body": "Documents received and owner name matched. It is not a requirement to publish."
+          "title": "Ownership checked",
+          "body": "Documents received and owner name matched. Optional: it is not a requirement to publish."
         },
         "P4": {
-          "title": "Verified buyers",
-          "body": "Financial badges on enquiries — less time wasted, fewer no-shows."
+          "title": "Retracted",
+          "body": "Retracted. This form will not be built."
         },
         "P5": {
           "title": "Viewing scheduler",
-          "body": "Your calendar, your slots, confirmed viewings — even open-house mode."
+          "body": "Your calendar, your slots, confirmed viewings. You show the house."
         },
         "P6": {
           "title": "Document checklist",
-          "body": "APE, planimetria, visura — we tell you what's needed and keep it organised and private."
+          "body": "APE, planimetria, visura — we tell you what is needed and keep it private. Linked to the paid document check-up."
         },
         "P7": {
           "title": "Seller dashboard",
-          "body": "Views, saves, enquiry rate, and how your price compares over time."
+          "body": "Views, saves, enquiry rate. Data on the listing, not a judgement of a person."
         },
         "P8": {
           "title": "You publish",
           "body": "No exclusivity, no mandate. You decide when to publish."
+        },
+        "P9": {
+          "title": "Publishing is free",
+          "body": "No listing fee. Always."
+        },
+        "P10": {
+          "title": "No commission",
+          "body": "From neither side. Holds in PONTE; review on licence-state change, do not auto-retract."
+        },
+        "P11": {
+          "title": "Energy figures required",
+          "body": "Class and index in kWh/m²·year: without both, the listing does not become published."
+        },
+        "P12": {
+          "title": "Buyer's own pre-approval",
+          "body": "The buyer obtains the document from their own bank or a registered broker. Coming soon."
         }
       }
+    },
+    "never": {
+      "kicker": "So there is no confusion",
+      "title": "What we will never do for you — at any price.",
+      "items": [
+        {
+          "title": "We will not find your buyer.",
+          "body": "We publish what you write and get out of the way. Finding and matching is the work of a licensed agent, and we are not one."
+        },
+        {
+          "title": "We will not negotiate your price.",
+          "body": "Not on the phone, not by message, not “just to test the water”."
+        },
+        {
+          "title": "We will not write the purchase proposal.",
+          "body": "We explain in plain language how one works, free, before you are in any negotiation. We will never fill one in."
+        },
+        {
+          "title": "We will not hold your keys or show the house for you.",
+          "body": "The keys stay with you, and so does the decision about who comes in."
+        },
+        {
+          "title": "We will not take a commission — from you or from your buyer.",
+          "body": "There is no success fee and no percentage. If we ever wanted one, we would have to become a different company."
+        },
+        {
+          "title": "We will not judge the people who contact you.",
+          "body": "No score, no badge, no traffic light on a human being. We check documents; you read people."
+        }
+      ]
+    },
+    "ape": {
+      "kicker": "The one that catches people out",
+      "title": "Your advert must carry the energy figures",
+      "body": "Italian law requires every commercial property advert to state the energy performance index and the energy class. It is not a formality: the penalty is €500 to €3,000 per advert, and it falls on whoever is responsible for publishing it — which, on a private listing, is you.",
+      "cite": "art. 6 c. 8 D.lgs. 192/2005 · art. 15",
+      "pairs": [
+        {
+          "title": "Both figures, not one",
+          "body": "The class letter on its own is not enough. The index in kWh/m²·year has to be there too."
+        },
+        {
+          "title": "We block the publish",
+          "body": "The form will not let the listing go live without them, and it tells you why. That is protection for you before it is protection for us."
+        },
+        {
+          "title": "You commission the APE yourself",
+          "body": "The certifier has to be independent of the parties, so we cannot produce it for you. We receive it, check it, and tell you if it is expired."
+        }
+      ]
+    },
+    "ready": {
+      "kicker": "Optional, and entirely the buyer's",
+      "kickerComing": "Coming soon — not in production yet",
+      "title": "Knowing which buyers are serious",
+      "body": "You will get messages from people who are ready and people who are dreaming, and telling them apart is the real cost of selling privately. The strongest signal a buyer can send you is proof from their own bank or credit broker that their financing stands up. That document belongs to them — we neither issue it nor read a verdict into it.",
+      "bodyComing": "The mechanism — a pre-approval in the buyer's name, attached if they choose, read by you — ships only after Credit Prime confirms and the DPIA. Until then we do not promise it as if it were already on the road.",
+      "steps": [
+        {
+          "title": "The buyer gets the document",
+          "body": "From their own bank, or from a registered credit broker such as Credit Prime. They are that broker's client, not ours, and it is issued in their name."
+        },
+        {
+          "title": "They choose whether to attach it",
+          "body": "Nothing on this site requires it, and no listing is hidden from a buyer who has not got one."
+        },
+        {
+          "title": "You decide",
+          "body": "You see that a document from a named issuer is attached, with its date. What it is worth to you is your call — never ours."
+        }
+      ],
+      "foot": "We accept a delibera reddituale or pre-approval from any bank or registered broker, and proof of funds from buyers who are not borrowing. We are paid nothing by any of them for sending a buyer their way.",
+      "footComing": "[[BUCO: Credit Prime confirmation — pre-approval issued to the buyer as their own client + DPIA]]. While that hole is open, this block stays coming soon."
+    },
+    "costs": {
+      "title": "What it costs",
+      "sub": "Fixed prices, agreed before we start, due on delivery. Never a percentage.",
+      "items": [
+        {
+          "title": "Publish your listing",
+          "body": "Your advert, in your name, for as long as you need it.",
+          "price": "Free",
+          "free": true
+        },
+        {
+          "title": "Valuation",
+          "body": "Published OMI ranges and comparable sales for your zone, written up.",
+          "price": "€99",
+          "free": false
+        },
+        {
+          "title": "Document check-up",
+          "body": "What you have, what is missing, what would stop the deed, and what each fix costs.",
+          "price": "€149",
+          "free": false
+        },
+        {
+          "title": "Viewing kit",
+          "body": "Booking page on your own availability, checklists, and the safety guide.",
+          "price": "€39",
+          "free": false
+        }
+      ],
+      "noteBefore": "Photographs and floor plan, conformity survey, virtual tour and the “Sell it yourself” course are on the",
+      "noteLink": "full price list",
+      "noteAfter": ", along with the bundles."
+    },
+    "agency": {
+      "title": "And if you would rather use an agency",
+      "body": "That is a perfectly good decision, and nothing here is designed to trap you. There is no exclusivity and no mandate, so you can list here and work with an agency at the same time, or stop at any point.",
+      "dirBefore": "Our",
+      "dirLink": "directory of licensed agencies",
+      "dirAfter": " lists them with their REA registration numbers, so you can check any of them yourself. No ranking, no “recommended”, and your details are not sold to anyone. Their fee is set out in their own mandate and paid to them — EasyCasa receives nothing from it."
     },
     "not": {
       "kicker": "Transparency",
@@ -2891,23 +3090,27 @@
       "items": [
         {
           "q": "What documents do I need?",
-          "a": "Typically an energy certificate (APE), floor plan (planimetria) and ownership extract (visura). A checklist on the platform will tell you what is needed for your case and keep uploads private."
-        },
-        {
-          "q": "How does Verified Owner work?",
-          "a": "You upload ownership documentation (e.g. visura). After checks, if the documents were received and the name matches, the listing can show the badge. It is not a requirement to publish."
+          "a": "Typically the energy certificate (APE), the floor plan (planimetria) and the ownership extract (visura) — plus provenance and condominium papers for the deed itself. The checklist on the platform tells you what your case needs and keeps uploads private."
         },
         {
           "q": "Who sees my documents?",
-          "a": "Moderation only — never the public. Documents used for owner verification are not shown on the listing page."
+          "a": "Moderation only, never the public. Documents used to check ownership are not shown on the listing page."
         },
         {
-          "q": "What is the Verified Buyer badge and who provides it?",
-          "a": "It is a financial affordability badge buyers will be able to attach to enquiries. It is provided by Banks4All. Coming soon — the same wording as on the buyer page."
+          "q": "Do I have to prove I own the property?",
+          "a": "No. The ownership check is optional and you can publish without it. It exists because buyers on this site expect listings to be real, and it is a check on the listing — not a rating of you."
+        },
+        {
+          "q": "Can a buyer show me they can afford it?",
+          "a": "They will be able to attach a pre-approval from their own bank or a registered credit broker when that mechanism is in production. We will show you which issuer it came from and when. We do not assess it, we do not label anyone, and we never filter your enquiries by it. Today the block is coming soon."
         },
         {
           "q": "Can I also list with an agency?",
-          "a": "Yes. There is no exclusivity and no mandate required to publish on EasyCasa."
+          "a": "Yes. There is no exclusivity and no mandate required to publish here. The directory of licensed agencies lists them with their REA numbers — no ranking, no contact capture. Their fee is paid to them; EasyCasa receives nothing from it."
+        },
+        {
+          "q": "Do you take anything when I sell?",
+          "a": "No. Not a commission, not a success fee, not a percentage — from you or from your buyer. You pay for the deliverables you order, and nothing else ever becomes due."
         }
       ]
     },
@@ -2926,12 +3129,12 @@
         {
           "kicker": "For private sellers",
           "title": "You sell the home.",
-          "body": "You publish the listing. The tools stay yours. No mandate, no exclusivity."
+          "body": "You publish the listing. Buyers write to you. You show the house. No mandate, no exclusivity."
         },
         {
           "kicker": "01 · The listing",
           "title": "You write it.",
-          "body": "Photos, facts, asking price. A wizard guides you. You publish when you are ready."
+          "body": "An assisted draft, your review, published in your name. The last word is yours because the law puts it on whoever publishes."
         },
         {
           "kicker": "02 · Zone data",
@@ -2941,7 +3144,7 @@
         {
           "kicker": "03 · Enquiries",
           "title": "They come to you.",
-          "body": "Interested people write to you. EasyCasa carries the message. It does not negotiate."
+          "body": "Interested people write to you. EasyCasa carries the message. It does not read, score or assign it."
         },
         {
           "kicker": "04 · Viewings",
@@ -2950,13 +3153,13 @@
         },
         {
           "kicker": "05 · Documents",
-          "title": "A checklist, and an optional badge.",
-          "body": "APE, floor plan, visura: you keep them organised. The Verified Owner badge is not a requirement to publish."
+          "title": "A checklist, and an optional check.",
+          "body": "APE, floor plan, visura: you keep them organised. The ownership-checked mark is not a requirement to publish."
         },
         {
           "kicker": "06 · Dashboard",
           "title": "See how the listing moves.",
-          "body": "Views, saves, enquiries. Data on your listing, not a verdict on the price."
+          "body": "Views, saves, enquiries. Data on your listing, not a verdict on the price or on a person."
         },
         {
           "kicker": "easycasaita.com",
@@ -2971,11 +3174,17 @@
       "cta": "Create your free listing"
     },
     "foot": {
-      "privacyBefore": "Privacy notice:",
+      "entityBefore": "Easy Casa Italia is a service of",
+      "entityHole": "[legal name — VAT — REA — seat: to be published at incorporation]",
+      "entityAfter": ", Brescia, part of Ayni Group. Platform and software licensed from Mundida.",
+      "notEnrolled": "Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation.",
+      "mediationBefore": "What that means in practice is set out in our",
+      "mediation": "mediation notice",
+      "mediationAfter": ".",
+      "privacyBefore": "Privacy:",
       "privacyLink": "informativa",
-      "privacyAfter": ".",
-      "myData": "My data",
-      "mediation": "Mediation"
+      "privacyAfter": " ·",
+      "myData": "My data"
     }
   },
   "aste": {

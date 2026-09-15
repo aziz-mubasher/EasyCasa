@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { eq, sql } from 'drizzle-orm';
 
+import { assertPublishEnergyFigures } from '@easycasa/shared';
 import { listingRowToPin } from '../../alerts/listing-pin';
 import { DRIZZLE } from '../../db/db.module';
 import type { Db } from '../../db/drizzle';
@@ -27,6 +28,10 @@ export class DrizzleListingSink implements ListingSink {
   async upsertByWpKey(listing: PilotListing): Promise<void> {
     const ownerId = await this.ensurePilotOwner();
     const wpPostId = wpKeyToPostId(listing.wpKey);
+    const energyClass = listing.energyClass === 'A' ? 'A1' : listing.energyClass;
+    const energyPerformanceKwhM2Y = '150';
+    assertPublishEnergyFigures({ energyClass, energyPerformanceKwhM2Y });
+
     const values = {
       wpPostId,
       slug: listing.slug,
@@ -39,7 +44,8 @@ export class DrizzleListingSink implements ListingSink {
       bedrooms: listing.rooms,
       rooms: listing.rooms,
       sizeSqm: String(listing.sqm),
-      energyClass: listing.energyClass === 'A' ? 'A1' : listing.energyClass,
+      energyClass,
+      energyPerformanceKwhM2Y,
       propertyType: 'apartment',
       address: listing.address,
       city: listing.city,
@@ -68,6 +74,7 @@ export class DrizzleListingSink implements ListingSink {
           rooms: values.rooms,
           sizeSqm: values.sizeSqm,
           energyClass: values.energyClass,
+          energyPerformanceKwhM2Y: values.energyPerformanceKwhM2Y,
           address: values.address,
           city: values.city,
           latitude: values.latitude,

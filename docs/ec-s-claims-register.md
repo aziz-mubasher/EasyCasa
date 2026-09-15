@@ -1,8 +1,8 @@
 # EC-S claims register
 
-**Date:** 2026-09-07  
-**After:** EC-S-34 honesty pass (PR 1)  
-**Machine-readable follow-up:** EC-S-35 (`retracted` + `licence_state[]` on `promises.json`, bound to `PERIMETER`). This file is the human record until that ships. Do not fork `validate-promise-ledger.mjs`.
+**Date:** 2026-09-15  
+**After:** EC-SELL-PRIVATELY-1 (P4 retracted; `retracted` + `licence_state[]` on the ledger).  
+`PERIMETER` (EC-AYNI-1 PR 2) is still absent — company state is `companyLicenceState` on `promises.json`. Do not fork `validate-promise-ledger.mjs`; keep it in sync with `promiseLedger/index.ts`.
 
 Ledger file: `apps/web/src/config/sell-privately/promises.json`.  
 Page: `/{it,en,es}/vendi-da-privato` (and localized slugs).  
@@ -23,16 +23,20 @@ Licence column is the set of company states in which the **claim** may be made. 
 
 | Promise | Ledger (`promises.json`) | Register | Licence | i18n (it/en/es same keys) | Backing | Proof if live |
 |---|---|---|---|---|---|---|
-| **P1** Zero commission | `hidden` | **retracted** | all — none available in `PONTE` | `benefits.items.P1.*` (not rendered) · hero/meta/schema stripped of fee language | EC-S-34 · blocked by G1 | — |
-| **P2** OMI guidance | `live` | **live, rewritten** | all | `benefits.items.P2.*` · `how.steps.price.*` | T08+T09 · copy EC-S-34 · flag EC-S-41 | Wizard OMI panel + `sourceOmi` strings. Page states the published zone range only. |
-| **P3** Verified Owner | `live` | **live, scoped** | all | `benefits.items.P3.*` · `how.steps.verify.*` · `faq.items[1]` | T14–T17 · scope EC-S-34 · ops EC-S-44 | VO FSM + badge. Publish is **not** hard-gated. `verified_owner_case` was 0 at 2026-08-15 close-out (not re-counted here). |
-| **P4** Verified buyers | `coming` | **coming** | all | `benefits.items.P4.*` · `how.steps.buyers.*` · `faq.items[3]` | EC-1 · EC-B-17 | Buyer page already `Verified Buyer Badge (coming soon)` / `in arrivo` / `próximamente`. Adapter fail-soft; `BANKS4ALL_PARTNER_TOKEN` empty. |
-| **P5** Viewings | `live` | **live** | all | `benefits.items.P5.*` · `how.steps.viewings.*` | EC-3–7 · T21/T22 | Book / confirm / cancel / no-show / ICS. V-1 smoke PASS 2026-08-15. |
-| **P6** Checklist | `live` | **live** | all | `benefits.items.P6.*` · `faq.items[0]` | T18 | `SELLER_CHECKLIST_ENABLED` + checklist panel. |
-| **P7** Analytics | `live` | **live** | all | `benefits.items.P7.*` | T23 · empty state EC-S-39 | `SELLER_ANALYTICS_ENABLED`. 92/118 listings had zero metrics at close-out. Row **not** reverted. |
-| **P8** Control & data | `hidden` | **retracted** | all — none available while `LEGAL_ENTITY` is pre-incorporation | `benefits.items.P8.*` (not rendered) · foot no longer names a controller or version | Gate 0 · EC-S-34 | Consent-ledger **recording** unchanged. |
-| `savingsFigures` | `hidden` | **retracted** | all | `savings.*` (section not mounted) | EC-S-34 with P1 | — |
-| `mediazioneCopy` | `hidden` | **retracted** | all | `not.*` (section not mounted) | EC-S-34 | `brand.tagline` still renders the opposite claim (untouched). |
+| **P1** Zero commission | `retracted` | **retracted** | all | leftover `benefits.items.P1.*` | EC-S-34 · replaced by P9+P10 in PONTE | — |
+| **P2** OMI guidance | `live` | **live** | all | `how.steps.price.*` | T08+T09 | Zone range only. Never a sotto-mercato verdict. |
+| **P3** Ownership checked | `live` | **live, renamed** | all | `how.steps.verify.*` · FAQ ownership | T14–T17 | Optional document check. `verified_owner_case` last counted **0** (2026-08-15). |
+| **P4** Verified buyers | `retracted` | **retracted** | all | leftover `benefits.items.P4.*` (not rendered) | EC-SELL-PRIVATELY-1 | Not delayed — will not ship as a person badge / Banks4All financial badge. Replacement is P12. |
+| **P5** Viewings | `live` | **live, promoted** | all | `how.steps.viewings.*` | EC-3–7 · T21/T22 | Seller-conducted. Central product. |
+| **P6** Checklist | `live` | **live** | all | `how.steps.docs.*` | T18 | Linked to paid DOC_CHECKUP. |
+| **P7** Analytics | `live` | **live** | all | leftover tile copy | T23 | No metric that judges a person. |
+| **P8** Control & data | `retracted` | **retracted** | all | leftover `benefits.items.P8.*` | Gate 0 | — |
+| **P9** Publishing is free | `live` | **live** | ponte, agente, oam | money band · costs | EC-SELL-PRIVATELY-1 | LISTING_PUBLICATION €0. |
+| **P10** No commission either side | `live` | **live** | **ponte only** | money band · FAQ | EC-SELL-PRIVATELY-1 | Review at month 12. Catalog FULL_MEDIATION remains an AYNI contradiction. |
+| **P11** Energy figures required | `live` | **live** | all | APE section | R4 same PR | Class + index at every publish path. |
+| **P12** Buyer’s own pre-approval | `coming` | **coming** | all | ready section (coming copy) | PR D | Credit Prime + DPIA still open. |
+| `savingsFigures` | `retracted` | **retracted** | all | `savings.*` (not mounted) | EC-S-34 | — |
+| `mediazioneCopy` | `retracted` | **retracted** | all | `not.*` (not mounted) | EC-S-34 | Perimeter copy is now in-page (`never` + footer). |
 
 ---
 
