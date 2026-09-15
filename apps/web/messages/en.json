@@ -2644,7 +2644,8 @@
       "titleEm": "From the owner, or an agency.",
       "lead": "Search homes listed by private owners and by real-estate agencies. After you sign in you can check official zone data, write to whoever published the listing, and book a viewing from their real availability.",
       "ctaPrimary": "Start searching",
-      "ctaSecondary": "Watch how it works"
+      "ctaSecondary": "Watch how it works",
+      "ctaPricing": "See the price list"
     },
     "tags": {
       "live": "Live",
@@ -2659,7 +2660,7 @@
       {
         "idx": "02 / KNOW",
         "tag": "live",
-        "title": "Fair-price check on every listing",
+        "title": "Official OMI range on every listing",
         "body": "Each listing can be checked against official OMI zone ranges from the Agenzia delle Entrate — over 157.000 zone-level price ranges, nationwide. Sign in to see where the asking price sits in that zone range.",
         "fig": "OMI H2 2025",
         "figNote": "the same dataset the tax authority uses",
@@ -2672,17 +2673,14 @@
         "body": "No phone tag. Send your enquiry to whoever published the listing — the owner or the agency — pick a viewing slot from their real availability, and get a confirmation.",
         "fig": "Online booking",
         "figNote": "confirmed slots, not phone tag"
-      },
-      {
-        "idx": "04 / WIN",
-        "tag": "soon",
-        "title": "Verified Buyer Badge",
-        "body": "Get a financing attestation through Banks4All, our sister company in the Mundida group, and attach it to your enquiries. Owners see a verified budget band next to your name.",
-        "fig": "Banks4All",
-        "figNote": "sister company, separate entity",
-        "href": "/banks4all"
       }
     ],
+    "model": {
+      "kicker": "What buying costs",
+      "title": "No commission. You pay for documents, not the deal.",
+      "body": "If we are working for the seller of a property, we will not take your money on that same property. Optional services are named deliverables at a flat fee, due on delivery.",
+      "cta": "See the price list"
+    },
     "trust": {
       "kicker": "Why you can trust what you see",
       "title": "Genuine homes, genuine owners",
@@ -2718,7 +2716,7 @@
         },
         {
           "title": "Enquire directly",
-          "body": "Write to the publisher — the owner or the agency. Attach a Verified Buyer Badge if you have one."
+          "body": "Write to the publisher — the owner or the agency."
         },
         {
           "title": "Book your viewing",
@@ -2815,7 +2813,7 @@
       "cta": "Find your home"
     },
     "foot": {
-      "mundida": "EasyCasa and Banks4All are part of the Mundida group (P.IVA IT04531990986). Banks4All financing services are provided by a sister company of EasyCasa within the same group. EasyCasa is a platform connecting private buyers and sellers directly and does not act as a real-estate intermediary.",
+      "mundida": "EasyCasa and Banks4All are part of the Mundida group (P.IVA IT04531990986). EasyCasa is a platform connecting private buyers and sellers directly and does not act as a real-estate intermediary.",
       "omi": "Price benchmarks are derived from the OMI dataset published by the Agenzia delle Entrate and are indicative zone-level ranges, not valuations of individual properties.",
       "privacy": "Privacy",
       "terms": "Terms"

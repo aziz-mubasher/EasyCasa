@@ -1,6 +1,6 @@
 /**
- * EC-B-08 — /for-buyers honesty pass.
- * Keys must stay symmetric across it/en/es. Retracted fee / matching / GDPR
+ * EC-B-08 honesty pass + 15 Sep retract (Verified Buyer Badge / sister-company).
+ * Keys must stay symmetric across it/en/es. Retracted badge / matching / GDPR
  * claims must not remain in the forBuyers namespace.
  * Dual-channel (private + agency) is the live buyer story — do not revert
  * the page to «privates only» or «agency vs EasyCasa».
@@ -21,6 +21,7 @@ const publicFilm = join(dirname(fileURLToPath(import.meta.url)), '../../public/f
 
 type ForBuyers = {
   pillars: Array<{ idx: string; tag: 'live' | 'soon'; title: string; body: string }>;
+  model: { kicker: string; title: string; body: string; cta: string };
   trust: { items: Array<{ title: string; body: string; tag?: 'live' | 'soon' }> };
   hero: Record<string, string>;
   how: { steps: Array<{ title: string; body: string }> };
@@ -50,30 +51,51 @@ function leafKeys(value: unknown, prefix = ''): string[] {
   return [prefix];
 }
 
-/** Source-key scan — CSS text-transform must not be the test surface. */
-const banned =
-  /commission|commissione|comisi[oó]n|provvigione|honorario|buyer-side fee|%\s*\+|€\s*9[.\s]?150|answered first|risponde prima|respuesta primero|before they can publish|prima di pubblicare|antes de publicar|posing as|si fingono|se hacen pasar|your data books|i tuoi dati servono|tus datos reservan|bait pricing|prezzi esca|precio cebo|zero buyer|zero commissione|cero comisi/i;
+/** False claims retracted in EC-B-08. Honest «no commission» denials are now allowed (PR A live). */
+const bannedFalse =
+  /zero buyer|zero commissione|cero comisi|buyer-side fee|%\s*\+|€\s*9[.\s]?150|answered first|risponde prima|respuesta primero|before they can publish|prima di pubblicare|antes de publicar|posing as|si fingono|se hacen pasar|your data books|i tuoi dati servono|tus datos reservan|bait pricing|prezzi esca|precio cebo/i;
 
-describe('forBuyers honesty (EC-B-08)', () => {
+/** 15 Sep: badge + group-routing + reserved-act attribution must not return. */
+const bannedBadge =
+  /verified buyer badge|sister company|societ[aà] sorella|empresa hermana|financing attestation|attestazione di finanziamento|attesta(ci[oó]n|tion) de financi/i;
+
+/** T04 row 2: OMI is data, not a verdict. */
+const bannedJudgment = /fair-price|fair price|prezzo equo|precio justo/i;
+
+describe('forBuyers honesty (EC-B-08 + 15 Sep)', () => {
   it('keeps the same leaf keys in it/en/es', () => {
     const [it, en, es] = locales.map((l) => leafKeys(load(l).forBuyers).sort());
     expect(it).toEqual(en);
     expect(es).toEqual(en);
   });
 
-  it('does not ship retracted fee, matching, or controller-naming claims', () => {
+  it('does not ship retracted fee, matching, badge, or judgment labels', () => {
     for (const locale of locales) {
       const blob = JSON.stringify(load(locale).forBuyers);
-      expect(blob, locale).not.toMatch(banned);
+      expect(blob, locale).not.toMatch(bannedFalse);
+      expect(blob, locale).not.toMatch(bannedBadge);
+      expect(blob, locale).not.toMatch(bannedJudgment);
     }
   });
 
-  it('renders three pillars: OMI live, viewings live, badge still soon', () => {
+  it('renders two live pillars and no coming-soon product chip', () => {
     for (const locale of locales) {
       const { pillars } = load(locale).forBuyers;
-      expect(pillars).toHaveLength(3);
-      expect(pillars.map((p) => p.tag)).toEqual(['live', 'live', 'soon']);
-      expect(pillars[2]?.title).toMatch(/Verified Buyer Badge/);
+      expect(pillars).toHaveLength(2);
+      expect(pillars.map((p) => p.tag)).toEqual(['live', 'live']);
+      expect(pillars[0]?.title).toMatch(/OMI/);
+    }
+  });
+
+  it('states the price model and one-side rule, with a listino CTA', () => {
+    for (const locale of locales) {
+      const { model, hero } = load(locale).forBuyers;
+      expect(model.title.length).toBeGreaterThan(20);
+      expect(model.body.toLowerCase()).toMatch(
+        /same property|stesso immobile|mismo inmueble/,
+      );
+      expect(model.cta.length).toBeGreaterThan(4);
+      expect(hero.ctaPricing.length).toBeGreaterThan(4);
     }
   });
 

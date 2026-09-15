@@ -206,6 +206,41 @@ button.fb-btn {
   font-family: var(--font-body), Georgia, serif;
 }
 
+.fb-model {
+  margin-top: 36px;
+  background: var(--fb-ink);
+  color: var(--fb-parchment);
+  border-radius: 16px;
+  padding: 32px 36px;
+}
+
+.fb-model .fb-kicker {
+  color: #7fb2d6;
+  margin-bottom: 12px;
+}
+
+.fb-model h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(22px, 2.8vw, 30px);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  max-width: 720px;
+  margin: 0 0 12px;
+}
+
+.fb-model p {
+  font-size: 17px;
+  color: rgba(243, 237, 225, 0.85);
+  max-width: 720px;
+  margin: 0 0 22px;
+}
+
+.fb-btn--model {
+  background: var(--fb-ochre);
+  color: var(--fb-ink);
+}
+
 .fb-tag {
   align-self: flex-start;
   font-family: var(--font-mono), ui-monospace, monospace;

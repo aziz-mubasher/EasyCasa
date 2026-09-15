@@ -52,6 +52,9 @@ export function ForBuyersPage() {
             <button type="button" className="fb-btn fb-btn--ghost" onClick={() => setFilmOpen(true)}>
               {t('hero.ctaSecondary')}
             </button>
+            <Link className="fb-btn fb-btn--ghost" href="/pricing">
+              {t('hero.ctaPricing')}
+            </Link>
           </div>
         </div>
       </header>
@@ -85,6 +88,14 @@ export function ForBuyersPage() {
               </article>
             ))}
           </div>
+          <aside className="fb-model" aria-labelledby="fb-model-title">
+            <p className="fb-kicker fb-kicker--ink">{t('model.kicker')}</p>
+            <h3 id="fb-model-title">{t('model.title')}</h3>
+            <p>{t('model.body')}</p>
+            <Link className="fb-btn fb-btn--model" href="/pricing">
+              {t('model.cta')}
+            </Link>
+          </aside>
         </div>
       </section>
 

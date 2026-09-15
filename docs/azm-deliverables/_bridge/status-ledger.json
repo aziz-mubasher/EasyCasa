@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T08:14:28.626Z",
+  "updatedAt": "2026-09-15T10:30:47.730Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": "task_ec_for_buyers_15sep",
+      "kaizenCode": "K EC FOR-BUYERS",
+      "polishId": "EC-B-15SEP",
+      "title": "for-buyers 15 Sep: retract badge, factual OMI, pricing link",
+      "venture": "EasyCasa",
+      "lifecycle": "pr_open",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-9f454520-4fd5-4046-9da5-655c8535ec0c",
+      "agentUrl": "https://cursor.com/agents/bc-9f454520-4fd5-4046-9da5-655c8535ec0c",
+      "branch": "cursor/for-buyers-badge-retract-ec0c",
+      "prNumber": 235,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/235",
+      "prState": "DRAFT",
+      "dispatchedAt": "2026-09-15T10:29:18.937Z",
+      "updatedAt": "2026-09-15T10:30:47.730Z",
+      "summary": "Draft PR #235: retract Verified Buyer Badge + sister-company copy; factual OMI label; pricing link + one-side. Footer P.IVA and Credit Prime block not touched.",
+      "nextAction": "Review draft PR #235. Do not build the delibera block until Credit Prime confirms they issue to the buyer.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_pricing_final",
       "kaizenCode": "K EC PRICING",

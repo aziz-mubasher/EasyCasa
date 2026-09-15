@@ -38,15 +38,17 @@ Same keys in `it.json` / `en.json` / `es.json`. Proven by `apps/web/src/lib/for-
 | `forBuyers.hero.titleEm` | `live` | all | EC-B-08 | «From the owner.» Replaces «Keep the commission.» |
 | `forBuyers.hero.lead` | `live` | all | EC-B-08 + EC-3–7 | Direct contact + viewings. Fee sentence removed. |
 | `forBuyers.hero.ctaPrimary` | `live` | all | — | Links `/search`. «it's free» removed. |
-| `forBuyers.hero.ctaSecondary` | `live` | all | — | In-page `#how`. |
+| `forBuyers.hero.ctaSecondary` | `live` | all | — | Opens the intro film. |
+| `forBuyers.hero.ctaPricing` | `live` | all | EC-PRICING-FINAL PR A | Links `/pricing`. |
 | `forBuyers.tags.live` | `live` | all | — | Chip label. CSS `text-transform: uppercase` — tests scan keys, not DOM. |
 | `forBuyers.tags.soon` | `live` | all | — | Chip label. |
 | `forBuyers.services.kicker` | `live` | all | — | Chrome. |
 | `forBuyers.services.title` | `live` | all | EC-B-08 | Count «Four» removed after pillar 01 retraction. |
 | `forBuyers.services.sub` | `live` | all | EC-B-08 | Sign-in OMI + enquire + book. Commission sentence removed. |
-| `forBuyers.pillars[0].*` (idx `02 / KNOW`) | `live` | all | EC-B-08 copy · EC-B-09 parked | `ListingValuationGate` + `RegisteredOnly` + `NEXT_PUBLIC_VALUATION_BAND_ENABLED` (`valuation-band.ts`). Honesty spec: body mentions sign-in. **`OmiPricePanel` unmounted — do not cite it.** |
+| `forBuyers.pillars[0].*` (idx `02 / KNOW`) | `live` | all | EC-B-08 copy · 15 Sep label | Title is factual («Official OMI range»), not *fair*. Body still sign-in scoped. **`OmiPricePanel` unmounted — do not cite it.** |
 | `forBuyers.pillars[1].*` (idx `03 / MOVE`) | `live` | all | EC-3–7 | `POST /viewings`, `/{locale}/listings/[slug]/book`, confirm / cancel / no-show / ICS — `docs/ec-4-viewing-process.md`. 05e outcome **not** claimed here. |
-| `forBuyers.pillars[2].*` (idx `04 / WIN`) | `coming` | `AGENTE_IMMOBILIARE`, `OAM` | EC-1 / EC-B-17 | Tag **`soon`**. Code: `ContactEnquiryForm` + `Banks4AllPort`. Env `BANKS4ALL_PARTNER_TOKEN` empty → fail-soft. **Seller ledger P4 is `live` — split, do not reconcile here.** |
+| `forBuyers.pillars[2].*` (idx `04 / WIN`) | **`retracted`** | — | 15 Sep brief | Entire Verified Buyer Badge / Banks4All sister-company row removed from messages. Do not re-add. Delibera block waits on Credit Prime + DPIA. |
+| `forBuyers.model.*` | `live` | all | EC-PRICING-FINAL PR A | «No commission. You pay for documents» + one-side rule + CTA `/pricing`. Lawful only while buyer-side `provvigione` SKUs stay inactive. |
 | `forBuyers.trust.kicker` | `live` | all | — | Chrome. |
 | `forBuyers.trust.title` | `live` | all | — | Chrome. |
 | `forBuyers.trust.sub` | `live` | all | EC-B-08 | States VO is a badge, not a publish gate. |
@@ -57,7 +59,7 @@ Same keys in `it.json` / `en.json` / `es.json`. Proven by `apps/web/src/lib/for-
 | `forBuyers.how.title` | `live` | all | — | Four steps remain. |
 | `forBuyers.how.steps[0].*` | `live` | all | search | `/{locale}/search`. Dropped «no duplicates / no ghost listings» (unproven). |
 | `forBuyers.how.steps[1].*` | `live` | all | EC-B-08 | Sign-in to see OMI band. |
-| `forBuyers.how.steps[2].*` | `live` + badge `coming` | all / row 6 | enquiry + EC-1 | Contact form live. Badge attach is optional / fail-soft («if you have one»). |
+| `forBuyers.how.steps[2].*` | `live` | all | enquiry | Contact form. Badge attach sentence **retracted** 15 Sep. |
 | `forBuyers.how.steps[3].*` | `live` | all | EC-3–7 | Book + confirmation. «Tell us how it went» removed (EC-B-14). |
 | `forBuyers.compare.kicker` | `live` | all | — | Chrome. |
 | `forBuyers.compare.title` | `live` | all | — | Chrome. |
@@ -66,12 +68,12 @@ Same keys in `it.json` / `en.json` / `es.json`. Proven by `apps/web/src/lib/for-
 | `forBuyers.compare.rows[0].*` | `live` | all | enquiry | Owner inbox / enquiry, not an agent desk. |
 | `forBuyers.compare.rows[1].*` | `live` | all | EC-B-08 | «After you sign in» — matches pillar 02. |
 | `forBuyers.compare.rows[2].*` | `live` | all | EC-3–7 | Slot picker. |
-| `forBuyers.compare.rows[3].*` | `coming` | `AGENTE_IMMOBILIARE`, `OAM` | EC-B-17 | «Verified Buyer Badge (coming soon)» — same chip as pillar 04. |
+| `forBuyers.compare.rows[3].*` | `live` | all | search `sellerType` | Search filter Private / Agency. Badge compare row **retracted** 15 Sep. |
 | `forBuyers.final.title` | `live` | all | — | Chrome. |
 | `forBuyers.final.titleLine2` | `live` | all | — | Chrome. |
 | `forBuyers.final.body` | `live` | all | search | Fee / «always free» removed. |
 | `forBuyers.final.cta` | `live` | all | — | Links `/search`. |
-| `forBuyers.foot.mundida` | `live` (inherited) | counsel-open | Claim 2 / sell-privately | Sister-company + portal sentence **reused** from other live pages. `CLAUDE.md` §1.2 REA contradiction is **unresolved**. Not introduced here. Do not treat as G1-cleared. |
+| `forBuyers.foot.mundida` | `live` (inherited) | counsel-open | Claim 2 / sell-privately | P.IVA line **unchanged** (15 Sep §3 waits on visura). Sister-company *financing services* sentence **removed** so the page no longer attributes a reserved act to Banks4All. |
 | `forBuyers.foot.omi` | `live` | all | T04 row 2 | Attribution; «not valuations». |
 | `forBuyers.foot.privacy` | `live` | all | — | Nav label only. Not a processing claim. |
 | `forBuyers.foot.terms` | `live` | all | — | Nav label only. |
@@ -102,6 +104,10 @@ These strings must not reappear on `/for-buyers` without a flip PR that cites ev
 | «before they can publish» | Publish not VO-gated | — | EC-B-10 (blocked in `PONTE`) |
 | Pillar 03 «afterwards both sides report» | 05e out of scope | — | EC-B-14 (`coming` on trust item) |
 | How step 4 «tell us how it went» | Same | — | EC-B-14 |
+| Pillar `04 / WIN` Verified Buyer Badge + Banks4All sister-company body | Reserved-act attribution + group routing + person-badge; *coming soon* made it worse | OAM / art. 22 GDPR / T04 row 6 | Credit Prime delibera (not a badge) after DPIA |
+| «Fair-price check» / «Controllo prezzo equo» / «precio justo» | Verdict next to a price (T04 row 2; same rule as Legenda semaforo) | — | Keep factual OMI title |
+| How step «Attach a Verified Buyer Badge if you have one» | Same badge | — | — |
+| `foot.mundida` «financing services … sister company» | Reserved act + declared group link | OAM | P.IVA line left pending visura |
 
 ---
 
@@ -109,10 +115,10 @@ These strings must not reappear on `/for-buyers` without a flip PR that cites ev
 
 | # | Claim | State on page | Licence | Task |
 |---|---|---|---|---|
-| 1 | Zero buyer commission + ≈€9.150 | **`retracted`** | all (unlawful while catalogue has `provvigione`) | EC-B-08 done · **G1** |
-| 2 | OMI fair-price check | **`live`**, sign-in scoped | all | EC-B-08 · EC-B-09 parked |
+| 1 | Zero buyer commission + ≈€9.150 | **`retracted`** (false chip). Honest «no commission / documents not the deal» is **`live`** on `model.*` after PR A | all | EC-B-08 · EC-PRICING-FINAL |
+| 2 | OMI range (was «fair-price check») | **`live`**, factual label, sign-in scoped | all | EC-B-08 · 15 Sep |
 | 3 | Direct contact, structured viewings | **`live`** | all | EC-3–7 |
-| 4 | Verified Buyer Badge | **`coming`** | `AGENTE_IMMOBILIARE`, `OAM` | EC-B-17 |
+| 4 | Verified Buyer Badge | **`retracted`** | — | 15 Sep · do not rebuild as a person-badge |
 | 5 | Answered first | **`retracted`** | counsel only | EC-B-23 |
 | 6 | Identity-verified sellers | **`live`**, badge-scoped | all | T14–T17 |
 | 7 | Ownership / cadastral vs identity | **`retracted`** | `AGENTE_IMMOBILIARE`, `OAM` | EC-B-11 |
@@ -146,3 +152,22 @@ Product feedback: buyers may purchase from a **private seller** or through a **r
 | Still retracted | Fee / €9.150 / «answered first» / rows 10–12 |
 
 T04: rows **2, 4, 5**. Film line «EasyCasa carries the message. It does not negotiate.» is row 5 + row 12 refusal, not a matching claim.
+
+---
+
+## F. 15 September 2026 — badge retract + commercial silence
+
+Shipped on `/for-buyers` after EC-PRICING-FINAL PR A landed (`BUYER_MEDIATION` / `OFFER_DRAFTING` / `VIEWING_ACCOMPANIMENT` inactive; no `provvigione` on `GET /service-catalog`).
+
+| # | Change | State |
+|---|---|---|
+| 1 | Entire Verified Buyer Badge pillar (Banks4All / sister company / Mundida group / *coming soon*) | **`retracted`** |
+| 2 | «Fair-price check» / «prezzo equo» / «precio justo» | **`retracted`**; replaced by factual OMI title |
+| 3 | Price-list CTA + one-side sentence | **`live`** (`hero.ctaPricing`, `model.*`) |
+| 4 | Page-footer P.IVA / entity line | **untouched** — visura still open |
+| 5 | Agency-pays / REA block | **not this PR** — waits EC-PRICING-1 PR C |
+| 6 | «No commission. You pay for documents» | **`live`** — PR A united |
+| 7 | Buyer delibera / Credit Prime block | **not this PR** — waits issuer confirmation + DPIA |
+| 8 | Energy class / kWh row | **not this PR** — R4 does not yet gate every published listing |
+
+Honesty spec: `apps/web/src/lib/for-buyers-honesty.spec.ts`. A later PR that restores the badge strings or a *fair* verdict next to price, without evidence, is the defect.
