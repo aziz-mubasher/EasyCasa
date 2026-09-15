@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": "task_ec_transparency_15sep",
+  "kaizenCode": "K EC TRANSPARENCY",
+  "polishId": "PP-TRANSPARENCY",
+  "title": "transparency 15 Sep honesty pass",
+  "venture": "EasyCasa",
+  "lifecycle": "pr_open",
+  "agentStatus": "RUNNING",
+  "agentBcId": "bc-bb45221b-baea-4a36-a15c-841c443a0bb0",
+  "agentUrl": "https://cursor.com/agents/bc-bb45221b-baea-4a36-a15c-841c443a0bb0",
+  "branch": "cursor/transparency-honesty-0bb0",
+  "prNumber": 242,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/242",
+  "prState": "DRAFT",
+  "dispatchedAt": "2026-09-15T18:02:21.499Z",
+  "updatedAt": "2026-09-15T18:02:21.499Z",
+  "summary": "PR opened: /transparency honesty. T1 discloses inactive 2.49% SKUs (PR A not shipped). T2 names €49/€99. Credit Prime, art. 52/59+ODR, source+semester, featured disclosed.",
+  "nextAction": "Review PR; decide PR A vs leave T1 disclosure. Pilot end date still open.",
+  "errors": []
+}
