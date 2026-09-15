@@ -14,8 +14,8 @@
       "description": "Publish your listing: property details, price and floor area, photos. Fill in the EasyCasa taxonomy so buyers can find you."
     },
     "pricing": {
-      "title": "À la carte pricing",
-      "description": "The EasyCasa service price list. Pay only for the services you use — fixed fees, with no percentage of the sale price."
+      "title": "Price list",
+      "description": "Fixed-price deliverables from Easy Casa Italia. Appalto di servizi (art. 1655 c.c.): you pay for named work, never a percentage of the sale."
     },
     "notFound": {
       "title": "Page not found"
@@ -23,7 +23,7 @@
   },
   "brand": {
     "name": "EasyCasa",
-    "tagline": "Buy, sell, and rent — pay only for the services you use, from a licensed agency."
+    "tagline": "Buy, sell, and rent — pay only for the services you use."
   },
   "errors": {
     "quota": {
@@ -565,7 +565,9 @@
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",
       "images": "Photos",
-      "videoUrl": "Video link"
+      "videoUrl": "Video link",
+      "energyClass": "Energy class",
+      "energyIndex": "Energy index (kWh/m²·year)"
     },
     "hints": {
       "province": "Select the province first, then the municipality from the list.",
@@ -575,7 +577,8 @@
       "leaseType": "Required for rentals — drives contract and RLI rules.",
       "characteristics": "Optional. Select amenities that apply to this property.",
       "images": "Up to 20 images (JPEG/PNG/WebP). Uploaded when you publish.",
-      "videoUrl": "Optional YouTube, Vimeo, or direct video URL."
+      "videoUrl": "Optional YouTube, Vimeo, or direct video URL.",
+      "energyAdvert": "Italian law requires class and index on every advert (art. 6 c. 8 and art. 15 D.lgs. 192/2005). Fine 500–3,000 € per advert if they are missing."
     },
     "errors": {
       "title": "Enter a title (at least 3 characters).",
@@ -593,7 +596,8 @@
       "signInRequired": "Sign in to publish your listing.",
       "publishFailed": "Saved as draft, but publish failed. Check your account role.",
       "network": "Could not reach the server. Check your connection and try again.",
-      "generic": "Something went wrong. Try again."
+      "generic": "Something went wrong. Try again.",
+      "energyAdvert": "Add the energy class and the index in kWh/m²·year before publishing. Fine 500–3,000 € per advert if they are missing (D.lgs. 192/2005)."
     },
     "smartlink": {
       "title": "SmartLink — shareable page",
@@ -638,8 +642,8 @@
   },
   "footer": {
     "externalHint": "Opens on {host} in a new tab",
-    "entity": "EasyCasa Italia · P.IVA IT04531990986",
-    "blurb": "EasyCasa is the Italian property portal with no commission for the seller. Every listing has a verified owner. Every valuation rests on official Agenzia delle Entrate data.",
+    "entity": "Easy Casa Italia · part of Ayni Group",
+    "blurb": "EasyCasa is the Italian property portal. We sell preparation and documents, never the deal. Every listing is checked as a property — documents, not people.",
     "columns": {
       "sellers": "For sellers",
       "buyers": "For buyers",
@@ -651,7 +655,7 @@
       "valutazioneGratuita": "Free valuation",
       "add": "List a property",
       "photo": "Photography and virtual tour",
-      "ape": "Energy certificate (APE)",
+      "ape": "Energy class on the advert",
       "documents": "Document checks",
       "compliance": "Cadastral and planning compliance",
       "rentContract": "Rental contract and RLI registration"
@@ -661,8 +665,8 @@
       "search": "Search homes",
       "viewings": "Book a viewing",
       "verify": "Property check — title and condominium",
-      "proposal": "Draft the offer",
-      "deed": "Support at the deed",
+      "proposal": "How a purchase proposal works",
+      "deed": "File for your notary",
       "buyAbroad": "Buying from abroad"
     },
     "legal": {
@@ -680,23 +684,208 @@
       "easyLegenda": "Easy Legenda",
       "nibProperty": "Non Interest Buying (NIB)",
       "agencies": "Property agencies"
-    }
+    },
+    "enrollment": "Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation."
   },
   "pricing": {
-    "title": "À la carte pricing",
-    "subtitle": "Pay only for the services you use. No hidden percentage on search or listing.",
-    "disclosure": "When you instruct us as a licensed mediator, a provvigione may apply on successful conclusion — always disclosed in the incarico before you sign.",
+    "title": "One fixed price, agreed before we start.",
+    "subtitle": "We are paid by you, and by nobody else.",
+    "free": "Free",
     "fixed": "Fixed",
-    "provvigione": "{rate}% on closing",
     "passthrough": "Pass-through",
     "empty": "Catalog unavailable right now. Try again shortly.",
-    "iva": "Fixed fees shown net; VAT (22%) applies where noted in your quote.",
+    "iva": "Fixed fees shown net of VAT; 22% applies where your quote says so.",
     "ivaExcluded": "+ VAT where applicable",
-    "mediationLinkBefore": "Mediation and provvigione details:",
-    "mediationLink": "mediation disclosure",
+    "masthead": {
+      "eyebrow": "Easy Casa Italia · part of Ayni Group",
+      "title": "One fixed price, agreed before we start.",
+      "lede": "We are paid by you, and by nobody else. Every line below is a piece of work we take on under an appalto di servizi (art. 1655 c.c.): we owe you a finished deliverable for an agreed sum, due on delivery — never a percentage of your sale."
+    },
+    "promise": {
+      "deliverable": {
+        "title": "You get a thing, not a promise",
+        "body": "Every price buys a named deliverable. If your sale never happens, you still have what you paid for."
+      },
+      "noTransaction": {
+        "title": "Nothing is charged on the transaction",
+        "body": "No commission, no percentage, no success fee — in either direction, at any point."
+      },
+      "specialists": {
+        "title": "Specialists work in our name",
+        "body": "Surveyors and technicians are engaged by us (art. 1656 c.c.): one contract, one invoice, one party answerable to you."
+      },
+      "withdrawal": {
+        "title": "Fourteen days to change your mind",
+        "body": "The withdrawal right under art. 52 of the consumer code applies, and we tell you before you start what you owe if work has begun."
+      }
+    },
+    "paths": {
+      "sell": {
+        "title": "Selling it yourself",
+        "p1": "You publish the listing in your own name. Buyers write to <b>you</b>, not to us. You show the house and you decide who to let in.",
+        "p2": "We prepare you: the documents, the figures, the photographs, the tools."
+      },
+      "buy": {
+        "title": "Buying",
+        "p1": "You find the property — here or anywhere. We check what you are about to sign for, on a property you have <b>already</b> found.",
+        "p2": "We never go looking on your behalf, and we never negotiate for you."
+      },
+      "agency": {
+        "title": "Properties listed by an agency",
+        "p1": "Licensed agencies list here too, under their own name and their own REA registration. They are the ones you deal with.",
+        "p2": "Their fee is set out in their own mandate. <b>EasyCasa receives nothing from it.</b>"
+      }
+    },
+    "journeys": {
+      "sell": {
+        "title": "Selling your own home",
+        "subtitle": "You sell. We make sure you are ready to, and that your listing is lawful."
+      },
+      "buy": {
+        "title": "Buying — on a property you have already found",
+        "subtitle": "We check what you are about to sign for. We do not go looking on your behalf.",
+        "asteTitle": "Auction file report",
+        "asteNote": "Buying at auction is a different animal.",
+        "asteNoteAfter": " reads the perizia and the ordinanza and explains them in your language. First file free.",
+        "asteDeliver": "Written report",
+        "astePrice": "From €0"
+      },
+      "rent": {
+        "title": "Renting out",
+        "subtitle": "For landlords who already have their tenant and need the paperwork done properly."
+      }
+    },
+    "rows": {
+      "LISTING_PUBLICATION": {
+        "note": "You write it, you publish it, buyers contact you directly. Before it goes live we show you what Italian law requires in a property advert — including the energy class and index, which carry a €500–3,000 penalty per advert if they are missing.",
+        "deliver": "Your listing, in your name"
+      },
+      "VALUATION": {
+        "note": "Published OMI ranges for your zone plus comparable sales, written up. We give you the figures the market gives; we do not tell you your home is worth more or less than anyone’s asking.",
+        "deliver": "Written report"
+      },
+      "DOC_CHECKUP": {
+        "note": "Visura, planimetria, provenance, condominium papers, energy certificate. What you have, what is missing, what would stop the deed, and what each fix costs. Most private sales fail here.",
+        "deliver": "Written report"
+      },
+      "CONFORMITY_SURVEY": {
+        "note": "A qualified surveyor checks that the building matches its plans and its permits, and signs the report. Engaged by us, in our name — you get one contract and one invoice.",
+        "deliver": "Surveyor’s sworn report"
+      },
+      "MEDIA_PACK": {
+        "note": "A photographer shoots the property and a measured floor plan is drawn. The files are yours to use anywhere, including on other portals.",
+        "deliver": "Image set + plan"
+      },
+      "VIRTUAL_TOUR": {
+        "note": "A walkthrough of the property, hosted and embeddable.",
+        "deliver": "Media file"
+      },
+      "VIEWING_KIT": {
+        "note": "A booking page on your own availability, a checklist of what to show and what to have ready, and a safety guide for receiving strangers at home. You run the viewings — nobody knows the house like you do.",
+        "deliver": "Tools + checklists"
+      },
+      "SELL_IT_YOURSELF_COURSE": {
+        "note": "The whole route, start to deed, in plain language — in Italian, English, Spanish, Urdu and more. Private training: no authorisation, no exam, and no certificate pretending to be one.",
+        "deliver": "Course access"
+      },
+      "PROPOSAL_NOTE": {
+        "note": "A plain-language note on what a proposta d’acquisto commits you to, what a deposit is, and what happens next. General information, given before any negotiation — never filled in for you.",
+        "deliver": "Download"
+      },
+      "LEASE_DRAFTING": {
+        "note": "4+4, 3+2, transitional or student — drawn to the right type, with the rules and the rent caps that apply in your municipality. For a tenant you have already found.",
+        "deliver": "Contract, ready to sign"
+      },
+      "RLI_REGISTRATION": {
+        "note": "Filed with the Agenzia delle Entrate inside the thirty-day window, with the flat-tax option set the way you choose. You get the protocol number.",
+        "deliver": "Filed registration"
+      }
+    },
+    "never": {
+      "kicker": "The part most price lists leave out",
+      "title": "What we never do — and will not do for money.",
+      "commission": {
+        "title": "We never take a commission.",
+        "body": "Not from the seller, not from the buyer, not from an agency. There is no percentage anywhere in this business."
+      },
+      "findBuyer": {
+        "title": "We never find your buyer, and never negotiate the price.",
+        "body": "That is the work of a licensed agent, and we are not one."
+      },
+      "writeProposal": {
+        "title": "We never write your purchase proposal.",
+        "body": "We explain in general how one works, free, before you are in any negotiation. We will never fill one in."
+      },
+      "keys": {
+        "title": "We never hold your keys or run your viewings.",
+        "body": "The keys stay with you, and so does the decision about who comes in and when."
+      },
+      "people": {
+        "title": "We verify documents, never people.",
+        "body": "No score, no badge, no traffic light on a human being — not on a buyer, not on a tenant, not on you."
+      },
+      "agencyPay": {
+        "title": "No agency pays us, and we are paid nothing for sending you to one.",
+        "body": "If you go to an agency, you go on your own, and we earn nothing either way."
+      }
+    },
+    "oneSide": {
+      "title": "One property, one side.",
+      "body": "If we are working for the seller of a property, we will not take the buyer’s money on that same property — and the other way round. This is enforced in our systems, not left to good intentions. It is the one rule that keeps “independent” from being a word on a website."
+    },
+    "readiness": {
+      "kicker": "Optional, and entirely yours",
+      "title": "Showing a seller that you are ready",
+      "lede": "Sellers get a lot of messages. If you want to stand out, the strongest thing you can send is proof from your own bank or credit broker that your financing stands up. That document belongs to you — we neither issue it nor read a verdict into it.",
+      "issue": {
+        "title": "You get the document",
+        "body": "From your own bank, or from a registered credit broker such as Credit Prime. You are their client, not ours; it is issued in your name."
+      },
+      "attach": {
+        "title": "You choose whether to attach it",
+        "body": "You can send it with your message, or not. Nothing on this site requires it, and nothing is hidden from you without it."
+      },
+      "decide": {
+        "title": "The seller decides",
+        "body": "They see that a document from a named issuer is attached, and they decide who to show the house to. That call is theirs, never ours."
+      },
+      "footer": "We accept a delibera reddituale or pre-approval from any bank or registered broker, and proof of funds if you are buying without a mortgage. We receive no fee from any of them for sending you their way."
+    },
+    "packages": {
+      "heading": "Bundles",
+      "intro": "The same deliverables, bought together. Still fixed, still due on delivery.",
+      "select": "Add to quote",
+      "selected": "In quote",
+      "empty": "No packages in the catalog right now.",
+      "wasReadyToList": "€287",
+      "wasReadyToSell": "€837",
+      "wasRenting": "€200"
+    },
+    "verified": {
+      "title": "What “verified” means here",
+      "lede": "Only real properties appear on this site. Verification is a check on the <strong>property</strong> — never a judgement about a person.",
+      "visura": "The person listing it is the person on the visura",
+      "catasto": "Cadastral identifiers are present and match",
+      "energy": "Energy class and index are published, as the law requires in every advert",
+      "noScore": "No scoring of buyers, sellers or tenants",
+      "noBadge": "No “qualified buyer” badge, ever"
+    },
+    "agency": {
+      "title": "If you would rather use an agency",
+      "p1": "Plenty of people would, and it is a perfectly good decision — an agent can do things we deliberately do not.",
+      "p2": "Our <directory>directory of licensed agencies</directory> lists them with their REA registration numbers, so you can check any of them yourself. No ranking, no “recommended”, no lead sold to anyone.",
+      "p3": "Their fee is set out in their own mandate and is paid to them. <strong>EasyCasa receives nothing from it</strong> — not a share, not a referral fee, not a discount."
+    },
+    "pageFooter": {
+      "iva": "Fixed fees shown net of VAT; 22% applies where your quote says so. Pass-through costs — registry duties, stamp duty, notarial fees — are charged at cost and shown separately before you confirm.",
+      "entity": "Easy Casa Italia is a service of",
+      "placeholder": "[denominazione — P.IVA — REA — sede: to be published at incorporation]",
+      "entityAfter": ", Brescia. Platform and software licensed from Mundida.",
+      "enrollment": "Easy Casa Italia is not enrolled as an agente d’affari in mediazione and does not carry out property mediation."
+    },
     "coverage": {
       "provinceLabel": "Property province",
-      "provinceHint": "Needed to check whether technical services (APE, conformity…) are available where the property is.",
+      "provinceHint": "Needed to check whether technical services (conformity, photographs…) are available where the property is.",
       "provincePlaceholder": "Select province",
       "checking": "Checking availability…",
       "unavailable": "Not yet available in this province.",
@@ -704,52 +893,6 @@
       "notify": "Notify me when available",
       "notifyBusy": "Sending…",
       "notifyDone": "Request logged"
-    },
-    "comparison": {
-      "title": "How much could you save vs a traditional agency?",
-      "intro": "Indicative comparison for a typical seller: à la carte services plus mediation only if the deal closes. Adjust the property value to update the estimate.",
-      "propertyValueLabel": "Property value (estimate)",
-      "propertyValueHint": "Between {min} and {max}.",
-      "traditionalTitle": "Traditional agency (market reference)",
-      "traditionalNote": "Illustrative example at {rate}% of the price — often charged regardless, sometimes on both sides.",
-      "traditionalFootnote": "Generic market reference, not a specific competitor's price.",
-      "easycasaTitle": "EasyCasa (à la carte + mediation on closing)",
-      "mediationLine": "{rate} on closing",
-      "easycasaDueNow": "Due now (fixed services, VAT included)",
-      "easycasaWithMediation": "Estimated total if the deal closes (includes estimated mediation)",
-      "mediationHonesty": "Mediation applies only when the deal closes and is always stated in the mandate.",
-      "savingsLabel": "Estimated saving vs the traditional reference:",
-      "savingsDisclaimer": "Indicative only — your case depends on services chosen and negotiation outcome.",
-      "calculating": "Calculating…",
-      "error": "Could not compute the comparison. Please try again."
-    },
-    "journeys": {
-      "sell": {
-        "title": "If you want to sell",
-        "subtitle": "Listing, dossier, media, and mediation only if you close."
-      },
-      "buy": {
-        "title": "If you want to buy",
-        "subtitle": "Viewings, offers, and buyer-side mediation when you need them."
-      },
-      "rent": {
-        "title": "If you want to rent out",
-        "subtitle": "Lease, registration, and tenant screening."
-      }
-    },
-    "packages": {
-      "heading": "Bundles",
-      "intro": "Fixed-price service bundles; provvigione and pass-through items follow the catalog.",
-      "partsTotal": "Sum of individual fixed services (incl. VAT): {amount}",
-      "saving": "Bundle saving: {amount}",
-      "provvigioneNote": "Any closing mediation fee is not included in the bundle price.",
-      "select": "Add to quote",
-      "selected": "In quote",
-      "empty": "No packages in the catalog right now."
-    },
-    "allServices": {
-      "show": "Show full à la carte list",
-      "hide": "Hide full list"
     },
     "quote": {
       "add": "Add",
@@ -762,7 +905,7 @@
       "notPayment": "This is an informational quote — it does not start payment or orders.",
       "estimatedLine": "Estimated amount",
       "dueNow": "Due now (estimate)",
-      "estimatedTotal": "Estimated total (incl. mediation)",
+      "estimatedTotal": "Estimated total",
       "ivaNote": "VAT as per catalog (22% on EasyCasa services; excluded on pass-through).",
       "sendEmail": "Send request by email",
       "emailHint": "Opens your mail app with the summary — no charge.",
@@ -772,8 +915,8 @@
       "proceedPay": "Proceed to payment",
       "payBusy": "Preparing checkout…",
       "payFailed": "Could not start checkout",
-      "payHint": "Provvigione and pass-through items are not charged online.",
-      "payModeNote": "Fixed-fee services can be paid online in test mode; mediation fees stay quote-only."
+      "payHint": "Pass-through items are not charged online.",
+      "payModeNote": "Fixed-fee services can be paid online in test mode."
     },
     "checkout": {
       "title": "Complete payment",
@@ -3519,7 +3662,9 @@
       "price": "Price (€)",
       "photoUrls": "Photo URLs (one per line, min. 3)",
       "description": "Description",
-      "acceptedTerms": "I confirm I am the owner / entitled party and accept the terms."
+      "acceptedTerms": "I confirm I am the owner / entitled party and accept the terms.",
+      "energyClass": "Energy class (APE)",
+      "energyIndex": "Index (kWh/m²·year)"
     },
     "propertyTypes": {
       "apartment": "Apartment",
@@ -3560,6 +3705,9 @@
       "DESCRIPTION_TOO_SHORT": "The description is too short.",
       "ACCEPTED_TERMS_REQUIRED": "You must accept the terms to publish.",
       "CURRENT_STEP_INVALID": "Invalid step."
+    },
+    "hints": {
+      "energyAdvert": "Required on every advert. Fine 500–3,000 € per advert if missing. [[BUCO: elenco cause di esenzione APE]]"
     }
   },
   "sellerAnalytics": {

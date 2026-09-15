@@ -20,6 +20,8 @@ export function draftPayloadToCreateDto(draft: ListingDraftPayload): CreateListi
     bedrooms: draft.rooms,
     bathrooms: draft.bathrooms,
     yearBuilt: draft.yearBuilt,
+    energyClass: draft.energyClass,
+    energyPerformanceKwhM2Y: draft.energyPerformanceKwhM2Y,
     latitude: draft.lat,
     longitude: draft.lng,
     sellerType: 'private',

@@ -350,6 +350,26 @@ export function SellerListingWizard() {
                 }
               />
             </Field>
+            <Field label={t('fields.energyClass')} hint={t('hints.energyAdvert')}>
+              <Input
+                value={draft.energyClass ?? ''}
+                onChange={(e) => void save({ ...draft, energyClass: e.target.value || undefined })}
+              />
+            </Field>
+            <Field label={t('fields.energyIndex')}>
+              <Input
+                type="number"
+                min={0}
+                step="0.1"
+                value={draft.energyPerformanceKwhM2Y ?? ''}
+                onChange={(e) =>
+                  void save({
+                    ...draft,
+                    energyPerformanceKwhM2Y: e.target.value ? Number(e.target.value) : undefined,
+                  })
+                }
+              />
+            </Field>
           </>
         ) : null}
 

@@ -1,5 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { and, desc, eq, sql } from 'drizzle-orm';
+import { isPonte } from '@easycasa/shared';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { leads, payouts, partnerProfiles, listings } from '../db/schema';
@@ -7,11 +8,19 @@ import { scoreLead, hasContactIntent, type LeadSignals } from './lead-score';
 
 @Injectable()
 export class PartnersService {
+  private readonly log = new Logger(PartnersService.name);
+
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
-  /** Route a new lead to a partner covering the listing's region (commission-free model:
-   *  serious leads go to partners). Returns the created lead id or null. */
+  /**
+   * EC-S-36 / R3 — scored assignment of a buyer contact to a partner.
+   * Disabled in PONTE: the path stays mounted, it does not write a lead.
+   */
   async routeLead(listingId: string, buyerId: string | null, message: string, buyerHasHistory: boolean) {
+    if (isPonte()) {
+      this.log.debug(`routeLead skipped in PONTE listing=${listingId}`);
+      return null;
+    }
     const listingRows = await this.db
       .select({ regionId: listings.regionId, price: listings.price })
       .from(listings)

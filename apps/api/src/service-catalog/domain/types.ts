@@ -19,7 +19,8 @@ export type ServiceCategory =
   | 'mediation'
   | 'closing'
   | 'rental'
-  | 'aml';
+  | 'aml'
+  | 'training';
 
 /** Italian standard VAT on agency services. */
 export const IVA_RATE = 0.22;
@@ -37,6 +38,12 @@ export interface CatalogItem {
   ratePercent?: number;
   /** Whether EasyCasa adds IVA. True for services; false for pass-through taxes. */
   ivaApplicable: boolean;
+  /**
+   * Orderable in the current corporate state. Inactive rows stay in the
+   * catalog (they return at month 12) but are absent from GET /service-catalog
+   * and rejected by quotes/orders.
+   */
+  active: boolean;
 }
 
 export interface ServicePackage {
@@ -51,6 +58,8 @@ export interface ServicePackage {
    * bundle price (cents). provvigione and passthrough items still apply.
    */
   bundleFixedCents?: number;
+  /** Same rule as catalog items: keep the row, flip this in PONTE. */
+  active: boolean;
 }
 
 export interface QuoteRequest {

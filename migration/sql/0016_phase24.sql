@@ -38,9 +38,9 @@ INSERT INTO service_catalog_items (
   iva_applicable, active, legal_basis
 ) VALUES
   ('VIEWING_ACCOMPANIMENT', 'Viewing accompaniment', 'Accompagnamento visita',
-   'mediation', 'fixed', 4900, NULL, true, true, 'mediazione'),
+   'mediation', 'fixed', 4900, NULL, true, true, 'review_required'),
   ('BUYER_MEDIATION', 'Buyer-side mediation', 'Mediazione lato acquirente',
-   'mediation', 'provvigione', NULL, 0.0249, true, true, 'mediazione'),
+   'mediation', 'provvigione', NULL, 0.0249, true, true, 'review_required'),
   ('OFFER_DRAFTING', 'Offer drafting', 'Redazione proposta di acquisto',
-   'mediation', 'fixed', 9900, NULL, true, true, 'mediazione')
+   'mediation', 'fixed', 9900, NULL, true, true, 'review_required')
 ON CONFLICT (code) DO NOTHING;

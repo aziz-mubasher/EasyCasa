@@ -68,6 +68,8 @@ export interface DetailsFields {
   floor?: number;
   yearBuilt?: number;
   condition?: string;
+  energyClass?: string;
+  energyPerformanceKwhM2Y?: number;
 }
 
 export interface PriceFields {
@@ -192,6 +194,15 @@ function validateDetails(payload: Partial<ListingDraftPayload>, codes: string[])
     (!Number.isInteger(payload.yearBuilt) || payload.yearBuilt < MIN_YEAR_BUILT || payload.yearBuilt > maxYear)
   ) {
     codes.push('YEAR_BUILT_INVALID');
+  }
+
+  if (!isNonEmptyString(payload.energyClass)) {
+    codes.push('ENERGY_CLASS_REQUIRED');
+  }
+  if (payload.energyPerformanceKwhM2Y === undefined) {
+    codes.push('ENERGY_INDEX_REQUIRED');
+  } else if (!isFiniteNumber(payload.energyPerformanceKwhM2Y) || payload.energyPerformanceKwhM2Y < 0) {
+    codes.push('ENERGY_INDEX_INVALID');
   }
 }
 
@@ -387,6 +398,13 @@ export function deserializeDraft(raw: unknown): ListingDraftPayload {
   const floor = readNumber(raw, 'floor', 'FLOOR_TYPE_INVALID', codes);
   const yearBuilt = readNumber(raw, 'yearBuilt', 'YEAR_BUILT_TYPE_INVALID', codes);
   const condition = readString(raw, 'condition', 'CONDITION_TYPE_INVALID', codes);
+  const energyClass = readString(raw, 'energyClass', 'ENERGY_CLASS_TYPE_INVALID', codes);
+  const energyPerformanceKwhM2Y = readNumber(
+    raw,
+    'energyPerformanceKwhM2Y',
+    'ENERGY_INDEX_TYPE_INVALID',
+    codes,
+  );
 
   const price = readNumber(raw, 'price', 'PRICE_TYPE_INVALID', codes);
   const priceNegotiable = readBoolean(raw, 'priceNegotiable', 'PRICE_NEGOTIABLE_TYPE_INVALID', codes);
@@ -418,6 +436,8 @@ export function deserializeDraft(raw: unknown): ListingDraftPayload {
     floor,
     yearBuilt,
     condition,
+    energyClass,
+    energyPerformanceKwhM2Y,
     price,
     priceNegotiable,
     photoUrls,

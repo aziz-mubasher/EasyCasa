@@ -14,6 +14,8 @@ import type {
   PricingPort,
 } from '../transactions/domain/ports';
 import type { OrderEvent, QuoteRequest } from '../transactions/domain/types';
+import { OneSideConflictError } from './domain/one-side';
+import { assertOneSideForSubject } from './domain/one-side-lookup';
 import { assertOrderSubject, buyerSubject, ownerSubject, type OrderSubject } from './domain/order-subject';
 import { cardPayableGrossCents } from '../payments/card-payable';
 
@@ -91,6 +93,12 @@ export class OrdersService {
 
   private async createWithSubject(subject: OrderSubject, req: QuoteRequest): Promise<OrderRecord> {
     assertOrderSubject(subject);
+    try {
+      await assertOneSideForSubject(this.db, subject);
+    } catch (err) {
+      if (err instanceof OneSideConflictError) throw new BadRequestException(err.message);
+      throw err;
+    }
     const itemCodes = this.pricing.resolveItemCodes(req);
     const province =
       req.province?.trim() || (await this.resolveProvince(subject)) || null;

@@ -20,6 +20,8 @@ import {
   type FinancingOptionSlug,
   type SellerTypeSlug,
   type TransactionTypeSlug,
+  ENERGY_ADVERT_CLASS_SLUGS,
+  energyAdvertComplete,
 } from '@easycasa/shared';
 import { Button } from '@/components/ui/Button';
 import { Field, Input, Select, TextArea } from '@/components/ui/Field';
@@ -35,7 +37,6 @@ import { useViewingsApi } from '@/lib/viewings-api';
 
 
 const TOTAL = 6;
-const ENERGY_CLASSES = ['A4', 'A3', 'A2', 'A1', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
 const MAX_IMAGES = 20;
 
 function LocalImageThumb({ file }: { file: File }) {
@@ -80,6 +81,7 @@ type FormState = {
   yearBuilt: string;
   yearRenovated: string;
   energyClass: string;
+  energyPerformanceKwhM2Y: string;
   videoUrl: string;
 };
 
@@ -107,6 +109,7 @@ const initialForm: FormState = {
   yearBuilt: '',
   yearRenovated: '',
   energyClass: '',
+  energyPerformanceKwhM2Y: '',
   videoUrl: '',
 };
 
@@ -252,6 +255,16 @@ export function AddListingForm() {
     }
     if (n === 3) {
       if (!form.yearBuilt.trim()) return t('errors.yearBuilt');
+      if (
+        !energyAdvertComplete({
+          energyClass: form.energyClass,
+          energyPerformanceKwhM2Y: form.energyPerformanceKwhM2Y
+            ? Number(form.energyPerformanceKwhM2Y)
+            : null,
+        })
+      ) {
+        return t('errors.energyAdvert');
+      }
     }
     if (n === 4 && form.videoUrl.trim()) {
       try {
@@ -319,6 +332,9 @@ export function AddListingForm() {
         yearBuilt: form.yearBuilt ? Number(form.yearBuilt) : undefined,
         yearRenovated: form.yearRenovated ? Number(form.yearRenovated) : undefined,
         energyClass: form.energyClass || undefined,
+        energyPerformanceKwhM2Y: form.energyPerformanceKwhM2Y
+          ? Number(form.energyPerformanceKwhM2Y)
+          : undefined,
         videoUrl: form.videoUrl.trim() || undefined,
       };
 
@@ -605,15 +621,24 @@ export function AddListingForm() {
                 <Input type="number" min={0} value={form.bathrooms} onChange={set('bathrooms')} />
               </Field>
             </div>
-            <Field label={tf('energy')}>
+            <Field label={t('fields.energyClass')} required>
               <Select value={form.energyClass} onChange={set('energyClass')}>
                 <option value="">{t('choose')}</option>
-                {ENERGY_CLASSES.map((ec) => (
+                {ENERGY_ADVERT_CLASS_SLUGS.map((ec) => (
                   <option key={ec} value={ec}>
                     {ec}
                   </option>
                 ))}
               </Select>
+            </Field>
+            <Field label={t('fields.energyIndex')} required hint={t('hints.energyAdvert')}>
+              <Input
+                type="number"
+                min={0}
+                step="0.1"
+                value={form.energyPerformanceKwhM2Y}
+                onChange={set('energyPerformanceKwhM2Y')}
+              />
             </Field>
 
             <fieldset>
@@ -806,12 +831,18 @@ export function AddListingForm() {
                   <dt className="text-muted">{t('fields.bathrooms')}</dt>
                   <dd>{form.bathrooms || '—'}</dd>
                 </div>
-                {form.energyClass ? (
-                  <div>
-                    <dt className="text-muted">{tf('energy')}</dt>
-                    <dd>{form.energyClass}</dd>
-                  </div>
-                ) : null}
+                <div>
+                  <dt className="text-muted">{t('fields.energyClass')}</dt>
+                  <dd>{form.energyClass || '—'}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted">{t('fields.energyIndex')}</dt>
+                  <dd>
+                    {form.energyPerformanceKwhM2Y
+                      ? `${form.energyPerformanceKwhM2Y} kWh/m²·anno`
+                      : '—'}
+                  </dd>
+                </div>
               </dl>
               {form.financingOptions.length > 0 && (
                 <p className="text-sm">
