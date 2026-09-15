@@ -14,7 +14,7 @@ export const STATIC_PAGE_LASTMOD: Record<string, string> = {
   '': '2026-08-12',
   '/search': '2026-07-25',
   '/add': '2026-08-11',
-  '/pricing': '2026-07-26',
+  '/pricing': '2026-09-15',
   '/acquisto-assistito': '2026-08-14',
   '/for-buyers': '2026-09-08',
   '/about': '2026-08-02',
