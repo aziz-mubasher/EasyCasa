@@ -10,13 +10,13 @@ import {
 const ROOT = resolve(__dirname, '../../../..');
 
 const PUBLISH_PATHS = [
-  ['API / owner / admin / web form', 'apps/api/src/listings/listings.service.ts'],
-  ['seller HTTP', 'apps/api/src/listings/seller-listings.controller.ts'],
-  ['listings HTTP', 'apps/api/src/listings/listings.controller.ts'],
-  ['ETL WordPress load', 'migration/src/etl/load.ts'],
-  ['demo seed sink', 'apps/api/src/demo/seed/demo-listing.sink.ts'],
-  ['pilot seed sink', 'apps/api/src/pilot/seed/drizzle-listing.sink.ts'],
-  ['add-listing form', 'apps/web/src/components/add/AddListingForm.tsx'],
+  ['API / owner / admin / web form', 'apps/api/src/listings/listings.service.ts', /assertPublishEnergyFigures/],
+  ['seller HTTP', 'apps/api/src/listings/seller-listings.controller.ts', /this\.listings\.publish\(/],
+  ['listings HTTP', 'apps/api/src/listings/listings.controller.ts', /this\.listings\.publish\(/],
+  ['ETL WordPress load', 'migration/src/etl/load.ts', /assertPublishEnergyFigures/],
+  ['demo seed sink', 'apps/api/src/demo/seed/demo-listing.sink.ts', /assertPublishEnergyFigures/],
+  ['pilot seed sink', 'apps/api/src/pilot/seed/drizzle-listing.sink.ts', /assertPublishEnergyFigures/],
+  ['add-listing form', 'apps/web/src/components/add/AddListingForm.tsx', /hasPublishEnergyFigures/],
 ] as const;
 
 describe('R4 publish energy figures (all publish paths)', () => {
@@ -36,8 +36,8 @@ describe('R4 publish energy figures (all publish paths)', () => {
     ).toThrow(PublishEnergyFiguresError);
   });
 
-  it.each(PUBLISH_PATHS)('%s wires the R4 energy invariant', (_label, rel) => {
+  it.each(PUBLISH_PATHS)('%s wires the R4 energy invariant', (_label, rel, needle) => {
     const src = readFileSync(resolve(ROOT, rel), 'utf8');
-    expect(src).toMatch(/assertPublishEnergyFigures|hasPublishEnergyFigures/);
+    expect(src).toMatch(needle);
   });
 });
