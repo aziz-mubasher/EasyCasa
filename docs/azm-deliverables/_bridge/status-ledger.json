@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T18:02:21.499Z",
+  "updatedAt": "2026-09-15T18:24:28.010Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "PP-TRANSPARENCY",
       "title": "transparency 15 Sep honesty pass",
       "venture": "EasyCasa",
-      "lifecycle": "pr_open",
-      "agentStatus": "RUNNING",
+      "lifecycle": "pr_ready",
+      "agentStatus": "IDLE",
       "agentBcId": "bc-bb45221b-baea-4a36-a15c-841c443a0bb0",
       "agentUrl": "https://cursor.com/agents/bc-bb45221b-baea-4a36-a15c-841c443a0bb0",
       "branch": "cursor/transparency-honesty-0bb0",
       "prNumber": 242,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/242",
-      "prState": "DRAFT",
+      "prState": "OPEN",
       "dispatchedAt": "2026-09-15T18:02:21.499Z",
-      "updatedAt": "2026-09-15T18:02:21.499Z",
-      "summary": "PR opened: /transparency honesty. T1 discloses inactive 2.49% SKUs (PR A not shipped). T2 names €49/€99. Credit Prime, art. 52/59+ODR, source+semester, featured disclosed.",
-      "nextAction": "Review PR; decide PR A vs leave T1 disclosure. Pilot end date still open.",
+      "updatedAt": "2026-09-15T18:24:28.010Z",
+      "summary": "PR #242 ready. /en/transparency: T1 discloses inactive 2.49% SKUs; T2 names €49/€99; Credit Prime; art. 52/59+ODR; source+semester; featured disclosed. PR A not shipped.",
+      "nextAction": "AZM: review and merge when ready. Decide PR A vs leave T1 disclosure. Pilot end date still open. Kaizen Operations + Startup Phase 3 need a human board write.",
       "errors": []
     },
     {
