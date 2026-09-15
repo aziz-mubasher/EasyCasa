@@ -14,8 +14,8 @@
       "description": "Pubblica il tuo annuncio: dati dell'immobile, prezzo e superficie, foto. Compila la tassonomia EasyCasa così i compratori possono trovarti."
     },
     "pricing": {
-      "title": "Prezzi à la carte",
-      "description": "Il listino dei servizi EasyCasa. Paghi solo i servizi che usi — tariffe fisse, senza percentuale sul prezzo di vendita."
+      "title": "Listino prezzi",
+      "description": "Lavori a prezzo fisso di Easy Casa Italia. Appalto di servizi (art. 1655 c.c.): paghi un elaborato nominato, mai una percentuale sulla vendita."
     },
     "notFound": {
       "title": "Pagina non trovata"
@@ -23,7 +23,7 @@
   },
   "brand": {
     "name": "EasyCasa",
-    "tagline": "Compra, vendi e affitta — paghi solo i servizi che usi, con un'agenzia regolare."
+    "tagline": "Compra, vendi e affitta — paghi solo i servizi che usi."
   },
   "errors": {
     "quota": {
@@ -565,7 +565,9 @@
       "bedrooms": "Camere",
       "bathrooms": "Bagni",
       "images": "Foto",
-      "videoUrl": "Link video"
+      "videoUrl": "Link video",
+      "energyClass": "Classe energetica",
+      "energyIndex": "Indice (kWh/m²·anno)"
     },
     "hints": {
       "province": "Seleziona prima la provincia, poi il comune dall’elenco.",
@@ -575,7 +577,8 @@
       "leaseType": "Obbligatorio per gli affitti — influenza contratto e RLI.",
       "characteristics": "Opzionale. Seleziona le caratteristiche presenti nell’immobile.",
       "images": "Fino a 20 immagini (JPEG/PNG/WebP). Caricate al momento della pubblicazione.",
-      "videoUrl": "Opzionale: YouTube, Vimeo o URL video diretto."
+      "videoUrl": "Opzionale: YouTube, Vimeo o URL video diretto.",
+      "energyAdvert": "La legge richiede classe e indice su ogni annuncio (art. 6 c. 8 e art. 15 D.lgs. 192/2005). Sanzione 500–3.000 € per annuncio se mancano."
     },
     "errors": {
       "title": "Inserisci un titolo (almeno 3 caratteri).",
@@ -593,7 +596,8 @@
       "signInRequired": "Accedi per pubblicare l’annuncio.",
       "publishFailed": "Salvato come bozza, ma la pubblicazione non è riuscita. Verifica il ruolo dell’account.",
       "network": "Impossibile raggiungere il server. Controlla la connessione e riprova.",
-      "generic": "Qualcosa è andato storto. Riprova."
+      "generic": "Qualcosa è andato storto. Riprova.",
+      "energyAdvert": "Inserisci classe energetica e indice in kWh/m²·anno prima di pubblicare. Sanzione 500–3.000 € per annuncio se mancano (D.lgs. 192/2005)."
     },
     "smartlink": {
       "title": "SmartLink — pagina condivisibile",
@@ -638,8 +642,8 @@
   },
   "footer": {
     "externalHint": "Si apre su {host} in una nuova scheda",
-    "entity": "EasyCasa Italia · P.IVA IT04531990986",
-    "blurb": "EasyCasa è il portale immobiliare italiano senza provvigione per il venditore. Ogni annuncio ha un proprietario verificato. Ogni valutazione poggia sui dati ufficiali dell’Agenzia delle Entrate.",
+    "entity": "Easy Casa Italia · parte di Ayni Group",
+    "blurb": "EasyCasa è il portale immobiliare italiano. Vendiamo preparazione e documenti, mai l’affare. La verifica è sull’immobile e sulle sue carte, non sulle persone.",
     "columns": {
       "sellers": "Per chi vende",
       "buyers": "Per chi compra",
@@ -651,7 +655,7 @@
       "valutazioneGratuita": "Valutazione gratuita",
       "add": "Pubblica un annuncio",
       "photo": "Servizio fotografico e virtual tour",
-      "ape": "Certificazione energetica (APE)",
+      "ape": "Classe energetica in annuncio",
       "documents": "Verifica documenti",
       "compliance": "Conformità catastale e urbanistica",
       "rentContract": "Contratto d'affitto e registrazione RLI"
@@ -661,8 +665,8 @@
       "search": "Cerca casa",
       "viewings": "Prenota una visita",
       "verify": "Verifica immobile — visure e condominio",
-      "proposal": "Redazione della proposta",
-      "deed": "Assistenza al rogito",
+      "proposal": "Come funziona una proposta di acquisto",
+      "deed": "Fascicolo per il tuo notaio",
       "buyAbroad": "Comprare dall'estero"
     },
     "legal": {
@@ -680,23 +684,208 @@
       "easyLegenda": "Easy Legenda",
       "nibProperty": "Non Interest Buying (NIB)",
       "agencies": "Agenzie immobiliari"
-    }
+    },
+    "enrollment": "Easy Casa Italia non è iscritta come agente d’affari in mediazione e non svolge attività di mediazione immobiliare."
   },
   "pricing": {
-    "title": "Prezzi à la carte",
-    "subtitle": "Paghi solo i servizi che usi. Nessuna percentuale nascosta su ricerca o annuncio.",
-    "disclosure": "Se ci incarichi come mediatori abilitati, può applicarsi una provvigione a conclusione dell'affare — sempre indicata nell'incarico prima della firma.",
+    "title": "Un prezzo fisso, concordato prima di iniziare.",
+    "subtitle": "Ci paghi tu, e nessun altro.",
+    "free": "Gratuito",
     "fixed": "Fisso",
-    "provvigione": "{rate}% a conclusione",
-    "passthrough": "Riaddebito",
+    "passthrough": "A costo",
     "empty": "Catalogo non disponibile. Riprova tra poco.",
-    "iva": "Importi fissi indicati al netto; l'IVA (22%) si applica dove indicato nel preventivo.",
+    "iva": "Importi fissi al netto; l’IVA (22%) si applica dove il preventivo lo indica.",
     "ivaExcluded": "+ IVA ove applicabile",
-    "mediationLinkBefore": "Dettagli su mediazione e provvigione:",
-    "mediationLink": "informativa mediazione",
+    "masthead": {
+      "eyebrow": "Easy Casa Italia · parte di Ayni Group",
+      "title": "Un prezzo fisso, concordato prima di iniziare.",
+      "lede": "Ci paghi tu, e nessun altro. Ogni riga è un lavoro che assumiamo in appalto di servizi (art. 1655 c.c.): ti dobbiamo un elaborato finito, per una somma pattuita, dovuta alla consegna — mai una percentuale sulla vendita."
+    },
+    "promise": {
+      "deliverable": {
+        "title": "Compra un elaborato, non una promessa",
+        "body": "Ogni prezzo compra un deliverable nominato. Se la vendita non avviene, ti resta ciò che hai pagato."
+      },
+      "noTransaction": {
+        "title": "Niente è addebitato sulla transazione",
+        "body": "Niente commissione, niente percentuale, niente successo — in nessuna direzione, in nessun momento."
+      },
+      "specialists": {
+        "title": "I tecnici lavorano in nome nostro",
+        "body": "Geometri e tecnici li incarichiamo noi (art. 1656 c.c.): un contratto, una fattura, un soggetto responsabile verso di te."
+      },
+      "withdrawal": {
+        "title": "Quattordici giorni per cambiare idea",
+        "body": "Il recesso di cui all’art. 52 del Codice del consumo vale, e ti diciamo prima di iniziare quanto dovresti se il lavoro è già partito."
+      }
+    },
+    "paths": {
+      "sell": {
+        "title": "Vendi da solo",
+        "p1": "Pubblichi l’annuncio a tuo nome. I compratori scrivono a <b>te</b>, non a noi. Mostri la casa e decidi chi entra.",
+        "p2": "Noi ti prepariamo: i documenti, i numeri, le fotografie, gli strumenti."
+      },
+      "buy": {
+        "title": "Comprare",
+        "p1": "Trovi tu l’immobile — qui o altrove. Controlliamo ciò che stai per firmare, su un immobile che hai <b>già</b> trovato.",
+        "p2": "Non cerchiamo al posto tuo e non trattiamo per te."
+      },
+      "agency": {
+        "title": "Immobili in annuncio di un’agenzia",
+        "p1": "Le agenzie iscritte pubblicano qui a proprio nome e con il proprio numero REA. Tratti con loro.",
+        "p2": "Il loro compenso sta nel loro incarico. <b>EasyCasa non riceve nulla da quella somma.</b>"
+      }
+    },
+    "journeys": {
+      "sell": {
+        "title": "Vendere la tua casa",
+        "subtitle": "Vendi tu. Noi ti mettiamo in condizione di farlo, e di farlo in regola."
+      },
+      "buy": {
+        "title": "Comprare — su un immobile che hai già trovato",
+        "subtitle": "Controlliamo ciò che stai per firmare. Non cerchiamo al posto tuo.",
+        "asteTitle": "Relazione sul fascicolo d’asta",
+        "asteNote": "Comprare all’asta è un altro mestiere.",
+        "asteNoteAfter": " legge la perizia e l’ordinanza e te le spiega nella tua lingua. Primo fascicolo gratuito.",
+        "asteDeliver": "Relazione scritta",
+        "astePrice": "Da €0"
+      },
+      "rent": {
+        "title": "Mettere in affitto",
+        "subtitle": "Per chi ha già il conduttore e deve fare le carte per bene."
+      }
+    },
+    "rows": {
+      "LISTING_PUBLICATION": {
+        "note": "Lo scrivi tu, lo pubblichi tu, i compratori ti contattano. Prima che vada in rete ti mostriamo cosa la legge chiede in un annuncio — classe energetica e indice compresi, con sanzione da 500 a 3.000 € per annuncio se mancano.",
+        "deliver": "Il tuo annuncio, a tuo nome"
+      },
+      "VALUATION": {
+        "note": "Fasce OMI pubblicate della zona e vendite comparabili, per iscritto. Ti diamo i numeri che dà il mercato; non ti diciamo che la casa vale più o meno di quanto chiedono gli altri.",
+        "deliver": "Relazione scritta"
+      },
+      "DOC_CHECKUP": {
+        "note": "Visura, planimetria, provenienza, carte del condominio, attestato energetico. Cosa hai, cosa manca, cosa fermerebbe il rogito, e quanto costa ogni pezzo. Quasi tutte le vendite private si inceppano qui.",
+        "deliver": "Relazione scritta"
+      },
+      "CONFORMITY_SURVEY": {
+        "note": "Un tecnico abilitato verifica che l’edificio corrisponda a progetti e titoli, e firma. Lo incarichiamo noi, in nome nostro: un contratto e una fattura.",
+        "deliver": "Relazione del tecnico"
+      },
+      "MEDIA_PACK": {
+        "note": "Un fotografo scatta e si redige una planimetria quotata. I file sono tuoi, anche su altri portali.",
+        "deliver": "Set di immagini + pianta"
+      },
+      "VIRTUAL_TOUR": {
+        "note": "Un percorso dell’immobile, ospitato e incorporabile.",
+        "deliver": "File media"
+      },
+      "VIEWING_KIT": {
+        "note": "Una pagina di prenotazione sulla tua disponibilità, una checklist di cosa mostrare e cosa avere pronto, e una guida di sicurezza per ricevere sconosciuti in casa. Le visite le fai tu: la casa la conosci tu.",
+        "deliver": "Strumenti + checklist"
+      },
+      "SELL_IT_YOURSELF_COURSE": {
+        "note": "Tutto il percorso, dalla messa in vendita al rogito, in lingua chiara — italiano, inglese, spagnolo, urdu e altro. Formazione privata: nessuna autorizzazione, nessun esame, nessun attestato che finga di esserlo.",
+        "deliver": "Accesso al corso"
+      },
+      "PROPOSAL_NOTE": {
+        "note": "Una nota in lingua chiara su cosa impegna una proposta d’acquisto, cos’è una caparra e cosa succede dopo. Informazione generale, prima di ogni trattativa — mai compilata per te.",
+        "deliver": "Download"
+      },
+      "LEASE_DRAFTING": {
+        "note": "4+4, 3+2, transitorio o studenti — sul tipo giusto, con le regole e i tetti del tuo comune. Per un conduttore che hai già trovato.",
+        "deliver": "Contratto, pronto da firmare"
+      },
+      "RLI_REGISTRATION": {
+        "note": "Depositata all’Agenzia delle Entrate entro i trenta giorni, con l’opzione della cedolare secca come scegli tu. Ti resta il protocollo.",
+        "deliver": "Registrazione depositata"
+      }
+    },
+    "never": {
+      "kicker": "La parte che i listini di solito omettono",
+      "title": "Cosa non facciamo — e non faremo nemmeno a pagamento.",
+      "commission": {
+        "title": "Non prendiamo una commissione.",
+        "body": "Non dal venditore, non dal compratore, non da un’agenzia. In questa attività non c’è una percentuale."
+      },
+      "findBuyer": {
+        "title": "Non ti troviamo il compratore e non trattiamo il prezzo.",
+        "body": "È il lavoro di un agente iscritto, e noi non lo siamo."
+      },
+      "writeProposal": {
+        "title": "Non redigiamo la tua proposta di acquisto.",
+        "body": "Spieghiamo in generale come funziona, gratis, prima che tu sia in una trattativa. Non la compileremo mai."
+      },
+      "keys": {
+        "title": "Non teniamo le chiavi e non facciamo le visite.",
+        "body": "Le chiavi restano a te, e anche la decisione su chi entra e quando."
+      },
+      "people": {
+        "title": "Verifichiamo i documenti, mai le persone.",
+        "body": "Niente punteggio, niente bollino, niente semaforo su un essere umano — non sul compratore, non sull’inquilino, non su di te."
+      },
+      "agencyPay": {
+        "title": "Nessuna agenzia ci paga, e non siamo pagati per mandarti da lei.",
+        "body": "Se vai in agenzia, ci vai tu, e noi non incassiamo da nessuna parte."
+      }
+    },
+    "oneSide": {
+      "title": "Un immobile, una parte.",
+      "body": "Se lavoriamo per il venditore di un immobile, non prendiamo i soldi del compratore su quello stesso immobile — e viceversa. Lo fa il sistema, non la buona volontà. È la regola che tiene «indipendenti» fuori dalle parole da sito."
+    },
+    "readiness": {
+      "kicker": "Facoltativo, e tutto tuo",
+      "title": "Mostrare a un venditore che sei pronto",
+      "lede": "I venditori ricevono molti messaggi. Se vuoi distinguerti, la cosa più solida che puoi allegare è la prova della tua banca o del tuo mediatore creditizio che il finanziamento regge. Quel documento è tuo: noi non lo emettiamo e non ci leggiamo un verdetto.",
+      "issue": {
+        "title": "Ottieni il documento",
+        "body": "Dalla tua banca, o da un mediatore creditizio iscritto, per esempio Credit Prime. Sei cliente loro, non nostro; è intestato a te."
+      },
+      "attach": {
+        "title": "Scegli se allegarlo",
+        "body": "Puoi mandarlo col messaggio, o no. Nulla su questo sito lo pretende, e nulla ti è nascosto se non ce l’hai."
+      },
+      "decide": {
+        "title": "Decide il venditore",
+        "body": "Vede che è allegato un documento di un ente nominato, e decide a chi mostrare la casa. Quella scelta è sua, mai nostra."
+      },
+      "footer": "Accettiamo una delibera reddituale o un pre-approvazione di qualunque banca o mediatore iscritto, e la prova dei fondi se compri senza mutuo. Da nessuno di loro riceviamo un compenso per averti indicato."
+    },
+    "packages": {
+      "heading": "Pacchetti",
+      "intro": "Gli stessi elaborati, comprati insieme. Sempre fissi, sempre dovuti alla consegna.",
+      "select": "Aggiungi al preventivo",
+      "selected": "Nel preventivo",
+      "empty": "Nessun pacchetto in catalogo al momento.",
+      "wasReadyToList": "€287",
+      "wasReadyToSell": "€837",
+      "wasRenting": "€200"
+    },
+    "verified": {
+      "title": "Cosa significa «verificato» qui",
+      "lede": "Su questo sito compaiono solo immobili reali. La verifica è un controllo sull’<strong>immobile</strong> — mai un giudizio su una persona.",
+      "visura": "Chi lo pubblica è chi risulta dalla visura",
+      "catasto": "Gli identificativi catastali ci sono e coincidono",
+      "energy": "Classe energetica e indice sono in annuncio, come chiede la legge",
+      "noScore": "Nessun punteggio su compratori, venditori o inquilini",
+      "noBadge": "Nessun bollino «compratore qualificato», mai"
+    },
+    "agency": {
+      "title": "Se preferisci un’agenzia",
+      "p1": "Molti la preferiscono, ed è una scelta legittima: un agente fa cose che noi, di proposito, non facciamo.",
+      "p2": "La nostra <directory>directory delle agenzie iscritte</directory> le elenca con il numero REA, così le controlli tu. Niente classifica, niente «consigliata», niente contatto venduto.",
+      "p3": "Il loro compenso sta nel loro incarico e lo paghi a loro. <strong>EasyCasa non riceve nulla</strong> — né una quota, né un referral, né uno sconto."
+    },
+    "pageFooter": {
+      "iva": "Importi fissi al netto dell’IVA; il 22% si applica dove il preventivo lo dice. I costi a riaddebito — imposte di registro, bollo, notaio — restano a costo e li vedi prima di confermare.",
+      "entity": "Easy Casa Italia è un servizio di",
+      "placeholder": "[denominazione — P.IVA — REA — sede: da pubblicare alla costituzione]",
+      "entityAfter": ", Brescia. Piattaforma e software concessi in licenza da Mundida.",
+      "enrollment": "Easy Casa Italia non è iscritta come agente d’affari in mediazione e non svolge attività di mediazione immobiliare."
+    },
     "coverage": {
       "provinceLabel": "Provincia dell'immobile",
-      "provinceHint": "Serve per verificare se i servizi tecnici (APE, conformità…) sono disponibili dove si trova l'immobile.",
+      "provinceHint": "Serve per verificare se i servizi tecnici (conformità, foto…) sono disponibili dove si trova l'immobile.",
       "provincePlaceholder": "Seleziona provincia",
       "checking": "Verifica disponibilità…",
       "unavailable": "Non ancora disponibile in questa provincia.",
@@ -704,52 +893,6 @@
       "notify": "Avvisami quando disponibile",
       "notifyBusy": "Invio…",
       "notifyDone": "Richiesta registrata"
-    },
-    "comparison": {
-      "title": "Quanto risparmi rispetto a un'agenzia tradizionale?",
-      "intro": "Confronto indicativo per un venditore tipico: servizi à la carte + mediazione solo a conclusione dell'affare. Regola il valore dell'immobile per vedere la stima.",
-      "propertyValueLabel": "Valore immobile (stima)",
-      "propertyValueHint": "Tra {min} e {max}.",
-      "traditionalTitle": "Agenzia tradizionale (riferimento di mercato)",
-      "traditionalNote": "Esempio illustrativo al {rate}% sul prezzo — spesso addebitato comunque, a volte su entrambe le parti.",
-      "traditionalFootnote": "Riferimento di mercato generico, non il prezzo di un concorrente specifico.",
-      "easycasaTitle": "EasyCasa (à la carte + mediazione a conclusione)",
-      "mediationLine": "{rate} a conclusione",
-      "easycasaDueNow": "Da pagare subito (servizi fissi, IVA inclusa)",
-      "easycasaWithMediation": "Stima totale se l'affare si conclude (include mediazione stimata)",
-      "mediationHonesty": "La mediazione matura solo a conclusione dell'affare ed è sempre indicata nell'incarico.",
-      "savingsLabel": "Risparmio stimato rispetto al riferimento tradizionale:",
-      "savingsDisclaimer": "Stima indicativa: il tuo caso dipende dai servizi scelti e dall'esito della trattativa.",
-      "calculating": "Calcolo in corso…",
-      "error": "Impossibile calcolare il confronto. Riprova."
-    },
-    "journeys": {
-      "sell": {
-        "title": "Se vuoi vendere",
-        "subtitle": "Pubblicazione, fascicolo, media e mediazione solo se chiudi l'affare."
-      },
-      "buy": {
-        "title": "Se vuoi comprare",
-        "subtitle": "Visite, proposta e mediazione lato acquirente quando serve."
-      },
-      "rent": {
-        "title": "Se vuoi affittare",
-        "subtitle": "Contratto, registrazione e screening inquilino."
-      }
-    },
-    "packages": {
-      "heading": "Pacchetti",
-      "intro": "Bundle sui servizi a prezzo fisso; provvigioni e riaddebiti restano come in catalogo.",
-      "partsTotal": "Somma singoli servizi fissi (IVA incl.): {amount}",
-      "saving": "Risparmio sul bundle: {amount}",
-      "provvigioneNote": "Eventuali provvigioni a conclusione non sono incluse nel prezzo bundle.",
-      "select": "Aggiungi al preventivo",
-      "selected": "Nel preventivo",
-      "empty": "Nessun pacchetto in catalogo al momento."
-    },
-    "allServices": {
-      "show": "Mostra tutti i servizi à la carte",
-      "hide": "Nascondi elenco completo"
     },
     "quote": {
       "add": "Aggiungi",
@@ -762,7 +905,7 @@
       "notPayment": "Questo è un preventivo informativo — non avvia pagamenti o ordini.",
       "estimatedLine": "Importo stimato",
       "dueNow": "Da pagare ora (stima)",
-      "estimatedTotal": "Totale stimato (con mediazione)",
+      "estimatedTotal": "Totale stimato",
       "ivaNote": "IVA calcolata come da catalogo (22% sui servizi EasyCasa; esclusa sui riaddebiti).",
       "sendEmail": "Invia richiesta via email",
       "emailHint": "Si apre il tuo client di posta con il riepilogo — nessun addebito.",
@@ -772,8 +915,8 @@
       "proceedPay": "Procedi al pagamento",
       "payBusy": "Preparazione checkout…",
       "payFailed": "Impossibile avviare il pagamento",
-      "payHint": "Provvigione e riaddebiti non sono addebitati online.",
-      "payModeNote": "In modalità test puoi pagare online i servizi a tariffa fissa; la mediazione resta su preventivo."
+      "payHint": "I riaddebiti non si addebitano online.",
+      "payModeNote": "In modalità test puoi pagare online i servizi a tariffa fissa."
     },
     "checkout": {
       "title": "Completa il pagamento",
@@ -3519,7 +3662,9 @@
       "price": "Prezzo (€)",
       "photoUrls": "URL foto (una per riga, min. 3)",
       "description": "Descrizione",
-      "acceptedTerms": "Confermo di essere il proprietario / avente diritto e di accettare le condizioni."
+      "acceptedTerms": "Confermo di essere il proprietario / avente diritto e di accettare le condizioni.",
+      "energyClass": "Classe energetica (APE)",
+      "energyIndex": "Indice (kWh/m²·anno)"
     },
     "propertyTypes": {
       "apartment": "Appartamento",
@@ -3560,6 +3705,9 @@
       "DESCRIPTION_TOO_SHORT": "La descrizione è troppo corta.",
       "ACCEPTED_TERMS_REQUIRED": "Devi accettare le condizioni per pubblicare.",
       "CURRENT_STEP_INVALID": "Passo non valido."
+    },
+    "hints": {
+      "energyAdvert": "Obbligatori su ogni annuncio. Sanzione 500–3.000 € per annuncio se mancano. [[BUCO: elenco cause di esenzione APE]]"
     }
   },
   "sellerAnalytics": {

@@ -25,6 +25,8 @@ const validDraft: ListingDraftPayload = {
   sqm: 85,
   rooms: 3,
   bathrooms: 1,
+  energyClass: 'G',
+  energyPerformanceKwhM2Y: 180,
   price: 250000,
   photoUrls: ['https://cdn.example.com/1.jpg', 'https://cdn.example.com/2.jpg', 'https://cdn.example.com/3.jpg'],
   description:
@@ -100,7 +102,17 @@ describe('validateStep', () => {
   it('flags SQM_INVALID and ROOMS_INVALID for non-positive details', () => {
     const result = validateStep('details', { sqm: -10, rooms: 0 });
     expect(result.ok).toBe(false);
-    expect(result.ok ? [] : result.codes).toEqual(expect.arrayContaining(['SQM_INVALID', 'ROOMS_INVALID']));
+    expect(result.ok ? [] : result.codes).toEqual(
+      expect.arrayContaining(['SQM_INVALID', 'ROOMS_INVALID', 'ENERGY_CLASS_REQUIRED', 'ENERGY_INDEX_REQUIRED']),
+    );
+  });
+
+  it('requires energy class and index on the details step', () => {
+    const result = validateStep('details', { sqm: 80, rooms: 3 });
+    expect(result.ok).toBe(false);
+    expect(result.ok ? [] : result.codes).toEqual(
+      expect.arrayContaining(['ENERGY_CLASS_REQUIRED', 'ENERGY_INDEX_REQUIRED']),
+    );
   });
 
   it('flags PRICE_REQUIRED when price is missing and PRICE_INVALID when non-positive', () => {

@@ -105,12 +105,10 @@ describe('enquiry routing + conversion', () => {
 
   it('buildOrderDraftFromEnquiry maps intent → buyer-side items', () => {
     expect(buildOrderDraftFromEnquiry(enq({ intent: 'offer' })).suggestedItemCodes).toEqual([
-      'BUYER_MEDIATION',
-      'OFFER_DRAFTING',
+      'PROPOSAL_NOTE',
+      'DOC_CHECKUP',
     ]);
-    expect(buildOrderDraftFromEnquiry(enq({ intent: 'viewing' })).suggestedItemCodes).toEqual([
-      'VIEWING_ACCOMPANIMENT',
-    ]);
+    expect(buildOrderDraftFromEnquiry(enq({ intent: 'viewing' })).suggestedItemCodes).toEqual([]);
     const draft = buildOrderDraftFromEnquiry(enq());
     expect(draft.side).toBe('buyer');
     expect(draft.partyUserId).toBe('seek');

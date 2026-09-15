@@ -3,7 +3,10 @@ import { eq } from 'drizzle-orm';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { properties, serviceOrderLines, serviceOrders } from '../db/schema';
-import { CATALOG, PACKAGES } from './domain/catalog';
+import { OneSideConflictError } from '../orders/domain/one-side';
+import { assertOneSideForSubject } from '../orders/domain/one-side-lookup';
+import { ownerSubject } from '../orders/domain/order-subject';
+import { PACKAGES, listPublicCatalogItems, listPublicPackages } from './domain/catalog';
 import { buildQuote, QuoteError } from './domain/pricing';
 import { resolveOrderItemCodes } from '../transactions/domain/legal-basis';
 import type { CatalogItem, Quote, QuoteRequest, ServicePackage } from './domain/types';
@@ -17,11 +20,11 @@ export class ServiceCatalogService {
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
   listItems(): readonly CatalogItem[] {
-    return CATALOG;
+    return listPublicCatalogItems();
   }
 
   listPackages(): readonly ServicePackage[] {
-    return PACKAGES;
+    return listPublicPackages();
   }
 
   quote(req: QuoteRequest): Quote {
@@ -39,11 +42,18 @@ export class ServiceCatalogService {
     req: QuoteRequest,
   ): Promise<{ orderId: string; quote: Quote }> {
     const rows = await this.db
-      .select({ id: properties.id, province: properties.province })
+      .select({ id: properties.id, province: properties.province, listingId: properties.listingId })
       .from(properties)
       .where(eq(properties.id, propertyId))
       .limit(1);
     if (!rows[0]) throw new NotFoundException(`Property ${propertyId} not found`);
+
+    try {
+      await assertOneSideForSubject(this.db, ownerSubject(propertyId, rows[0].listingId ?? null));
+    } catch (err) {
+      if (err instanceof OneSideConflictError) throw new BadRequestException(err.message);
+      throw err;
+    }
 
     const quote = this.quote(req);
     const itemCodes = resolveOrderItemCodes(req, PACKAGE_CONTENTS);

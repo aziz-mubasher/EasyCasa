@@ -1,3 +1,5 @@
+import { isPonte } from '@easycasa/shared';
+
 import { catalogItem, servicePackage } from './catalog';
 import {
   IVA_RATE,
@@ -13,7 +15,17 @@ function iva(netCents: number, applicable: boolean): number {
   return applicable ? Math.round(netCents * IVA_RATE) : 0;
 }
 
+function assertOrderableItem(item: CatalogItem): void {
+  if (!item.active) {
+    throw new QuoteError(`Catalog item ${item.code} is not available`);
+  }
+  if (isPonte() && item.priceModel === 'provvigione') {
+    throw new QuoteError(`Catalog item ${item.code} cannot be priced as provvigione while corporate state is PONTE`);
+  }
+}
+
 function lineForItem(item: CatalogItem, referenceValueCents?: number): QuoteLine {
+  assertOrderableItem(item);
   if (item.priceModel === 'provvigione') {
     const rate = item.ratePercent ?? 0;
     const estNet = referenceValueCents ? Math.round(referenceValueCents * rate) : 0;
@@ -62,10 +74,12 @@ export function buildQuote(req: QuoteRequest): Quote {
   if (req.packageCode) {
     const pkg = servicePackage(req.packageCode);
     if (!pkg) throw new QuoteError(`Unknown package: ${req.packageCode}`);
+    if (!pkg.active) throw new QuoteError(`Package ${pkg.code} is not available`);
 
     const included = pkg.includes.map((c) => {
       const item = catalogItem(c);
       if (!item) throw new QuoteError(`Package ${pkg.code} references unknown item ${c}`);
+      assertOrderableItem(item);
       return item;
     });
 

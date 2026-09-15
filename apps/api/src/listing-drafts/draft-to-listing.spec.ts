@@ -18,6 +18,8 @@ const ready: ListingDraftPayload = {
   bathrooms: 1,
   yearBuilt: 1970,
   condition: 'good',
+  energyClass: 'G',
+  energyPerformanceKwhM2Y: 180,
   price: 320000,
   photoUrls: ['https://cdn.example/a.webp', 'https://cdn.example/b.webp', 'https://cdn.example/c.webp'],
   description: 'A'.repeat(50),

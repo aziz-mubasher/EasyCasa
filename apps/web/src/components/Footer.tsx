@@ -122,6 +122,7 @@ export function Footer() {
               {t('entity')}
               <MundidaDevCredit className="sf-dev-credit" inline leadingMiddot />
             </p>
+            <p className="sf-enrollment">{t('enrollment')}</p>
           </div>
           <div className="sf-legal-links">
             <Link href="/legal/privacy">{t('legal.privacy')}</Link>

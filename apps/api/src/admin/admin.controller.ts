@@ -230,7 +230,7 @@ export class AdminController {
         amountCents: seed.amountCents ?? null,
         ratePercent: seed.ratePercent ?? null,
         ivaApplicable: seed.ivaApplicable,
-        active: true,
+        active: seed.active,
         legalBasis: toDbLegalBasis(legalBasis),
       });
     }

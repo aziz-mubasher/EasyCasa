@@ -9,7 +9,9 @@ import {
 import {
   applyPublish,
   applyUnpublish,
+  assertEnergyAdvertComplete,
   deriveLegacyCategorySlug,
+  EnergyAdvertError,
   normalizeProvinceSlug,
   primaryTransactionType,
   PublishTransitionError,
@@ -213,6 +215,8 @@ export class ListingsService {
       city: dto.city,
       province: dto.province ? normalizeProvinceSlug(dto.province) ?? dto.province : undefined,
       energyClass: dto.energyClass,
+      energyPerformanceKwhM2Y:
+        dto.energyPerformanceKwhM2Y != null ? String(dto.energyPerformanceKwhM2Y) : undefined,
       latitude: dto.latitude,
       longitude: dto.longitude,
       features: dto.features ?? [],
@@ -298,6 +302,8 @@ export class ListingsService {
           ? normalizeProvinceSlug(dto.province) ?? dto.province
           : undefined,
       energyClass: dto.energyClass,
+      energyPerformanceKwhM2Y:
+        dto.energyPerformanceKwhM2Y != null ? String(dto.energyPerformanceKwhM2Y) : undefined,
       latitude: dto.latitude,
       longitude: dto.longitude,
       features: dto.features,
@@ -336,6 +342,16 @@ export class ListingsService {
     }
     if (existing.status === 'sold' || existing.status === 'archived') {
       throw new BadRequestException(`cannot publish listing in status "${existing.status}"`);
+    }
+
+    try {
+      assertEnergyAdvertComplete({
+        energyClass: existing.energyClass,
+        energyPerformanceKwhM2Y: existing.energyPerformanceKwhM2Y,
+      });
+    } catch (err) {
+      if (err instanceof EnergyAdvertError) throw new BadRequestException(err.message);
+      throw err;
     }
 
     const now = new Date();

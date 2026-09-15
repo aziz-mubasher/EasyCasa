@@ -8,7 +8,7 @@ function draft(over: Partial<OrderDraft> = {}): OrderDraft {
     partyUserId: 'seek',
     side: 'buyer',
     subjectListingId: 'L1',
-    suggestedItemCodes: ['BUYER_MEDIATION', 'OFFER_DRAFTING'],
+    suggestedItemCodes: ['PROPOSAL_NOTE', 'DOC_CHECKUP'],
     ...over,
   };
 }
@@ -19,7 +19,7 @@ describe('buildCreateOrderInput', () => {
     expect(input.partyRole).toBe('BUYER');
     expect(input.partyUserId).toBe('seek');
     expect(input.listingId).toBe('L1');
-    expect(input.itemCodes).toEqual(['BUYER_MEDIATION', 'OFFER_DRAFTING']);
+    expect(input.itemCodes).toEqual(['PROPOSAL_NOTE', 'DOC_CHECKUP']);
     expect(input.referenceValueCents).toBe(30_000_000);
     expect(input.source).toBe('ENQUIRY');
   });
@@ -34,10 +34,10 @@ describe('buildCreateOrderInput', () => {
     expect(buildCreateOrderInput(draft(), { priceCents: null }).referenceValueCents).toBeNull();
   });
 
-  it('viewing-only draft carries the accompaniment item', () => {
-    const input = buildCreateOrderInput(draft({ suggestedItemCodes: ['VIEWING_ACCOMPANIMENT'] }), {
+  it('viewing-only draft carries no reserved accompaniment item', () => {
+    const input = buildCreateOrderInput(draft({ suggestedItemCodes: [] }), {
       priceCents: 25_000_000,
     });
-    expect(input.itemCodes).toEqual(['VIEWING_ACCOMPANIMENT']);
+    expect(input.itemCodes).toEqual([]);
   });
 });

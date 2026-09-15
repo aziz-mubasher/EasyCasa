@@ -34,8 +34,8 @@ export function canConvertToOrder(enquiry: Pick<Enquiry, 'status' | 'intent' | '
 /** Buyer-side catalog items suggested for the enquiry's intent. Illustrative codes. */
 const ITEMS_BY_INTENT: Readonly<Record<EnquiryIntent, string[]>> = {
   info: [],
-  viewing: ['VIEWING_ACCOMPANIMENT'],
-  offer: ['BUYER_MEDIATION', 'OFFER_DRAFTING'],
+  viewing: [],
+  offer: ['PROPOSAL_NOTE', 'DOC_CHECKUP'],
 };
 
 /** Map a qualified enquiry to an order draft for the Phase 10 pipeline. */

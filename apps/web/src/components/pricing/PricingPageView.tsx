@@ -13,12 +13,7 @@ import {
 } from '@/lib/api';
 import { DEFAULT_PROPERTY_VALUE_EUR } from '@/lib/pricing-config';
 
-import { SavingsComparison } from './SavingsComparison';
-import {
-  PricingCatalogSections,
-  bundleGrossFromPackage,
-  sumPartsGrossCents,
-} from './PricingCatalogSections';
+import { PricingCatalogSections } from './PricingCatalogSections';
 import { PricingQuotePanel } from './PricingQuotePanel';
 
 type Props = {
@@ -66,22 +61,6 @@ export function PricingPageView({ locale, items: initialItems, packages }: Props
   );
 
   const itemsByCode = useMemo(() => new Map(items.map((i) => [i.code, i])), [items]);
-
-  const packagePartTotals = useMemo(() => {
-    const out: Record<string, number | null> = {};
-    for (const pkg of packages) {
-      out[pkg.code] = sumPartsGrossCents(pkg, itemsByCode);
-    }
-    return out;
-  }, [packages, itemsByCode]);
-
-  const packageBundleTotals = useMemo(() => {
-    const out: Record<string, number | null> = {};
-    for (const pkg of packages) {
-      out[pkg.code] = bundleGrossFromPackage(pkg);
-    }
-    return out;
-  }, [packages]);
 
   const toggleItem = useCallback(
     (code: string) => {
@@ -143,7 +122,7 @@ export function PricingPageView({ locale, items: initialItems, packages }: Props
 
   return (
     <>
-      <div className="mt-8 flex flex-col sm:flex-row sm:items-end gap-3 rounded-xl border border-line bg-paper px-5 py-4">
+      <div className="mt-2 flex flex-col sm:flex-row sm:items-end gap-3 rounded-xl border border-line bg-paper px-5 py-4">
         <label className="flex-1 min-w-0">
           <span className="block text-sm font-medium text-ink">{t('provinceLabel')}</span>
           <span className="block text-xs text-muted mt-0.5">{t('provinceHint')}</span>
@@ -168,7 +147,6 @@ export function PricingPageView({ locale, items: initialItems, packages }: Props
         {catalogBusy ? <p className="text-xs text-muted pb-2">{t('checking')}</p> : null}
       </div>
 
-      <SavingsComparison locale={locale} catalogByCode={catalogByCode} />
       <PricingCatalogSections
         locale={locale}
         items={items}
@@ -179,8 +157,6 @@ export function PricingPageView({ locale, items: initialItems, packages }: Props
         onSelectPackage={selectPackage}
         onRequestQuote={() => void onRequestQuote()}
         quoteBusy={quoteBusy}
-        packagePartTotals={packagePartTotals}
-        packageBundleTotals={packageBundleTotals}
         province={province}
         notifyState={notifyState}
         onNotify={(code) => void onNotify(code)}

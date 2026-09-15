@@ -17,52 +17,41 @@ describe('buildQuote', () => {
     expect(q.dueNowGrossCents).toBe(3500);
   });
 
-  it('provvigione is estimated from reference value and excluded from due-now', () => {
-    const q = buildQuote({
-      items: ['FULL_MEDIATION'],
-      referenceValueCents: 30_000_000,
-    });
-    expect(q.provvigioneEstimatedNetCents).toBe(747_000);
-    const line = q.lines.find((l) => l.code === 'FULL_MEDIATION');
-    expect(line?.estimated).toBe(true);
-    expect(q.dueNowGrossCents).toBe(0);
-    expect(q.estimatedTotalGrossCents).toBe(747_000 + Math.round(747_000 * 0.22));
+  it('rejects a deactivated item (not just hiding the card)', () => {
+    expect(() => buildQuote({ items: ['FULL_MEDIATION'] })).toThrow(QuoteError);
+    expect(() => buildQuote({ items: ['OFFER_DRAFTING'] })).toThrow(/not available/);
+    expect(() => buildQuote({ items: ['APE_ISSUANCE'] })).toThrow(/not available/);
+    expect(() => buildQuote({ items: ['TENANT_SCREENING'] })).toThrow(/not available/);
+    expect(() => buildQuote({ items: ['VIEWING_ACCOMPANIMENT'] })).toThrow(/not available/);
+    expect(() => buildQuote({ items: ['ROGITO_COORDINATION'] })).toThrow(/not available/);
   });
 
-  it('provvigione without reference value estimates to zero but stays flagged', () => {
-    const q = buildQuote({ items: ['FULL_MEDIATION'] });
-    expect(q.provvigioneEstimatedNetCents).toBe(0);
-    expect(q.lines[0]?.estimated).toBe(true);
+  it('rejects a deactivated package and a package that contains mediation', () => {
+    expect(() => buildQuote({ packageCode: 'FAI_DA_TE' })).toThrow(/not available/);
+    expect(() => buildQuote({ packageCode: 'CHIAVI_IN_MANO' })).toThrow(/not available/);
+    expect(() => buildQuote({ packageCode: 'ASSISTITO' })).toThrow(/not available/);
+    expect(() => buildQuote({ packageCode: 'AFFITTO_SERENO' })).toThrow(/not available/);
   });
 
-  it('package emits one bundle line and covers its fixed items', () => {
-    const q = buildQuote({ packageCode: 'FAI_DA_TE' });
+  it('Ready to list emits one bundle line and covers its fixed items', () => {
+    const q = buildQuote({ packageCode: 'READY_TO_LIST' });
     const bundle = q.lines.find((l) => l.kind === 'bundle');
     expect(bundle).toBeTruthy();
-    expect(bundle?.netCents).toBe(19900);
-    expect(bundle?.ivaCents).toBe(4378);
+    expect(bundle?.netCents).toBe(25900);
+    expect(bundle?.ivaCents).toBe(5698);
     expect(q.lines.filter((l) => l.kind === 'fixed')).toHaveLength(0);
   });
 
   it('package + à la carte does not double-charge a covered item', () => {
-    const q = buildQuote({ packageCode: 'FAI_DA_TE', items: ['VALUATION'] });
+    const q = buildQuote({ packageCode: 'READY_TO_LIST', items: ['VALUATION'] });
     expect(q.lines.filter((l) => l.code === 'VALUATION')).toHaveLength(0);
   });
 
-  it('Assistito bundle itemises provvigione separately from the fixed bundle', () => {
-    const q = buildQuote({ packageCode: 'ASSISTITO', referenceValueCents: 20_000_000 });
-    expect(q.lines.some((l) => l.kind === 'bundle')).toBe(true);
-    const med = q.lines.find((l) => l.code === 'FULL_MEDIATION');
-    expect(med?.kind).toBe('provvigione');
-    expect(med?.estimated).toBe(true);
-    expect(med?.netCents).toBe(Math.round(20_000_000 * 0.0249));
-  });
-
-  it('rental package keeps registration taxes as pass-through', () => {
-    const q = buildQuote({ packageCode: 'AFFITTO_SERENO' });
-    expect(q.lines.some((l) => l.code === 'REGISTRATION_TAXES' && l.kind === 'passthrough')).toBe(
-      true,
-    );
+  it('renting bundle has no tenant screening and no pass-through leftover', () => {
+    const q = buildQuote({ packageCode: 'RENTING_MADE_SIMPLE' });
+    expect(q.lines.some((l) => l.code === 'TENANT_SCREENING')).toBe(false);
+    expect(q.lines.some((l) => l.kind === 'provvigione')).toBe(false);
+    expect(q.fixedNetCents).toBe(18900);
   });
 
   it('empty quote throws', () => {
