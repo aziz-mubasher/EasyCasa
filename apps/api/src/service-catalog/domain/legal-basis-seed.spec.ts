@@ -1,8 +1,20 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const SQL_DIR = join(import.meta.dirname, '../../../../../migration/sql');
+function findSqlDir(start = process.cwd()): string {
+  let dir = start;
+  for (let i = 0; i < 8; i++) {
+    const candidate = join(dir, 'migration/sql');
+    if (existsSync(candidate)) return candidate;
+    const parent = join(dir, '..');
+    if (parent === dir) break;
+    dir = parent;
+  }
+  throw new Error(`migration/sql not found from ${start}`);
+}
+
+const SQL_DIR = findSqlDir();
 
 /**
  * 0016 seeded `legal_basis = 'mediazione'` on three buyer-side items.
