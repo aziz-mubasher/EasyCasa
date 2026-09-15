@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T15:27:49.208Z",
+  "updatedAt": "2026-09-15T15:50:28.613Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "PP-ABOUT",
       "title": "K EC ABOUT",
       "venture": "EasyCasa",
-      "lifecycle": "pr_ready",
+      "lifecycle": "merged",
       "agentStatus": "IDLE",
       "agentBcId": "bc-b8598c85-da4c-4760-8cbf-46f45386740a",
       "agentUrl": "https://cursor.com/agents/bc-b8598c85-da4c-4760-8cbf-46f45386740a",
       "branch": "cursor/about-honesty-pass-740a",
       "prNumber": 238,
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/238",
-      "prState": "OPEN",
+      "prState": "MERGED",
       "dispatchedAt": "2026-09-15T15:06:49.334Z",
-      "updatedAt": "2026-09-15T15:27:49.207Z",
-      "summary": "PR #238 ready: /about on shared layout; appalto hero; card 01 removed; pricing identity hole; mediation-registration line deleted.",
-      "nextAction": "AZM review + merge. Kaizen Operations + Startup Phase 3 need a human board write. EC-S-36 still gates any publish-verification card or “directly”.",
+      "updatedAt": "2026-09-15T15:50:28.613Z",
+      "summary": "PR #238 merged and web deployed (31c2717). Live /en/about: appalto hero, no verify card, pricing identity hole; /en/transparency 308 from /en/trasparenza.",
+      "nextAction": "AZM: visura / incorporation fields. EC-S-36 before any publish-verification card or “directly”. Kaizen Operations + Startup Phase 3 need a human board write.",
       "errors": []
     },
     {
