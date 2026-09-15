@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T11:41:23.939Z",
+  "updatedAt": "2026-09-15T11:42:32.643Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "PP-AGENZIE",
       "title": "/agenzie honesty pass — retract budget, never-per-contact, ledger labels",
       "venture": "EasyCasa",
-      "lifecycle": "running",
+      "lifecycle": "pr_open",
       "agentStatus": "RUNNING",
       "agentBcId": "bc-b8598c85-da4c-4760-8cbf-46f45386740a",
       "agentUrl": "https://cursor.com/agents/bc-b8598c85-da4c-4760-8cbf-46f45386740a",
       "branch": "cursor/agenzie-honesty-pass-740a",
-      "prNumber": null,
-      "prUrl": null,
-      "prState": null,
+      "prNumber": 237,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/237",
+      "prState": "DRAFT",
       "dispatchedAt": "2026-09-15T11:41:23.939Z",
-      "updatedAt": "2026-09-15T11:41:23.939Z",
-      "summary": "Honesty pass on /agenzie: retract verified-budget/Banks4All, never-per-contact commitment, Mundida counterpart, A1–A4 coming chips, /en/for-agencies 301.",
-      "nextAction": "Finish tests, open PR, then AZM sets the pilot end date and Homio contract form.",
+      "updatedAt": "2026-09-15T11:42:32.642Z",
+      "summary": "PR #237 draft open. Honesty pass on /agenzie: budget block retracted, never-per-contact live, A1–A4 coming, /en/for-agencies 301.",
+      "nextAction": "Review PR #237. AZM sets pilot end date and Homio contract form. Do not rebuild a person-badge.",
       "errors": []
     },
     {
