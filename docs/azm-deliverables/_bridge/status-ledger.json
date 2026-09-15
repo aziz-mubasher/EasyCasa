@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T15:06:49.334Z",
+  "updatedAt": "2026-09-15T15:07:57.161Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -9,18 +9,18 @@
       "polishId": "PP-ABOUT",
       "title": "K EC ABOUT",
       "venture": "EasyCasa",
-      "lifecycle": "running",
+      "lifecycle": "pr_open",
       "agentStatus": "RUNNING",
       "agentBcId": "bc-b8598c85-da4c-4760-8cbf-46f45386740a",
       "agentUrl": "https://cursor.com/agents/bc-b8598c85-da4c-4760-8cbf-46f45386740a",
       "branch": "cursor/about-honesty-pass-740a",
-      "prNumber": null,
-      "prUrl": null,
-      "prState": null,
+      "prNumber": 238,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/238",
+      "prState": "DRAFT",
       "dispatchedAt": "2026-09-15T15:06:49.334Z",
-      "updatedAt": "2026-09-15T15:06:49.334Z",
-      "summary": "Rewriting /about: shared layout, retract G1/C2/C4 claims, pricing identity hole.",
-      "nextAction": "Open draft PR vs main; run honesty tests.",
+      "updatedAt": "2026-09-15T15:07:57.161Z",
+      "summary": "Draft PR #238: /about shared layout, appalto hero, card 01 removed, pricing identity hole, mediation-registration line deleted.",
+      "nextAction": "CI + browser walkthrough; then mark ready.",
       "errors": []
     },
     {
