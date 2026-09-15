@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T07:46:49.589Z",
+  "updatedAt": "2026-09-15T08:14:28.626Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
     {
@@ -10,7 +10,7 @@
       "title": "EC-PRICING-FINAL — PONTE price list",
       "venture": "EasyCasa",
       "lifecycle": "merged",
-      "agentStatus": "RUNNING",
+      "agentStatus": "IDLE",
       "agentBcId": "bc-9f454520-4fd5-4046-9da5-655c8535ec0c",
       "agentUrl": "https://cursor.com/agents/bc-9f454520-4fd5-4046-9da5-655c8535ec0c",
       "branch": "cursor/ec-pricing-final-ec0c",
@@ -18,9 +18,9 @@
       "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/231",
       "prState": "MERGED",
       "dispatchedAt": "2026-09-15T07:18:20.393Z",
-      "updatedAt": "2026-09-15T07:46:49.589Z",
-      "summary": "PR #231 merged to main (77f9e55). VPS pulled; 0075 applied; api+web no-cache rebuild in progress.",
-      "nextAction": "Confirm live /en/pricing and GET /service-catalog after recreate; AZM to confirm D10 and commercial prices. Do not build PR E until Credit Prime issues the delibera to the buyer.",
+      "updatedAt": "2026-09-15T08:14:28.615Z",
+      "summary": "PR #231 merged and deployed. Live /api/version gitSha 77f9e55. Catalog has 13 fixed items, no provvigione. /en /it /es pricing show PONTE list + enrollment line.",
+      "nextAction": "AZM to confirm D10 (free vs paid publication) and commercial prices. Do not build PR E until Credit Prime issues the delibera to the buyer. Kaizen Operations + Startup Phase 3 still need a human board write.",
       "errors": []
     },
     {
