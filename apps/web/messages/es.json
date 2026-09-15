@@ -2644,7 +2644,8 @@
       "titleEm": "Del propietario, o de una agencia.",
       "lead": "Busca casas publicadas por propietarios particulares y por agencias inmobiliarias. Tras iniciar sesión puedes consultar los datos oficiales de zona, escribir a quien publicó el anuncio y reservar una visita desde su disponibilidad real.",
       "ctaPrimary": "Empieza a buscar",
-      "ctaSecondary": "Mira cómo funciona"
+      "ctaSecondary": "Mira cómo funciona",
+      "ctaPricing": "Ver la lista de precios"
     },
     "tags": {
       "live": "Disponible",
@@ -2659,7 +2660,7 @@
       {
         "idx": "02 / SABES",
         "tag": "live",
-        "title": "Control de precio justo en cada anuncio",
+        "title": "Rango OMI oficial en cada anuncio",
         "body": "Cada anuncio se puede comparar con los rangos OMI oficiales de la Agenzia delle Entrate — más de 157.000 rangos de precio por zona, a nivel nacional. Inicia sesión para ver dónde queda el precio pedido en ese rango.",
         "fig": "OMI H2 2025",
         "figNote": "el mismo dataset de la administración fiscal",
@@ -2672,17 +2673,14 @@
         "body": "Sin persecuciones telefónicas. Envía la consulta a quien publicó el anuncio — el propietario o la agencia — elige un hueco de su disponibilidad real y recibe confirmación.",
         "fig": "Reserva online",
         "figNote": "huecos confirmados, no persecuciones telefónicas"
-      },
-      {
-        "idx": "04 / GANA",
-        "tag": "soon",
-        "title": "Verified Buyer Badge",
-        "body": "Consigue una attestación de financiación a través de Banks4All, nuestra empresa hermana del grupo Mundida, y adjúntala a tus consultas. Los propietarios ven una banda de presupuesto verificada junto a tu nombre.",
-        "fig": "Banks4All",
-        "figNote": "empresa hermana, entidad distinta",
-        "href": "/banks4all"
       }
     ],
+    "model": {
+      "kicker": "Cuánto cuesta comprar",
+      "title": "Ninguna comisión. Pagas documentos, no la operación.",
+      "body": "Si trabajamos para el vendedor de un inmueble, no aceptamos tu dinero sobre ese mismo inmueble. Los servicios opcionales son entregables nominados a tarifa fija, a pagar a la entrega.",
+      "cta": "Ver la lista de precios"
+    },
     "trust": {
       "kicker": "Por qué puedes confiar en lo que ves",
       "title": "Casas reales, propietarios reales",
@@ -2718,7 +2716,7 @@
         },
         {
           "title": "Pregunta directamente",
-          "body": "Escribe a quien publicó — el propietario o la agencia. Adjunta el Verified Buyer Badge si lo tienes."
+          "body": "Escribe a quien publicó — el propietario o la agencia."
         },
         {
           "title": "Reserva tu visita",
@@ -2815,7 +2813,7 @@
       "cta": "Encuentra tu casa"
     },
     "foot": {
-      "mundida": "EasyCasa y Banks4All forman parte del grupo Mundida (P.IVA IT04531990986). Los servicios de financiación de Banks4All los presta una empresa hermana de EasyCasa dentro del mismo grupo. EasyCasa es una plataforma que conecta compradores y vendedores particulares de forma directa y no actúa como intermediario inmobiliario.",
+      "mundida": "EasyCasa y Banks4All forman parte del grupo Mundida (P.IVA IT04531990986). EasyCasa es una plataforma que conecta compradores y vendedores particulares de forma directa y no actúa como intermediario inmobiliario.",
       "omi": "Los benchmarks de precio derivan del dataset OMI publicado por la Agenzia delle Entrate y son rangos zonales indicativos, no valoraciones de inmuebles individuales.",
       "privacy": "Privacidad",
       "terms": "Términos"
