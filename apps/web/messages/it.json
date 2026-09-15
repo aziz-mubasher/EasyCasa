@@ -2451,17 +2451,21 @@
   "agenzie": {
     "meta": {
       "title": "Per le Agenzie — EasyCasa Italia",
-      "description": "Pubblica i tuoi annunci gratis durante il pilota EasyCasa: import automatico, acquirenti con verifica di budget, solo annunci autentici."
+      "description": "Pubblica gratis durante il pilota EasyCasa: import XML, mai un costo a contatto, P.IVA e REA su ogni agenzia. Noi non entriamo nella trattativa."
+    },
+    "tags": {
+      "live": "Live",
+      "coming": "In arrivo"
     },
     "hero": {
       "kicker": "Per le agenzie immobiliari",
       "title": "Vendere casa in modo autentico. Insieme.",
-      "lead": "EasyCasa è il portale italiano dove ogni annuncio è verificato e ogni agenzia è identificata. Durante il programma pilota pubblicare è gratuito: nessun abbonamento, nessun rinnovo automatico, nessun vincolo. La tua provvigione resta tua — noi non entriamo nella trattativa.",
+      "lead": "EasyCasa è il portale italiano dove ogni agenzia è identificata — P.IVA e REA visibili in pagina. Durante il programma pilota pubblicare è gratuito: nessun abbonamento, nessun rinnovo automatico, nessun vincolo. La tua provvigione resta tua — noi non entriamo nella trattativa.",
       "cta": "Candida la tua agenzia",
       "ctaSecondary": "Come funziona",
       "pills": [
         "€ 0 durante il pilota",
-        "Import automatico XML",
+        "Mai a contatto",
         "Nessun rinnovo automatico",
         "Non in esclusiva"
       ]
@@ -2472,34 +2476,40 @@
       "sub": "Abbiamo costruito il portale attorno ai problemi veri delle agenzie indipendenti: costi dei portali in crescita, lead che fanno perdere tempo, annunci seri sepolti sotto gli annunci fantasma.",
       "items": [
         {
+          "id": "free",
           "num": "01",
           "title": "Gratis durante il pilota",
-          "body": "Nessun canone, nessuna fascia di annunci, nessuna sorpresa al rinnovo. Quando introdurremo servizi a pagamento, i partner fondatori manterranno condizioni riservate — e lo diciamo oggi, per iscritto."
+          "body": "Nessun canone, nessuna fascia di annunci, nessuna sorpresa al rinnovo. Il pilota è a tempo: la data di fine, e cosa succede il giorno dopo, arriveranno per iscritto prima di qualsiasi addebito."
         },
         {
+          "id": "xml",
           "num": "02",
           "title": "Nessun doppio lavoro",
           "body": "Importiamo i tuoi annunci dal feed XML che già usi per gli altri portali. Configurazione una volta sola, sincronizzazione automatica, report di importazione leggibile dopo ogni aggiornamento."
         },
         {
+          "id": "noPerContact",
           "num": "03",
-          "title": "Acquirenti con budget verificato",
-          "body": "Le richieste possono arrivare con un'attestazione di capacità finanziaria: stato, fascia di budget e validità. Fai visite solo con chi può davvero comprare."
+          "title": "Mai a contatto, mai ad affare",
+          "body": "Non vi faremo mai pagare per contatto, né per affare concluso. Se un giorno faremo pagare, sarà un canone fisso, uguale per tutti, pubblicato."
         },
         {
+          "id": "diary",
           "num": "04",
           "title": "Agenda visite integrata",
           "body": "Proposta di orari, conferma e registrazione dell'esito in un unico flusso. Meno telefonate, meno no-show, uno storico ordinato per ogni immobile."
         },
         {
+          "id": "identified",
           "num": "05",
-          "title": "Solo annunci autentici",
-          "body": "Ogni agenzia è verificata (P.IVA e numero REA visibili), ogni annuncio dichiara un incarico reale, i duplicati vengono bloccati. I tuoi annunci non competono con gli annunci fantasma."
+          "title": "P.IVA e REA su ogni agenzia",
+          "body": "Ogni agenzia è identificata: P.IVA e numero REA in pagina. Questo è live. I cancelli di autenticità sull'annuncio sono etichettati sotto — nessuno è venduto come live finché non lo è."
         },
         {
+          "id": "brand",
           "num": "06",
           "title": "Il tuo brand, sempre",
-          "body": "Logo, nome e contatti della tua agenzia su ogni annuncio e su una pagina agenzia dedicata. I clienti sono tuoi: noi siamo il canale, non l'intermediario."
+          "body": "Logo, nome e contatti della tua agenzia su ogni annuncio e su una pagina agenzia dedicata. I clienti sono tuoi dal primo contatto: noi siamo il canale, non l'intermediario."
         }
       ]
     },
@@ -2534,9 +2544,32 @@
         "Rispondi alle richieste entro 48 ore.",
         "Ritiri l'annuncio entro 5 giorni da vendita o revoca dell'incarico.",
         "Confermi la disponibilità degli annunci con un click ogni 30 giorni (automatico se usi il feed).",
-        "Gestisci le visite dei clienti EasyCasa nell'agenda integrata."
+        "Gestisci le visite prenotate tramite EasyCasa nell'agenda integrata."
       ],
       "disclose": "I criteri di visibilità degli annunci e le regole di sospensione sono documentati e trasparenti: nessuna penalizzazione senza motivazione scritta e possibilità di replica."
+    },
+    "claims": {
+      "kicker": "Cosa è live, cosa è in arrivo",
+      "title": "Quattro promesse, etichettate",
+      "sub": "Un'agenzia le controlla nei primi dieci minuti. Una promessa marcata «in arrivo» è accettabile. Una promessa falsa no.",
+      "items": {
+        "A1": {
+          "title": "Ogni annuncio è verificato",
+          "body": "La verifica del proprietario esiste come flusso. Nessun annuncio live la porta, e la pubblicazione non è condizionata."
+        },
+        "A2": {
+          "title": "Ogni annuncio dichiara un incarico reale",
+          "body": "Il patto continua a chiederti di pubblicare solo con un incarico reale. Un campo incarico non è un cancello di pubblicazione oggi."
+        },
+        "A3": {
+          "title": "I duplicati vengono bloccati",
+          "body": "Il rilevamento di immagini doppie esiste sul percorso del privato. I duplicati di annuncio a livello di portale non sono un blocco certo sui feed agenzia."
+        },
+        "A4": {
+          "title": "Classe e indice energetico su ogni annuncio",
+          "body": "Gli annunci possono ancora andare online senza entrambi i dati. Quando il cancello arriverà, bloccherà quegli annunci — è una protezione per te, non una regola da ricordare."
+        }
+      }
     },
     "honest": {
       "kicker": "Parliamo chiaro",
@@ -2547,12 +2580,12 @@
           "body": "Il traffico acquirenti sta crescendo zona per zona: per questo il pilota è gratuito e concentrato geograficamente. Rischi un feed XML, non un abbonamento."
         },
         {
-          "title": "2 · L'attestazione finanziaria è del nostro gruppo.",
-          "body": "Il servizio di verifica del budget è fornito da Banks4All, società del gruppo Mundida come EasyCasa. Nessun documento finanziario dell'acquirente arriva a te o a noi: solo stato, fascia e validità."
+          "title": "2 · Firmi con Mundida.",
+          "body": "Il portale è di Mundida S.r.l. (P.IVA IT04531990986, Brescia). Ayni è la società di consulenza. Questa candidatura è verso Mundida. Se un giorno ci sarà un canone, è una licenza software a canone fisso da Mundida all'agenzia."
         },
         {
-          "title": "3 · Un giorno guadagneremo.",
-          "body": "Dopo il pilota introdurremo servizi opzionali a pagamento. Le condizioni per i partner fondatori saranno comunicate prima, per iscritto, senza rinnovi automatici."
+          "title": "3 · Non vi faremo mai pagare per contatto.",
+          "body": "Né per richiesta, né per affare concluso. Se un giorno introdurremo un corrispettivo, sarà un canone fisso, uguale per tutti, pubblicato. Le condizioni per i partner fondatori arriveranno prima, per iscritto, senza rinnovi automatici."
         }
       ]
     },
@@ -2570,6 +2603,7 @@
       "gestionalePlaceholder": "es. Getrix",
       "submit": "Invia candidatura",
       "sent": "Si apre il tuo client email con la candidatura pronta. Invia il messaggio per completare.",
+      "counterpart": "La controparte è Mundida S.r.l., P.IVA IT04531990986. Questa candidatura non crea esclusiva né un rinnovo automatico.",
       "note": "I dati sono trattati per gestire la tua candidatura al programma pilota (art. 6(1)(b) GDPR). <privacy>Informativa privacy</privacy>.",
       "mailSubject": "Candidatura pilota agenzia — {agency}",
       "mailAgency": "Agenzia: {agency}",

@@ -5,6 +5,7 @@ import {
   isSitemapExcludedPath,
   staticPageLastModified,
 } from './sitemap-entries';
+import { agenzieLanguageAlternates, agenziePath } from './agenzie';
 import { sellPrivatelyLanguageAlternates, sellPrivatelyPath } from './sell-privately';
 
 describe('sitemap (T33 honesty + sell-privately locales)', () => {
@@ -62,5 +63,24 @@ describe('sitemap (T33 honesty + sell-privately locales)', () => {
     expect(sellPrivatelyLanguageAlternates(site)['x-default']).toBe(
       `${site}/it/vendi-da-privato`,
     );
+  });
+
+  it('includes localized agenzie paths per locale', () => {
+    const entries = buildStaticSitemapEntries(site).filter(
+      (e) => e.url.includes('/agenzie') || e.url.includes('/for-agencies'),
+    );
+    expect(entries).toHaveLength(3);
+    expect(entries.map((e) => e.url)).toEqual([
+      `${site}/it/agenzie`,
+      `${site}/en/for-agencies`,
+      `${site}/es/agenzie`,
+    ]);
+    for (const entry of entries) {
+      const last = entry.lastModified;
+      const iso = last instanceof Date ? last.toISOString() : String(last);
+      expect(iso).toBe('2026-09-15T00:00:00.000Z');
+    }
+    expect(agenziePath('en')).toBe('/for-agencies');
+    expect(agenzieLanguageAlternates(site)['x-default']).toBe(`${site}/it/agenzie`);
   });
 });

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { agenziePath } from '@/lib/agenzie';
 import { sellPrivatelyPath } from '@/lib/sell-privately';
 import { sellerInboxEnabled } from '@/lib/seller-inbox-config';
 
@@ -26,7 +27,7 @@ export const STATIC_PAGE_LASTMOD: Record<string, string> = {
   '/privacy': '2026-07-29',
   '/contatti': '2026-07-29',
   '/trasparenza': '2026-07-29',
-  '/agenzie': '2026-07-29',
+  '/agenzie': '2026-09-15',
   '/banks4all': '2026-08-02',
 };
 
@@ -52,8 +53,11 @@ export function buildStaticSitemapEntries(site: string): MetadataRoute.Sitemap {
     staticPaths
       .filter((p) => !isSitemapExcludedPath(p))
       .map((p) => {
-        const pathFor = (l: (typeof LOCALES)[number]) =>
-          p === '/vendi-da-privato' ? sellPrivatelyPath(l) : p;
+        const pathFor = (l: (typeof LOCALES)[number]) => {
+          if (p === '/vendi-da-privato') return sellPrivatelyPath(l);
+          if (p === '/agenzie') return agenziePath(l);
+          return p;
+        };
         return {
           url: `${site}/${loc}${pathFor(loc)}`,
           lastModified: staticPageLastModified(p),

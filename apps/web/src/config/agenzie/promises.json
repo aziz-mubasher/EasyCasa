@@ -1,0 +1,27 @@
+{
+  "$schema": "./promises.schema.json",
+  "version": 1,
+  "updatedAt": "2026-09-15",
+  "promises": {
+    "A1": {
+      "state": "coming",
+      "tasks": ["T14", "T15", "T16", "T17"],
+      "note": "Hero claimed every listing is verified. VO FSM exists; verified_owner_case was 0 at 2026-08-15 close-out; publish is not hard-gated. Do not flip to live until a live listing carries the badge."
+    },
+    "A2": {
+      "state": "coming",
+      "tasks": ["AGENZIE-MANDATE"],
+      "note": "Page claimed every listing declares a real mandate. mandates is the service-order incarico, not a listing publish flag. Pact rule stays; the product claim does not."
+    },
+    "A3": {
+      "state": "coming",
+      "tasks": ["T19.2"],
+      "note": "Page claimed duplicates are blocked. PK-6 image-dup enforce is seller-path only; agency XML / listing-level duplicates are unproven. An agency will upload a double to test."
+    },
+    "A4": {
+      "state": "coming",
+      "tasks": ["R4"],
+      "note": "Authentic listings only / energy class + index. 92/118 listings lacked both at close-out. R4 as agency protection is the later brief row — coming until it gates publish."
+    }
+  }
+}

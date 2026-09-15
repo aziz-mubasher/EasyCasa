@@ -5,6 +5,7 @@ import { Link, usePathname } from '@/i18n/routing';
 import { getBanks4AllReferralUrl } from '@/lib/banks4all-referral';
 import { isListingLandingPath } from '@/lib/listing-landing';
 import { isMarketingServicePath } from '@/lib/marketing-service';
+import { agenziePath } from '@/lib/agenzie';
 import { sellPrivatelyPath } from '@/lib/sell-privately';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import './site-footer.css';
@@ -51,7 +52,7 @@ export function Footer() {
     { key: 'banks4all', kind: 'internal', href: '/banks4all' },
     { key: 'easyLegenda', kind: 'external', href: LEGENDA_ORIGIN, host: 'legenda.easycasaita.com' },
     { key: 'nibProperty', kind: 'external', href: nibHref, host: 'nib.banks4all.eu' },
-    { key: 'agencies', kind: 'internal', href: '/agenzie' },
+    { key: 'agencies', kind: 'internal', href: agenziePath(locale) },
   ];
 
   if (isListingLandingPath(pathname) || isMarketingServicePath(pathname)) return null;

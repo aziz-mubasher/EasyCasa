@@ -3,13 +3,32 @@
 import { useId, useState, type FormEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { visibleAgencyPromises, type AgencyPromiseEntry } from '@/lib/agenzie';
 import './agenzie.css';
 
 const APPLY_MAILTO = 'mailto:info@easycasaita.com';
 
-type Benefit = { num: string; title: string; body: string };
+type Benefit = { id: string; num: string; title: string; body: string };
 type Step = { title: string; body: string };
 type Honest = { title: string; body: string };
+
+function StatusChip({
+  status,
+  liveLabel,
+  comingLabel,
+}: {
+  status: AgencyPromiseEntry['status'];
+  liveLabel: string;
+  comingLabel: string;
+}) {
+  const label = status === 'live' ? liveLabel : comingLabel;
+  const kind = status === 'live' ? 'live' : 'coming';
+  return (
+    <span className={`ag-chip ag-chip--${kind}`} role="status" aria-label={label}>
+      {label}
+    </span>
+  );
+}
 
 export function AgenziePage() {
   const t = useTranslations('agenzie');
@@ -19,6 +38,7 @@ export function AgenziePage() {
   const rules = t.raw('rules.items') as string[];
   const honest = t.raw('honest.items') as Honest[];
   const pills = t.raw('hero.pills') as string[];
+  const claims = visibleAgencyPromises();
 
   const [agency, setAgency] = useState('');
   const [piva, setPiva] = useState('');
@@ -79,7 +99,7 @@ export function AgenziePage() {
           <p className="sub">{t('benefits.sub')}</p>
           <div className="grid">
             {benefits.map((item) => (
-              <div className="benefit" key={item.num}>
+              <div className="benefit" key={item.id}>
                 <p className="num">{item.num}</p>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
@@ -117,6 +137,30 @@ export function AgenziePage() {
             </ul>
           </div>
           <p className="disclose">{t('rules.disclose')}</p>
+        </div>
+      </section>
+
+      <section id="promesse" style={{ paddingTop: 0 }}>
+        <div className="wrap">
+          <p className="kicker2">{t('claims.kicker')}</p>
+          <h2>{t('claims.title')}</h2>
+          <p className="sub">{t('claims.sub')}</p>
+          <ul className="claims">
+            {claims.map((claim) => (
+              <li className="claim" key={claim.id}>
+                <div className="claim-head">
+                  <span className="claim-id">{claim.id}</span>
+                  <StatusChip
+                    status={claim.status}
+                    liveLabel={t('tags.live')}
+                    comingLabel={t('tags.coming')}
+                  />
+                </div>
+                <h3>{t(`claims.items.${claim.id}.title`)}</h3>
+                <p>{t(`claims.items.${claim.id}.body`)}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -201,6 +245,7 @@ export function AgenziePage() {
             />
             <button type="submit">{t('form.submit')}</button>
             {sent ? <p className="sent">{t('form.sent')}</p> : null}
+            <p className="counterpart">{t('form.counterpart')}</p>
             <p className="note">
               {t.rich('form.note', {
                 privacy: (chunks) => <Link href="/legal/privacy">{chunks}</Link>,

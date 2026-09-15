@@ -23,12 +23,28 @@ const nextConfig = {
         destination: '/es/vender-entre-particulares',
         permanent: true,
       },
+      {
+        source: '/en/agenzie',
+        destination: '/en/for-agencies',
+        permanent: true,
+      },
+      {
+        source: '/it/for-agencies',
+        destination: '/it/agenzie',
+        permanent: true,
+      },
+      {
+        source: '/es/for-agencies',
+        destination: '/es/agenzie',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
     return [
       { source: '/en/sell-privately', destination: '/en/vendi-da-privato' },
       { source: '/es/vender-entre-particulares', destination: '/es/vendi-da-privato' },
+      { source: '/en/for-agencies', destination: '/en/agenzie' },
     ];
   },
 };

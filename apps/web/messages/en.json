@@ -2451,17 +2451,21 @@
   "agenzie": {
     "meta": {
       "title": "For Agencies — EasyCasa Italia",
-      "description": "List for free during the EasyCasa pilot: automatic import, buyers with budget verification, authentic listings only."
+      "description": "List for free during the EasyCasa pilot: XML import, never a per-contact fee, VAT and REA on every agency. We stay out of the deal."
+    },
+    "tags": {
+      "live": "Live",
+      "coming": "Coming soon"
     },
     "hero": {
       "kicker": "For estate agencies",
       "title": "Sell homes authentically. Together.",
-      "lead": "EasyCasa is the Italian portal where every listing is verified and every agency is identified. During the pilot, publishing is free: no subscription, no auto-renewal, no lock-in. Your commission stays yours — we stay out of the deal.",
+      "lead": "EasyCasa is the Italian portal where every agency is identified — VAT and REA visible on the page. During the pilot, publishing is free: no subscription, no auto-renewal, no lock-in. Your commission stays yours — we stay out of the deal.",
       "cta": "Apply with your agency",
       "ctaSecondary": "How it works",
       "pills": [
         "€0 during the pilot",
-        "Automatic XML import",
+        "Never per contact",
         "No auto-renewal",
         "Non-exclusive"
       ]
@@ -2472,34 +2476,40 @@
       "sub": "We built the portal around the real problems of independent agencies: rising portal fees, time-wasting leads, serious listings buried under ghost ads.",
       "items": [
         {
+          "id": "free",
           "num": "01",
           "title": "Free during the pilot",
-          "body": "No retainer, no listing tiers, no renewal surprises. When we introduce paid services, founding partners keep reserved terms — and we say so today, in writing."
+          "body": "No retainer, no listing tiers, no renewal surprises. The pilot is time-bounded: the end date, and what happens the day after, will be in writing before any charge starts."
         },
         {
+          "id": "xml",
           "num": "02",
           "title": "No double work",
           "body": "We import your listings from the XML feed you already use for other portals. One-time setup, automatic sync, a readable import report after every update."
         },
         {
+          "id": "noPerContact",
           "num": "03",
-          "title": "Buyers with verified budget",
-          "body": "Enquiries can arrive with a financial-capacity attestation: status, budget band and validity. Show homes only to people who can actually buy."
+          "title": "Never pay per contact",
+          "body": "We will never charge you per enquiry or per closed deal. If one day we charge, it will be a published flat fee, the same for everyone."
         },
         {
+          "id": "diary",
           "num": "04",
           "title": "Built-in viewing diary",
           "body": "Propose times, confirm, and record outcomes in one flow. Fewer calls, fewer no-shows, an orderly history for every property."
         },
         {
+          "id": "identified",
           "num": "05",
-          "title": "Authentic listings only",
-          "body": "Every agency is verified (VAT and REA number visible), every listing declares a real mandate, duplicates are blocked. Your listings do not compete with ghost ads."
+          "title": "VAT and REA on every agency",
+          "body": "Every agency is identified: VAT number and REA on the page. That is live today. Listing-level authenticity gates are labelled honestly below — none of them is sold as live until it is."
         },
         {
+          "id": "brand",
           "num": "06",
           "title": "Your brand, always",
-          "body": "Your logo, name and contacts on every listing and on a dedicated agency page. Clients are yours: we are the channel, not the middleman."
+          "body": "Your logo, name and contacts on every listing and on a dedicated agency page. Clients are yours from the first contact: we are the channel, not the middleman."
         }
       ]
     },
@@ -2534,9 +2544,32 @@
         "You reply to enquiries within 48 hours.",
         "You withdraw a listing within 5 days of sale or mandate revocation.",
         "You confirm listing availability with one click every 30 days (automatic if you use the feed).",
-        "You manage EasyCasa client viewings in the built-in diary."
+        "You manage viewings booked through EasyCasa in the built-in diary."
       ],
       "disclose": "Listing visibility criteria and suspension rules are documented and transparent: no penalty without a written reason and a right of reply."
+    },
+    "claims": {
+      "kicker": "What is live, what is coming",
+      "title": "Four promises, labelled",
+      "sub": "An agency will check these in the first ten minutes. A promise marked coming is acceptable. A false one is not.",
+      "items": {
+        "A1": {
+          "title": "Every listing is verified",
+          "body": "Owner verification exists as a workflow. No live listing carries it yet, and publish is not gated on it."
+        },
+        "A2": {
+          "title": "Every listing declares a real mandate",
+          "body": "The pact still asks you to publish only with a real incarico. A mandate field is not a publish gate today."
+        },
+        "A3": {
+          "title": "Duplicates are blocked",
+          "body": "Image-duplicate detect exists on the seller path. Portal-level listing duplicates are not a hard block for agency feeds."
+        },
+        "A4": {
+          "title": "Energy class and index on every listing",
+          "body": "Listings can still go live without both energy fields. When the gate ships, it will block those ads — that is protection for you, not a rule we ask you to remember."
+        }
+      }
     },
     "honest": {
       "kicker": "Straight talk",
@@ -2547,12 +2580,12 @@
           "body": "Buyer traffic is growing zone by zone: that is why the pilot is free and geographically focused. You risk an XML feed, not a subscription."
         },
         {
-          "title": "2 · Budget attestation is from our group.",
-          "body": "Budget verification is provided by Banks4All, a Mundida group company like EasyCasa. No buyer financial documents reach you or us: only status, band and validity."
+          "title": "2 · You contract with Mundida.",
+          "body": "The portal is Mundida S.r.l. (VAT IT04531990986, Brescia). Ayni is the consulting firm. This application is to Mundida. If a fee is introduced, it is a flat software licence from Mundida to the agency."
         },
         {
-          "title": "3 · One day we will earn.",
-          "body": "After the pilot we will introduce optional paid services. Founding-partner terms will be communicated first, in writing, with no auto-renewals."
+          "title": "3 · We will never charge per contact.",
+          "body": "Not per enquiry, not per closed deal. If one day we introduce a fee, it will be a published flat fee, the same for everyone. Founding-partner terms will be written first, with no auto-renewals."
         }
       ]
     },
@@ -2570,6 +2603,7 @@
       "gestionalePlaceholder": "e.g. Getrix",
       "submit": "Send application",
       "sent": "Your email client opens with the application ready. Send the message to finish.",
+      "counterpart": "The contracting party is Mundida S.r.l., VAT IT04531990986. This application does not create exclusivity or an automatic renewal.",
       "note": "Data is processed to handle your pilot application (GDPR art. 6(1)(b)). <privacy>Privacy notice</privacy>.",
       "mailSubject": "Agency pilot application — {agency}",
       "mailAgency": "Agency: {agency}",
