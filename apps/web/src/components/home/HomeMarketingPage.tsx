@@ -9,6 +9,7 @@ type Step = { title: string; body: string };
 
 export async function HomeMarketingPage({ locale }: { locale: string }) {
   const t = await getTranslations('home');
+  const tb = await getTranslations('brand');
   const capacityUrl = getBanks4AllReferralUrl(locale, 'propertyPlanPortal');
   const problems = t.raw('problem.items') as Problem[];
   const steps = t.raw('method.steps') as Step[];
@@ -18,7 +19,7 @@ export async function HomeMarketingPage({ locale }: { locale: string }) {
       <section className="hm-hero" aria-labelledby="hm-hero-title">
         <div className="hm-wrap">
           <p className="hm-brand">
-            <BrandLogo priority className="hm-brand-logo" />
+            <BrandLogo priority alt={tb('logoLabel')} className="hm-brand-logo" />
           </p>
           <h1 id="hm-hero-title">
             {t('hero.title')}

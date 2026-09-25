@@ -46,8 +46,7 @@ export async function SmartLinkAgentCard({ locale, token, data }: Props) {
         <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p>
-              <BrandLogo className="h-10 w-auto" />
-              <span className="sr-only">{tb('logoLabel')}</span>
+              <BrandLogo alt={tb('logoLabel')} className="h-10 w-auto" />
             </p>
             <p className="text-xs text-muted">{t('brandSubtitle')}</p>
           </div>

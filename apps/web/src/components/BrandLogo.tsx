@@ -9,16 +9,17 @@ const SRC = {
 
 type Props = {
   variant?: keyof typeof SRC;
+  alt: string;
   className?: string;
   priority?: boolean;
 };
 
-/** Official EasyCasa Italia wordmark (1000×264). Decorative; the parent link names it. */
-export function BrandLogo({ variant = 'color', className, priority = false }: Props) {
+/** Official EasyCasa Italia wordmark (1000×264). `alt` names the home link. */
+export function BrandLogo({ variant = 'color', alt, className, priority = false }: Props) {
   return (
     <Image
       src={SRC[variant]}
-      alt=""
+      alt={alt}
       width={1000}
       height={264}
       priority={priority}
