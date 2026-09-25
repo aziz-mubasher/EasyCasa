@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import {
+  HOME_INTRO_CATALOG_PATH,
   HOME_INTRO_COLLECTION_ID,
   defaultHomeIntroLang,
   homeIntroEmbedSrc,
@@ -16,6 +17,7 @@ const webRoot = join(dirname(fileURLToPath(import.meta.url)), '../..');
 describe('home intro video catalog', () => {
   it('keeps the Bunny collection id the brief named', () => {
     expect(HOME_INTRO_COLLECTION_ID).toBe('5c2223c8-8f21-4d79-bda6-923974d51c96');
+    expect(HOME_INTRO_CATALOG_PATH).toBe('/home-intro.json');
   });
 
   it('matches titles in the five intro languages', () => {

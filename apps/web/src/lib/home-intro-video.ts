@@ -1,6 +1,9 @@
 /** Bunny Stream collection for the homepage intro (en / it / es / ur / hi). */
 export const HOME_INTRO_COLLECTION_ID = '5c2223c8-8f21-4d79-bda6-923974d51c96';
 
+/** Public catalog URL on `web`. Not `/api/*` — Traefik sends that prefix to Nest. */
+export const HOME_INTRO_CATALOG_PATH = '/home-intro.json';
+
 export const HOME_INTRO_LANGS = ['en', 'it', 'es', 'ur', 'hi'] as const;
 export type HomeIntroLang = (typeof HOME_INTRO_LANGS)[number];
 

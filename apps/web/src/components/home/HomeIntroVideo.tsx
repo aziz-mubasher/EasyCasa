@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import {
+  HOME_INTRO_CATALOG_PATH,
   HOME_INTRO_LANGS,
   HOME_INTRO_LANG_LABELS,
   type HomeIntroCatalog,
@@ -30,7 +31,7 @@ export function HomeIntroVideo({ locale, title, langLabel, catalog: initialCatal
 
   useEffect(() => {
     let cancelled = false;
-    fetch('/api/home-intro')
+    fetch(HOME_INTRO_CATALOG_PATH)
       .then((res) => (res.ok ? res.json() : null))
       .then((data: HomeIntroCatalog | null) => {
         if (cancelled || !data?.libraryId) return;
