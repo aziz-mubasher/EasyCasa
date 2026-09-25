@@ -1,30 +1,15 @@
-import { ImageResponse } from 'next/og';
-
-export const runtime = 'edge';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 
 /** Serves `/icon.png` for the web manifest (512×512 PWA icon). */
 export async function GET() {
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#14212E',
-          fontSize: 280,
-          fontWeight: 700,
-          fontFamily: 'system-ui, sans-serif',
-          letterSpacing: '-0.04em',
-          lineHeight: 1,
-        }}
-      >
-        <span style={{ color: '#F3EDE1' }}>E</span>
-        <span style={{ color: '#2C6E9B' }}>.</span>
-      </div>
-    ),
-    { width: 512, height: 512 },
+  const body = await readFile(
+    path.join(process.cwd(), 'public/brand/easycasa-italia-icon-512.png'),
   );
+  return new Response(body, {
+    headers: {
+      'Content-Type': 'image/png',
+      'Cache-Control': 'public, max-age=86400',
+    },
+  });
 }

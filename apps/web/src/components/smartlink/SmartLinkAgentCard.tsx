@@ -6,6 +6,7 @@ import { SmartLinkSocialRow, socialLinksFromAgent } from '@/components/smartlink
 import { fetchPublicAgentBySlug, telHref, type PublicAgentProfile } from '@/lib/agent-public';
 import type { SmartLinkPublicPayload } from '@/lib/smartlink';
 import { smartLinkPublicUrl } from '@/lib/smartlink';
+import { BrandLogo } from '@/components/BrandLogo';
 
 type Props = {
   locale: string;
@@ -44,9 +45,8 @@ export async function SmartLinkAgentCard({ locale, token, data }: Props) {
       <div className="relative rounded-xl2 border border-line bg-paper p-6 shadow-sm md:p-8">
         <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="font-display text-2xl font-semibold tracking-tight text-ink">
-              {tb('name')}
-              <span className="text-azure">.</span>
+            <p>
+              <BrandLogo alt={tb('logoLabel')} className="h-10 w-auto" />
             </p>
             <p className="text-xs text-muted">{t('brandSubtitle')}</p>
           </div>
