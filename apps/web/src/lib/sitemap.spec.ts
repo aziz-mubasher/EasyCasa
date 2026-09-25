@@ -13,7 +13,7 @@ describe('sitemap (T33 honesty + sell-privately locales)', () => {
   it('uses fixed lastmod for static pages, not build-time now', () => {
     const home = staticPageLastModified('');
     const sell = staticPageLastModified('/vendi-da-privato');
-    expect(home.toISOString()).toBe('2026-08-12T00:00:00.000Z');
+    expect(home.toISOString()).toBe('2026-09-25T00:00:00.000Z');
     expect(sell.toISOString()).toBe('2026-09-08T00:00:00.000Z');
   });
 

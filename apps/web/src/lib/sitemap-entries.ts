@@ -12,7 +12,7 @@ type ListingRef = { slug: string; updatedAt: string };
  * materially changes — never use build-time "now" for static marketing pages (T33).
  */
 export const STATIC_PAGE_LASTMOD: Record<string, string> = {
-  '': '2026-08-12',
+  '': '2026-09-25',
   '/search': '2026-07-25',
   '/add': '2026-08-11',
   '/pricing': '2026-09-15',
