@@ -23,9 +23,9 @@ export function Header() {
   if (marketing) {
     return (
       <header className="border-b border-line-strong bg-paper sticky top-0 z-30">
-        <div className="mx-auto max-w-measure px-5 sm:px-[clamp(1.25rem,5vw,4.5rem)] h-14 flex items-baseline justify-between gap-3">
-          <Link href="/" className="shrink-0">
-            <BrandLogo priority alt={tb('logoLabel')} className="h-8 w-auto" />
+        <div className="mx-auto max-w-measure px-5 sm:px-[clamp(1.25rem,5vw,4.5rem)] h-14 flex items-center justify-between gap-3">
+          <Link href="/" className="shrink-0 inline-flex items-center">
+            <BrandLogo priority alt={tb('logoLabel')} className="h-9 w-auto" sizes="180px" />
           </Link>
           <LocaleSwitcher />
         </div>
@@ -37,8 +37,8 @@ export function Header() {
     return (
       <header className="border-b border-line bg-paper sticky top-0 z-30">
         <div className="mx-auto max-w-6xl px-5 h-14 flex items-center justify-between gap-3">
-          <Link href="/" className="shrink-0">
-            <BrandLogo priority alt={tb('logoLabel')} className="h-8 w-auto" />
+          <Link href="/" className="shrink-0 inline-flex items-center">
+            <BrandLogo priority alt={tb('logoLabel')} className="h-9 w-auto" sizes="180px" />
           </Link>
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {listing ? (
@@ -60,8 +60,8 @@ export function Header() {
   return (
     <header className="border-b border-line bg-paper/80 backdrop-blur sticky top-0 z-20">
       <div className="mx-auto max-w-7xl px-5 h-16 flex items-center justify-between">
-        <Link href="/" className="shrink-0">
-          <BrandLogo priority alt={tb('logoLabel')} className="h-10 w-auto" />
+        <Link href="/" className="shrink-0 inline-flex items-center">
+          <BrandLogo priority alt={tb('logoLabel')} className="h-11 w-auto" sizes="220px" />
         </Link>
         <nav className="flex items-center gap-6 text-sm">
           <Link href="/search" className="hover:text-azure">

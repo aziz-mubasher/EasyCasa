@@ -12,10 +12,21 @@ type Props = {
   alt: string;
   className?: string;
   priority?: boolean;
+  /** `next/image` sizes hint. Defaults to header / footer lockup width. */
+  sizes?: string;
+  /** Serve the source PNG so the wordmark stays sharp at hero scale. */
+  crisp?: boolean;
 };
 
 /** Official EasyCasa Italia wordmark (1000×264). `alt` names the home link. */
-export function BrandLogo({ variant = 'color', alt, className, priority = false }: Props) {
+export function BrandLogo({
+  variant = 'color',
+  alt,
+  className,
+  priority = false,
+  sizes = '(max-width: 640px) 160px, 200px',
+  crisp = false,
+}: Props) {
   return (
     <Image
       src={SRC[variant]}
@@ -23,6 +34,9 @@ export function BrandLogo({ variant = 'color', alt, className, priority = false 
       width={1000}
       height={264}
       priority={priority}
+      quality={100}
+      sizes={sizes}
+      unoptimized={crisp}
       className={className}
     />
   );

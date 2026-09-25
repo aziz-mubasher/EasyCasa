@@ -19,7 +19,13 @@ export async function HomeMarketingPage({ locale }: { locale: string }) {
       <section className="hm-hero" aria-labelledby="hm-hero-title">
         <div className="hm-wrap">
           <p className="hm-brand">
-            <BrandLogo priority alt={tb('logoLabel')} className="hm-brand-logo" />
+            <BrandLogo
+              priority
+              crisp
+              alt={tb('logoLabel')}
+              className="hm-brand-logo"
+              sizes="(max-width: 640px) 280px, 460px"
+            />
           </p>
           <h1 id="hm-hero-title">
             {t('hero.title')}

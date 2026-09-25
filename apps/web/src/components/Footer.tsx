@@ -65,7 +65,7 @@ export function Footer() {
         <div className="sf-dir">
           <div className="sf-about">
             <Link href="/" className="sf-logo">
-              <BrandLogo variant="white" alt={tb('logoLabel')} className="h-9 w-auto" />
+              <BrandLogo variant="white" alt={tb('logoLabel')} className="h-10 w-auto" sizes="200px" />
             </Link>
             <p className="sf-blurb">{t('blurb')}</p>
             <h2 id="footer-about">{t('columns.about')}</h2>
