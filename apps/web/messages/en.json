@@ -94,7 +94,9 @@
       "subtitle": "The owner is verified before a listing goes live. Market values come from Italy’s tax authority. And we take nothing from the seller.",
       "ctaPrimary": "What is my home worth?",
       "ctaSecondary": "Search homes",
-      "micro": "Free, instant, no registration. No agent will call you."
+      "micro": "Free, instant, no registration. No agent will call you.",
+      "videoTitle": "EasyCasa introduction",
+      "videoLangLabel": "Video language"
     },
     "problem": {
       "eyebrow": "Why we exist",

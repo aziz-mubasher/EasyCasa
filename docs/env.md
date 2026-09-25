@@ -15,6 +15,8 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | BUNNY_STORAGE_ZONE / BUNNY_STORAGE_PASSWORD | api | Bunny Storage Zone name + access key. Required when `MEDIA_ORIGIN=bunny`. Never commit password. |
 | BUNNY_STORAGE_ENDPOINT / BUNNY_S3_REGION | api | Bunny S3 endpoint — use regional host e.g. `https://de-s3.storage.bunnycdn.com` (global `storage.bunnycdn.com` is rewritten from region). |
 | BUNNY_CDN_BASE | api | Pull Zone base, e.g. `https://cdn.easycasaita.com`. |
+| BUNNY_STREAM_LIBRARY_ID | web | Bunny Stream library id for the homepage intro embed. Public (appears in the iframe URL). |
+| BUNNY_STREAM_API_KEY | web | Stream library API key. Server-only (`/api/home-intro`). Lists collection `5c2223c8-8f21-4d79-bda6-923974d51c96` (en/it/es/ur/hi). Never `NEXT_PUBLIC`. |
 | MEDIA_PRIVATE_BASE | api | Private `users/` doc URLs. Empty + bunny → API media proxy (not the public CDN). |
 | API_PORT / WEB_PORT / AI_PORT | apps | Internal ports. |
 | NODE_ENV | apps | `production` on the VPS. |

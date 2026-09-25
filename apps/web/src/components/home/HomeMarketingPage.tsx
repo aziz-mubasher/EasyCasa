@@ -1,7 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getBanks4AllReferralUrl } from '@/lib/banks4all-referral';
-import { BrandLogo } from '@/components/BrandLogo';
+import { HomeIntroVideo } from '@/components/home/HomeIntroVideo';
+import { loadHomeIntroCatalog } from '@/lib/home-intro-video';
 import './home-marketing.css';
 
 type Problem = { title: string; body: string };
@@ -9,38 +10,37 @@ type Step = { title: string; body: string };
 
 export async function HomeMarketingPage({ locale }: { locale: string }) {
   const t = await getTranslations('home');
-  const tb = await getTranslations('brand');
   const capacityUrl = getBanks4AllReferralUrl(locale, 'propertyPlanPortal');
   const problems = t.raw('problem.items') as Problem[];
   const steps = t.raw('method.steps') as Step[];
+  const introCatalog = await loadHomeIntroCatalog();
 
   return (
     <div className="hm">
       <section className="hm-hero" aria-labelledby="hm-hero-title">
-        <div className="hm-wrap">
-          <p className="hm-brand">
-            <BrandLogo
-              priority
-              crisp
-              alt={tb('logoLabel')}
-              className="hm-brand-logo"
-              sizes="(max-width: 640px) 280px, 460px"
-            />
-          </p>
-          <h1 id="hm-hero-title">
-            {t('hero.title')}
-            <span className="hm-h1-accent">{t('hero.titleAccent')}</span>
-          </h1>
-          <p className="hm-lede">{t('hero.subtitle')}</p>
-          <div className="hm-ctas">
-            <Link className="hm-btn hm-btn-primary" href="/valutazione-gratuita">
-              {t('hero.ctaPrimary')}
-            </Link>
-            <Link className="hm-btn hm-btn-secondary" href="/search">
-              {t('hero.ctaSecondary')}
-            </Link>
+        <div className="hm-wrap hm-hero-grid">
+          <div className="hm-copy">
+            <h1 id="hm-hero-title">
+              {t('hero.title')}
+              <span className="hm-h1-accent">{t('hero.titleAccent')}</span>
+            </h1>
+            <p className="hm-lede">{t('hero.subtitle')}</p>
+            <div className="hm-ctas">
+              <Link className="hm-btn hm-btn-primary" href="/valutazione-gratuita">
+                {t('hero.ctaPrimary')}
+              </Link>
+              <Link className="hm-btn hm-btn-secondary" href="/search">
+                {t('hero.ctaSecondary')}
+              </Link>
+            </div>
+            <p className="hm-micro">{t('hero.micro')}</p>
           </div>
-          <p className="hm-micro">{t('hero.micro')}</p>
+          <HomeIntroVideo
+            locale={locale}
+            title={t('hero.videoTitle')}
+            langLabel={t('hero.videoLangLabel')}
+            catalog={introCatalog}
+          />
         </div>
       </section>
 

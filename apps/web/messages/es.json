@@ -94,7 +94,9 @@
       "subtitle": "El propietario se verifica antes de publicar el anuncio. Los valores de mercado son los oficiales de la Agenzia delle Entrate. Y del vendedor no cobramos un euro.",
       "ctaPrimary": "¿Cuánto vale mi casa?",
       "ctaSecondary": "Buscar casa",
-      "micro": "Gratis, inmediata, sin registro. Ningún agente te llama."
+      "micro": "Gratis, inmediata, sin registro. Ningún agente te llama.",
+      "videoTitle": "Introducción EasyCasa",
+      "videoLangLabel": "Idioma del vídeo"
     },
     "problem": {
       "eyebrow": "Por qué existimos",
