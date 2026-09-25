@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getBanks4AllReferralUrl } from '@/lib/banks4all-referral';
+import { BrandLogo } from '@/components/BrandLogo';
 import './home-marketing.css';
 
 type Problem = { title: string; body: string };
@@ -17,7 +18,7 @@ export async function HomeMarketingPage({ locale }: { locale: string }) {
       <section className="hm-hero" aria-labelledby="hm-hero-title">
         <div className="hm-wrap">
           <p className="hm-brand">
-            Easy<span>Casa</span>
+            <BrandLogo priority className="hm-brand-logo" />
           </p>
           <h1 id="hm-hero-title">
             {t('hero.title')}

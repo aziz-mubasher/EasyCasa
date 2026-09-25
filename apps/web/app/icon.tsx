@@ -1,32 +1,13 @@
-import { ImageResponse } from 'next/og';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 
-export const runtime = 'edge';
 export const size = { width: 32, height: 32 };
 export const contentType = 'image/png';
 
-/** Browser tab favicon — EasyCasa “E.” mark on surveyor's ink. */
-export default function Icon() {
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#14212E',
-          fontSize: 22,
-          fontWeight: 700,
-          fontFamily: 'system-ui, sans-serif',
-          letterSpacing: '-0.06em',
-          lineHeight: 1,
-        }}
-      >
-        <span style={{ color: '#F3EDE1' }}>E</span>
-        <span style={{ color: '#2C6E9B' }}>.</span>
-      </div>
-    ),
-    { ...size },
+/** Browser tab favicon — EasyCasa Italia house mark. */
+export default async function Icon() {
+  const body = await readFile(
+    path.join(process.cwd(), 'public/brand/easycasa-italia-favicon-32.png'),
   );
+  return new Response(body, { headers: { 'Content-Type': 'image/png' } });
 }

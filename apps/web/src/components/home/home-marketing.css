@@ -38,18 +38,14 @@
 }
 
 .hm-hero .hm-brand {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.75rem, 4.5vw, 2.35rem);
-  letter-spacing: -0.02em;
-  line-height: 1;
+  line-height: 0;
   margin: 0 0 1.35rem;
-  color: var(--ink);
   animation: hm-rise 0.7s ease both;
 }
 
-.hm-hero .hm-brand span {
-  color: var(--azure);
+.hm-hero .hm-brand-logo {
+  height: clamp(2.6rem, 6vw, 3.5rem);
+  width: auto;
 }
 
 .hm-hero h1 {

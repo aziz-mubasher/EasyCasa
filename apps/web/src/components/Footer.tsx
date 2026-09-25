@@ -8,6 +8,7 @@ import { isMarketingServicePath } from '@/lib/marketing-service';
 import { sellPrivatelyPath } from '@/lib/sell-privately';
 import { contactPath, transparencyPath } from '@/lib/site-paths';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
+import { BrandLogo } from '@/components/BrandLogo';
 import './site-footer.css';
 
 type InternalItem = { key: string; href: string };
@@ -40,6 +41,7 @@ type StakeholderExternal = { key: string; kind: 'external'; href: string; host: 
 
 export function Footer() {
   const t = useTranslations('footer');
+  const tb = useTranslations('brand');
   const locale = useLocale();
   const pathname = usePathname();
   const sellerLinks: InternalItem[] = [
@@ -62,8 +64,8 @@ export function Footer() {
       <div className="sf-wrap">
         <div className="sf-dir">
           <div className="sf-about">
-            <Link href="/" className="sf-logo" aria-label="EasyCasa">
-              Easy<span>Casa</span>
+            <Link href="/" className="sf-logo" aria-label={tb('logoLabel')}>
+              <BrandLogo variant="white" className="h-9 w-auto" />
             </Link>
             <p className="sf-blurb">{t('blurb')}</p>
             <h2 id="footer-about">{t('columns.about')}</h2>

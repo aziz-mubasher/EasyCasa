@@ -45,18 +45,14 @@
 
 .sf .sf-logo {
   display: inline-block;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.35rem;
-  letter-spacing: -0.015em;
-  line-height: 1.1;
-  color: var(--paper);
+  line-height: 0;
   text-decoration: none;
   margin: 0 0 0.85rem;
 }
 
-.sf .sf-logo span {
-  color: var(--azure-pale);
+.sf .sf-logo img {
+  height: 2.35rem;
+  width: auto;
 }
 
 .sf .sf-blurb {

@@ -9,6 +9,7 @@ import { isMarketingServicePath } from '@/lib/marketing-service';
 import { useListingLanding } from '@/components/listings/ListingLandingContext';
 import { ListingShareActions } from '@/components/listings/ListingShareActions';
 import { useCanImportCasafari } from '@/auth/useCanImportCasafari';
+import { BrandLogo } from './BrandLogo';
 
 export function Header() {
   const t = useTranslations('nav');
@@ -23,8 +24,8 @@ export function Header() {
     return (
       <header className="border-b border-line-strong bg-paper sticky top-0 z-30">
         <div className="mx-auto max-w-measure px-5 sm:px-[clamp(1.25rem,5vw,4.5rem)] h-14 flex items-baseline justify-between gap-3">
-          <Link href="/" className="font-display text-[1.05rem] font-bold tracking-tight shrink-0">
-            Easy<span className="text-azure">Casa</span>
+          <Link href="/" className="shrink-0" aria-label={tb('logoLabel')}>
+            <BrandLogo priority className="h-8 w-auto" />
           </Link>
           <LocaleSwitcher />
         </div>
@@ -36,9 +37,8 @@ export function Header() {
     return (
       <header className="border-b border-line bg-paper sticky top-0 z-30">
         <div className="mx-auto max-w-6xl px-5 h-14 flex items-center justify-between gap-3">
-          <Link href="/" className="font-display text-xl font-semibold tracking-tight shrink-0">
-            {tb('name')}
-            <span className="text-azure">.</span>
+          <Link href="/" className="shrink-0" aria-label={tb('logoLabel')}>
+            <BrandLogo priority className="h-8 w-auto" />
           </Link>
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {listing ? (
@@ -60,9 +60,8 @@ export function Header() {
   return (
     <header className="border-b border-line bg-paper/80 backdrop-blur sticky top-0 z-20">
       <div className="mx-auto max-w-7xl px-5 h-16 flex items-center justify-between">
-        <Link href="/" className="font-display text-xl font-semibold tracking-tight">
-          {tb('name')}
-          <span className="text-azure">.</span>
+        <Link href="/" className="shrink-0" aria-label={tb('logoLabel')}>
+          <BrandLogo priority className="h-10 w-auto" />
         </Link>
         <nav className="flex items-center gap-6 text-sm">
           <Link href="/search" className="hover:text-azure">

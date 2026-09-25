@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'EasyCasa',
+    name: 'EasyCasa Italia',
     short_name: 'EasyCasa',
     description: 'Commission-free real estate in Italy.',
     start_url: '/',

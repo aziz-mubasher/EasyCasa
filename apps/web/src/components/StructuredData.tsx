@@ -51,7 +51,7 @@ export function OrganizationStructuredData() {
       data={{
         '@context': 'https://schema.org',
         '@type': 'Organization',
-        name: 'EasyCasa',
+        name: 'EasyCasa Italia',
         url: SITE,
         logo: `${SITE}/logo.png`,
       }}
