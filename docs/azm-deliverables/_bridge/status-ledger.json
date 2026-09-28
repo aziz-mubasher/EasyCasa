@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T18:32:47.081Z",
+  "updatedAt": "2026-09-28T05:56:47.494Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": null,
+      "kaizenCode": "EC-APP-1",
+      "polishId": "EC-APP-1",
+      "title": "EC-APP-1 — censimento app iOS/Android",
+      "venture": "EasyCasa",
+      "lifecycle": "running",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-302d9a7f-30d9-4f59-b34e-0fe87f8a68f4",
+      "agentUrl": "https://cursor.com/agents/bc-302d9a7f-30d9-4f59-b34e-0fe87f8a68f4",
+      "branch": "cursor/ec-app-1-census-68f4",
+      "prNumber": null,
+      "prUrl": null,
+      "prState": null,
+      "dispatchedAt": "2026-09-28T05:56:47.494Z",
+      "updatedAt": "2026-09-28T05:56:47.494Z",
+      "summary": "PR 0 in corso: censimento read-only. Webhook non firmato se PAYMENTS_ENABLED è falso.",
+      "nextAction": "Leggere docs/ec-app-1-census.md. Non partire dal PR 1 finché il ticket webhook è visto.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_transparency_15sep",
       "kaizenCode": "K EC TRANSPARENCY",
