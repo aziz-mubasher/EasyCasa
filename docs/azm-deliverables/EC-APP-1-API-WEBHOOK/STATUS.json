@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": null,
+  "kaizenCode": "EC-APP-1-API-WEBHOOK",
+  "polishId": "EC-APP-1-API-WEBHOOK",
+  "title": "EC-APP-1-API-WEBHOOK — reject unsigned payment webhooks",
+  "venture": "EasyCasa",
+  "lifecycle": "pr_open",
+  "agentStatus": "RUNNING",
+  "agentBcId": "bc-302d9a7f-30d9-4f59-b34e-0fe87f8a68f4",
+  "agentUrl": "https://cursor.com/agents/bc-302d9a7f-30d9-4f59-b34e-0fe87f8a68f4",
+  "branch": "cursor/ec-app-1-api-webhook-68f4",
+  "prNumber": 247,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/247",
+  "prState": "DRAFT",
+  "dispatchedAt": "2026-09-28T08:22:03.171Z",
+  "updatedAt": "2026-09-28T08:22:03.171Z",
+  "summary": "Draft PR #247. Production unsigned POST /payments/webhook is 404. Audit count was not run: no database in this environment.",
+  "nextAction": "AZM runs unsigned-succeeded-audit.sql on production. Deploy with docs/deploy.md (force-recreate). Then EC-APP-1-API-M1.",
+  "errors": []
+}
