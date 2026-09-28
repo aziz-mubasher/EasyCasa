@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "scheme": "easycasa",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
     "assetBundlePatterns": [
       "**/*"
     ],
