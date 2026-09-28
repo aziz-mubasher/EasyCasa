@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { agentForPublic } from '@easycasa/shared';
+
 import {
   credentialAllowsPublicPhone,
   publicPhone,
@@ -50,6 +52,40 @@ describe('publicPhone', () => {
     expect(publicPhone('+39 030 111', false)).toBeNull();
     expect(publicPhone('   ', true)).toBeNull();
     expect(publicPhone(null, true)).toBeNull();
+  });
+});
+
+describe('agentForPublic', () => {
+  const PRIVATE_PHONE = '+393339998877';
+  const PRIVATE_EMAIL = 'private-seller@example.com';
+  const AGENCY_PHONE = '+390301112233';
+
+  it('copies a gated phone and never an email or a fallback phone', () => {
+    const view = agentForPublic(
+      {
+        id: 'agent-1',
+        displayName: 'Studio',
+        phone: ` ${AGENCY_PHONE} `,
+        slug: 'studio',
+        bio: null,
+        avatarUrl: null,
+      },
+      { phone: PRIVATE_PHONE, email: PRIVATE_EMAIL, displayName: 'Old' },
+    );
+    expect(view?.phone).toBe(AGENCY_PHONE);
+    expect(view).not.toHaveProperty('email');
+    expect(JSON.stringify(view)).not.toContain(PRIVATE_PHONE);
+    expect(JSON.stringify(view)).not.toContain(PRIVATE_EMAIL);
+  });
+
+  it('drops the phone when the gated contact has none', () => {
+    const view = agentForPublic(
+      { id: 'seller-1', displayName: 'Mario', phone: null, slug: 'mario' },
+      { phone: PRIVATE_PHONE, email: PRIVATE_EMAIL },
+    );
+    expect(view?.phone).toBeNull();
+    expect(JSON.stringify(view)).not.toContain(PRIVATE_PHONE);
+    expect(JSON.stringify(view)).not.toContain(PRIVATE_EMAIL);
   });
 });
 

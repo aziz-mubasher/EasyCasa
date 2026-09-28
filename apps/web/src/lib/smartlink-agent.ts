@@ -1,3 +1,5 @@
+import { agentForPublic } from '@easycasa/shared';
+
 import type { PublicAgentProfile } from '@/lib/agent-public';
 import type { SmartLinkPublicPayload } from '@/lib/smartlink';
 
@@ -9,18 +11,31 @@ export interface SmartLinkAgentView {
 }
 
 /**
- * Phone is rendered only when the share payload already carries it.
- * A profile fetched by slug is not a second source for the number.
+ * Phone is decided only by `agentForPublic`. A profile fetched by slug can
+ * fill name, bio, and portrait. It cannot fill the number.
  */
 export function mergeSmartLinkAgent(
   snapshot: SmartLinkPublicPayload['agent'],
   profile: PublicAgentProfile | null,
 ): SmartLinkAgentView {
-  const phone = snapshot.phone?.trim();
+  const view = agentForPublic(
+    {
+      displayName: snapshot.displayName,
+      phone: snapshot.phone,
+      bio: snapshot.bio,
+      slug: snapshot.slug,
+    },
+    {
+      displayName: profile?.displayName,
+      bio: profile?.bio,
+      avatarUrl: profile?.avatarUrl,
+      phone: profile?.phone,
+    },
+  );
   return {
-    name: profile?.displayName ?? snapshot.displayName ?? '',
-    phone: phone ? phone : null,
-    bio: profile?.bio ?? snapshot.bio,
-    avatarUrl: profile?.avatarUrl ?? null,
+    name: view?.displayName ?? '',
+    phone: view?.phone ?? null,
+    bio: view?.bio ?? null,
+    avatarUrl: view?.avatarUrl ?? null,
   };
 }

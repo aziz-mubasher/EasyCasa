@@ -107,6 +107,7 @@ function service(phone: string | null) {
       bio: null,
       avatarUrl: null,
       email: PRIVATE_EMAIL,
+      phoneE164: PRIVATE_PHONE,
     }),
   };
   const read = { getRaw: vi.fn().mockResolvedValue(rawListing()), findSimilar: vi.fn() };
@@ -124,34 +125,53 @@ function service(phone: string | null) {
   return { svc, users };
 }
 
-describe('GET /listings/:slug public projection', () => {
-  it('returns one shape for UUID and slug, with no private phone or email', async () => {
-    const { svc } = service(null);
+function assertNoPrivateContact(body: unknown) {
+  const json = JSON.stringify(body);
+  expect(json).not.toContain(PRIVATE_PHONE);
+  expect(json).not.toContain(PRIVATE_EMAIL);
+  const agent = (body as { agent: { phone: string | null } }).agent;
+  expect(agent.phone).toBeNull();
+  expect(agent).not.toHaveProperty('email');
+}
+
+describe('GET /listings/:slug public agent', () => {
+  it('keeps the Phase 21 shape on a UUID and hides a private phone and email', async () => {
+    const { svc, users } = service(null);
     const byId = await svc.getBySlug(LISTING_ID);
-    const bySlug = await svc.getBySlug('bilocale-brescia');
-    expect(byId).toEqual(bySlug);
+    expect(users.publicContactFor).toHaveBeenCalledWith('owner-1');
     expect(byId).toMatchObject({
       id: LISTING_ID,
-      slug: 'bilocale-brescia',
-      price: 200000,
       priceCents: 20_000_000,
       dealType: 'sale',
     });
-    const agent = byId.agent as { phone: string | null; displayName: string };
-    expect(agent.phone).toBeNull();
-    expect(agent).not.toHaveProperty('email');
-    const json = JSON.stringify(byId);
-    expect(json).not.toContain(PRIVATE_PHONE);
-    expect(json).not.toContain(PRIVATE_EMAIL);
-    expect(json).not.toContain('ownerUserId');
+    expect(byId).not.toHaveProperty('slug');
+    expect(byId).not.toHaveProperty('price');
+    assertNoPrivateContact(byId);
   });
 
-  it('includes the agency phone when the contact gate returned one', async () => {
-    const { svc, users } = service(AGENCY_PHONE);
-    const body = await svc.getBySlug('bilocale-brescia');
-    expect(users.publicContactFor).toHaveBeenCalledWith('owner-1');
-    const agent = body.agent as { phone: string | null };
-    expect(agent.phone).toBe(AGENCY_PHONE);
-    expect(JSON.stringify(body)).not.toContain(PRIVATE_EMAIL);
+  it('keeps the catalogue shape on a slug and hides a private phone and email', async () => {
+    const { svc } = service(null);
+    const bySlug = await svc.getBySlug('bilocale-brescia');
+    expect(bySlug).toMatchObject({
+      id: LISTING_ID,
+      slug: 'bilocale-brescia',
+      price: 200000,
+      ownerUserId: 'owner-1',
+    });
+    expect(bySlug).not.toHaveProperty('priceCents');
+    expect(bySlug).not.toHaveProperty('dealType');
+    expect((bySlug as { media: unknown[] }).media).toHaveLength(1);
+    assertNoPrivateContact(bySlug);
+  });
+
+  it('includes the agency phone on both the UUID and the slug response', async () => {
+    const { svc } = service(AGENCY_PHONE);
+    const byId = await svc.getBySlug(LISTING_ID);
+    const bySlug = await svc.getBySlug('bilocale-brescia');
+    expect((byId as { agent: { phone: string } }).agent.phone).toBe(AGENCY_PHONE);
+    expect((bySlug as { agent: { phone: string } }).agent.phone).toBe(AGENCY_PHONE);
+    expect(JSON.stringify(byId)).not.toContain(PRIVATE_EMAIL);
+    expect(JSON.stringify(bySlug)).not.toContain(PRIVATE_EMAIL);
+    expect(byId).not.toEqual(bySlug);
   });
 });

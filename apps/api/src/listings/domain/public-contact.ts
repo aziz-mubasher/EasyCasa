@@ -52,3 +52,10 @@ export function publicSlug(slug: string | null | undefined): string | null {
   if (!slug || slug.startsWith('oidc:')) return null;
   return slug;
 }
+
+export {
+  agentForPublic,
+  type PublicAgentFallback,
+  type PublicAgentInput,
+  type PublicAgentView,
+} from '@easycasa/shared';

@@ -27,7 +27,7 @@ import type { QueryListingDto } from './dto/query-listing.dto';
 import type { AuthUser } from '../auth/auth.types';
 import { buildListingDetail } from './domain/detail';
 import { LISTING_READ, type ListingReadPort } from './domain/ports';
-import { toPublicListing } from './domain/public-listing';
+import { agentForPublic } from './domain/public-contact';
 import type { ListingDetail, SimilarPin } from './domain/types';
 import { ValuationBandService } from '../avm/valuation-band.service';
 import { resolveListingPropertyType } from '../avm/domain/normalize-property-type';
@@ -107,28 +107,41 @@ export class ListingsService {
   }
 
   /**
-   * One public listing JSON for a UUID or a slug.
-   * Publisher phone is attached only by `UsersService.publicContactFor`.
+   * Public listing. UUID stays the Phase 21 detail. A slug stays the catalogue
+   * row. Both attach `agent` only through `agentForPublic`.
    */
   async getBySlug(slug: string) {
-    const row = UUID_RE.test(slug)
-      ? await this.repo.findById(slug)
-      : await this.repo.findBySlug(slug);
-    if (!row) throw new NotFoundException('listing not found');
-    void recordListingView(this.db, row.id);
-    const [media, contact, boosted, raw] = await Promise.all([
-      this.repo.listMedia(row.id),
-      row.agentId ? this.users.publicContactFor(row.agentId) : Promise.resolve(null),
-      this.boosts.isListingBoosted(row.id),
-      this.read.getRaw(row.id),
-    ]);
-    return toPublicListing({
-      row,
+    if (UUID_RE.test(slug)) {
+      const detail = await this.getDetail(slug);
+      const contact = detail.agent?.id
+        ? await this.users.publicContactFor(detail.agent.id)
+        : null;
+      return {
+        ...detail,
+        agent: agentForPublic(contact, detail.agent),
+      };
+    }
+    const l = await this.repo.findBySlug(slug);
+    if (!l) throw new NotFoundException('listing not found');
+    void recordListingView(this.db, l.id);
+    const media = await this.repo.listMedia(l.id);
+    const imageUrls = media
+      .filter((m) => m.type === 'image' || m.type === 'floorplan')
+      .map((m) => m.url);
+    const contact = l.agentId ? await this.users.publicContactFor(l.agentId) : null;
+    const boosted = await this.boosts.isListingBoosted(l.id);
+    return {
+      ...l,
+      price: l.price == null ? null : Number(l.price),
+      sizeSqm: l.sizeSqm == null ? null : Number(l.sizeSqm),
+      surfaceSqm: l.surfaceSqm == null ? null : Number(l.surfaceSqm),
+      landSqm: l.landSqm == null ? null : Number(l.landSqm),
       media,
-      contact,
+      imageUrls,
+      coverUrl: imageUrls[0] ?? null,
+      agent: agentForPublic(contact, null),
       boosted,
-      phase21: raw ? buildListingDetail(raw) : null,
-    });
+    };
   }
 
   /** Provisional market band for sale listings (K EC 1.26). */

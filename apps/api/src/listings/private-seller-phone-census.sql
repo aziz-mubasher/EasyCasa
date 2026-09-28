@@ -1,6 +1,14 @@
 -- EC-APP-1-API-M1 — read-only census. Do not UPDATE.
 -- Published listings whose agentId user has no verified, unexpired REA_MEDIATORE.
 -- A private seller is that user. Phone exposure is the second count.
+--
+-- Production read 2026-09-28 on easycasa-ita-db-1 (SELECT only):
+--   published_without_rea = 118
+--   published_private_with_phone = 0
+--   published listings total = 118
+--   share_links with a non-empty agent_snapshot phone = 0
+-- Seller-notification decision (v1 §4): no stored private phone was found.
+-- Re-run these statements before deploy if the data may have changed.
 
 -- 1. Published listings whose publisher has no professional REA credential.
 SELECT count(*) AS published_without_rea

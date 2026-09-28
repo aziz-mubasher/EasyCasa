@@ -6,6 +6,7 @@ import { users, favorites, devices, listings, credentials, professionals } from 
 import type { AuthUser } from '../auth/auth.types';
 import type { ListingSummary } from '@easycasa/shared';
 import {
+  agentForPublic,
   credentialAllowsPublicPhone,
   publicPhone,
   publicSlug,
@@ -67,12 +68,13 @@ export class UsersService {
     const row = rows[0];
     if (!row) throw new NotFoundException('agent not found');
     const contact = await this.publicContactFor(row.id);
+    const view = agentForPublic(contact, null);
     return {
-      displayName: contact?.displayName ?? null,
-      phone: contact?.phone ?? null,
-      bio: contact?.bio ?? null,
-      avatarUrl: contact?.avatarUrl ?? null,
-      slug: contact?.slug ?? null,
+      displayName: view?.displayName ?? null,
+      phone: view?.phone ?? null,
+      bio: view?.bio ?? null,
+      avatarUrl: view?.avatarUrl ?? null,
+      slug: view?.slug ?? null,
     };
   }
 
