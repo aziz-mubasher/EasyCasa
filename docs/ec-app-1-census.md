@@ -6,6 +6,8 @@
 **Corporate state in code:** `CORPORATE_STATE = 'PONTE'` in `packages/shared/src/corporate-state.ts`.  
 **This document is read-only.** It does not change the app, the API, or the catalog.
 
+R&D status for Claude: `docs/audits/EC-APP-1-rnd-report.md`.
+
 The four design files named in the brief **are not in the repo**:
 
 - `claude/AZM_EC_Seller_Contact_Shield_Design_v1.md`
