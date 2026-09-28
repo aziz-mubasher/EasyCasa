@@ -1,0 +1,20 @@
+{
+  "bridgeTaskId": null,
+  "kaizenCode": "EC-APP-1-PR1",
+  "polishId": null,
+  "title": "App mobile — Expo upgrade stopped at SDK 55",
+  "venture": "EasyCasa",
+  "lifecycle": "pr_open",
+  "agentStatus": "RUNNING",
+  "agentBcId": "bc-302d9a7f-30d9-4f59-b34e-0fe87f8a68f4",
+  "agentUrl": "https://cursor.com/agents/bc-302d9a7f-30d9-4f59-b34e-0fe87f8a68f4",
+  "branch": "cursor/ec-app-1-pr1-expo-68f4",
+  "prNumber": 249,
+  "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/249",
+  "prState": "DRAFT",
+  "dispatchedAt": "2026-09-28T08:48:29.399Z",
+  "updatedAt": "2026-09-28T08:48:29.399Z",
+  "summary": "Expo is on SDK 55 (RN 0.83). SDK 56 expo-doctor failed (dom-webview + Hermes V1). No EAS binary, so API 36 and Xcode were not read. webAppUrl is https://easycasaita.com.",
+  "nextAction": "Review draft PR 249. Next jump is SDK 56 only if expo-doctor is green; doctor currently says install expo@^57.0.9. EAS device builds need credentials. AZM creates Startup card S EC 3.A by hand.",
+  "errors": []
+}
