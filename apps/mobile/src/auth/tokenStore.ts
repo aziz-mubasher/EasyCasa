@@ -3,8 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 
 /**
  * expo-secure-store is unavailable on web, so on web we fall back to
- * localStorage. Tokens on web live in the app-shell origin (app.easycasa.it)
- * only; the public Next.js site never sees them.
+ * localStorage. Tokens on web live in this app origin only; the public
+ * Next.js site never sees them.
  */
 const isWeb = Platform.OS === 'web';
 

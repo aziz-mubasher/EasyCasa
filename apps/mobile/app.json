@@ -14,9 +14,7 @@
       "bundleIdentifier": "it.easycasa.app",
       "associatedDomains": [
         "applinks:easycasaita.com",
-        "applinks:www.easycasaita.com",
-        "applinks:easycasa.it",
-        "applinks:www.easycasa.it"
+        "applinks:www.easycasaita.com"
       ],
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "EasyCasa uses your location to show nearby listings on the map."
@@ -48,8 +46,13 @@
             },
             {
               "scheme": "https",
-              "host": "easycasa.it",
+              "host": "www.easycasaita.com",
               "pathPrefix": "/listing"
+            },
+            {
+              "scheme": "https",
+              "host": "www.easycasaita.com",
+              "pathPrefix": "/it/listings"
             }
           ],
           "category": [
@@ -83,7 +86,7 @@
       "apiBaseUrl": "https://easycasaita.com/api",
       "oidcIssuer": "https://auth.easycasaita.com/realms/easycasa",
       "oidcClientId": "easycasa-app",
-      "webAppUrl": "https://app.easycasaita.com"
+      "webAppUrl": "https://easycasaita.com"
     }
   }
 }
