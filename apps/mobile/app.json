@@ -7,7 +7,9 @@
     "scheme": "easycasa",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "it.easycasa.app",
@@ -26,17 +28,35 @@
       "adaptiveIcon": {
         "backgroundColor": "#16233b"
       },
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
       "intentFilters": [
         {
           "action": "VIEW",
           "autoVerify": true,
           "data": [
-            { "scheme": "https", "host": "easycasaita.com", "pathPrefix": "/listing" },
-            { "scheme": "https", "host": "easycasaita.com", "pathPrefix": "/it/listings" },
-            { "scheme": "https", "host": "easycasa.it", "pathPrefix": "/listing" }
+            {
+              "scheme": "https",
+              "host": "easycasaita.com",
+              "pathPrefix": "/listing"
+            },
+            {
+              "scheme": "https",
+              "host": "easycasaita.com",
+              "pathPrefix": "/it/listings"
+            },
+            {
+              "scheme": "https",
+              "host": "easycasa.it",
+              "pathPrefix": "/listing"
+            }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -54,7 +74,8 @@
         {
           "color": "#1e5ae0"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
