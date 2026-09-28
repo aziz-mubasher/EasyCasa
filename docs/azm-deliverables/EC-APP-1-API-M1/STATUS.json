@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/248",
   "prState": "DRAFT",
   "dispatchedAt": "2026-09-28T08:35:45.659Z",
-  "updatedAt": "2026-09-28T08:35:45.659Z",
-  "summary": "Public listing, share link, and agent card hide a private seller phone unless the user has a verified unexpired REA. Census SQL was not run (no production DB).",
-  "nextAction": "Review draft PR 248. Run private-seller-phone-census.sql on production after deploy. AZM creates the Kaizen Operations / Improve card by hand.",
+  "updatedAt": "2026-09-28T09:11:40.959Z",
+  "summary": "Two listing JSON shapes stay. agentForPublic hides phone unless REA is verified and unexpired. Production census 2026-09-28: 118 published listings without REA, 0 with a phone.",
+  "nextAction": "Review draft PR 248. Do not force-recreate the API: live image is easycasa-ita-api:latest (77f9e55), trial code is only on unused overlay tags. AZM confirms deploy. Kaizen Operations / Improve card is manual.",
   "errors": []
 }
