@@ -2,9 +2,15 @@ import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nest
 import { and, desc, eq, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { users, favorites, devices, listings } from '../db/schema';
+import { users, favorites, devices, listings, credentials, professionals } from '../db/schema';
 import type { AuthUser } from '../auth/auth.types';
 import type { ListingSummary } from '@easycasa/shared';
+import {
+  credentialAllowsPublicPhone,
+  publicPhone,
+  publicSlug,
+  type PublicAgentContact,
+} from '../listings/domain/public-contact';
 
 @Injectable()
 export class UsersService {
@@ -45,10 +51,52 @@ export class UsersService {
     return inserted[0];
   }
 
-  async getBySlug(slug: string) {
+  /**
+   * Public agent card. Phone only with a verified REA. Email, phoneE164, and
+   * the internal id never leave this method.
+   */
+  async getBySlug(slug: string): Promise<{
+    displayName: string | null;
+    phone: string | null;
+    bio: string | null;
+    avatarUrl: string | null;
+    slug: string | null;
+  }> {
+    if (!slug || slug.startsWith('oidc:')) throw new NotFoundException('agent not found');
     const rows = await this.db.select().from(users).where(eq(users.slug, slug)).limit(1);
-    if (!rows[0]) throw new NotFoundException('agent not found');
-    return rows[0];
+    const row = rows[0];
+    if (!row) throw new NotFoundException('agent not found');
+    const contact = await this.publicContactFor(row.id);
+    return {
+      displayName: contact?.displayName ?? null,
+      phone: contact?.phone ?? null,
+      bio: contact?.bio ?? null,
+      avatarUrl: contact?.avatarUrl ?? null,
+      slug: contact?.slug ?? null,
+    };
+  }
+
+  /** Credential-gated public contact for one user. Null when the user is missing. */
+  async publicContactFor(userId: string, now = new Date()): Promise<PublicAgentContact | null> {
+    const row = await this.findById(userId);
+    if (!row) return null;
+    const creds = await this.db
+      .select({
+        type: credentials.type,
+        status: credentials.status,
+        expiresAt: credentials.expiresAt,
+      })
+      .from(credentials)
+      .innerJoin(professionals, eq(credentials.professionalId, professionals.id))
+      .where(eq(professionals.userId, userId));
+    return {
+      id: row.id,
+      displayName: row.displayName ?? null,
+      phone: publicPhone(row.phone, credentialAllowsPublicPhone(creds, now)),
+      slug: publicSlug(row.slug),
+      bio: row.bio ?? null,
+      avatarUrl: row.avatarUrl ?? null,
+    };
   }
 
   async findById(id: string) {

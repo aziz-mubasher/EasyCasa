@@ -27,6 +27,7 @@ import type { QueryListingDto } from './dto/query-listing.dto';
 import type { AuthUser } from '../auth/auth.types';
 import { buildListingDetail } from './domain/detail';
 import { LISTING_READ, type ListingReadPort } from './domain/ports';
+import { toPublicListing } from './domain/public-listing';
 import type { ListingDetail, SimilarPin } from './domain/types';
 import { ValuationBandService } from '../avm/valuation-band.service';
 import { resolveListingPropertyType } from '../avm/domain/normalize-property-type';
@@ -72,21 +73,6 @@ export class ListingsService {
     private readonly boosts: ListingBoostService,
   ) {}
 
-  /** Public-safe publisher contact for listing pages (no email / OIDC slug). */
-  private async publicAgentFor(
-    agentId: string | null | undefined,
-  ): Promise<{ displayName: string | null; phone: string | null; slug: string | null } | null> {
-    if (!agentId) return null;
-    const u = await this.users.findById(agentId);
-    if (!u) return null;
-    const slug = u.slug && !u.slug.startsWith('oidc:') ? u.slug : null;
-    return {
-      displayName: u.displayName ?? null,
-      phone: u.phone ?? null,
-      slug,
-    };
-  }
-
   search(q: QueryListingDto) {
     return this.repo.search(q);
   }
@@ -120,33 +106,29 @@ export class ListingsService {
     });
   }
 
+  /**
+   * One public listing JSON for a UUID or a slug.
+   * Publisher phone is attached only by `UsersService.publicContactFor`.
+   */
   async getBySlug(slug: string) {
-    // UUID → Phase 21 detail (map clusters link by listingId).
-    if (UUID_RE.test(slug)) {
-      return this.getDetail(slug);
-    }
-    const l = await this.repo.findBySlug(slug);
-    if (!l) throw new NotFoundException('listing not found');
-    // EC-S-T23 — fail-soft catalogue view increment (never breaks detail).
-    void recordListingView(this.db, l.id);
-    const media = await this.repo.listMedia(l.id);
-    const imageUrls = media
-      .filter((m) => m.type === 'image' || m.type === 'floorplan')
-      .map((m) => m.url);
-    const agent = await this.publicAgentFor(l.agentId);
-    const boosted = await this.boosts.isListingBoosted(l.id);
-    return {
-      ...l,
-      price: l.price == null ? null : Number(l.price),
-      sizeSqm: l.sizeSqm == null ? null : Number(l.sizeSqm),
-      surfaceSqm: l.surfaceSqm == null ? null : Number(l.surfaceSqm),
-      landSqm: l.landSqm == null ? null : Number(l.landSqm),
+    const row = UUID_RE.test(slug)
+      ? await this.repo.findById(slug)
+      : await this.repo.findBySlug(slug);
+    if (!row) throw new NotFoundException('listing not found');
+    void recordListingView(this.db, row.id);
+    const [media, contact, boosted, raw] = await Promise.all([
+      this.repo.listMedia(row.id),
+      row.agentId ? this.users.publicContactFor(row.agentId) : Promise.resolve(null),
+      this.boosts.isListingBoosted(row.id),
+      this.read.getRaw(row.id),
+    ]);
+    return toPublicListing({
+      row,
       media,
-      imageUrls,
-      coverUrl: imageUrls[0] ?? null,
-      agent,
+      contact,
       boosted,
-    };
+      phase21: raw ? buildListingDetail(raw) : null,
+    });
   }
 
   /** Provisional market band for sale listings (K EC 1.26). */
