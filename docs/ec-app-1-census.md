@@ -1,212 +1,242 @@
-# EC-APP-1 — Censimento (PR 0)
+# EC-APP-1 — Census (PR 0)
 
-**Data:** 28 settembre 2026  
-**HEAD letto:** `e6342bc` (`fix: bump homepage sitemap lastmod after intro-video copy`)  
-**Stato societario nel codice:** `CORPORATE_STATE = 'PONTE'` in `packages/shared/src/corporate-state.ts`.  
-**Questo documento è sola lettura.** Non cambia l’app, l’API o il catalogo.
+**Date:** 28 September 2026  
+**Brief:** v1.1 (AZM decisions on accounts, domain, payments, and prices)  
+**HEAD read:** `e6342bc` (`fix: bump homepage sitemap lastmod after intro-video copy`)  
+**Corporate state in code:** `CORPORATE_STATE = 'PONTE'` in `packages/shared/src/corporate-state.ts`.  
+**This document is read-only.** It does not change the app, the API, or the catalog.
 
-I quattro file di design citati dal brief **non sono nel repo**:
+The four design files named in the brief **are not in the repo**:
 
 - `claude/AZM_EC_Seller_Contact_Shield_Design_v1.md`
 - `claude/AZM_EC_Viewing_Organisation_Design_v1.md`
 - `claude/AZM_EC_Sell_Privately_Redesign_v1.md`
 - `claude/AZM_EC_Pricing_Final_Instructions_v1.md`
 
-Nemmeno il canvas «Easy Casa Italia App». Il censimento descrive il codice. Non inventa il copy delle 16 schermate.
+The canvas «Easy Casa Italia App» is not in the repo either. This census describes the code. It does not invent copy for the 16 screens.
 
 ---
 
-## 0. Segnalazione immediata — webhook pagamenti
+## 0. Immediate flag — payments webhook
 
-Il brief chiede di fermarsi se l’API di produzione accetta un webhook non firmato. **Il codice non rifiuta sempre.**
+The brief says to stop if the production API accepts an unsigned webhook. **The code does not always reject one.**
 
-`POST /payments/webhook` è `@Public()`. In `apps/api/src/payments/payments.controller.ts`:
+`POST /payments/webhook` is `@Public()`. In `apps/api/src/payments/payments.controller.ts`:
 
-- se `PAYMENTS_ENABLED` è vero, il corpo passa a `StripePaymentsWebhookHandler`, che rifiuta l’header `stripe-signature` assente o invalido;
-- se `PAYMENTS_ENABLED` è falso, il corpo JSON `{ providerRef, type }` è accettato **senza firma** e `PaymentsService.handleWebhook` aggiorna l’intento.
+- when `PAYMENTS_ENABLED` is true, the body goes to `StripePaymentsWebhookHandler`, which rejects a missing or invalid `stripe-signature` header;
+- when `PAYMENTS_ENABLED` is false, JSON `{ providerRef, type }` is accepted **with no signature**, and `PaymentsService.handleWebhook` updates the intent.
 
-Il default di boot è `PAYMENTS_ENABLED: bool(false)` in `apps/api/src/config/load.ts`. `docs/env.md` dice la stessa cosa. Un audit del 2026-09-07 (`docs/legal/AYNI_STATE_AUDIT.md`) afferma che sul VPS il flag era `true`. **Questo ambiente non legge il `.env` del VPS**, quindi lo stato vivo non è riverificato qui.
+The boot default is `PAYMENTS_ENABLED: bool(false)` in `apps/api/src/config/load.ts`. `docs/env.md` says the same. An audit dated 2026-09-07 (`docs/legal/AYNI_STATE_AUDIT.md`) says the VPS flag was `true`. **This environment does not read the VPS `.env`**, so the live flag is not re-checked here.
 
-Conseguenza: il rifiuto della firma non è una proprietà del binario. È una proprietà del flag. Con il default, (b) è falso.
+Signature rejection is a property of the flag, not of the binary. With the default, (b) is false.
 
-Lato app, `apps/mobile/src/payments/confirm.ts` **non è escluso dalla build**. Il ramo `dev_secret_` è codice sorgente sempre compilato. Parte solo se il client secret inizia con `dev_secret_`. Quel prefisso lo emette `PspPaymentProvider` quando mancano `PSP_API_URL` / `PSP_SECRET_KEY` **e** `ALLOW_PROVIDER_STUBS` è vero (default `false`). Con Stripe acceso il secret non ha quel prefisso, quindi il ramo non corre. Resta nel binario. (a) è falso nel senso chiesto dal brief («non finisca nella build»).
+On the app side, `apps/mobile/src/payments/confirm.ts` **is not stripped from the build**. The `dev_secret_` branch is source that is always compiled. It runs only when the client secret starts with `dev_secret_`. `PspPaymentProvider` emits that prefix when `PSP_API_URL` / `PSP_SECRET_KEY` are missing **and** `ALLOW_PROVIDER_STUBS` is true (default `false`). A Stripe secret does not have that prefix, so the branch does not run against Stripe. It is still in the binary. (a) is false in the sense the brief asked (“does not ship in the production build”).
 
-**Ticket API, fuori da EC-APP-1:** rifiutare `POST /payments/webhook` senza firma Stripe anche quando `PAYMENTS_ENABLED` è falso, oppure non montare affatto la route non firmata. Non si sistema dentro i PR dell’app.
+**API ticket, outside EC-APP-1:** reject `POST /payments/webhook` without a Stripe signature even when `PAYMENTS_ENABLED` is false, or do not mount the unsigned route at all. Do not fix it inside the app PRs.
 
-Il brief §8 tiene `checkout.tsx` e `confirm.ts` fuori dalla build v1. Questo non chiude il buco sull’API, che è già pubblica.
+Brief v1.1 §8 removes `checkout.tsx`, `confirm.ts`, and `billing.tsx` from the v1 bundle. That does not close the hole on the API, which is already public.
 
 ---
 
-## 1. Fatti del §2
+## 1. Brief §2 facts
 
-| # | Asserzione del brief | Esito |
+| # | What the brief asserted | Result |
 |---|---|---|
-| 1 | Expo `~51.0.28`, RN `0.74.5`, `react-native-maps` `1.14.0`, `newArchEnabled: false`, bundle `it.easycasa.app` su iOS e Android | **Vera.** `apps/mobile/package.json`, `apps/mobile/app.json`. |
-| 2 | `@easycasa/design-tokens` ha ancora azure `#1e5ae0`, paper `#f5f4ef`, ink `#16233b`; il web ha ink `#14212e`, paper `#f3ede1`, azure `#2c6e9b`, ochre `#c08a1e` | **Vera.** Il pacchetto non ha i nomi `ink`, `ink-soft`, `paper-deep`, `azure-pale`, `ochre`, `line-strong`. `globals.css` li ha. `apps/mobile/src/theme/theme.ts` legge `tokens.color.primary` / `paper` / `primaryDark`. L’app mostra i colori vecchi. |
-| 3 | `associatedDomains` e `intentFilters` includono `easycasa.it` | **Vera come presenza nel file.** Proprietà del dominio: **non dimostrata dal repo.** `docs/phase-7.md` lo chiama apex di cutover futuro («declared in app.json associated domains for the future flip»). L’host di prodotto in `app.json` `extra` è `easycasaita.com`. Non c’è un file `apple-app-site-association` né `assetlinks.json` nel tree (la checklist di phase-7 li segna fatti; i file non ci sono). **Non si toglie il dominio in questo PR:** la risposta è la domanda aperta 13.3, non un fatto di codice. |
-| 4 | Percorso DEV verso `POST /payments/webhook` senza firma | **Vedi §0.** Il percorso è nel sorgente dell’app. L’API lo onora quando `PAYMENTS_ENABLED` è falso. |
+| 1 | Expo `~51.0.28`, RN `0.74.5`, `react-native-maps` `1.14.0`, `newArchEnabled: false`, bundle `it.easycasa.app` on both platforms | **True.** `apps/mobile/package.json`, `apps/mobile/app.json`. |
+| 2 | `@easycasa/design-tokens` still has azure `#1e5ae0`, paper `#f5f4ef`, ink `#16233b`; the web uses ink `#14212e`, paper `#f3ede1`, azure `#2c6e9b`, ochre `#c08a1e` | **True.** The package does not have the names `ink`, `ink-soft`, `paper-deep`, `azure-pale`, `ochre`, `line-strong`. `globals.css` does. `apps/mobile/src/theme/theme.ts` reads `tokens.color.primary` / `paper` / `primaryDark`. The app shows the old colours. |
+| 3 | `associatedDomains` and `intentFilters` include `easycasa.it` | **True as a fact about the file.** **AZM decision in v1.1: the only domain is `easycasaita.com`.** Remove `applinks:easycasa.it`, `applinks:www.easycasa.it`, and the `easycasa.it` intent filter in PR 1. Keep `easycasaita.com` and `www.easycasaita.com`. |
+| 4 | DEV path posts `POST /payments/webhook` with no signature | **See §0.** The path is in the app source. The API honours it when `PAYMENTS_ENABLED` is false. |
 
-Nome store in `app.json`: `"name": "EasyCasa"`. Il brief vuole «Easy Casa Italia». Fatto per un PR successivo, non una smentita del §2.
+Store name in `app.json` is `"name": "EasyCasa"`. The brief wants «Easy Casa Italia». That is a later PR, not a correction of §2.
 
-`NSLocationWhenInUseUsageDescription` è una sola stringa inglese. Confermato.
+`NSLocationWhenInUseUsageDescription` is a single English string. Confirmed.
+
+### `app.easycasaita.com` does not resolve
+
+Checked from this environment on 28 September 2026:
+
+- `easycasaita.com` resolves to `82.25.97.164` and answers HTTPS `307` to `https://easycasaita.com/it`.
+- `www.easycasaita.com` resolves to the same address and answers HTTPS `308` to `https://easycasaita.com/`.
+- `app.easycasaita.com` has **no DNS record**. `curl` reports `Could not resolve host`.
+
+`app.json` `extra.webAppUrl` is `https://app.easycasaita.com`. `docs/phase-7.md` and `docs/env.md` describe that host as the Expo web shell. `apps/api/src/config/load.ts` lists it in the CORS default. The host is not on the public DNS. PR 1 should point `webAppUrl` at a host that exists (`https://easycasaita.com`) unless AZM publishes `app.easycasaita.com` first. `apps/mobile/src/auth/AuthProvider.tsx` uses `webAppUrl` as a logout redirect. Checkout builds a mandate PDF URL from it; v1.1 removes checkout from the bundle, so that call site goes away with the payment files.
+
+There is still no `apple-app-site-association` or `assetlinks.json` file in the tree. `docs/phase-7.md` checks them off. The files are not here.
 
 ---
 
-## 2. Cosa fanno oggi le route fuori dal design v1
+## 2. v1.1 decisions, recorded so later PRs do not reopen them
 
-Nessuna di queste è nel perimetro schermate 01–14. Restano nel sorgente. Il brief chiede la descrizione prima di decidere se restano. **Qui non si cancellano.**
+Closed by AZM on 28 September 2026:
 
-### `app/(owner)/[propertyId]/checkout.tsx`
+| Decision | What the code does with it |
+|---|---|
+| Personal Apple and Google Play accounts (§10-bis) | No code change. PR 6 must reach a Play **closed test** with 12 testers for 14 days. The store seller will be a person. The privacy notice must name the real controller. A later transfer to an organisation account is a runbook item, not a v1 code change. |
+| Only domain `easycasaita.com` (§2.3) | Remove `easycasa.it` hosts in PR 1. `app.easycasaita.com` does not resolve today (§1). |
+| No payment system in v1 (§8) | Remove `app/(owner)/[propertyId]/checkout.tsx`, `src/payments/confirm.ts`, `src/api/billing.tsx`, and their imports from the v1 bundle. CI scan: zero occurrences of `stripe`, `paymentSheet`, `confirmPayment`, `createIntent` in `apps/mobile`. The app shows a price from the catalog and says payment happens outside the app. No payment link and no checkout WebView. |
+| Design example prices: fascicolo **€149**, visit management **€99 / 90 days** | Example figures for the design only. **Do not write them into message files.** The live price comes from the catalog API. The real price list is still open (§13.3) until EC-PRICING-1 sets it. |
 
-Pagamento in app e mandato.
+Still open, and not answered by the repo:
 
-1. Crea un ordine dalla selezione passata in query (`items` / `packageCode`).
-2. Anteprima fattura (`useInvoicePreview`).
-3. `createIntent` con `purpose: 'DUE_NOW'` e `confirmPayment` (`src/payments/confirm.ts`).
-4. Dopo il pagamento, crea un mandato (toggle esclusiva, default acceso, durata 6 mesi) e chiede un URL di firma. L’email firmatario è fissa: `owner@easycasaita.com`.
+1. Who the 12 Play closed-test testers are, and who recruits them.
+2. The work address (or PO box) and phone to publish as the App Store trader. Email in the brief: `info@easycasaita.com`.
+3. The real catalog prices, when EC-PRICING-1 fixes them.
 
-Il tipo del client in `src/api/billing.tsx` ammette anche `purpose: 'PROVVIGIONE'`. Questa schermata chiama solo `DUE_NOW`. L’enum API `CreateIntentDto` è `DUE_NOW | PROVVIGIONE`.
+---
 
-Il brief §8 la tiene fuori dalla build v1. D’accordo con il codice: è acquisto dentro l’app.
+## 3. What the routes outside design v1 do today
+
+None of these is in screens 01–14. They remain in the source. v1.1 already decides the fate of checkout and the payment modules: they leave the v1 bundle. The others are described here and are not deleted in this PR.
+
+### `app/(owner)/[propertyId]/checkout.tsx` — out of the v1 bundle
+
+In-app payment and a mandate.
+
+1. Creates an order from the selection passed in the query (`items` / `packageCode`).
+2. Invoice preview (`useInvoicePreview`).
+3. `createIntent` with `purpose: 'DUE_NOW'` and `confirmPayment` (`src/payments/confirm.ts`).
+4. After payment, creates a mandate (exclusivity toggle, default on, duration 6 months) and requests a signing URL. The signer email is hardcoded: `owner@easycasaita.com`.
+
+The client type in `src/api/billing.tsx` also allows `purpose: 'PROVVIGIONE'`. This screen calls only `DUE_NOW`. The API enum `CreateIntentDto` is `DUE_NOW | PROVVIGIONE`.
+
+v1.1 removes this screen, `confirm.ts`, and `billing.tsx` from the bundle.
 
 ### `app/(owner)/[propertyId]/lease.tsx`
 
-Modulo contratto di locazione, non una scheda annuncio.
+A lease-contract form, not a listing card.
 
-Tipi: `LIBERO_4_4`, `CONCORDATO_3_2`, `TRANSITORIO`, `STUDENTI`. Campi: decorrenza, durata, canone annuo, cedolare secca, alta tensione, APE allegato. Chiama l’API rentals per un’anteprima di validazione, poi persiste un lease e legge un payload RLI.
+Types: `LIBERO_4_4`, `CONCORDATO_3_2`, `TRANSITORIO`, `STUDENTI`. Fields: start date, duration, annual rent, cedolare secca, high tension, APE attached. Calls the rentals API for a validation preview, then persists a lease and reads an RLI payload.
+
+Not in design v1. Not removed in this census.
 
 ### `app/(owner)/[propertyId]/services.tsx`
 
-Scelta pacchetti e voci di catalogo, richiesta di preventivo, push verso checkout con la selezione serializzata. `ServiceItemRow` ha un ramo `priceModel === 'provvigione'` e una stringa propria `owner.svc.provvigione`. `QuoteSummary` ha `owner.quote.provvigioneNote`.
+Package and catalog picker, quote request, navigation to checkout with the selection serialised. `ServiceItemRow` has a `priceModel === 'provvigione'` branch and its own string `owner.svc.provvigione`. `QuoteSummary` has `owner.quote.provvigioneNote`.
 
-Sul server, con `PONTE`, `publicCatalog()` toglie le voci `priceModel === 'provvigione'` e `VIEWING_ACCOMPANIMENT` / `FULL_MEDIATION` / `BUYER_MEDIATION` / `OFFER_DRAFTING` sono `active: false` in `apps/api/src/service-catalog/domain/catalog.ts`. Il ramo UI resta compilato. Se il flag societario cambia, la riga percentuale si riaccende da sola.
+On the server, while `PONTE`, `publicCatalog()` drops `priceModel === 'provvigione'` rows, and `VIEWING_ACCOMPANIMENT` / `FULL_MEDIATION` / `BUYER_MEDIATION` / `OFFER_DRAFTING` are `active: false` in `apps/api/src/service-catalog/domain/catalog.ts`. The UI branch is still compiled. If the corporate flag changes, the percentage row turns itself back on.
 
 ### `app/(owner)/valuation.tsx`
 
-Stima AVM. Form: comune, provincia, tipo, mq, locali, classe energetica, condizione. Coordinate fisse Milano (`lat: 45.4642`, `lng: 9.19`) con un TODO di geocoding. Mostra un importo arrotondato al migliaio e un colore di confidenza (`high` / `medium` / `low`). Non è una banda OMI con zona, semestre e fonte.
+An AVM-style estimate. Form: comune, province, type, square metres, rooms, energy class, condition. Coordinates are hardcoded to Milan (`lat: 45.4642`, `lng: 9.19`) with a geocoding TODO. It shows an amount rounded to the nearest thousand and a confidence colour (`high` / `medium` / `low`). It is not an OMI band with zone, semester, and source.
 
 ### `app/(pro)/`
 
-Inbox di assegnazioni (`useMyAssignments`) e schermata credenziali. «Assegnare» un professionista a un incarico è il modello di questa route. Il brief la vuole fuori dal bundle v1. Il codice c’è ed è raggiungibile dal router.
+Assignment inbox (`useMyAssignments`) and a credentials screen. Assigning a professional to a job is the model of this route. The brief wants it out of the v1 bundle. The code is there and reachable from the router.
 
-### Fascicolo, per contrasto
+### Fascicolo, for contrast
 
-`app/(owner)/[propertyId]/fascicolo.tsx` **è** nel design (schermata 12). Oggi: checklist documenti, upload, banner di gate. Non dichiara il pagamento alla consegna. Non va descritto come checkout.
+`app/(owner)/[propertyId]/fascicolo.tsx` **is** in the design (screen 12). Today: document checklist, upload, gate banner. It does not state “pay on delivery”. It is not checkout.
 
 ---
 
-## 3. Regole del §5 — l’API le regge già?
+## 4. §5 rules — does the API already support them?
 
-Una riga, un ticket. Nessuno di questi ticket si implementa nei PR dell’app.
+One row, one ticket. None of these tickets is implemented in the app PRs.
 
-### M1 — il numero del venditore non esce; il messaggio viaggia intero
+### M1 — the seller’s number never leaves; the message is forwarded whole
 
-**Non è vero su tutte le risposte che un compratore può ricevere.**
+**This is not true of every response a buyer can receive.**
 
-| Superficie | Telefono / email del venditore |
+| Surface | Seller phone / email |
 |---|---|
-| `GET /listings/:id` quando `:id` è un UUID | `getDetail` → `buildListingDetail`. L’agente è `{ id, displayName }`. Nessun telefono, nessuna email. È il percorso che `EasyCasaListingsApi` si aspetta (`packages/api-client/src/phase21.ts`). |
-| `GET /listings/:slug` quando `:slug` **non** è un UUID | `ListingsService.getBySlug` fa lo spread della riga e aggiunge `agent` da `publicAgentFor`: `{ displayName, phone, slug }`. Il telefono dell’utente `agentId` è nel JSON pubblico. L’email utente non c’è. Lo slug è il deep link (`pathPrefix: /listing`). |
-| Enquiry del seeker (`enquiryForSeekerApi`) | Nessun campo telefono del venditore. `contactPhone` è il numero di chi ha scritto. |
-| Proiezione visita seeker (`viewingForSeeker`) | Niente telefono. L’indirizzo esatto c’è solo se `status === 'CONFIRMED'`. |
-| Push `enquiry.new` | Payload: `enquiryId`, `listingId`, `intent`, `message` tagliato a 200 caratteri. Il numero del venditore non c’è. Il testo **non** è inoltrato com’è scritto. |
-| Thread `GET/POST /enquiries/:id/messages` | Il corpo salvato è il testo (trim, max 2000). La notifica di risposta porta solo `enquiryId` e `messageId`, non un’anteprima. `isLikelySpam` può rifiutare il messaggio: non è un inoltro incondizionato. |
-| Azione esplicita «rivelo il mio numero» | Nessun endpoint. |
+| `GET /listings/:id` when `:id` is a UUID | `getDetail` → `buildListingDetail`. The agent is `{ id, displayName }`. No phone, no email. This is the shape `EasyCasaListingsApi` expects (`packages/api-client/src/phase21.ts`). |
+| `GET /listings/:slug` when `:slug` is **not** a UUID | `ListingsService.getBySlug` spreads the row and adds `agent` from `publicAgentFor`: `{ displayName, phone, slug }`. The `agentId` user’s phone is in the public JSON. The user email is not. The slug is the deep link (`pathPrefix: /listing`). |
+| Seeker enquiry (`enquiryForSeekerApi`) | No seller-phone field. `contactPhone` is the writer’s number. |
+| Seeker viewing projection (`viewingForSeeker`) | No phone. The exact address is present only when `status === 'CONFIRMED'`. |
+| Push `enquiry.new` | Payload: `enquiryId`, `listingId`, `intent`, `message` sliced to 200 characters. The seller’s number is not there. The text is **not** forwarded as written. |
+| Thread `GET/POST /enquiries/:id/messages` | The stored body is the text (trim, max 2000). The reply notification carries only `enquiryId` and `messageId`, not a preview. `isLikelySpam` can reject the message: that is not unconditional forwarding. |
+| Explicit “I reveal my number” action | No endpoint. |
 
-**Ticket `EC-APP-1-API-M1`.** Togliere `phone` da `publicAgentFor` / dal ramo slug di `GET /listings/:slug`. Allineare quel ramo al DTO Phase 21, così lo slug non è un secondo contratto. Decidere a parte il troncamento a 200 caratteri e il rifiuto spam: oggi contraddicono «inoltrato com’è scritto».
+**Ticket `EC-APP-1-API-M1`.** Remove `phone` from `publicAgentFor` / from the slug branch of `GET /listings/:slug`. Align that branch with the Phase 21 DTO so the slug is not a second contract. The 200-character cut and the spam rejection contradict “forwarded as written” and belong in the same ticket.
 
-### M2 — dichiarazione verbatim col messaggio
+### M2 — the declaration travels with the message, verbatim
 
-`CreateEnquiryDto` (`apps/api/src/enquiries/enquiries.controller.ts`) ha: `intent` (`info` \| `viewing` \| `offer`), `message`, `contactEmail`, `contactPhone`, `contactWhatsappAvailable`, `banks4AllTracking`.
+`CreateEnquiryDto` (`apps/api/src/enquiries/enquiries.controller.ts`) has: `intent` (`info` | `viewing` | `offer`), `message`, `contactEmail`, `contactPhone`, `contactWhatsappAvailable`, `banks4AllTracking`.
 
-Non ci sono: agente sì/no, REA, per chi, tempi, modalità di pagamento, presa visione di classe e indice.
+Missing: agent yes/no, REA, on whose behalf, timing, payment method, and “has read class and index”.
 
-**Ticket `EC-APP-1-API-M2`.** Campi dichiarazione sul create, salvati e riletti tali e quali, senza punteggio.
+**Ticket `EC-APP-1-API-M2`.** Declaration fields on create, stored and read back as written, with no score.
 
-### M3 — regola del venditore, ordine, non esclusione
+### M3 — the seller writes the rule; it orders and does not exclude
 
-Nessuna risorsa «regola del proprietario» su annuncio o profilo. L’ordinamento dei messaggi nel thread è `createdAt` ascendente, ma non è una regola scritta dal venditore e non è esposta sull’annuncio.
+No “owner’s rule” resource on the listing or the profile. Thread messages are ordered by `createdAt` ascending, but that is not a rule the seller wrote, and it is not shown on the listing.
 
 **Ticket `EC-APP-1-API-M3`.**
 
-### V1 — orari pubblicati
+### V1 — published hours
 
-**Presente.** `POST /listings/:listingId/availability` con finestre settimanali (`weekday`, `startMinutes`, `endMinutes`, `capacity`). `GET /listings/:listingId/slots` è pubblico e genera slot da quelle finestre (`apps/api/src/viewings/viewings.service.ts`). Nessun ticket per l’esistenza delle finestre.
+**Present.** `POST /listings/:listingId/availability` with weekly windows (`weekday`, `startMinutes`, `endMinutes`, `capacity`). `GET /listings/:listingId/slots` is public and generates slots from those windows (`apps/api/src/viewings/viewings.service.ts`). No ticket for the existence of the windows.
 
-### V2 — identità prima della conferma
+### V2 — identity before confirmation
 
-`BookDto` è `{ startMs, enquiryId? }`. `confirm` chiama `transition(..., 'CONFIRM')` senza controllo di documento o di identità. Esiste un modulo `phone-verify`, non agganciato alla conferma visita.
+`BookDto` is `{ startMs, enquiryId? }`. `confirm` calls `transition(..., 'CONFIRM')` with no document or identity check. A `phone-verify` module exists. It is not wired to viewing confirmation.
 
 **Ticket `EC-APP-1-API-V2`.**
 
-### V7 — condizioni di sicurezza come vincolo di prenotazione
+### V7 — safety conditions as a booking constraint
 
-Nessun campo e nessun controllo nelle viewings.
+No field and no check in viewings.
 
 **Ticket `EC-APP-1-API-V7`.**
 
-### Nessun esito sulla visita
+### No outcome on a viewing
 
-Lo schema ha l’esito. `ViewingStatus` è `REQUESTED | CONFIRMED | COMPLETED | CANCELLED | NO_SHOW`. Eventi `COMPLETE` e `NO_SHOW` sono esposti al conductor (`POST /viewings/:id/complete`, `POST /viewings/:id/no-show`) e al seller (`seller-viewings.controller.ts`). Non c’è una colonna di nome `outcome`; lo status è l’esito.
+The schema has an outcome. `ViewingStatus` is `REQUESTED | CONFIRMED | COMPLETED | CANCELLED | NO_SHOW`. Events `COMPLETE` and `NO_SHOW` are exposed to the conductor (`POST /viewings/:id/complete`, `POST /viewings/:id/no-show`) and to the seller (`seller-viewings.controller.ts`). There is no column named `outcome`. The status is the outcome.
 
-L’app mobile non legge `NO_SHOW` / `COMPLETE` (nessuna occorrenza in `apps/mobile`). L’API sì. Un test di schema «nessuna visita ha un esito» **fallirebbe oggi**.
+The mobile app does not read `NO_SHOW` / `COMPLETE` (no occurrences under `apps/mobile`). The API does. A schema test “no viewing has an outcome” **would fail today**.
 
 **Ticket `EC-APP-1-API-VISIT-STATUS`.**
 
-### Classe energetica e indice su ogni scheda
+### Energy class and index on every card
 
-Scrittura: `listings.service.publish` chiama `assertEnergyAdvertComplete`. Senza classe **e** indice il publish risponde 400. È il blocco R4 in uscita.
+Write path: `listings.service.publish` calls `assertEnergyAdvertComplete`. Without both class **and** index, publish returns 400. That is the R4 gate on the way out.
 
-Lettura, che è ciò che l’app riceve:
+Read path, which is what the app receives:
 
-- il pin di ricerca (`ListingPin`) ha `energyClass` nullable e **non ha** l’indice;
-- il dettaglio Phase 21 ha `energy.present`, `energyClass` nullable, `performanceKwhM2Y` nullable, e viene servito anche se incompleto;
-- annunci già pubblicati prima del gate restano leggibili.
+- the search pin (`ListingPin`) has nullable `energyClass` and **no index**;
+- Phase 21 detail has `energy.present`, nullable `energyClass`, nullable `performanceKwhM2Y`, and is served even when incomplete;
+- listings published before the gate remain readable.
 
-L’app oggi (`ListingCard`) non mostra né classe né indice. Il dettaglio colora la classe (`ENERGY_COLORS` in `app/listing/[slug].tsx`). Quei colori sono sulla classe, non sul prezzo.
+The app today (`ListingCard`) shows neither class nor index. The detail screen colours the class (`ENERGY_COLORS` in `app/listing/[slug].tsx`). Those colours sit on the class, not on the price.
 
-**Ticket `EC-APP-1-API-R4-READ`.** Il publish gate non basta: search e detail consegnano ancora schede incomplete. L’app, da brief, non deve renderle; il filtro di lettura è lavoro API.
+**Ticket `EC-APP-1-API-R4-READ`.** The publish gate is not enough: search and detail still deliver incomplete cards. The brief says the app must not render them. The read filter is API work.
 
-`[[BUCO: elenco cause di esenzione APE]]` è già nel codice di `packages/shared/src/energy-advert.ts`. Non si colma qui.
+`[[BUCO: elenco cause di esenzione APE]]` is already in `packages/shared/src/energy-advert.ts`. It is not filled here.
 
-### OMI come fatto, mai come giudizio
+### OMI as a fact, never as a judgement
 
-`GET /listings/:slug/valuation-band` restituisce ancore `selling`, `fairMarket`, `outOfMarket` e un `side` `below | in_band | above` (`apps/api/src/avm/domain/valuation-band.ts`). È un giudizio sul prezzo, non la quadrupla banda / zona / semestre / fonte.
+`GET /listings/:slug/valuation-band` returns anchors `selling`, `fairMarket`, `outOfMarket` and a `side` of `below | in_band | above` (`apps/api/src/avm/domain/valuation-band.ts`). That is a judgement on the price, not the quadruple band / zone / semester / source.
 
-Le analytics venditore espongono `priceVsOmiBandPct`. I nudge hanno `ABOVE_OMI_BAND` e `BELOW_OMI_BAND`. Le quotazioni grezze stanno in `omi_quotes` / `omi_zone_quotes`, non sul DTO pubblico dell’annuncio.
+Seller analytics expose `priceVsOmiBandPct`. Nudges include `ABOVE_OMI_BAND` and `BELOW_OMI_BAND`. Raw quotes live in `omi_quotes` / `omi_zone_quotes`, not on the public listing DTO.
 
-**Ticket `EC-APP-1-API-OMI-FACT`.** Un DTO pubblico che sia solo banda, zona, semestre, fonte. Il valuation-band attuale non va riusato tale e quale sulla scheda.
+**Ticket `EC-APP-1-API-OMI-FACT`.** A public DTO that is only band, zone, semester, and source. Do not reuse the current valuation-band on the listing card as it stands.
 
-### Tier 3 — agente che apre la porta
+### Tier 3 — an agent who opens the door
 
-Non c’è una lista di agenti iscritti, con REA e P.IVA, scelti dal venditore, ordinati solo per un criterio pubblicato, senza compenso di piattaforma.
+There is no list of enrolled agents, with REA and VAT number, chosen by the seller, ordered only by a published criterion, with no platform fee.
 
-`VIEWING_ACCOMPANIMENT` è nel catalogo sorgente, `active: false`, prezzo fisso 4900 centesimi. Non è il tier 3 del brief. Il gruppo `(pro)/` è un’inbox di assignment, non quella scelta.
+`VIEWING_ACCOMPANIMENT` is in the catalog source, `active: false`, fixed price 4900 cents. That is not the brief’s tier 3. The `(pro)/` group is an assignment inbox, not that choice.
 
 **Ticket `EC-APP-1-API-TIER3`.**
 
 ---
 
-## 4. Cose già vere, da non rifare
+## 5. Already true — do not rebuild it
 
-- Stato societario `PONTE`: il catalogo pubblico non elenca voci `provvigione` (`publicCatalog` in `catalog.ts`).
-- `VIEWING_ACCOMPANIMENT`, `FULL_MEDIATION`, `BUYER_MEDIATION`, `OFFER_DRAFTING` sono `active: false`.
-- Il preventivo in stato `PONTE` rifiuta una voce `provvigione` (`pricing.ts`).
-- Publish rifiuta classe o indice mancanti.
-- La proiezione visita del seeker non contiene il telefono del conductor.
-- Il dettaglio UUID non contiene il telefono.
+- Corporate state `PONTE`: the public catalog does not list `provvigione` rows (`publicCatalog` in `catalog.ts`).
+- `VIEWING_ACCOMPANIMENT`, `FULL_MEDIATION`, `BUYER_MEDIATION`, and `OFFER_DRAFTING` are `active: false`.
+- A quote in `PONTE` rejects a `provvigione` line (`pricing.ts`).
+- Publish rejects a missing class or index.
+- The seeker viewing projection does not contain the conductor’s phone.
+- UUID detail does not contain the phone.
 
 ---
 
-## 5. Cosa questo PR non fa
+## 6. What this PR does not do
 
-- Non aggiorna Expo.
-- Non toglie Banks4All, `QUALIFIED`, `offer`, `provvigione`, `VIEWING_ACCOMPANIMENT` dall’app. Ci sono. Il conteggio per lo scan del PR 2 è lavoro del PR 2.
-- Non crea i due gusci, né la schermata 01.
-- Non sceglie SDK 55 o 56. Quella frase è del PR 1, e parte solo dopo questo censimento.
-- Non scrive sulle board Kaizen / Startup: il brief non assegna una delle quattro categorie né una fase 1–6.
-- Non ha un `task_<hex>`. Il ledger, se aggiornato, userà il codice `EC-APP-1` senza un id bridge.
-
-## 6. Domande aperte che il codice non chiude
-
-Restano le quattro del §13 del brief. Sul punto 3, l’unica frase nel repo è che `easycasa.it` è un apex di cutover futuro, non una prova di titolarità.
+- It does not upgrade Expo.
+- It does not remove Banks4All, `QUALIFIED`, `offer`, `provvigione`, `VIEWING_ACCOMPANIMENT`, or `easycasa.it` from the app. They are present. The PR 2 scan, and the PR 1 domain edit, are later PRs.
+- It does not build the two shells or screen 01.
+- It does not pick SDK 55 or 56. That sentence belongs to PR 1, and PR 1 starts only after this census is read.
+- It does not write to the Kaizen or Startup boards: the brief assigns neither one of the four categories nor a phase 1–6.
+- There is no `task_<hex>`. The ledger uses the code `EC-APP-1` with a null bridge id.

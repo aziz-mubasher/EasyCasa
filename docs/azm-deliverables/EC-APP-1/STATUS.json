@@ -2,7 +2,7 @@
   "bridgeTaskId": null,
   "kaizenCode": "EC-APP-1",
   "polishId": "EC-APP-1",
-  "title": "EC-APP-1 — censimento app iOS/Android",
+  "title": "EC-APP-1 — iOS/Android app census",
   "venture": "EasyCasa",
   "lifecycle": "pr_open",
   "agentStatus": "RUNNING",
@@ -13,8 +13,8 @@
   "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/246",
   "prState": "DRAFT",
   "dispatchedAt": "2026-09-28T05:56:47.494Z",
-  "updatedAt": "2026-09-28T05:57:45.165Z",
-  "summary": "Censimento PR 0 aperto (#246). Webhook non firmato se PAYMENTS_ENABLED è falso. GET /listings/:slug (non UUID) restituisce agent.phone.",
-  "nextAction": "AZM conferma PAYMENTS_ENABLED sul VPS e se easycasa.it è nostro. I ticket API del censimento restano fuori dai PR dell'app.",
+  "updatedAt": "2026-09-28T06:01:26.638Z",
+  "summary": "Census PR #246 is in English (brief v1.1). Unsigned webhook if PAYMENTS_ENABLED is false. Non-UUID GET /listings/:slug returns agent.phone. app.easycasaita.com does not resolve.",
+  "nextAction": "AZM confirms live PAYMENTS_ENABLED. PR 1 removes easycasa.it and points webAppUrl at a host that exists. API tickets stay outside the app PRs.",
   "errors": []
 }
