@@ -6,16 +6,15 @@
     "orientation": "portrait",
     "scheme": "easycasa",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "it.easycasa.app",
       "associatedDomains": [
         "applinks:easycasaita.com",
-        "applinks:www.easycasaita.com",
-        "applinks:easycasa.it",
-        "applinks:www.easycasa.it"
+        "applinks:www.easycasaita.com"
       ],
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "EasyCasa uses your location to show nearby listings on the map."
@@ -26,17 +25,40 @@
       "adaptiveIcon": {
         "backgroundColor": "#16233b"
       },
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
       "intentFilters": [
         {
           "action": "VIEW",
           "autoVerify": true,
           "data": [
-            { "scheme": "https", "host": "easycasaita.com", "pathPrefix": "/listing" },
-            { "scheme": "https", "host": "easycasaita.com", "pathPrefix": "/it/listings" },
-            { "scheme": "https", "host": "easycasa.it", "pathPrefix": "/listing" }
+            {
+              "scheme": "https",
+              "host": "easycasaita.com",
+              "pathPrefix": "/listing"
+            },
+            {
+              "scheme": "https",
+              "host": "easycasaita.com",
+              "pathPrefix": "/it/listings"
+            },
+            {
+              "scheme": "https",
+              "host": "www.easycasaita.com",
+              "pathPrefix": "/listing"
+            },
+            {
+              "scheme": "https",
+              "host": "www.easycasaita.com",
+              "pathPrefix": "/it/listings"
+            }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -54,7 +76,8 @@
         {
           "color": "#1e5ae0"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
@@ -63,7 +86,7 @@
       "apiBaseUrl": "https://easycasaita.com/api",
       "oidcIssuer": "https://auth.easycasaita.com/realms/easycasa",
       "oidcClientId": "easycasa-app",
-      "webAppUrl": "https://app.easycasaita.com"
+      "webAppUrl": "https://easycasaita.com"
     }
   }
 }
