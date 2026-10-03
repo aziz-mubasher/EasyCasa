@@ -81,6 +81,11 @@ const Schema = z
     STRIPE_WEBHOOK_SECRET: z.string().default(''),
     /** K EC 1.38 — order payments (fixed-fee catalog). Default off until counsel + SdI go-live. */
     PAYMENTS_ENABLED: bool(false),
+    /**
+     * EC-APP-1-API-WEBHOOK — unsigned JSON POST /payments/webhook.
+     * Default off. Ignored when NODE_ENV=production (that path is 404).
+     */
+    PAYMENTS_DEV_WEBHOOK: bool(false),
     /** Must be true to boot with sk_live_* — explicit human ack before real charges. */
     GO_LIVE_PAYMENTS_ACK: bool(false),
     PAYMENTS_SUCCESS_URL: z
