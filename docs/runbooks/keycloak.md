@@ -154,6 +154,8 @@ The brief’s “36/79 null email” figure is **not** this realm today. Rollbac
 
 `register.ftl` must render password after `email` when username is admin-only. Stock KC only hooks password to username / email-as-username.
 
+The same profile **drops username from the registration form**, but the realm still requires it (`registrationEmailAsUsername` stays off). A submit with no username redisplays the form and shows no error. `register.ftl` copies the e-mail into a hidden `username` (`registerUsername.js`). Do not “fix” this by turning on e-mail as username.
+
 Still human: set Realm → Email (host + from) before turning `verifyEmail` back on; dedicated cookie page.
 
 ---
@@ -303,7 +305,7 @@ separately (or point it at the same relay, with its own from-address).
 | Mandatory acceptance, auditable | `terms_and_conditions` required action → per-user timestamp |
 | Optional marketing, separate | `marketingEmailOptIn` in the User Profile, unticked, own help text. Never merge with terms |
 | Withdrawal as easy as giving | Same attribute editable in the account console; unsubscribe link in every mail |
-| Data minimisation | Email, first name, last name, optional marketing. Username is admin-managed (new users get the e-mail as username). No phone, no CF, no DoB |
+| Data minimisation | Email, first name, last name, optional marketing. Username is admin-managed. The sign-up form sets it from the e-mail; the realm flag “e-mail as username” stays off. No phone, no CF, no DoB |
 | No third-party disclosure before auth | System-font stacks only. No CDN, no web-font host, no analytics |
 | Cookie posture | Auth cookies are strictly necessary; `KEYCLOAK_LOCALE` is set by the user’s own click. **No banner** |
 | Account-enumeration resistance | Generic `invalidUserMessage` and `emailSentMessage` in `it` / `en` / `es` |
