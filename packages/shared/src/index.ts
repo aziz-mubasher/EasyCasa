@@ -1,4 +1,5 @@
 export * from './env';
+export * from './public-agent';
 export * from './types';
 export * from './corporate-state';
 export * from './energy-advert';
