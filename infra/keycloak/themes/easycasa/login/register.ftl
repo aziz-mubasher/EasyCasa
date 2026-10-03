@@ -1,6 +1,9 @@
 <#import "template.ftl" as layout>
 <#import "user-profile-commons.ftl" as userProfileCommons>
-<@layout.registrationLayout displayMessage=messagesPerField.exists('global') displayRequiredFields=false displayInfo=true; section>
+<#-- Banner for errors that are not already printed under a visible field.
+     Username is one of those: the profile hides it, but a missing or rejected
+     username used to redisplay this form with no message at all. -->
+<@layout.registrationLayout displayMessage=!messagesPerField.existsError('email','firstName','lastName','password','password-confirm','username') displayRequiredFields=false displayInfo=true; section>
     <#if section = "header">
         <#if messageHeader??>
             ${kcSanitize(msg("${messageHeader}"))?no_esc}
@@ -14,10 +17,19 @@
 
             <#-- Password pair is hooked to username (stock) or email-as-username.
                  Username is admin-edit only on easycasa, so neither hook fires
-                 unless we also treat a plain email field as the hook. -->
+                 unless we also treat a plain email field as the hook.
+                 The same profile omits username from the form. The realm still
+                 requires one, and registrationEmailAsUsername stays off so
+                 existing non-email usernames can log in. Copy email → username
+                 on submit; without that the form redisplays and looks like a no-op. -->
             <#assign passwordFieldsRendered = false>
+            <#assign usernameSubmitted = false>
             <@userProfileCommons.userProfileFormFields; callback, attribute>
-                <#if callback = "afterField">
+                <#if callback = "beforeField">
+                    <#if attribute.name == "username" && !(attribute.readOnly!false)>
+                        <#assign usernameSubmitted = true>
+                    </#if>
+                <#elseif callback = "afterField">
                     <#if passwordRequired?? && !passwordFieldsRendered && (attribute.name == 'username' || attribute.name == 'email')>
                         <#assign passwordFieldsRendered = true>
                         <div class="${properties.kcFormGroupClass!}">
@@ -73,6 +85,15 @@
                 </#if>
             </@userProfileCommons.userProfileFormFields>
 
+            <#if !usernameSubmitted>
+                <input type="hidden" id="username" name="username" value="" autocomplete="off" />
+                <#if messagesPerField.existsError('username')>
+                    <span id="input-error-username" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
+                        ${kcSanitize(messagesPerField.get('username'))?no_esc}
+                    </span>
+                </#if>
+            </#if>
+
             <div class="ec-terms" id="ec-terms">
                 <details class="ec-terms-read">
                     <summary>${msg("ecTermsToggle")}</summary>
@@ -102,6 +123,9 @@
             </div>
         </form>
         <script type="module" src="${url.resourcesPath}/js/passwordVisibility.js"></script>
+        <#if !usernameSubmitted>
+            <script type="module" src="${url.resourcesPath}/js/registerUsername.js"></script>
+        </#if>
     <#elseif section = "info">
         <span>${msg("ecHaveAccount")} <a href="${url.loginUrl}">${msg("doLogIn")}</a></span>
     </#if>

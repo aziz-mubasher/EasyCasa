@@ -63,6 +63,7 @@ describe('easycasa Keycloak login/email theme', () => {
       'login/resources/img/logo-legenda.png',
       'login/resources/css/login-v2.css',
       'login/resources/js/passwordVisibility.js',
+      'login/resources/js/registerUsername.js',
       'login/messages/messages_it.properties',
       'login/messages/messages_en.properties',
       'login/messages/messages_es.properties',
@@ -265,5 +266,13 @@ describe('easycasa Keycloak login/email theme', () => {
     expect(read(path.join(LOGIN, 'register.ftl'))).toMatch(
       /passwordRequired\?\? && !passwordFieldsRendered && \(attribute\.name == 'username' \|\| attribute\.name == 'email'\)/,
     );
+    const register = read(path.join(LOGIN, 'register.ftl'));
+    expect(register).toContain('name="username"');
+    expect(register).toContain('registerUsername.js');
+    expect(register).toContain("existsError('username')");
+    expect(register).not.toContain("displayMessage=messagesPerField.exists('global')");
+    const sync = read(path.join(LOGIN, 'resources/js/registerUsername.js'));
+    expect(sync).toContain('email.value.trim()');
+    expect(sync).toContain("username.type !== 'hidden'");
   });
 });
