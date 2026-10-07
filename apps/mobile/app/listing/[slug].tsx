@@ -9,7 +9,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +17,7 @@ import { useCreateEnquiry } from '../../src/api/enquiries';
 import { useDiscoveryListing, useSimilar } from '../../src/api/discovery-hooks';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { EnquiryModal } from '../../src/components/discovery/EnquiryModal';
+import { ListingPinMap } from '../../src/components/listing/ListingPinMap';
 import { useTheme } from '../../src/theme/useTheme';
 
 function euro(cents: number): string {
@@ -165,18 +165,11 @@ export default function ListingDetailScreen() {
           </Text>
         ) : null}
 
-        <MapView
+        <ListingPinMap
           style={styles.miniMap}
-          pointerEvents="none"
-          initialRegion={{
-            latitude: l.location.lat,
-            longitude: l.location.lng,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}
-        >
-          <Marker coordinate={{ latitude: l.location.lat, longitude: l.location.lng }} />
-        </MapView>
+          latitude={l.location.lat}
+          longitude={l.location.lng}
+        />
 
         <Pressable
           onPress={() => {
