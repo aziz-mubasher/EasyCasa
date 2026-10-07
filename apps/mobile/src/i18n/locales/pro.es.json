@@ -8,14 +8,15 @@
       "credential": "Credencial requerida",
       "province": "Provincia",
       "start": "Iniciar tarea",
-      "deliver": "Subir entregable"
+      "deliver": "Subir entregable",
+      "unavailable": "Este encargo no está disponible en la app."
     },
     "creds": {
       "title": "Credenciales",
       "yours": "Tus credenciales",
       "none": "No hay credenciales registradas.",
       "add": "Enviar una credencial",
-      "reference": "Referencia (REA / colegio / n.\u00ba p\u00f3liza)",
+      "reference": "Referencia (colegio / n.º póliza)",
       "submit": "Enviar para verificaci\u00f3n",
       "note": "Las credenciales deben ser verificadas por EasyCasa antes de recibir trabajos regulados.",
       "PENDING": "Pendiente",

@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { ProAssignment } from '@easycasa/api-client';
 import { useMyAssignments, useStart, useDeliver } from '../../src/api/professional-hooks';
+import { isMediazioneAssignment } from '../../src/pro/assignment-filter';
 import { pickAndUploadDocument } from '../../src/api/upload';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { StatusPill } from '../../src/components/pro/StatusPill';
@@ -92,6 +93,7 @@ export default function AssignmentDetail() {
   }
 
   const task = assignment.task;
+  const blocked = isMediazioneAssignment(assignment);
 
   return (
     <ScrollView style={{ backgroundColor: theme.colors.background }} contentContainerStyle={styles.content}>
@@ -110,11 +112,15 @@ export default function AssignmentDetail() {
         </View>
       ) : null}
 
-      {assignment.status === 'ASSIGNED' ? (
+      {blocked ? (
+        <Text style={{ color: theme.colors.textMuted }}>{t('pro.detail.unavailable')}</Text>
+      ) : null}
+
+      {!blocked && assignment.status === 'ASSIGNED' ? (
         <ActionButton label={t('pro.detail.start')} busy={start.isPending} onPress={() => start.mutate(id)} theme={theme} />
       ) : null}
 
-      {assignment.status === 'IN_PROGRESS' ? (
+      {!blocked && assignment.status === 'IN_PROGRESS' ? (
         <ActionButton label={t('pro.detail.deliver')} busy={uploading} onPress={onDeliver} theme={theme} />
       ) : null}
 

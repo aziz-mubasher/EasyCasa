@@ -2,7 +2,12 @@ import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import type { Enquiry, EnquiryEvent, EnquiryStatus } from '@easycasa/api-client';
+import type { Enquiry, EnquiryEvent } from '@easycasa/api-client';
+import {
+  presentedEnquiryStatus,
+  presentedIntentKey,
+  type PresentedEnquiryStatus,
+} from '../../enquiries/present';
 import { Banks4AllAffordabilityBadge } from './Banks4AllAffordabilityBadge';
 import { EnquiryStatusPill } from './EnquiryStatusPill';
 import { useTheme } from '../../theme/useTheme';
@@ -13,18 +18,13 @@ interface Action {
   primary?: boolean;
 }
 
-/** Lifecycle actions offered per status (mirrors the Phase 24 machine). */
-const ACTIONS: Record<EnquiryStatus, Action[]> = {
+/** Seller actions: mark contacted, close, reopen. No merit step and no order conversion. */
+const ACTIONS: Record<PresentedEnquiryStatus, Action[]> = {
   NEW: [
     { event: 'CONTACT', key: 'markContacted', primary: true },
     { event: 'CLOSE', key: 'close' },
   ],
-  CONTACTED: [
-    { event: 'QUALIFY', key: 'qualify', primary: true },
-    { event: 'CLOSE', key: 'close' },
-  ],
-  QUALIFIED: [{ event: 'CLOSE', key: 'close' }],
-  CONVERTED: [],
+  CONTACTED: [{ event: 'CLOSE', key: 'close' }],
   CLOSED: [{ event: 'REOPEN', key: 'reopen' }],
 };
 
@@ -32,17 +32,15 @@ export function EnquiryCard({
   enquiry,
   busy,
   onTransition,
-  onConvert,
 }: {
   enquiry: Enquiry;
   busy: boolean;
   onTransition: (event: EnquiryEvent) => void;
-  onConvert: () => void;
 }) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const actions = ACTIONS[enquiry.status];
-  const contact = enquiry.contactEmail ?? enquiry.contactPhone ?? '';
+  const presented = presentedEnquiryStatus(enquiry.status);
+  const actions = ACTIONS[presented];
 
   return (
     <View
@@ -50,7 +48,7 @@ export function EnquiryCard({
     >
       <View style={styles.head}>
         <Text style={[styles.intent, { color: theme.colors.text }]}>
-          {t(`enquiryInbox.intents.${enquiry.intent}`)}
+          {t(`enquiryInbox.intents.${presentedIntentKey(enquiry.intent)}`)}
         </Text>
         <EnquiryStatusPill status={enquiry.status} />
       </View>
@@ -59,32 +57,11 @@ export function EnquiryCard({
         {enquiry.message}
       </Text>
       <Banks4AllAffordabilityBadge enquiry={enquiry} />
-      {contact ? (
-        <Text style={[styles.contact, { color: theme.colors.textMuted }]}>{contact}</Text>
-      ) : null}
-      {enquiry.orderId ? (
-        <Text style={[styles.order, { color: theme.colors.primary }]}>
-          {t('enquiryInbox.orderCreated')} · {enquiry.orderId.slice(0, 8)}…
-        </Text>
-      ) : null}
 
       {busy ? (
         <ActivityIndicator style={{ marginTop: 12 }} color={theme.colors.primary} />
       ) : (
         <View style={styles.actions}>
-          {enquiry.status === 'QUALIFIED' ? (
-            <Pressable
-              onPress={onConvert}
-              style={[
-                styles.btn,
-                { backgroundColor: theme.colors.primary, borderRadius: theme.radius.sm },
-              ]}
-            >
-              <Text style={{ color: theme.colors.primaryText, fontWeight: '700', fontSize: 13 }}>
-                {t('enquiryInbox.actions.convert')}
-              </Text>
-            </Pressable>
-          ) : null}
           {actions.map((a) => (
             <Pressable
               key={a.event}
@@ -118,8 +95,6 @@ const styles = StyleSheet.create({
   head: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   intent: { fontSize: 15, fontWeight: '700', flex: 1, paddingRight: 8 },
   message: { fontSize: 13, lineHeight: 19 },
-  contact: { fontSize: 12 },
-  order: { fontSize: 12, fontWeight: '600' },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 },
   btn: { paddingHorizontal: 14, paddingVertical: 9 },
 });

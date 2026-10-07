@@ -3,12 +3,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { summarizeQuote, type Quote } from '@easycasa/api-client';
+import { omitNonFlatQuote } from '../../catalog/flat-prices';
 import { useTheme } from '../../theme/useTheme';
 
 export function QuoteSummary({ quote }: { quote: Quote }) {
   const theme = useTheme();
   const { t, i18n } = useTranslation();
-  const display = summarizeQuote(quote, i18n.language);
+  const display = summarizeQuote(omitNonFlatQuote(quote), i18n.language);
 
   return (
     <View style={[styles.card, { backgroundColor: theme.colors.surface, borderRadius: theme.radius.md }]}>
@@ -43,9 +44,6 @@ export function QuoteSummary({ quote }: { quote: Quote }) {
               {display.estimatedTotal}
             </Text>
           </View>
-          <Text style={[styles.note, { color: theme.colors.textMuted }]}>
-            {t('owner.quote.provvigioneNote')}
-          </Text>
         </>
       ) : null}
     </View>
@@ -64,5 +62,4 @@ const styles = StyleSheet.create({
   totalAmount: { fontSize: 18, fontWeight: '800' },
   subLabel: { fontSize: 13 },
   subAmount: { fontSize: 13 },
-  note: { fontSize: 11, fontStyle: 'italic', marginTop: 2 },
 });

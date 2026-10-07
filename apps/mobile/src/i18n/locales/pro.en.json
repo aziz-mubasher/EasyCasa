@@ -8,14 +8,15 @@
       "credential": "Required credential",
       "province": "Province",
       "start": "Start task",
-      "deliver": "Upload deliverable"
+      "deliver": "Upload deliverable",
+      "unavailable": "This assignment is not available in the app."
     },
     "creds": {
       "title": "Credentials",
       "yours": "Your credentials",
       "none": "No credentials on file.",
       "add": "Submit a credential",
-      "reference": "Reference (REA / albo / policy no.)",
+      "reference": "Reference (register / policy no.)",
       "submit": "Submit for verification",
       "note": "Credentials must be verified by EasyCasa before you can be assigned regulated work.",
       "PENDING": "Pending",

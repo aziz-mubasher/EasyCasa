@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { ProAssignment } from '@easycasa/api-client';
 import { useMyAssignments, useMyProfile } from '../../src/api/professional-hooks';
+import { listableAssignments } from '../../src/pro/assignment-filter';
 import { AssignmentCard } from '../../src/components/pro/AssignmentCard';
 import { useTheme } from '../../src/theme/useTheme';
 
@@ -40,7 +41,7 @@ export default function ProInbox() {
         <Text style={[styles.center, { color: theme.colors.danger }]}>{t('common.error')}</Text>
       ) : (
         <FlatList
-          data={data ?? []}
+          data={listableAssignments(data ?? [])}
           keyExtractor={(a) => a.id}
           renderItem={({ item }) => <AssignmentCard assignment={item} onPress={open} />}
           contentContainerStyle={styles.list}

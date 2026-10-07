@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import type { EnquiryIntent } from '@easycasa/api-client';
+import { SEEKER_ENQUIRY_INTENTS, seekerIntent, type SeekerEnquiryIntent } from '../../enquiries/present';
 import { useTheme } from '../../theme/useTheme';
-
-const INTENTS: EnquiryIntent[] = ['info', 'viewing', 'offer'];
 
 export function EnquiryModal({
   visible,
@@ -16,11 +14,11 @@ export function EnquiryModal({
   visible: boolean;
   submitting: boolean;
   onClose: () => void;
-  onSubmit: (v: { intent: EnquiryIntent; message: string; contactEmail?: string; contactPhone?: string }) => void;
+  onSubmit: (v: { intent: SeekerEnquiryIntent; message: string; contactEmail?: string; contactPhone?: string }) => void;
 }) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [intent, setIntent] = useState<EnquiryIntent>('viewing');
+  const [intent, setIntent] = useState<SeekerEnquiryIntent>('viewing');
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -28,8 +26,8 @@ export function EnquiryModal({
   const canSend = message.trim().length > 0 && (email.trim().length > 0 || phone.trim().length > 0) && !submitting;
 
   const submit = () => {
-    const body: { intent: EnquiryIntent; message: string; contactEmail?: string; contactPhone?: string } = {
-      intent,
+    const body: { intent: SeekerEnquiryIntent; message: string; contactEmail?: string; contactPhone?: string } = {
+      intent: seekerIntent(intent),
       message: message.trim(),
     };
     if (email.trim()) body.contactEmail = email.trim();
@@ -45,7 +43,7 @@ export function EnquiryModal({
 
           <Text style={[styles.label, { color: theme.colors.textMuted }]}>{t('enquiry.intent')}</Text>
           <View style={styles.row}>
-            {INTENTS.map((i) => (
+            {SEEKER_ENQUIRY_INTENTS.map((i) => (
               <Pressable
                 key={i}
                 onPress={() => setIntent(i)}

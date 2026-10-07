@@ -83,10 +83,13 @@ export default function LeaseScreen() {
 
   useEffect(() => {
     if (!input) {
+      // Lease preview behaviour is unchanged in EC-APP-1-PR2. The reset stays here.
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- existing preview clear
       setPreview(null);
       return;
     }
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- existing in-flight flag
     setPreviewBusy(true);
     void api
       .previewLease(input)

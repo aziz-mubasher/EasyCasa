@@ -12,12 +12,16 @@ const config = getDefaultConfig(projectRoot);
 config.watchFolders = [monorepoRoot];
 
 // Resolve modules from the app first, then the monorepo root.
+// pnpm does not hoist transitive packages into those folders; the virtual
+// store at node_modules/.pnpm/node_modules is where they actually live.
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(monorepoRoot, 'node_modules'),
+  path.resolve(monorepoRoot, 'node_modules/.pnpm/node_modules'),
 ];
 
-// pnpm uses symlinks; let Metro follow them.
+// pnpm uses symlinks. Keep lookup inside nodeModulesPaths so a nested
+// package does not pull a second copy of react-native past the web alias.
 config.resolver.unstable_enableSymlinks = true;
 config.resolver.disableHierarchicalLookup = true;
 

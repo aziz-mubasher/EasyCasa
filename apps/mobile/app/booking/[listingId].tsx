@@ -23,8 +23,10 @@ export default function BookViewingScreen() {
   const { listingId, enquiryId } = useLocalSearchParams<{ listingId: string; enquiryId?: string }>();
   const id = listingId ?? '';
 
-  const from = Date.now();
-  const to = from + 30 * DAY_MS;
+  const [{ from, to }] = useState(() => {
+    const start = Date.now();
+    return { from: start, to: start + 30 * DAY_MS };
+  });
   const { data: slots, isLoading } = useSlots(id, from, to);
   const book = useBookViewing(id);
   const [booked, setBooked] = useState<number | null>(null);

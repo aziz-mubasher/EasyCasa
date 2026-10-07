@@ -11,6 +11,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import type { QuoteRequest } from '@easycasa/api-client';
 
+import { dropNonFlatCatalogItems } from '../../../src/catalog/flat-prices';
 import { useCatalog, usePackages, useQuote } from '../../../src/api/owner-hooks';
 import { PackageCard } from '../../../src/components/owner/PackageCard';
 import { ServiceItemRow } from '../../../src/components/owner/ServiceItemRow';
@@ -29,6 +30,12 @@ export default function ServicesScreen() {
 
   const [packageCode, setPackageCode] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  const catalogItems = useMemo(
+    () => dropNonFlatCatalogItems(catalog ?? []),
+    [catalog],
+  );
+  const flatCodes = useMemo(() => new Set(catalogItems.map((item) => item.code)), [catalogItems]);
 
   const coveredByPackage = useMemo(() => {
     const pkg = packages?.find((p) => p.code === packageCode);
@@ -49,7 +56,7 @@ export default function ServicesScreen() {
   };
 
   const buildRequest = (): QuoteRequest => {
-    const items = [...selected].filter((c) => !coveredByPackage.has(c));
+    const items = [...selected].filter((c) => flatCodes.has(c) && !coveredByPackage.has(c));
     return {
       ...(packageCode ? { packageCode } : {}),
       ...(items.length ? { items } : {}),
@@ -97,7 +104,7 @@ export default function ServicesScreen() {
       <Text style={[styles.section, { color: theme.colors.textMuted }]}>
         {t('owner.services.alaCarteHeading')}
       </Text>
-      {(catalog ?? []).map((item) => {
+      {catalogItems.map((item) => {
         const covered = coveredByPackage.has(item.code);
         return (
           <View key={item.code} style={covered ? styles.covered : undefined}>
