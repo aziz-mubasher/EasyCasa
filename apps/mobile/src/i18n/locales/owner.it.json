@@ -49,15 +49,13 @@
     },
     "svc": {
       "plusIva": "{{amount}} + IVA",
-      "passthrough": "{{amount}} a costo",
-      "provvigione": "{{rate}}% provvigione sulla vendita"
+      "passthrough": "{{amount}} a costo"
     },
     "pkg": { "includes_one": "{{count}} servizio incluso", "includes_other": "{{count}} servizi inclusi" },
     "quote": {
       "estimated": "stimato",
       "dueNow": "Da pagare ora",
-      "estimatedTotal": "Totale stimato",
-      "provvigioneNote": "La provvigione matura solo alla conclusione dell'affare."
+      "estimatedTotal": "Totale stimato"
     },
     "lease": {
       "title": "Contratto / RLI",

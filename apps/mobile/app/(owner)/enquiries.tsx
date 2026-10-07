@@ -3,15 +3,11 @@ import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 're
 import { useTranslation } from 'react-i18next';
 
 import type { Enquiry, EnquiryEvent } from '@easycasa/api-client';
-import {
-  useConvertEnquiry,
-  useInboundEnquiries,
-  useTransitionEnquiry,
-} from '../../src/api/enquiries';
+import { useInboundEnquiries, useTransitionEnquiry } from '../../src/api/enquiries';
 import { EnquiryCard } from '../../src/components/owner/EnquiryCard';
 import { useTheme } from '../../src/theme/useTheme';
 
-const ACTIVE: Enquiry['status'][] = ['NEW', 'CONTACTED', 'QUALIFIED'];
+const ACTIVE: Enquiry['status'][] = ['NEW', 'CONTACTED'];
 
 export default function EnquiriesInboxScreen() {
   const theme = useTheme();
@@ -19,28 +15,13 @@ export default function EnquiriesInboxScreen() {
 
   const { data, isLoading } = useInboundEnquiries();
   const transition = useTransitionEnquiry();
-  const convert = useConvertEnquiry();
-  const busyId = transition.isPending
-    ? transition.variables?.id
-    : convert.isPending
-      ? convert.variables
-      : undefined;
+  const busyId = transition.isPending ? transition.variables?.id : undefined;
 
   const onTransition = (id: string, event: EnquiryEvent) => {
     transition.mutate(
       { id, event },
       { onError: (e) => Alert.alert(t('common.error'), e.message) },
     );
-  };
-  const onConvert = (id: string) => {
-    convert.mutate(id, {
-      onSuccess: (r) =>
-        Alert.alert(
-          t('enquiryInbox.converted'),
-          t('enquiryInbox.convertedBody', { orderId: r.orderId }),
-        ),
-      onError: (e) => Alert.alert(t('common.error'), e.message),
-    });
   };
 
   if (isLoading) {
@@ -79,7 +60,6 @@ export default function EnquiriesInboxScreen() {
               enquiry={e}
               busy={busyId === e.id}
               onTransition={(ev) => onTransition(e.id, ev)}
-              onConvert={() => onConvert(e.id)}
             />
           ))}
         </>
@@ -96,7 +76,6 @@ export default function EnquiriesInboxScreen() {
               enquiry={e}
               busy={busyId === e.id}
               onTransition={(ev) => onTransition(e.id, ev)}
-              onConvert={() => onConvert(e.id)}
             />
           ))}
         </>

@@ -43,12 +43,19 @@ export function DiscoveryMap({
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const [vertices, setVertices] = useState<GeoPoint[]>([]);
+  const [trackedDrawMode, setTrackedDrawMode] = useState(drawMode);
+  if (drawMode !== trackedDrawMode) {
+    setTrackedDrawMode(drawMode);
+    if (!drawMode) setVertices([]);
+  }
   const drawModeRef = useRef(drawMode);
-  drawModeRef.current = drawMode;
   const onSelectRef = useRef(onSelectListing);
-  onSelectRef.current = onSelectListing;
   const onRegionRef = useRef(onRegionChange);
-  onRegionRef.current = onRegionChange;
+  useEffect(() => {
+    drawModeRef.current = drawMode;
+    onSelectRef.current = onSelectListing;
+    onRegionRef.current = onRegionChange;
+  }, [drawMode, onSelectListing, onRegionChange]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -120,10 +127,6 @@ export function DiscoveryMap({
       markersRef.current.push(marker);
     }
   }, [clusters, drawMode, theme.colors.primary, theme.colors.primaryText]);
-
-  useEffect(() => {
-    if (!drawMode) setVertices([]);
-  }, [drawMode]);
 
   const finishPolygon = () => {
     if (vertices.length >= 3) onPolygonComplete(vertices);

@@ -49,15 +49,13 @@
     },
     "svc": {
       "plusIva": "{{amount}} + VAT",
-      "passthrough": "{{amount}} at cost",
-      "provvigione": "{{rate}}% commission on sale"
+      "passthrough": "{{amount}} at cost"
     },
     "pkg": { "includes_one": "{{count}} service included", "includes_other": "{{count}} services included" },
     "quote": {
       "estimated": "estimated",
       "dueNow": "Due now",
-      "estimatedTotal": "Estimated total",
-      "provvigioneNote": "Commission matures only when the deal closes."
+      "estimatedTotal": "Estimated total"
     },
     "lease": {
       "title": "Lease / RLI",

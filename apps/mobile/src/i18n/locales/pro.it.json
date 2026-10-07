@@ -8,14 +8,15 @@
       "credential": "Abilitazione richiesta",
       "province": "Provincia",
       "start": "Avvia attivit\u00e0",
-      "deliver": "Carica documento"
+      "deliver": "Carica documento",
+      "unavailable": "Questo incarico non è disponibile nell'app."
     },
     "creds": {
       "title": "Abilitazioni",
       "yours": "Le tue abilitazioni",
       "none": "Nessuna abilitazione registrata.",
       "add": "Invia un'abilitazione",
-      "reference": "Riferimento (REA / albo / n. polizza)",
+      "reference": "Riferimento (albo / n. polizza)",
       "submit": "Invia per verifica",
       "note": "Le abilitazioni devono essere verificate da EasyCasa prima di poter ricevere incarichi regolamentati.",
       "PENDING": "In attesa",

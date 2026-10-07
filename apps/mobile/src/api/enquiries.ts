@@ -8,7 +8,6 @@ import {
 
 import {
   EasyCasaEnquiriesApi,
-  type ConvertResult,
   type Enquiry,
   type EnquiryEvent,
   type EnquiryIntent,
@@ -41,7 +40,7 @@ export function useCreateEnquiry() {
   });
 }
 
-/* Owner / mediator inbox ---------------------------------------------- */
+/* Owner inbox --------------------------------------------------------- */
 
 const INBOX_KEY = ['enquiries', 'inbound'] as const;
 
@@ -60,15 +59,6 @@ export function useTransitionEnquiry() {
   const qc = useQueryClient();
   return useMutation<Enquiry, Error, { id: string; event: EnquiryEvent }>({
     mutationFn: ({ id, event }) => api.transition(id, event),
-    onSuccess: () => void qc.invalidateQueries({ queryKey: INBOX_KEY }),
-  });
-}
-
-export function useConvertEnquiry() {
-  const api = useEnquiriesApi();
-  const qc = useQueryClient();
-  return useMutation<ConvertResult, Error, string>({
-    mutationFn: (id) => api.convert(id),
     onSuccess: () => void qc.invalidateQueries({ queryKey: INBOX_KEY }),
   });
 }

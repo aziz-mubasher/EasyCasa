@@ -3,21 +3,21 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import type { EnquiryStatus } from '@easycasa/api-client';
+import { presentedEnquiryStatus, type PresentedEnquiryStatus } from '../../enquiries/present';
 
-const COLORS: Record<EnquiryStatus, string> = {
+const COLORS: Record<PresentedEnquiryStatus, string> = {
   NEW: '#3b82f6',
   CONTACTED: '#f59e0b',
-  QUALIFIED: '#3bc9a8',
-  CONVERTED: '#22a559',
   CLOSED: '#6b7280',
 };
 
 export function EnquiryStatusPill({ status }: { status: EnquiryStatus }) {
   const { t } = useTranslation();
-  const color = COLORS[status];
+  const presented = presentedEnquiryStatus(status);
+  const color = COLORS[presented];
   return (
     <View style={[styles.pill, { backgroundColor: `${color}22`, borderColor: color }]}>
-      <Text style={[styles.text, { color }]}>{t(`enquiryInbox.status.${status}`)}</Text>
+      <Text style={[styles.text, { color }]}>{t(`enquiryInbox.status.${presented}`)}</Text>
     </View>
   );
 }

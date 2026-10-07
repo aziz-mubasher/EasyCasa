@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { formatEuroCents, type CatalogItem } from '@easycasa/api-client';
+import { isFlatCatalogItem } from '../../catalog/flat-prices';
 import { useTheme } from '../../theme/useTheme';
 
 interface Props {
@@ -15,9 +16,6 @@ function priceLabel(
   item: CatalogItem,
   t: (key: string, options?: Record<string, unknown>) => string,
 ): string {
-  if (item.priceModel === 'provvigione') {
-    return t('owner.svc.provvigione', { rate: ((item.ratePercent ?? 0) * 100).toFixed(2) });
-  }
   const base = formatEuroCents(item.amountCents ?? 0);
   if (item.priceModel === 'passthrough') return t('owner.svc.passthrough', { amount: base });
   return item.ivaApplicable ? t('owner.svc.plusIva', { amount: base }) : base;
@@ -29,6 +27,8 @@ export function ServiceItemRow({ item, selected, onToggle }: Props) {
   const label = i18n.language.startsWith('it') ? item.labelIt : item.labelEn;
   const translate = (key: string, options?: Record<string, unknown>) =>
     String(t(key, options as never));
+
+  if (!isFlatCatalogItem(item)) return null;
 
   return (
     <Pressable

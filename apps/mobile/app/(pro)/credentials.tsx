@@ -4,17 +4,12 @@ import { useTranslation } from 'react-i18next';
 
 import type { ProCredential } from '@easycasa/api-client';
 import { useMyProfile, useSubmitCredential } from '../../src/api/professional-hooks';
+import {
+  ACCEPTED_CREDENTIAL_TYPES,
+  isAcceptedCredentialType,
+} from '../../src/pro/assignment-filter';
 import { CredentialRow } from '../../src/components/pro/CredentialRow';
 import { useTheme } from '../../src/theme/useTheme';
-
-const TYPES: ProCredential['type'][] = [
-  'REA_MEDIATORE',
-  'RC_INSURANCE',
-  'ALBO_TECNICO',
-  'APE_CERTIFIER',
-  'PHOTOGRAPHER',
-  'NOTAIO',
-];
 
 export default function ProCredentials() {
   const theme = useTheme();
@@ -22,7 +17,7 @@ export default function ProCredentials() {
   const profile = useMyProfile();
   const submit = useSubmitCredential(profile.data?.id ?? '');
 
-  const [type, setType] = useState<ProCredential['type']>('REA_MEDIATORE');
+  const [type, setType] = useState<ProCredential['type']>(ACCEPTED_CREDENTIAL_TYPES[0] ?? 'ALBO_TECNICO');
   const [reference, setReference] = useState('');
 
   if (profile.isLoading) return <ActivityIndicator style={styles.center} color={theme.colors.primary} />;
@@ -35,6 +30,7 @@ export default function ProCredentials() {
   }
 
   const onSubmit = () => {
+    if (!isAcceptedCredentialType(type)) return;
     submit.mutate({ type, ...(reference ? { reference } : {}) });
     setReference('');
   };
@@ -42,15 +38,17 @@ export default function ProCredentials() {
   return (
     <ScrollView style={{ backgroundColor: theme.colors.background }} contentContainerStyle={styles.content}>
       <Text style={[styles.section, { color: theme.colors.textMuted }]}>{t('pro.creds.yours')}</Text>
-      {profile.data.credentials.length === 0 ? (
+      {profile.data.credentials.filter((c) => isAcceptedCredentialType(c.type)).length === 0 ? (
         <Text style={[styles.muted, { color: theme.colors.textMuted }]}>{t('pro.creds.none')}</Text>
       ) : (
-        profile.data.credentials.map((c) => <CredentialRow key={c.type} credential={c} />)
+        profile.data.credentials
+          .filter((c) => isAcceptedCredentialType(c.type))
+          .map((c) => <CredentialRow key={c.type} credential={c} />)
       )}
 
       <Text style={[styles.section, { color: theme.colors.textMuted }]}>{t('pro.creds.add')}</Text>
       <View style={styles.chips}>
-        {TYPES.map((tp) => {
+        {ACCEPTED_CREDENTIAL_TYPES.map((tp) => {
           const active = tp === type;
           return (
             <Pressable
