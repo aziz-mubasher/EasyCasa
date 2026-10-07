@@ -27,6 +27,7 @@ import type { QueryListingDto } from './dto/query-listing.dto';
 import type { AuthUser } from '../auth/auth.types';
 import { buildListingDetail } from './domain/detail';
 import { LISTING_READ, type ListingReadPort } from './domain/ports';
+import { agentForPublic } from './domain/public-contact';
 import type { ListingDetail, SimilarPin } from './domain/types';
 import { ValuationBandService } from '../avm/valuation-band.service';
 import { resolveListingPropertyType } from '../avm/domain/normalize-property-type';
@@ -72,21 +73,6 @@ export class ListingsService {
     private readonly boosts: ListingBoostService,
   ) {}
 
-  /** Public-safe publisher contact for listing pages (no email / OIDC slug). */
-  private async publicAgentFor(
-    agentId: string | null | undefined,
-  ): Promise<{ displayName: string | null; phone: string | null; slug: string | null } | null> {
-    if (!agentId) return null;
-    const u = await this.users.findById(agentId);
-    if (!u) return null;
-    const slug = u.slug && !u.slug.startsWith('oidc:') ? u.slug : null;
-    return {
-      displayName: u.displayName ?? null,
-      phone: u.phone ?? null,
-      slug,
-    };
-  }
-
   search(q: QueryListingDto) {
     return this.repo.search(q);
   }
@@ -120,20 +106,29 @@ export class ListingsService {
     });
   }
 
+  /**
+   * Public listing. UUID stays the Phase 21 detail. A slug stays the catalogue
+   * row. Both attach `agent` only through `agentForPublic`.
+   */
   async getBySlug(slug: string) {
-    // UUID → Phase 21 detail (map clusters link by listingId).
     if (UUID_RE.test(slug)) {
-      return this.getDetail(slug);
+      const detail = await this.getDetail(slug);
+      const contact = detail.agent?.id
+        ? await this.users.publicContactFor(detail.agent.id)
+        : null;
+      return {
+        ...detail,
+        agent: agentForPublic(contact, detail.agent),
+      };
     }
     const l = await this.repo.findBySlug(slug);
     if (!l) throw new NotFoundException('listing not found');
-    // EC-S-T23 — fail-soft catalogue view increment (never breaks detail).
     void recordListingView(this.db, l.id);
     const media = await this.repo.listMedia(l.id);
     const imageUrls = media
       .filter((m) => m.type === 'image' || m.type === 'floorplan')
       .map((m) => m.url);
-    const agent = await this.publicAgentFor(l.agentId);
+    const contact = l.agentId ? await this.users.publicContactFor(l.agentId) : null;
     const boosted = await this.boosts.isListingBoosted(l.id);
     return {
       ...l,
@@ -144,7 +139,7 @@ export class ListingsService {
       media,
       imageUrls,
       coverUrl: imageUrls[0] ?? null,
-      agent,
+      agent: agentForPublic(contact, null),
       boosted,
     };
   }
