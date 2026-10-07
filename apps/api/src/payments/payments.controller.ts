@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Headers, Param, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Logger,
+  NotFoundException,
+  Param,
+  Post,
+  Req,
+} from '@nestjs/common';
 import type { RawBodyRequest } from '@nestjs/common';
 import type { Request } from 'express';
 import { plainToInstance } from 'class-transformer';
@@ -10,10 +20,13 @@ import { apiConfig } from '../config';
 import { CreateIntentDto, WebhookDto } from './dto';
 import { PaymentsService } from './payments.service';
 import { StripePaymentsWebhookHandler } from './stripe-webhook.handler';
+import { decidePaymentWebhook, truncateIp } from './webhook-route';
 
 @Controller('payments')
 @RequiresAuth()
 export class PaymentsController {
+  private readonly log = new Logger(PaymentsController.name);
+
   constructor(
     private readonly service: PaymentsService,
     private readonly stripeWebhook: StripePaymentsWebhookHandler,
@@ -34,16 +47,35 @@ export class PaymentsController {
     return this.service.refund(id);
   }
 
-  /** Public — Stripe signature verified when PAYMENTS_ENABLED; DEV JSON webhook otherwise. */
+  /**
+   * Public. Signed Stripe when PAYMENTS_ENABLED.
+   * Unsigned JSON only outside production and only with PAYMENTS_DEV_WEBHOOK=true.
+   * Production never accepts an unsigned body (404), whatever the payments flag is.
+   */
   @Public()
   @Post('webhook')
   async webhook(
     @Req() req: RawBodyRequest<Request>,
     @Headers('stripe-signature') sig: string | undefined,
   ) {
-    if (apiConfig.PAYMENTS_ENABLED) {
+    const decision = decidePaymentWebhook({
+      nodeEnv: apiConfig.NODE_ENV,
+      paymentsEnabled: apiConfig.PAYMENTS_ENABLED,
+      devWebhook: apiConfig.PAYMENTS_DEV_WEBHOOK,
+      hasSignature: Boolean(sig),
+    });
+
+    if (decision.action === 'reject') {
+      this.log.warn(
+        `payments webhook rejected ip=${truncateIp(req.ip)} reason=${decision.reason}`,
+      );
+      throw new NotFoundException();
+    }
+
+    if (decision.action === 'stripe') {
       return this.stripeWebhook.handle(req.rawBody as Buffer, sig ?? '');
     }
+
     const dto = plainToInstance(WebhookDto, req.body);
     await validateOrReject(dto);
     await this.service.handleWebhook(dto);
