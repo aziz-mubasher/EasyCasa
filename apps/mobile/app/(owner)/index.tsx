@@ -15,6 +15,8 @@ import type { OwnerProperty } from '@easycasa/api-client';
 import { useInboundEnquiries } from '../../src/api/enquiries';
 import { useMyProperties } from '../../src/api/owner-hooks';
 import { useAuth } from '../../src/auth/AuthProvider';
+import { OwnerTabBar } from '../../src/components/shell/OwnerTabBar';
+import { NAV, publishPath } from '../../src/flow/paths';
 import { useTheme } from '../../src/theme/useTheme';
 
 export default function OwnerHome() {
@@ -22,7 +24,7 @@ export default function OwnerHome() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t } = useTranslation();
-  const { isAuthenticated, signIn, ready } = useAuth();
+  const { isAuthenticated, ready } = useAuth();
   const { data, isLoading, isError, refetch } = useMyProperties();
   const { data: inbound } = useInboundEnquiries();
   const newCount = (inbound ?? []).filter((e) => e.status === 'NEW').length;
@@ -39,45 +41,7 @@ export default function OwnerHome() {
     );
   }
 
-  if (!isAuthenticated) {
-    return (
-      <View
-        style={[
-          styles.centerFill,
-          { backgroundColor: theme.colors.background, paddingHorizontal: 24 },
-        ]}
-      >
-        <Text style={{ fontFamily: theme.font.display, fontSize: 24, color: theme.colors.text, textAlign: 'center' }}>
-          {t('auth.signedOutTitle')}
-        </Text>
-        <Text
-          style={{
-            fontFamily: theme.font.body,
-            fontSize: 16,
-            color: theme.colors.textMuted,
-            textAlign: 'center',
-            marginTop: 10,
-            lineHeight: 22,
-          }}
-        >
-          {t('auth.signedOutBody')}
-        </Text>
-        <Pressable
-          onPress={() => void signIn()}
-          style={[
-            styles.priBtn,
-            { backgroundColor: theme.colors.ink, borderRadius: theme.radius.md, marginTop: 20 },
-          ]}
-        >
-          <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 16, color: theme.colors.inkText }}>
-            {t('auth.signIn')}
-          </Text>
-        </Pressable>
-      </View>
-    );
-  }
-
-  if (isError) {
+  if (isError && isAuthenticated) {
     return (
       <View style={[styles.centerFill, { backgroundColor: theme.colors.background }]}>
         <Text style={{ color: theme.colors.danger, fontFamily: theme.font.displaySemi }}>
@@ -92,10 +56,16 @@ export default function OwnerHome() {
     );
   }
 
+  const heroTitle = primary?.title ?? 'Trilocale con terrazzo';
+  const heroMeta = primary
+    ? `${t('owner.dealType.' + primary.dealType)} · ${primary.status}`
+    : 'Brescia · Centro storico · € 245.000';
+
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <ScrollView
       style={{ flex: 1, backgroundColor: theme.colors.background }}
-      contentContainerStyle={{ paddingBottom: 40 }}
+      contentContainerStyle={{ paddingBottom: 24 }}
     >
       <View
         style={[
@@ -112,7 +82,7 @@ export default function OwnerHome() {
           </Text>
         </View>
 
-        {primary ? (
+        {primary || !isAuthenticated ? (
           <View style={styles.heroBody}>
             <View style={[styles.heroThumb, { backgroundColor: 'rgba(243,237,225,0.18)' }]}>
               <Text style={{ fontSize: 28 }}>⌂</Text>
@@ -126,10 +96,10 @@ export default function OwnerHome() {
                   color: theme.colors.inkText,
                 }}
               >
-                {primary.title ?? t('owner.untitled')}
+                {heroTitle}
               </Text>
               <Text style={{ fontSize: 16, color: '#e8dfcc', fontFamily: theme.font.body }}>
-                {t('owner.dealType.' + primary.dealType)} · {primary.status}
+                {heroMeta}
               </Text>
             </View>
           </View>
@@ -160,24 +130,21 @@ export default function OwnerHome() {
             label="MESSAGGI NUOVI"
             big={String(newCount)}
             sub={newCount > 0 ? t('enquiryInbox.badgeNew', { count: newCount }) : 'Nessun messaggio nuovo'}
-            onPress={() => router.push('/(owner)/enquiries')}
+            onPress={() => router.push(NAV.inbox)}
             theme={theme}
           />
           <Tile
             label="PROSSIMA VISITA"
             big="—"
             sub="Apri le visite"
-            onPress={() => {
-              if (primary) router.push(`/(owner)/${primary.id}/services`);
-            }}
+            onPress={() => router.push(NAV.visits)}
             theme={theme}
             monoBig={false}
           />
         </View>
 
-        {primary ? (
-          <Pressable
-            onPress={() => router.push(`/(owner)/${primary.id}/fascicolo`)}
+        <Pressable
+            onPress={() => router.push(NAV.documents)}
             style={[
               styles.tile,
               {
@@ -206,7 +173,6 @@ export default function OwnerHome() {
             </View>
             <Text style={{ fontSize: 18, color: theme.colors.text }}>›</Text>
           </Pressable>
-        ) : null}
 
         <View
           style={[
@@ -220,38 +186,24 @@ export default function OwnerHome() {
           ]}
         >
           <Text style={styles.lbl}>L&apos;ANNUNCIO</Text>
-          {primary ? (
-            <>
-              <Pressable
-                onPress={() => router.push(`/(owner)/${primary.id}/services`)}
-                style={styles.listRow}
-              >
-                <Text style={{ fontSize: 15, fontFamily: theme.font.body, color: theme.colors.text }}>
-                  {t('owner.services.title')}
-                </Text>
-                <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 14, color: theme.colors.primary }}>
-                  Apri
-                </Text>
-              </Pressable>
-              <Pressable
-                onPress={() => router.push(`/(owner)/${primary.id}/lease`)}
-                style={styles.listRow}
-              >
-                <Text style={{ fontSize: 15, fontFamily: theme.font.body, color: theme.colors.text }}>
-                  {t('owner.lease.title')}
-                </Text>
-                <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 14, color: theme.colors.primary }}>
-                  Apri
-                </Text>
-              </Pressable>
-            </>
-          ) : (
-            <Pressable onPress={() => router.push('/(owner)/valuation')}>
-              <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 15, color: theme.colors.primary }}>
-                {t('valuation.title')}
-              </Text>
-            </Pressable>
-          )}
+          <Pressable onPress={() => router.push(publishPath('basics'))} style={styles.listRow}>
+            <Text style={{ fontSize: 15, fontFamily: theme.font.body, color: theme.colors.text }}>
+              Pubblica o riprendi la bozza
+            </Text>
+            <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 14, color: theme.colors.primary }}>Apri</Text>
+          </Pressable>
+          <Pressable onPress={() => router.push(NAV.rule)} style={styles.listRow}>
+            <Text style={{ fontSize: 15, fontFamily: theme.font.body, color: theme.colors.text }}>
+              La tua regola sui messaggi
+            </Text>
+            <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 14, color: theme.colors.primary }}>Modifica</Text>
+          </Pressable>
+          <Pressable onPress={() => router.push(NAV.perimeter)} style={styles.listRow}>
+            <Text style={{ fontSize: 15, fontFamily: theme.font.body, color: theme.colors.text }}>
+              Nessuna esclusiva. Come funziona
+            </Text>
+            <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 14, color: theme.colors.primary }}>Apri</Text>
+          </Pressable>
         </View>
 
         {(data ?? []).length > 1 ? (
@@ -293,6 +245,8 @@ export default function OwnerHome() {
         </Text>
       </View>
     </ScrollView>
+    <OwnerTabBar active="home" />
+    </View>
   );
 }
 

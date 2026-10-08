@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -12,11 +11,9 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import type { EnquiryIntent } from '@easycasa/api-client';
-import { useCreateEnquiry } from '../../src/api/enquiries';
 import { useDiscoveryListing, useSimilar } from '../../src/api/discovery-hooks';
-import { useAuth } from '../../src/auth/AuthProvider';
-import { EnquiryModal } from '../../src/components/discovery/EnquiryModal';
+import { useFlow } from '../../src/flow/FlowProvider';
+import { NAV, toHref } from '../../src/flow/paths';
 import { ListingPinMap } from '../../src/components/listing/ListingPinMap';
 import { useTheme } from '../../src/theme/useTheme';
 
@@ -48,14 +45,21 @@ export default function ListingDetailScreen() {
   const theme = useTheme();
   const router = useRouter();
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
+  const flow = useFlow();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const listingId = slug ?? null;
 
-  const { data: l, isLoading, isError } = useDiscoveryListing(listingId);
+  const { data: l, isLoading, isError, refetch } = useDiscoveryListing(listingId);
   const { data: similar } = useSimilar(listingId);
-  const createEnquiry = useCreateEnquiry();
-  const [enquiryOpen, setEnquiryOpen] = useState(false);
+
+  const requireMember = (dest: string) => {
+    if (flow.isMember) {
+      router.push(toHref(dest));
+      return;
+    }
+    flow.setReturnTo(dest);
+    router.push(NAV.signIn);
+  };
 
   if (isLoading) {
     return (
@@ -67,8 +71,14 @@ export default function ListingDetailScreen() {
 
   if (isError || !l) {
     return (
-      <View style={[styles.center, { backgroundColor: theme.colors.background }]}>
-        <Text style={{ color: theme.colors.danger }}>{t('common.error')}</Text>
+      <View style={[styles.center, { backgroundColor: theme.colors.background, gap: 12 }]}>
+        <Text style={{ fontFamily: theme.font.display, fontSize: 22, color: theme.colors.text }}>Sei offline</Text>
+        <Pressable onPress={() => void refetch()}>
+          <Text style={{ color: theme.colors.primary, fontFamily: theme.font.displaySemi }}>Riprova</Text>
+        </Pressable>
+        <Pressable onPress={() => router.push(NAV.offline)}>
+          <Text style={{ color: theme.colors.textMuted }}>Apri la schermata offline</Text>
+        </Pressable>
       </View>
     );
   }
@@ -172,13 +182,7 @@ export default function ListingDetailScreen() {
         />
 
         <Pressable
-          onPress={() => {
-            if (!isAuthenticated) {
-              router.push('/(auth)/sign-in');
-              return;
-            }
-            setEnquiryOpen(true);
-          }}
+          onPress={() => listingId && requireMember(`${NAV.write}/${listingId}`)}
           style={[
             styles.cta,
             { backgroundColor: theme.colors.primary, borderRadius: theme.radius.md },
@@ -190,14 +194,7 @@ export default function ListingDetailScreen() {
         </Pressable>
 
         <Pressable
-          onPress={() => {
-            if (!isAuthenticated) {
-              router.push('/(auth)/sign-in');
-              return;
-            }
-            if (!listingId) return;
-            router.push(`/booking/${listingId}`);
-          }}
+          onPress={() => listingId && requireMember(`${NAV.booking}/${listingId}`)}
           style={[
             styles.ctaSecondary,
             {
@@ -211,40 +208,11 @@ export default function ListingDetailScreen() {
           </Text>
         </Pressable>
 
-        <EnquiryModal
-          visible={enquiryOpen}
-          submitting={createEnquiry.isPending}
-          onClose={() => setEnquiryOpen(false)}
-          onSubmit={(body: {
-            intent: EnquiryIntent;
-            message: string;
-            contactEmail?: string;
-            contactPhone?: string;
-          }) => {
-            if (!listingId) return;
-            createEnquiry.mutate(
-              { listingId, ...body },
-              {
-                onSuccess: (enquiry) => {
-                  setEnquiryOpen(false);
-                  if (body.intent === 'viewing') {
-                    Alert.alert(t('enquiry.sent'), t('viewings.bookAfterEnquiry'), [
-                      { text: t('viewings.done'), style: 'cancel' },
-                      {
-                        text: t('viewings.bookCta'),
-                        onPress: () =>
-                          router.push(`/booking/${listingId}?enquiryId=${enquiry.id}`),
-                      },
-                    ]);
-                  } else {
-                    Alert.alert(t('enquiry.sent'));
-                  }
-                },
-                onError: () => Alert.alert(t('common.error')),
-              },
-            );
-          }}
-        />
+        <Pressable onPress={() => router.push(NAV.perimeter)}>
+          <Text style={{ color: theme.colors.primary, fontFamily: theme.font.displayMed }}>
+            Cosa non facciamo
+          </Text>
+        </Pressable>
 
         {similar && similar.length > 0 ? (
           <>

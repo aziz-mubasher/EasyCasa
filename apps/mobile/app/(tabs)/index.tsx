@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -16,7 +16,9 @@ import { useTranslation } from 'react-i18next';
 import type { SearchFilters } from '@easycasa/api-client';
 import { useBoundsSearch } from '../../src/api/discovery-hooks';
 import { ListingCard } from '../../src/components/discovery/ListingCard';
-import { FilterSheet } from '../../src/components/discovery/FilterSheet';
+import { useFlow } from '../../src/flow/FlowProvider';
+import { activeFilterCount } from '../../src/flow/machine';
+import { NAV } from '../../src/flow/paths';
 import { useTheme } from '../../src/theme/useTheme';
 
 /** Brescia metro viewport — design v2 default search. */
@@ -32,20 +34,25 @@ export default function SearchListScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t } = useTranslation();
+  const flow = useFlow();
+  const discovery = flow.state.discovery;
 
-  const [query, setQuery] = useState('Brescia');
-  const [filters, setFilters] = useState<SearchFilters>({ dealType: 'sale' });
-  const [filterOpen, setFilterOpen] = useState(false);
+  const filters = useMemo<SearchFilters>(() => {
+    const next: SearchFilters = { dealType: discovery.dealType };
+    if (discovery.priceMaxEur != null) next.priceMaxCents = discovery.priceMaxEur * 100;
+    if (discovery.minRooms != null) next.minRooms = discovery.minRooms;
+    const energy: NonNullable<SearchFilters['energyClasses']> = [];
+    for (const letter of discovery.energy) {
+      if (letter === 'A') energy.push('A1');
+      else if (letter === 'B' || letter === 'C' || letter === 'D' || letter === 'E' || letter === 'F' || letter === 'G') {
+        energy.push(letter);
+      }
+    }
+    if (energy.length) next.energyClasses = energy;
+    return next;
+  }, [discovery]);
 
-  const activeFilterCount = useMemo(() => {
-    let n = 0;
-    if (filters.priceMaxCents != null) n += 1;
-    if (filters.minRooms != null) n += 1;
-    if (filters.energyClasses?.length) n += 1;
-    if (filters.types?.length) n += 1;
-    if (filters.priceMinCents != null) n += 1;
-    return n;
-  }, [filters]);
+  const filterCount = activeFilterCount(discovery);
 
   const search = useBoundsSearch({
     bounds: BRESCIA_BOUNDS,
@@ -72,8 +79,8 @@ export default function SearchListScreen() {
           >
             <Text style={{ color: theme.colors.textMuted, fontSize: 18 }}>⌕</Text>
             <TextInput
-              value={query}
-              onChangeText={setQuery}
+              value={discovery.text}
+              onChangeText={(text) => flow.setDiscovery({ text })}
               placeholder={t('search.placeholder')}
               placeholderTextColor={theme.colors.textMuted}
               style={{
@@ -88,9 +95,9 @@ export default function SearchListScreen() {
             />
           </View>
           <Pressable
-            onPress={() => setFilterOpen(true)}
+            onPress={() => router.push(NAV.filters)}
             accessibilityLabel={
-              activeFilterCount > 0 ? `Filtri, ${activeFilterCount} attivi` : 'Filtri'
+              filterCount > 0 ? `Filtri, ${filterCount} attivi` : 'Filtri'
             }
             style={[
               styles.filterBtn,
@@ -98,10 +105,10 @@ export default function SearchListScreen() {
             ]}
           >
             <Text style={{ color: theme.colors.inkText, fontSize: 18 }}>☰</Text>
-            {activeFilterCount > 0 ? (
+            {filterCount > 0 ? (
               <View style={[styles.badge, { backgroundColor: theme.colors.orange, borderColor: theme.colors.background }]}>
                 <Text style={{ fontFamily: theme.font.mono, fontSize: 11, color: theme.colors.ink }}>
-                  {activeFilterCount}
+                  {filterCount}
                 </Text>
               </View>
             ) : null}
@@ -111,35 +118,40 @@ export default function SearchListScreen() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
           <Chip
             label="Vendita"
-            on={filters.dealType === 'sale'}
-            onPress={() => setFilters((f) => ({ ...f, dealType: 'sale' }))}
+            on={discovery.dealType === 'sale'}
+            onPress={() => flow.setDiscovery({ dealType: 'sale' })}
             theme={theme}
           />
           <Chip
             label="Affitto"
-            on={filters.dealType === 'rent'}
-            onPress={() => setFilters((f) => ({ ...f, dealType: 'rent' }))}
+            on={discovery.dealType === 'rent'}
+            onPress={() => flow.setDiscovery({ dealType: 'rent' })}
             theme={theme}
           />
-          {filters.priceMaxCents != null ? (
+          {discovery.priceMaxEur != null ? (
             <Chip
-              label={`fino a € ${Math.round(filters.priceMaxCents / 100).toLocaleString('it-IT')}`}
+              label={`fino a € ${discovery.priceMaxEur.toLocaleString('it-IT')}`}
               on
-              onPress={() => setFilters((f) => ({ ...f, priceMaxCents: undefined }))}
+              onPress={() => flow.setDiscovery({ priceMaxEur: null })}
               theme={theme}
               dismiss
             />
           ) : null}
-          {filters.minRooms != null ? (
+          {discovery.minRooms != null ? (
             <Chip
-              label={`${filters.minRooms}+ locali`}
+              label={`${discovery.minRooms}+ locali`}
               on
-              onPress={() => setFilters((f) => ({ ...f, minRooms: undefined }))}
+              onPress={() => flow.setDiscovery({ minRooms: null })}
               theme={theme}
               dismiss
             />
           ) : null}
-          <Chip label="Solo privati" on={false} onPress={() => setFilterOpen(true)} theme={theme} />
+          <Chip
+            label="Solo privati"
+            on={discovery.seller === 'private'}
+            onPress={() => flow.setDiscovery({ seller: discovery.seller === 'private' ? 'all' : 'private' })}
+            theme={theme}
+          />
         </ScrollView>
       </View>
 
@@ -152,7 +164,17 @@ export default function SearchListScreen() {
             <Text style={{ color: theme.colors.textMuted, fontFamily: theme.font.display, fontSize: 14 }}>
               ↕ Più recenti
             </Text>
-            <Pressable onPress={() => router.push('/(search)/saved')}>
+            <Pressable
+              onPress={() => {
+                if (!flow.isMember) {
+                  flow.setReturnTo(NAV.saved);
+                  router.push(NAV.signIn);
+                  return;
+                }
+                flow.saveCurrentSearch();
+                router.push(NAV.saved);
+              }}
+            >
               <Text style={{ color: theme.colors.primary, fontFamily: theme.font.displaySemi, fontSize: 14 }}>
                 🔔 Salva ricerca
               </Text>
@@ -164,7 +186,7 @@ export default function SearchListScreen() {
             <Text style={{ color: theme.colors.text, fontSize: 16 }}>☰</Text>
           </View>
           <Pressable
-            onPress={() => router.push('/(search)')}
+            onPress={() => router.push(flow.state.locationAsked ? NAV.map : NAV.permLocation)}
             style={styles.segOff}
             accessibilityLabel="Mappa"
           >
@@ -175,6 +197,50 @@ export default function SearchListScreen() {
 
       {search.isLoading ? (
         <ActivityIndicator style={{ marginTop: 40 }} color={theme.colors.primary} />
+      ) : search.isError ? (
+        <View style={{ padding: 24, gap: 12 }}>
+          <Text style={{ fontFamily: theme.font.display, fontSize: 22, color: theme.colors.text }}>Sei offline</Text>
+          <Pressable onPress={() => void search.refetch()}>
+            <Text style={{ fontFamily: theme.font.displaySemi, color: theme.colors.primary }}>Riprova</Text>
+          </Pressable>
+          <Pressable onPress={() => router.push(NAV.offline)}>
+            <Text style={{ fontFamily: theme.font.body, color: theme.colors.textMuted }}>Apri la schermata offline</Text>
+          </Pressable>
+        </View>
+      ) : pins.length === 0 ? (
+        <View style={{ padding: 24, gap: 12 }}>
+          <Text style={{ fontFamily: theme.font.display, fontSize: 24, color: theme.colors.text }}>
+            Nessun annuncio con questi filtri
+          </Text>
+          <Text style={{ fontFamily: theme.font.body, fontSize: 16, lineHeight: 22, color: theme.colors.textMuted }}>
+            Prova ad allargare il prezzo o la zona, oppure salva la ricerca: ti avvisiamo quando un proprietario pubblica qualcosa che corrisponde.
+          </Text>
+          <Pressable
+            onPress={() => {
+              if (!flow.isMember) {
+                flow.setReturnTo(NAV.saved);
+                router.push(NAV.signIn);
+                return;
+              }
+              flow.saveCurrentSearch();
+              router.push(NAV.saved);
+            }}
+          >
+            <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 16, color: theme.colors.primary }}>
+              Salva ricerca e avvisami
+            </Text>
+          </Pressable>
+          <Pressable onPress={() => router.push(NAV.filters)}>
+            <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 16, color: theme.colors.text }}>Modifica i filtri</Text>
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              flow.setDiscovery({ priceMaxEur: null, minRooms: null, energy: [], seller: 'all', dealType: 'sale' })
+            }
+          >
+            <Text style={{ fontFamily: theme.font.body, fontSize: 15, color: theme.colors.textMuted }}>Azzera filtri</Text>
+          </Pressable>
+        </View>
       ) : (
         <FlatList
           data={pins}
@@ -183,31 +249,8 @@ export default function SearchListScreen() {
           renderItem={({ item }) => (
             <ListingCard pin={item} onPress={(id) => router.push(`/listing/${id}`)} />
           )}
-          ListEmptyComponent={
-            <Text
-              style={{
-                textAlign: 'center',
-                marginTop: 48,
-                color: theme.colors.textMuted,
-                fontFamily: theme.font.body,
-                fontSize: 16,
-              }}
-            >
-              {t('search.empty')}
-            </Text>
-          }
         />
       )}
-
-      <FilterSheet
-        visible={filterOpen}
-        initial={filters}
-        onClose={() => setFilterOpen(false)}
-        onApply={(next) => {
-          setFilters(next);
-          setFilterOpen(false);
-        }}
-      />
     </View>
   );
 }

@@ -8,12 +8,13 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { useFavorites } from '../../src/api/hooks';
-import { useAuth } from '../../src/auth/AuthProvider';
+import { useFlow } from '../../src/flow/FlowProvider';
+import { NAV } from '../../src/flow/paths';
 import { useTheme } from '../../src/theme/useTheme';
 
 function euro(priceEur: number | null): string {
@@ -26,11 +27,12 @@ export default function FavoritesScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t } = useTranslation();
-  const { isAuthenticated, signIn } = useAuth();
+  const flow = useFlow();
+  const params = useLocalSearchParams<{ seg?: string }>();
   const { data, isLoading } = useFavorites();
-  const [seg, setSeg] = useState<'listings' | 'searches'>('listings');
+  const [seg, setSeg] = useState<'listings' | 'searches'>(params.seg === 'searches' ? 'searches' : 'listings');
 
-  if (!isAuthenticated) {
+  if (!flow.isMember) {
     return (
       <View
         style={[
@@ -53,7 +55,10 @@ export default function FavoritesScreen() {
           {t('auth.signedOutBody')}
         </Text>
         <Pressable
-          onPress={() => void signIn()}
+          onPress={() => {
+            flow.setReturnTo(NAV.saved);
+            router.push(NAV.signIn);
+          }}
           style={[
             styles.cta,
             { backgroundColor: theme.colors.ink, borderRadius: theme.radius.md, marginTop: 20 },
@@ -99,10 +104,7 @@ export default function FavoritesScreen() {
           </Text>
         </Pressable>
         <Pressable
-          onPress={() => {
-            setSeg('searches');
-            router.push('/(search)/saved');
-          }}
+          onPress={() => setSeg('searches')}
           style={[styles.segItem, seg === 'searches' && { backgroundColor: theme.colors.cream }]}
         >
           <Text
@@ -117,7 +119,51 @@ export default function FavoritesScreen() {
         </Pressable>
       </View>
 
-      {isLoading ? (
+      {seg === 'searches' ? (
+        <View style={{ paddingHorizontal: 20, paddingTop: 14, gap: 12 }}>
+          {flow.state.savedSearches.length === 0 ? (
+            <Text style={{ fontFamily: theme.font.body, fontSize: 16, color: theme.colors.textMuted }}>
+              Nessuna ricerca salvata. Dalla ricerca tocca «Salva ricerca».
+            </Text>
+          ) : (
+            flow.state.savedSearches.map((search) => (
+              <View
+                key={search.id}
+                style={{
+                  backgroundColor: theme.colors.cream,
+                  borderRadius: 16,
+                  padding: 14,
+                  borderWidth: 1,
+                  borderColor: 'rgba(20,33,46,0.10)',
+                  gap: 8,
+                }}
+              >
+                <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 17, color: theme.colors.text }}>
+                  {search.title}
+                </Text>
+                <Text style={{ fontFamily: theme.font.body, color: theme.colors.textMuted }}>{search.detail}</Text>
+                <View style={{ flexDirection: 'row', gap: 18 }}>
+                  <Text
+                    onPress={() => {
+                      flow.setDiscovery({ text: search.title });
+                      router.push(NAV.search);
+                    }}
+                    style={{ fontFamily: theme.font.displaySemi, color: theme.colors.primary }}
+                  >
+                    Ripeti ricerca
+                  </Text>
+                  <Text
+                    onPress={() => flow.removeSavedSearch(search.id)}
+                    style={{ fontFamily: theme.font.displayMed, color: theme.colors.textMuted }}
+                  >
+                    Elimina
+                  </Text>
+                </View>
+              </View>
+            ))
+          )}
+        </View>
+      ) : isLoading ? (
         <ActivityIndicator style={{ marginTop: 40 }} color={theme.colors.primary} />
       ) : (
         <FlatList

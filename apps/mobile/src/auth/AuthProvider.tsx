@@ -24,10 +24,14 @@ interface Tokens {
   expiresAt: number; // epoch ms
 }
 
+export type SignInResult = 'ok' | 'cancel' | 'unavailable';
+
 interface AuthState {
   ready: boolean;
+  /** Keycloak discovery document and PKCE request are ready. */
+  oidcReady: boolean;
   isAuthenticated: boolean;
-  signIn: () => Promise<void>;
+  signIn: () => Promise<SignInResult>;
   signOut: () => Promise<void>;
   getAccessToken: () => Promise<string | null>;
 }
@@ -79,44 +83,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })();
   }, []);
 
-  const signIn = useCallback(async () => {
-    if (!discovery || !request) return;
-    const result = await promptAsync();
-    if (result.type !== 'success' || !result.params.code) return;
+  const signIn = useCallback(async (): Promise<SignInResult> => {
+    if (!discovery || !request) return 'unavailable';
+    try {
+      const result = await promptAsync();
+      if (result.type === 'cancel' || result.type === 'dismiss') return 'cancel';
+      if (result.type !== 'success' || !result.params.code) return 'unavailable';
 
-    const exchanged = await AuthSession.exchangeCodeAsync(
-      {
-        clientId: config.oidcClientId,
-        code: result.params.code,
-        redirectUri,
-        extraParams: request.codeVerifier
-          ? { code_verifier: request.codeVerifier }
-          : {},
-      },
-      discovery,
-    );
+      const exchanged = await AuthSession.exchangeCodeAsync(
+        {
+          clientId: config.oidcClientId,
+          code: result.params.code,
+          redirectUri,
+          extraParams: request.codeVerifier
+            ? { code_verifier: request.codeVerifier }
+            : {},
+        },
+        discovery,
+      );
 
-    const next: Tokens = {
-      accessToken: exchanged.accessToken,
-      refreshToken: exchanged.refreshToken ?? null,
-      expiresAt: Date.now() + (exchanged.expiresIn ?? 300) * 1000,
-    };
-    await persist(next);
-    setTokens(next);
+      const next: Tokens = {
+        accessToken: exchanged.accessToken,
+        refreshToken: exchanged.refreshToken ?? null,
+        expiresAt: Date.now() + (exchanged.expiresIn ?? 300) * 1000,
+      };
+      await persist(next);
+      setTokens(next);
+      return 'ok';
+    } catch {
+      return 'unavailable';
+    }
   }, [discovery, request, promptAsync]);
 
   const signOut = useCallback(async () => {
     await clear();
     setTokens(null);
-    if (discovery?.endSessionEndpoint) {
-      const params = new URLSearchParams({
-        client_id: config.oidcClientId,
-        post_logout_redirect_uri: config.webAppUrl || AuthSession.makeRedirectUri({ scheme: 'easycasa', path: 'auth' }),
-      });
-      await WebBrowser.openAuthSessionAsync(
-        `${discovery.endSessionEndpoint}?${params.toString()}`,
-        config.webAppUrl || redirectUri,
-      );
+    if (!discovery?.endSessionEndpoint) return;
+    const params = new URLSearchParams({
+      client_id: config.oidcClientId,
+      post_logout_redirect_uri: config.webAppUrl || AuthSession.makeRedirectUri({ scheme: 'easycasa', path: 'auth' }),
+    });
+    try {
+      await Promise.race([
+        WebBrowser.openAuthSessionAsync(
+          `${discovery.endSessionEndpoint}?${params.toString()}`,
+          config.webAppUrl || redirectUri,
+        ),
+        new Promise((resolve) => setTimeout(resolve, 1500)),
+      ]);
+    } catch {
+      // Local tokens are already cleared. The IdP page is best-effort.
     }
   }, [discovery]);
 
@@ -152,12 +168,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<AuthState>(
     () => ({
       ready,
+      oidcReady: discovery != null && request != null,
       isAuthenticated: tokens !== null,
       signIn,
       signOut,
       getAccessToken,
     }),
-    [ready, tokens, signIn, signOut, getAccessToken],
+    [ready, discovery, request, tokens, signIn, signOut, getAccessToken],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
