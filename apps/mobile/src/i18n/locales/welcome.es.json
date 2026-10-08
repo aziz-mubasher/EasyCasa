@@ -1,0 +1,26 @@
+{
+  "welcome": {
+    "headline": "No estamos en medio.",
+    "headlineAccent": "Estamos detrás.",
+    "body": "Compra o vende de particular, con las herramientas que suele tener solo una agencia.",
+    "seekTitle": "Busco casa",
+    "seekSubtitle": "Anuncios con clase energética y banda OMI",
+    "sellTitle": "Vendo mi casa",
+    "sellSubtitle": "Tu número nunca se publica",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "signIn": "Acceder",
+    "heroBadgePrivate": "Particular",
+    "heroPrice": "€ 245.000",
+    "heroTitle": "Tríplex con terraza",
+    "heroPlace": "Brescia · Centro histórico"
+  },
+  "tabs": {
+    "search": "Buscar",
+    "saved": "Guardados",
+    "profile": "Perfil",
+    "home": "Casa",
+    "messages": "Mensajes",
+    "visits": "Visitas",
+    "docs": "Documentos"
+  }
+}

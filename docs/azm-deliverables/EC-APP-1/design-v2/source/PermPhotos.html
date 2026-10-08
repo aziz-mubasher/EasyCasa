@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Permesso foto</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f3ede1;color:#14212e}
+a{color:#2c6e9b}a:hover{color:#1f5478}
+.d{font-family:'Bricolage Grotesque',sans-serif}
+.m{font-family:'IBM Plex Mono',monospace}
+.lbl{font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#4c5d6e;text-transform:uppercase}
+.soft{color:#4c5d6e}
+.h1{margin:0;font:700 28px/1.1 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+.h2{margin:0;font:700 22px/1.15 'Bricolage Grotesque',sans-serif;letter-spacing:-.015em}
+.h3{margin:0;font:600 16px/1.25 'Bricolage Grotesque',sans-serif}
+.p{margin:0;font-size:16px;line-height:1.42}
+.small{font-size:14px;line-height:1.4}
+.card{background:#fffcf6;border:1px solid rgba(20,33,46,.10);border-radius:16px;box-shadow:0 1px 2px rgba(20,33,46,.05),0 8px 22px rgba(20,33,46,.07)}
+.flat{background:#fffcf6;border:1px solid rgba(20,33,46,.12);border-radius:14px}
+.note{background:#e8dfcc;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.42}
+.btn{height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font:600 16px 'Bricolage Grotesque',sans-serif;text-decoration:none;border:0;box-sizing:border-box;padding:0 18px}
+.pri{background:#14212e;color:#f3ede1}
+.sec{background:transparent;color:#14212e;border:1px solid #14212e}
+.dis{background:#d6cfc2;color:#6d7884}
+.ghost{background:transparent;color:#2c6e9b}
+.chip{height:36px;padding:0 14px;border-radius:18px;border:1px solid rgba(20,33,46,.30);background:transparent;font:500 14px 'Bricolage Grotesque',sans-serif;color:#14212e;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;box-sizing:border-box}
+.chip.on{background:#14212e;color:#f3ede1;border-color:#14212e}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:8px;font:600 12px 'Bricolage Grotesque',sans-serif}
+.tag.ink{background:#14212e;color:#f3ede1}
+.tag.ver{background:#e3efe9;color:#1f6f5c}
+.tag.out{background:#fffcf6;color:#14212e;border:1px solid rgba(20,33,46,.30)}
+.seg{display:flex;padding:3px;border-radius:14px;background:#e8dfcc;gap:3px}
+.seg span{flex:1;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:6px;font:600 14px 'Bricolage Grotesque',sans-serif;color:#4c5d6e}
+.seg span.on{background:#fffcf6;color:#14212e;box-shadow:0 1px 3px rgba(20,33,46,.14)}
+.field{display:flex;flex-direction:column;gap:6px}
+.input{height:52px;border:1px solid rgba(20,33,46,.30);border-radius:14px;background:#fffcf6;padding:0 14px;display:flex;align-items:center;gap:10px;font:500 16px 'Bricolage Grotesque',sans-serif;color:#14212e;box-sizing:border-box}
+.input.locked{background:#ece5d8;color:#4c5d6e}
+.box{width:22px;height:22px;border-radius:6px;border:1.5px solid rgba(20,33,46,.45);flex-shrink:0;display:flex;align-items:center;justify-content:center;box-sizing:border-box;margin-top:1px}
+.box.on{background:#14212e;border-color:#14212e}
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.4}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(20,33,46,.12);font-size:16px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font:500 11px 'Bricolage Grotesque',sans-serif;color:#4c5d6e;text-decoration:none}
+.tab svg{padding:4px 18px;border-radius:16px}
+.tab.on{color:#14212e;font-weight:600}
+.tab.on svg{background:#dde8f0}
+.dim{position:absolute;left:0;top:0;width:100%;height:100%;background:rgba(20,33,46,.42)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#f3ede1;border-radius:26px 26px 0 0;box-shadow:0 -10px 40px rgba(20,33,46,.18)}
+.grab{width:40px;height:5px;border-radius:3px;background:rgba(20,33,46,.22);margin:10px auto 0}
+.ico{width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center}
+.stp{flex:1;height:4px;border-radius:2px;background:#d6ccb6}
+.stp.on{background:#2c6e9b}
+.ok{width:24px;height:24px;border-radius:12px;background:#1f6f5c;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.no{width:24px;height:24px;border-radius:12px;background:#f6e3df;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f3ede1; font-family: 'Newsreader', Georgia, serif; position: relative; overflow: hidden">
+
+<div><div style="padding: 52px 20px 0"><div style="display: flex; gap: 4px"><div class="stp on"></div><div class="stp on"></div><div class="stp on"></div><div class="stp on"></div><div class="stp on"></div><div class="stp"></div><div class="stp"></div></div></div></div>
+<div class="dim"></div>
+<div class="sheet" style="padding: 0 22px 34px; display: flex; flex-direction: column; gap: 16px">
+  <div class="grab"></div>
+  <div class="ico" style="background: #dde8f0; margin-top: 8px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2c6e9b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg></div>
+  <div style="display: flex; flex-direction: column; gap: 6px"><h2 class="h2">Accesso alle foto</h2><p class="p soft">Per caricare le foto della casa nel tuo annuncio.</p></div>
+  <div style="display: flex; flex-direction: column; gap: 10px"><div style="display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 1.4"><span class="ok" style="width: 22px; height: 22px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Scegli tu quali foto: carichiamo solo quelle che selezioni.</span></div><div style="display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 1.4"><span class="ok" style="width: 22px; height: 22px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Puoi dare accesso anche solo a foto selezionate.</span></div></div>
+  <span class="btn pri">Consenti</span>
+  <span class="btn ghost" style="height: 44px">Non ora</span>
+  
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

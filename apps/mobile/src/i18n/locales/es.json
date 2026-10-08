@@ -1,7 +1,7 @@
 {
-  "tabs": { "search": "Buscar", "map": "Mapa", "favorites": "Guardados", "profile": "Perfil" },
+  "tabs": { "search": "Buscar", "map": "Mapa", "favorites": "Guardados", "saved": "Guardados", "profile": "Perfil" },
   "search": {
-    "placeholder": "Ciudad, regi\u00f3n o palabra clave",
+    "placeholder": "Municipio o zona",
     "empty": "Ning\u00fan anuncio coincide con tus filtros.",
     "resultsCount": "{{count}} anuncios"
   },

@@ -1,10 +1,6 @@
 import { Redirect } from 'expo-router';
 
-/**
- * Root entry. Without this, Expo Router picks the first route group that has an
- * index — alphabetically `(owner)` — so release builds open on My properties
- * instead of discovery.
- */
+/** EC-APP-1 design v2 entry — welcome chooser (Cerco / Vendo). */
 export default function RootIndex() {
-  return <Redirect href="/(tabs)" />;
+  return <Redirect href="/(welcome)" />;
 }

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>La tua regola</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f3ede1;color:#14212e}
+a{color:#2c6e9b}a:hover{color:#1f5478}
+.lbl{font:400 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#4c5d6e}
+.tg{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(20,33,46,.16);font-size:16px}
+.tg span{flex-grow:1}
+.sw{width:50px;height:30px;border-radius:15px;background:#c9c2b3;position:relative;flex-shrink:0;border:0}
+.sw::after{content:'';position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:12px;background:#fff}
+.sw.on{background:#2c6e9b}.sw.on::after{left:23px}
+
+/* v2 polish */
+.tab{gap:2px}
+.tab svg{padding:4px 16px;border-radius:16px}
+.tab.on{color:#14212e;font-weight:600}
+.tab.on svg{background:#dde8f0}
+.card,.tile,.win{box-shadow:0 1px 2px rgba(20,33,46,.05),0 8px 22px rgba(20,33,46,.07);border-color:rgba(20,33,46,.10)!important}
+button,a{-webkit-tap-highlight-color:transparent}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f3ede1; font-family: 'Newsreader', Georgia, serif; position: relative; overflow: hidden">
+  <div style="padding: 52px 16px 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(20,33,46,.16)">
+    <a href="Inbox.html" aria-label="Indietro" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14212e" stroke-width="1.8" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a>
+    <span style="font: 700 18px 'Bricolage Grotesque', sans-serif">La tua regola</span>
+  </div>
+  <div style="padding: 18px 20px 130px; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <h1 style="margin: 0; font: 700 24px/1.15 'Bricolage Grotesque', sans-serif">Decidi tu chi leggere per primo.</h1>
+      <p style="margin: 0; font-size: 16px; line-height: 1.4; color: #4c5d6e">Nessun messaggio viene bloccato o scartato: cambia solo l'ordine. Senza una regola, arrivano in ordine di arrivo.</p>
+    </div>
+    <div>
+      <span class="lbl">METTI IN CIMA CHI</span>
+      <div class="tg"><span>Non è un agente immobiliare</span><button class="sw on" type="button" role="switch" aria-checked="true" aria-label="Non è un agente immobiliare"></button></div>
+      <div class="tg"><span>Ha indicato quando vuole comprare</span><button class="sw on" type="button" role="switch" aria-checked="true" aria-label="Ha indicato quando vuole comprare"></button></div>
+      <div class="tg"><span>Ha letto la classe energetica</span><button class="sw" type="button" role="switch" aria-checked="false" aria-label="Ha letto la classe energetica"></button></div>
+      <div class="tg"><span>Cerca casa per sé</span><button class="sw" type="button" role="switch" aria-checked="false" aria-label="Cerca casa per sé"></button></div>
+    </div>
+    <div style="padding: 14px; background: #e8dfcc; border-radius: 8px; display: flex; flex-direction: column; gap: 6px">
+      <span class="lbl">SULL'ANNUNCIO SI LEGGE</span>
+      <span style="font-size: 16px; line-height: 1.4">«Il proprietario legge prima i messaggi di chi non è un agente e indica i tempi. Nessun messaggio viene scartato.»</span>
+    </div>
+    <div style="font-size: 14px; color: #4c5d6e; line-height: 1.4">Le condizioni sono dichiarazioni di chi scrive. Noi non controlliamo e non valutiamo le persone.</div>
+  </div>
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px 30px; background: rgba(251,248,241,.94); border-top: 1px solid rgba(20,33,46,.10); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px)">
+    <a href="Inbox.html" style="height: 52px; border-radius: 14px; background: #14212e; color: #f3ede1; display: flex; align-items: center; justify-content: center; font: 600 16px 'Bricolage Grotesque', sans-serif; text-decoration: none">Salva e pubblica la regola</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

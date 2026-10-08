@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Messaggi</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f3ede1;color:#14212e}
+a{color:#2c6e9b}a:hover{color:#1f5478}
+.d{font-family:'Bricolage Grotesque',sans-serif}
+.m{font-family:'IBM Plex Mono',monospace}
+.lbl{font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#4c5d6e;text-transform:uppercase}
+.soft{color:#4c5d6e}
+.h1{margin:0;font:700 28px/1.1 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+.h2{margin:0;font:700 22px/1.15 'Bricolage Grotesque',sans-serif;letter-spacing:-.015em}
+.h3{margin:0;font:600 16px/1.25 'Bricolage Grotesque',sans-serif}
+.p{margin:0;font-size:16px;line-height:1.42}
+.small{font-size:14px;line-height:1.4}
+.card{background:#fffcf6;border:1px solid rgba(20,33,46,.10);border-radius:16px;box-shadow:0 1px 2px rgba(20,33,46,.05),0 8px 22px rgba(20,33,46,.07)}
+.flat{background:#fffcf6;border:1px solid rgba(20,33,46,.12);border-radius:14px}
+.note{background:#e8dfcc;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.42}
+.btn{height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font:600 16px 'Bricolage Grotesque',sans-serif;text-decoration:none;border:0;box-sizing:border-box;padding:0 18px}
+.pri{background:#14212e;color:#f3ede1}
+.sec{background:transparent;color:#14212e;border:1px solid #14212e}
+.dis{background:#d6cfc2;color:#6d7884}
+.ghost{background:transparent;color:#2c6e9b}
+.chip{height:36px;padding:0 14px;border-radius:18px;border:1px solid rgba(20,33,46,.30);background:transparent;font:500 14px 'Bricolage Grotesque',sans-serif;color:#14212e;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;box-sizing:border-box}
+.chip.on{background:#14212e;color:#f3ede1;border-color:#14212e}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:8px;font:600 12px 'Bricolage Grotesque',sans-serif}
+.tag.ink{background:#14212e;color:#f3ede1}
+.tag.ver{background:#e3efe9;color:#1f6f5c}
+.tag.out{background:#fffcf6;color:#14212e;border:1px solid rgba(20,33,46,.30)}
+.seg{display:flex;padding:3px;border-radius:14px;background:#e8dfcc;gap:3px}
+.seg span{flex:1;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:6px;font:600 14px 'Bricolage Grotesque',sans-serif;color:#4c5d6e}
+.seg span.on{background:#fffcf6;color:#14212e;box-shadow:0 1px 3px rgba(20,33,46,.14)}
+.field{display:flex;flex-direction:column;gap:6px}
+.input{height:52px;border:1px solid rgba(20,33,46,.30);border-radius:14px;background:#fffcf6;padding:0 14px;display:flex;align-items:center;gap:10px;font:500 16px 'Bricolage Grotesque',sans-serif;color:#14212e;box-sizing:border-box}
+.input.locked{background:#ece5d8;color:#4c5d6e}
+.box{width:22px;height:22px;border-radius:6px;border:1.5px solid rgba(20,33,46,.45);flex-shrink:0;display:flex;align-items:center;justify-content:center;box-sizing:border-box;margin-top:1px}
+.box.on{background:#14212e;border-color:#14212e}
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.4}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(20,33,46,.12);font-size:16px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font:500 11px 'Bricolage Grotesque',sans-serif;color:#4c5d6e;text-decoration:none}
+.tab svg{padding:4px 18px;border-radius:16px}
+.tab.on{color:#14212e;font-weight:600}
+.tab.on svg{background:#dde8f0}
+.dim{position:absolute;left:0;top:0;width:100%;height:100%;background:rgba(20,33,46,.42)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#f3ede1;border-radius:26px 26px 0 0;box-shadow:0 -10px 40px rgba(20,33,46,.18)}
+.grab{width:40px;height:5px;border-radius:3px;background:rgba(20,33,46,.22);margin:10px auto 0}
+.ico{width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center}
+.stp{flex:1;height:4px;border-radius:2px;background:#d6ccb6}
+.stp.on{background:#2c6e9b}
+.ok{width:24px;height:24px;border-radius:12px;background:#1f6f5c;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.no{width:24px;height:24px;border-radius:12px;background:#f6e3df;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f3ede1; font-family: 'Newsreader', Georgia, serif; position: relative; overflow: hidden">
+
+<div style="padding: 60px 20px 12px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid rgba(20,33,46,.12)">
+  <div style="display: flex; justify-content: space-between; align-items: baseline"><h1 class="h1">Messaggi</h1><a href="InboxRule.html" class="d" style="font-size: 15px; font-weight: 500; text-decoration: none">La tua regola</a></div>
+  <span class="small soft">In ordine secondo la tua regola. Nessuno viene bloccato.</span>
+  <div style="display: flex; gap: 8px"><span class="chip on">Tutti · <span class="m">12</span></span><span class="chip">Agenti dichiarati · <span class="m">3</span></span></div>
+</div>
+<div style="padding: 0 20px 100px">
+  <div style="display: flex; gap: 12px; padding: 16px 0; border-bottom: 1px solid rgba(20,33,46,.12)">
+  <span class="d" style="width: 40px; height: 40px; border-radius: 20px; background: #e8dfcc; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0">G</span>
+  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+    <div style="display: flex; justify-content: space-between; align-items: baseline"><span class="d" style="font-size: 16px; font-weight: 600">Giulia</span><span class="m" style="font-size: 12px; color: #4c5d6e">09:12</span></div>
+    <span class="m" style="font-size: 12px; line-height: 1.5; color: #4c5d6e">Non agente · per sé · 3–6 mesi · con mutuo · ha letto la classe</span>
+    <div style="display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: #e3efe9">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f6f5c" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
+  <div style="display: flex; flex-direction: column; gap: 2px"><span class="d" style="font-size: 14px; font-weight: 600; color: #1f4f43">Capacità d'acquisto verificata · Banks4All</span><span class="m" style="font-size: 12px; color: #1f4f43">fascia indicativa fino a € 260.000 · valida fino al 14 nov</span></div>
+</div>
+    <span style="font-size: 15px; line-height: 1.4">Buongiorno, il terrazzo è abitabile tutto l'anno? Sarei libera per una visita di sabato.</span>
+    <div style="display: flex; gap: 18px; padding-top: 4px"><a href="Inbox.html" class="d" style="font-size: 14px; font-weight: 600; text-decoration: none">Rispondi</a><a href="Visits.html" class="d" style="font-size: 14px; font-weight: 600; text-decoration: none">Proponi i tuoi orari</a></div>
+  </div>
+</div>
+  <div style="display: flex; gap: 12px; padding: 16px 0; border-bottom: 1px solid rgba(20,33,46,.12)">
+  <span class="d" style="width: 40px; height: 40px; border-radius: 20px; background: #e8dfcc; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0">M</span>
+  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+    <div style="display: flex; justify-content: space-between; align-items: baseline"><span class="d" style="font-size: 16px; font-weight: 600">Marco</span><span class="m" style="font-size: 12px; color: #4c5d6e">ieri</span></div>
+    <span class="m" style="font-size: 12px; line-height: 1.5; color: #4c5d6e">Non agente · per un familiare · entro 3 mesi · senza mutuo</span>
+    
+    <span style="font-size: 15px; line-height: 1.4">Mia madre cerca un secondo piano con ascensore in centro. Il box è incluso?</span>
+    <div style="display: flex; gap: 18px; padding-top: 4px"><a href="Inbox.html" class="d" style="font-size: 14px; font-weight: 600; text-decoration: none">Rispondi</a><a href="Visits.html" class="d" style="font-size: 14px; font-weight: 600; text-decoration: none">Proponi i tuoi orari</a></div>
+  </div>
+</div>
+  <div style="display: flex; align-items: center; gap: 10px; padding: 16px 0 0"><span class="lbl">Poi, secondo la tua regola</span><span style="flex-grow: 1; height: 1px; background: rgba(20,33,46,.14)"></span></div>
+  <div style="display: flex; gap: 12px; padding: 16px 0; border-bottom: 1px solid rgba(20,33,46,.12)">
+  <span class="d" style="width: 40px; height: 40px; border-radius: 20px; background: #14212e; color: #f3ede1; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0">A</span>
+  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+    <div style="display: flex; justify-content: space-between; align-items: baseline"><span class="d" style="font-size: 16px; font-weight: 600">Agenzia [nome]</span><span class="m" style="font-size: 12px; color: #4c5d6e">ieri</span></div>
+    <span class="m" style="font-size: 12px; line-height: 1.5; color: #14212e">Dichiara: agente immobiliare · REA BS-[numero]</span>
+    
+    <span style="font-size: 15px; line-height: 1.4">Abbiamo clienti interessati alla zona, possiamo sentirci?</span>
+    
+  </div>
+</div>
+  <div style="display: flex; gap: 10px; padding: 16px 0 0" class="small soft"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2c6e9b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 6.1A9.8 9.8 0 0 1 12 6c5 0 8.5 4 9.5 6a13 13 0 0 1-3 3.6M6.5 7.6A13 13 0 0 0 2.5 12c1 2 4.5 6 9.5 6a9.6 9.6 0 0 0 4-.9"/></svg><span>Vedi il nome, non il cognome. Email e telefono si scambiano quando entrambi confermate una visita. La verifica Banks4All è di un soggetto terzo: non è un'offerta di credito né un'approvazione.</span></div>
+</div>
+<nav style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 6px 26px; display: flex; background: rgba(251,248,241,.95); border-top: 1px solid rgba(20,33,46,.10); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px)"><a class="tab" href="SellerHome.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Casa</a><a class="tab on" href="Inbox.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2c6e9b" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>Messaggi</a><a class="tab" href="Visits.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Visite</a><a class="tab" href="Fascicolo.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>Documenti</a><a class="tab" href="Profile.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Profilo</a></nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

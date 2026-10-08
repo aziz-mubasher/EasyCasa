@@ -29,6 +29,9 @@ import valuationEs from './locales/valuation.es.json';
 import viewingsEn from './locales/viewings.en.json';
 import viewingsIt from './locales/viewings.it.json';
 import viewingsEs from './locales/viewings.es.json';
+import welcomeEn from './locales/welcome.en.json';
+import welcomeIt from './locales/welcome.it.json';
+import welcomeEs from './locales/welcome.es.json';
 
 export const SUPPORTED_LOCALES = ['en', 'it', 'es'] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
@@ -53,6 +56,7 @@ void i18n.use(initReactI18next).init({
         ...enquiryInboxEn,
         ...valuationEn,
         ...viewingsEn,
+        ...welcomeEn,
       },
     },
     it: {
@@ -66,6 +70,7 @@ void i18n.use(initReactI18next).init({
         ...enquiryInboxIt,
         ...valuationIt,
         ...viewingsIt,
+        ...welcomeIt,
       },
     },
     es: {
@@ -79,6 +84,7 @@ void i18n.use(initReactI18next).init({
         ...enquiryInboxEs,
         ...valuationEs,
         ...viewingsEs,
+        ...welcomeEs,
       },
     },
   },

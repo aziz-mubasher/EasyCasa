@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Fascicolo della casa</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f3ede1;color:#14212e}
+a{color:#2c6e9b}a:hover{color:#1f5478}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font:500 11px 'Bricolage Grotesque',sans-serif;color:#4c5d6e;text-decoration:none}
+.tab.on{color:#14212e}
+.lbl{font:400 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#4c5d6e}
+.doc{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(20,33,46,.16)}
+.st{font:500 12px 'IBM Plex Mono',monospace;white-space:nowrap}
+.ok{width:24px;height:24px;border-radius:12px;background:#1f6f5c;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.no{width:24px;height:24px;border-radius:12px;border:2px dashed #4c5d6e;box-sizing:border-box;flex-shrink:0}
+
+/* v2 polish */
+.tab{gap:2px}
+.tab svg{padding:4px 16px;border-radius:16px}
+.tab.on{color:#14212e;font-weight:600}
+.tab.on svg{background:#dde8f0}
+.card,.tile,.win{box-shadow:0 1px 2px rgba(20,33,46,.05),0 8px 22px rgba(20,33,46,.07);border-color:rgba(20,33,46,.10)!important}
+button,a{-webkit-tap-highlight-color:transparent}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f3ede1; font-family: 'Newsreader', Georgia, serif; position: relative; overflow: hidden">
+  <div style="padding: 60px 20px 14px; display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid rgba(20,33,46,.16)">
+    <h1 style="margin: 0; font: 700 28px 'Bricolage Grotesque', sans-serif">Il fascicolo della casa</h1>
+    <div style="font-size: 15px; color: #4c5d6e; line-height: 1.4">Cosa manca, e cosa potrebbe fermare il rogito. Meglio saperlo prima di un compratore.</div>
+  </div>
+  <div style="padding: 6px 20px 190px">
+    <div class="doc"><div class="ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div><span style="flex-grow: 1; font-size: 16px">Visura catastale</span><span class="st">caricato</span></div>
+    <div class="doc"><div class="ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div><span style="flex-grow: 1; font-size: 16px">Planimetria catastale</span><span class="st">caricato</span></div>
+    <div class="doc"><div class="ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div><span style="flex-grow: 1; font-size: 16px">APE</span><span class="st">valido fino al 2033</span></div>
+    <div class="doc"><div class="ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div><span style="flex-grow: 1; font-size: 16px">Atto di acquisto</span><span class="st">caricato</span></div>
+    <div class="doc"><div class="no"></div><span style="flex-grow: 1; font-size: 16px">Provenienza (successione, donazione)</span><span class="st" style="color: #4c5d6e">manca</span></div>
+    <div class="doc"><div class="no"></div><span style="flex-grow: 1; font-size: 16px">Ipoteche ancora iscritte</span><span class="st" style="color: #4c5d6e">da verificare</span></div>
+    <div class="doc"><div class="no"></div><span style="flex-grow: 1; font-size: 16px">Spese condominiali arretrate</span><span class="st" style="color: #4c5d6e">chiedi all'amm.</span></div>
+    <button type="button" style="margin-top: 14px; width: 100%; height: 48px; border-radius: 14px; border: 1px dashed rgba(20,33,46,.5); background: transparent; font: 500 15px 'Bricolage Grotesque', sans-serif; color: #14212e">+ Carica un documento</button>
+  </div>
+  <div style="position: absolute; left: 0; right: 0; bottom: 84px; padding: 14px 20px; background: #14212e; color: #f3ede1; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font: 600 17px 'Bricolage Grotesque', sans-serif">Il fascicolo, fatto da noi</span><span style="font: 500 15px 'IBM Plex Mono', monospace">€ 149</span></div>
+    <span style="font-size: 14px; color: #e8dfcc; line-height: 1.35">Un rapporto scritto su cosa manca. Lo paghi alla consegna, con fattura: nell'app non si paga nulla. Geometra e notaio li incarichi tu.</span>
+    <button type="button" style="height: 44px; border-radius: 14px; border: 0; background: #f3ede1; color: #14212e; font: 600 15px 'Bricolage Grotesque', sans-serif">Richiedi il fascicolo</button>
+  </div>
+  <nav style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 6px 26px; display: flex; background: rgba(251,248,241,.94); border-top: 1px solid rgba(20,33,46,.10); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px)">
+    <a class="tab" href="SellerHome.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Casa</a>
+    <a class="tab" href="Inbox.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>Messaggi</a>
+    <a class="tab" href="Visits.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="1"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Visite</a>
+    <a class="tab on" href="Fascicolo.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2c6e9b" stroke-width="1.8" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>Documenti</a>
+    <a class="tab" href="Profile.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Profilo</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

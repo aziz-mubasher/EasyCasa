@@ -1,6 +1,14 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import type { OwnerProperty } from '@easycasa/api-client';
@@ -11,161 +19,374 @@ import { useTheme } from '../../src/theme/useTheme';
 
 export default function OwnerHome() {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t } = useTranslation();
   const { isAuthenticated, signIn, ready } = useAuth();
   const { data, isLoading, isError, refetch } = useMyProperties();
   const { data: inbound } = useInboundEnquiries();
   const newCount = (inbound ?? []).filter((e) => e.status === 'NEW').length;
+  const primary: OwnerProperty | undefined = (data ?? [])[0];
+  const statusLabel = primary?.status === 'published' || primary?.status === 'PUBLISHED'
+    ? 'PUBBLICATO'
+    : (primary?.status ?? 'BOZZA').toUpperCase();
 
-  const renderItem = ({ item }: { item: OwnerProperty }) => (
-    <View style={[styles.card, { backgroundColor: theme.colors.surface, borderRadius: theme.radius.md }]}>
-      <Text style={[styles.title, { color: theme.colors.text }]}>
-        {item.title ?? t('owner.untitled')}
-      </Text>
-      <Text style={[styles.status, { color: theme.colors.textMuted }]}>
-        {t('owner.dealType.' + item.dealType)} · {item.status}
-      </Text>
-      <View style={styles.actions}>
-        <Pressable
-          onPress={() => router.push(`/(owner)/${item.id}/fascicolo`)}
-          style={[styles.action, { borderColor: theme.colors.border, borderRadius: theme.radius.sm }]}
+  if (!ready || (isAuthenticated && isLoading)) {
+    return (
+      <View style={[styles.centerFill, { backgroundColor: theme.colors.background }]}>
+        <ActivityIndicator color={theme.colors.primary} />
+      </View>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <View
+        style={[
+          styles.centerFill,
+          { backgroundColor: theme.colors.background, paddingHorizontal: 24 },
+        ]}
+      >
+        <Text style={{ fontFamily: theme.font.display, fontSize: 24, color: theme.colors.text, textAlign: 'center' }}>
+          {t('auth.signedOutTitle')}
+        </Text>
+        <Text
+          style={{
+            fontFamily: theme.font.body,
+            fontSize: 16,
+            color: theme.colors.textMuted,
+            textAlign: 'center',
+            marginTop: 10,
+            lineHeight: 22,
+          }}
         >
-          <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>
-            {t('owner.fascicolo.title')}
-          </Text>
-        </Pressable>
+          {t('auth.signedOutBody')}
+        </Text>
         <Pressable
-          onPress={() => router.push(`/(owner)/${item.id}/services`)}
-          style={[styles.action, { borderColor: theme.colors.border, borderRadius: theme.radius.sm }]}
+          onPress={() => void signIn()}
+          style={[
+            styles.priBtn,
+            { backgroundColor: theme.colors.ink, borderRadius: theme.radius.md, marginTop: 20 },
+          ]}
         >
-          <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>
-            {t('owner.services.title')}
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => router.push(`/(owner)/${item.id}/lease`)}
-          style={[styles.action, { borderColor: theme.colors.border, borderRadius: theme.radius.sm }]}
-        >
-          <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>
-            {t('owner.lease.title')}
+          <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 16, color: theme.colors.inkText }}>
+            {t('auth.signIn')}
           </Text>
         </Pressable>
       </View>
-    </View>
-  );
+    );
+  }
+
+  if (isError) {
+    return (
+      <View style={[styles.centerFill, { backgroundColor: theme.colors.background }]}>
+        <Text style={{ color: theme.colors.danger, fontFamily: theme.font.displaySemi }}>
+          {t('common.error')}
+        </Text>
+        <Pressable onPress={() => void refetch()} style={{ marginTop: 16 }}>
+          <Text style={{ color: theme.colors.primary, fontFamily: theme.font.displaySemi }}>
+            {t('common.retry')}
+          </Text>
+        </Pressable>
+      </View>
+    );
+  }
 
   return (
-    <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
-      <Pressable
-        onPress={() => router.push('/(owner)/enquiries')}
+    <ScrollView
+      style={{ flex: 1, backgroundColor: theme.colors.background }}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
+      <View
         style={[
-          styles.inboxBanner,
+          styles.hero,
           {
-            backgroundColor: theme.colors.surface,
-            borderColor: theme.colors.border,
-            borderRadius: theme.radius.md,
+            backgroundColor: theme.colors.ink,
+            paddingTop: insets.top + 16,
           },
         ]}
       >
-        <Text style={[styles.inboxTitle, { color: theme.colors.text }]}>
-          {t('enquiryInbox.nav')}
-        </Text>
-        <Text style={{ color: newCount > 0 ? theme.colors.primary : theme.colors.textMuted, fontWeight: '700' }}>
-          {newCount > 0 ? t('enquiryInbox.badgeNew', { count: newCount }) : '→'}
-        </Text>
-      </Pressable>
-
-      <Pressable
-        onPress={() => router.push('/(owner)/valuation')}
-        style={[
-          styles.inboxBanner,
-          {
-            backgroundColor: theme.colors.surface,
-            borderColor: theme.colors.border,
-            borderRadius: theme.radius.md,
-          },
-        ]}
-      >
-        <Text style={[styles.inboxTitle, { color: theme.colors.text }]}>
-          {t('valuation.title')}
-        </Text>
-        <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>→</Text>
-      </Pressable>
-
-      {!ready || (isAuthenticated && isLoading) ? (
-        <ActivityIndicator style={styles.center} color={theme.colors.primary} />
-      ) : !isAuthenticated ? (
-        <View style={styles.signedOut}>
-          <Text style={[styles.signedOutTitle, { color: theme.colors.text }]}>
-            {t('auth.signedOutTitle')}
+        <View style={styles.heroTop}>
+          <Text style={{ fontFamily: theme.font.monoReg, fontSize: 11, letterSpacing: 0.9, color: '#a9c8dc' }}>
+            IL TUO ANNUNCIO · {statusLabel}
           </Text>
-          <Text style={[styles.signedOutBody, { color: theme.colors.textMuted }]}>
-            {t('auth.signedOutBody')}
-          </Text>
-          <Pressable
-            onPress={() => void signIn()}
-            style={[styles.signInBtn, { backgroundColor: theme.colors.primary, borderRadius: theme.radius.md }]}
-          >
-            <Text style={{ color: theme.colors.primaryText, fontWeight: '700' }}>
-              {t('auth.signIn')}
-            </Text>
-          </Pressable>
         </View>
-      ) : isError ? (
-        <View style={styles.signedOut}>
-          <Text style={[styles.signedOutTitle, { color: theme.colors.danger }]}>
-            {t('common.error')}
-          </Text>
-          <Pressable
-            onPress={() => void refetch()}
-            style={[styles.signInBtn, { borderColor: theme.colors.border, borderWidth: 1, borderRadius: theme.radius.md }]}
-          >
-            <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>
-              {t('common.retry')}
+
+        {primary ? (
+          <View style={styles.heroBody}>
+            <View style={[styles.heroThumb, { backgroundColor: 'rgba(243,237,225,0.18)' }]}>
+              <Text style={{ fontSize: 28 }}>⌂</Text>
+            </View>
+            <View style={{ flex: 1, gap: 4 }}>
+              <Text
+                style={{
+                  fontFamily: theme.font.display,
+                  fontSize: 24,
+                  lineHeight: 28,
+                  color: theme.colors.inkText,
+                }}
+              >
+                {primary.title ?? t('owner.untitled')}
+              </Text>
+              <Text style={{ fontSize: 16, color: '#e8dfcc', fontFamily: theme.font.body }}>
+                {t('owner.dealType.' + primary.dealType)} · {primary.status}
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <View style={{ gap: 8 }}>
+            <Text style={{ fontFamily: theme.font.display, fontSize: 24, color: theme.colors.inkText }}>
+              Casa mia
             </Text>
-          </Pressable>
-        </View>
-      ) : (
-        <FlatList
-          data={data ?? []}
-          keyExtractor={(p) => p.id}
-          renderItem={renderItem}
-          contentContainerStyle={styles.list}
-          ListEmptyComponent={
-            <Text style={[styles.center, { color: theme.colors.textMuted }]}>
+            <Text style={{ fontSize: 16, color: '#e8dfcc', fontFamily: theme.font.body }}>
               {t('owner.empty')}
             </Text>
-          }
-        />
-      )}
-    </View>
+          </View>
+        )}
+
+        <View style={[styles.promises, { borderTopColor: 'rgba(169,200,220,0.3)' }]}>
+          <Text style={{ fontSize: 16, color: '#e8dfcc', fontFamily: theme.font.body }}>
+            🔒  Il tuo numero non è mai pubblicato.
+          </Text>
+          <Text style={{ fontSize: 16, color: '#e8dfcc', fontFamily: theme.font.body }}>
+            📅  Non concorderai mai un orario al telefono.
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.body}>
+        <View style={styles.grid}>
+          <Tile
+            label="MESSAGGI NUOVI"
+            big={String(newCount)}
+            sub={newCount > 0 ? t('enquiryInbox.badgeNew', { count: newCount }) : 'Nessun messaggio nuovo'}
+            onPress={() => router.push('/(owner)/enquiries')}
+            theme={theme}
+          />
+          <Tile
+            label="PROSSIMA VISITA"
+            big="—"
+            sub="Apri le visite"
+            onPress={() => {
+              if (primary) router.push(`/(owner)/${primary.id}/services`);
+            }}
+            theme={theme}
+            monoBig={false}
+          />
+        </View>
+
+        {primary ? (
+          <Pressable
+            onPress={() => router.push(`/(owner)/${primary.id}/fascicolo`)}
+            style={[
+              styles.tile,
+              {
+                backgroundColor: theme.colors.cream,
+                borderColor: 'rgba(20,33,46,0.10)',
+                borderRadius: theme.radius.md,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 14,
+              },
+            ]}
+          >
+            <View style={{ flex: 1, gap: 8 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={styles.lbl}>FASCICOLO DELLA CASA</Text>
+                <Text style={{ fontFamily: theme.font.mono, fontSize: 13, color: theme.colors.text }}>
+                  —
+                </Text>
+              </View>
+              <View style={{ height: 6, backgroundColor: theme.colors.sand, borderRadius: 2 }}>
+                <View style={{ width: '40%', height: 6, backgroundColor: theme.colors.primary, borderRadius: 2 }} />
+              </View>
+              <Text style={{ fontSize: 15, fontFamily: theme.font.body, color: theme.colors.text }}>
+                {t('owner.fascicolo.title')}
+              </Text>
+            </View>
+            <Text style={{ fontSize: 18, color: theme.colors.text }}>›</Text>
+          </Pressable>
+        ) : null}
+
+        <View
+          style={[
+            styles.tile,
+            {
+              backgroundColor: theme.colors.cream,
+              borderColor: 'rgba(20,33,46,0.10)',
+              borderRadius: theme.radius.md,
+              gap: 10,
+            },
+          ]}
+        >
+          <Text style={styles.lbl}>L&apos;ANNUNCIO</Text>
+          {primary ? (
+            <>
+              <Pressable
+                onPress={() => router.push(`/(owner)/${primary.id}/services`)}
+                style={styles.listRow}
+              >
+                <Text style={{ fontSize: 15, fontFamily: theme.font.body, color: theme.colors.text }}>
+                  {t('owner.services.title')}
+                </Text>
+                <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 14, color: theme.colors.primary }}>
+                  Apri
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => router.push(`/(owner)/${primary.id}/lease`)}
+                style={styles.listRow}
+              >
+                <Text style={{ fontSize: 15, fontFamily: theme.font.body, color: theme.colors.text }}>
+                  {t('owner.lease.title')}
+                </Text>
+                <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 14, color: theme.colors.primary }}>
+                  Apri
+                </Text>
+              </Pressable>
+            </>
+          ) : (
+            <Pressable onPress={() => router.push('/(owner)/valuation')}>
+              <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 15, color: theme.colors.primary }}>
+                {t('valuation.title')}
+              </Text>
+            </Pressable>
+          )}
+        </View>
+
+        {(data ?? []).length > 1 ? (
+          <View style={{ gap: 8 }}>
+            <Text style={styles.lbl}>ALTRI ANNUNCI</Text>
+            {(data ?? []).slice(1).map((p) => (
+              <Pressable
+                key={p.id}
+                onPress={() => router.push(`/(owner)/${p.id}/fascicolo`)}
+                style={[
+                  styles.tile,
+                  {
+                    backgroundColor: theme.colors.cream,
+                    borderColor: 'rgba(20,33,46,0.10)',
+                    borderRadius: theme.radius.md,
+                  },
+                ]}
+              >
+                <Text style={{ fontFamily: theme.font.displaySemi, fontSize: 16, color: theme.colors.text }}>
+                  {p.title ?? t('owner.untitled')}
+                </Text>
+                <Text style={{ fontSize: 13, color: theme.colors.textMuted }}>
+                  {t('owner.dealType.' + p.dealType)} · {p.status}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
+
+        <Text
+          style={{
+            fontSize: 14,
+            color: theme.colors.textMuted,
+            lineHeight: 20,
+            fontFamily: theme.font.body,
+          }}
+        >
+          Nessuna esclusiva, nessun contratto. Puoi anche affidarti a un&apos;agenzia.
+        </Text>
+      </View>
+    </ScrollView>
+  );
+}
+
+function Tile({
+  label,
+  big,
+  sub,
+  onPress,
+  theme,
+  monoBig = true,
+}: {
+  label: string;
+  big: string;
+  sub: string;
+  onPress: () => void;
+  theme: ReturnType<typeof useTheme>;
+  monoBig?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[
+        styles.tile,
+        {
+          flex: 1,
+          backgroundColor: theme.colors.cream,
+          borderColor: 'rgba(20,33,46,0.10)',
+          borderRadius: theme.radius.md,
+          gap: 6,
+        },
+      ]}
+    >
+      <Text style={styles.lbl}>{label}</Text>
+      <Text
+        style={{
+          fontFamily: monoBig ? theme.font.mono : theme.font.mono,
+          fontSize: monoBig ? 26 : 17,
+          color: theme.colors.text,
+        }}
+      >
+        {big}
+      </Text>
+      <Text style={{ fontSize: 14, color: theme.colors.textMuted, fontFamily: theme.font.body }}>{sub}</Text>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
-  inboxBanner: {
-    marginHorizontal: 16,
-    marginTop: 12,
-    marginBottom: 4,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+  centerFill: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  hero: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    gap: 14,
+  },
+  heroTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  heroBody: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  heroThumb: {
+    width: 68,
+    height: 68,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  promises: {
+    gap: 8,
+    paddingTop: 12,
+    borderTopWidth: 1,
+  },
+  body: { paddingHorizontal: 20, paddingTop: 16, gap: 12 },
+  grid: { flexDirection: 'row', gap: 10 },
+  tile: {
+    padding: 14,
     borderWidth: 1,
+    shadowColor: '#14212e',
+    shadowOpacity: 0.07,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+  },
+  lbl: {
+    fontFamily: 'IBMPlexMono_400Regular',
+    fontSize: 11,
+    letterSpacing: 0.9,
+    color: '#4c5d6e',
+  },
+  listRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  inboxTitle: { fontSize: 16, fontWeight: '700' },
-  list: { padding: 16 },
-  card: { padding: 16, marginBottom: 12, gap: 6 },
-  title: { fontSize: 17, fontWeight: '700' },
-  status: { fontSize: 13 },
-  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 },
-  action: { paddingHorizontal: 14, paddingVertical: 8, borderWidth: 1 },
-  center: { textAlign: 'center', marginTop: 48 },
-  signedOut: { paddingHorizontal: 24, marginTop: 48, alignItems: 'center', gap: 12 },
-  signedOutTitle: { fontSize: 18, fontWeight: '700', textAlign: 'center' },
-  signedOutBody: { fontSize: 14, textAlign: 'center', lineHeight: 20 },
-  signInBtn: { marginTop: 8, paddingHorizontal: 24, paddingVertical: 14, minWidth: 180, alignItems: 'center' },
+  priBtn: {
+    height: 52,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 180,
+  },
 });

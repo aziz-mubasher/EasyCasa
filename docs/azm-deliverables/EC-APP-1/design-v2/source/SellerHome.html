@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Casa mia</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f3ede1;color:#14212e}
+a{color:#2c6e9b}a:hover{color:#1f5478}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font:500 11px 'Bricolage Grotesque',sans-serif;color:#4c5d6e;text-decoration:none}
+.tab.on{color:#14212e}
+.lbl{font:400 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#4c5d6e}
+.tile{display:flex;flex-direction:column;gap:6px;padding:14px;background:#fffcf6;border:1px solid rgba(20,33,46,.16);border-radius:14px;text-decoration:none;color:#14212e}
+.big{font:500 26px 'IBM Plex Mono',monospace}
+
+/* v2 polish */
+.tab{gap:2px}
+.tab svg{padding:4px 16px;border-radius:16px}
+.tab.on{color:#14212e;font-weight:600}
+.tab.on svg{background:#dde8f0}
+.card,.tile,.win{box-shadow:0 1px 2px rgba(20,33,46,.05),0 8px 22px rgba(20,33,46,.07);border-color:rgba(20,33,46,.10)!important}
+button,a{-webkit-tap-highlight-color:transparent}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f3ede1; font-family: 'Newsreader', Georgia, serif; position: relative; overflow: hidden">
+  <div style="padding: 60px 20px 20px; background: #14212e; color: #f3ede1; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; justify-content: space-between; align-items: center"><span style="font: 400 11px 'IBM Plex Mono', monospace; letter-spacing: .08em; color: #a9c8dc">IL TUO ANNUNCIO · PUBBLICATO</span><span style="font: 400 12px 'IBM Plex Mono', monospace; color: #a9c8dc">312 visite alla pagina</span></div>
+    <div style="display: flex; align-items: center; gap: 14px"><img src="assets/seller-house.jpg" alt="La tua casa" style="width: 68px; height: 68px; border-radius: 16px; object-fit: cover; flex-shrink: 0; display: block; box-shadow: 0 0 0 2px rgba(243,237,225,.18)"><div style="display: flex; flex-direction: column; gap: 4px"><span style="font: 700 24px/1.1 'Bricolage Grotesque', sans-serif">Trilocale con terrazzo</span><span style="font-size: 16px; color: #e8dfcc">Brescia · Centro storico · € 245.000</span></div></div>
+    <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 6px; border-top: 1px solid rgba(169,200,220,.3)">
+      <div style="display: flex; gap: 10px; align-items: center; font-size: 16px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a9c8dc" stroke-width="1.6" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Il tuo numero non è mai pubblicato.</div>
+      <div style="display: flex; gap: 10px; align-items: center; font-size: 16px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a9c8dc" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="1"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Non concorderai mai un orario al telefono.</div>
+    </div>
+  </div>
+  <div style="padding: 16px 20px 100px; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <a class="tile" href="Inbox.html"><span class="lbl">MESSAGGI NUOVI</span><span class="big">7</span><span style="font-size: 14px; color: #4c5d6e">3 dichiarano di essere agenti</span></a>
+      <a class="tile" href="Visits.html"><span class="lbl">PROSSIMA VISITA</span><span style="font: 500 17px 'IBM Plex Mono', monospace">sab 11 · 10:00</span><span style="font-size: 14px; color: #4c5d6e">Visita aperta · 3 prenotati</span></a>
+    </div>
+    <a class="tile" href="Fascicolo.html" style="flex-direction: row; align-items: center; gap: 14px">
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between"><span class="lbl">FASCICOLO DELLA CASA</span><span style="font: 500 13px 'IBM Plex Mono', monospace">4 / 7</span></div>
+        <div style="height: 6px; background: #e8dfcc"><div style="width: 57%; height: 6px; background: #2c6e9b"></div></div>
+        <span style="font-size: 15px">Mancano: provenienza, ipoteche, spese condominiali</span>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14212e" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+    <div class="tile" style="gap: 10px">
+      <span class="lbl">L'ANNUNCIO</span>
+      <div style="display: flex; justify-content: space-between; font-size: 15px"><span>Classe energetica e indice</span><span style="font: 500 13px 'IBM Plex Mono', monospace; color: #1f6f5c">D · 142 ✓</span></div>
+      <div style="display: flex; justify-content: space-between; font-size: 15px"><span>Foto e planimetria</span><span style="font: 500 13px 'IBM Plex Mono', monospace; color: #1f6f5c">14 ✓</span></div>
+      <div style="display: flex; justify-content: space-between; font-size: 15px"><span>La tua regola sui messaggi</span><a href="InboxRule.html" style="font: 500 14px 'Bricolage Grotesque', sans-serif">Modifica</a></div>
+    </div>
+    <div style="font-size: 14px; color: #4c5d6e; line-height: 1.4">Nessuna esclusiva, nessun contratto. Puoi anche affidarti a un'agenzia: <a href="Perimeter.html">come funziona</a>.</div>
+  </div>
+  <nav style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 6px 26px; display: flex; background: rgba(251,248,241,.94); border-top: 1px solid rgba(20,33,46,.10); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px)">
+    <a class="tab on" href="SellerHome.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2c6e9b" stroke-width="1.8" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Casa</a>
+    <a class="tab" href="Inbox.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>Messaggi</a>
+    <a class="tab" href="Visits.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="1"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Visite</a>
+    <a class="tab" href="Fascicolo.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>Documenti</a>
+    <a class="tab" href="Profile.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Profilo</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

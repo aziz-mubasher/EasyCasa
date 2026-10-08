@@ -1,7 +1,7 @@
 {
-  "tabs": { "search": "Cerca", "map": "Mappa", "favorites": "Salvati", "profile": "Profilo" },
+  "tabs": { "search": "Cerca", "map": "Mappa", "favorites": "Salvati", "saved": "Salvati", "profile": "Profilo" },
   "search": {
-    "placeholder": "Citt\u00e0, regione o parola chiave",
+    "placeholder": "Comune o zona",
     "empty": "Nessun annuncio corrisponde ai filtri.",
     "resultsCount": "{{count}} annunci"
   },

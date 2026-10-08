@@ -1,0 +1,26 @@
+{
+  "welcome": {
+    "headline": "We don't stand in the middle.",
+    "headlineAccent": "We stand behind.",
+    "body": "Buy or sell privately, with the tools agencies usually keep to themselves.",
+    "seekTitle": "I'm looking",
+    "seekSubtitle": "Listings with energy class and OMI band",
+    "sellTitle": "I'm selling",
+    "sellSubtitle": "Your number is never published",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "heroBadgePrivate": "Private",
+    "heroPrice": "€ 245,000",
+    "heroTitle": "Three-room with terrace",
+    "heroPlace": "Brescia · Historic centre"
+  },
+  "tabs": {
+    "search": "Search",
+    "saved": "Saved",
+    "profile": "Profile",
+    "home": "Home",
+    "messages": "Messages",
+    "visits": "Visits",
+    "docs": "Documents"
+  }
+}

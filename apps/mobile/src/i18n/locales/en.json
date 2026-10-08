@@ -1,7 +1,7 @@
 {
-  "tabs": { "search": "Search", "map": "Map", "favorites": "Saved", "profile": "Profile" },
+  "tabs": { "search": "Search", "map": "Map", "favorites": "Saved", "saved": "Saved", "profile": "Profile" },
   "search": {
-    "placeholder": "City, region, or keyword",
+    "placeholder": "City or area",
     "empty": "No listings match your filters yet.",
     "resultsCount": "{{count}} listings"
   },

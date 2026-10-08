@@ -1,0 +1,26 @@
+{
+  "welcome": {
+    "headline": "Non stiamo in mezzo.",
+    "headlineAccent": "Stiamo dietro.",
+    "body": "Compra o vendi casa da privato, con gli strumenti che di solito ha solo un'agenzia.",
+    "seekTitle": "Cerco casa",
+    "seekSubtitle": "Annunci con classe energetica e banda OMI",
+    "sellTitle": "Vendo casa mia",
+    "sellSubtitle": "Il tuo numero non è mai pubblicato",
+    "hasAccount": "Hai già un account?",
+    "signIn": "Accedi",
+    "heroBadgePrivate": "Privato",
+    "heroPrice": "€ 245.000",
+    "heroTitle": "Trilocale con terrazzo",
+    "heroPlace": "Brescia · Centro storico"
+  },
+  "tabs": {
+    "search": "Cerca",
+    "saved": "Salvati",
+    "profile": "Profilo",
+    "home": "Casa",
+    "messages": "Messaggi",
+    "visits": "Visite",
+    "docs": "Documenti"
+  }
+}

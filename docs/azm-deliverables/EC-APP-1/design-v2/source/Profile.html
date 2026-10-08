@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Profilo</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f3ede1;color:#14212e}
+a{color:#2c6e9b}a:hover{color:#1f5478}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font:500 11px 'Bricolage Grotesque',sans-serif;color:#4c5d6e;text-decoration:none}
+.tab.on{color:#14212e}
+.lbl{font:400 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#4c5d6e}
+.it{display:flex;align-items:center;gap:12px;min-height:52px;border-bottom:1px solid rgba(20,33,46,.16);text-decoration:none;color:#14212e;font-size:16px}
+.it span{flex-grow:1}
+.it .v{flex-grow:0;font:400 14px 'IBM Plex Mono',monospace;color:#4c5d6e}
+.seg{flex:1;height:44px;border:0;border-radius:10px;background:transparent;font:600 15px 'Bricolage Grotesque',sans-serif;color:#14212e}
+.seg.on{background:#14212e;color:#f3ede1}
+
+/* v2 polish */
+.tab{gap:2px}
+.tab svg{padding:4px 16px;border-radius:16px}
+.tab.on{color:#14212e;font-weight:600}
+.tab.on svg{background:#dde8f0}
+.card,.tile,.win{box-shadow:0 1px 2px rgba(20,33,46,.05),0 8px 22px rgba(20,33,46,.07);border-color:rgba(20,33,46,.10)!important}
+button,a{-webkit-tap-highlight-color:transparent}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f3ede1; font-family: 'Newsreader', Georgia, serif; position: relative; overflow: hidden">
+  <div style="padding: 60px 20px 16px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <div style="width: 52px; height: 52px; border-radius: 26px; background: #e8dfcc; display: flex; align-items: center; justify-content: center; font: 600 20px 'Bricolage Grotesque', sans-serif">L</div>
+      <div style="display: flex; flex-direction: column"><span style="font: 700 20px 'Bricolage Grotesque', sans-serif">Laura Bianchi</span><span style="font: 400 13px 'IBM Plex Mono', monospace; color: #4c5d6e">laura@[dominio].it</span></div>
+    </div>
+    <div style="display: flex; padding: 4px; border: 1px solid rgba(20,33,46,.34); border-radius: 14px; gap: 4px">
+      <button class="seg" type="button">Cerco casa</button>
+      <button class="seg on" type="button">Vendo casa</button>
+    </div>
+  </div>
+  <div style="padding: 0 20px 100px; display: flex; flex-direction: column">
+    <span class="lbl" style="padding: 8px 0 4px">IMPOSTAZIONI</span>
+    <a class="it" href="Main.html"><span>Lingua</span><span class="v">Italiano</span></a>
+    <a class="it" href="Profile.html"><span>Notifiche</span><span class="v">messaggi, visite</span></a>
+    <a class="it" href="Profile.html"><span>Ricerche salvate</span><span class="v">2</span></a>
+    <span class="lbl" style="padding: 18px 0 4px">I TUOI DATI</span>
+    <a class="it" href="Profile.html"><span>Informativa privacy</span></a>
+    <a class="it" href="Profile.html"><span>Scarica i miei dati</span></a>
+    <a class="it" href="Perimeter.html"><span>Cosa non facciamo</span></a>
+    <a class="it" href="Profile.html"><span>Termini del servizio</span></a>
+    <a class="it" href="Profile.html" style="color: #14212e"><span style="font-weight: 500">Elimina l'account</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14212e" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <div style="padding-top: 16px; font: 400 12px/1.6 'IBM Plex Mono', monospace; color: #4c5d6e">[Titolare del servizio · P.IVA · sede — alla costituzione]<br>Versione 1.0.0</div>
+  </div>
+  <nav style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 6px 26px; display: flex; background: rgba(251,248,241,.94); border-top: 1px solid rgba(20,33,46,.10); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px)">
+    <a class="tab" href="SellerHome.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Casa</a>
+    <a class="tab" href="Inbox.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>Messaggi</a>
+    <a class="tab" href="Visits.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="1"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Visite</a>
+    <a class="tab" href="Fascicolo.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>Documenti</a>
+    <a class="tab on" href="Profile.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2c6e9b" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Profilo</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
