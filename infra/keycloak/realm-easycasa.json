@@ -645,7 +645,12 @@
       },
       "redirectUris": [
         "easycasa://auth/*",
-        "exp://*"
+        "exp://*",
+        "https://easycasaita.com/app",
+        "https://easycasaita.com/app/*"
+      ],
+      "webOrigins": [
+        "https://easycasaita.com"
       ],
       "defaultClientScopes": [
         "basic",
