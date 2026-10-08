@@ -12,6 +12,8 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
+import { useFlow } from '../../src/flow/FlowProvider';
+import { NAV } from '../../src/flow/paths';
 import { setLocale, SUPPORTED_LOCALES, type SupportedLocale } from '../../src/i18n';
 import { useTheme } from '../../src/theme/useTheme';
 
@@ -23,6 +25,7 @@ export default function WelcomeScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const flow = useFlow();
   const { t, i18n } = useTranslation();
 
   return (
@@ -96,7 +99,10 @@ export default function WelcomeScreen() {
 
       <View style={styles.actions}>
         <Pressable
-          onPress={() => router.replace('/(tabs)')}
+          onPress={() => {
+            flow.chooseRole('seeker');
+            router.replace(NAV.search);
+          }}
           style={[styles.role, styles.roleDark, { backgroundColor: theme.colors.ink }]}
         >
           <View style={[styles.ic, { backgroundColor: 'rgba(169,200,220,0.16)' }]}>
@@ -114,7 +120,10 @@ export default function WelcomeScreen() {
         </Pressable>
 
         <Pressable
-          onPress={() => router.push('/(owner)')}
+          onPress={() => {
+            flow.chooseRole('seller');
+            router.replace(NAV.seller);
+          }}
           style={[
             styles.role,
             {
@@ -141,7 +150,14 @@ export default function WelcomeScreen() {
         <Text style={[styles.footer, { color: theme.colors.textMuted, fontFamily: theme.font.body }]}>
           {t('welcome.hasAccount')}{' '}
           <Text
-            onPress={() => router.push('/(tabs)/profile')}
+            onPress={() => {
+              if (flow.isMember) {
+                router.replace(flow.role === 'seller' ? NAV.profileSeller : NAV.profileSeeker);
+                return;
+              }
+              flow.setReturnTo(NAV.profileSeeker);
+              router.push(NAV.signIn);
+            }}
             style={{ color: theme.colors.primary, fontFamily: theme.font.displaySemi }}
           >
             {t('welcome.signIn')}

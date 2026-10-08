@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider } from '../src/auth/AuthProvider';
+import { FlowProvider } from '../src/flow/FlowProvider';
 import { ApiProvider } from '../src/api/client';
 import { DiscoveryProvider } from '../src/api/discovery';
 import { useAppFonts } from '../src/theme/fonts';
@@ -26,25 +27,32 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
+        <FlowProvider>
         <ApiProvider>
           <DiscoveryProvider>
             <StatusBar style="dark" />
             <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.colors.background } }}>
               <Stack.Screen name="index" />
+              <Stack.Screen name="splash" />
               <Stack.Screen name="(welcome)" />
               <Stack.Screen name="(tabs)" />
               <Stack.Screen name="(search)" />
               <Stack.Screen name="(owner)" options={{ headerShown: false }} />
               <Stack.Screen name="(pro)" options={{ headerShown: false }} />
               <Stack.Screen name="listing/[slug]" options={{ headerShown: true, title: '' }} />
-              <Stack.Screen name="booking/[listingId]" options={{ headerShown: true, title: '' }} />
-              <Stack.Screen
-                name="(auth)/sign-in"
-                options={{ presentation: 'modal', headerShown: true, title: '' }}
-              />
+              <Stack.Screen name="write/[slug]" />
+              <Stack.Screen name="sent/[slug]" />
+              <Stack.Screen name="booking/[listingId]" options={{ headerShown: true, title: 'Prenota una visita' }} />
+              <Stack.Screen name="filters" />
+              <Stack.Screen name="perimeter" />
+              <Stack.Screen name="offline" />
+              <Stack.Screen name="session-expired" />
+              <Stack.Screen name="permissions" />
+              <Stack.Screen name="(auth)/sign-in" options={{ headerShown: false }} />
             </Stack>
           </DiscoveryProvider>
         </ApiProvider>
+        </FlowProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,8 @@ import {
   useCreateSavedSearch,
   type Bounds,
 } from '../../src/api/discovery-hooks';
+import { useFlow } from '../../src/flow/FlowProvider';
+import { NAV } from '../../src/flow/paths';
 import { useTheme } from '../../src/theme/useTheme';
 
 /** Milan default viewport. */
@@ -28,6 +30,11 @@ export default function SearchScreen() {
   const theme = useTheme();
   const router = useRouter();
   const { t } = useTranslation();
+  const flow = useFlow();
+
+  useEffect(() => {
+    if (flow.ready && !flow.state.locationAsked) router.replace(NAV.permLocation);
+  }, [flow.ready, flow.state.locationAsked, router]);
 
   const [bounds, setBounds] = useState<Bounds | null>(null);
   const [zoom, setZoom] = useState(12);
@@ -81,7 +88,8 @@ export default function SearchScreen() {
       />
 
       <View style={styles.topBar}>
-        <Pill label={t('discovery.filters.title')} onPress={() => setFilterOpen(true)} theme={theme} />
+        <Pill label="Elenco" onPress={() => router.replace(NAV.search)} theme={theme} />
+        <Pill label={t('discovery.filters.title')} onPress={() => router.push(NAV.filters)} theme={theme} />
         <Pill
           label={drawMode ? t('common.cancel') : t('discovery.draw')}
           active={drawMode}

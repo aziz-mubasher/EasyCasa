@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 
-/** EC-APP-1 design v2 entry — welcome chooser (Cerco / Vendo). */
+/** Native launch hands off to the in-app splash, then welcome or the last shell. */
 export default function RootIndex() {
-  return <Redirect href="/(welcome)" />;
+  return <Redirect href="/splash" />;
 }

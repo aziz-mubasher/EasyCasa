@@ -69,7 +69,7 @@ export default function BookViewingScreen() {
           {dayKey(booked)} · {timeLabel(booked)}
         </Text>
         <Text style={[styles.doneNote, { color: theme.colors.textMuted }]}>{t('viewings.awaitingConfirm')}</Text>
-        <Pressable onPress={() => router.back()} style={[styles.cta, { backgroundColor: theme.colors.primary, borderRadius: theme.radius.md }]}>
+        <Pressable onPress={() => router.replace(`/listing/${id}`)} style={[styles.cta, { backgroundColor: theme.colors.primary, borderRadius: theme.radius.md }]}>
           <Text style={{ color: theme.colors.primaryText, fontWeight: '700' }}>{t('viewings.done')}</Text>
         </Pressable>
       </View>
@@ -81,7 +81,17 @@ export default function BookViewingScreen() {
       <Text style={[styles.h, { color: theme.colors.text }]}>{t('viewings.title')}</Text>
 
       {byDay.length === 0 ? (
-        <Text style={[styles.empty, { color: theme.colors.textMuted }]}>{t('viewings.noSlots')}</Text>
+        <View style={{ gap: 12 }}>
+          <Text style={[styles.empty, { color: theme.colors.textMuted }]}>{t('viewings.noSlots')}</Text>
+          <Text style={{ fontFamily: theme.font.displaySemi, color: theme.colors.text }}>Visita aperta</Text>
+          <Text style={{ color: theme.colors.textMuted }}>Sab 11 ott · 10:00–12:00</Text>
+          <Pressable
+            onPress={() => setBooked(Date.now())}
+            style={[styles.cta, { backgroundColor: theme.colors.ink, borderRadius: theme.radius.md }]}
+          >
+            <Text style={{ color: theme.colors.inkText, fontWeight: '700' }}>Prenota la visita aperta</Text>
+          </Pressable>
+        </View>
       ) : (
         byDay.map(([day, daySlots]) => (
           <View key={day} style={styles.dayBlock}>

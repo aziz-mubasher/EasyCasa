@@ -1,16 +1,22 @@
 import React from 'react';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import type { Enquiry, EnquiryEvent } from '@easycasa/api-client';
 import { useInboundEnquiries, useTransitionEnquiry } from '../../src/api/enquiries';
 import { EnquiryCard } from '../../src/components/owner/EnquiryCard';
+import { OwnerTabBar } from '../../src/components/shell/OwnerTabBar';
+import { NAV } from '../../src/flow/paths';
 import { useTheme } from '../../src/theme/useTheme';
 
 const ACTIVE: Enquiry['status'][] = ['NEW', 'CONTACTED'];
 
 export default function EnquiriesInboxScreen() {
   const theme = useTheme();
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
 
   const { data, isLoading } = useInboundEnquiries();
@@ -37,16 +43,27 @@ export default function EnquiriesInboxScreen() {
   const done = items.filter((e) => !ACTIVE.includes(e.status));
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <ScrollView
       style={{ backgroundColor: theme.colors.background }}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + 16 }]}
     >
-      <Text style={[styles.h, { color: theme.colors.text }]}>{t('enquiryInbox.title')}</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <Text style={[styles.h, { color: theme.colors.text }]}>{t('enquiryInbox.title')}</Text>
+        <Pressable onPress={() => router.push(NAV.rule)}>
+          <Text style={{ fontFamily: theme.font.displayMed, fontSize: 15, color: theme.colors.primary }}>La tua regola</Text>
+        </Pressable>
+      </View>
 
       {items.length === 0 ? (
-        <Text style={[styles.empty, { color: theme.colors.textMuted }]}>
-          {t('enquiryInbox.empty')}
-        </Text>
+        <View style={{ gap: 10 }}>
+          <Text style={[styles.empty, { color: theme.colors.textMuted }]}>
+            {t('enquiryInbox.empty')}
+          </Text>
+          <Pressable onPress={() => router.push(NAV.visits)}>
+            <Text style={{ fontFamily: theme.font.displaySemi, color: theme.colors.primary }}>Proponi i tuoi orari</Text>
+          </Pressable>
+        </View>
       ) : null}
 
       {active.length > 0 ? (
@@ -81,6 +98,8 @@ export default function EnquiriesInboxScreen() {
         </>
       ) : null}
     </ScrollView>
+    <OwnerTabBar active="inbox" />
+    </View>
   );
 }
 

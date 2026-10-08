@@ -11,7 +11,7 @@
     "export:web": "expo export --platform web",
     "typecheck": "tsc --noEmit",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts,.tsx",
-    "test": "node --import tsx --test src/catalog/flat-prices.test.ts src/pro/assignment-filter.test.ts src/enquiries/present.test.ts src/i18n/locale-parity.test.ts",
+    "test": "node --import tsx --test src/catalog/flat-prices.test.ts src/pro/assignment-filter.test.ts src/enquiries/present.test.ts src/i18n/locale-parity.test.ts src/flow/machine.test.ts",
     "doctor": "expo-doctor"
   },
   "dependencies": {
