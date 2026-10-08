@@ -86,13 +86,14 @@
       "expo-asset"
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/app"
     },
     "extra": {
       "apiBaseUrl": "https://easycasaita.com/api",
       "oidcIssuer": "https://auth.easycasaita.com/realms/easycasa",
       "oidcClientId": "easycasa-app",
-      "webAppUrl": "https://app.easycasaita.com",
+      "webAppUrl": "https://easycasaita.com/app",
       "router": {
         "origin": false
       },

@@ -164,7 +164,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | EXPO_PUBLIC_API_BASE_URL | mobile | API base (e.g. `https://easycasaita.com/api`). |
 | EXPO_PUBLIC_OIDC_ISSUER | mobile | Keycloak issuer for PKCE (`easycasa-app` public client). |
 | EXPO_PUBLIC_OIDC_CLIENT_ID | mobile | Defaults to `easycasa-app`. |
-| EXPO_PUBLIC_WEB_APP_URL | mobile | Hosted Expo web shell (`https://app.easycasaita.com`). |
+| EXPO_PUBLIC_WEB_APP_URL | mobile | Hosted Expo web shell (`https://easycasaita.com/app`). |
 | EXPO_TOKEN | CI / EAS | Optional — Expo access token for cloud native builds. |
 
 ## Phase 10 — orders + mandate (incarico)
