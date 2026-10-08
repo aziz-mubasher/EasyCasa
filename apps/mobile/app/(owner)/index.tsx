@@ -6,13 +6,15 @@ import { useTranslation } from 'react-i18next';
 import type { OwnerProperty } from '@easycasa/api-client';
 import { useInboundEnquiries } from '../../src/api/enquiries';
 import { useMyProperties } from '../../src/api/owner-hooks';
+import { useAuth } from '../../src/auth/AuthProvider';
 import { useTheme } from '../../src/theme/useTheme';
 
 export default function OwnerHome() {
   const theme = useTheme();
   const router = useRouter();
   const { t } = useTranslation();
-  const { data, isLoading, isError } = useMyProperties();
+  const { isAuthenticated, signIn, ready } = useAuth();
+  const { data, isLoading, isError, refetch } = useMyProperties();
   const { data: inbound } = useInboundEnquiries();
   const newCount = (inbound ?? []).filter((e) => e.status === 'NEW').length;
 
@@ -91,10 +93,39 @@ export default function OwnerHome() {
         <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>→</Text>
       </Pressable>
 
-      {isLoading ? (
+      {!ready || (isAuthenticated && isLoading) ? (
         <ActivityIndicator style={styles.center} color={theme.colors.primary} />
+      ) : !isAuthenticated ? (
+        <View style={styles.signedOut}>
+          <Text style={[styles.signedOutTitle, { color: theme.colors.text }]}>
+            {t('auth.signedOutTitle')}
+          </Text>
+          <Text style={[styles.signedOutBody, { color: theme.colors.textMuted }]}>
+            {t('auth.signedOutBody')}
+          </Text>
+          <Pressable
+            onPress={() => void signIn()}
+            style={[styles.signInBtn, { backgroundColor: theme.colors.primary, borderRadius: theme.radius.md }]}
+          >
+            <Text style={{ color: theme.colors.primaryText, fontWeight: '700' }}>
+              {t('auth.signIn')}
+            </Text>
+          </Pressable>
+        </View>
       ) : isError ? (
-        <Text style={[styles.center, { color: theme.colors.danger }]}>{t('common.error')}</Text>
+        <View style={styles.signedOut}>
+          <Text style={[styles.signedOutTitle, { color: theme.colors.danger }]}>
+            {t('common.error')}
+          </Text>
+          <Pressable
+            onPress={() => void refetch()}
+            style={[styles.signInBtn, { borderColor: theme.colors.border, borderWidth: 1, borderRadius: theme.radius.md }]}
+          >
+            <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>
+              {t('common.retry')}
+            </Text>
+          </Pressable>
+        </View>
       ) : (
         <FlatList
           data={data ?? []}
@@ -133,4 +164,8 @@ const styles = StyleSheet.create({
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 },
   action: { paddingHorizontal: 14, paddingVertical: 8, borderWidth: 1 },
   center: { textAlign: 'center', marginTop: 48 },
+  signedOut: { paddingHorizontal: 24, marginTop: 48, alignItems: 'center', gap: 12 },
+  signedOutTitle: { fontSize: 18, fontWeight: '700', textAlign: 'center' },
+  signedOutBody: { fontSize: 14, textAlign: 'center', lineHeight: 20 },
+  signInBtn: { marginTop: 8, paddingHorizontal: 24, paddingVertical: 14, minWidth: 180, alignItems: 'center' },
 });

@@ -14,6 +14,7 @@ import type {
   ServicePackage,
 } from '@easycasa/api-client';
 
+import { useAuth } from '../auth/AuthProvider';
 import { useOwnerApi } from './owner';
 
 const keys = {
@@ -35,7 +36,12 @@ export function usePackages(): UseQueryResult<ServicePackage[]> {
 
 export function useMyProperties(): UseQueryResult<OwnerProperty[]> {
   const api = useOwnerApi();
-  return useQuery({ queryKey: keys.properties(), queryFn: () => api.listMyProperties() });
+  const { isAuthenticated } = useAuth();
+  return useQuery({
+    queryKey: keys.properties(),
+    queryFn: () => api.listMyProperties(),
+    enabled: isAuthenticated,
+  });
 }
 
 export function useFascicolo(propertyId: string): UseQueryResult<FascicoloView> {

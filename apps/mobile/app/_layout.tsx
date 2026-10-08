@@ -16,6 +16,7 @@ export default function RootLayout() {
           <DiscoveryProvider>
             <StatusBar style="auto" />
             <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="index" />
               <Stack.Screen name="(tabs)" />
               <Stack.Screen name="(search)" />
               <Stack.Screen name="(owner)" options={{ headerShown: false }} />
