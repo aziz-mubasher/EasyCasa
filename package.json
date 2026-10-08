@@ -29,12 +29,15 @@
       "undici": ">=6.24.0",
       "lodash": ">=4.18.0",
       "js-yaml": ">=4.3.0",
-      "@xmldom/xmldom": ">=0.8.13"
+      "@xmldom/xmldom": "0.8.13"
     },
     "auditConfig": {
       "ignoreCves": [
         "CVE-2026-23864"
       ]
+    },
+    "patchedDependencies": {
+      "@expo/cli@0.18.31": "patches/@expo__cli@0.18.31.patch"
     }
   },
   "devDependencies": {

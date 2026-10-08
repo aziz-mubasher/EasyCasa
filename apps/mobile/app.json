@@ -4,10 +4,17 @@
     "slug": "easycasa",
     "version": "0.1.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "scheme": "easycasa",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
-    "assetBundlePatterns": ["**/*"],
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#16233b"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "it.easycasa.app",
@@ -18,25 +25,45 @@
         "applinks:www.easycasa.it"
       ],
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "EasyCasa uses your location to show nearby listings on the map."
+        "NSLocationWhenInUseUsageDescription": "EasyCasa uses your location to show nearby listings on the map.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "package": "it.easycasa.app",
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#16233b"
       },
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
       "intentFilters": [
         {
           "action": "VIEW",
           "autoVerify": true,
           "data": [
-            { "scheme": "https", "host": "easycasaita.com", "pathPrefix": "/listing" },
-            { "scheme": "https", "host": "easycasaita.com", "pathPrefix": "/it/listings" },
-            { "scheme": "https", "host": "easycasa.it", "pathPrefix": "/listing" }
+            {
+              "scheme": "https",
+              "host": "easycasaita.com",
+              "pathPrefix": "/listing"
+            },
+            {
+              "scheme": "https",
+              "host": "easycasaita.com",
+              "pathPrefix": "/it/listings"
+            },
+            {
+              "scheme": "https",
+              "host": "easycasa.it",
+              "pathPrefix": "/listing"
+            }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -52,9 +79,11 @@
       [
         "expo-notifications",
         {
+          "icon": "./assets/notification-icon.png",
           "color": "#1e5ae0"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
@@ -63,7 +92,14 @@
       "apiBaseUrl": "https://easycasaita.com/api",
       "oidcIssuer": "https://auth.easycasaita.com/realms/easycasa",
       "oidcClientId": "easycasa-app",
-      "webAppUrl": "https://app.easycasaita.com"
-    }
+      "webAppUrl": "https://app.easycasaita.com",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "13a9ea79-b458-49f7-8c8a-7bfea6bb336f"
+      }
+    },
+    "owner": "mundida-apps"
   }
 }
