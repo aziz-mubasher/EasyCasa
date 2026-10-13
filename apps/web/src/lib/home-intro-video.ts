@@ -1,10 +1,10 @@
-/** Bunny Stream collection for the homepage intro (en / it / es / ur / hi). */
+/** Bunny Stream collection for the homepage intro (en / it / es / ur / pa / hi). */
 export const HOME_INTRO_COLLECTION_ID = '5c2223c8-8f21-4d79-bda6-923974d51c96';
 
 /** Public catalog URL on `web`. Not `/api/*` — Traefik sends that prefix to Nest. */
 export const HOME_INTRO_CATALOG_PATH = '/home-intro.json';
 
-export const HOME_INTRO_LANGS = ['en', 'it', 'es', 'ur', 'hi'] as const;
+export const HOME_INTRO_LANGS = ['en', 'it', 'es', 'ur', 'pa', 'hi'] as const;
 export type HomeIntroLang = (typeof HOME_INTRO_LANGS)[number];
 
 export const HOME_INTRO_LANG_LABELS: Record<HomeIntroLang, string> = {
@@ -12,6 +12,8 @@ export const HOME_INTRO_LANG_LABELS: Record<HomeIntroLang, string> = {
   it: 'Italiano',
   es: 'Español',
   ur: 'اردو',
+  /** Latin label on purpose — do not show Gurmukhi on the language pill. */
+  pa: 'Punjabi',
   hi: 'हिन्दी',
 };
 
@@ -20,6 +22,7 @@ const LANG_PATTERNS: Record<HomeIntroLang, RegExp> = {
   it: /\b(it|ita|italian|italiano)\b/i,
   es: /\b(es|spa|spanish|espa[nñ]ol|castellano)\b/i,
   ur: /\b(ur|urd|urdu)|اردو/i,
+  pa: /\b(pa|pun|punjabi|panjabi)\b|ਪੰਜਾਬੀ/i,
   hi: /\b(hi|hin|hindi)\b|हिन्द[ीि]/i,
 };
 
@@ -47,7 +50,7 @@ function haystack(video: BunnyVideo): string {
 export function matchHomeIntroLang(text: string): HomeIntroLang | null {
   const trimmed = text.trim();
   if (!trimmed) return null;
-  const order: HomeIntroLang[] = ['ur', 'hi', 'es', 'it', 'en'];
+  const order: HomeIntroLang[] = ['ur', 'pa', 'hi', 'es', 'it', 'en'];
   for (const lang of order) {
     if (LANG_PATTERNS[lang].test(trimmed)) return lang;
   }
