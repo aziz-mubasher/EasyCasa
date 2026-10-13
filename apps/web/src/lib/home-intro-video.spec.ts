@@ -21,7 +21,7 @@ describe('home intro video catalog', () => {
     expect(HOME_INTRO_CATALOG_PATH).toBe('/home-intro.json');
   });
 
-  it('matches titles in the six intro languages', () => {
+  it('matches titles in the eight intro languages', () => {
     expect(matchHomeIntroLang('EasyCasa intro — English')).toBe('en');
     expect(matchHomeIntroLang('Intro Italiano')).toBe('it');
     expect(matchHomeIntroLang('Presentación Español')).toBe('es');
@@ -29,9 +29,15 @@ describe('home intro video catalog', () => {
     expect(matchHomeIntroLang('Intro Punjabi')).toBe('pa');
     expect(matchHomeIntroLang('Easy Casa Italia Intro Punjabi - Hyperframes v1')).toBe('pa');
     expect(matchHomeIntroLang('Intro Hindi')).toBe('hi');
+    expect(matchHomeIntroLang('Intro Bangla')).toBe('bn');
+    expect(matchHomeIntroLang('Easy Casa Italia Intro Bangla - Hyperframes v1')).toBe('bn');
+    expect(matchHomeIntroLang('Intro Arabic')).toBe('ar');
+    expect(matchHomeIntroLang('Easy Casa Italia Intro Arabic - Hyperframes v1')).toBe('ar');
     expect(matchHomeIntroLang('اردو تعارف')).toBe('ur');
     expect(matchHomeIntroLang('ਪੰਜਾਬੀ ਜਾਣ-ਪਛਾਣ')).toBe('pa');
     expect(matchHomeIntroLang('हिन्दी परिचय')).toBe('hi');
+    expect(matchHomeIntroLang('বাংলা পরিচিতি')).toBe('bn');
+    expect(matchHomeIntroLang('تعارف العربية')).toBe('ar');
     expect(HOME_INTRO_LANG_LABELS.pa).toBe('Punjabi');
     expect(matchHomeIntroLang('untitled clip')).toBeNull();
   });
@@ -44,6 +50,8 @@ describe('home intro video catalog', () => {
       { guid: 'ddd', title: 'Intro Urdu' },
       { guid: 'eee', title: 'Intro Punjabi' },
       { guid: 'fff', title: 'Intro Hindi' },
+      { guid: 'hhh', title: 'Intro Bangla' },
+      { guid: 'iii', title: 'Intro Arabic' },
       { guid: 'ggg', title: 'Intro English duplicate' },
     ]);
     expect(videos).toEqual({
@@ -53,6 +61,8 @@ describe('home intro video catalog', () => {
       ur: 'ddd',
       pa: 'eee',
       hi: 'fff',
+      bn: 'hhh',
+      ar: 'iii',
     });
   });
 
