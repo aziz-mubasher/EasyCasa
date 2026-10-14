@@ -2821,6 +2821,32 @@
         }
       ]
     },
+    "faq": {
+      "kicker": "FAQ",
+      "title": "Preguntas de quien compra",
+      "items": [
+        {
+          "q": "¿Los anuncios son de particulares o de agencias?",
+          "a": "De ambos. Cada anuncio indica quién lo publicó — el propietario o una agencia inmobiliaria. En la búsqueda puedes filtrar por Particular o Agencia si quieres un solo camino."
+        },
+        {
+          "q": "¿Qué es el rango OMI en un anuncio?",
+          "a": "Tras iniciar sesión, cada anuncio puede mostrar los rangos OMI oficiales de la Agenzia delle Entrate junto al precio pedido. Son datos de zona para esa microzona y ese semestre — no una valoración de ese inmueble concreto."
+        },
+        {
+          "q": "¿EasyCasa negocia o cobra una comisión por mi compra?",
+          "a": "No. EasyCasa lleva tu consulta a quien publicó el anuncio. No negocia el precio. Los servicios opcionales de pago son entregables con nombre a precio fijo, exigibles al entregarlos — nunca un porcentaje de la operación. Si trabajamos para el vendedor de un inmueble, no tomaremos tu dinero sobre ese mismo inmueble."
+        },
+        {
+          "q": "¿Cómo funcionan las visitas?",
+          "a": "Eliges un hueco desde la disponibilidad real de quien publicó — el propietario o la agencia — y ellos confirman. EasyCasa aporta las herramientas de reserva; la visita es entre tú y ellos."
+        },
+        {
+          "q": "¿Qué significa Verified Owner?",
+          "a": "Los vendedores que completan la verificación de identidad pueden mostrar la insignia Verified Owner en sus anuncios. Es una insignia, no un requisito para publicar. Los anuncios sin insignia pueden seguir apareciendo en la búsqueda."
+        }
+      ]
+    },
     "final": {
       "title": "La casa es la misma.",
       "titleLine2": "La experiencia no.",

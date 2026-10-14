@@ -465,6 +465,47 @@ button.fb-btn {
   color: var(--fb-ochre);
 }
 
+.fb-faq {
+  margin-top: 2rem;
+  border-top: 1px solid var(--fb-rule, rgba(20, 33, 46, 0.12));
+}
+
+.fb-faq-item {
+  border-bottom: 1px solid var(--fb-rule, rgba(20, 33, 46, 0.12));
+  padding: 0.35rem 0;
+}
+
+.fb-faq-item summary {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 650;
+  font-size: 1.05rem;
+  cursor: pointer;
+  padding: 1rem 0;
+  list-style: none;
+}
+
+.fb-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.fb-faq-item summary::after {
+  content: '+';
+  float: right;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  color: var(--fb-azure);
+}
+
+.fb-faq-item[open] summary::after {
+  content: '–';
+}
+
+.fb-faq-item p {
+  margin: 0 0 1.15rem;
+  color: var(--fb-ink-70);
+  max-width: 42rem;
+  font-size: 1rem;
+}
+
 .fb-final {
   background: var(--fb-ink);
   color: var(--fb-parchment);

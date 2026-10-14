@@ -30,6 +30,7 @@ type CompareRow = {
   private: string;
   agency: string;
 };
+type FaqItem = { q: string; a: string };
 
 type Props = {
   introCatalog: HomeIntroCatalog;
@@ -43,6 +44,7 @@ export function ForBuyersPage({ introCatalog }: Props) {
   const trust = t.raw('trust.items') as TrustItem[];
   const steps = t.raw('how.steps') as Step[];
   const compare = t.raw('compare.rows') as CompareRow[];
+  const faq = t.raw('faq.items') as FaqItem[];
 
   return (
     <div className="fb">
@@ -174,6 +176,29 @@ export function ForBuyersPage({ introCatalog }: Props) {
         </div>
       </section>
 
+      <section id="intro" className="fb-section fb-film-section">
+        <div className="fb-wrap">
+          <p className="fb-kicker fb-kicker--ink">{t('film.kicker')}</p>
+          <h2>{t('film.title')}</h2>
+          <BuyerIntroFilm fullscreenOpen={filmOpen} onFullscreenOpenChange={setFilmOpen} />
+        </div>
+      </section>
+
+      <section className="fb-section" aria-labelledby="fb-faq-title">
+        <div className="fb-wrap">
+          <p className="fb-kicker fb-kicker--ink">{t('faq.kicker')}</p>
+          <h2 id="fb-faq-title">{t('faq.title')}</h2>
+          <div className="fb-faq">
+            {faq.map((item) => (
+              <details key={item.q} className="fb-faq-item">
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <div className="fb-final">
         <div className="fb-wrap">
           <h2>
@@ -187,14 +212,6 @@ export function ForBuyersPage({ introCatalog }: Props) {
           </Link>
         </div>
       </div>
-
-      <section id="intro" className="fb-section fb-film-section">
-        <div className="fb-wrap">
-          <p className="fb-kicker fb-kicker--ink">{t('film.kicker')}</p>
-          <h2>{t('film.title')}</h2>
-          <BuyerIntroFilm fullscreenOpen={filmOpen} onFullscreenOpenChange={setFilmOpen} />
-        </div>
-      </section>
 
       <footer className="fb-foot">
         <div className="fb-wrap">

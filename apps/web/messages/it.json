@@ -2821,6 +2821,32 @@
         }
       ]
     },
+    "faq": {
+      "kicker": "FAQ",
+      "title": "Domande di chi compra",
+      "items": [
+        {
+          "q": "Gli annunci sono di privati o di agenzie?",
+          "a": "Entrambi. Ogni annuncio indica chi l’ha pubblicato — il proprietario o un’agenzia immobiliare. In ricerca puoi filtrare per Privato o Agenzia se vuoi un solo percorso."
+        },
+        {
+          "q": "Cos’è la fascia OMI sull’annuncio?",
+          "a": "Dopo l’accesso, ogni annuncio può mostrare le fasce OMI ufficiali dell’Agenzia delle Entrate accanto al prezzo richiesto. Sono dati di zona per quella microzona e quel semestre — non una perizia di quell’immobile."
+        },
+        {
+          "q": "EasyCasa tratta il prezzo o prende una commissione sull’acquisto?",
+          "a": "No. EasyCasa porta la tua richiesta a chi ha pubblicato l’annuncio. Non tratta il prezzo. I servizi opzionali a pagamento sono consegne nominate a prezzo fisso, dovute alla consegna — mai una percentuale sull’affare. Se lavoriamo per il venditore di un immobile, non prendiamo i tuoi soldi sullo stesso immobile."
+        },
+        {
+          "q": "Come funzionano le visite?",
+          "a": "Scegli uno slot dalla disponibilità reale di chi ha pubblicato — il proprietario o l’agenzia — e loro confermano. EasyCasa fornisce gli strumenti di prenotazione; la visita è tra te e loro."
+        },
+        {
+          "q": "Cosa significa Verified Owner?",
+          "a": "I venditori che completano la verifica dell’identità possono mostrare il badge Verified Owner sugli annunci. È un badge, non un requisito per pubblicare. Gli annunci senza badge possono comunque comparire in ricerca."
+        }
+      ]
+    },
     "final": {
       "title": "La casa è la stessa.",
       "titleLine2": "L’esperienza no.",
