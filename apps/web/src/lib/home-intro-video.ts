@@ -62,17 +62,28 @@ export function matchHomeIntroLang(text: string): HomeIntroLang | null {
   for (const lang of order) {
     if (LANG_PATTERNS[lang].test(trimmed)) return lang;
   }
+  // Bunny filenames: EC_Buyer_HowItWorks_v3_it_16x9.mp4 (underscore is a word char, so \b fails)
+  for (const lang of order) {
+    if (new RegExp(`(?:^|[._-])${lang}(?:[._-]|$)`, 'i').test(trimmed)) return lang;
+  }
   return null;
 }
 
 export function mapCollectionVideos(items: BunnyVideo[]): Partial<Record<HomeIntroLang, string>> {
   const videos: Partial<Record<HomeIntroLang, string>> = {};
+  const unmatched: string[] = [];
   for (const item of items) {
     const id = item.guid?.trim();
     if (!id) continue;
     const lang = matchHomeIntroLang(haystack(item));
-    if (lang && !videos[lang]) videos[lang] = id;
+    if (lang) {
+      if (!videos[lang]) videos[lang] = id;
+    } else {
+      unmatched.push(id);
+    }
   }
+  // Bare cuts with no language token (e.g. EC_SELLER_v6_16x9, …_v3_16x9) → English slot
+  if (!videos.en && unmatched[0]) videos.en = unmatched[0];
   return videos;
 }
 
