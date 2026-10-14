@@ -79,14 +79,6 @@ export function ForBuyersPage({ introCatalog }: Props) {
         </div>
       </header>
 
-      <section id="intro" className="fb-section fb-film-section">
-        <div className="fb-wrap">
-          <p className="fb-kicker fb-kicker--ink">{t('film.kicker')}</p>
-          <h2>{t('film.title')}</h2>
-          <BuyerIntroFilm fullscreenOpen={filmOpen} onFullscreenOpenChange={setFilmOpen} />
-        </div>
-      </section>
-
       <section id="services" className="fb-section">
         <div className="fb-wrap">
           <p className="fb-kicker fb-kicker--ink">{t('services.kicker')}</p>
@@ -195,6 +187,14 @@ export function ForBuyersPage({ introCatalog }: Props) {
           </Link>
         </div>
       </div>
+
+      <section id="intro" className="fb-section fb-film-section">
+        <div className="fb-wrap">
+          <p className="fb-kicker fb-kicker--ink">{t('film.kicker')}</p>
+          <h2>{t('film.title')}</h2>
+          <BuyerIntroFilm fullscreenOpen={filmOpen} onFullscreenOpenChange={setFilmOpen} />
+        </div>
+      </section>
 
       <footer className="fb-foot">
         <div className="fb-wrap">
