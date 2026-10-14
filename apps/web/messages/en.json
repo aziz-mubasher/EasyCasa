@@ -2821,6 +2821,32 @@
         }
       ]
     },
+    "faq": {
+      "kicker": "FAQ",
+      "title": "Questions buyers ask",
+      "items": [
+        {
+          "q": "Are listings from private owners or from agencies?",
+          "a": "Both. Every listing shows who published it — the owner or a real-estate agency. You can filter search by Private or Agency when you want one path only."
+        },
+        {
+          "q": "What is the OMI range on a listing?",
+          "a": "After you sign in, each listing can show official OMI zone ranges from the Agenzia delle Entrate next to the asking price. They are zone-level data for that microzone and semester — not a valuation of that specific home."
+        },
+        {
+          "q": "Does EasyCasa negotiate or take a commission on my purchase?",
+          "a": "No. EasyCasa carries your enquiry to whoever published the listing. It does not negotiate the price. Optional paid services are named deliverables at a flat fee, due on delivery — never a percentage of the deal. If we are working for the seller of a property, we will not take your money on that same property."
+        },
+        {
+          "q": "How do viewings work?",
+          "a": "You pick a slot from the publisher’s real availability — the owner or the agency — and they confirm. EasyCasa provides the booking tools; the visit is between you and them."
+        },
+        {
+          "q": "What does Verified Owner mean?",
+          "a": "Sellers who complete identity verification can show a Verified Owner badge on their listings. It is a badge, not a requirement to publish. Listings without the badge can still appear in search."
+        }
+      ]
+    },
     "final": {
       "title": "The house is the same.",
       "titleLine2": "The experience isn't.",

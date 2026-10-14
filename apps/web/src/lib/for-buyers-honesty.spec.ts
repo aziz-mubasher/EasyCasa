@@ -31,6 +31,7 @@ type ForBuyers = {
     closeFullscreen: string;
     scenes: Array<{ kicker: string; title: string; body: string }>;
   };
+  faq: { kicker: string; title: string; items: Array<{ q: string; a: string }> };
 };
 
 function load(locale: (typeof locales)[number]) {
@@ -168,6 +169,18 @@ describe('forBuyers honesty (EC-B-08 + 15 Sep)', () => {
       const film = load(locale).forBuyers.film;
       expect(film.fullscreen.length).toBeGreaterThan(0);
       expect(film.closeFullscreen.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('ships a buyer FAQ that keeps OMI as zone data after sign-in', () => {
+    for (const locale of locales) {
+      const { faq } = load(locale).forBuyers;
+      expect(faq.items.length).toBeGreaterThanOrEqual(4);
+      const hay = faq.items.map((i) => `${i.q} ${i.a}`).join(' ');
+      expect(hay.toLowerCase()).toMatch(/omi/);
+      expect(hay.toLowerCase()).toMatch(/sign in|accedi|iniciar sesi[oó]n|dopo l|after you|tras iniciar/);
+      expect(hay).toMatch(/private|privato|privati|particular/i);
+      expect(hay).toMatch(/agency|agenzia|agenzie|agencia/i);
     }
   });
 });

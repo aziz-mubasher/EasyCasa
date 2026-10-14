@@ -191,6 +191,16 @@ export function SellPrivatelyPage({ introCatalog }: Props) {
         </section>
       ) : null}
 
+      <section id="intro" className="sp-section sp-film-section" aria-labelledby="sp-film-title">
+        <div className="sp-wrap">
+          <p className="sp-kicker">{t('film.kicker')}</p>
+          <h2 id="sp-film-title" className="sp-display">
+            {t('film.title')}
+          </h2>
+          <SellerIntroFilm fullscreenOpen={filmOpen} onFullscreenOpenChange={setFilmOpen} />
+        </div>
+      </section>
+
       <section className="sp-section" aria-labelledby="sp-faq-title">
         <div className="sp-wrap">
           <p className="sp-kicker">{t('faq.kicker')}</p>
@@ -215,16 +225,6 @@ export function SellPrivatelyPage({ introCatalog }: Props) {
           <Link className="sp-btn sp-btn--primary" href="/add">
             {t('final.cta')}
           </Link>
-        </div>
-      </section>
-
-      <section id="intro" className="sp-section sp-film-section" aria-labelledby="sp-film-title">
-        <div className="sp-wrap">
-          <p className="sp-kicker">{t('film.kicker')}</p>
-          <h2 id="sp-film-title" className="sp-display">
-            {t('film.title')}
-          </h2>
-          <SellerIntroFilm fullscreenOpen={filmOpen} onFullscreenOpenChange={setFilmOpen} />
         </div>
       </section>
 
