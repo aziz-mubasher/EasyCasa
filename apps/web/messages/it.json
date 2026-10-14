@@ -2658,7 +2658,9 @@
       "lead": "Cerca case pubblicate da proprietari privati e da agenzie immobiliari. Dopo l’accesso puoi consultare i dati ufficiali di zona, scrivere a chi ha pubblicato l’annuncio e prenotare una visita dalla disponibilità reale.",
       "ctaPrimary": "Inizia a cercare",
       "ctaSecondary": "Guarda come funziona",
-      "ctaPricing": "Vedi il listino"
+      "ctaPricing": "Vedi il listino",
+      "videoTitle": "Per acquirenti — presentazione",
+      "videoLangLabel": "Lingua del video"
     },
     "tags": {
       "live": "Disponibile",
@@ -2963,7 +2965,9 @@
       "lead": "Pubblica un annuncio vero, visto da acquirenti veri. Niente esclusiva, niente incarico.",
       "ctaPrimary": "Crea il tuo annuncio gratis",
       "ctaSecondary": "Come funziona ↓",
-      "ctaFilm": "Guarda come funziona"
+      "ctaFilm": "Guarda come funziona",
+      "videoTitle": "Vendi da privato — presentazione",
+      "videoLangLabel": "Lingua del video"
     },
     "savings": {
       "kicker": "Pubblicazione",

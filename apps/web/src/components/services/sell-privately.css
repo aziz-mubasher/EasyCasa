@@ -74,11 +74,26 @@
   border-bottom: 1px solid rgba(243, 237, 225, 0.12);
 }
 
+.sp-hero .sp-wrap.sp-hero-grid {
+  max-width: 88rem;
+}
+
+.sp-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(20rem, 1.15fr);
+  gap: clamp(1.5rem, 3.5vw, 2.75rem);
+  align-items: center;
+}
+
 .sp-hero .sp-brand,
 .sp-hero .sp-display,
 .sp-hero .sp-lead,
 .sp-hero .sp-actions {
   animation: sp-rise 0.7s ease both;
+}
+
+.sp-hero .hm-video {
+  animation: sp-rise 0.75s 0.08s ease both;
 }
 
 .sp-hero .sp-display {
@@ -94,6 +109,12 @@
 
 .sp-hero .sp-actions {
   animation-delay: 0.24s;
+}
+
+@media (max-width: 860px) {
+  .sp-hero-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @keyframes sp-rise {

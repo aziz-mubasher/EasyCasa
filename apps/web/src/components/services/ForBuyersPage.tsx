@@ -1,9 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { HomeIntroVideo } from '@/components/home/HomeIntroVideo';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
+import {
+  FOR_BUYERS_INTRO_CATALOG_PATH,
+  type HomeIntroCatalog,
+} from '@/lib/home-intro-video';
 import { BuyerIntroFilm } from './BuyerIntroFilm';
 import './for-buyers.css';
 
@@ -26,8 +31,13 @@ type CompareRow = {
   agency: string;
 };
 
-export function ForBuyersPage() {
+type Props = {
+  introCatalog: HomeIntroCatalog;
+};
+
+export function ForBuyersPage({ introCatalog }: Props) {
   const t = useTranslations('forBuyers');
+  const locale = useLocale();
   const [filmOpen, setFilmOpen] = useState(false);
   const pillars = t.raw('pillars') as Pillar[];
   const trust = t.raw('trust.items') as TrustItem[];
@@ -37,25 +47,35 @@ export function ForBuyersPage() {
   return (
     <div className="fb">
       <header className="fb-hero">
-        <div className="fb-wrap">
-          <p className="fb-kicker">{t('hero.kicker')}</p>
-          <h1>
-            {t('hero.title')}
-            <br />
-            <em>{t('hero.titleEm')}</em>
-          </h1>
-          <p className="fb-lead">{t('hero.lead')}</p>
-          <div className="fb-actions">
-            <Link className="fb-btn fb-btn--primary" href="/search">
-              {t('hero.ctaPrimary')}
-            </Link>
-            <button type="button" className="fb-btn fb-btn--ghost" onClick={() => setFilmOpen(true)}>
-              {t('hero.ctaSecondary')}
-            </button>
-            <Link className="fb-btn fb-btn--ghost" href="/pricing">
-              {t('hero.ctaPricing')}
-            </Link>
+        <div className="fb-wrap fb-hero-grid">
+          <div className="fb-hero-copy">
+            <p className="fb-kicker">{t('hero.kicker')}</p>
+            <h1>
+              {t('hero.title')}
+              <br />
+              <em>{t('hero.titleEm')}</em>
+            </h1>
+            <p className="fb-lead">{t('hero.lead')}</p>
+            <div className="fb-actions">
+              <Link className="fb-btn fb-btn--primary" href="/search">
+                {t('hero.ctaPrimary')}
+              </Link>
+              <button type="button" className="fb-btn fb-btn--ghost" onClick={() => setFilmOpen(true)}>
+                {t('hero.ctaSecondary')}
+              </button>
+              <Link className="fb-btn fb-btn--ghost" href="/pricing">
+                {t('hero.ctaPricing')}
+              </Link>
+            </div>
           </div>
+          <HomeIntroVideo
+            locale={locale}
+            title={t('hero.videoTitle')}
+            langLabel={t('hero.videoLangLabel')}
+            catalog={introCatalog}
+            catalogPath={FOR_BUYERS_INTRO_CATALOG_PATH}
+            langsLabelId="fb-video-langs-label"
+          />
         </div>
       </header>
 

@@ -3,8 +3,12 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import {
+  FOR_BUYERS_INTRO_CATALOG_PATH,
+  FOR_BUYERS_INTRO_COLLECTION_ID,
   HOME_INTRO_CATALOG_PATH,
   HOME_INTRO_COLLECTION_ID,
+  SELL_PRIVATELY_INTRO_CATALOG_PATH,
+  SELL_PRIVATELY_INTRO_COLLECTION_ID,
   defaultHomeIntroLang,
   homeIntroEmbedSrc,
   HOME_INTRO_LANG_LABELS,
@@ -16,9 +20,13 @@ import {
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), '../..');
 
 describe('home intro video catalog', () => {
-  it('keeps the Bunny collection id the brief named', () => {
+  it('keeps the Bunny collection ids and catalog paths', () => {
     expect(HOME_INTRO_COLLECTION_ID).toBe('5c2223c8-8f21-4d79-bda6-923974d51c96');
     expect(HOME_INTRO_CATALOG_PATH).toBe('/home-intro.json');
+    expect(SELL_PRIVATELY_INTRO_COLLECTION_ID).toBe('910c1b99-2d2d-4961-9121-7be5fbf5537d');
+    expect(SELL_PRIVATELY_INTRO_CATALOG_PATH).toBe('/sell-privately-intro.json');
+    expect(FOR_BUYERS_INTRO_COLLECTION_ID).toBe('ca446c67-f534-4abe-af1e-1abb55addd77');
+    expect(FOR_BUYERS_INTRO_CATALOG_PATH).toBe('/for-buyers-intro.json');
   });
 
   it('matches titles in the eight intro languages', () => {
@@ -79,9 +87,11 @@ describe('home intro video catalog', () => {
 
   it('keeps hero video copy keys aligned in it/en/es', () => {
     for (const locale of ['it', 'en', 'es'] as const) {
-      const home = JSON.parse(readFileSync(join(webRoot, `messages/${locale}.json`), 'utf8')).home;
-      expect(home.hero.videoTitle.length).toBeGreaterThan(0);
-      expect(home.hero.videoLangLabel.length).toBeGreaterThan(0);
+      const messages = JSON.parse(readFileSync(join(webRoot, `messages/${locale}.json`), 'utf8'));
+      for (const ns of ['home', 'sellPrivately', 'forBuyers'] as const) {
+        expect(messages[ns].hero.videoTitle.length).toBeGreaterThan(0);
+        expect(messages[ns].hero.videoLangLabel.length).toBeGreaterThan(0);
+      }
     }
   });
 });
