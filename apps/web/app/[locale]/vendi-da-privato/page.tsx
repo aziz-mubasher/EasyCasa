@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { JsonLdScript } from '@/components/JsonLdScript';
 import { SellPrivatelyPage } from '@/components/services/SellPrivatelyPage';
 import { routing } from '@/i18n/routing';
+import { loadSellPrivatelyIntroCatalog } from '@/lib/home-intro-video';
 import {
   getSellPrivatelyBenefits,
   sellPrivatelyAbsoluteUrl,
@@ -64,12 +65,13 @@ export default async function SellPrivatelyRoute({ params }: Props) {
   });
 
   const faqLd = buildSellPrivatelyFaqLd(faq);
+  const introCatalog = await loadSellPrivatelyIntroCatalog();
 
   return (
     <>
       <JsonLdScript data={serviceLd} />
       <JsonLdScript data={faqLd} />
-      <SellPrivatelyPage />
+      <SellPrivatelyPage introCatalog={introCatalog} />
     </>
   );
 }

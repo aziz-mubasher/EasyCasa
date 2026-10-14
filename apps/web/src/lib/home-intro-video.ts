@@ -1,8 +1,12 @@
-/** Bunny Stream collection for the homepage intro (en / it / es / ur / pa / hi / bn / ar). */
+/** Bunny Stream collections for marketing intro embeds (multilingual title match). */
 export const HOME_INTRO_COLLECTION_ID = '5c2223c8-8f21-4d79-bda6-923974d51c96';
+export const SELL_PRIVATELY_INTRO_COLLECTION_ID = '910c1b99-2d2d-4961-9121-7be5fbf5537d';
+export const FOR_BUYERS_INTRO_COLLECTION_ID = 'ca446c67-f534-4abe-af1e-1abb55addd77';
 
-/** Public catalog URL on `web`. Not `/api/*` — Traefik sends that prefix to Nest. */
+/** Public catalog URLs on `web`. Not `/api/*` — Traefik sends that prefix to Nest. */
 export const HOME_INTRO_CATALOG_PATH = '/home-intro.json';
+export const SELL_PRIVATELY_INTRO_CATALOG_PATH = '/sell-privately-intro.json';
+export const FOR_BUYERS_INTRO_CATALOG_PATH = '/for-buyers-intro.json';
 
 export const HOME_INTRO_LANGS = ['en', 'it', 'es', 'ur', 'pa', 'hi', 'bn', 'ar'] as const;
 export type HomeIntroLang = (typeof HOME_INTRO_LANGS)[number];
@@ -107,9 +111,13 @@ function streamAccessKey(): string {
   return process.env.BUNNY_STREAM_API_KEY?.trim() || '';
 }
 
-async function fetchCollectionVideos(libraryId: string, accessKey: string): Promise<BunnyVideo[]> {
+async function fetchCollectionVideos(
+  libraryId: string,
+  accessKey: string,
+  collectionId: string,
+): Promise<BunnyVideo[]> {
   const url = new URL(`https://video.bunnycdn.com/library/${encodeURIComponent(libraryId)}/videos`);
-  url.searchParams.set('collection', HOME_INTRO_COLLECTION_ID);
+  url.searchParams.set('collection', collectionId);
   url.searchParams.set('itemsPerPage', '100');
   const res = await fetch(url, {
     headers: { AccessKey: accessKey, Accept: 'application/json' },
@@ -122,23 +130,35 @@ async function fetchCollectionVideos(libraryId: string, accessKey: string): Prom
   return body.items ?? body.Items ?? [];
 }
 
-export async function loadHomeIntroCatalog(): Promise<HomeIntroCatalog> {
+export async function loadBunnyIntroCatalog(collectionId: string): Promise<HomeIntroCatalog> {
   const libraryId = streamLibraryId();
   const accessKey = streamAccessKey();
   const empty: HomeIntroCatalog = {
-    collectionId: HOME_INTRO_COLLECTION_ID,
+    collectionId,
     libraryId,
     videos: {},
   };
   if (!libraryId || !accessKey) return empty;
   try {
-    const items = await fetchCollectionVideos(libraryId, accessKey);
+    const items = await fetchCollectionVideos(libraryId, accessKey, collectionId);
     return {
-      collectionId: HOME_INTRO_COLLECTION_ID,
+      collectionId,
       libraryId,
       videos: mapCollectionVideos(items),
     };
   } catch {
     return empty;
   }
+}
+
+export async function loadHomeIntroCatalog(): Promise<HomeIntroCatalog> {
+  return loadBunnyIntroCatalog(HOME_INTRO_COLLECTION_ID);
+}
+
+export async function loadSellPrivatelyIntroCatalog(): Promise<HomeIntroCatalog> {
+  return loadBunnyIntroCatalog(SELL_PRIVATELY_INTRO_COLLECTION_ID);
+}
+
+export async function loadForBuyersIntroCatalog(): Promise<HomeIntroCatalog> {
+  return loadBunnyIntroCatalog(FOR_BUYERS_INTRO_COLLECTION_ID);
 }

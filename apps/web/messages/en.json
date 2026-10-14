@@ -2658,7 +2658,9 @@
       "lead": "Search homes listed by private owners and by real-estate agencies. After you sign in you can check official zone data, write to whoever published the listing, and book a viewing from their real availability.",
       "ctaPrimary": "Start searching",
       "ctaSecondary": "Watch how it works",
-      "ctaPricing": "See the price list"
+      "ctaPricing": "See the price list",
+      "videoTitle": "For buyers — introduction",
+      "videoLangLabel": "Video language"
     },
     "tags": {
       "live": "Live",
@@ -2963,7 +2965,9 @@
       "lead": "Publish a genuine listing, seen by genuine buyers. No exclusivity, no contract.",
       "ctaPrimary": "Create your free listing",
       "ctaSecondary": "How it works ↓",
-      "ctaFilm": "Watch how it works"
+      "ctaFilm": "Watch how it works",
+      "videoTitle": "Sell privately — introduction",
+      "videoLangLabel": "Video language"
     },
     "savings": {
       "kicker": "Listing",

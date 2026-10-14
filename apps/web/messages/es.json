@@ -2658,7 +2658,9 @@
       "lead": "Busca casas publicadas por propietarios particulares y por agencias inmobiliarias. Tras iniciar sesión puedes consultar los datos oficiales de zona, escribir a quien publicó el anuncio y reservar una visita desde su disponibilidad real.",
       "ctaPrimary": "Empieza a buscar",
       "ctaSecondary": "Mira cómo funciona",
-      "ctaPricing": "Ver la lista de precios"
+      "ctaPricing": "Ver la lista de precios",
+      "videoTitle": "Para compradores — presentación",
+      "videoLangLabel": "Idioma del vídeo"
     },
     "tags": {
       "live": "Disponible",
@@ -2963,7 +2965,9 @@
       "lead": "Publica un anuncio genuino, visto por compradores genuinos. Sin exclusividad, sin contrato.",
       "ctaPrimary": "Crea tu anuncio gratis",
       "ctaSecondary": "Cómo funciona ↓",
-      "ctaFilm": "Mira cómo funciona"
+      "ctaFilm": "Mira cómo funciona",
+      "videoTitle": "Vender como particular — presentación",
+      "videoLangLabel": "Idioma del vídeo"
     },
     "savings": {
       "kicker": "Publicación",

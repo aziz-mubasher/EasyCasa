@@ -11,15 +11,27 @@ import {
   homeIntroEmbedSrc,
   pickHomeIntroVideo,
 } from '@/lib/home-intro-video';
+import './bunny-intro-video.css';
 
 type Props = {
   locale: string;
   title: string;
   langLabel: string;
   catalog: HomeIntroCatalog;
+  /** Client refetch path; defaults to the homepage catalog. */
+  catalogPath?: string;
+  /** Unique id prefix when several players share a page. */
+  langsLabelId?: string;
 };
 
-export function HomeIntroVideo({ locale, title, langLabel, catalog: initialCatalog }: Props) {
+export function HomeIntroVideo({
+  locale,
+  title,
+  langLabel,
+  catalog: initialCatalog,
+  catalogPath = HOME_INTRO_CATALOG_PATH,
+  langsLabelId = 'hm-video-langs-label',
+}: Props) {
   const [catalog, setCatalog] = useState(initialCatalog);
   const initial = useMemo(() => {
     const preferred = defaultHomeIntroLang(locale);
@@ -31,7 +43,7 @@ export function HomeIntroVideo({ locale, title, langLabel, catalog: initialCatal
 
   useEffect(() => {
     let cancelled = false;
-    fetch(HOME_INTRO_CATALOG_PATH)
+    fetch(catalogPath)
       .then((res) => (res.ok ? res.json() : null))
       .then((data: HomeIntroCatalog | null) => {
         if (cancelled || !data?.libraryId) return;
@@ -43,7 +55,7 @@ export function HomeIntroVideo({ locale, title, langLabel, catalog: initialCatal
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [catalogPath]);
 
   useEffect(() => {
     setLang(initial);
@@ -67,10 +79,10 @@ export function HomeIntroVideo({ locale, title, langLabel, catalog: initialCatal
       </div>
       {available.length > 0 ? (
         <div className="hm-video-langs">
-          <p className="hm-video-langs-label" id="hm-video-langs-label">
+          <p className="hm-video-langs-label" id={langsLabelId}>
             {langLabel}
           </p>
-          <div className="hm-video-langs-list" role="group" aria-labelledby="hm-video-langs-label">
+          <div className="hm-video-langs-list" role="group" aria-labelledby={langsLabelId}>
             {available.map((l) => (
               <button
                 key={l}

@@ -1,8 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { HomeIntroVideo } from '@/components/home/HomeIntroVideo';
+import {
+  SELL_PRIVATELY_INTRO_CATALOG_PATH,
+  type HomeIntroCatalog,
+} from '@/lib/home-intro-video';
 import {
   getSellPrivatelyBenefits,
   getSellPrivatelyLedger,
@@ -37,8 +42,13 @@ function StatusChip({ status, liveLabel, comingLabel }: {
   );
 }
 
-export function SellPrivatelyPage() {
+type Props = {
+  introCatalog: HomeIntroCatalog;
+};
+
+export function SellPrivatelyPage({ introCatalog }: Props) {
   const t = useTranslations('sellPrivately');
+  const locale = useLocale();
   const [filmOpen, setFilmOpen] = useState(false);
   const ledger = getSellPrivatelyLedger();
   const steps = getSellPrivatelySteps(ledger);
@@ -52,21 +62,31 @@ export function SellPrivatelyPage() {
   return (
     <div className="sp">
       <header className="sp-hero">
-        <div className="sp-wrap">
-          <p className="sp-brand">EasyCasa</p>
-          <h1 className="sp-display">{t('hero.title')}</h1>
-          <p className="sp-lead">{t('hero.lead')}</p>
-          <div className="sp-actions">
-            <Link className="sp-btn sp-btn--primary" href="/add">
-              {t('hero.ctaPrimary')}
-            </Link>
-            <button type="button" className="sp-btn sp-btn--ghost" onClick={() => setFilmOpen(true)}>
-              {t('hero.ctaFilm')}
-            </button>
-            <a className="sp-btn sp-btn--ghost" href="#how">
-              {t('hero.ctaSecondary')}
-            </a>
+        <div className="sp-wrap sp-hero-grid">
+          <div className="sp-hero-copy">
+            <p className="sp-brand">EasyCasa</p>
+            <h1 className="sp-display">{t('hero.title')}</h1>
+            <p className="sp-lead">{t('hero.lead')}</p>
+            <div className="sp-actions">
+              <Link className="sp-btn sp-btn--primary" href="/add">
+                {t('hero.ctaPrimary')}
+              </Link>
+              <button type="button" className="sp-btn sp-btn--ghost" onClick={() => setFilmOpen(true)}>
+                {t('hero.ctaFilm')}
+              </button>
+              <a className="sp-btn sp-btn--ghost" href="#how">
+                {t('hero.ctaSecondary')}
+              </a>
+            </div>
           </div>
+          <HomeIntroVideo
+            locale={locale}
+            title={t('hero.videoTitle')}
+            langLabel={t('hero.videoLangLabel')}
+            catalog={introCatalog}
+            catalogPath={SELL_PRIVATELY_INTRO_CATALOG_PATH}
+            langsLabelId="sp-video-langs-label"
+          />
         </div>
       </header>
 

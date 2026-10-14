@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ForBuyersPage } from '@/components/services/ForBuyersPage';
 import { routing } from '@/i18n/routing';
+import { loadForBuyersIntroCatalog } from '@/lib/home-intro-video';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -35,5 +36,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ForBuyersRoute({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <ForBuyersPage />;
+  const introCatalog = await loadForBuyersIntroCatalog();
+  return <ForBuyersPage introCatalog={introCatalog} />;
 }
