@@ -46,8 +46,11 @@ describe('home intro video catalog', () => {
     expect(matchHomeIntroLang('हिन्दी परिचय')).toBe('hi');
     expect(matchHomeIntroLang('বাংলা পরিচিতি')).toBe('bn');
     expect(matchHomeIntroLang('تعارف العربية')).toBe('ar');
+    expect(matchHomeIntroLang('EC_Buyer_HowItWorks_v3_it_16x9.mp4')).toBe('it');
+    expect(matchHomeIntroLang('EC_Buyer_HowItWorks_v3_es_16x9.mp4')).toBe('es');
     expect(HOME_INTRO_LANG_LABELS.pa).toBe('Punjabi');
     expect(matchHomeIntroLang('untitled clip')).toBeNull();
+    expect(matchHomeIntroLang('EC_SELLER_v6_16x9.mp4')).toBeNull();
   });
 
   it('maps a collection list onto unique language slots', () => {
@@ -71,6 +74,20 @@ describe('home intro video catalog', () => {
       hi: 'fff',
       bn: 'hhh',
       ar: 'iii',
+    });
+    expect(mapCollectionVideos([{ guid: 'seller', title: 'EC_SELLER_v6_16x9.mp4' }])).toEqual({
+      en: 'seller',
+    });
+    expect(
+      mapCollectionVideos([
+        { guid: 'bit', title: 'EC_Buyer_HowItWorks_v3_it_16x9.mp4' },
+        { guid: 'bes', title: 'EC_Buyer_HowItWorks_v3_es_16x9.mp4' },
+        { guid: 'ben', title: 'EC_Buyer_HowItWorks_v3_16x9.mp4' },
+      ]),
+    ).toEqual({
+      it: 'bit',
+      es: 'bes',
+      en: 'ben',
     });
   });
 
