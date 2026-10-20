@@ -39,6 +39,14 @@ describe('emailFromAccessToken', () => {
     expect(emailFromAccessToken(token)).toBe('ops@easycasa.it');
     expect(emailFromAccessToken(undefined)).toBeUndefined();
   });
+
+  it('falls back to email-shaped preferred_username', async () => {
+    const { emailFromAccessToken } = await import('./jwt-payload');
+    const payload = Buffer.from(
+      JSON.stringify({ preferred_username: 'ops@easycasa.it' }),
+    ).toString('base64url');
+    expect(emailFromAccessToken(`hdr.${payload}.sig`)).toBe('ops@easycasa.it');
+  });
 });
 
 describe('asteAnalysisServerAccessAllowed', () => {
