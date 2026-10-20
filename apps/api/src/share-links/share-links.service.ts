@@ -8,12 +8,14 @@ import {
 import { apiConfig } from '../config';
 import { ListingsRepository } from '../listings/listings.repository';
 import { ListingsService } from '../listings/listings.service';
+import { UsersService } from '../users/users.service';
 import type { AuthUser } from '../auth/auth.types';
 import {
   assertCanCreateShareLink,
   canManageShareLink,
   ShareLinkAuthError,
 } from './domain/authorization';
+import { projectPublicShareAgent } from './domain/public-agent';
 import { generateShareToken, normalizeOpaqueVisitorId, utcViewDate, visitorHashForView } from './domain/tokens';
 import type {
   PublicListingPayload,
@@ -44,6 +46,7 @@ export class ShareLinksService {
     private readonly repo: ShareLinksRepository,
     private readonly listingsRepo: ListingsRepository,
     private readonly listings: ListingsService,
+    private readonly users: UsersService,
   ) {}
 
   async create(dto: CreateShareLinkDto, userId: string, user: AuthUser) {
@@ -65,7 +68,9 @@ export class ShareLinksService {
       throw e;
     }
 
-    const agentSnapshot = await this.repo.agentSnapshotForUser(userId);
+    const rawSnapshot = await this.repo.agentSnapshotForUser(userId);
+    const contact = await this.users.publicContactFor(userId);
+    const agentSnapshot = projectPublicShareAgent(rawSnapshot, contact);
     let token = generateShareToken();
     for (let attempt = 0; attempt < 3; attempt += 1) {
       try {
@@ -159,7 +164,8 @@ export class ShareLinksService {
       valuationBand = await this.listings.getValuationBand(listing.slug);
     }
 
-    const snapshot = link.agentSnapshot as ShareLinkPublicPayload['agent'];
+    const stored = link.agentSnapshot as ShareLinkPublicPayload['agent'];
+    const contact = await this.users.publicContactFor(link.createdBy);
 
     return {
       token: link.token,
@@ -168,7 +174,7 @@ export class ShareLinksService {
         viewCount: counts.viewCount,
         uniqueViewCount: counts.uniqueViewCount,
       },
-      agent: snapshot,
+      agent: projectPublicShareAgent(stored, contact),
       agency: {
         name: apiConfig.AGENCY_PUBLIC_NAME,
         email: apiConfig.AGENCY_PUBLIC_EMAIL,

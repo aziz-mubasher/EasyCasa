@@ -3,9 +3,10 @@ import { getTranslations } from 'next-intl/server';
 
 import { SmartLinkQrCode } from '@/components/smartlink/SmartLinkQrCode';
 import { SmartLinkSocialRow, socialLinksFromAgent } from '@/components/smartlink/SmartLinkSocialRow';
-import { fetchPublicAgentBySlug, telHref, type PublicAgentProfile } from '@/lib/agent-public';
+import { fetchPublicAgentBySlug, telHref } from '@/lib/agent-public';
 import type { SmartLinkPublicPayload } from '@/lib/smartlink';
 import { smartLinkPublicUrl } from '@/lib/smartlink';
+import { mergeSmartLinkAgent } from '@/lib/smartlink-agent';
 import { BrandLogo } from '@/components/BrandLogo';
 
 type Props = {
@@ -14,24 +15,12 @@ type Props = {
   data: Pick<SmartLinkPublicPayload, 'agent' | 'agency'>;
 };
 
-function mergeAgent(
-  snapshot: SmartLinkPublicPayload['agent'],
-  profile: PublicAgentProfile | null,
-): { name: string; phone: string | null; bio: string | null; avatarUrl: string | null } {
-  return {
-    name: profile?.displayName ?? snapshot.displayName ?? '',
-    phone: profile?.phone ?? snapshot.phone,
-    bio: profile?.bio ?? snapshot.bio,
-    avatarUrl: profile?.avatarUrl ?? null,
-  };
-}
-
 export async function SmartLinkAgentCard({ locale, token, data }: Props) {
   const t = await getTranslations('smartlink.agentCard');
   const ts = await getTranslations('smartlink');
   const tb = await getTranslations('brand');
   const profile = await fetchPublicAgentBySlug(data.agent.slug);
-  const agent = mergeAgent(data.agent, profile);
+  const agent = mergeSmartLinkAgent(data.agent, profile);
   const agentName = agent.name || t('defaultName');
   const publicUrl = smartLinkPublicUrl(token, locale);
   const socials = socialLinksFromAgent(agent.phone);
