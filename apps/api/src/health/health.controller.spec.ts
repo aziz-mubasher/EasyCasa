@@ -51,6 +51,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     STRIPE_SECRET_KEY: '',
     STRIPE_WEBHOOK_SECRET: '',
     PAYMENTS_ENABLED: false,
+    PAYMENTS_DEV_WEBHOOK: false,
     GO_LIVE_PAYMENTS_ACK: false,
     PAYMENTS_SUCCESS_URL: '',
     PAYMENTS_CANCEL_URL: '',

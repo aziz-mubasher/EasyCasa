@@ -141,6 +141,7 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 |---|---|---|
 | STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET | api | Stripe server key + webhook signing secret. Empty = billing disabled safely. **Live keys (`sk_live_*`) refuse boot unless `GO_LIVE_PAYMENTS_ACK=true`.** |
 | PAYMENTS_ENABLED | api | `true` enables fixed-fee catalog checkout + Stripe PaymentIntents (test mode first). Requires `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET`. Default `false`. |
+| PAYMENTS_DEV_WEBHOOK | api | `true` allows unsigned JSON `POST /payments/webhook` outside production only. Default `false`. Ignored when `NODE_ENV=production` (unsigned POST is 404). |
 | GO_LIVE_PAYMENTS_ACK | api | Explicit human ack before accepting `sk_live_*`. Default `false`. |
 | PAYMENTS_SUCCESS_URL / PAYMENTS_CANCEL_URL | api | Redirect targets for embedded checkout return (web success/cancel pages). |
 | NEXT_PUBLIC_PAYMENTS_ENABLED | web (build) | Shows pay path on `/pricing`. Must match API `PAYMENTS_ENABLED`. Rebuild web after changing. |

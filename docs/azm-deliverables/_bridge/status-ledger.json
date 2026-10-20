@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-15T18:32:47.081Z",
+  "updatedAt": "2026-09-28T09:12:57.382Z",
   "pollUrl": "https://raw.githubusercontent.com/aziz-mubasher/EasyCasa/main/docs/azm-deliverables/_bridge/status-ledger.json",
   "tasks": [
+    {
+      "bridgeTaskId": null,
+      "kaizenCode": "EC-APP-1-API-WEBHOOK",
+      "polishId": "EC-APP-1-API-WEBHOOK",
+      "title": "EC-APP-1-API-WEBHOOK — reject unsigned payment webhooks",
+      "venture": "EasyCasa",
+      "lifecycle": "pr_open",
+      "agentStatus": "RUNNING",
+      "agentBcId": "bc-302d9a7f-30d9-4f59-b34e-0fe87f8a68f4",
+      "agentUrl": "https://cursor.com/agents/bc-302d9a7f-30d9-4f59-b34e-0fe87f8a68f4",
+      "branch": "cursor/ec-app-1-api-webhook-68f4",
+      "prNumber": 247,
+      "prUrl": "https://github.com/aziz-mubasher/EasyCasa/pull/247",
+      "prState": "DRAFT",
+      "dispatchedAt": "2026-09-28T08:22:03.171Z",
+      "updatedAt": "2026-09-28T09:12:57.382Z",
+      "summary": "Draft PR #247. Unsigned production webhook is 404. Production audit 2026-09-28: 0 succeeded intents without a pi_ ref. PAYMENTS_ENABLED is true. Not deployed.",
+      "nextAction": "Review draft PR 247. Do not force-recreate the API. Live image is easycasa-ita-api:latest (77f9e55). Trial code is only on unused overlay tags. AZM confirms deploy. Kaizen Operations / Improve card is manual.",
+      "errors": []
+    },
     {
       "bridgeTaskId": "task_ec_transparency_15sep",
       "kaizenCode": "K EC TRANSPARENCY",
