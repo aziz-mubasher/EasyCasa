@@ -1,8 +1,9 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
+import { CommunitySocial } from '@/components/CommunitySocial';
 import './acquisto-assistito.css';
 
 const CONTACT_MAILTO = 'mailto:acquisti@easycasaita.com';
@@ -23,6 +24,7 @@ type Faq = { q: string; a: string };
 type SchedaRow = { dt: string; dd: string; hi?: boolean };
 
 export function AcquistoAssistitoPage() {
+  const locale = useLocale();
   const t = useTranslations('acquistoAssistito');
   const traps = t.raw('traps') as Trap[];
   const steps = t.raw('steps') as Step[];
@@ -212,6 +214,9 @@ export function AcquistoAssistitoPage() {
         </section>
 
         <footer className="aa-footer">
+          <div className="wrap">
+            <CommunitySocial locale={locale} kind="follow" headingId="soc-acquisto" />
+          </div>
           <div className="wrap">
             <div>
               <p>

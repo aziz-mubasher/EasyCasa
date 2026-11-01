@@ -10,6 +10,7 @@ import {
   type HomeIntroCatalog,
 } from '@/lib/home-intro-video';
 import { BuyerIntroFilm } from './BuyerIntroFilm';
+import { CommunitySocial } from '@/components/CommunitySocial';
 import './for-buyers.css';
 
 type Pillar = {
@@ -215,6 +216,7 @@ export function ForBuyersPage({ introCatalog }: Props) {
 
       <footer className="fb-foot">
         <div className="fb-wrap">
+          <CommunitySocial locale={locale} kind="follow" headingId="soc-buyers" />
           <p>
             {t('foot.mundida')}
             <MundidaDevCredit inline leadingMiddot />

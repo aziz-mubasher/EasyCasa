@@ -1,4 +1,5 @@
 import { buildListingJsonLd } from '@/lib/listing-json-ld';
+import { ayniFacebookSameAs } from '@/lib/community-social';
 import { JsonLdScript } from './JsonLdScript';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://easycasaita.com';
@@ -54,6 +55,7 @@ export function OrganizationStructuredData() {
         name: 'EasyCasa Italia',
         url: SITE,
         logo: `${SITE}/logo.png`,
+        sameAs: ayniFacebookSameAs(),
       }}
     />
   );

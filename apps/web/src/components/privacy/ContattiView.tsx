@@ -1,5 +1,6 @@
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
+import { CommunitySocial } from '@/components/CommunitySocial';
 import './privacy-doc.css';
 
 type Channel = {
@@ -25,6 +26,7 @@ type RouteRow = {
 type IdentRow = { label: string; value: string; todo?: boolean };
 
 export async function ContattiView() {
+  const locale = await getLocale();
   const t = await getTranslations('contatti');
   const channels = t.raw('channels') as Channel[];
   const routes = t.raw('routes') as RouteRow[];
@@ -53,6 +55,8 @@ export async function ContattiView() {
             </div>
           ))}
         </div>
+
+        <CommunitySocial locale={locale} kind="follow" headingId="soc-contact" />
 
         <h2 className="pd-h">{t('routesTitle')}</h2>
         <p className="pd-lede">{t('routesLede')}</p>

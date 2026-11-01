@@ -1,0 +1,134 @@
+.soc {
+  width: 100%;
+  margin-top: 1.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  color: inherit;
+}
+
+.soc .soc-heading {
+  margin: 0 0 0.75rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: inherit;
+}
+
+.soc-primary,
+.soc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.soc-primary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.soc a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+.soc-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  color: inherit;
+  text-decoration: none;
+}
+
+.soc-icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  transform: none !important;
+}
+
+.soc-other {
+  margin-top: 0.9rem;
+}
+
+.soc-other summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.soc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 0.6rem;
+}
+
+.soc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+.soc-row.is-current {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  font-weight: 700;
+}
+
+.soc-name {
+  color: inherit;
+  text-decoration: none;
+}
+
+.soc-mini {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.soc-icon--mini {
+  width: 32px;
+  height: 32px;
+}
+
+.soc [lang='bn'] {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+}
+
+.soc [lang='hi'] {
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+.soc [lang='ur'] {
+  font-family: 'Noto Nastaliq Urdu', serif;
+}
+
+.soc [lang='ar'] {
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif;
+}
+
+.sf .soc,
+.fb-foot .soc,
+.sp-foot .soc {
+  color: rgba(243, 237, 225, 0.92);
+}
+
+.sf .soc {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 1.6rem;
+}
+
+@media (min-width: 720px) {
+  .soc-other summary {
+    cursor: default;
+  }
+}

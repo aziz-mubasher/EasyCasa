@@ -1,0 +1,71 @@
+{
+  "version": "2026-11-01",
+  "communities": {
+    "it": {
+      "label": "Italiano",
+      "facebook": "https://www.facebook.com/profile.php?id=61594781186543",
+      "instagram": "https://www.instagram.com/aynigroupita/",
+      "tiktok": "https://www.tiktok.com/@aynigroupitalia",
+      "youtube": "https://www.youtube.com/channel/UC_SFo3cJv-375ASElWz7vIw"
+    },
+    "en": {
+      "label": "English",
+      "facebook": "https://www.facebook.com/profile.php?id=61594557006594",
+      "instagram": "https://www.instagram.com/aynigroupitaenglish/",
+      "tiktok": "https://www.tiktok.com/@aynigroupitaenglish",
+      "youtube": "https://www.youtube.com/channel/UCVa8oqavD9nU_iSUQGgGl9g"
+    },
+    "es": {
+      "label": "Español",
+      "facebook": "https://www.facebook.com/aynigroupo",
+      "instagram": "https://www.instagram.com/aynigroupoitaespanyol/",
+      "tiktok": "https://www.tiktok.com/@aynitalia",
+      "youtube": "https://www.youtube.com/channel/UCFNmG0iugert7fX5ebO-xVg"
+    },
+    "ur": {
+      "label": "اردو / پنجابی",
+      "facebook": "https://www.facebook.com/aynigroupitaliaurdu",
+      "instagram": "https://www.instagram.com/aynigroupitaliaurdu/",
+      "tiktok": "https://www.tiktok.com/@aynigroupitaliaurdu",
+      "youtube": "https://www.youtube.com/channel/UCie82xRBwDpGxk-dVdkzGFg"
+    },
+    "hi": {
+      "label": "हिन्दी / ਪੰਜਾਬੀ",
+      "facebook": "https://www.facebook.com/aynigroupitahindi",
+      "instagram": "https://www.instagram.com/aynigroupitahindi/",
+      "tiktok": "https://www.tiktok.com/@easycasaitahindi",
+      "youtube": "https://www.youtube.com/channel/UCwCHSHal4HWVKqaLz0a4jsA"
+    },
+    "ar": {
+      "label": "العربية",
+      "facebook": "https://www.facebook.com/aynigroupitaracbic",
+      "instagram": "https://www.instagram.com/aynigroupitaarabia/",
+      "tiktok": "https://www.tiktok.com/@aynigroupita",
+      "youtube": "https://www.youtube.com/channel/UCpf7GgwMbtKmH7MUWaRfmYA"
+    },
+    "bn": {
+      "label": "বাংলা",
+      "facebook": "https://www.facebook.com/profile.php?id=61594574825639",
+      "instagram": "https://www.instagram.com/aynigroupbangla/",
+      "tiktok": "https://www.tiktok.com/@aynigroupitabangla",
+      "youtube": "https://www.youtube.com/channel/UCJVAmw76zzuVxq51xOBBQcg"
+    }
+  },
+  "localeToCommunity": {
+    "it": "it",
+    "en": "en",
+    "es": "es",
+    "ur": "ur",
+    "ur-Latn": "ur",
+    "roman-urdu": "ur",
+    "urhi": "ur",
+    "pa": "ur",
+    "hi": "hi",
+    "hi-Latn": "hi",
+    "roman-hindi": "hi",
+    "ar": "ar",
+    "bn": "bn",
+    "fr": "en"
+  },
+  "fallbackCommunity": "en"
+}

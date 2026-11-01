@@ -7,6 +7,7 @@ import { Link } from '@/i18n/routing';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import { submitAsteLead } from '@/lib/aste-api';
 import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
+import { CommunitySocial } from '@/components/CommunitySocial';
 import './aste-landing.css';
 
 type ProblemCard = { title: string; body: string };
@@ -267,6 +268,7 @@ export function AsteLandingPage() {
 
       <footer className="aste-foot">
         <div className="aste-wrap">
+          <CommunitySocial locale={locale} kind="follow" headingId="soc-aste" />
           <p>{t('disclaimer')}</p>
           <p className="aste-counsel">{t('counselMark')}</p>
           <MundidaDevCredit />

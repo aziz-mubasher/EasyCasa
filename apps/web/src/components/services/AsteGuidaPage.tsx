@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
+import { CommunitySocial } from '@/components/CommunitySocial';
 import './aste-guida.css';
 
 type Check = { title: string; body: string };
@@ -46,6 +47,7 @@ export function AsteGuidaPage() {
         </section>
 
         <footer className="guida-foot">
+          <CommunitySocial locale={locale} kind="follow" headingId="soc-guida" />
           <p>{t('disclaimer')}</p>
           <p className="guida-counsel">{t('counselMark')}</p>
           <MundidaDevCredit />

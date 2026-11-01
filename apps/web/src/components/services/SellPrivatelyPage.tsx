@@ -20,6 +20,7 @@ import {
 } from '@/lib/sell-privately';
 import { SellPrivatelySavingsSlider } from './SellPrivatelySavingsSlider';
 import { SellerIntroFilm } from './SellerIntroFilm';
+import { CommunitySocial } from '@/components/CommunitySocial';
 import './sell-privately.css';
 
 type FaqItem = { q: string; a: string };
@@ -230,6 +231,7 @@ export function SellPrivatelyPage({ introCatalog }: Props) {
 
       <footer className="sp-foot">
         <div className="sp-wrap">
+          <CommunitySocial locale={locale} kind="follow" headingId="soc-sell" />
           <p>
             {t('foot.privacyBefore')}{' '}
             <Link href="/legal/privacy">{t('foot.privacyLink')}</Link>

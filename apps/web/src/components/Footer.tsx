@@ -9,6 +9,7 @@ import { sellPrivatelyPath } from '@/lib/sell-privately';
 import { contactPath, transparencyPath } from '@/lib/site-paths';
 import { MundidaDevCredit } from '@/components/MundidaDevCredit';
 import { BrandLogo } from '@/components/BrandLogo';
+import { CommunitySocial } from '@/components/CommunitySocial';
 import './site-footer.css';
 
 type InternalItem = { key: string; href: string };
@@ -118,6 +119,8 @@ export function Footer() {
             </ul>
           </nav>
         </div>
+
+        <CommunitySocial locale={locale} kind="follow" headingId="soc-foot" />
 
         <div className="sf-legal">
           <div className="sf-legal-meta">
