@@ -115,6 +115,10 @@
         "description": "Admin portal — all admin personas"
       },
       {
+        "name": "admin_marketing",
+        "description": "Admin portal — marketing (Analytics only; no operations rights)"
+      },
+      {
         "name": "crm-admin",
         "description": "K EC 4.1 CRM — full access incl. export/erasure"
       },

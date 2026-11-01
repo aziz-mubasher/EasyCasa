@@ -10,6 +10,7 @@ import { Footer } from '@/components/Footer';
 import { Providers } from '@/components/Providers';
 import { DemoBanner } from '@/components/DemoBanner';
 import { OrganizationStructuredData } from '@/components/StructuredData';
+import { AnalyticsBeacon } from '@/components/analytics/AnalyticsBeacon';
 import '../globals.css';
 import '@/styles/easycasa-brand.css';
 
@@ -68,6 +69,7 @@ export default async function LocaleLayout({
         <OrganizationStructuredData />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>
+            <AnalyticsBeacon />
             <DemoBanner />
             <Header />
             <main className="flex-1">{children}</main>

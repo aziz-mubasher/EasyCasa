@@ -1715,6 +1715,10 @@
       {
         "id": "t9",
         "label": "Changes to this notice"
+      },
+      {
+        "id": "t10",
+        "label": "Audience measurement"
       }
     ],
     "s1": {
@@ -1769,6 +1773,47 @@
       "title": "Changes to this notice",
       "brief": "If we change something substantial we will tell you; we will not merely update the date. Previous versions remain available so you can see what changed and when."
     },
+    "s10": {
+      "title": "Audience measurement",
+      "counsel": "COUNSEL REVIEW PENDING",
+      "brief": "We measure site visits in aggregate, on our own server, with no analytics cookies and no onward transfer. The legal basis is Article 6(1)(f) GDPR: a legitimate interest in knowing, in aggregate, which pages and channels work.",
+      "what": "We collect the page as a template (not the full address), the language chosen among Italian, English and Spanish, a listing identifier only on that property's page, the referring host only, cleaned campaign parameters, a presence flag for paid clicks and never the click value, device class, browser family and operating-system family, a country derived from the browser time zone, a screen-width band, foreground time, scroll in 25 percent steps, and a closed list of actions (enquiry, viewing, call, listing submission, purchase of a service).",
+      "not": "We do not store the IP address, the full browser string, a device identifier, name, email, phone or the text of a request. We do not use analytics cookies. A visitor for one day is a hash computed with a random salt that is then deleted: after deletion the hash cannot be linked back to a person. Raw rows are kept for 30 days; after that only anonymous totals remain, with no hash.",
+      "host": "The site is hosted on a Hostinger VPS. On 1 November 2026 the site's public address geolocated to Frankfurt am Main, Hesse, Germany. If the hosting contract names a different centre, the contract prevails.",
+      "object": "An active Global Privacy Control or Do Not Track signal means the visit is not measured. To object another way, write to the controller at the address in this notice.",
+      "storage": "The site does not set NEXT_LOCALE. Sign-in also keeps tokens in localStorage and the PKCE verifier in sessionStorage: those are not cookies and they are not used for measurement.",
+      "cookiesTitle": "Cookies and technical identifiers",
+      "thName": "Name",
+      "thWho": "Set by",
+      "thWhy": "Purpose",
+      "thLife": "Lifetime"
+    },
+    "cookies": [
+      {
+        "name": "ec_access",
+        "who": "easycasaita.com",
+        "why": "Access token after sign-in. Not an analytics cookie.",
+        "life": "Remaining token lifetime. SameSite=Lax. Secure on https."
+      },
+      {
+        "name": "ec_sl_vid",
+        "who": "easycasaita.com",
+        "why": "Random identifier so the same share-link open is not counted twice. Set only on those pages.",
+        "life": "400 days. Path=/. SameSite=Lax."
+      },
+      {
+        "name": "ec_staff",
+        "who": "admin.easycasaita.com, domain .easycasaita.com",
+        "why": "Staff technical cookie. Excludes the back office from audience measurement.",
+        "life": "180 days. SameSite=Lax."
+      },
+      {
+        "name": "Keycloak session",
+        "who": "auth.easycasaita.com",
+        "why": "Sign-in session emitted by Keycloak. Cookie names are not defined in this site.",
+        "life": "Whatever the authentication realm is configured to use."
+      }
+    ],
     "dataRows": [
       {
         "cat": "Identifiers",

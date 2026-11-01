@@ -753,6 +753,49 @@ export class EasyCasaAdminApi {
     }>;
   }
 
+  analyticsOverview(query: string): Promise<unknown> {
+    return this.request(`/admin/analytics/overview?${query}`, z.unknown());
+  }
+  analyticsPages(query: string): Promise<unknown> {
+    return this.request(`/admin/analytics/pages?${query}`, z.unknown());
+  }
+  analyticsListings(query: string): Promise<unknown> {
+    return this.request(`/admin/analytics/listings?${query}`, z.unknown());
+  }
+  analyticsSources(query: string): Promise<unknown> {
+    return this.request(`/admin/analytics/sources?${query}`, z.unknown());
+  }
+  analyticsConversions(query: string): Promise<unknown> {
+    return this.request(`/admin/analytics/conversions?${query}`, z.unknown());
+  }
+  analyticsFunnel(id: string, query: string): Promise<unknown> {
+    return this.request(`/admin/analytics/funnels/${encodeURIComponent(id)}?${query}`, z.unknown());
+  }
+  analyticsDimensions(dim: string, query: string): Promise<unknown> {
+    return this.request(`/admin/analytics/dimensions/${encodeURIComponent(dim)}?${query}`, z.unknown());
+  }
+  analyticsProvinces(query: string): Promise<unknown> {
+    return this.request(`/admin/analytics/provinces?${query}`, z.unknown());
+  }
+  analyticsRealtime(): Promise<{ live: number }> {
+    return this.request('/admin/analytics/realtime', z.object({ live: z.number() }));
+  }
+  analyticsSpend(body: { utmCampaign: string; month: string; spendEur: number; note?: string }): Promise<unknown> {
+    return this.request('/admin/analytics/spend', z.unknown(), {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+  }
+  async analyticsExportCsv(query: string): Promise<string> {
+    const base = this.opts.baseUrl.replace(/\/$/, '');
+    const headers = new Headers();
+    const token = await this.opts.getAccessToken?.();
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+    const res = await fetch(`${base}/admin/analytics/export.csv?${query}`, { headers });
+    if (!res.ok) throw new Error(`export ${res.status}`);
+    return res.text();
+  }
+
   crmPatchRole(
     contactId: string,
     role: string,

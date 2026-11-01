@@ -76,6 +76,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!ready || typeof document === 'undefined') return;
+    const host = window.location.hostname;
+    const onSite = host === 'easycasaita.com' || host.endsWith('.easycasaita.com');
+    const domain = onSite ? '; Domain=.easycasaita.com' : '';
+    const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+    if (tokens) {
+      document.cookie = `ec_staff=1; Path=/; Max-Age=${180 * 24 * 60 * 60}; SameSite=Lax${domain}${secure}`;
+      return;
+    }
+    document.cookie = `ec_staff=; Path=/; Max-Age=0${domain}`;
+    document.cookie = 'ec_staff=; Path=/; Max-Age=0';
+  }, [tokens, ready]);
+
   const persist = useCallback((next: StoredTokens) => {
     tokenStore.setTokens(next);
     setTokens(next);

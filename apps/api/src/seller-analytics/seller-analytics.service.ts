@@ -60,6 +60,8 @@ export async function recordListingView(
   listingId: string,
   now = new Date(),
 ): Promise<void> {
+  // F2: parallel feed from the web-analytics rollup stays off until AZM flips it.
+  if (process.env.LISTING_VIEWS_FROM_WEB_ANALYTICS === 'true') return;
   try {
     const day = utcDayString(now);
     await db

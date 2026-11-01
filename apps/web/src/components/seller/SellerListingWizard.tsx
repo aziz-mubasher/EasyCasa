@@ -19,6 +19,7 @@ import { SellerQuotaUpsell } from '@/components/seller/SellerPremiumPanel';
 import { useSellerEntitlements } from '@/hooks/useSellerEntitlements';
 import { useSellerMe } from '@/hooks/useSellerMe';
 import { parseQuotaErrorCode, type QuotaErrorCode } from '@/lib/seller-monetisation';
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 import { resolveWizardEntryPhase, type SellerProfileView } from '@/lib/seller-onboarding';
 
 /**
@@ -30,6 +31,7 @@ export function SellerListingWizard() {
   const t = useTranslations('sellerWizard');
   const tQuota = useTranslations('errors.quota');
   const locale = useLocale();
+  const [addStarted, setAddStarted] = useState(false);
   const { ready, isAuthenticated, signIn, getAccessToken } = useAuth();
   const { loading: meLoading, flagOff, profile, consent, refresh: refreshMe } = useSellerMe(
     ready && isAuthenticated,
@@ -155,6 +157,7 @@ export function SellerListingWizard() {
         return;
       }
       const body = (await res.json()) as { listingId: string };
+      trackProduct(PRODUCT_EVENTS.SELLER_LISTING_SUBMITTED, { locale });
       setListingId(body.listingId);
     } finally {
       setBusy(false);
@@ -244,7 +247,14 @@ export function SellerListingWizard() {
   const stepIndex = WIZARD_STEPS.indexOf(step);
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
+    <div
+      className="mx-auto max-w-2xl px-4 py-10"
+      onPointerDown={() => {
+        if (addStarted) return;
+        setAddStarted(true);
+        trackProduct(PRODUCT_EVENTS.SELLER_ADD_STARTED, { locale, source: 'wizard' });
+      }}
+    >
       <p className="data text-xs uppercase tracking-wide text-muted">
         {t('stepOf', { n: stepIndex + 1, total: WIZARD_STEPS.length })}
       </p>

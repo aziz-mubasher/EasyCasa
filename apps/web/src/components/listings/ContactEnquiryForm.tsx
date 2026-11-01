@@ -14,6 +14,7 @@ import {
   enquiryPhoneForSubmit,
   isPlausibleEnquiryPhone,
 } from '@/lib/enquiry-phone';
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 
 type Props = {
   listingId: string;
@@ -131,6 +132,9 @@ export function ContactEnquiryForm({ listingId, listingTitle, className = '' }: 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
+      if (res.ok) {
+        trackProduct(PRODUCT_EVENTS.ENQUIRY_SUBMITTED, { locale });
+      }
       if (!res.ok) {
         const errBody = (await res.json().catch(() => null)) as { message?: string | string[] } | null;
         const msg = Array.isArray(errBody?.message)

@@ -10,6 +10,7 @@ import { AffordThisHomeReferralBlock } from '@/components/financing/AffordThisHo
 import { ListingLandingShell } from '@/components/listings/ListingLandingShell';
 import { ListingSummaryCard } from '@/components/listings/ListingSummaryCard';
 import { ListingContactSection } from '@/components/listings/ListingContactSection';
+import { ListingViewBeacon } from '@/components/listings/ListingViewBeacon';
 import { ListingValuationGate } from '@/components/listings/ListingValuationGate';
 import { ListingValuationBandSection } from '@/components/valuation/ListingValuationBandSection';
 import { MapView } from '@/components/search/MapView';
@@ -109,6 +110,7 @@ export default async function ListingPage({ params }: PageParams) {
         tablistLabel={t('tabs.tablist')}
         sections={sections}
       >
+        <ListingViewBeacon locale={locale} provincia={listing.province ?? null} />
         <article className="mx-auto max-w-6xl px-5 py-8 space-y-14 pb-16">
           <section id="details" className="scroll-mt-28">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)] lg:items-start">

@@ -22,6 +22,7 @@ import type { Db } from '../db/drizzle';
 import { listingDraft, media, sellerProfile } from '../db/schema';
 import { ListingsService } from '../listings/listings.service';
 import type { AuthUser } from '../auth/auth.types';
+import { noteServerConversion } from '../web-analytics/server-conversion';
 import { draftPayloadToCreateDto } from './draft-to-listing';
 
 /** EC-S-T07 + PR-W — listing draft autosave + submit → create → publish. */
@@ -158,6 +159,8 @@ export class ListingDraftsService {
         updatedAt: new Date(),
       })
       .where(and(eq(listingDraft.id, draftId), eq(listingDraft.sellerId, userId)));
+
+    noteServerConversion('seller.listing_submitted');
 
     return {
       id: draftId,

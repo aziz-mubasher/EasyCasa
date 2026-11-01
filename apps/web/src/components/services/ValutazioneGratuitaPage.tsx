@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useId, type FormEvent } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 import './valutazione-gratuita.css';
 
 type Compare = { tag: string; title: string; body: string; hi?: boolean };
@@ -13,6 +14,7 @@ const CONDITION_KEYS = ['renovate', 'normal', 'renovated', 'new'] as const;
 
 export function ValutazioneGratuitaPage() {
   const t = useTranslations('valutazioneGratuita');
+  const locale = useLocale();
   const id = useId();
   const usual = t.raw('compare.usual') as Compare;
   const here = t.raw('compare.here') as Compare;
@@ -29,6 +31,9 @@ export function ValutazioneGratuitaPage() {
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitted(true);
+    if (locale === 'it' || locale === 'en' || locale === 'es') {
+      trackProduct(PRODUCT_EVENTS.VALUATION_REQUESTED, { locale });
+    }
     document.getElementById('vg-result')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 

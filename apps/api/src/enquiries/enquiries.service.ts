@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { crmFireSafe } from '../crm/crm-fire-safe';
+import { noteServerConversion } from '../web-analytics/server-conversion';
 import { CRM_HOOKS, type CrmHooks } from '../crm/domain/ports';
 import { EmailService } from '../email/email.service';
 import { assertEnquiryConsents } from '../privacy/enquiry-consent.gate';
@@ -101,6 +102,7 @@ export class EnquiriesService {
       contactWhatsappAvailable,
       ...b4aFields,
     });
+    noteServerConversion('enquiry.submitted');
 
     const routing = planEnquiryRouting(input.intent, parties);
     for (const userId of routing.notifyUserIds) {

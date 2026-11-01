@@ -144,6 +144,12 @@ Record the date whenever this secret changes. A 404 on a bookmarked `#whatsapp/<
 | GO_LIVE_PAYMENTS_ACK | api | Explicit human ack before accepting `sk_live_*`. Default `false`. |
 | PAYMENTS_SUCCESS_URL / PAYMENTS_CANCEL_URL | api | Redirect targets for embedded checkout return (web success/cancel pages). |
 | NEXT_PUBLIC_PAYMENTS_ENABLED | web (build) | Shows pay path on `/pricing`. Must match API `PAYMENTS_ENABLED`. Rebuild web after changing. |
+| WEB_ANALYTICS_ENABLED | api | Tier 0 collector. Default `false`. Stores nothing and still answers 204 while off. Turn on with the web flag only after privacy section 10 is live. See `docs/runbooks/web-analytics.md`. |
+| NEXT_PUBLIC_WEB_ANALYTICS_ENABLED | web (build) | Default `false`. Baked into the client. Rebuild the web image to change it. |
+| ANALYTICS_HONOR_GPC | api | Default `true`. `Sec-GPC: 1` or `DNT: 1` stores nothing. |
+| LISTING_VIEWS_FROM_WEB_ANALYTICS | api | Default `false`. Do not flip until the bot/real ratio is reported. |
+| WEB_ANALYTICS_SITE | api | Site label inside the daily hash. Default `easycasaita.com`. |
+| WEB_ANALYTICS_ORIGINS | api | Comma-separated Origins accepted by the collector. |
 | STRIPE_PRICE_ASTE_CREDITS_1 / _3 / _10 | api | EC-27 — optional Stripe Price IDs for Aste credit packs (1/3/10 full-report unlocks). Empty → test-mode `price_data` fallback. Requires **payments on** and analysis access (public **or** EC-36 preview allowlist). Live `sk_live_*` checkout refused while `ASTE_ANALYSIS_ENABLED=false`. |
 | NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY | web (build) | Stripe `pk_test_*` / `pk_live_*` for Payment Element. Never commit real keys. |
 | BILLING_SUCCESS_URL / BILLING_CANCEL_URL | api | Checkout redirect targets. |

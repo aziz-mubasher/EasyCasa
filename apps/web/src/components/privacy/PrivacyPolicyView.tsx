@@ -6,6 +6,7 @@ type TocItem = { id: string; label: string };
 type DataRow = { cat: string; examples: string; from: string };
 type PurposeRow = { purpose: string; basis: string };
 type RightRow = { right: string; where: string; link?: boolean };
+type CookieRow = { name: string; who: string; why: string; life: string };
 
 export async function PrivacyPolicyView() {
   const t = await getTranslations('privacyPolicy');
@@ -13,6 +14,7 @@ export async function PrivacyPolicyView() {
   const dataRows = t.raw('dataRows') as DataRow[];
   const purposeRows = t.raw('purposeRows') as PurposeRow[];
   const rightRows = t.raw('rightRows') as RightRow[];
+  const cookieRows = t.raw('cookies') as CookieRow[];
 
   return (
     <div className="pd">
@@ -242,6 +244,47 @@ export async function PrivacyPolicyView() {
               <span className="tag">{t('briefTag')}</span>
               <p>{t('s9.brief')}</p>
             </div>
+          </section>
+
+          {/* COUNSEL REVIEW PENDING */}
+          <section className="pd-sec">
+            <h2 className="pd-s" id="t10">
+              <span className="n">10</span>
+              {t('s10.title')}
+            </h2>
+            <div className="pd-todo">
+              <b>{t('s10.counsel')}</b>
+            </div>
+            <div className="pd-brief">
+              <span className="tag">{t('briefTag')}</span>
+              <p>{t('s10.brief')}</p>
+            </div>
+            <p>{t('s10.what')}</p>
+            <p>{t('s10.not')}</p>
+            <p>{t('s10.host')}</p>
+            <p>{t('s10.object')}</p>
+            <h3>{t('s10.cookiesTitle')}</h3>
+            <p>{t('s10.storage')}</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>{t('s10.thName')}</th>
+                  <th>{t('s10.thWho')}</th>
+                  <th>{t('s10.thWhy')}</th>
+                  <th>{t('s10.thLife')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cookieRows.map((row) => (
+                  <tr key={row.name}>
+                    <td className="mono">{row.name}</td>
+                    <td>{row.who}</td>
+                    <td>{row.why}</td>
+                    <td className="mono">{row.life}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </section>
 
           <div className="pd-help">

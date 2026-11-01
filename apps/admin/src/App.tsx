@@ -22,6 +22,7 @@ import { PartnerDirectoryAdmin } from './pages/PartnerDirectoryAdmin';
 import { WhatsAppChannel } from './pages/WhatsAppChannel';
 import { AsteAdmin } from './pages/AsteAdmin';
 import { CrmShell } from './pages/crm/CrmShell';
+import { Analytics } from './pages/Analytics';
 
 type View =
   | 'credentials'
@@ -38,9 +39,11 @@ type View =
   | 'compliance'
   | 'aml'
   | 'rli'
-  | 'crm';
+  | 'crm'
+  | 'analytics';
 
 const NAV: { key: View; label: string; hint: string }[] = [
+  { key: 'analytics', label: 'Analytics', hint: 'Visits · sources · funnels' },
   { key: 'crm', label: 'CRM', hint: 'Contacts · pipelines' },
   { key: 'credentials', label: 'Credentials', hint: 'Ops · expiring first' },
   { key: 'coverage', label: 'Coverage', hint: 'Ops / support read' },
@@ -59,6 +62,7 @@ const NAV: { key: View; label: string; hint: string }[] = [
 ];
 
 const VIEWS: Record<View, React.ReactNode> = {
+  analytics: <Analytics />,
   crm: <CrmShell />,
   credentials: <Credentials />,
   coverage: <CoverageMatrix />,

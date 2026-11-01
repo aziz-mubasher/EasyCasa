@@ -317,9 +317,25 @@ Described as implemented controls, **not** as adequacy conclusions.
 | `docs/legal/mediation-disclosure.md` | **Draft template** — REA/fees bracketed |
 | Counsel review | **Never completed** |
 | Production | Web serves these documents; API policy version **`v1-draft`**; consent ledger stores **`v1-draft`** |
-| Cookie policy / banner | **Missing** |
+| Cookie policy / banner | **Section 10 of the privacy notice** (`privacyPolicy.s10`, counsel-marked `COUNSEL REVIEW PENDING`). No consent banner: Tier 0 stores no analytics cookie. |
+| Tier 0 audience measurement | **Draft, flags off.** `docs/legal/lia-web-analytics.md`. Art. 6(1)(f). Salt destroyed daily. Raw events 30 days. |
 | Register of processing (Art. 30) | **This package** — engineering draft for counsel, not a signed register |
 | Internal CRM (K EC 4.1) | Schema/API/admin **merged**; §1.6 Q2a **consent applied** 2026-08-02 (`crm-controller-responsibility.md`); code default `CRM_ENABLED=false`; **production may enable** |
+
+---
+
+## 1.8 Audience measurement (EC-ANALYTICS-1) — COUNSEL REVIEW PENDING
+
+Not legal advice. Draft for counsel. Flags `WEB_ANALYTICS_ENABLED` and `NEXT_PUBLIC_WEB_ANALYTICS_ENABLED` ship **off**.
+
+Published text: privacy notice section 10, locales it / en / es, marked in `PrivacyPolicyView.tsx` with `COUNSEL REVIEW PENDING`. LIA draft: `docs/legal/lia-web-analytics.md`.
+
+**`ec_sl_vid` (decision left to AZM, not taken here):**
+
+- (a) Cut the share-link cookie from 400 days to 30 days and keep disclosing it.
+- (b) Drop the cookie and dedupe share-link views with the same daily hash used for audience measurement. Cleaner and consistent with Tier 0. Recommended, not implemented.
+
+**Open for counsel:** whether Tier 0 meets art. 122 Codice Privacy and Garante provv. 231 of 10 June 2021 (aggregated statistics, one site, minimised identifying power, no combination and no onward transfer), the LIA, and the section 10 wording.
 
 ---
 
@@ -336,7 +352,8 @@ Consent gating on enquiries proves **mechanism**, not that counsel agrees consen
 - Legal entity / controller full details (denominazione, sede, P.IVA, REA, CCIAA)
 - Whether a DPO is appointed and contact details
 - DPA status and subprocessors: Brevo, Cloudflare, Hostinger, Sentry, Stripe, OpenAI (if used)
-- Physical location of VPS and data residency; encryption at rest on Hostinger volumes
+- Physical location of VPS: public A record `82.25.97.164` geolocated on 1 Nov 2026 to Frankfurt am Main, Hesse, Germany (Hostinger AS47583). **Contract still prevails** if the data centre moves. Encryption at rest on Hostinger volumes remains UNKNOWN
+- Brevo dashboard open/click tracking: **not readable from this repo**. Sends use SMTP relay only (`smtp-relay.brevo.com`). Recommend open tracking off for transactional mail (Garante pixel provvedimento 17 Apr 2026)
 - Whether Cloudflare is DNS-only or proxied; CF IP logs retention
 - OpenFreeMap operator identity, DPA, and whether IP addresses are processed
 - Keycloak admin credential rotation status on production

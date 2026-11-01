@@ -143,6 +143,11 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     AGENCY_PUBLIC_EMAIL: 'info@easycasaita.com',
     AGENCY_PUBLIC_PHONE: '',
     ...over,
+    WEB_ANALYTICS_ENABLED: over.WEB_ANALYTICS_ENABLED ?? false,
+    ANALYTICS_HONOR_GPC: over.ANALYTICS_HONOR_GPC ?? true,
+    LISTING_VIEWS_FROM_WEB_ANALYTICS: over.LISTING_VIEWS_FROM_WEB_ANALYTICS ?? false,
+    WEB_ANALYTICS_SITE: over.WEB_ANALYTICS_SITE ?? 'easycasaita.com',
+    WEB_ANALYTICS_ORIGINS: over.WEB_ANALYTICS_ORIGINS ?? 'https://easycasaita.com',
   };
 }
 

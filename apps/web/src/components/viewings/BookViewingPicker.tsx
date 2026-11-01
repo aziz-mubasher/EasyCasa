@@ -104,6 +104,7 @@ export function BookViewingPicker({ listingId, listingSlug, listingTitle, areaLa
     setBookError(null);
     try {
       await api.book(listingId, { startMs: selected.startMs });
+      trackProduct(PRODUCT_EVENTS.VIEWING_REQUESTED, { locale });
       setStatus('ok');
     } catch {
       setStatus('err');

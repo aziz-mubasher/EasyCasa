@@ -4,10 +4,20 @@ import { ListingCard } from '@/components/listing/ListingCard';
 import { FavoriteToggle } from '@/favorites/FavoriteToggle';
 import { MapView } from '@/components/search/MapView';
 import type { ListingSummary } from '@easycasa/shared';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocale } from 'next-intl';
+
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 
 export function SearchResultsPanel({ items }: { items: ListingSummary[] }) {
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
+  const locale = useLocale();
+
+  useEffect(() => {
+    const props: Record<string, string> = {};
+    if (locale === 'it' || locale === 'en' || locale === 'es') props.locale = locale;
+    trackProduct(PRODUCT_EVENTS.SEARCH_PERFORMED, props);
+  }, [locale]);
 
   return (
     <div className="grid lg:grid-cols-[1fr_420px] gap-6">

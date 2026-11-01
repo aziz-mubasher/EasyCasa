@@ -334,6 +334,25 @@ const Schema = z
     /** K EC 1.29 — HMAC pepper for SmartLink daily unique-view hashes (no raw IP stored). */
     SHARE_VIEW_HMAC_SECRET: z.string().min(16).default('dev-smartlink-view-secret-change-me'),
 
+    /**
+     * EC-ANALYTICS-1 — Tier 0 collector. Default off.
+     * Turn on together with NEXT_PUBLIC_WEB_ANALYTICS_ENABLED only after the
+     * informativa section is live.
+     */
+    WEB_ANALYTICS_ENABLED: bool(false),
+    /** Drop the beacon when Sec-GPC or DNT is set. Default on. */
+    ANALYTICS_HONOR_GPC: bool(true),
+    /**
+     * EC-ANALYTICS-1 F2 — when true, listing_analytics_daily.views is replaced
+     * by the rollup's listing.view counts and recordListingView() does not increment.
+     * Leave false until the bot/real ratio has been read for 14 days.
+     */
+    LISTING_VIEWS_FROM_WEB_ANALYTICS: bool(false),
+    WEB_ANALYTICS_SITE: z.string().default('easycasaita.com'),
+    WEB_ANALYTICS_ORIGINS: z
+      .string()
+      .default('https://easycasaita.com,https://www.easycasaita.com'),
+
     AGENCY_PUBLIC_NAME: z.string().default('Easy Casa Italy'),
     AGENCY_PUBLIC_EMAIL: z.string().default('info@easycasaita.com'),
     AGENCY_PUBLIC_PHONE: z.string().default(''),

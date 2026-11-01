@@ -34,6 +34,7 @@ import { useListingPublishRoute } from '@/auth/useListingPublishRoute';
 import { apiUrl, createAuthedFetch } from '@/auth/authedFetch';
 import { Link, useRouter } from '@/i18n/routing';
 import { useViewingsApi } from '@/lib/viewings-api';
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 
 
 const TOTAL = 6;
@@ -365,6 +366,7 @@ export function AddListingForm() {
         setError(t('errors.publishFailed'));
         return;
       }
+      trackProduct(PRODUCT_EVENTS.SELLER_LISTING_SUBMITTED, { locale, source: 'add' });
       setCreatedId(created.id);
     } catch (e) {
       if (e instanceof TypeError && /failed to fetch/i.test(e.message)) {

@@ -13,6 +13,7 @@ import {
 } from '@easycasa/shared';
 import { Link } from '@/i18n/routing';
 import { submitCallRequest } from '@/lib/call-booking-api';
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 import './book-call.css';
 
 type Props = {
@@ -59,6 +60,10 @@ export function BookCallForm({ locale, initialProvince, initialReason }: Props) 
         preferredAt: preferredAt ? new Date(preferredAt).toISOString() : null,
         locale,
         consent: true,
+      });
+      trackProduct(PRODUCT_EVENTS.CALL_BOOKED, {
+        locale: locale === 'ur' || locale === 'hi' ? 'en' : locale,
+        provincia: province,
       });
       setDone(true);
     } catch {

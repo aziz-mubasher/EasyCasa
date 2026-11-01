@@ -5,6 +5,8 @@ import {
   type ProductEventProps,
 } from '@easycasa/shared';
 
+import { noteServerConversion } from '../web-analytics/server-conversion';
+
 /**
  * Nest wrapper around the shared in-memory product analytics sink.
  * Events are also logged as structured JSON for VPS log shipping.
@@ -16,5 +18,6 @@ export class ProductAnalyticsService {
   track(name: ProductEventName, props: ProductEventProps = {}): void {
     productAnalytics.track(name, props);
     this.log.log(JSON.stringify({ event: name, ...props }));
+    noteServerConversion(name);
   }
 }

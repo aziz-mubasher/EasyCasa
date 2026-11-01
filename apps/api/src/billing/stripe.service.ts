@@ -27,6 +27,7 @@ import { ListingBoostService } from '../listing-boost/listing-boost.service';
 import { SearchService } from '../search/search.service';
 import type { AsteCreditsService } from '../aste/aste-credits.service';
 import { asteUserHasAnalysisAccess, asteCreditsCheckoutBlockedByLiveKey } from '../aste/aste-access';
+import { noteServerConversion } from '../web-analytics/server-conversion';
 
 const SELLER_PREMIUM_PLAN_KEY = 'seller_premium';
 const PARTNER_DIRECTORY_PLAN_KEY = 'partner_directory_placement';
@@ -292,6 +293,7 @@ export class StripeService {
             Number(s.metadata.days ?? 7),
             (s.payment_intent as string) || s.id,
           );
+          noteServerConversion('seller.paid_service_purchased');
         } else if (s.mode === 'payment' && s.metadata?.kind === 'partner_directory') {
           await this.activatePartnerDirectory(
             s.metadata.partnerDirectoryId,
@@ -368,6 +370,7 @@ export class StripeService {
         stripeSubscriptionId: subscriptionId,
         stripeCustomerId: customerId,
       });
+      noteServerConversion('seller.paid_service_purchased');
     }
   }
 

@@ -29,7 +29,8 @@ export type AdminRole =
   | 'finance'
   | 'dpo'
   | 'aml'
-  | 'superadmin';
+  | 'superadmin'
+  | 'marketing';
 
 /** Realm role names that grant AdminRole. Bare `admin` grants capability only — fail closed. */
 export const ADMIN_ROLE_REALM: Readonly<Record<string, AdminRole>> = {
@@ -39,6 +40,7 @@ export const ADMIN_ROLE_REALM: Readonly<Record<string, AdminRole>> = {
   admin_dpo: 'dpo',
   admin_aml: 'aml',
   admin_superadmin: 'superadmin',
+  admin_marketing: 'marketing',
 };
 
 /**

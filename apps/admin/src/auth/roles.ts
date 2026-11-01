@@ -49,6 +49,8 @@ export function canAccessView(roles: readonly AdminRole[], view: string): boolea
       return roles.includes('operations') || roles.includes('support');
     case 'aste':
       return roles.includes('operations') || roles.includes('support');
+    case 'analytics':
+      return roles.includes('operations') || roles.includes('marketing');
     case 'dsar':
       return roles.includes('dpo');
     case 'aml':

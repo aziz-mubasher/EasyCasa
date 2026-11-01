@@ -6,6 +6,7 @@ import { normalizeProvinceSlug } from '@easycasa/shared';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { listings, omiQuotes, valuationRequests } from '../db/schema';
+import { noteServerConversion } from '../web-analytics/server-conversion';
 import { AvmController } from './avm.controller';
 import { AvmService, COMPARABLES_PORT, OMI_PORT, VALUATION_REQUEST_LOG } from './avm.service';
 import type { ComparablesPort, OmiPort, ValuationRequestLog } from './domain/ports';
@@ -184,6 +185,7 @@ export class DrizzleValuationRequestLog implements ValuationRequestLog {
         pointCents: input.estimate.pointCents,
       })
       .returning({ id: valuationRequests.id });
+    noteServerConversion('valuation.requested');
     return { id: row.id };
   }
 }

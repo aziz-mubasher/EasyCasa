@@ -1,7 +1,13 @@
 import {
   pgTable, pgEnum, pgSchema, uuid, text, integer, numeric, timestamp, jsonb, boolean,
-  doublePrecision, bigint, primaryKey, uniqueIndex, index, date,
+  doublePrecision, bigint, primaryKey, uniqueIndex, index, date, smallint, char, customType,
 } from 'drizzle-orm/pg-core';
+
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({
+  dataType() {
+    return 'bytea';
+  },
+});
 
 export const listingStatus = pgEnum('listing_status', [
   'draft',
@@ -1417,6 +1423,193 @@ export const listingNudges = pgTable(
   }),
 );
 
+/** EC-ANALYTICS-1 — daily salt. Deleted after the Rome day ends. */
+export const analyticsSalts = pgTable('analytics_salts', {
+  day: date('day', { mode: 'string' }).primaryKey(),
+  salt: bytea('salt').notNull(),
+});
+
+export const analyticsEvents = pgTable(
+  'analytics_events',
+  {
+    id: bigint('id', { mode: 'number' }).primaryKey().generatedByDefaultAsIdentity(),
+    ts: timestamp('ts', { withTimezone: true }).notNull().defaultNow(),
+    day: date('day', { mode: 'string' }).notNull(),
+    visitorHash: char('visitor_hash', { length: 32 }).notNull(),
+    type: text('type').notNull(),
+    pathTemplate: text('path_template').notNull(),
+    entityId: uuid('entity_id'),
+    locale: text('locale'),
+    referrerHost: text('referrer_host'),
+    channel: text('channel').notNull(),
+    utmSource: text('utm_source'),
+    utmMedium: text('utm_medium'),
+    utmCampaign: text('utm_campaign'),
+    utmContent: text('utm_content'),
+    utmTerm: text('utm_term'),
+    clickFlag: text('click_flag'),
+    device: text('device'),
+    browser: text('browser'),
+    os: text('os'),
+    country: char('country', { length: 2 }),
+    screenBucket: text('screen_bucket'),
+    eventName: text('event_name'),
+    eventProps: jsonb('event_props').$type<Record<string, string> | null>(),
+    engagedMs: integer('engaged_ms'),
+    scrollPct: smallint('scroll_pct'),
+  },
+  (t) => ({
+    dayIdx: index('analytics_events_day_idx').on(t.day),
+    dayVisitorIdx: index('analytics_events_day_visitor_idx').on(t.day, t.visitorHash, t.ts),
+    tsIdx: index('analytics_events_ts_idx').on(t.ts),
+  }),
+);
+
+export const analyticsDailyPages = pgTable(
+  'analytics_daily_pages',
+  {
+    day: date('day', { mode: 'string' }).notNull(),
+    pathTemplate: text('path_template').notNull(),
+    locale: text('locale'),
+    entityId: uuid('entity_id'),
+    pageviews: integer('pageviews').notNull(),
+    visitors: integer('visitors').notNull(),
+    entries: integer('entries').notNull(),
+    engagedMsSum: bigint('engaged_ms_sum', { mode: 'number' }).notNull(),
+    engagedSamples: integer('engaged_samples').notNull(),
+  },
+  (t) => ({
+    // NULLS NOT DISTINCT is in 0076. drizzle-orm 0.36 IndexBuilder cannot express it.
+    key: uniqueIndex('analytics_daily_pages_key').on(t.day, t.pathTemplate, t.locale, t.entityId),
+  }),
+);
+
+export const analyticsDailySources = pgTable(
+  'analytics_daily_sources',
+  {
+    day: date('day', { mode: 'string' }).notNull(),
+    channel: text('channel').notNull(),
+    utmSource: text('utm_source'),
+    utmMedium: text('utm_medium'),
+    utmCampaign: text('utm_campaign'),
+    locale: text('locale'),
+    sessions: integer('sessions').notNull(),
+    visitors: integer('visitors').notNull(),
+    engagedSessions: integer('engaged_sessions').notNull(),
+    pageviews: integer('pageviews').notNull(),
+  },
+  (t) => ({
+    key: uniqueIndex('analytics_daily_sources_key').on(
+      t.day,
+      t.channel,
+      t.utmSource,
+      t.utmMedium,
+      t.utmCampaign,
+      t.locale,
+    ),
+  }),
+);
+
+export const analyticsDailyConversions = pgTable(
+  'analytics_daily_conversions',
+  {
+    day: date('day', { mode: 'string' }).notNull(),
+    eventName: text('event_name').notNull(),
+    channel: text('channel').notNull(),
+    utmCampaign: text('utm_campaign'),
+    locale: text('locale'),
+    count: integer('count').notNull(),
+  },
+  (t) => ({
+    key: uniqueIndex('analytics_daily_conversions_key').on(
+      t.day,
+      t.eventName,
+      t.channel,
+      t.utmCampaign,
+      t.locale,
+    ),
+  }),
+);
+
+export const analyticsDailyDims = pgTable(
+  'analytics_daily_dims',
+  {
+    day: date('day', { mode: 'string' }).notNull(),
+    dim: text('dim').notNull(),
+    value: text('value').notNull(),
+    visitors: integer('visitors').notNull(),
+    sessions: integer('sessions').notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.day, t.dim, t.value] }),
+  }),
+);
+
+export const analyticsDailyFunnels = pgTable(
+  'analytics_daily_funnels',
+  {
+    day: date('day', { mode: 'string' }).notNull(),
+    funnel: text('funnel').notNull(),
+    step: smallint('step').notNull(),
+    channel: text('channel').notNull(),
+    visitors: integer('visitors').notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.day, t.funnel, t.step, t.channel] }),
+  }),
+);
+
+export const analyticsServerConversions = pgTable(
+  'analytics_server_conversions',
+  {
+    day: date('day', { mode: 'string' }).notNull(),
+    eventName: text('event_name').notNull(),
+    count: integer('count').notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.day, t.eventName] }),
+  }),
+);
+
+export const analyticsCampaignSpend = pgTable(
+  'analytics_campaign_spend',
+  {
+    utmCampaign: text('utm_campaign').notNull(),
+    month: date('month', { mode: 'string' }).notNull(),
+    spendEur: numeric('spend_eur', { precision: 10, scale: 2 }).notNull(),
+    note: text('note'),
+    updatedBy: text('updated_by'),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.utmCampaign, t.month] }),
+  }),
+);
+
+export const analyticsDailyTotals = pgTable('analytics_daily_totals', {
+  day: date('day', { mode: 'string' }).primaryKey(),
+  visitors: integer('visitors').notNull(),
+  sessions: integer('sessions').notNull(),
+  pageviews: integer('pageviews').notNull(),
+  engagedSessions: integer('engaged_sessions').notNull(),
+  engagedMsSum: bigint('engaged_ms_sum', { mode: 'number' }).notNull(),
+  engagedSamples: integer('engaged_samples').notNull(),
+  conversions: integer('conversions').notNull(),
+});
+
+export const analyticsDailyProvinces = pgTable(
+  'analytics_daily_provinces',
+  {
+    day: date('day', { mode: 'string' }).notNull(),
+    province: text('province').notNull(),
+    listingViews: integer('listing_views').notNull(),
+    enquiries: integer('enquiries').notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.day, t.province] }),
+  }),
+);
+
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
   sellerProfile, listingDraft, moderationEvents, verifiedOwnerCase, sellerDocChecklist,
@@ -1445,5 +1638,9 @@ export const schema = {
   shareLinks, shareLinkViewDedup,
   crmContacts, crmSeekerProfiles, crmOwnerProfiles, crmB4aReferrals, crmPartnerProfiles,
   crmActivities, crmTasks, crmAuditLog,
+  analyticsSalts, analyticsEvents, analyticsDailyPages, analyticsDailySources,
+  analyticsDailyConversions, analyticsDailyDims, analyticsDailyFunnels,
+  analyticsServerConversions, analyticsCampaignSpend, analyticsDailyTotals,
+  analyticsDailyProvinces,
 };
 export type Schema = typeof schema;

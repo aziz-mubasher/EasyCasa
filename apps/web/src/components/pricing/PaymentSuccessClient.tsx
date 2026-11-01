@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { getOrder } from '@/lib/payments-api';
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 import { formatEuroCents } from '@/lib/pricing-display';
 import { apiUrl } from '@/auth/authedFetch';
 
@@ -25,6 +26,9 @@ export function PaymentSuccessClient({ locale }: Props) {
       .then((o) => {
         setStatus(o.status);
         setDueNow(o.dueNowGrossCents);
+        if (o.status === 'succeeded' || o.status === 'paid' || o.status === 'complete') {
+          trackProduct(PRODUCT_EVENTS.SELLER_PAID_SERVICE_PURCHASED, { locale, source: 'catalog' });
+        }
       })
       .catch((err) => setError(err instanceof Error ? err.message : t('loadFailed')));
   }, [orderId, t]);

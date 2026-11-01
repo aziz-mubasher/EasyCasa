@@ -1715,6 +1715,10 @@
       {
         "id": "t9",
         "label": "Modifiche a questa informativa"
+      },
+      {
+        "id": "t10",
+        "label": "Statistiche di navigazione"
       }
     ],
     "s1": {
@@ -1769,6 +1773,47 @@
       "title": "Modifiche a questa informativa",
       "brief": "Se cambiamo qualcosa di sostanziale te lo diciamo, non ci limitiamo ad aggiornare la data. Le versioni precedenti restano consultabili, così puoi vedere cosa è cambiato e quando."
     },
+    "s10": {
+      "title": "Statistiche di navigazione",
+      "counsel": "COUNSEL REVIEW PENDING",
+      "brief": "Misuriamo le visite del sito in forma aggregata, sul nostro server, senza cookie di statistica e senza cederle a terzi. La base giuridica è l'art. 6, par. 1, lett. f), del Regolamento (UE) 2016/679: interesse legittimo a sapere, in aggregato, quali pagine e quali canali funzionano.",
+      "what": "Raccogliamo il modello della pagina (non l'indirizzo completo), la lingua scelta tra italiano, inglese e spagnolo, l'identificativo di un annuncio solo sulla scheda di quell'immobile, il solo dominio del sito da cui si arriva, i parametri di campagna ripuliti, un segno di presenza dei clic a pagamento senza mai il valore, la classe di dispositivo, la famiglia del browser e del sistema operativo, un Paese ricavato dal fuso orario del browser, una fascia di larghezza dello schermo, il tempo in primo piano, lo scorrimento a passi del 25 per cento, e un elenco chiuso di azioni (richiesta, visita, chiamata, invio di un annuncio, acquisto di un servizio).",
+      "not": "Non memorizziamo l'indirizzo IP, la stringa completa del browser, un identificativo di dispositivo, nome, e-mail, telefono o il testo delle richieste. Non usiamo cookie di analytics. Il visitatore del giorno è un hash calcolato con un sale casuale che viene cancellato: dopo la cancellazione l'hash non è più riconducibile a una persona. I dati grezzi restano 30 giorni; poi restano solo totali anonimi, senza hash.",
+      "host": "Il sito è ospitato su un VPS Hostinger. Al 1° novembre 2026 l'indirizzo pubblico del sito risulta geolocalizzato a Francoforte sul Meno, Assia, Germania. Se il contratto di hosting indica un altro centro, prevale il contratto.",
+      "object": "Un segnale Global Privacy Control o Do Not Track attivo fa sì che la visita non sia misurata. Per opporti in altro modo puoi scrivere al titolare all'indirizzo indicato in questa informativa.",
+      "storage": "Il sito non imposta NEXT_LOCALE. Il login conserva anche token in localStorage e il verificatore PKCE in sessionStorage: non sono cookie e non servono alle statistiche.",
+      "cookiesTitle": "Cookie e identificativi tecnici",
+      "thName": "Nome",
+      "thWho": "Chi lo imposta",
+      "thWhy": "A cosa serve",
+      "thLife": "Durata"
+    },
+    "cookies": [
+      {
+        "name": "ec_access",
+        "who": "easycasaita.com",
+        "why": "Token di accesso dopo il login. Non è un cookie di statistica.",
+        "life": "La vita residua del token. SameSite=Lax. Secure su https."
+      },
+      {
+        "name": "ec_sl_vid",
+        "who": "easycasaita.com",
+        "why": "Identificativo casuale per non contare due volte l'apertura dello stesso link di condivisione. Impostato solo su quelle pagine.",
+        "life": "400 giorni. Path=/. SameSite=Lax."
+      },
+      {
+        "name": "ec_staff",
+        "who": "admin.easycasaita.com, dominio .easycasaita.com",
+        "why": "Cookie tecnico dello staff. Esclude il back-office dalle statistiche di navigazione.",
+        "life": "180 giorni. SameSite=Lax."
+      },
+      {
+        "name": "Sessione Keycloak",
+        "who": "auth.easycasaita.com",
+        "why": "Sessione di accesso emessa da Keycloak. I nomi dei cookie non sono definiti in questo sito.",
+        "life": "Quella configurata sul realm di autenticazione."
+      }
+    ],
     "dataRows": [
       {
         "cat": "Identificativi",

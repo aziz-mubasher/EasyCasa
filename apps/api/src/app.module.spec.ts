@@ -57,6 +57,7 @@ import { SellerChecklistModule } from './seller-checklist/seller-checklist.modul
 import { SellerInboxModule } from './seller-inbox/seller-inbox.module';
 import { EnquiryMessagingModule } from './enquiry-messaging/enquiry-messaging.module';
 import { SellerAnalyticsModule } from './seller-analytics/seller-analytics.module';
+import { WebAnalyticsModule } from './web-analytics/web-analytics.module';
 import { SellerNudgesModule } from './nudges/seller-nudges.module';
 
 /** Static module imports (Privacy is DynamicModule via forRootProduction). */
@@ -111,6 +112,7 @@ const REQUIRED_STATIC = [
   SellerInboxModule,
   EnquiryMessagingModule,
   SellerAnalyticsModule,
+  WebAnalyticsModule,
   SellerNudgesModule,
   PilotModule,
   DemoModule,

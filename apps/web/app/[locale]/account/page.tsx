@@ -1,16 +1,26 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+
+import { PRODUCT_EVENTS, trackProduct } from '@/lib/product-analytics';
 
 import { Link } from '@/i18n/routing';
 import { billingReturnKind } from '@/lib/seller-monetisation';
 
 function AccountBillingReturnInner() {
   const t = useTranslations('sellerMonetisation.billingReturn');
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const kind = billingReturnKind(searchParams.get('billing'));
+
+  useEffect(() => {
+    if (kind !== 'success') return;
+    if (locale === 'it' || locale === 'en' || locale === 'es') {
+      trackProduct(PRODUCT_EVENTS.SELLER_PAID_SERVICE_PURCHASED, { locale, source: 'membership' });
+    }
+  }, [kind, locale]);
 
   if (kind === 'success') {
     return (

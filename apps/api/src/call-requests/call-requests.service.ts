@@ -6,6 +6,7 @@ import {
 } from '@easycasa/shared';
 
 import { crmFireSafe } from '../crm/crm-fire-safe';
+import { noteServerConversion } from '../web-analytics/server-conversion';
 import { CRM_HOOKS, type CrmHooks } from '../crm/domain/ports';
 import type { CreateCallRequestDto } from './dto/create-call-request.dto';
 
@@ -43,6 +44,7 @@ export class CallRequestsService {
       });
     });
 
+    noteServerConversion('call.booked');
     return { ok: true, dueAt: dueAt.toISOString() };
   }
 }

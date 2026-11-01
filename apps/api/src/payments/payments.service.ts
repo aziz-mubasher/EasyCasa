@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { apiConfig } from '../config';
+import { noteServerConversion } from '../web-analytics/server-conversion';
 import { ORDER_REPOSITORY } from '../orders/orders.service';
 import type { OrderRepository } from '../transactions/domain/ports';
 import { cardPayableGrossCents } from './card-payable';
@@ -98,6 +99,7 @@ export class PaymentsService {
           ? processing
           : await this.advance(processing, 'SUCCEED');
       await this.onSucceeded.onPaymentSucceeded(succeeded);
+      noteServerConversion('seller.paid_service_purchased');
       return;
     }
     if (event.type === 'failed') {

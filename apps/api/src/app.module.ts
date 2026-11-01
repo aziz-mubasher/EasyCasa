@@ -57,6 +57,7 @@ import { WhatsAppModule } from './whatsapp/whatsapp.module';
 import { ObservabilityModule } from './observability/observability.module';
 import { CallRequestsModule } from './call-requests/call-requests.module';
 import { CrmModule } from './crm/crm.module';
+import { WebAnalyticsModule } from './web-analytics/web-analytics.module';
 import { HealthIndicatorRegistry } from './health/health-indicator.registry';
 import { EmailHealthIndicator } from './health/email.health';
 import { MeiliHealthIndicator } from './health/meili.health';
@@ -135,6 +136,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     DemoModule,
     CallRequestsModule,
     CrmModule,
+    WebAnalyticsModule,
   ],
   controllers: [HealthController, ReadinessController, VersionController],
   providers: [
