@@ -368,6 +368,7 @@ export class EasyCasaAdminApi {
       locale: string;
       createdAt: string;
       windowRemainingMs: number | null;
+      needsFollowUp?: boolean;
       callStatus: string | null;
       crmContactId: string | null;
     }>;
@@ -430,6 +431,77 @@ export class EasyCasaAdminApi {
     return this.request(`/admin/whatsapp/leads/${encodeURIComponent(id)}/close`, z.unknown(), {
       method: 'POST',
       body: JSON.stringify({ reason }),
+    });
+  }
+  beatWhatsAppPresence(available: boolean): Promise<{ available: boolean }> {
+    return this.request('/admin/whatsapp/leads/presence', z.object({ available: z.boolean() }), {
+      method: 'POST',
+      body: JSON.stringify({ available }),
+    });
+  }
+  listWhatsAppAlerts(): Promise<{ items: Array<{ leadId: string; step: string; subject: string; href: string }> }> {
+    return this.request(
+      '/admin/whatsapp/leads/alerts',
+      z.object({
+        items: z.array(z.object({ leadId: z.string(), step: z.string(), subject: z.string(), href: z.string() })),
+      }),
+    );
+  }
+  whatsAppAlertStatus(): Promise<{
+    enabled: boolean;
+    nobodyReceives: boolean;
+    rosterCount: number;
+    measures: {
+      meanAssignMin: number | null;
+      meanFirstReplyMin: number | null;
+      answeredInsideWindowPct: number | null;
+      alertsPerLead: number | null;
+    };
+  }> {
+    return this.request('/admin/whatsapp/leads/alert-status', z.unknown()) as Promise<{
+      enabled: boolean;
+      nobodyReceives: boolean;
+      rosterCount: number;
+      measures: {
+        meanAssignMin: number | null;
+        meanFirstReplyMin: number | null;
+        answeredInsideWindowPct: number | null;
+        alertsPerLead: number | null;
+      };
+    }>;
+  }
+  listWhatsAppRoster(): Promise<{
+    items: Array<{
+      userId: string;
+      role: string;
+      days: number[];
+      startMin: number;
+      endMin: number;
+      email: string;
+      waPhone: string | null;
+      active: boolean;
+    }>;
+  }> {
+    return this.request('/admin/whatsapp/leads/roster', z.unknown()) as Promise<{
+      items: Array<{
+        userId: string;
+        role: string;
+        days: number[];
+        startMin: number;
+        endMin: number;
+        email: string;
+        waPhone: string | null;
+        active: boolean;
+      }>;
+    }>;
+  }
+  saveWhatsAppRoster(
+    userId: string,
+    body: { role: string; days: number[]; startMin: number; endMin: number; email: string; waPhone?: string; active: boolean },
+  ): Promise<unknown> {
+    return this.request(`/admin/whatsapp/leads/roster/${encodeURIComponent(userId)}`, z.unknown(), {
+      method: 'PUT',
+      body: JSON.stringify(body),
     });
   }
   getWhatsAppLead(id: string): Promise<unknown> {

@@ -752,6 +752,8 @@ export const waIntakeLeads = pgTable(
     closedReason: text('closed_reason'),
     closedAt: timestamp('closed_at', { withTimezone: true }),
     assignedAt: timestamp('assigned_at', { withTimezone: true }),
+    /** EC-WA-ALERTS-1 — opening the lead cancels the new-lead ladder. */
+    openedAt: timestamp('opened_at', { withTimezone: true }),
     assignAlertedAt: timestamp('assign_alerted_at', { withTimezone: true }),
     windowAlertedAt: timestamp('window_alerted_at', { withTimezone: true }),
     contactPref: text('contact_pref'),
@@ -792,6 +794,43 @@ export const waCallRequests = pgTable(
     leadIdx: index('wa_call_requests_lead_idx').on(t.leadId),
   }),
 );
+
+/** EC-WA-ALERTS-1 — who is on duty. Edited by a superadmin. Not customer data. */
+export const waAlertRoster = pgTable('wa_alert_roster', {
+  userId: uuid('user_id').primaryKey(),
+  role: text('role').notNull(),
+  days: smallint('days').array().notNull(),
+  startMin: smallint('start_min').notNull(),
+  endMin: smallint('end_min').notNull(),
+  email: text('email').notNull(),
+  /** Stored only. Staff WhatsApp alerts are not sent. */
+  waPhone: text('wa_phone'),
+  active: boolean('active').notNull().default(true),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** One row per lead per ladder step, so a restart cannot send it twice. */
+export const waAlertSent = pgTable(
+  'wa_alert_sent',
+  {
+    leadId: uuid('lead_id').notNull(),
+    step: text('step').notNull(),
+    sentAt: timestamp('sent_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.leadId, t.step] }),
+  }),
+);
+
+/** Recipient is a user id. The address is not stored. */
+export const waAlertAudit = pgTable('wa_alert_audit', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  leadId: uuid('lead_id').notNull(),
+  step: text('step').notNull(),
+  channel: text('channel').notNull(),
+  recipientUserId: uuid('recipient_user_id'),
+  sentAt: timestamp('sent_at', { withTimezone: true }).notNull().defaultNow(),
+});
 
 /** K EC 7.4 — operator canned replies (API Hub). */
 export const waCannedReplies = pgTable('wa_canned_replies', {
@@ -1696,7 +1735,7 @@ export const schema = {
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,
-  authorityAuditLog, phoneOtpChallenges, whatsappMessages, waContacts, waIntakeLeads, waCallRequests, waCannedReplies,
+  authorityAuditLog, phoneOtpChallenges, whatsappMessages, waContacts, waIntakeLeads, waCallRequests, waAlertRoster, waAlertSent, waAlertAudit, waCannedReplies,
   waThreadNotes, adminAuditLog,
   dsarAdminRequests, listingReports, identityReviewRequests,
   leases, kycCases,

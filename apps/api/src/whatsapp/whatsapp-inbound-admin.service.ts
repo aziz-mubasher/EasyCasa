@@ -20,6 +20,7 @@ import { maskWaId, redactPreview } from './redact';
 import { waHandleFor } from './wa-handle';
 import { toE164 } from './whatsapp-inbound.service';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
+import { WaPresenceService } from './wa-presence';
 import { WhatsAppJourneyService } from './whatsapp-journey.service';
 
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
@@ -113,6 +114,7 @@ export class WhatsAppInboundAdminService {
     private readonly audit: AdminAuditService,
     private readonly cloud: WhatsAppCloudClient,
     private readonly journey: WhatsAppJourneyService,
+    private readonly presence: WaPresenceService,
     @InjectConfig() private readonly config: ApiConfig,
   ) {}
 
@@ -672,8 +674,7 @@ export class WhatsAppInboundAdminService {
       return true;
     });
     const now = new Date();
-    return {
-      items: await Promise.all(
+    const items = await Promise.all(
         filtered.map(async (row) => {
           const [contact] = await this.db
             .select({ lastInboundAt: waContacts.lastInboundAt })
@@ -689,6 +690,9 @@ export class WhatsAppInboundAdminService {
           const expires = contact?.lastInboundAt
             ? new Date(contact.lastInboundAt.getTime() + 24 * 60 * 60 * 1000)
             : null;
+          const windowRemainingMs = expires ? Math.max(0, expires.getTime() - now.getTime()) : null;
+          const needsFollowUp =
+            row.status !== 'closed' && row.status !== 'contacted' && expires != null && now >= expires;
           return {
             id: row.id,
             status: row.status,
@@ -697,18 +701,25 @@ export class WhatsAppInboundAdminService {
             route: row.route,
             locale: row.locale,
             createdAt: row.createdAt.toISOString(),
-            windowRemainingMs: expires ? Math.max(0, expires.getTime() - now.getTime()) : null,
+            windowRemainingMs,
+            needsFollowUp,
             callStatus: call?.status ?? null,
             crmContactId: row.crmContactId,
           };
         }),
-      ),
-    };
+      );
+    items.sort((a, b) => Number(b.needsFollowUp) - Number(a.needsFollowUp));
+    return { items };
   }
 
   async getLead(id: string) {
     const [row] = await this.db.select().from(waIntakeLeads).where(eq(waIntakeLeads.id, id)).limit(1);
     if (!row) throw new NotFoundException('Lead not found');
+    if (!row.openedAt) {
+      const openedAt = new Date();
+      await this.db.update(waIntakeLeads).set({ openedAt, updatedAt: openedAt }).where(eq(waIntakeLeads.id, id));
+      this.presence.clearLead(id);
+    }
     const calls = await this.db
       .select()
       .from(waCallRequests)

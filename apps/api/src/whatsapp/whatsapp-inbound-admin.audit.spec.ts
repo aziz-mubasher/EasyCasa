@@ -58,6 +58,7 @@ describe('WhatsAppInboundAdminService listMessagesForHandle', () => {
       audit as never,
       cloud as never,
       { getByWaId: vi.fn().mockResolvedValue(null), crmFormName: vi.fn().mockResolvedValue(null) } as never,
+      { clearLead: vi.fn() } as never,
       { WA_HANDLE_SECRET: SECRET } as never,
     );
     await expect(
@@ -78,6 +79,7 @@ describe('WhatsAppInboundAdminService listMessagesForHandle', () => {
       audit as never,
       cloud as never,
       { getByWaId: vi.fn().mockResolvedValue(null), crmFormName: vi.fn().mockResolvedValue(null) } as never,
+      { clearLead: vi.fn() } as never,
       { WA_HANDLE_SECRET: SECRET } as never,
     );
     await expect(
