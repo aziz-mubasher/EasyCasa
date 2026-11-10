@@ -4,6 +4,8 @@ import {
   alertSubject,
   atRome,
   auctionDateSet,
+  detailAlertActive,
+  leadDetailMessage,
   planLeadAlerts,
   romeParts,
   type AlertLead,
@@ -182,5 +184,33 @@ describe('lead alert ladder', () => {
     expect(text).not.toContain('mutuo');
     expect(text).not.toContain('date_set');
     expect(alertSubject(lead())).toBe('Nuovo lead WhatsApp · Easy Legenda · Asta · UR · finestra 23h');
+  });
+});
+
+describe('24-hour detail email', () => {
+  const until = '2026-11-11T12:52:00+01:00';
+
+  it('is on only until the deadline', () => {
+    expect(detailAlertActive('lead-alerts@example.com', until, new Date('2026-11-10T12:00:00+01:00'))).toBe(true);
+    expect(detailAlertActive('lead-alerts@example.com', until, new Date('2026-11-11T12:52:00+01:00'))).toBe(false);
+    expect(detailAlertActive('', until, new Date('2026-11-10T12:00:00+01:00'))).toBe(false);
+  });
+
+  it('includes the answers and the WhatsApp number', () => {
+    const message = leadDetailMessage({
+      product: 'easy_casa',
+      route: 'route_buy',
+      locale: 'it',
+      intakeStatus: 'complete',
+      contactPref: 'write',
+      waId: '393331112233',
+      answers: { 'close.name': 'Mario Rossi', B2: 'cerco un bilocale' },
+      link: 'https://admin.easycasaita.com/#whatsapp/leads/lead-1',
+    });
+    expect(message.subject).toContain('Easy Casa');
+    expect(message.body).toContain('Mario Rossi');
+    expect(message.body).toContain('cerco un bilocale');
+    expect(message.body).toContain('+393331112233');
+    expect(message.body).toContain('#whatsapp/leads/lead-1');
   });
 });

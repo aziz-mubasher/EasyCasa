@@ -7,7 +7,7 @@ import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { users, waAlertAudit, waAlertRoster, waAlertSent, waContacts, waIntakeLeads } from '../db/schema';
 import { EmailService } from '../email/email.service';
-import { auctionDateSet, planLeadAlerts, type AlertLead, type DutyWindow } from './intake/lead-alerts';
+import { auctionDateSet, detailAlertActive, leadDetailMessage, planLeadAlerts, type AlertLead, type DutyWindow } from './intake/lead-alerts';
 import { WaPresenceService } from './wa-presence';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -26,6 +26,7 @@ type RosterInput = {
 @Injectable()
 export class WhatsAppLeadAlertService {
   private readonly log = new Logger(WhatsAppLeadAlertService.name);
+  private readonly detailInflight = new Set<string>();
 
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
@@ -99,6 +100,54 @@ export class WhatsAppLeadAlertService {
     for (const action of actions) {
       const delivered = await this.deliver(action, stored, fallback, now);
       if (delivered) n += 1;
+    }
+    return n;
+  }
+
+  /** One email with the lead's answers. Retries until sent or the 24-hour window ends. */
+  async notifyLeadDetail(leadId: string, now = new Date()): Promise<boolean> {
+    if (!detailAlertActive(this.config.WA_LEAD_DETAIL_ALERT_EMAIL, this.config.WA_LEAD_DETAIL_ALERT_UNTIL, now)) return false;
+    if (this.detailInflight.has(leadId)) return false;
+    this.detailInflight.add(leadId);
+    try {
+      return await this.sendLeadDetail(leadId, now);
+    } finally {
+      this.detailInflight.delete(leadId);
+    }
+  }
+
+  private async sendLeadDetail(leadId: string, now: Date): Promise<boolean> {
+    const step = 'detail_5m';
+    if (await this.sent(leadId, step)) return false;
+    const [lead] = await this.db.select().from(waIntakeLeads).where(eq(waIntakeLeads.id, leadId)).limit(1);
+    if (!lead) return false;
+    const message = leadDetailMessage({
+      product: lead.product,
+      route: lead.route,
+      locale: lead.locale,
+      intakeStatus: lead.intakeStatus,
+      contactPref: lead.contactPref,
+      waId: lead.waId,
+      answers: lead.answers,
+      link: this.link(lead.id),
+    });
+    const result = await this.email.sendText(this.config.WA_LEAD_DETAIL_ALERT_EMAIL.trim(), message.subject, message.body);
+    if (!result.delivered) {
+      this.log.warn(`lead detail email not delivered lead=${lead.id}`);
+      return false;
+    }
+    await this.audit(lead.id, step, 'email', null, now);
+    await this.markSent(lead.id, step, now);
+    return true;
+  }
+
+  async sweepDetailEmails(now = new Date()): Promise<number> {
+    if (!detailAlertActive(this.config.WA_LEAD_DETAIL_ALERT_EMAIL, this.config.WA_LEAD_DETAIL_ALERT_UNTIL, now)) return 0;
+    const since = new Date(now.getTime() - 10 * 60 * 1000);
+    const leads = await this.db.select({ id: waIntakeLeads.id }).from(waIntakeLeads).where(gte(waIntakeLeads.createdAt, since));
+    let n = 0;
+    for (const lead of leads) {
+      if (await this.notifyLeadDetail(lead.id, now)) n += 1;
     }
     return n;
   }
@@ -300,6 +349,15 @@ export class WhatsAppLeadAlertService {
     if (!ok) return false;
     for (const leadId of action.leadIds) await this.markSent(leadId, action.step, now);
     return true;
+  }
+
+  private async sent(leadId: string, step: string): Promise<boolean> {
+    const rows = await this.db
+      .select({ leadId: waAlertSent.leadId })
+      .from(waAlertSent)
+      .where(and(eq(waAlertSent.leadId, leadId), eq(waAlertSent.step, step)))
+      .limit(1);
+    return Boolean(rows[0]);
   }
 
   private async audited(leadId: string, step: string, recipientUserId: string | null): Promise<boolean> {

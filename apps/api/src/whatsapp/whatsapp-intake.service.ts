@@ -100,10 +100,13 @@ export class WhatsAppIntakeService implements OnModuleInit, OnModuleDestroy {
     }, SWEEP_MS);
     this.timer.unref?.();
     }
-    if (this.config.WA_LEAD_ALERTS_ENABLED) {
+    if (this.config.WA_LEAD_ALERTS_ENABLED || this.config.WA_LEAD_DETAIL_ALERT_EMAIL.trim()) {
       this.alertTimer = setInterval(() => {
         void this.leadAlerts.sweep().catch((err: unknown) => {
           this.log.warn(`lead alert ladder failed: ${err instanceof Error ? err.message : 'unknown'}`);
+        });
+        void this.leadAlerts.sweepDetailEmails().catch((err: unknown) => {
+          this.log.warn(`lead detail email failed: ${err instanceof Error ? err.message : 'unknown'}`);
         });
       }, ALERT_MS);
       this.alertTimer.unref?.();
@@ -278,6 +281,11 @@ export class WhatsAppIntakeService implements OnModuleInit, OnModuleDestroy {
     }
     if (leadId && contactPref === 'call' && this.config.WA_CALL_REQUESTS_ENABLED) {
       await this.openCallRequest(leadId, waId, session);
+    }
+    if (leadId) {
+      void this.leadAlerts.notifyLeadDetail(leadId).catch((err: unknown) => {
+        this.log.warn(`lead detail email failed: ${err instanceof Error ? err.message : 'unknown'}`);
+      });
     }
     if (!leadId || !this.config.WA_INTAKE_SUMMARY_ENABLED) return;
     await this.writeSummary(leadId, {
