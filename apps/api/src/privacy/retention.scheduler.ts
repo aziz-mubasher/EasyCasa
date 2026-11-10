@@ -44,5 +44,12 @@ export class RetentionScheduler implements OnModuleInit {
         `wa inbound retention purge skipped: ${err instanceof Error ? err.message : String(err)}`,
       );
     }
+    try {
+      await this.retention.purgeWaIntake(this.config.WA_INTAKE_RETENTION_DAYS);
+    } catch (err) {
+      this.logger.warn(
+        `wa intake retention purge skipped: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
   }
 }

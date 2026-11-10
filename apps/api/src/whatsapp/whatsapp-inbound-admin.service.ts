@@ -15,7 +15,7 @@ import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { adminAuditLog, waCallRequests, waContacts, waInboundMessages, waIntakeLeads, waThreadNotes, waThreadOutbound } from '../db/schema';
 import templateCorpus from './intake/EC_WA_templates_v1.json';
-import { assertCallShape, chooseTemplateLocale, closePatch, slotProblem } from './intake/rules';
+import { approvedLanguageCodes, assertCallShape, chooseTemplateLocale, closePatch, slotProblem } from './intake/rules';
 import { maskWaId, redactPreview } from './redact';
 import { waHandleFor } from './wa-handle';
 import { toE164 } from './whatsapp-inbound.service';
@@ -846,9 +846,10 @@ export class WhatsAppInboundAdminService {
     const slot = new Date(slotRaw);
     const problem = slotProblem(slot, now, await this.ownerSlotStarts(lead.ownerUserId, call.id));
     if (problem) throw new BadRequestException(`slot rejected: ${problem}`);
-    const locale = chooseTemplateLocale(lead.locale, input.approvedLocales ?? []);
-    if (!locale) throw new BadRequestException('template not approved in this language');
     const templateName = input.action === 'confirm' ? 'ec_call_confirmed' : 'ec_call_not_possible';
+    const approved = approvedLanguageCodes(await this.cloud.templateLanguageStatuses(templateName));
+    const locale = chooseTemplateLocale(lead.locale, approved ?? []);
+    if (!locale) throw new BadRequestException('template not approved in this language');
     const planned = call.requestedSlot ? formatRome(call.requestedSlot, locale) : (call.customerPreference ?? formatRome(slot, locale));
     const params = input.action === 'confirm'
       ? [formatRome(slot, locale), callLanguageName(locale, language)]

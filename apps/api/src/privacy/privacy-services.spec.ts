@@ -142,6 +142,9 @@ describe('RetentionService (Art. 5(1)(e))', () => {
       async purgeWaInboundBefore() {
         return 0;
       },
+      async purgeWaIntakeBefore() {
+        return 0;
+      },
     };
     const now = new Date('2026-07-20T00:00:00Z');
     const n = await new RetentionService(sink).purgeStaleLeads(90, now);
@@ -154,6 +157,9 @@ describe('RetentionService (Art. 5(1)(e))', () => {
         return 0;
       },
       async purgeWaInboundBefore() {
+        return 0;
+      },
+      async purgeWaIntakeBefore() {
         return 0;
       },
     };
@@ -169,10 +175,32 @@ describe('RetentionService (Art. 5(1)(e))', () => {
         captured = c;
         return 3;
       },
+      async purgeWaIntakeBefore() {
+        return 0;
+      },
     };
     const now = new Date('2026-07-20T00:00:00Z');
     const n = await new RetentionService(sink).purgeWaInbound(90, now);
     expect(n).toBe(3);
     expect(captured?.toISOString()).toBe('2026-04-21T00:00:00.000Z');
+  });
+  it('purges wa intake leads after 30 days', async () => {
+    let captured: Date | undefined;
+    const sink: RetentionSink = {
+      async anonymizeStaleLeadsBefore() {
+        return 0;
+      },
+      async purgeWaInboundBefore() {
+        return 0;
+      },
+      async purgeWaIntakeBefore(c) {
+        captured = c;
+        return 2;
+      },
+    };
+    const now = new Date('2026-11-10T00:00:00Z');
+    const n = await new RetentionService(sink).purgeWaIntake(30, now);
+    expect(n).toBe(2);
+    expect(captured?.toISOString()).toBe('2026-10-11T00:00:00.000Z');
   });
 });

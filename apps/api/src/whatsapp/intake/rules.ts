@@ -81,6 +81,14 @@ export function reminderDue(input: {
   return delta >= REMINDER_BEFORE_MS - REMINDER_SLACK_MS && delta <= REMINDER_BEFORE_MS + REMINDER_SLACK_MS;
 }
 
+/** Locales whose template status is APPROVED. Null when the list could not be read. */
+export function approvedLanguageCodes(
+  rows: ReadonlyArray<{ language: string; status: string }> | null,
+): string[] | null {
+  if (rows == null) return null;
+  return rows.filter((row) => row.status === 'APPROVED').map((row) => row.language);
+}
+
 export function chooseTemplateLocale(
   customerLocale: string,
   approvedLocales: readonly string[],

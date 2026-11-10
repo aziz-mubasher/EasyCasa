@@ -206,6 +206,11 @@ export function WhatsAppLeads() {
                       <option value="it">Italian</option>
                       <option value="en">English</option>
                       <option value="es">Spanish</option>
+                      <option value="hi">Hindi</option>
+                      <option value="ur">Urdu</option>
+                      <option value="pa">Punjabi</option>
+                      <option value="bn">Bengali</option>
+                      <option value="ar">Arabic</option>
                     </select>
                   </label>
                   <button type="button" className="btn btn--sm" onClick={() => call.mutate('confirm')}>Confirm</button>

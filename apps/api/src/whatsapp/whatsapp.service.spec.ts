@@ -29,6 +29,7 @@ function cfg(overrides: Record<string, unknown> = {}) {
     WA_CALL_REQUESTS_ENABLED: false,
     ADMIN_PUBLIC_URL: 'https://admin.easycasaita.com',
     WA_HANDLE_SECRET: 'test-wa-handle-secret-xx',
+    WHATSAPP_WABA_ID: '61588757714987',
     ...overrides,
   };
 }

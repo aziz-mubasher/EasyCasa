@@ -2,7 +2,7 @@
 
 AZM pastes each block into WhatsApp Manager. Category is UTILITY. There are no buttons. The customer replies by typing.
 
-Do not submit these from the API in this change. Every locale is still `review: draft`. A template is sent only after WhatsApp Manager shows that locale as APPROVED. If the customer locale is not approved, English is used when English is approved. Otherwise nothing is sent and the desk shows “template not approved in this language”.
+AZM approved these languages on 10 Nov 2026. A template is sent only after the API reads that locale as APPROVED on `WHATSAPP_WABA_ID`. If the customer locale is not approved, English is used when English is approved. Otherwise nothing is sent and the desk shows “template not approved in this language”. The corpus `review` field stays `draft`; Meta status is the send gate.
 
 Footer on every template: `Easy Casa Italia · Easy Legenda`.
 

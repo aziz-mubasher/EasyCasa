@@ -14,7 +14,8 @@ import { WhatsAppCloudClient } from './whatsapp-cloud.client';
 import { WhatsAppClaudeClient } from './whatsapp-claude.client';
 import { WhatsAppJourneyService } from './whatsapp-journey.service';
 import { LEAD_LINK_WINDOW_MS, PARTIAL_AFTER_MS, corpus, questionIds, text } from './intake/corpus';
-import { reminderDue, workingMinutes } from './intake/rules';
+import templateCorpus from './intake/EC_WA_templates_v1.json';
+import { approvedLanguageCodes, chooseTemplateLocale, reminderDue, workingMinutes } from './intake/rules';
 import { parseTranslation, translateSystem, translateUser, type TranslateDirection } from './intake/translate-assist';
 import { consultantBotAction, reduceIntake, type IntakeSession, type InboundTurn, type Outbound } from './intake/machine';
 import { parseSummary, summaryUserMessage, SUMMARY_SYSTEM, type SummaryInput } from './intake/summary';
@@ -350,9 +351,35 @@ export class WhatsAppIntakeService implements OnModuleInit, OnModuleDestroy {
     for (const row of rows) {
       if (!reminderDue({ status: row.status, slot: row.requestedSlot, reminderSentAt: row.reminderSentAt, now })) continue;
       const [lead] = await this.db.select().from(waIntakeLeads).where(eq(waIntakeLeads.id, row.leadId)).limit(1);
-      if (!lead) continue;
-      // No locale is approved until AZM submits the templates. Do not consume the single reminder.
-      this.log.log(`call reminder held until ec_call_reminder is approved lead=${lead.id} locale=${lead.locale}`);
+      if (!lead || !row.requestedSlot) continue;
+      const approved = approvedLanguageCodes(await this.cloud.templateLanguageStatuses('ec_call_reminder'));
+      const locale = chooseTemplateLocale(lead.locale, approved ?? []);
+      if (!locale) {
+        this.log.log(`call reminder held until ec_call_reminder is approved lead=${lead.id} locale=${lead.locale}`);
+        continue;
+      }
+      const time = new Intl.DateTimeFormat(locale, { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' }).format(row.requestedSlot);
+      const pack = templateCorpus.templates.ec_call_reminder[locale as keyof typeof templateCorpus.templates.ec_call_reminder];
+      const send = await this.cloud.sendTemplate({
+        phoneE164: `+${lead.waId}`,
+        templateName: 'ec_call_reminder',
+        languageCode: pack?.meta_language ?? locale,
+        bodyParams: [time],
+      });
+      if (!send.ok) {
+        this.log.warn(`call reminder send failed lead=${lead.id} reason=${send.reason}`);
+        continue;
+      }
+      await this.db.update(waCallRequests).set({ reminderSentAt: now, updatedAt: now }).where(eq(waCallRequests.id, row.id));
+      await this.db.insert(waThreadOutbound).values({
+        waId: lead.waId,
+        waHandle: waHandleFor(lead.waId, this.config.WA_HANDLE_SECRET),
+        providerMessageId: send.messageId,
+        body: time,
+        templateName: 'ec_call_reminder',
+        windowOpen: false,
+        source: 'operator',
+      });
       n += 1;
     }
     return n;

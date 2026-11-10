@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS wa_call_requests (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT wa_call_requests_duration_chk CHECK (duration_min = 15),
-  CONSTRAINT wa_call_requests_language_chk CHECK (call_language IN ('it', 'en', 'es')),
+  CONSTRAINT wa_call_requests_language_chk CHECK (call_language IN ('it', 'en', 'es', 'hi', 'ur', 'pa', 'bn', 'ar')),
   CONSTRAINT wa_call_requests_status_chk CHECK (
     status IN ('requested', 'confirmed', 'offered_other', 'done', 'cancelled', 'no_show')
   )

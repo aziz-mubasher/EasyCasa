@@ -11,7 +11,7 @@ export const LEAD_LINK_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
  * Locales a person can actually take a call in. Default from the corpus.
  * Not hardcoded in customer copy — the note string still comes from the corpus.
  */
-export const STAFFED_CALL_LOCALES = ['it', 'en', 'es'] as const;
+export const STAFFED_CALL_LOCALES = ['it', 'en', 'es', 'hi', 'ur', 'pa', 'bn', 'ar'] as const;
 
 /**
  * Shipping gate. A locale is in the picker only when this is true AND

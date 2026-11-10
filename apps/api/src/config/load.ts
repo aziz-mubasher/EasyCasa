@@ -53,15 +53,8 @@ const Schema = z
     WA_INTAKE_ENABLED: bool(false),
     /** EC-WA-INTAKE-1 internal summary. Default off. Never sends WhatsApp. */
     WA_INTAKE_SUMMARY_ENABLED: bool(false),
-    /** EC-WA-INTAKE-2. Default off. Unset means delete nothing. */
-    WA_INTAKE_RETENTION_DAYS: z
-      .string()
-      .optional()
-      .transform((value) => {
-        if (value == null || value.trim() === '') return null;
-        const parsed = Number(value);
-        return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
-      }),
+    /** EC-WA-INTAKE-2. Intake leads and call requests older than this are deleted. */
+    WA_INTAKE_RETENTION_DAYS: z.coerce.number().int().positive().default(30),
     WA_CONSULTANT_REPLY_ENABLED: bool(false),
     WA_TRANSLATE_ASSIST_ENABLED: bool(false),
     WA_CALL_REQUESTS_ENABLED: bool(false),
@@ -69,7 +62,13 @@ const Schema = z
     WA_LEAD_WINDOW_ALERT_H: z.coerce.number().int().positive().default(20),
     /** Comma-separated. Empty: the alert sweep sends nothing. AZM fills this. */
     WA_LEAD_ALERT_RECIPIENTS: z.string().default(''),
-    STAFFED_CALL_LOCALES: z.string().default('it,en,es'),
+    STAFFED_CALL_LOCALES: z.string().default('it,en,es,hi,ur,pa,bn,ar'),
+    /**
+     * WhatsApp Business account used to read template approval.
+     * AZM supplied 61588757714987 (node name Easycasaita) on 10 Nov 2026.
+     * Not a secret. Sends still use WHATSAPP_PHONE_NUMBER_ID.
+     */
+    WHATSAPP_WABA_ID: z.string().default('61588757714987'),
     /** EC-19 — base URL for admin SPA links in inbound alerts. */
     ADMIN_PUBLIC_URL: z.string().default('https://admin.easycasaita.com'),
     /**

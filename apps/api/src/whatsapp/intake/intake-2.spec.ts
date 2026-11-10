@@ -5,6 +5,7 @@ import { consultantBotAction, emptySession, reduceIntake } from './machine';
 import {
   assertCallShape,
   assertFreeTextAllowed,
+  approvedLanguageCodes,
   chooseTemplateLocale,
   closePatch,
   reminderDue,
@@ -23,6 +24,8 @@ describe('EC-WA-INTAKE-2 rules', () => {
   });
 
   it('refuses a template locale that is not approved and falls back to English only when English is approved', () => {
+    expect(approvedLanguageCodes([{ language: 'it', status: 'APPROVED' }, { language: 'en', status: 'PENDING' }])).toEqual(['it']);
+    expect(approvedLanguageCodes(null)).toBeNull();
     expect(chooseTemplateLocale('hi', [])).toBeNull();
     expect(chooseTemplateLocale('hi', ['en'])).toBe('en');
     expect(chooseTemplateLocale('it', ['it'])).toBe('it');
@@ -59,6 +62,7 @@ describe('EC-WA-INTAKE-2 rules', () => {
   it('requires a 15 minute call in a staffed language', () => {
     expect(() => assertCallShape(30, 'it', ['it', 'en', 'es'])).toThrow(/15/);
     expect(() => assertCallShape(15, 'hi', ['it', 'en', 'es'])).toThrow(/staffed/);
+    expect(() => assertCallShape(15, 'hi', ['it', 'en', 'es', 'hi', 'ur', 'pa', 'bn', 'ar'])).not.toThrow();
     expect(() => assertCallShape(15, 'en', ['it', 'en', 'es'])).not.toThrow();
   });
 
