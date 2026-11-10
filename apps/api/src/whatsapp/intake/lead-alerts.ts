@@ -132,6 +132,63 @@ export function auctionDateSet(route: string, answers: unknown): boolean {
   return (answers as Record<string, unknown>).A1 === 'date_set';
 }
 
+/** One detail email, for the clock window AZM set. Empty email or a past instant means off. */
+export function detailAlertActive(email: string, untilIso: string, now: Date): boolean {
+  if (!email.trim().includes('@')) return false;
+  const until = Date.parse(untilIso);
+  return Number.isFinite(until) && now.getTime() < until;
+}
+
+export function leadDetailMessage(input: {
+  product: string;
+  route: string;
+  locale: string;
+  intakeStatus: string;
+  contactPref: string | null;
+  waId: string;
+  answers: unknown;
+  link: string;
+}): { subject: string; body: string } {
+  const subject = alertSubject({
+    id: 'detail',
+    status: 'new',
+    product: input.product,
+    route: input.route,
+    locale: input.locale,
+    createdAt: new Date(0),
+    assignedAt: null,
+    ownerUserId: null,
+    openedAt: null,
+    contactedAt: null,
+    windowRemainingMs: 24 * 60 * 60 * 1000,
+    auctionDateSet: false,
+  });
+  const digits = input.waId.replace(/\D/g, '');
+  const lines = [
+    `Stato scheda: ${input.intakeStatus}`,
+    `Preferenza: ${input.contactPref ?? '—'}`,
+    `WhatsApp: ${digits ? `+${digits}` : '—'}`,
+    '',
+    'Risposte:',
+    ...answerLines(input.answers),
+    '',
+    `Apri: ${input.link}`,
+  ];
+  return { subject, body: `${lines.join('\n').slice(0, 4000)}\n` };
+}
+
+function answerLines(answers: unknown): string[] {
+  if (!answers || typeof answers !== 'object') return ['—'];
+  const lines: string[] = [];
+  for (const [key, value] of Object.entries(answers as Record<string, unknown>)) {
+    if (typeof value !== 'string' && typeof value !== 'number') continue;
+    const text = String(value).replace(/[\r\n]+/g, ' ').trim();
+    if (!text) continue;
+    lines.push(`${key}: ${text.slice(0, 500)}`);
+  }
+  return lines.length > 0 ? lines : ['—'];
+}
+
 export function alertSubject(lead: AlertLead): string {
   const parts = ['Nuovo lead WhatsApp'];
   const product = PRODUCT[lead.product];

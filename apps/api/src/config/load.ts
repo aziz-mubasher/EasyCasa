@@ -67,6 +67,12 @@ const Schema = z
     WA_LEAD_ALERTS_ENABLED: bool(false),
     /** Comma-separated fallback when the roster is empty. Empty means no email. */
     WA_LEAD_ALERT_RECIPIENTS: z.string().default(''),
+    /**
+     * One mailbox for a full lead email, sent as soon as the lead is saved.
+     * Active only while now is before WA_LEAD_DETAIL_ALERT_UNTIL. Both empty: off.
+     */
+    WA_LEAD_DETAIL_ALERT_EMAIL: z.string().default(''),
+    WA_LEAD_DETAIL_ALERT_UNTIL: z.string().default(''),
     STAFFED_CALL_LOCALES: z.string().default('it,en,es'),
     /**
      * WhatsApp Business account used to read template approval.

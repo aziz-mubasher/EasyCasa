@@ -57,6 +57,8 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WA_LEAD_WINDOW_ALERT_H | api | Clock hours after assign with no outbound before an ops alert. Default `20`. |
 | WA_LEAD_ALERTS_ENABLED | api | Default off. On: roster emails, in-admin alerts, 06:00–22:00 Europe/Rome. |
 | WA_LEAD_ALERT_RECIPIENTS | api | Fallback only when the alert roster is empty. Empty means no email. |
+| WA_LEAD_DETAIL_ALERT_EMAIL | api | One mailbox. Receives the lead’s details as soon as the lead is saved. |
+| WA_LEAD_DETAIL_ALERT_UNTIL | api | ISO time. The detail email stops at this instant. Empty means off. |
 | STAFFED_CALL_LOCALES | api | Call languages the desk can confirm. Default `it,en,es`. The other intake locales show the call-language note. |
 | ADMIN_PUBLIC_URL | api | EC-19 base URL for inbound alert links (default `https://admin.easycasaita.com`). |
 | WA_HANDLE_SECRET | api | EC-19a HMAC secret for opaque `wa_handle` routing (min 16). **Required at boot** — no silent fallback. Rotation breaks open `#whatsapp/<handle>` deep-links only — re-open from the list (do not blame the viewer). **Log every rotation** in the table below. |

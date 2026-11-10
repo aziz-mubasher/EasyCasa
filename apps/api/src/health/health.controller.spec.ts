@@ -44,6 +44,8 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     WA_LEAD_WINDOW_ALERT_H: 20,
     WA_LEAD_ALERTS_ENABLED: false,
     WA_LEAD_ALERT_RECIPIENTS: '',
+    WA_LEAD_DETAIL_ALERT_EMAIL: '',
+    WA_LEAD_DETAIL_ALERT_UNTIL: '',
     STAFFED_CALL_LOCALES: 'it,en,es',
     WHATSAPP_WABA_ID: '61588757714987',
     ADMIN_PUBLIC_URL: 'https://admin.easycasaita.com',
