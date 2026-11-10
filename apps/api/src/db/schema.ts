@@ -667,6 +667,10 @@ export const waThreadOutbound = pgTable(
     waHandle: text('wa_handle'),
     providerMessageId: text('provider_message_id'),
     body: text('body').notNull(),
+    originalBody: text('original_body'),
+    machineTranslated: boolean('machine_translated').notNull().default(false),
+    templateName: text('template_name'),
+    windowOpen: boolean('window_open'),
     source: text('source').notNull(),
     actorUserId: uuid('actor_user_id'),
     sentAt: timestamp('sent_at', { withTimezone: true }).notNull().defaultNow(),
@@ -712,6 +716,8 @@ export const waContacts = pgTable(
     journeyStep: text('journey_step').notNull().default('none'),
     contactType: text('contact_type').notNull().default('lead'),
     blockedAt: timestamp('blocked_at', { withTimezone: true }),
+    /** EC-WA-INTAKE-2 — set by the first consultant outbound. The bot stays quiet after this. */
+    consultantRepliedAt: timestamp('consultant_replied_at', { withTimezone: true }),
     /** EC-WA-INTAKE-1 in-progress script. Null when intake is off or finished. */
     intakeState: jsonb('intake_state'),
     crmContactId: uuid('crm_contact_id'),
@@ -736,7 +742,18 @@ export const waIntakeLeads = pgTable(
     locale: text('locale').notNull(),
     answers: jsonb('answers').notNull(),
     media: jsonb('media').notNull().default([]),
-    status: text('status').notNull(),
+    /** complete | partial — the intake outcome from EC-WA-INTAKE-1. */
+    intakeStatus: text('intake_status').notNull(),
+    /** new | assigned | contacted | closed — consultant pipeline. */
+    status: text('status').notNull().default('new'),
+    ownerUserId: uuid('owner_user_id'),
+    crmContactId: uuid('crm_contact_id'),
+    contactedAt: timestamp('contacted_at', { withTimezone: true }),
+    closedReason: text('closed_reason'),
+    closedAt: timestamp('closed_at', { withTimezone: true }),
+    assignedAt: timestamp('assigned_at', { withTimezone: true }),
+    assignAlertedAt: timestamp('assign_alerted_at', { withTimezone: true }),
+    windowAlertedAt: timestamp('window_alerted_at', { withTimezone: true }),
     contactPref: text('contact_pref'),
     bookingRequestId: uuid('booking_request_id'),
     bookingStatus: text('booking_status'),
@@ -749,6 +766,30 @@ export const waIntakeLeads = pgTable(
   },
   (t) => ({
     waCreatedIdx: index('wa_intake_leads_wa_created_idx').on(t.waId, t.createdAt),
+  }),
+);
+
+/** EC-WA-INTAKE-2 — one requested 15-minute call. Confirm and offer live here, not on CRM task status. */
+export const waCallRequests = pgTable(
+  'wa_call_requests',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    leadId: uuid('lead_id').notNull(),
+    crmTaskId: uuid('crm_task_id'),
+    customerPreference: text('customer_preference'),
+    requestedSlot: timestamp('requested_slot', { withTimezone: true }),
+    offeredSlot: timestamp('offered_slot', { withTimezone: true }),
+    durationMin: integer('duration_min').notNull().default(15),
+    callLanguage: text('call_language').notNull().default('it'),
+    status: text('status').notNull().default('requested'),
+    decidedBy: uuid('decided_by'),
+    decidedAt: timestamp('decided_at', { withTimezone: true }),
+    reminderSentAt: timestamp('reminder_sent_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    leadIdx: index('wa_call_requests_lead_idx').on(t.leadId),
   }),
 );
 
@@ -1655,7 +1696,7 @@ export const schema = {
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,
-  authorityAuditLog, phoneOtpChallenges, whatsappMessages, waContacts, waIntakeLeads, waCannedReplies,
+  authorityAuditLog, phoneOtpChallenges, whatsappMessages, waContacts, waIntakeLeads, waCallRequests, waCannedReplies,
   waThreadNotes, adminAuditLog,
   dsarAdminRequests, listingReports, identityReviewRequests,
   leases, kycCases,

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { WaInboundDataSource } from './wa-inbound.data-source';
+import { storedPhoneToWaId, WaInboundDataSource } from './wa-inbound.data-source';
 
 function makeDb(opts: {
   phoneE164: string | null;
@@ -32,7 +32,9 @@ function makeDb(opts: {
           limit: vi.fn(async () => [{ phoneE164: opts.phoneE164 }]),
           orderBy: vi.fn(async () => {
             orderCalls += 1;
-            return orderCalls === 1 ? messages : outbound;
+            if (orderCalls === 1) return messages;
+            if (orderCalls === 2) return outbound;
+            return [];
           }),
         })),
       })),
@@ -74,6 +76,11 @@ describe('WaInboundDataSource (EC-19b phone_e164 match)', () => {
       provider_message_id: 'wamid.1',
       body: 'ciao',
     });
+  });
+
+  it('routes a trunk-zero Italian landline through toWaId', () => {
+    expect(storedPhoneToWaId('02 7654321')).toBe('39027654321');
+    expect(storedPhoneToWaId('39021234567')).toBe('39021234567');
   });
 
   it('exports messages for Italian landline phone_e164', async () => {

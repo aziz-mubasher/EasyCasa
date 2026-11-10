@@ -9,6 +9,7 @@ import { WhatsAppClaudeClient } from './whatsapp-claude.client';
 import { WhatsAppHubController } from './whatsapp-hub.controller';
 import { WhatsAppHubService } from './whatsapp-hub.service';
 import { WhatsAppInboundAdminController } from './whatsapp-inbound-admin.controller';
+import { WhatsAppLeadsController } from './whatsapp-leads.controller';
 import { WhatsAppInboundAdminService } from './whatsapp-inbound-admin.service';
 import { WhatsAppInboundService } from './whatsapp-inbound.service';
 import { WhatsAppJourneyService } from './whatsapp-journey.service';
@@ -25,6 +26,7 @@ import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
   controllers: [
     WhatsAppWebhookController,
     WhatsAppInboundAdminController,
+    WhatsAppLeadsController,
     WhatsAppAiController,
     WhatsAppHubController,
   ],

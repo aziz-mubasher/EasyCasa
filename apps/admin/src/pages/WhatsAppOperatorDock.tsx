@@ -192,6 +192,7 @@ export function WhatsAppOperatorDock({
           onSend();
         }}
       >
+        <p className="muted">No price opinion, no lot analysis, nothing about credit or Banks4All.</p>
         <label className="ec-sr-only" htmlFor="ecwa-reply">
           Reply
         </label>

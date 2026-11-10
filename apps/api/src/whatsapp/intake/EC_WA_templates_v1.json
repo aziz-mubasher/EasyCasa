@@ -1,0 +1,80 @@
+{
+  "schema": "ec-wa-templates/1",
+  "version": "1.1",
+  "changelog": [
+    "1.1 (10 Nov 2026): all buttons removed (AZM decision); bodies unchanged."
+  ],
+  "note": "Meta WhatsApp message templates for EC-WA-INTAKE-2. Category UTILITY for all. review=draft: AZM approves a locale before it is submitted. Sent only by a human action or by the booking reminder, never by a model.",
+  "category": "UTILITY",
+  "footer": "Easy Casa Italia · Easy Legenda",
+  "buttons": "none in v1.1 (sender has no quick-reply component; customer replies by typing)",
+  "variable_examples": {
+    "ec_request_followup": [
+      "Giulia",
+      "<route.*.title in this locale, e.g. en: Buy a home>"
+    ],
+    "ec_call_confirmed": [
+      "<date+time formatted in this locale, e.g. en: Thursday 12 November, 10:30>",
+      "<LANG_NAMES[locale][call_lang], e.g. en: Italian>"
+    ],
+    "ec_call_not_possible": [
+      "<date+time in locale>",
+      "<date+time in locale>"
+    ],
+    "ec_call_reminder": [
+      "<time in locale, e.g. 10:30>"
+    ]
+  },
+  "call_language_names": {
+    "en": { "it": "Italian", "en": "English", "es": "Spanish", "hi": "Hindi", "ur": "Urdu", "pa": "Punjabi", "bn": "Bengali", "ar": "Arabic" },
+    "it": { "it": "italiano", "en": "inglese", "es": "spagnolo", "hi": "hindi", "ur": "urdu", "pa": "punjabi", "bn": "bengalese", "ar": "arabo" },
+    "es": { "it": "italiano", "en": "inglés", "es": "español", "hi": "hindi", "ur": "urdu", "pa": "panyabí", "bn": "bengalí", "ar": "árabe" },
+    "hi": { "it": "इतालवी", "en": "अंग्रेज़ी", "es": "स्पैनिश", "hi": "हिन्दी", "ur": "उर्दू", "pa": "पंजाबी", "bn": "बांग्ला", "ar": "अरबी" },
+    "ur": { "it": "اطالوی", "en": "انگریزی", "es": "ہسپانوی", "hi": "ہندی", "ur": "اردو", "pa": "پنجابی", "bn": "بنگالی", "ar": "عربی" },
+    "pa": { "it": "اطالوی", "en": "انگریزی", "es": "ہسپانوی", "hi": "ہندی", "ur": "اردو", "pa": "پنجابی", "bn": "بنگالی", "ar": "عربی" },
+    "bn": { "it": "ইতালীয়", "en": "ইংরেজি", "es": "স্প্যানিশ", "hi": "হিন্দি", "ur": "উর্দু", "pa": "পাঞ্জাবি", "bn": "বাংলা", "ar": "আরবি" },
+    "ar": { "it": "الإيطالية", "en": "الإنجليزية", "es": "الإسبانية", "hi": "الهندية", "ur": "الأردية", "pa": "البنجابية", "bn": "البنغالية", "ar": "العربية" }
+  },
+  "templates": {
+    "ec_request_followup": {
+      "en": { "meta_language": "en", "review": "draft", "body": "Hello, this is {{1}} from Ayni Group Italia. We are following up on your WhatsApp request about: {{2}}. Reply to this message and we will continue here.", "buttons": [] },
+      "it": { "meta_language": "it", "review": "draft", "body": "Buongiorno, sono {{1}} di Ayni Group Italia. La ricontattiamo per la Sua richiesta WhatsApp su: {{2}}. Risponda a questo messaggio e proseguiamo qui.", "buttons": [] },
+      "es": { "meta_language": "es", "review": "draft", "body": "Hola, soy {{1}} de Ayni Group Italia. Le escribimos sobre su solicitud por WhatsApp: {{2}}. Responda a este mensaje y seguimos aquí.", "buttons": [] },
+      "hi": { "meta_language": "hi", "review": "draft", "body": "नमस्ते, मैं Ayni Group Italia से {{1}} हूँ। हम आपके WhatsApp अनुरोध के बारे में संपर्क कर रहे हैं: {{2}}। इस संदेश का जवाब दें, हम यहीं बात आगे बढ़ाएँगे।", "buttons": [] },
+      "ur": { "meta_language": "ur", "review": "draft", "body": "السلام علیکم، میں Ayni Group Italia سے {{1}} ہوں۔ ہم آپ کی WhatsApp درخواست کے بارے میں رابطہ کر رہے ہیں: {{2}}۔ اس پیغام کا جواب دیں، ہم یہیں بات آگے بڑھائیں گے۔", "buttons": [] },
+      "pa": { "meta_language": "pa", "review": "draft", "body": "السلام علیکم، میں Ayni Group Italia توں {{1}} آں۔ اسیں تہاڈی WhatsApp درخواست بارے رابطہ کر رہے آں: {{2}}۔ ایس سنیہے دا جواب دیو، اسیں ایتھے ای گل اگے ودھاواں گے۔", "buttons": [] },
+      "bn": { "meta_language": "bn", "review": "draft", "body": "হ্যালো, আমি Ayni Group Italia থেকে {{1}}। আপনার WhatsApp অনুরোধ নিয়ে যোগাযোগ করছি: {{2}}। এই বার্তার উত্তর দিন, আমরা এখানেই কথা চালিয়ে যাব।", "buttons": [] },
+      "ar": { "meta_language": "ar", "review": "draft", "body": "مرحباً، معك {{1}} من Ayni Group Italia. نتواصل معك بخصوص طلبك عبر واتساب: {{2}}. رُدّ على هذه الرسالة لنتابع هنا.", "buttons": [] }
+    },
+    "ec_call_confirmed": {
+      "en": { "meta_language": "en", "review": "draft", "body": "Your call with Ayni Group Italia is confirmed for {{1}} (Italian time), in {{2}}. If you can no longer make it, reply to this message.", "buttons": [] },
+      "it": { "meta_language": "it", "review": "draft", "body": "La Sua chiamata con Ayni Group Italia è confermata per {{1}} (ora italiana), in {{2}}. Se non può più partecipare, risponda a questo messaggio.", "buttons": [] },
+      "es": { "meta_language": "es", "review": "draft", "body": "Su llamada con Ayni Group Italia está confirmada para {{1}} (hora italiana), en {{2}}. Si ya no puede, responda a este mensaje.", "buttons": [] },
+      "hi": { "meta_language": "hi", "review": "draft", "body": "Ayni Group Italia के साथ आपकी कॉल {{1}} (इटली का समय) के लिए पक्की है, भाषा: {{2}}। अगर आप नहीं आ सकते, तो इस संदेश का जवाब दें।", "buttons": [] },
+      "ur": { "meta_language": "ur", "review": "draft", "body": "Ayni Group Italia کے ساتھ آپ کی کال {{1}} (اٹلی کا وقت) کے لیے طے ہے، زبان: {{2}}۔ اگر آپ نہیں آ سکتے تو اس پیغام کا جواب دیں۔", "buttons": [] },
+      "pa": { "meta_language": "pa", "review": "draft", "body": "Ayni Group Italia نال تہاڈی کال {{1}} (اٹلی دا ویلا) لئی پکی اے، زبان: {{2}}۔ جے تسی نئیں آ سکدے تے ایس سنیہے دا جواب دیو۔", "buttons": [] },
+      "bn": { "meta_language": "bn", "review": "draft", "body": "Ayni Group Italia-র সাথে আপনার কল {{1}} (ইতালির সময়) নিশ্চিত হয়েছে, ভাষা: {{2}}। আসতে না পারলে এই বার্তার উত্তর দিন।", "buttons": [] },
+      "ar": { "meta_language": "ar", "review": "draft", "body": "تم تأكيد مكالمتك مع Ayni Group Italia في {{1}} (بتوقيت إيطاليا)، باللغة {{2}}. إذا لم تعد تستطيع الحضور، رُدّ على هذه الرسالة.", "buttons": [] }
+    },
+    "ec_call_not_possible": {
+      "en": { "meta_language": "en", "review": "draft", "body": "We are sorry, we cannot hold the call planned for {{1}}. We can offer {{2}} (Italian time). Reply OK to accept, or tell us another time.", "buttons": [] },
+      "it": { "meta_language": "it", "review": "draft", "body": "Ci dispiace, non possiamo fare la chiamata prevista per {{1}}. Possiamo proporLe {{2}} (ora italiana). Risponda OK per accettare, oppure ci indichi un altro orario.", "buttons": [] },
+      "es": { "meta_language": "es", "review": "draft", "body": "Lo sentimos, no podemos hacer la llamada prevista para {{1}}. Le proponemos {{2}} (hora italiana). Responda OK para aceptar o indíquenos otra hora.", "buttons": [] },
+      "hi": { "meta_language": "hi", "review": "draft", "body": "क्षमा करें, {{1}} वाली कॉल हम नहीं कर पाएँगे। हम {{2}} (इटली का समय) का समय दे सकते हैं। स्वीकार करने के लिए OK लिखें, या कोई दूसरा समय बताएँ।", "buttons": [] },
+      "ur": { "meta_language": "ur", "review": "draft", "body": "معذرت، {{1}} والی کال ہم نہیں کر سکیں گے۔ ہم {{2}} (اٹلی کا وقت) پیش کر سکتے ہیں۔ قبول کرنے کے لیے OK لکھیں، یا کوئی اور وقت بتائیں۔", "buttons": [] },
+      "pa": { "meta_language": "pa", "review": "draft", "body": "معاف کرنا، {{1}} والی کال اسیں نئیں کر سکاں گے۔ اسیں {{2}} (اٹلی دا ویلا) دے سکدے آں۔ منن لئی OK لکھو، یا کوئی ہور ویلا دسو۔", "buttons": [] },
+      "bn": { "meta_language": "bn", "review": "draft", "body": "দুঃখিত, {{1}}-এর কলটি আমরা করতে পারব না। আমরা {{2}} (ইতালির সময়) প্রস্তাব করছি। রাজি থাকলে OK লিখুন, অথবা অন্য সময় জানান।", "buttons": [] },
+      "ar": { "meta_language": "ar", "review": "draft", "body": "نعتذر، لا يمكننا إجراء المكالمة المحددة في {{1}}. نقترح {{2}} (بتوقيت إيطاليا). اكتب OK للموافقة، أو أخبرنا بموعد آخر.", "buttons": [] }
+    },
+    "ec_call_reminder": {
+      "en": { "meta_language": "en", "review": "draft", "body": "Reminder: your call with Ayni Group Italia is today at {{1}} (Italian time). If you can no longer make it, reply to this message.", "buttons": [] },
+      "it": { "meta_language": "it", "review": "draft", "body": "Promemoria: la Sua chiamata con Ayni Group Italia è oggi alle {{1}} (ora italiana). Se non può più partecipare, risponda a questo messaggio.", "buttons": [] },
+      "es": { "meta_language": "es", "review": "draft", "body": "Recordatorio: su llamada con Ayni Group Italia es hoy a las {{1}} (hora italiana). Si ya no puede, responda a este mensaje.", "buttons": [] },
+      "hi": { "meta_language": "hi", "review": "draft", "body": "याद दिलाना: Ayni Group Italia के साथ आपकी कॉल आज {{1}} बजे (इटली का समय) है। अगर आप नहीं आ सकते, तो इस संदेश का जवाब दें।", "buttons": [] },
+      "ur": { "meta_language": "ur", "review": "draft", "body": "یاد دہانی: Ayni Group Italia کے ساتھ آپ کی کال آج {{1}} بجے (اٹلی کا وقت) ہے۔ اگر آپ نہیں آ سکتے تو اس پیغام کا جواب دیں۔", "buttons": [] },
+      "pa": { "meta_language": "pa", "review": "draft", "body": "یاد دہانی: Ayni Group Italia نال تہاڈی کال اج {{1}} وجے (اٹلی دا ویلا) اے۔ جے تسی نئیں آ سکدے تے ایس سنیہے دا جواب دیو۔", "buttons": [] },
+      "bn": { "meta_language": "bn", "review": "draft", "body": "মনে করিয়ে দিচ্ছি: Ayni Group Italia-র সাথে আপনার কল আজ {{1}}-এ (ইতালির সময়)। আসতে না পারলে এই বার্তার উত্তর দিন।", "buttons": [] },
+      "ar": { "meta_language": "ar", "review": "draft", "body": "تذكير: مكالمتك مع Ayni Group Italia اليوم الساعة {{1}} (بتوقيت إيطاليا). إذا لم تعد تستطيع الحضور، رُدّ على هذه الرسالة.", "buttons": [] }
+    }
+  }
+}

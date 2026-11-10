@@ -11,7 +11,7 @@ export const LEAD_LINK_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
  * Locales a person can actually take a call in. Default from the corpus.
  * Not hardcoded in customer copy — the note string still comes from the corpus.
  */
-export const STAFFED_CALL_LOCALES = ['it', 'en', 'es'] as const;
+export const STAFFED_CALL_LOCALES = ['it', 'en', 'es', 'hi', 'ur', 'pa', 'bn', 'ar'] as const;
 
 /**
  * Shipping gate. A locale is in the picker only when this is true AND
@@ -89,15 +89,21 @@ export function routeCard(locale: string, route: string): string | null {
   return kbCards[locale]?.[route] ?? null;
 }
 
+/** `{n}` counts the route questions plus name, contact, and the possible call-time question. */
 export function questionCount(route: string): number {
   const flow = corpus.flows[route as keyof Corpus['flows']];
-  if (!flow) return corpus.close.length;
-  return flow.length + corpus.close.length;
+  return (flow?.length ?? 0) + 3;
 }
 
-export function questionIds(route: string): string[] {
+/**
+ * `close.call_time` is asked only after the customer chooses a call.
+ * The corpus `close` array documents that; it is not a list of message ids.
+ */
+export function questionIds(route: string, answers: Record<string, string> = {}): string[] {
   const flow = corpus.flows[route as keyof Corpus['flows']];
-  return [...(flow ?? []), ...corpus.close];
+  const close = ['close.name', 'close.contact'];
+  if (answers['close.contact'] === 'call') close.push('close.call_time');
+  return [...(flow ?? []), ...close];
 }
 
 export type LimitViolation = { locale: string; key: string; length: number; limit: number };

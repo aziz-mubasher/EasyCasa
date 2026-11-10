@@ -6,6 +6,8 @@ export interface RetentionSink {
   anonymizeStaleLeadsBefore(cutoff: Date): Promise<number>;
   /** EC-17 — hard-delete WhatsApp inbound rows older than the cutoff. */
   purgeWaInboundBefore(cutoff: Date): Promise<number>;
+  /** EC-WA-INTAKE-2 — hard-delete intake leads and their call requests. */
+  purgeWaIntakeBefore(cutoff: Date): Promise<number>;
 }
 
 export const RETENTION_SINK = Symbol('RETENTION_SINK');
@@ -35,6 +37,16 @@ export class RetentionService {
     const n = await this.sink.purgeWaInboundBefore(cutoff);
     this.logger.log(
       `retention: purged ${n} wa_inbound_messages older than ${cutoff.toISOString()}`,
+    );
+    return n;
+  }
+
+  async purgeWaIntake(retentionDays: number, now: Date = new Date()): Promise<number> {
+    if (retentionDays <= 0) throw new Error('retentionDays must be positive');
+    const cutoff = new Date(now.getTime() - retentionDays * 24 * 60 * 60 * 1000);
+    const n = await this.sink.purgeWaIntakeBefore(cutoff);
+    this.logger.log(
+      `retention: purged ${n} wa intake rows older than ${cutoff.toISOString()}`,
     );
     return n;
   }

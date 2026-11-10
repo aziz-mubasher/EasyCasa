@@ -152,7 +152,7 @@ describe('EC-WA-INTAKE-1 flow', () => {
     if (buttons?.type === 'buttons') expect(buttons.buttons.map((button) => button.id)).toEqual(['write']);
   });
 
-  it('adds the call-language note outside Italian, English and Spanish', () => {
+  it('offers Hindi a call without a language warning', () => {
     const at = '2026-11-10T12:00:00.000Z';
     const ids = questionIds('route_buy');
     const session = emptySession(at);
@@ -164,7 +164,7 @@ describe('EC-WA-INTAKE-1 flow', () => {
     expect(buttons?.type).toBe('buttons');
     if (buttons?.type === 'buttons') {
       expect(buttons.buttons.map((button) => button.id)).toEqual(['call', 'write']);
-      expect(buttons.body).toContain(corpus.strings.hi.t['close.call_language_note']);
+      expect(buttons.body).not.toContain(corpus.strings.hi.t['close.call_language_note']);
     }
   });
 });

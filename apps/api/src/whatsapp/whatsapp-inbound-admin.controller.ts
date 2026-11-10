@@ -71,6 +71,15 @@ class ReplyBody {
   @MinLength(1)
   @MaxLength(4096)
   body!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(4096)
+  originalBody?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  machineTranslated?: boolean;
 }
 
 class BlockBody {
@@ -131,7 +140,10 @@ export class WhatsAppInboundAdminController {
     @CurrentUser() user: AuthUser,
   ) {
     const actor = await this.users.getOrCreate(user);
-    return this.inboundAdmin.replyToHandle(handle, actor.id, body.body);
+    return this.inboundAdmin.replyToHandle(handle, actor.id, body.body, new Date(), {
+      originalBody: body.originalBody,
+      machineTranslated: body.machineTranslated,
+    });
   }
 
   @Get(':handle/notes')

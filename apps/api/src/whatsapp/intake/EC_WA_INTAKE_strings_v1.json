@@ -83,7 +83,8 @@
   },
   "close": [
     "close.name",
-    "close.contact"
+    "close.contact",
+    "close.call_time (only if call chosen)"
   ],
   "questions": {
     "B1": {
@@ -224,12 +225,13 @@
         "q.A4": "Su cosa desidera aiuto?",
         "q.O1": "Ci dica brevemente di cosa si tratta.",
         "q.H1": "In breve, di cosa vorrebbe parlare?",
-        "close.name": "Ultime due domande. Con quale nome deve chiamarLa il consulente?",
+        "close.name": "Quasi finito. Con quale nome deve chiamarLa il consulente?",
         "close.contact.body": "Come preferisce proseguire?",
         "close.contact.buttons.call": "Prenota chiamata",
         "close.contact.buttons.write": "Mi scriva",
         "close.call_language_note": "Le chiamate sono in italiano, inglese o spagnolo.",
-        "done.write": "Grazie. La Sua richiesta è al nostro team. Un collega Le scriverà qui. Riceverà una risposta in ogni caso."
+        "done.write": "Grazie. La Sua richiesta è al nostro team. Un collega Le scriverà qui. Riceverà una risposta in ogni caso.",
+        "close.call_time": "Quali giorni e orari Le vanno bene per una chiamata di 15 minuti? Dal lunedì al venerdì, 9:00–18:00 ora italiana."
       }
     },
     "en": {
@@ -290,12 +292,13 @@
         "q.A4": "What would you like help with?",
         "q.O1": "Tell us briefly what your question is about.",
         "q.H1": "Briefly, what would you like to talk about?",
-        "close.name": "Last two questions. What name should the consultant use?",
+        "close.name": "Almost done. What name should the consultant use?",
         "close.contact.body": "How would you like to continue?",
         "close.contact.buttons.call": "Book a call",
         "close.contact.buttons.write": "Write to me",
         "close.call_language_note": "Calls are in Italian, English or Spanish.",
-        "done.write": "Thank you. Your request is with our team. A colleague will write to you here. You will get an answer either way."
+        "done.write": "Thank you. Your request is with our team. A colleague will write to you here. You will get an answer either way.",
+        "close.call_time": "Which days and times suit you for a 15-minute call? Monday to Friday, 9:00–18:00 Italian time."
       }
     },
     "es": {
@@ -356,12 +359,13 @@
         "q.A4": "¿En qué quiere ayuda?",
         "q.O1": "Díganos brevemente de qué se trata.",
         "q.H1": "En pocas palabras, ¿de qué le gustaría hablar?",
-        "close.name": "Dos últimas preguntas. ¿Qué nombre debe usar su asesor?",
+        "close.name": "Ya casi terminamos. ¿Qué nombre debe usar su asesor?",
         "close.contact.body": "¿Cómo prefiere continuar?",
         "close.contact.buttons.call": "Reservar llamada",
         "close.contact.buttons.write": "Escríbanme",
         "close.call_language_note": "Las llamadas son en italiano, inglés o español.",
-        "done.write": "Gracias. Su solicitud está con nuestro equipo. Un compañero le escribirá aquí. Recibirá una respuesta en cualquier caso."
+        "done.write": "Gracias. Su solicitud está con nuestro equipo. Un compañero le escribirá aquí. Recibirá una respuesta en cualquier caso.",
+        "close.call_time": "¿Qué días y horas le vienen bien para una llamada de 15 minutos? De lunes a viernes, 9:00–18:00 hora italiana."
       }
     },
     "hi": {
@@ -422,12 +426,13 @@
         "q.A4": "आपको किस चीज़ में मदद चाहिए?",
         "q.O1": "संक्षेप में बताइए कि बात किस बारे में है।",
         "q.H1": "संक्षेप में, आप किस बारे में बात करना चाहेंगे?",
-        "close.name": "आख़िरी दो सवाल। सलाहकार आपको किस नाम से बुलाए?",
+        "close.name": "बस थोड़ा और। सलाहकार आपको किस नाम से बुलाए?",
         "close.contact.body": "आप कैसे आगे बढ़ना चाहेंगे?",
         "close.contact.buttons.call": "कॉल बुक करें",
         "close.contact.buttons.write": "मुझे लिखें",
         "close.call_language_note": "कॉल इतालवी, अंग्रेज़ी या स्पैनिश में होती है।",
-        "done.write": "धन्यवाद। आपका अनुरोध हमारी टीम तक पहुँच गया है। हमारा एक सहकर्मी आपको यहीं लिखेगा। आपको हर हाल में जवाब मिलेगा।"
+        "done.write": "धन्यवाद। आपका अनुरोध हमारी टीम तक पहुँच गया है। हमारा एक सहकर्मी आपको यहीं लिखेगा। आपको हर हाल में जवाब मिलेगा।",
+        "close.call_time": "15 मिनट की कॉल के लिए आपको कौन-से दिन और समय ठीक लगते हैं? सोमवार से शुक्रवार, 9:00–18:00 इटली का समय।"
       }
     },
     "ur": {
@@ -488,12 +493,13 @@
         "q.A4": "آپ کو کس چیز میں مدد چاہیے؟",
         "q.O1": "مختصراً بتائیے کہ بات کس بارے میں ہے۔",
         "q.H1": "مختصراً، آپ کس بارے میں بات کرنا چاہیں گے؟",
-        "close.name": "آخری دو سوال۔ مشیر آپ کو کس نام سے مخاطب کرے؟",
+        "close.name": "بس تھوڑا سا اور۔ مشیر آپ کو کس نام سے مخاطب کرے؟",
         "close.contact.body": "آپ کیسے آگے بڑھنا چاہیں گے؟",
         "close.contact.buttons.call": "کال بک کریں",
         "close.contact.buttons.write": "مجھے لکھیں",
         "close.call_language_note": "کالز اطالوی، انگریزی یا ہسپانوی میں ہوتی ہیں۔",
-        "done.write": "شکریہ۔ آپ کی درخواست ہماری ٹیم تک پہنچ گئی ہے۔ ہمارا ایک ساتھی آپ کو یہیں لکھے گا۔ آپ کو ہر صورت جواب ملے گا۔"
+        "done.write": "شکریہ۔ آپ کی درخواست ہماری ٹیم تک پہنچ گئی ہے۔ ہمارا ایک ساتھی آپ کو یہیں لکھے گا۔ آپ کو ہر صورت جواب ملے گا۔",
+        "close.call_time": "15 منٹ کی کال کے لیے آپ کو کون سے دن اور وقت مناسب ہیں؟ پیر سے جمعہ، 9:00–18:00 اٹلی کا وقت۔"
       }
     },
     "pa": {
@@ -554,12 +560,13 @@
         "q.A4": "تہانوں کس چیز وچ مدد چاہیدی اے؟",
         "q.O1": "تھوڑے لفظاں وچ دسو کہ گل کس بارے اے۔",
         "q.H1": "تھوڑے لفظاں وچ، تسی کس بارے گل کرنا چاہو گے؟",
-        "close.name": "آخری دو سوال۔ مشیر تہانوں کس ناں نال بلاوے؟",
+        "close.name": "بس تھوڑا جیہا ہور۔ مشیر تہانوں کس ناں نال بلاوے؟",
         "close.contact.body": "تسی کیویں اگے ودھنا چاہو گے؟",
         "close.contact.buttons.call": "کال بک کرو",
         "close.contact.buttons.write": "مینوں لکھو",
         "close.call_language_note": "کالاں اطالوی، انگریزی یا ہسپانوی وچ ہوندیاں نیں۔",
-        "done.write": "شکریہ۔ تہاڈی درخواست ساڈی ٹیم کول پہنچ گئی اے۔ ساڈا اک ساتھی تہانوں ایتھے ای لکھے گا۔ تہانوں ہر حال وچ جواب ملے گا۔"
+        "done.write": "شکریہ۔ تہاڈی درخواست ساڈی ٹیم کول پہنچ گئی اے۔ ساڈا اک ساتھی تہانوں ایتھے ای لکھے گا۔ تہانوں ہر حال وچ جواب ملے گا۔",
+        "close.call_time": "15 منٹ دی کال لئی تہانوں کیہڑے دن تے ویلے ٹھیک لگدے نیں؟ سوموار توں جمعہ، 9:00–18:00 اٹلی دا ویلا۔"
       }
     },
     "bn": {
@@ -620,12 +627,13 @@
         "q.A4": "কোন বিষয়ে সাহায্য চান?",
         "q.O1": "সংক্ষেপে জানান বিষয়টি কী নিয়ে।",
         "q.H1": "সংক্ষেপে, আপনি কী নিয়ে কথা বলতে চান?",
-        "close.name": "শেষ দুটি প্রশ্ন। পরামর্শদাতা আপনাকে কোন নামে ডাকবেন?",
+        "close.name": "প্রায় শেষ। পরামর্শদাতা আপনাকে কোন নামে ডাকবেন?",
         "close.contact.body": "কীভাবে এগোতে চান?",
         "close.contact.buttons.call": "কল বুক করুন",
         "close.contact.buttons.write": "আমাকে লিখুন",
         "close.call_language_note": "কল হয় ইতালীয়, ইংরেজি বা স্প্যানিশ ভাষায়।",
-        "done.write": "ধন্যবাদ। আপনার অনুরোধ আমাদের দলের কাছে পৌঁছেছে। আমাদের একজন সহকর্মী এখানেই আপনাকে লিখবেন। আপনি যেকোনো ক্ষেত্রে উত্তর পাবেন।"
+        "done.write": "ধন্যবাদ। আপনার অনুরোধ আমাদের দলের কাছে পৌঁছেছে। আমাদের একজন সহকর্মী এখানেই আপনাকে লিখবেন। আপনি যেকোনো ক্ষেত্রে উত্তর পাবেন।",
+        "close.call_time": "১৫ মিনিটের কলের জন্য কোন দিন ও সময় আপনার সুবিধা? সোমবার থেকে শুক্রবার, ৯:০০–১৮:০০ ইতালির সময়।"
       }
     },
     "ar": {
@@ -686,12 +694,13 @@
         "q.A4": "في ماذا تريد المساعدة؟",
         "q.O1": "أخبرنا باختصار عن موضوع سؤالك.",
         "q.H1": "باختصار، عمّ تود أن تتحدث؟",
-        "close.name": "سؤالان أخيران. بأي اسم يناديك المستشار؟",
+        "close.name": "أوشكنا على الانتهاء. بأي اسم يناديك المستشار؟",
         "close.contact.body": "كيف تفضل المتابعة؟",
         "close.contact.buttons.call": "احجز مكالمة",
         "close.contact.buttons.write": "راسلوني",
         "close.call_language_note": "المكالمات بالإيطالية أو الإنجليزية أو الإسبانية.",
-        "done.write": "شكراً لك. وصل طلبك إلى فريقنا. سيكتب لك أحد زملائنا هنا. ستتلقى رداً في جميع الأحوال."
+        "done.write": "شكراً لك. وصل طلبك إلى فريقنا. سيكتب لك أحد زملائنا هنا. ستتلقى رداً في جميع الأحوال.",
+        "close.call_time": "ما الأيام والأوقات المناسبة لك لمكالمة مدتها 15 دقيقة؟ من الاثنين إلى الجمعة، 9:00–18:00 بتوقيت إيطاليا."
       }
     }
   },
@@ -727,5 +736,9 @@
         "route_human": "আপনার চ্যাট আমাদের একজন সহকর্মীর কাছে দেওয়া হচ্ছে।"
       }
     }
-  }
+  },
+  "version": "1.1",
+  "changelog": [
+    "1.1 (10 Nov 2026): added close.call_time (8 locales); call length fixed at 15 minutes; {n} in intake.intro = questions in flow + 3; close.name no longer says \"last two questions\"."
+  ]
 }

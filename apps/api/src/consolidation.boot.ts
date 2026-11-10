@@ -103,6 +103,9 @@ stubRegistry.register({
             async purgeWaInboundBefore() {
               return 0;
             },
+            async purgeWaIntakeBefore() {
+              return 0;
+            },
           },
         },
       ],

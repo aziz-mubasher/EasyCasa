@@ -13,7 +13,9 @@ import { InjectConfig } from '../config/inject-config.decorator';
 import { AdminAuditService } from '../authority/admin-audit.service';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { adminAuditLog, waInboundMessages, waIntakeLeads, waThreadNotes, waThreadOutbound } from '../db/schema';
+import { adminAuditLog, waCallRequests, waContacts, waInboundMessages, waIntakeLeads, waThreadNotes, waThreadOutbound } from '../db/schema';
+import templateCorpus from './intake/EC_WA_templates_v1.json';
+import { approvedLanguageCodes, assertCallShape, chooseTemplateLocale, closePatch, slotProblem } from './intake/rules';
 import { maskWaId, redactPreview } from './redact';
 import { waHandleFor } from './wa-handle';
 import { toE164 } from './whatsapp-inbound.service';
@@ -503,7 +505,10 @@ export class WhatsAppInboundAdminService {
         id: row.id,
         route: row.route,
         locale: row.locale,
-        status: row.status,
+        status: row.intakeStatus,
+        pipelineStatus: row.status,
+        ownerUserId: row.ownerUserId,
+        crmContactId: row.crmContactId,
         product: row.product,
         contactPref: row.contactPref,
         bookingStatus: row.bookingStatus,
@@ -578,6 +583,7 @@ export class WhatsAppInboundAdminService {
     actorUserId: string,
     bodyRaw: string,
     now: Date = new Date(),
+    translation?: { originalBody?: string; machineTranslated?: boolean },
   ) {
     const body = bodyRaw.trim();
     if (!body) throw new BadRequestException('message body required');
@@ -614,18 +620,32 @@ export class WhatsAppInboundAdminService {
         waHandle: handle,
         providerMessageId: send.messageId,
         body,
+        originalBody: translation?.originalBody ?? null,
+        machineTranslated: Boolean(translation?.machineTranslated),
         source: 'operator',
         actorUserId,
         sentAt,
+        windowOpen: true,
       })
       .returning({ id: waThreadOutbound.id });
+
+    if (this.config.WA_CONSULTANT_REPLY_ENABLED) {
+      await this.db
+        .update(waContacts)
+        .set({ consultantRepliedAt: sentAt, updatedAt: sentAt })
+        .where(eq(waContacts.waId, waId));
+      await this.db
+        .update(waIntakeLeads)
+        .set({ status: 'contacted', contactedAt: sentAt, updatedAt: sentAt })
+        .where(and(eq(waIntakeLeads.waId, waId), sql`${waIntakeLeads.status} in ('new', 'assigned')`));
+    }
 
     await this.audit.record({
       actorUserId,
       action: 'whatsapp_inbound_reply',
       resourceType: 'wa_inbound_thread',
       resourceId: waId,
-      reason: `operator reply ${inserted[0]?.id ?? 'unknown'}`,
+      reason: `operator reply ${inserted[0]?.id ?? 'unknown'} window=open free_text`,
     });
 
     return {
@@ -637,4 +657,286 @@ export class WhatsAppInboundAdminService {
       windowRemainingMs: remainingMs(expires, now),
     };
   }
+
+  /** EC-WA-INTAKE-2 — lead list for #whatsapp/leads. Link only; no message bodies. */
+  async listLeads(filter: { status?: string; ownerUserId?: string; product?: string }) {
+    const rows = await this.db
+      .select()
+      .from(waIntakeLeads)
+      .orderBy(desc(waIntakeLeads.createdAt))
+      .limit(200);
+    const filtered = rows.filter((row) => {
+      if (filter.status && row.status !== filter.status) return false;
+      if (filter.ownerUserId && row.ownerUserId !== filter.ownerUserId) return false;
+      if (filter.product && row.product !== filter.product) return false;
+      return true;
+    });
+    const now = new Date();
+    return {
+      items: await Promise.all(
+        filtered.map(async (row) => {
+          const [contact] = await this.db
+            .select({ lastInboundAt: waContacts.lastInboundAt })
+            .from(waContacts)
+            .where(eq(waContacts.waId, row.waId))
+            .limit(1);
+          const [call] = await this.db
+            .select({ status: waCallRequests.status })
+            .from(waCallRequests)
+            .where(eq(waCallRequests.leadId, row.id))
+            .orderBy(desc(waCallRequests.createdAt))
+            .limit(1);
+          const expires = contact?.lastInboundAt
+            ? new Date(contact.lastInboundAt.getTime() + 24 * 60 * 60 * 1000)
+            : null;
+          return {
+            id: row.id,
+            status: row.status,
+            ownerUserId: row.ownerUserId,
+            product: row.product,
+            route: row.route,
+            locale: row.locale,
+            createdAt: row.createdAt.toISOString(),
+            windowRemainingMs: expires ? Math.max(0, expires.getTime() - now.getTime()) : null,
+            callStatus: call?.status ?? null,
+            crmContactId: row.crmContactId,
+          };
+        }),
+      ),
+    };
+  }
+
+  async getLead(id: string) {
+    const [row] = await this.db.select().from(waIntakeLeads).where(eq(waIntakeLeads.id, id)).limit(1);
+    if (!row) throw new NotFoundException('Lead not found');
+    const calls = await this.db
+      .select()
+      .from(waCallRequests)
+      .where(eq(waCallRequests.leadId, row.id))
+      .orderBy(desc(waCallRequests.createdAt));
+    const [contact] = await this.db
+      .select({ lastInboundAt: waContacts.lastInboundAt })
+      .from(waContacts)
+      .where(eq(waContacts.waId, row.waId))
+      .limit(1);
+    const now = new Date();
+    const expires = contact?.lastInboundAt
+      ? new Date(contact.lastInboundAt.getTime() + 24 * 60 * 60 * 1000)
+      : null;
+    return {
+      id: row.id,
+      status: row.status,
+      intakeStatus: row.intakeStatus,
+      ownerUserId: row.ownerUserId,
+      product: row.product,
+      route: row.route,
+      locale: row.locale,
+      contactPref: row.contactPref,
+      answers: row.answers,
+      summary: row.summary,
+      createdAt: row.createdAt.toISOString(),
+      windowOpen: expires ? now < expires : false,
+      windowRemainingMs: expires ? Math.max(0, expires.getTime() - now.getTime()) : null,
+      conversationHref: `#whatsapp/${waHandleFor(row.waId, this.config.WA_HANDLE_SECRET)}`,
+      calls: calls.map((call) => ({
+        id: call.id,
+        status: call.status,
+        customerPreference: call.customerPreference,
+        requestedSlot: call.requestedSlot?.toISOString() ?? null,
+        offeredSlot: call.offeredSlot?.toISOString() ?? null,
+        durationMin: call.durationMin,
+        callLanguage: call.callLanguage,
+        reminderSentAt: call.reminderSentAt?.toISOString() ?? null,
+      })),
+    };
+  }
+
+  async assignLead(id: string, ownerUserId: string, actorUserId: string) {
+    const now = new Date();
+    const updated = await this.db
+      .update(waIntakeLeads)
+      .set({ status: 'assigned', ownerUserId, assignedAt: now, updatedAt: now })
+      .where(and(eq(waIntakeLeads.id, id), sql`${waIntakeLeads.status} in ('new', 'assigned')`))
+      .returning({ id: waIntakeLeads.id });
+    if (!updated[0]) throw new BadRequestException('Lead cannot be assigned from its current status');
+    await this.audit.record({
+      actorUserId,
+      action: 'whatsapp_lead_assign',
+      resourceType: 'wa_intake_lead',
+      resourceId: id,
+      reason: `owner ${ownerUserId}`,
+    });
+    return { id, status: 'assigned', ownerUserId };
+  }
+
+  async closeLead(id: string, reason: string, actorUserId: string) {
+    const patch = closePatch(reason);
+    const now = new Date();
+    const updated = await this.db
+      .update(waIntakeLeads)
+      .set({ status: 'closed', closedReason: patch.closedReason, closedAt: now, updatedAt: now })
+      .where(eq(waIntakeLeads.id, id))
+      .returning({ id: waIntakeLeads.id });
+    if (!updated[0]) throw new NotFoundException('Lead not found');
+    await this.audit.record({
+      actorUserId,
+      action: 'whatsapp_lead_close',
+      resourceType: 'wa_intake_lead',
+      resourceId: id,
+      reason: patch.closedReason,
+    });
+    return { id, status: 'closed', closedReason: patch.closedReason };
+  }
+
+  /**
+   * Confirm, offer, cancel, done, or no-show. Call templates are sent only when
+   * that locale (or English) is in the approved set. An empty set refuses the send.
+   */
+  async decideCall(
+    leadId: string,
+    actorUserId: string,
+    input: {
+      action: 'confirm' | 'offer' | 'cancel' | 'done' | 'no_show';
+      requestedSlot?: string;
+      offeredSlot?: string;
+      callLanguage?: string;
+      approvedLocales?: string[];
+    },
+  ) {
+    if (!this.config.WA_CALL_REQUESTS_ENABLED) throw new BadRequestException('call requests are off');
+    const [lead] = await this.db.select().from(waIntakeLeads).where(eq(waIntakeLeads.id, leadId)).limit(1);
+    if (!lead) throw new NotFoundException('Lead not found');
+    const [call] = await this.db
+      .select()
+      .from(waCallRequests)
+      .where(eq(waCallRequests.leadId, leadId))
+      .orderBy(desc(waCallRequests.createdAt))
+      .limit(1);
+    if (!call) throw new NotFoundException('Call request not found');
+    const staffed = this.config.STAFFED_CALL_LOCALES.split(',').map((item) => item.trim()).filter(Boolean);
+    const language = input.callLanguage ?? call.callLanguage;
+    try {
+      assertCallShape(15, language, staffed);
+    } catch (err) {
+      throw new BadRequestException(err instanceof Error ? err.message : 'call shape rejected');
+    }
+    const now = new Date();
+    if (input.action === 'cancel' || input.action === 'done' || input.action === 'no_show') {
+      await this.db
+        .update(waCallRequests)
+        .set({ status: input.action === 'cancel' ? 'cancelled' : input.action, callLanguage: language, decidedBy: actorUserId, decidedAt: now, updatedAt: now })
+        .where(eq(waCallRequests.id, call.id));
+      if (input.action === 'done' && (lead.status === 'new' || lead.status === 'assigned')) {
+        await this.db
+          .update(waIntakeLeads)
+          .set({ status: 'contacted', contactedAt: now, updatedAt: now })
+          .where(eq(waIntakeLeads.id, lead.id));
+      }
+      await this.audit.record({
+        actorUserId,
+        action: 'whatsapp_call_decide',
+        resourceType: 'wa_call_request',
+        resourceId: call.id,
+        reason: input.action,
+      });
+      return { status: input.action === 'cancel' ? 'cancelled' : input.action, sent: false };
+    }
+    const slotRaw = input.action === 'confirm' ? input.requestedSlot : input.offeredSlot;
+    if (!slotRaw) throw new BadRequestException('slot required');
+    const slot = new Date(slotRaw);
+    const problem = slotProblem(slot, now, await this.ownerSlotStarts(lead.ownerUserId, call.id));
+    if (problem) throw new BadRequestException(`slot rejected: ${problem}`);
+    const templateName = input.action === 'confirm' ? 'ec_call_confirmed' : 'ec_call_not_possible';
+    const approved = approvedLanguageCodes(await this.cloud.templateLanguageStatuses(templateName));
+    const locale = chooseTemplateLocale(lead.locale, approved ?? []);
+    if (!locale) throw new BadRequestException('template not approved in this language');
+    const planned = call.requestedSlot ? formatRome(call.requestedSlot, locale) : (call.customerPreference ?? formatRome(slot, locale));
+    const params = input.action === 'confirm'
+      ? [formatRome(slot, locale), callLanguageName(locale, language)]
+      : [planned, formatRome(slot, locale)];
+    const send = await this.cloud.sendTemplate({
+      phoneE164: `+${lead.waId}`,
+      templateName,
+      languageCode: metaLanguage(templateName, locale),
+      bodyParams: params,
+    });
+    if (!send.ok) throw new BadRequestException(`whatsapp send failed (${send.reason})`);
+    await this.db
+      .update(waCallRequests)
+      .set({
+        status: input.action === 'confirm' ? 'confirmed' : 'offered_other',
+        requestedSlot: input.action === 'confirm' ? slot : call.requestedSlot,
+        offeredSlot: input.action === 'offer' ? slot : call.offeredSlot,
+        callLanguage: language,
+        decidedBy: actorUserId,
+        decidedAt: now,
+        updatedAt: now,
+      })
+      .where(eq(waCallRequests.id, call.id));
+    await this.db.insert(waThreadOutbound).values({
+      waId: lead.waId,
+      waHandle: waHandleFor(lead.waId, this.config.WA_HANDLE_SECRET),
+      providerMessageId: send.messageId,
+      body: params.join(' · '),
+      templateName,
+      windowOpen: false,
+      source: 'operator',
+      actorUserId,
+    });
+    await this.audit.record({
+      actorUserId,
+      action: 'whatsapp_call_decide',
+      resourceType: 'wa_call_request',
+      resourceId: call.id,
+      reason: `${input.action} template=${templateName} locale=${locale}`,
+    });
+    return { status: input.action === 'confirm' ? 'confirmed' : 'offered_other', sent: true, locale };
+  }
+
+  private async ownerSlotStarts(ownerUserId: string | null, exceptCallId: string): Promise<Date[]> {
+    if (!ownerUserId) return [];
+    const leads = await this.db.select({ id: waIntakeLeads.id }).from(waIntakeLeads).where(eq(waIntakeLeads.ownerUserId, ownerUserId));
+    const starts: Date[] = [];
+    for (const lead of leads) {
+      const calls = await this.db.select().from(waCallRequests).where(eq(waCallRequests.leadId, lead.id));
+      for (const call of calls) {
+        if (call.id === exceptCallId) continue;
+        if (call.status !== 'confirmed' && call.status !== 'offered_other') continue;
+        const start = call.status === 'offered_other' ? call.offeredSlot : call.requestedSlot;
+        if (start) starts.push(start);
+      }
+    }
+    return starts;
+  }
+
+  async leadIdForCrmContact(contactId: string): Promise<{ leadId: string | null }> {
+    const [row] = await this.db
+      .select({ id: waIntakeLeads.id })
+      .from(waIntakeLeads)
+      .where(eq(waIntakeLeads.crmContactId, contactId))
+      .orderBy(desc(waIntakeLeads.createdAt))
+      .limit(1);
+    return { leadId: row?.id ?? null };
+  }
+}
+
+function formatRome(slot: Date, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    timeZone: 'Europe/Rome',
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(slot);
+}
+
+function callLanguageName(locale: string, callLanguage: string): string {
+  const table = (templateCorpus.call_language_names as Record<string, Record<string, string>>)[locale];
+  return table?.[callLanguage] ?? callLanguage;
+}
+
+function metaLanguage(templateName: string, locale: string): string {
+  const templates = templateCorpus.templates as Record<string, Record<string, { meta_language: string }>>;
+  return templates[templateName]?.[locale]?.meta_language ?? locale;
 }

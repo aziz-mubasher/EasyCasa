@@ -188,6 +188,99 @@ export class WhatsAppCloudClient {
     });
   }
 
+  private templateCache: {
+    at: number;
+    byName: Map<string, { language: string; status: string }[]>;
+  } | null = null;
+
+  /**
+   * Language rows for one template name.
+   * Reads WHATSAPP_WABA_ID first. If that node rejects message_templates,
+   * reads the WABA attached to the phone number that actually sends.
+   * Null means the list could not be read.
+   */
+  async templateLanguageStatuses(name: string): Promise<{ language: string; status: string }[] | null> {
+    if (this.config.DEMO_MODE || !this.config.WHATSAPP_TOKEN) return null;
+    const fresh = this.templateCache && Date.now() - this.templateCache.at < 5 * 60 * 1000;
+    if (fresh && this.templateCache) return this.templateCache.byName.get(name) ?? [];
+    const accountIds = await this.templateAccountIds();
+    const byName = new Map<string, { language: string; status: string }[]>();
+    let read = false;
+    for (const accountId of accountIds) {
+      const rows = await this.listMessageTemplates(accountId);
+      if (!rows) continue;
+      read = true;
+      for (const row of rows) {
+        const list = byName.get(row.name) ?? [];
+        list.push({ language: row.language, status: row.status });
+        byName.set(row.name, list);
+      }
+    }
+    if (!read) return null;
+    this.templateCache = { at: Date.now(), byName };
+    return byName.get(name) ?? [];
+  }
+
+  private graph(path: string): string {
+    return `https://graph.facebook.com/${this.config.WHATSAPP_GRAPH_VERSION}/${path}`;
+  }
+
+  private async templateAccountIds(): Promise<string[]> {
+    const configured = this.config.WHATSAPP_WABA_ID.trim();
+    const ids = configured ? [configured] : [];
+    if (!configured) return ids;
+    const probe = await this.graphGet(`${configured}/message_templates?limit=1&fields=name`);
+    const code = probe && typeof probe === 'object' && 'error' in probe
+      ? (probe.error as { code?: number } | undefined)?.code
+      : undefined;
+    if (code !== 100) return ids;
+    const phoneId = this.config.WHATSAPP_PHONE_NUMBER_ID;
+    if (!phoneId) return ids;
+    const health = await this.graphGet(`${phoneId}?fields=health_status`);
+    const entities = (health as { health_status?: { entities?: { entity_type?: string; id?: string }[] } } | null)
+      ?.health_status?.entities ?? [];
+    const waba = entities.find((entity) => entity.entity_type === 'WABA' && entity.id);
+    if (waba?.id && waba.id !== configured) {
+      this.log.warn('configured WhatsApp account rejected message_templates; reading the phone account');
+      ids.push(waba.id);
+    }
+    return ids;
+  }
+
+  private async listMessageTemplates(
+    accountId: string,
+  ): Promise<{ name: string; language: string; status: string }[] | null> {
+    const rows: { name: string; language: string; status: string }[] = [];
+    let path: string | null = `${accountId}/message_templates?limit=100&fields=name,status,language`;
+    while (path) {
+      const json = await this.graphGet(path);
+      if (!json || typeof json !== 'object' || 'error' in json) return rows.length ? rows : null;
+      const page = json as {
+        data?: { name?: string; status?: string; language?: string }[];
+        paging?: { next?: string };
+      };
+      for (const row of page.data ?? []) {
+        if (row.name && row.language && row.status) {
+          rows.push({ name: row.name, language: row.language, status: row.status });
+        }
+      }
+      path = page.paging?.next ?? null;
+    }
+    return rows;
+  }
+
+  private async graphGet(path: string): Promise<unknown> {
+    try {
+      const url = path.startsWith('http') ? path : this.graph(path);
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${this.config.WHATSAPP_TOKEN}` } });
+      return await res.json().catch(() => null);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      this.log.warn(`WhatsApp template status failed: ${message}`);
+      return null;
+    }
+  }
+
   private messagesUrl(): string {
     return `https://graph.facebook.com/${this.config.WHATSAPP_GRAPH_VERSION}/${this.config.WHATSAPP_PHONE_NUMBER_ID}/messages`;
   }

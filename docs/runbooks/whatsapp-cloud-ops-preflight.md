@@ -10,7 +10,7 @@ Env catalogue: `docs/env.md` (six Nest secrets + no-dump rule).
 - [ ] `DEMO_MODE=false` — anything else short-circuits the Cloud client before Graph
 - [ ] All **six** Nest secrets set: token · phone number ID · verify token · app secret ·
       template name(s) · `WA_HANDLE_SECRET`
-- [ ] **WABA ID is not a Nest env.** Meta-console only. Do not list it.
+- [ ] `WHATSAPP_WABA_ID` is the account id used to read template status. Default `61588757714987`. It is not a secret.
 - [ ] `.env` hygiene: one key per line · ASCII only · no inline `#` on a secret value ·
       no duplicate keys (last wins, silently) · no `…` from a truncated paste
 - [ ] Length check per key **inside the container**, not on the host file:

@@ -124,7 +124,29 @@ function isSkip(value: string, locale: string): boolean {
   return folded === norm(text(locale, 'intake.skip'));
 }
 
+export function isLanguageRestart(turn: InboundTurn): boolean {
+  return languageHit(turn) != null;
+}
+
+/** After the first consultant message the script stays quiet, except a language restart or the media refusal. */
+export function consultantBotAction(
+  consultantReplied: boolean,
+  turn: InboundTurn,
+): 'script' | 'media' | 'silent' {
+  if (!consultantReplied) return 'script';
+  if (isLanguageRestart(turn)) return 'script';
+  if (turn.kind === 'media') return 'media';
+  return 'silent';
+}
+
 function questionMessage(locale: string, id: string): Outbound {
+  if (id === 'close.call_time') {
+    return {
+      type: 'buttons',
+      body: text(locale, 'close.call_time'),
+      buttons: [{ id: 'skip', title: text(locale, 'intake.skip') }],
+    };
+  }
   if (id === 'close.name') {
     return {
       type: 'buttons',
@@ -255,8 +277,8 @@ export function reduceIntake(current: IntakeSession | null, turn: InboundTurn, s
     return { session, outbound: [welcomeMessage(session.locale)], handoff: null, restarted: false };
   }
 
-  const ids = questionIds(session.route);
-  const currentId = ids[session.cursor];
+  const idsBefore = questionIds(session.route, session.answers);
+  const currentId = idsBefore[session.cursor];
   if (!currentId) {
     return { session, outbound: [], handoff: null, restarted: false };
   }
@@ -265,6 +287,7 @@ export function reduceIntake(current: IntakeSession | null, turn: InboundTurn, s
     return { session, outbound: [questionMessage(session.locale, currentId)], handoff: null, restarted: false };
   }
   session.answers = { ...session.answers, [currentId]: answer };
+  const ids = questionIds(session.route, session.answers);
   const nextCursor = session.cursor + 1;
   if (nextCursor >= ids.length) {
     session.cursor = nextCursor;
