@@ -5,14 +5,16 @@ import { z } from 'zod';
 import { useApi } from '../api';
 import { Badge } from '../components/ui';
 import { WhatsAppInbound } from './WhatsAppInbound';
+import { WhatsAppLeads } from './WhatsAppLeads';
 
-const HUB_TABS = ['inbox', 'connection', 'templates', 'canned', 'analytics'] as const;
+const HUB_TABS = ['inbox', 'leads', 'connection', 'templates', 'canned', 'analytics'] as const;
 type HubTab = (typeof HUB_TABS)[number];
 
 function tabFromHash(): HubTab {
   if (typeof window === 'undefined') return 'inbox';
   const raw = window.location.hash.replace(/^#/, '');
   const rest = raw.replace(/^whatsapp\/?/, '');
+  if (rest === 'leads' || rest.startsWith('leads/')) return 'leads';
   if (!rest || /^[0-9a-f]{32}$/i.test(rest)) return 'inbox';
   if ((HUB_TABS as readonly string[]).includes(rest)) return rest as HubTab;
   return 'inbox';
@@ -345,6 +347,7 @@ export function WhatsAppChannel() {
     () =>
       ({
         inbox: 'Inbox',
+        leads: 'Leads',
         connection: 'Connection',
         templates: 'Templates',
         canned: 'Canned',
@@ -368,6 +371,7 @@ export function WhatsAppChannel() {
         ))}
       </nav>
       {tab === 'inbox' ? <WhatsAppInbound /> : null}
+      {tab === 'leads' ? <WhatsAppLeads /> : null}
       {tab === 'connection' ? <ConnectionTab /> : null}
       {tab === 'templates' ? <TemplatesTab /> : null}
       {tab === 'canned' ? <CannedTab /> : null}

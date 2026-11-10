@@ -357,6 +357,91 @@ export class EasyCasaAdminApi {
     );
   }
 
+  /* EC-WA-INTAKE-2 lead list (no message bodies) */
+  listWhatsAppLeads(params?: { status?: string; ownerUserId?: string; product?: string }): Promise<{
+    items: Array<{
+      id: string;
+      status: string;
+      ownerUserId: string | null;
+      product: string;
+      route: string;
+      locale: string;
+      createdAt: string;
+      windowRemainingMs: number | null;
+      callStatus: string | null;
+      crmContactId: string | null;
+    }>;
+  }> {
+    const q = new URLSearchParams();
+    if (params?.status) q.set('status', params.status);
+    if (params?.ownerUserId) q.set('ownerUserId', params.ownerUserId);
+    if (params?.product) q.set('product', params.product);
+    const qs = q.toString();
+    return this.request(`/admin/whatsapp/leads${qs ? `?${qs}` : ''}`, z.unknown()) as Promise<{
+      items: Array<{
+        id: string;
+        status: string;
+        ownerUserId: string | null;
+        product: string;
+        route: string;
+        locale: string;
+        createdAt: string;
+        windowRemainingMs: number | null;
+        callStatus: string | null;
+        crmContactId: string | null;
+      }>;
+    }>;
+  }
+  assignWhatsAppLead(id: string, ownerUserId?: string): Promise<unknown> {
+    return this.request(`/admin/whatsapp/leads/${encodeURIComponent(id)}/assign`, z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify(ownerUserId ? { ownerUserId } : {}),
+    });
+  }
+  decideWhatsAppCall(
+    id: string,
+    body: {
+      action: 'confirm' | 'offer' | 'cancel' | 'done' | 'no_show';
+      requestedSlot?: string;
+      offeredSlot?: string;
+      callLanguage?: string;
+    },
+  ): Promise<unknown> {
+    return this.request(`/admin/whatsapp/leads/${encodeURIComponent(id)}/call`, z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+  translateWhatsAppAssist(body: {
+    text: string;
+    locale: string;
+    direction?: 'to_customer' | 'to_italian';
+  }): Promise<{ translation: string; machineTranslated: true; locale: string }> {
+    return this.request('/admin/whatsapp/leads/translate', z.object({
+      translation: z.string(),
+      machineTranslated: z.literal(true),
+      locale: z.string(),
+    }), {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+  closeWhatsAppLead(id: string, reason: string): Promise<unknown> {
+    return this.request(`/admin/whatsapp/leads/${encodeURIComponent(id)}/close`, z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  }
+  getWhatsAppLead(id: string): Promise<unknown> {
+    return this.request(`/admin/whatsapp/leads/${encodeURIComponent(id)}`, z.unknown());
+  }
+  whatsappLeadForContact(contactId: string): Promise<{ leadId: string | null }> {
+    return this.request(
+      `/admin/whatsapp/leads/by-contact/${encodeURIComponent(contactId)}`,
+      z.object({ leadId: z.string().nullable() }),
+    );
+  }
+
   /* EC-19 / EC WhatsApp inbound (read-only) */
   listWhatsAppInbound(params?: {
     window?: 'open' | 'closed';

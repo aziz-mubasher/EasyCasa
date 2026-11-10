@@ -25,6 +25,8 @@ function cfg(overrides: Record<string, unknown> = {}) {
     WA_INBOUND_EMAIL_FORWARD: false,
     WA_INTAKE_ENABLED: false,
     WA_INTAKE_SUMMARY_ENABLED: false,
+    WA_CONSULTANT_REPLY_ENABLED: false,
+    WA_CALL_REQUESTS_ENABLED: false,
     ADMIN_PUBLIC_URL: 'https://admin.easycasaita.com',
     WA_HANDLE_SECRET: 'test-wa-handle-secret-xx',
     ...overrides,

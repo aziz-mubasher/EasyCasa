@@ -53,6 +53,23 @@ const Schema = z
     WA_INTAKE_ENABLED: bool(false),
     /** EC-WA-INTAKE-1 internal summary. Default off. Never sends WhatsApp. */
     WA_INTAKE_SUMMARY_ENABLED: bool(false),
+    /** EC-WA-INTAKE-2. Default off. Unset means delete nothing. */
+    WA_INTAKE_RETENTION_DAYS: z
+      .string()
+      .optional()
+      .transform((value) => {
+        if (value == null || value.trim() === '') return null;
+        const parsed = Number(value);
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+      }),
+    WA_CONSULTANT_REPLY_ENABLED: bool(false),
+    WA_TRANSLATE_ASSIST_ENABLED: bool(false),
+    WA_CALL_REQUESTS_ENABLED: bool(false),
+    WA_LEAD_ASSIGN_ALERT_MIN: z.coerce.number().int().positive().default(120),
+    WA_LEAD_WINDOW_ALERT_H: z.coerce.number().int().positive().default(20),
+    /** Comma-separated. Empty: the alert sweep sends nothing. AZM fills this. */
+    WA_LEAD_ALERT_RECIPIENTS: z.string().default(''),
+    STAFFED_CALL_LOCALES: z.string().default('it,en,es'),
     /** EC-19 — base URL for admin SPA links in inbound alerts. */
     ADMIN_PUBLIC_URL: z.string().default('https://admin.easycasaita.com'),
     /**

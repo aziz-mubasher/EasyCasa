@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { DRIZZLE } from '../../db/db.module';
 import type { Db } from '../../db/drizzle';
-import { users, waContacts, waInboundMessages, waThreadNotes, waThreadOutbound } from '../../db/schema';
+import { users, waCallRequests, waContacts, waInboundMessages, waIntakeLeads, waThreadNotes, waThreadOutbound } from '../../db/schema';
+import { toWaId } from '../../whatsapp/phone';
 import type {
   CollectedData,
   ErasureOutcome,
@@ -26,7 +27,7 @@ export class WaInboundDataSource implements PersonalDataSource {
       .from(users)
       .where(eq(users.id, subjectId))
       .limit(1);
-    return rows[0]?.phoneE164 ?? null;
+    return storedPhoneToWaId(rows[0]?.phoneE164 ?? null);
   }
 
   async collect(subjectId: string): Promise<CollectedData> {
@@ -50,12 +51,28 @@ export class WaInboundDataSource implements PersonalDataSource {
       .select({
         providerMessageId: waThreadOutbound.providerMessageId,
         body: waThreadOutbound.body,
+        originalBody: waThreadOutbound.originalBody,
+        machineTranslated: waThreadOutbound.machineTranslated,
+        templateName: waThreadOutbound.templateName,
         source: waThreadOutbound.source,
         sentAt: waThreadOutbound.sentAt,
       })
       .from(waThreadOutbound)
       .where(eq(waThreadOutbound.waId, waId))
       .orderBy(waThreadOutbound.sentAt);
+
+    const leads = await this.db
+      .select()
+      .from(waIntakeLeads)
+      .where(eq(waIntakeLeads.waId, waId))
+      .orderBy(waIntakeLeads.createdAt);
+    const calls = leads.length
+      ? await this.db
+          .select()
+          .from(waCallRequests)
+          .where(eq(waCallRequests.leadId, leads[0]!.id))
+          .orderBy(waCallRequests.createdAt)
+      : [];
 
     return {
       source: this.source,
@@ -75,6 +92,25 @@ export class WaInboundDataSource implements PersonalDataSource {
           body: r.body,
           source: r.source,
           sent_at: r.sentAt.toISOString(),
+          original_body: r.originalBody,
+          machine_translated: r.machineTranslated,
+          template_name: r.templateName,
+        })),
+        ...leads.map((r) => ({
+          direction: 'intake',
+          id: r.id,
+          route: r.route,
+          locale: r.locale,
+          status: r.status,
+          answers: r.answers,
+          summary: r.summary,
+        })),
+        ...calls.map((r) => ({
+          direction: 'call_request',
+          id: r.id,
+          status: r.status,
+          customer_preference: r.customerPreference,
+          call_language: r.callLanguage,
         })),
       ],
     };
@@ -101,10 +137,39 @@ export class WaInboundDataSource implements PersonalDataSource {
       .delete(waInboundMessages)
       .where(eq(waInboundMessages.waId, waId))
       .returning({ id: waInboundMessages.id });
+    const deletedCalls = await this.db
+      .delete(waCallRequests)
+      .where(sql`${waCallRequests.leadId} in (select id from wa_intake_leads where wa_id = ${waId})`)
+      .returning({ id: waCallRequests.id });
+    const deletedLeads = await this.db
+      .delete(waIntakeLeads)
+      .where(eq(waIntakeLeads.waId, waId))
+      .returning({ id: waIntakeLeads.id });
     return {
       source: this.source,
-      erased: deletedIn.length + deletedOut.length + deletedNotes.length + deletedContacts.length,
+      erased:
+        deletedIn.length +
+        deletedOut.length +
+        deletedNotes.length +
+        deletedContacts.length +
+        deletedCalls.length +
+        deletedLeads.length,
       retainedUnderLegalHold: 0,
     };
   }
+}
+
+/**
+ * users.phone_e164 is written by phone-verify as toWaId() output (digits, no '+').
+ * A raw landline still has the trunk zero (`02…`). Always pass through toWaId.
+ * Do not fold this into normalizePhoneE164.
+ */
+export function storedPhoneToWaId(phoneE164: string | null | undefined): string | null {
+  if (!phoneE164) return null;
+  const trimmed = phoneE164.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith('+') || trimmed.startsWith('00') || trimmed.startsWith('0')) {
+    return toWaId(trimmed);
+  }
+  return toWaId(`+${trimmed}`);
 }

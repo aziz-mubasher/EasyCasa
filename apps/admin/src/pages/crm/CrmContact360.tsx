@@ -36,6 +36,10 @@ export function CrmContact360({
     queryKey: ['crm', 'contact', contactId],
     queryFn: () => api.crmGetContact(contactId),
   });
+  const leadLink = useQuery({
+    queryKey: ['whatsapp', 'lead-for-contact', contactId],
+    queryFn: () => api.whatsappLeadForContact(contactId),
+  });
 
   const schedule = useMutation({
     mutationFn: () => {
@@ -77,6 +81,11 @@ export function CrmContact360({
 
   return (
     <section className="crm-360">
+      {leadLink.data?.leadId ? (
+        <p>
+          <a href={`#whatsapp/leads/${leadLink.data.leadId}`}>WhatsApp lead</a>
+        </p>
+      ) : null}
       <button type="button" className="btn btn--sm" onClick={onBack}>
         ← Contacts
       </button>
