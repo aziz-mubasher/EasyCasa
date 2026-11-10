@@ -60,7 +60,12 @@ const Schema = z
     WA_CALL_REQUESTS_ENABLED: bool(false),
     WA_LEAD_ASSIGN_ALERT_MIN: z.coerce.number().int().positive().default(120),
     WA_LEAD_WINDOW_ALERT_H: z.coerce.number().int().positive().default(20),
-    /** Comma-separated. Empty: the alert sweep sends nothing. AZM fills this. */
+    /**
+     * EC-WA-ALERTS-1. Default off. When on, the roster decides who is emailed.
+     * An empty roster falls back to WA_LEAD_ALERT_RECIPIENTS.
+     */
+    WA_LEAD_ALERTS_ENABLED: bool(false),
+    /** Comma-separated fallback when the roster is empty. Empty means no email. */
     WA_LEAD_ALERT_RECIPIENTS: z.string().default(''),
     STAFFED_CALL_LOCALES: z.string().default('it,en,es'),
     /**

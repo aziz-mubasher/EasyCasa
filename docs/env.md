@@ -55,7 +55,8 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WA_INTAKE_RETENTION_DAYS | api | Hard-delete `wa_intake_leads` and their `wa_call_requests` after this many days. Default `30` (AZM, 10 Nov 2026). Inbound messages stay on `WA_INBOUND_RETENTION_DAYS`. |
 | WA_LEAD_ASSIGN_ALERT_MIN | api | Working minutes (Europe/Rome) a lead may stay `new` before an ops alert. Default `120`. |
 | WA_LEAD_WINDOW_ALERT_H | api | Clock hours after assign with no outbound before an ops alert. Default `20`. |
-| WA_LEAD_ALERT_RECIPIENTS | api | Unset. Empty means no alert is sent. AZM fills it. |
+| WA_LEAD_ALERTS_ENABLED | api | Default off. On: roster emails, in-admin alerts, 06:00–22:00 Europe/Rome. |
+| WA_LEAD_ALERT_RECIPIENTS | api | Fallback only when the alert roster is empty. Empty means no email. |
 | STAFFED_CALL_LOCALES | api | Call languages the desk can confirm. Default `it,en,es`. The other intake locales show the call-language note. |
 | ADMIN_PUBLIC_URL | api | EC-19 base URL for inbound alert links (default `https://admin.easycasaita.com`). |
 | WA_HANDLE_SECRET | api | EC-19a HMAC secret for opaque `wa_handle` routing (min 16). **Required at boot** — no silent fallback. Rotation breaks open `#whatsapp/<handle>` deep-links only — re-open from the list (do not blame the viewer). **Log every rotation** in the table below. |

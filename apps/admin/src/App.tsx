@@ -23,6 +23,7 @@ import { WhatsAppChannel } from './pages/WhatsAppChannel';
 import { AsteAdmin } from './pages/AsteAdmin';
 import { CrmShell } from './pages/crm/CrmShell';
 import { Analytics } from './pages/Analytics';
+import { WhatsAppPresence } from './pages/WhatsAppPresence';
 
 type View =
   | 'credentials'
@@ -181,6 +182,7 @@ export function App() {
     return 'credentials';
   })();
   const [view, setView] = useState<View>(initialView);
+  const [alertCount, setAlertCount] = useState(0);
 
   const activeView = allowedNav.some((n) => n.key === view)
     ? view
@@ -229,11 +231,14 @@ export function App() {
                 onClick={() => go(n.key)}
               >
                 <span className="nav-item__label">{n.label}</span>
-                <span className="nav-item__hint">{n.hint}</span>
+                <span className="nav-item__hint">
+                  {n.key === 'whatsapp' && alertCount > 0 ? `${alertCount} new` : n.hint}
+                </span>
               </button>
             ))}
           </nav>
           <div className="sidebar__foot">
+            {isAuthenticated ? <WhatsAppPresence onCount={setAlertCount} /> : null}
             <BuildMarker />
           </div>
         </aside>

@@ -14,6 +14,8 @@ import { WhatsAppInboundAdminService } from './whatsapp-inbound-admin.service';
 import { WhatsAppInboundService } from './whatsapp-inbound.service';
 import { WhatsAppJourneyService } from './whatsapp-journey.service';
 import { WhatsAppIntakeService } from './whatsapp-intake.service';
+import { WhatsAppLeadAlertService } from './whatsapp-lead-alert.service';
+import { WaPresenceService } from './wa-presence';
 import { WhatsAppMessagesStore } from './whatsapp-messages.store';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppUnmatchedSendersGauge } from './whatsapp-unmatched-senders.gauge';
@@ -39,6 +41,8 @@ import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
     WhatsAppInboundAdminService,
     WhatsAppJourneyService,
     WhatsAppIntakeService,
+    WhatsAppLeadAlertService,
+    WaPresenceService,
     WhatsAppHubService,
     WhatsAppService,
     WhatsAppUnmatchedSendersGauge,

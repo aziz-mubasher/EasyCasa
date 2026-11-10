@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { useAuth } from '../auth/AuthProvider';
+import { adminRolesFromAccessToken } from '../auth/roles';
 import { useApi } from '../api';
 
 type LeadRow = {
@@ -12,6 +14,7 @@ type LeadRow = {
   locale: string;
   createdAt: string;
   windowRemainingMs: number | null;
+  needsFollowUp?: boolean;
   callStatus: string | null;
 };
 
@@ -48,8 +51,26 @@ function windowLabel(ms: number | null): string {
   return `${hours}h ${minutes}m`;
 }
 
+const DAYS = [
+  [1, 'Mon'],
+  [2, 'Tue'],
+  [3, 'Wed'],
+  [4, 'Thu'],
+  [5, 'Fri'],
+  [6, 'Sat'],
+  [7, 'Sun'],
+] as const;
+
+function clockToMin(value: string): number {
+  const [hour = 0, minute = 0] = value.split(':').map((part) => Number(part));
+  if (!Number.isFinite(hour) || !Number.isFinite(minute)) return 0;
+  return hour * 60 + minute;
+}
+
 export function WhatsAppLeads() {
   const api = useApi();
+  const { accessToken } = useAuth();
+  const superadmin = adminRolesFromAccessToken(accessToken).includes('superadmin');
   const qc = useQueryClient();
   const [status, setStatus] = useState('');
   const [reason, setReason] = useState('completed');
@@ -79,7 +100,37 @@ export function WhatsAppLeads() {
     queryFn: () => api.getWhatsAppLead(selected!) as Promise<LeadDetail>,
   });
 
+  const alertStatus = useQuery({
+    queryKey: ['whatsapp', 'alert-status'],
+    queryFn: () => api.whatsAppAlertStatus(),
+  });
+  const roster = useQuery({
+    queryKey: ['whatsapp', 'roster'],
+    enabled: superadmin,
+    queryFn: () => api.listWhatsAppRoster(),
+  });
+  const [rosterUser, setRosterUser] = useState('');
+  const [rosterRole, setRosterRole] = useState('primary');
+  const [rosterDays, setRosterDays] = useState<number[]>([1, 2, 3, 4, 5]);
+  const [rosterStart, setRosterStart] = useState('09:00');
+  const [rosterEnd, setRosterEnd] = useState('18:00');
+  const [rosterEmail, setRosterEmail] = useState('');
+  const [rosterActive, setRosterActive] = useState(true);
+  const saveRoster = useMutation({
+    mutationFn: () =>
+      api.saveWhatsAppRoster(rosterUser.trim(), {
+        role: rosterRole,
+        days: rosterDays,
+        startMin: clockToMin(rosterStart),
+        endMin: clockToMin(rosterEnd),
+        email: rosterEmail.trim(),
+        active: rosterActive,
+      }),
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ['whatsapp', 'roster'] }),
+  });
+
   const rows = (list.data?.items ?? []) as LeadRow[];
+  const measures = alertStatus.data?.measures;
   const lead = detail.data;
 
   const assign = useMutation({
@@ -249,6 +300,16 @@ export function WhatsAppLeads() {
   return (
     <section className="ecwa-hub">
       <h2>Leads</h2>
+      {alertStatus.data?.nobodyReceives ? (
+        <p className="banner banner--danger">Nobody receives lead alerts.</p>
+      ) : null}
+      {measures ? (
+        <p className="muted">
+          30 days · assign {measures.meanAssignMin ?? '—'} min · first reply {measures.meanFirstReplyMin ?? '—'} min · inside window{' '}
+          {measures.answeredInsideWindowPct ?? '—'}% · alerts/lead {measures.alertsPerLead ?? '—'}
+          {measures.alertsPerLead != null && measures.alertsPerLead > 2 ? ' · roster hours look wrong' : ''}
+        </p>
+      ) : null}
       <form
         className="ecwa-hub__filters"
         onSubmit={(e) => {
@@ -293,7 +354,7 @@ export function WhatsAppLeads() {
                     window.location.hash = `whatsapp/leads/${row.id}`;
                   }}
                 >
-                  {row.status}
+                  {row.needsFollowUp ? 'Needs follow-up template' : row.status}
                 </button>
               </td>
               <td className="mono">{row.ownerUserId ?? '—'}</td>
@@ -308,6 +369,52 @@ export function WhatsAppLeads() {
         </tbody>
       </table>
       {rows.length === 0 ? <p className="muted">No leads.</p> : null}
+      {superadmin ? (
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (rosterUser.trim() && rosterEmail.trim() && rosterDays.length > 0) saveRoster.mutate();
+          }}
+        >
+          <h3>Alert roster</h3>
+          <p className="muted">Email only. A phone number is not collected. Saturday is a normal day on this form.</p>
+          <input value={rosterUser} onChange={(event) => setRosterUser(event.target.value)} placeholder="Admin user id" />
+          <select value={rosterRole} onChange={(event) => setRosterRole(event.target.value)}>
+            <option value="primary">primary</option>
+            <option value="backup">backup</option>
+            <option value="owner">owner</option>
+          </select>
+          {DAYS.map(([day, label]) => (
+            <label key={day}>
+              <input
+                type="checkbox"
+                checked={rosterDays.includes(day)}
+                onChange={(event) =>
+                  setRosterDays((current) =>
+                    event.target.checked ? [...current, day].sort() : current.filter((item) => item !== day),
+                  )
+                }
+              />
+              {label}
+            </label>
+          ))}
+          <input type="time" value={rosterStart} onChange={(event) => setRosterStart(event.target.value)} />
+          <input type="time" value={rosterEnd} onChange={(event) => setRosterEnd(event.target.value)} />
+          <input value={rosterEmail} onChange={(event) => setRosterEmail(event.target.value)} placeholder="Email" />
+          <label>
+            <input type="checkbox" checked={rosterActive} onChange={(event) => setRosterActive(event.target.checked)} />
+            Active
+          </label>
+          <button type="submit" className="btn btn--sm" disabled={saveRoster.isPending}>
+            Save roster row
+          </button>
+          {roster.data?.items.map((row) => (
+            <p key={row.userId}>
+              {row.role} · {row.email} · days {row.days.join(',')} · {row.active ? 'on' : 'off'}
+            </p>
+          ))}
+        </form>
+      ) : null}
     </section>
   );
 }

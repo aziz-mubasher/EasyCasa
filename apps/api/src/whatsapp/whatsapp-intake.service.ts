@@ -13,6 +13,7 @@ import { waHandleFor } from './wa-handle';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
 import { WhatsAppClaudeClient } from './whatsapp-claude.client';
 import { WhatsAppJourneyService } from './whatsapp-journey.service';
+import { WhatsAppLeadAlertService } from './whatsapp-lead-alert.service';
 import { LEAD_LINK_WINDOW_MS, PARTIAL_AFTER_MS, corpus, pickerLocales, questionIds, text } from './intake/corpus';
 import templateCorpus from './intake/EC_WA_templates_v1.json';
 import { approvedLanguageCodes, chooseTemplateLocale, reminderDue, workingMinutes } from './intake/rules';
@@ -21,6 +22,7 @@ import { consultantBotAction, emptySession, reduceIntake, type IntakeSession, ty
 import { parseSummary, summaryUserMessage, SUMMARY_SYSTEM, type SummaryInput } from './intake/summary';
 
 const SWEEP_MS = 15 * 60 * 1000;
+const ALERT_MS = 60 * 1000;
 const MEDIA_TYPES = new Set(['image', 'audio', 'video', 'document', 'sticker']);
 
 function toE164(waId: string): string {
@@ -70,6 +72,7 @@ function stageIds(route: string): string[] {
 export class WhatsAppIntakeService implements OnModuleInit, OnModuleDestroy {
   private readonly log = new Logger(WhatsAppIntakeService.name);
   private timer: ReturnType<typeof setInterval> | null = null;
+  private alertTimer: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
@@ -78,11 +81,12 @@ export class WhatsAppIntakeService implements OnModuleInit, OnModuleDestroy {
     private readonly claude: WhatsAppClaudeClient,
     private readonly email: EmailService,
     private readonly journey: WhatsAppJourneyService,
+    private readonly leadAlerts: WhatsAppLeadAlertService,
     @Optional() @Inject(CRM_REPOSITORY) private readonly crm?: CrmRepository,
   ) {}
 
   onModuleInit(): void {
-    if (!this.config.WA_INTAKE_ENABLED && !this.config.WA_CALL_REQUESTS_ENABLED) return;
+    if (this.config.WA_INTAKE_ENABLED || this.config.WA_CALL_REQUESTS_ENABLED) {
     this.timer = setInterval(() => {
       void this.sweepPartial().catch((err: unknown) => {
         this.log.warn(`intake partial sweep failed: ${err instanceof Error ? err.message : 'unknown'}`);
@@ -95,10 +99,20 @@ export class WhatsAppIntakeService implements OnModuleInit, OnModuleDestroy {
       });
     }, SWEEP_MS);
     this.timer.unref?.();
+    }
+    if (this.config.WA_LEAD_ALERTS_ENABLED) {
+      this.alertTimer = setInterval(() => {
+        void this.leadAlerts.sweep().catch((err: unknown) => {
+          this.log.warn(`lead alert ladder failed: ${err instanceof Error ? err.message : 'unknown'}`);
+        });
+      }, ALERT_MS);
+      this.alertTimer.unref?.();
+    }
   }
 
   onModuleDestroy(): void {
     if (this.timer) clearInterval(this.timer);
+    if (this.alertTimer) clearInterval(this.alertTimer);
   }
 
   async handleInboundRow(id: string): Promise<void> {
@@ -389,6 +403,7 @@ export class WhatsAppIntakeService implements OnModuleInit, OnModuleDestroy {
   }
 
   async sweepLeadAlerts(now = new Date()): Promise<number> {
+    if (this.config.WA_LEAD_ALERTS_ENABLED) return 0;
     const recipients = this.config.WA_LEAD_ALERT_RECIPIENTS.split(',').map((item) => item.trim()).filter(Boolean);
     if (recipients.length === 0) return 0;
     const leads = await this.db.select().from(waIntakeLeads).where(sql`${waIntakeLeads.status} in ('new', 'assigned')`);

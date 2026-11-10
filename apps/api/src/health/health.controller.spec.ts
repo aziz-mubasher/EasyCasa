@@ -42,6 +42,7 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     WA_CALL_REQUESTS_ENABLED: false,
     WA_LEAD_ASSIGN_ALERT_MIN: 120,
     WA_LEAD_WINDOW_ALERT_H: 20,
+    WA_LEAD_ALERTS_ENABLED: false,
     WA_LEAD_ALERT_RECIPIENTS: '',
     STAFFED_CALL_LOCALES: 'it,en,es',
     WHATSAPP_WABA_ID: '61588757714987',
