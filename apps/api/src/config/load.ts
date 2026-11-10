@@ -49,6 +49,10 @@ const Schema = z
      * Default false: subject-line alert + admin link only (no bodies).
      */
     WA_INBOUND_EMAIL_FORWARD: bool(false),
+    /** EC-WA-INTAKE-1. Default off: the existing journey script answers. */
+    WA_INTAKE_ENABLED: bool(false),
+    /** EC-WA-INTAKE-1 internal summary. Default off. Never sends WhatsApp. */
+    WA_INTAKE_SUMMARY_ENABLED: bool(false),
     /** EC-19 — base URL for admin SPA links in inbound alerts. */
     ADMIN_PUBLIC_URL: z.string().default('https://admin.easycasaita.com'),
     /**

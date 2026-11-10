@@ -172,6 +172,12 @@ export class WhatsAppJourneyService {
     return updated ?? existing[0];
   }
 
+  /** Phone match is context for this chat. It does not return another lead. */
+  async contactContext(waId: string): Promise<{ userId: string | null; contactType: 'client' | 'lead' }> {
+    const match = await this.matchPortalUser(waId);
+    return { userId: match.userId, contactType: match.isClient ? 'client' : 'lead' };
+  }
+
   private async matchPortalUser(waId: string): Promise<{ userId: string | null; isClient: boolean }> {
     const digits = waId.replace(/\D/g, '');
     if (!digits) return { userId: null, isClient: false };

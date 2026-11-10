@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { and, asc, desc, eq, sql, type SQL } from 'drizzle-orm';
@@ -12,7 +13,7 @@ import { InjectConfig } from '../config/inject-config.decorator';
 import { AdminAuditService } from '../authority/admin-audit.service';
 import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
-import { adminAuditLog, waInboundMessages, waThreadNotes, waThreadOutbound } from '../db/schema';
+import { adminAuditLog, waInboundMessages, waIntakeLeads, waThreadNotes, waThreadOutbound } from '../db/schema';
 import { maskWaId, redactPreview } from './redact';
 import { waHandleFor } from './wa-handle';
 import { toE164 } from './whatsapp-inbound.service';
@@ -103,6 +104,8 @@ function asRows<T>(result: unknown): T[] {
  */
 @Injectable()
 export class WhatsAppInboundAdminService {
+  private readonly log = new Logger(WhatsAppInboundAdminService.name);
+
   constructor(
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly audit: AdminAuditService,
@@ -402,7 +405,7 @@ export class WhatsAppInboundAdminService {
       forwardedAt: string | null;
       forwardError: string | null;
       createdAt: string | null;
-      source: 'auto_ack' | 'operator' | 'journey' | null;
+      source: 'auto_ack' | 'operator' | 'journey' | 'intake' | null;
       actorUserId: string | null;
     };
 
@@ -443,7 +446,9 @@ export class WhatsAppInboundAdminService {
           ? ('operator' as const)
           : r.source === 'journey'
             ? ('journey' as const)
-            : ('auto_ack' as const),
+            : r.source === 'intake'
+              ? ('intake' as const)
+              : ('auto_ack' as const),
       actorUserId: r.actorUserId,
     }));
 
@@ -455,6 +460,7 @@ export class WhatsAppInboundAdminService {
 
     const contact = await this.journey.getByWaId(waId);
     const crmFullName = await this.journey.crmFormName(waId);
+    const intake = await this.latestIntake(waId);
 
     return {
       waHandle: handle,
@@ -473,12 +479,48 @@ export class WhatsAppInboundAdminService {
       blocked: Boolean(contact?.blockedAt),
       crmContactId: contact?.crmContactId ?? null,
       matchedUserId: contact?.matchedUserId ?? null,
+      intake,
       auditId,
       messagesRevealed: page.length + outbound.length,
       items,
       /** @deprecated keep for older clients — same as items filtered to inbound */
       nextCursor,
     };
+  }
+
+  /** Null when migration 0077 has not been applied yet, so the existing viewer still opens. */
+  private async latestIntake(waId: string) {
+    try {
+      const intakeRows = await this.db
+        .select()
+        .from(waIntakeLeads)
+        .where(eq(waIntakeLeads.waId, waId))
+        .orderBy(desc(waIntakeLeads.createdAt))
+        .limit(1);
+      const row = intakeRows[0];
+      if (!row) return null;
+      return {
+        id: row.id,
+        route: row.route,
+        locale: row.locale,
+        status: row.status,
+        product: row.product,
+        contactPref: row.contactPref,
+        bookingStatus: row.bookingStatus,
+        answers: row.answers,
+        media: row.media,
+        summary: row.summary,
+        summaryStatus: row.summaryStatus,
+        disclosureSentAt: row.disclosureSentAt?.toISOString() ?? null,
+        createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+      };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '';
+      if (!message.includes('wa_intake_leads')) throw err;
+      this.log.warn('intake lookup skipped: wa_intake_leads is not migrated');
+      return null;
+    }
   }
 
   async listNotes(handle: string) {

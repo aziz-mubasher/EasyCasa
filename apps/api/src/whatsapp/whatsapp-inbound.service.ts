@@ -15,6 +15,7 @@ import {
 } from '../observability/metrics';
 import { waHandleFor } from './wa-handle';
 import { WhatsAppJourneyService } from './whatsapp-journey.service';
+import { WhatsAppIntakeService } from './whatsapp-intake.service';
 
 const WINDOW_MS = 24 * 60 * 60 * 1000;
 
@@ -50,6 +51,7 @@ export class WhatsAppInboundService {
     private readonly email: EmailService,
     @InjectConfig() private readonly config: ApiConfig,
     private readonly journey: WhatsAppJourneyService,
+    private readonly intake?: WhatsAppIntakeService,
   ) {}
 
   /** Insert new messages; return internal ids that need post-response handling. */
@@ -108,6 +110,8 @@ export class WhatsAppInboundService {
       whatsappAutoReplySuppressed.inc({ reason: 'stop_word' });
     } else if (row.windowExpiresAt.getTime() <= Date.now()) {
       whatsappAutoReplySuppressed.inc({ reason: 'window_closed' });
+    } else if (this.config.WA_INTAKE_ENABLED && this.intake) {
+      await this.intake.handleInboundRow(id);
     } else {
       await this.journey.handleInboundRow(id);
     }
