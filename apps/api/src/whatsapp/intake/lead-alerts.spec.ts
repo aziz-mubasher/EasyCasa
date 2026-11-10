@@ -187,13 +187,19 @@ describe('lead alert ladder', () => {
   });
 });
 
-describe('24-hour detail email', () => {
+describe('lead detail email', () => {
   const until = '2026-11-11T12:52:00+01:00';
 
-  it('is on only until the deadline', () => {
+  it('stays on while the mailbox is set and no deadline is configured', () => {
+    expect(detailAlertActive('lead-alerts@example.com', '', new Date('2026-11-12T12:00:00+01:00'))).toBe(true);
+    expect(detailAlertActive('lead-alerts@example.com', '   ', new Date('2026-11-12T12:00:00+01:00'))).toBe(true);
+  });
+
+  it('stops at a configured deadline', () => {
     expect(detailAlertActive('lead-alerts@example.com', until, new Date('2026-11-10T12:00:00+01:00'))).toBe(true);
     expect(detailAlertActive('lead-alerts@example.com', until, new Date('2026-11-11T12:52:00+01:00'))).toBe(false);
     expect(detailAlertActive('', until, new Date('2026-11-10T12:00:00+01:00'))).toBe(false);
+    expect(detailAlertActive('lead-alerts@example.com', 'not-a-date', new Date('2026-11-10T12:00:00+01:00'))).toBe(false);
   });
 
   it('includes the answers and the WhatsApp number', () => {
