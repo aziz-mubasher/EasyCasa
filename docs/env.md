@@ -47,6 +47,8 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WHATSAPP_INBOUND_OPS_EMAIL | api | EC-17/19 ops alert target. Empty → `AGENCY_PUBLIC_EMAIL`. |
 | WA_INBOUND_RETENTION_DAYS | api | EC-17 hard-delete window for `wa_inbound_messages` (default `90`). **COUNSEL TO CONFIRM.** |
 | WA_INBOUND_EMAIL_FORWARD | api | EC-19. `true` → legacy body-bearing ops email. Default `false` → subject-line alert + admin link only (no bodies). |
+| WA_INTAKE_ENABLED | api | EC-WA-INTAKE-1 scripted intake. Default `false` — the existing journey answers. |
+| WA_INTAKE_SUMMARY_ENABLED | api | EC-WA-INTAKE-1 internal consultant summary (Anthropic, already used by the desk). Default `false`. The summary module cannot send WhatsApp. |
 | ADMIN_PUBLIC_URL | api | EC-19 base URL for inbound alert links (default `https://admin.easycasaita.com`). |
 | WA_HANDLE_SECRET | api | EC-19a HMAC secret for opaque `wa_handle` routing (min 16). **Required at boot** — no silent fallback. Rotation breaks open `#whatsapp/<handle>` deep-links only — re-open from the list (do not blame the viewer). **Log every rotation** in the table below. |
 | WHATSAPP_VIEWING_*_TEMPLATE / WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE | api | K EC 8.7 Phase C utility templates. Empty name → skip that WhatsApp channel (email/in-app still run). |

@@ -712,6 +712,8 @@ export const waContacts = pgTable(
     journeyStep: text('journey_step').notNull().default('none'),
     contactType: text('contact_type').notNull().default('lead'),
     blockedAt: timestamp('blocked_at', { withTimezone: true }),
+    /** EC-WA-INTAKE-1 in-progress script. Null when intake is off or finished. */
+    intakeState: jsonb('intake_state'),
     crmContactId: uuid('crm_contact_id'),
     matchedUserId: uuid('matched_user_id'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -719,6 +721,34 @@ export const waContacts = pgTable(
   },
   (t) => ({
     handleIdx: index('wa_contacts_handle_idx').on(t.waHandle),
+  }),
+);
+
+/** EC-WA-INTAKE-1 — one prepared lead handed to a consultant. No licence_state column (EC-AYNI-1 is not in this repo). */
+export const waIntakeLeads = pgTable(
+  'wa_intake_leads',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    waId: text('wa_id').notNull(),
+    venture: text('venture').notNull().default('easycasa'),
+    product: text('product').notNull(),
+    route: text('route').notNull(),
+    locale: text('locale').notNull(),
+    answers: jsonb('answers').notNull(),
+    media: jsonb('media').notNull().default([]),
+    status: text('status').notNull(),
+    contactPref: text('contact_pref'),
+    bookingRequestId: uuid('booking_request_id'),
+    bookingStatus: text('booking_status'),
+    disclosureSentAt: timestamp('disclosure_sent_at', { withTimezone: true }),
+    summary: jsonb('summary'),
+    summaryStatus: text('summary_status'),
+    previousLeadId: uuid('previous_lead_id'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    waCreatedIdx: index('wa_intake_leads_wa_created_idx').on(t.waId, t.createdAt),
   }),
 );
 
@@ -1625,7 +1655,7 @@ export const schema = {
   properties, documentAssets, serviceCatalogItems, servicePackages, packageItems,
   serviceOrders, serviceOrderLines, mandates,
   professionals, credentials, serviceTasks, assignments, credentialPolicies, serviceDemandLog,
-  authorityAuditLog, phoneOtpChallenges, whatsappMessages, waContacts, waCannedReplies,
+  authorityAuditLog, phoneOtpChallenges, whatsappMessages, waContacts, waIntakeLeads, waCannedReplies,
   waThreadNotes, adminAuditLog,
   dsarAdminRequests, listingReports, identityReviewRequests,
   leases, kycCases,

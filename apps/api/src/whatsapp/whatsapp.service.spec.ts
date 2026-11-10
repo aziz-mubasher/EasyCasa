@@ -23,6 +23,8 @@ function cfg(overrides: Record<string, unknown> = {}) {
     WHATSAPP_INBOUND_OPS_EMAIL: 'ops@easycasaita.com',
     AGENCY_PUBLIC_EMAIL: 'info@easycasaita.com',
     WA_INBOUND_EMAIL_FORWARD: false,
+    WA_INTAKE_ENABLED: false,
+    WA_INTAKE_SUMMARY_ENABLED: false,
     ADMIN_PUBLIC_URL: 'https://admin.easycasaita.com',
     WA_HANDLE_SECRET: 'test-wa-handle-secret-xx',
     ...overrides,

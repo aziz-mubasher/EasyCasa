@@ -34,6 +34,8 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     WHATSAPP_INBOUND_OPS_EMAIL: '',
     WA_INBOUND_RETENTION_DAYS: 90,
     WA_INBOUND_EMAIL_FORWARD: false,
+    WA_INTAKE_ENABLED: false,
+    WA_INTAKE_SUMMARY_ENABLED: false,
     ADMIN_PUBLIC_URL: 'https://admin.easycasaita.com',
     WA_HANDLE_SECRET: 'test-wa-handle-secret-xx',
     WHATSAPP_VIEWING_REMINDER_24H_TEMPLATE: '',

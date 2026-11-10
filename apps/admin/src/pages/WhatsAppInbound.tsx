@@ -76,7 +76,7 @@ const TimelineItemSchema = z.object({
   forwardedAt: z.string().nullable(),
   forwardError: z.string().nullable(),
   createdAt: z.string().nullable(),
-  source: z.enum(['auto_ack', 'operator', 'journey']).nullable(),
+  source: z.enum(['auto_ack', 'operator', 'journey', 'intake']).nullable(),
   actorUserId: z.string().nullable(),
 });
 
@@ -98,6 +98,25 @@ const DetailSchema = z.object({
   windowRemainingMs: z.number(),
   auditId: z.string(),
   messagesRevealed: z.number(),
+  intake: z
+    .object({
+      id: z.string(),
+      route: z.string(),
+      locale: z.string(),
+      status: z.string(),
+      product: z.string(),
+      contactPref: z.string().nullable(),
+      bookingStatus: z.string().nullable(),
+      answers: z.unknown(),
+      media: z.unknown(),
+      summary: z.unknown().nullable(),
+      summaryStatus: z.string().nullable(),
+      disclosureSentAt: z.string().nullable(),
+      createdAt: z.string(),
+      updatedAt: z.string(),
+    })
+    .nullable()
+    .optional(),
   items: z.array(TimelineItemSchema),
   nextCursor: z.string().nullable(),
 });
@@ -539,6 +558,24 @@ export function WhatsAppInbound() {
                   {head.blocked ? ' · blocked' : ''}
                   {head.crmContactId ? ' · CRM linked' : ''}
                 </p>
+              ) : null}
+              {head?.intake ? (
+                <section className="ecwa__pad">
+                  <p>
+                    <strong>{head.intake.route}</strong>
+                    {' · '}
+                    {head.intake.locale}
+                    {' · '}
+                    {head.intake.status}
+                    {head.intake.contactPref ? ` · ${head.intake.contactPref}` : ''}
+                    {head.intake.bookingStatus ? ` · ${head.intake.bookingStatus}` : ''}
+                  </p>
+                  <pre className="mono">{JSON.stringify(head.intake.answers, null, 2)}</pre>
+                  {head.intake.summaryStatus ? <p className="muted">Summary: {head.intake.summaryStatus}</p> : null}
+                  {head.intake.summary ? (
+                    <pre className="mono">{JSON.stringify(head.intake.summary, null, 2)}</pre>
+                  ) : null}
+                </section>
               ) : null}
 
               <div
