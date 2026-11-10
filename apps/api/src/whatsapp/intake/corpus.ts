@@ -11,23 +11,23 @@ export const LEAD_LINK_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
  * Locales a person can actually take a call in. Default from the corpus.
  * Not hardcoded in customer copy — the note string still comes from the corpus.
  */
-export const STAFFED_CALL_LOCALES = ['it', 'en', 'es', 'hi', 'ur', 'pa', 'bn', 'ar'] as const;
+export const STAFFED_CALL_LOCALES = ['it', 'en', 'es'] as const;
 
 /**
  * Shipping gate. A locale is in the picker only when this is true AND
  * `strings.<locale>.review` is `approved` AND every Italian key is present.
- * All false until AZM flips review and this flag together. French cards stay
+ * AZM approved the eight intake locales on 10 Nov 2026. French cards stay
  * in kb-cards.json and stay out of the picker.
  */
 export const LOCALE_SHIPPED: Record<string, boolean> = {
-  it: false,
-  en: false,
-  es: false,
-  hi: false,
-  ur: false,
-  pa: false,
-  bn: false,
-  ar: false,
+  it: true,
+  en: true,
+  es: true,
+  hi: true,
+  ur: true,
+  pa: true,
+  bn: true,
+  ar: true,
   fr: false,
 };
 

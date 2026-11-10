@@ -59,9 +59,11 @@ describe('EC-WA-INTAKE-1 corpus', () => {
     expect(GROUP_DISPLAY_NAME).toBe(corpus.group_display_name);
   });
 
-  it('leaves every locale in draft, so the picker is empty', () => {
-    expect(corpus.locales.every((code) => corpus.strings[code as keyof typeof corpus.strings].review === 'draft')).toBe(true);
-    expect(pickerLocales()).toEqual([]);
+  it('ships the eight locales AZM approved', () => {
+    expect(pickerLocales()).toEqual(['it', 'en', 'es', 'hi', 'ur', 'pa', 'bn', 'ar']);
+    expect(corpus.route_cards_new_locales.pa.review).toBe('approved');
+    expect(corpus.route_cards_new_locales.bn.review).toBe('approved');
+    expect(corpus.route_cards_new_locales.en.review).toBe('reference');
   });
 
   it('keeps French cards and keeps French out of the picker', () => {
@@ -152,7 +154,7 @@ describe('EC-WA-INTAKE-1 flow', () => {
     if (buttons?.type === 'buttons') expect(buttons.buttons.map((button) => button.id)).toEqual(['write']);
   });
 
-  it('offers Hindi a call without a language warning', () => {
+  it('shows Hindi the call button and the language note', () => {
     const at = '2026-11-10T12:00:00.000Z';
     const ids = questionIds('route_buy');
     const session = emptySession(at);
@@ -164,7 +166,7 @@ describe('EC-WA-INTAKE-1 flow', () => {
     expect(buttons?.type).toBe('buttons');
     if (buttons?.type === 'buttons') {
       expect(buttons.buttons.map((button) => button.id)).toEqual(['call', 'write']);
-      expect(buttons.body).not.toContain(corpus.strings.hi.t['close.call_language_note']);
+      expect(buttons.body).toContain(corpus.strings.hi.t['close.call_language_note']);
     }
   });
 });
@@ -214,5 +216,44 @@ describe('EC-WA-INTAKE-1 fences', () => {
     expect(parsed?.customer_questions).toEqual([]);
     expect(parsed?.summary_it).not.toContain('200000');
     expect(parseSummary('not json', [])).toBeNull();
+  });
+});
+
+describe('legacy journey buttons', () => {
+  const at = '2026-11-10T12:00:00.000Z';
+
+  it.each([
+    ['buy_property', 'route_buy'],
+    ['sell_property', 'route_sell'],
+    ['easy_legenda', 'route_auction'],
+  ] as const)('maps %s onto %s', (button, route) => {
+    const session = emptySession(at);
+    session.locale = 'it';
+    const turn = reduceIntake(session, { kind: 'interactive', interactiveId: button, at });
+    expect(turn.session.route).toBe(route);
+    expect(turn.outbound.length).toBeGreaterThan(0);
+  });
+
+  it.each([
+    ['lang_it', 'it'],
+    ['lang_en', 'en'],
+    ['lang_es', 'es'],
+    ['lang_hi', 'hi'],
+    ['lang_ur', 'ur'],
+    ['lang_pa', 'pa'],
+    ['lang_bn', 'bn'],
+    ['lang_ar', 'ar'],
+  ] as const)('maps %s onto the %s welcome', (button, locale) => {
+    const turn = reduceIntake(null, { kind: 'interactive', interactiveId: button, at });
+    expect(turn.session.locale).toBe(locale);
+    expect(turn.outbound[0]?.type).toBe('list');
+  });
+
+  it('sends the eight-language picker for an unknown button', () => {
+    const turn = reduceIntake(null, { kind: 'interactive', interactiveId: 'book_viewing', at });
+    expect(turn.session.route).toBeNull();
+    const picker = turn.outbound[0];
+    expect(picker?.type).toBe('list');
+    if (picker?.type === 'list') expect(picker.rows.map((row) => row.id)).toEqual(['it', 'en', 'es', 'hi', 'ur', 'pa', 'bn', 'ar']);
   });
 });

@@ -13,11 +13,11 @@ import { waHandleFor } from './wa-handle';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
 import { WhatsAppClaudeClient } from './whatsapp-claude.client';
 import { WhatsAppJourneyService } from './whatsapp-journey.service';
-import { LEAD_LINK_WINDOW_MS, PARTIAL_AFTER_MS, corpus, questionIds, text } from './intake/corpus';
+import { LEAD_LINK_WINDOW_MS, PARTIAL_AFTER_MS, corpus, pickerLocales, questionIds, text } from './intake/corpus';
 import templateCorpus from './intake/EC_WA_templates_v1.json';
 import { approvedLanguageCodes, chooseTemplateLocale, reminderDue, workingMinutes } from './intake/rules';
 import { parseTranslation, translateSystem, translateUser, type TranslateDirection } from './intake/translate-assist';
-import { consultantBotAction, reduceIntake, type IntakeSession, type InboundTurn, type Outbound } from './intake/machine';
+import { consultantBotAction, emptySession, reduceIntake, type IntakeSession, type InboundTurn, type Outbound } from './intake/machine';
 import { parseSummary, summaryUserMessage, SUMMARY_SYSTEM, type SummaryInput } from './intake/summary';
 
 const SWEEP_MS = 15 * 60 * 1000;
@@ -123,6 +123,9 @@ export class WhatsAppIntakeService implements OnModuleInit, OnModuleDestroy {
     if (session && row.receivedAt.getTime() - Date.parse(session.lastCustomerAt) >= PARTIAL_AFTER_MS) {
       await this.writeLead(contact.waId, session, 'partial', null);
       session = null;
+    }
+    if (!session?.locale && contact.language && pickerLocales().includes(contact.language)) {
+      session = { ...(session ?? emptySession(row.receivedAt.toISOString())), locale: contact.language };
     }
     const result = reduceIntake(session, turnFromRow(row));
     const send = await this.sendAll(row.waId, result.outbound);
