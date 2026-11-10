@@ -62,7 +62,7 @@ const Schema = z
     WA_LEAD_WINDOW_ALERT_H: z.coerce.number().int().positive().default(20),
     /** Comma-separated. Empty: the alert sweep sends nothing. AZM fills this. */
     WA_LEAD_ALERT_RECIPIENTS: z.string().default(''),
-    STAFFED_CALL_LOCALES: z.string().default('it,en,es,hi,ur,pa,bn,ar'),
+    STAFFED_CALL_LOCALES: z.string().default('it,en,es'),
     /**
      * WhatsApp Business account used to read template approval.
      * AZM supplied 61588757714987 (node name Easycasaita) on 10 Nov 2026.

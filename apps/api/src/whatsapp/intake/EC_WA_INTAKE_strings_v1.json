@@ -168,7 +168,7 @@
   "answer_max_chars": 1000,
   "strings": {
     "it": {
-      "review": "draft",
+      "review": "approved",
       "urls": {
         "privacy_url": "https://easycasaita.com/it/privacy",
         "legenda_upload_url": "https://legenda.easycasaita.com/it",
@@ -235,7 +235,7 @@
       }
     },
     "en": {
-      "review": "draft",
+      "review": "approved",
       "urls": {
         "privacy_url": "https://easycasaita.com/en/privacy",
         "legenda_upload_url": "https://legenda.easycasaita.com/en",
@@ -302,7 +302,7 @@
       }
     },
     "es": {
-      "review": "draft",
+      "review": "approved",
       "urls": {
         "privacy_url": "https://easycasaita.com/es/privacy",
         "legenda_upload_url": "https://legenda.easycasaita.com/es",
@@ -369,7 +369,7 @@
       }
     },
     "hi": {
-      "review": "draft",
+      "review": "approved",
       "urls": {
         "privacy_url": "https://easycasaita.com/en/privacy",
         "legenda_upload_url": "https://legenda.easycasaita.com/en",
@@ -436,7 +436,7 @@
       }
     },
     "ur": {
-      "review": "draft",
+      "review": "approved",
       "urls": {
         "privacy_url": "https://easycasaita.com/en/privacy",
         "legenda_upload_url": "https://legenda.easycasaita.com/en",
@@ -503,7 +503,7 @@
       }
     },
     "pa": {
-      "review": "draft",
+      "review": "approved",
       "urls": {
         "privacy_url": "https://easycasaita.com/en/privacy",
         "legenda_upload_url": "https://legenda.easycasaita.com/en",
@@ -570,7 +570,7 @@
       }
     },
     "bn": {
-      "review": "draft",
+      "review": "approved",
       "urls": {
         "privacy_url": "https://easycasaita.com/en/privacy",
         "legenda_upload_url": "https://legenda.easycasaita.com/en",
@@ -637,7 +637,7 @@
       }
     },
     "ar": {
-      "review": "draft",
+      "review": "approved",
       "urls": {
         "privacy_url": "https://easycasaita.com/en/privacy",
         "legenda_upload_url": "https://legenda.easycasaita.com/en",
@@ -717,7 +717,7 @@
       }
     },
     "pa": {
-      "review": "draft",
+      "review": "approved",
       "t": {
         "route_buy": "Easy Casa Italia نال خریداری اینج ہوندی اے:\n• ہر اشتہار چھپن توں پہلاں چیک ہوندا اے: مالک دی شناخت تے ملکیت۔\n• منگی گئی قیمت دے نال اوس علاقے لئی Agenzia delle Entrate دی سرکاری قیمت دی حد وکھائی جاندی اے۔ ایہہ اک شائع شدہ ذریعہ اے، قیمت دا اندازہ نئیں۔\n• تلاش، ویچن والے نال رابطہ تے وزٹ بک کرنا مفت اے۔\n• جیہڑے کاغذاں تے تسی دستخط کردے او، اوہ اطالوی، انگریزی یا ہسپانوی وچ سمجھائے جاندے نیں۔\n• ایہہ چیٹ تہاڈے لئی کوئی گھر نئیں چُندی۔\nویب سائٹ:\nhttps://easycasaita.com/en",
         "route_sell": "Easy Casa Italia نال گھر ویچنا:\n• ویب سائٹ تے گھر دا اشتہار مفت اے۔\n• ویچن والے کولوں کوئی کمیشن نئیں۔\n• اختیاری سروساں (تصویراں، توانائی سرٹیفکیٹ، کاغذات دی جانچ) مقررہ قیمت تے، جیہڑی آرڈر توں پہلاں دسی جاندی اے۔\n• اسیں ایس چیٹ وچ تہاڈے گھر دی قیمت نئیں لاندے۔\nویب سائٹ:\nhttps://easycasaita.com/en",
@@ -727,7 +727,7 @@
       }
     },
     "bn": {
-      "review": "draft",
+      "review": "approved",
       "t": {
         "route_buy": "Easy Casa Italia-তে কেনা যেভাবে হয়:\n• প্রতিটি বিজ্ঞাপন প্রকাশের আগে যাচাই করা হয়: মালিকের পরিচয় ও মালিকানা।\n• চাওয়া দামের পাশে সেই এলাকার জন্য Agenzia delle Entrate-র সরকারি দামের সীমা দেখানো হয়। এটি একটি প্রকাশিত উৎস, মূল্যায়ন নয়।\n• খোঁজা, বিক্রেতার সাথে যোগাযোগ এবং পরিদর্শন বুক করা বিনামূল্যে।\n• আপনি যে কাগজে সই করেন তা ইতালীয়, ইংরেজি বা স্প্যানিশ ভাষায় ব্যাখ্যা করা হয়।\n• এই চ্যাট আপনার জন্য কোনো বাড়ি বেছে দেয় না।\nওয়েবসাইট: https://easycasaita.com/en",
         "route_sell": "Easy Casa Italia-তে বাড়ি বিক্রি:\n• ওয়েবসাইটে বাড়ির বিজ্ঞাপন বিনামূল্যে।\n• বিক্রেতার কাছ থেকে কোনো কমিশন নেই।\n• ঐচ্ছিক সেবা (ছবি, এনার্জি সার্টিফিকেট, কাগজপত্র যাচাই) নির্দিষ্ট দামে, যা অর্ডারের আগে দেখানো হয়।\n• এই চ্যাটে আমরা আপনার বাড়ির দাম নির্ধারণ করি না।\nওয়েবসাইট: https://easycasaita.com/en",

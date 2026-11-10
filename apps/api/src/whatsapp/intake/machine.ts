@@ -16,6 +16,24 @@ export { GROUP_DISPLAY_NAME };
 
 const LIVE_OTHER_LANGUAGES = 'Altre lingue · More languages · لغات أخرى';
 
+/** Buttons from the previous journey. A tap must not fall through to silence. */
+const LEGACY_LOCALE: Record<string, string> = {
+  lang_it: 'it',
+  lang_en: 'en',
+  lang_es: 'es',
+  lang_hi: 'hi',
+  lang_ur: 'ur',
+  lang_pa: 'pa',
+  lang_bn: 'bn',
+  lang_ar: 'ar',
+};
+
+const LEGACY_ROUTE: Record<string, string> = {
+  buy_property: 'route_buy',
+  sell_property: 'route_sell',
+  easy_legenda: 'route_auction',
+};
+
 export type Outbound =
   | { type: 'text'; body: string }
   | { type: 'buttons'; body: string; buttons: { id: string; title: string }[] }
@@ -74,6 +92,8 @@ type LanguageHit = { kind: 'picker' } | { kind: 'locale'; code: string } | null;
 function languageHit(turn: InboundTurn): LanguageHit {
   if (turn.kind === 'interactive' && turn.interactiveId) {
     if (turn.interactiveId === 'other_languages') return { kind: 'picker' };
+    const legacy = LEGACY_LOCALE[turn.interactiveId];
+    if (legacy) return { kind: 'locale', code: legacy };
     if (corpus.locales.includes(turn.interactiveId)) return { kind: 'locale', code: turn.interactiveId };
     return null;
   }
@@ -263,6 +283,13 @@ export function reduceIntake(current: IntakeSession | null, turn: InboundTurn, s
     };
   }
 
+  if (turn.kind === 'interactive' && turn.interactiveId && LEGACY_ROUTE[turn.interactiveId]) {
+    const route = LEGACY_ROUTE[turn.interactiveId];
+    if (session.locale && allowed.has(session.locale)) {
+      return { session, outbound: startRoute(session, route), handoff: null, restarted: false };
+    }
+  }
+
   if (!session.locale) {
     const rows = [...allowed];
     const picker = withPickerRows(pickerMessage(), rows);
@@ -273,6 +300,11 @@ export function reduceIntake(current: IntakeSession | null, turn: InboundTurn, s
   if (!session.route || session.cursor < 0) {
     if (turn.kind === 'interactive' && turn.interactiveId && Object.prototype.hasOwnProperty.call(corpus.flows, turn.interactiveId)) {
       return { session, outbound: startRoute(session, turn.interactiveId), handoff: null, restarted: false };
+    }
+    if (turn.kind === 'interactive' && turn.interactiveId) {
+      const rows = [...allowed];
+      const picker = withPickerRows(pickerMessage(), rows);
+      return { session, outbound: rows.length ? [picker] : [], handoff: null, restarted: false };
     }
     return { session, outbound: [welcomeMessage(session.locale)], handoff: null, restarted: false };
   }
