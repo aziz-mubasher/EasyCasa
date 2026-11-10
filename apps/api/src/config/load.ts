@@ -69,7 +69,7 @@ const Schema = z
     WA_LEAD_ALERT_RECIPIENTS: z.string().default(''),
     /**
      * One mailbox for a full lead email, sent as soon as the lead is saved.
-     * Active only while now is before WA_LEAD_DETAIL_ALERT_UNTIL. Both empty: off.
+     * Stays on until the mailbox is cleared. WA_LEAD_DETAIL_ALERT_UNTIL, when set, stops it at that instant.
      */
     WA_LEAD_DETAIL_ALERT_EMAIL: z.string().default(''),
     WA_LEAD_DETAIL_ALERT_UNTIL: z.string().default(''),

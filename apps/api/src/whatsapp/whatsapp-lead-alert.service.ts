@@ -104,7 +104,7 @@ export class WhatsAppLeadAlertService {
     return n;
   }
 
-  /** One email with the lead's answers. Retries until sent or the 24-hour window ends. */
+  /** One email with the lead's answers. The sweep retries leads from the last 10 minutes. */
   async notifyLeadDetail(leadId: string, now = new Date()): Promise<boolean> {
     if (!detailAlertActive(this.config.WA_LEAD_DETAIL_ALERT_EMAIL, this.config.WA_LEAD_DETAIL_ALERT_UNTIL, now)) return false;
     if (this.detailInflight.has(leadId)) return false;

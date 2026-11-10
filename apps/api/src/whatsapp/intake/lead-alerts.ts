@@ -132,11 +132,16 @@ export function auctionDateSet(route: string, answers: unknown): boolean {
   return (answers as Record<string, unknown>).A1 === 'date_set';
 }
 
-/** One detail email, for the clock window AZM set. Empty email or a past instant means off. */
+/**
+ * One detail email while the mailbox is set.
+ * An empty until stays on until the mailbox is cleared. A timestamp stops at that instant.
+ */
 export function detailAlertActive(email: string, untilIso: string, now: Date): boolean {
   if (!email.trim().includes('@')) return false;
-  const until = Date.parse(untilIso);
-  return Number.isFinite(until) && now.getTime() < until;
+  const until = untilIso.trim();
+  if (!until) return true;
+  const parsed = Date.parse(until);
+  return Number.isFinite(parsed) && now.getTime() < parsed;
 }
 
 export function leadDetailMessage(input: {
