@@ -6,6 +6,7 @@ import {
   creditRedirectDraft,
   isCreditAdviceDraft,
   isCreditTopicRefusal,
+  operatorRequestsCreditAdvice,
   parseClaudeJsonObject,
   translateSystemPrompt,
   waAiForbiddenReason,
@@ -26,6 +27,8 @@ describe('waAiForbiddenReason', () => {
       "Operator asks to request clarification, but customer's question is about mutuo (mortgage/credit advice), which is forbidden under T04 rules.";
     expect(isCreditTopicRefusal(reason)).toBe(true);
     expect(waAiForbiddenReason(reason)).toBeNull();
+    expect(operatorRequestsCreditAdvice('what are you looking for?')).toBe(false);
+    expect(operatorRequestsCreditAdvice('Can they get a mortgage while unemployed?')).toBe(true);
     expect(isCreditAdviceDraft(creditRedirectDraft('it'))).toBe(false);
     expect(isCreditAdviceDraft('Sì, puoi prendere un mutuo anche da disoccupato.')).toBe(true);
     expect(creditRedirectDraft('ur')).toContain('EasyCasa');
@@ -58,7 +61,7 @@ describe('compose prompts', () => {
     expect(system).toContain('Urdu');
     expect(system).toContain('T04 row 12');
     expect(system).toContain('sanabilità');
-    expect(system).toContain('is not a refusal');
+    expect(system).toContain('The operator note is the message');
     expect(system).not.toContain('mutuo / credit advice or lender routing');
     expect(system).not.toMatch(/provvigione on conclusion as a feature/i);
 

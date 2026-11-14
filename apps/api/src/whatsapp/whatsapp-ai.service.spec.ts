@@ -89,9 +89,10 @@ describe('WhatsAppAiService', () => {
     expect(user).toContain('Ask for city and price band');
   });
 
-  it('replaces a mutuo refusal with a redirect draft', async () => {
-    const { svc } = makeSvc({
-      complete: vi.fn().mockResolvedValue({
+  it('polishes the operator note when the thread mentions a mortgage', async () => {
+    const complete = vi
+      .fn()
+      .mockResolvedValueOnce({
         ok: true,
         text: JSON.stringify({
           refused: true,
@@ -100,18 +101,47 @@ describe('WhatsAppAiService', () => {
             'Operator asks to request clarification, but customer question is about mutuo (mortgage/credit advice).',
         }),
         model: 'claude-sonnet-4-5',
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: '{"refused":false,"draft":"Che cosa sta cercando?","reason":null}',
+        model: 'claude-sonnet-4-5',
+      });
+    const { svc } = makeSvc({ complete });
+    const result = await svc.compose({
+      handle: 'abc',
+      actorUserId: 'u1',
+      prompt: 'what are you looking for?',
+      locale: 'it',
+    });
+    expect(result.refused).toBe(false);
+    expect(result.reason).toBeNull();
+    expect(result.draft).toBe('Che cosa sta cercando?');
+    expect(result.draft).not.toMatch(/finanziamento|Banks4All/i);
+    expect(complete).toHaveBeenCalledTimes(2);
+  });
+
+  it('uses the financing redirect only when the operator asked for credit advice', async () => {
+    const { svc, complete } = makeSvc({
+      complete: vi.fn().mockResolvedValue({
+        ok: true,
+        text: JSON.stringify({
+          refused: true,
+          draft: null,
+          reason: 'Customer asked about a mortgage.',
+        }),
+        model: 'claude-sonnet-4-5',
       }),
     });
     const result = await svc.compose({
       handle: 'abc',
       actorUserId: 'u1',
-      prompt: 'Ask them to clarify what they need',
+      prompt: 'Tell them if they can get a mortgage while unemployed',
       locale: 'it',
     });
     expect(result.refused).toBe(false);
-    expect(result.reason).toBeNull();
     expect(result.draft).toContain('non valuta il finanziamento');
-    expect(result.draft).not.toMatch(/Banks4All|puoi prendere un mutuo/i);
+    expect(complete).toHaveBeenCalledOnce();
   });
 
   it('replaces an eligibility answer with the redirect', async () => {

@@ -181,35 +181,40 @@ export function WhatsAppOperatorDock({
         </div>
         {aiError ? <p className="error ecwa__composer-error">{aiError}</p> : null}
         <p className="muted ecwa__ai-hint">
-          Review the draft, then Send. Claude never sends on its own. No offers, caparra, or price
-          advice.
+          Draft rewrites your note in {languageName}. Claude never sends on its own. No offers,
+          caparra, or price advice.
         </p>
       </form>
       <form
         className="ecwa__composer"
         onSubmit={(e) => {
           e.preventDefault();
+          if (!canReply || sending) return;
           onSend();
         }}
       >
-        <p className="muted">No price opinion, no lot analysis, nothing about credit or Banks4All.</p>
+        <p className="muted ecwa__window-note">
+          {canReply
+            ? 'This box is the message. Type it yourself, or use a draft, then Send. Open for 24 hours after the customer’s last message.'
+            : '24-hour window is closed, so Send is off. You can still prepare the text. Send turns on for 24 hours after the customer writes again.'}
+        </p>
         <label className="ec-sr-only" htmlFor="ecwa-reply">
           Reply
         </label>
         <textarea
           id="ecwa-reply"
-          className="ecwa__composer-input"
-          rows={2}
+          className="ecwa__composer-input ecwa__reply-input"
+          rows={6}
           maxLength={4096}
           dir={dir}
-          placeholder={canReply ? 'Type a message' : 'Window closed — reply unavailable'}
+          placeholder="Type the message to send. You do not need a draft."
           value={replyText}
-          disabled={!canReply || sending}
+          disabled={sending}
           onChange={(e) => onReplyText(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              onSend();
+              if (canReply && !sending) onSend();
             }
           }}
         />

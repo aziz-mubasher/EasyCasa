@@ -1016,11 +1016,12 @@ select {
 
 .ecwa__ai {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.4rem 0.5rem;
   align-items: end;
   padding: 0.35rem 0 0.15rem;
   border-top: 1px dashed var(--border);
+  min-width: 0;
 }
 
 .ecwa__ai-input {
@@ -1047,16 +1048,26 @@ select {
   border: 0;
   background: transparent;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.5rem;
   align-items: end;
+  min-width: 0;
+}
+
+.ecwa__window-note {
+  grid-column: 1 / -1;
+  margin: 0;
 }
 
 .ecwa__composer-input {
   width: 100%;
-  resize: none;
+  min-width: 0;
+  box-sizing: border-box;
+  resize: vertical;
   min-height: 2.75rem;
-  max-height: 8rem;
+  max-height: 16rem;
+  overflow: auto;
+  overflow-wrap: anywhere;
   padding: 0.65rem 0.8rem;
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -1064,7 +1075,11 @@ select {
   color: var(--text);
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.35;
+  line-height: 1.45;
+}
+
+.ecwa__reply-input {
+  min-height: 8.5rem;
 }
 
 .ecwa__composer-input:disabled {

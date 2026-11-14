@@ -70,6 +70,26 @@ export function creditRedirectDraft(locale: WaAiLocale): string {
   return CREDIT_REDIRECT[locale];
 }
 
+/** The operator's own note asks for an eligibility answer or a lender. */
+const OPERATOR_CREDIT_ASK =
+  /\b(mutuo|mortgage|eligible|eligibility|unemployed|disoccupat\w*|banks4all|lender|financing|pre-approv)\b/i;
+
+export function operatorRequestsCreditAdvice(prompt: string): boolean {
+  return OPERATOR_CREDIT_ASK.test(prompt.trim());
+}
+
+export function composeTranscribeSystemPrompt(locale: WaAiLocale): string {
+  const language = WA_AI_LOCALE_ENGLISH[locale];
+  return [
+    'You rewrite one staff note as the WhatsApp message the customer will read.',
+    'Write it in ' + language + ' (' + locale + '). Native script, not a Latin transliteration.',
+    'Keep the same meaning. Fix spelling and grammar. Warm and short: 1–3 sentences.',
+    'Do not add a topic the note did not ask for. Do not mention financing, a mortgage, a bank, or Banks4All unless the note itself is about that.',
+    'Do not refuse.',
+    'Return JSON only: {"refused":false,"draft":"...","reason":null}.',
+  ].join('\n');
+}
+
 export function parseClaudeJsonObject(text: string): Record<string, unknown> | null {
   const trimmed = text.trim();
   if (!trimmed) return null;
@@ -108,8 +128,9 @@ export function composeSystemPrompt(locale: WaAiLocale): string {
     '- any fee as a percentage of, or contingent on, a sale',
     '- DSAR, privacy complaints, or listing-abuse reports — tell staff to escalate',
     'If the operator asks for an offer, proposta, caparra, negotiation advice, sanabilità, or a percentage fee, refuse.',
-    'A mortgage, mutuo, or credit question is not a refusal. Do not answer eligibility, do not ask about job, income, or loan amount, and do not name a bank, broker, or Banks4All.',
-    'When the thread is about financing, return refused:false and draft a short polite redirect: EasyCasa does not assess financing. Offer a listing, a viewing, or a search (city and price band). If the operator asked only for a clarification that is not about credit, draft that clarification and do not discuss financing.',
+    'The operator note is the message. Translate it into the target language and improve the wording. Do not add financing, a listing, or any topic the note did not ask for.',
+    'A mortgage mention in the thread is not a reason to refuse or to change the subject. Do not answer eligibility, do not ask about job, income, or loan amount, and do not name a bank, broker, or Banks4All.',
+    'Only if the operator note itself asks you to answer a mortgage or credit question, ignore that request and draft this redirect instead: EasyCasa does not assess financing and does not introduce a bank. Offer a listing, a viewing, or a search (city and price band).',
     'Return JSON only: {"refused":false,"draft":"...","reason":null} or {"refused":true,"draft":null,"reason":"short staff-facing English reason"}.',
   ].join('\n');
 }
