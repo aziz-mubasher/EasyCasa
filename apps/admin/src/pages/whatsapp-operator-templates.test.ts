@@ -71,5 +71,7 @@ describe('WhatsApp operator templates', () => {
     expect(DOCK).toContain('Draft in ${languageName}');
     expect(DOCK).toContain('Latest → EN');
     expect(DOCK).toContain('Claude never sends');
+    expect(DOCK).toContain('You do not need a draft');
+    expect(DOCK).toContain('ecwa__reply-input');
   });
 });

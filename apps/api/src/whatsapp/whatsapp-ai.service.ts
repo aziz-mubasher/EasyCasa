@@ -15,10 +15,12 @@ import type { Db } from '../db/drizzle';
 import { waInboundMessages, waThreadOutbound } from '../db/schema';
 import {
   composeSystemPrompt,
+  composeTranscribeSystemPrompt,
   composeUserPrompt,
   creditRedirectDraft,
   isCreditAdviceDraft,
   isCreditTopicRefusal,
+  operatorRequestsCreditAdvice,
   parseClaudeJsonObject,
   translateSystemPrompt,
   translateUserPrompt,
@@ -122,14 +124,17 @@ export class WhatsAppAiService {
 
     if (draft.length > DRAFT_MAX) draft = draft.slice(0, DRAFT_MAX).trim();
 
-    // A financing mention must not come back as a red "cannot draft" error.
-    // Eligibility answers and lender names are replaced with the same redirect.
-    if (refused && isCreditTopicRefusal(reason)) {
+    const creditAsk = operatorRequestsCreditAdvice(prompt);
+    if (creditAsk && (refused || isCreditAdviceDraft(draft))) {
       draft = creditRedirectDraft(locale);
       refused = false;
       reason = null;
+    } else if (refused && isCreditTopicRefusal(reason)) {
+      draft = await this.polishOperatorNote(locale, prompt);
+      refused = false;
+      reason = null;
     } else if (!refused && isCreditAdviceDraft(draft)) {
-      draft = creditRedirectDraft(locale);
+      draft = await this.polishOperatorNote(locale, prompt);
     }
 
     if (!refused && draft) {
@@ -166,6 +171,19 @@ export class WhatsAppAiService {
       model: completion.model,
       configured: true,
     };
+  }
+
+  /** Rewrite the operator's own words. Never substitutes a financing script. */
+  private async polishOperatorNote(locale: WaAiLocale, prompt: string): Promise<string> {
+    const completion = await this.claude.complete(
+      composeTranscribeSystemPrompt(locale),
+      `Staff note:\n${prompt.trim()}`,
+    );
+    if (!completion.ok) return prompt.trim();
+    const parsed = parseClaudeJsonObject(completion.text);
+    const draft = typeof parsed?.draft === 'string' ? parsed.draft.trim() : '';
+    if (!draft || parsed?.refused === true || isCreditAdviceDraft(draft)) return prompt.trim();
+    return draft.length > DRAFT_MAX ? draft.slice(0, DRAFT_MAX).trim() : draft;
   }
 
   async translate(input: {
