@@ -89,6 +89,49 @@ describe('WhatsAppAiService', () => {
     expect(user).toContain('Ask for city and price band');
   });
 
+  it('replaces a mutuo refusal with a redirect draft', async () => {
+    const { svc } = makeSvc({
+      complete: vi.fn().mockResolvedValue({
+        ok: true,
+        text: JSON.stringify({
+          refused: true,
+          draft: null,
+          reason:
+            'Operator asks to request clarification, but customer question is about mutuo (mortgage/credit advice).',
+        }),
+        model: 'claude-sonnet-4-5',
+      }),
+    });
+    const result = await svc.compose({
+      handle: 'abc',
+      actorUserId: 'u1',
+      prompt: 'Ask them to clarify what they need',
+      locale: 'it',
+    });
+    expect(result.refused).toBe(false);
+    expect(result.reason).toBeNull();
+    expect(result.draft).toContain('non valuta il finanziamento');
+    expect(result.draft).not.toMatch(/Banks4All|puoi prendere un mutuo/i);
+  });
+
+  it('replaces an eligibility answer with the redirect', async () => {
+    const { svc } = makeSvc({
+      complete: vi.fn().mockResolvedValue({
+        ok: true,
+        text: '{"refused":false,"draft":"Sì, puoi prendere un mutuo anche se sei disoccupato.","reason":null}',
+        model: 'claude-sonnet-4-5',
+      }),
+    });
+    const result = await svc.compose({
+      handle: 'abc',
+      actorUserId: 'u1',
+      prompt: 'Explain the mortgage question',
+      locale: 'en',
+    });
+    expect(result.refused).toBe(false);
+    expect(result.draft).toContain('does not assess financing');
+  });
+
   it('blocks a draft that smuggles caparra', async () => {
     const { svc } = makeSvc({
       complete: vi.fn().mockResolvedValue({

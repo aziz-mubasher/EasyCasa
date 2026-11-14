@@ -57,6 +57,8 @@ describe('WhatsApp operator templates', () => {
     expect(waOperatorTemplateBody('call', 'ur')).not.toContain('Salam o alaikum, name');
     expect(waOperatorTemplateBody('call', 'ur', { name: 'Ahmed' })).toContain('Salam o alaikum, Ahmed');
     expect(waOperatorTemplateBody('legenda', 'it')).toContain('legenda.easycasaita.com');
+    expect(waOperatorTemplateBody('financing', 'it')).toContain('non valuta il finanziamento');
+    expect(waOperatorTemplateBody('financing', 'en')).not.toMatch(/Banks4All|you can get a mortgage/i);
   });
 
   it('dock can insert and one-tap send', () => {
