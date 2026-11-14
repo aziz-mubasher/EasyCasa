@@ -3,6 +3,9 @@ import { describe, expect, it } from 'vitest';
 import {
   composeSystemPrompt,
   composeUserPrompt,
+  creditRedirectDraft,
+  isCreditAdviceDraft,
+  isCreditTopicRefusal,
   parseClaudeJsonObject,
   translateSystemPrompt,
   waAiForbiddenReason,
@@ -16,6 +19,16 @@ describe('waAiForbiddenReason', () => {
     expect(waAiForbiddenReason('Tell them the abuso is sanabile')).toMatch(/sanabilit/);
     expect(waAiForbiddenReason('Advise them to accept the price')).toMatch(/row 12/);
     expect(waAiForbiddenReason('Charge 2% of the sale')).toMatch(/percentage/);
+  });
+
+  it('does not treat a mortgage mention as a hard refusal', () => {
+    const reason =
+      "Operator asks to request clarification, but customer's question is about mutuo (mortgage/credit advice), which is forbidden under T04 rules.";
+    expect(isCreditTopicRefusal(reason)).toBe(true);
+    expect(waAiForbiddenReason(reason)).toBeNull();
+    expect(isCreditAdviceDraft(creditRedirectDraft('it'))).toBe(false);
+    expect(isCreditAdviceDraft('Sì, puoi prendere un mutuo anche da disoccupato.')).toBe(true);
+    expect(creditRedirectDraft('ur')).toContain('EasyCasa');
   });
 
   it('allows viewing / search-preference prompts', () => {
@@ -45,6 +58,8 @@ describe('compose prompts', () => {
     expect(system).toContain('Urdu');
     expect(system).toContain('T04 row 12');
     expect(system).toContain('sanabilità');
+    expect(system).toContain('is not a refusal');
+    expect(system).not.toContain('mutuo / credit advice or lender routing');
     expect(system).not.toMatch(/provvigione on conclusion as a feature/i);
 
     const user = composeUserPrompt({

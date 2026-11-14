@@ -32,6 +32,44 @@ export function waAiForbiddenReason(text: string): string | null {
   return null;
 }
 
+/** Staff-facing refusal that only exists because the thread mentions financing. */
+const CREDIT_TOPIC_REFUSAL =
+  /mutuo|mortgage|credit advice|lender routing|\blenders?\b|banks4all|\bcredit\b|financing/i;
+
+/**
+ * A customer-facing draft that answers eligibility, collects a credit need,
+ * or names a lender. The redirect below does not match this.
+ */
+const CREDIT_ADVICE_DRAFT =
+  /\bBanks4All\b|puoi (prendere|ottenere|avere|chiedere) (un |il )?mutuo|\b(get|qualify for|eligible for) (a |an )?mortgage\b|\bpre-approv|\btasso (del |di )?mutuo\b|\b(reddito|busta paga|quanto guadagni|your income|your salary)\b/i;
+
+const CREDIT_REDIRECT: Readonly<Record<WaAiLocale, string>> = {
+  it: 'EasyCasa non valuta il finanziamento e non indica banche o intermediari. Possiamo aiutarti con un annuncio, una visita o una ricerca: scrivi la città e la fascia di prezzo.',
+  en: 'EasyCasa does not assess financing and does not introduce banks or brokers. We can help with a listing, a viewing, or a search: send the city and the price band.',
+  es: 'EasyCasa no valora la financiación ni indica bancos o intermediarios. Podemos ayudarte con un anuncio, una visita o una búsqueda: escribe la ciudad y la franja de precio.',
+  fr: "EasyCasa n'évalue pas le financement et n'indique ni banque ni intermédiaire. Nous pouvons vous aider pour une annonce, une visite ou une recherche : indiquez la ville et la fourchette de prix.",
+  de: 'EasyCasa bewertet keine Finanzierung und nennt keine Banken oder Vermittler. Wir helfen bei einem Inserat, einer Besichtigung oder einer Suche: schreiben Sie Stadt und Preisspanne.',
+  pt: 'A EasyCasa não avalia financiamento nem indica bancos ou intermediários. Podemos ajudar com um anúncio, uma visita ou uma pesquisa: escreva a cidade e a faixa de preço.',
+  ur: 'EasyCasa فنانسنگ کا جائزہ نہیں لیتی اور نہ بینک یا ثالث بتاتی ہے۔ ہم اشتہار، وزٹ یا تلاش میں مدد کر سکتے ہیں: شہر اور قیمت کی حد لکھیں۔',
+  hi: 'EasyCasa फाइनेंसिंग का आकलन नहीं करती और न बैंक या बिचौलिया बताती है। हम लिस्टिंग, विज़िट या खोज में मदद कर सकते हैं: शहर और कीमत-पट्टी लिखें।',
+  pa: 'EasyCasa ਫਾਈਨੈਂਸਿੰਗ ਦਾ ਮੁਲਾਂਕਣ ਨਹੀਂ ਕਰਦੀ ਅਤੇ ਨਾ ਬੈਂਕ ਜਾਂ ਵਿਚੋਲਾ ਦੱਸਦੀ ਹੈ। ਅਸੀਂ ਲਿਸਟਿੰਗ, ਵਿਜ਼ਿਟ ਜਾਂ ਖੋਜ ਵਿੱਚ ਮਦਦ ਕਰ ਸਕਦੇ ਹਾਂ: ਸ਼ਹਿਰ ਅਤੇ ਕੀਮਤ-ਪੱਟੀ ਲਿਖੋ।',
+  ar: 'EasyCasa لا تقيّم التمويل ولا تدل على بنك أو وسيط. نستطيع المساعدة في إعلان أو زيارة أو بحث: اكتب المدينة ونطاق السعر.',
+};
+
+export function isCreditTopicRefusal(reason: string | null | undefined): boolean {
+  const sample = reason?.trim() ?? '';
+  return sample.length > 0 && CREDIT_TOPIC_REFUSAL.test(sample);
+}
+
+export function isCreditAdviceDraft(draft: string | null | undefined): boolean {
+  const sample = draft?.trim() ?? '';
+  return sample.length > 0 && CREDIT_ADVICE_DRAFT.test(sample);
+}
+
+export function creditRedirectDraft(locale: WaAiLocale): string {
+  return CREDIT_REDIRECT[locale];
+}
+
 export function parseClaudeJsonObject(text: string): Record<string, unknown> | null {
   const trimmed = text.trim();
   if (!trimmed) return null;
@@ -68,9 +106,10 @@ export function composeSystemPrompt(locale: WaAiLocale): string {
     '- negotiation advice or recommending a price to set or accept (T04 row 12)',
     '- sanabilità or a generated legal-risk conclusion',
     '- any fee as a percentage of, or contingent on, a sale',
-    '- mutuo / credit advice or lender routing',
     '- DSAR, privacy complaints, or listing-abuse reports — tell staff to escalate',
-    'If the operator prompt or thread asks for a forbidden act, refuse.',
+    'If the operator asks for an offer, proposta, caparra, negotiation advice, sanabilità, or a percentage fee, refuse.',
+    'A mortgage, mutuo, or credit question is not a refusal. Do not answer eligibility, do not ask about job, income, or loan amount, and do not name a bank, broker, or Banks4All.',
+    'When the thread is about financing, return refused:false and draft a short polite redirect: EasyCasa does not assess financing. Offer a listing, a viewing, or a search (city and price band). If the operator asked only for a clarification that is not about credit, draft that clarification and do not discuss financing.',
     'Return JSON only: {"refused":false,"draft":"...","reason":null} or {"refused":true,"draft":null,"reason":"short staff-facing English reason"}.',
   ].join('\n');
 }

@@ -54,6 +54,7 @@ export const WA_OPERATOR_TEMPLATE_IDS = [
   'call',
   'legenda',
   'hours',
+  'financing',
 ] as const;
 export type WaOperatorTemplateId = (typeof WA_OPERATOR_TEMPLATE_IDS)[number];
 
@@ -179,6 +180,23 @@ export const WA_OPERATOR_TEMPLATES: readonly WaOperatorTemplate[] = [
       es: 'Una persona responde en WhatsApp de 06:00 a 22:00 (Europe/Rome). Fuera de horario respondemos por la mañana.',
       ur: 'ایک آپریٹر 06:00 سے 22:00 (Europe/Rome) WhatsApp پر جواب دیتا ہے۔ آف آورز میں صبح جواب ملے گا۔',
       hi: 'एक व्यक्ति 06:00–22:00 (Europe/Rome) WhatsApp पर जवाब देता है। ऑफ-आवर्स में सुबह जवाब मिलेगा।',
+    },
+  },
+  {
+    id: 'financing',
+    title: {
+      it: 'Finanza',
+      en: 'Finance',
+      es: 'Financiación',
+      ur: 'فنانس',
+      hi: 'फाइनेंस',
+    },
+    body: {
+      it: 'EasyCasa non valuta il finanziamento e non indica banche o intermediari. Possiamo aiutarti con un annuncio, una visita o una ricerca: scrivi la città e la fascia di prezzo.',
+      en: 'EasyCasa does not assess financing and does not introduce banks or brokers. We can help with a listing, a viewing, or a search: send the city and the price band.',
+      es: 'EasyCasa no valora la financiación ni indica bancos o intermediarios. Podemos ayudarte con un anuncio, una visita o una búsqueda: escribe la ciudad y la franja de precio.',
+      ur: 'EasyCasa فنانسنگ کا جائزہ نہیں لیتی اور نہ بینک یا ثالث بتاتی ہے۔ ہم اشتہار، وزٹ یا تلاش میں مدد کر سکتے ہیں: شہر اور قیمت کی حد لکھیں۔',
+      hi: 'EasyCasa फाइनेंसिंग का आकलन नहीं करती और न बैंक या बिचौलिया बताती है। हम लिस्टिंग, विज़िट या खोज में मदद कर सकते हैं: शहर और कीमत-पट्टी लिखें।',
     },
   },
 ];

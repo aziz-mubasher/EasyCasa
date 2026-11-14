@@ -16,6 +16,9 @@ import { waInboundMessages, waThreadOutbound } from '../db/schema';
 import {
   composeSystemPrompt,
   composeUserPrompt,
+  creditRedirectDraft,
+  isCreditAdviceDraft,
+  isCreditTopicRefusal,
   parseClaudeJsonObject,
   translateSystemPrompt,
   translateUserPrompt,
@@ -103,8 +106,8 @@ export class WhatsAppAiService {
     if (!completion.ok) this.throwClaude(completion.reason, completion.message);
 
     const parsed = parseClaudeJsonObject(completion.text);
-    const refused = parsed?.refused === true;
-    const reason =
+    let refused = parsed?.refused === true;
+    let reason =
       refused && typeof parsed?.reason === 'string' && parsed.reason.trim()
         ? parsed.reason.trim()
         : refused
@@ -118,6 +121,16 @@ export class WhatsAppAiService {
           : '';
 
     if (draft.length > DRAFT_MAX) draft = draft.slice(0, DRAFT_MAX).trim();
+
+    // A financing mention must not come back as a red "cannot draft" error.
+    // Eligibility answers and lender names are replaced with the same redirect.
+    if (refused && isCreditTopicRefusal(reason)) {
+      draft = creditRedirectDraft(locale);
+      refused = false;
+      reason = null;
+    } else if (!refused && isCreditAdviceDraft(draft)) {
+      draft = creditRedirectDraft(locale);
+    }
 
     if (!refused && draft) {
       const draftRefuse = waAiForbiddenReason(draft);
