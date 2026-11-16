@@ -48,7 +48,7 @@ describe('WhatsAppAiService', () => {
       configured: true,
       model: 'claude-sonnet-4-5',
       autoSend: false,
-      locales: ['it', 'en', 'es', 'fr', 'de', 'pt', 'ur', 'hi', 'pa', 'ar'],
+      locales: ['it', 'en', 'es', 'fr', 'de', 'pt', 'ur', 'hi', 'pa', 'bn', 'ar'],
     });
   });
 

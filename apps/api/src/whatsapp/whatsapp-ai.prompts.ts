@@ -53,6 +53,7 @@ const CREDIT_REDIRECT: Readonly<Record<WaAiLocale, string>> = {
   ur: 'EasyCasa فنانسنگ کا جائزہ نہیں لیتی اور نہ بینک یا ثالث بتاتی ہے۔ ہم اشتہار، وزٹ یا تلاش میں مدد کر سکتے ہیں: شہر اور قیمت کی حد لکھیں۔',
   hi: 'EasyCasa फाइनेंसिंग का आकलन नहीं करती और न बैंक या बिचौलिया बताती है। हम लिस्टिंग, विज़िट या खोज में मदद कर सकते हैं: शहर और कीमत-पट्टी लिखें।',
   pa: 'EasyCasa ਫਾਈਨੈਂਸਿੰਗ ਦਾ ਮੁਲਾਂਕਣ ਨਹੀਂ ਕਰਦੀ ਅਤੇ ਨਾ ਬੈਂਕ ਜਾਂ ਵਿਚੋਲਾ ਦੱਸਦੀ ਹੈ। ਅਸੀਂ ਲਿਸਟਿੰਗ, ਵਿਜ਼ਿਟ ਜਾਂ ਖੋਜ ਵਿੱਚ ਮਦਦ ਕਰ ਸਕਦੇ ਹਾਂ: ਸ਼ਹਿਰ ਅਤੇ ਕੀਮਤ-ਪੱਟੀ ਲਿਖੋ।',
+  bn: 'EasyCasa অর্থায়ন মূল্যায়ন করে না এবং ব্যাংক বা মধ্যস্থতাকারী বলে না। আমরা একটি বিজ্ঞাপন, ভিজিট বা খোঁজে সাহায্য করতে পারি: শহর এবং দামের সীমা লিখুন।',
   ar: 'EasyCasa لا تقيّم التمويل ولا تدل على بنك أو وسيط. نستطيع المساعدة في إعلان أو زيارة أو بحث: اكتب المدينة ونطاق السعر.',
 };
 
@@ -138,7 +139,7 @@ export function translateSystemPrompt(): string {
     'Translate the customer text into simple, plain English a non-native staff member can act on.',
     'Keep meaning. Do not add advice, offers, legal conclusions, or missing facts.',
     'If the text is already English, set isEnglish true and return a slightly simpler wording only when needed; otherwise return the same text.',
-    'detectedLanguage is an ISO 639-1 code from: it, en, es, fr, de, pt, ur, hi, pa, ar (or "und" if unknown).',
+    'detectedLanguage is an ISO 639-1 code from: it, en, es, fr, de, pt, ur, hi, pa, bn, ar (or "und" if unknown).',
     'Return JSON only: {"isEnglish":false,"detectedLanguage":"ur","translation":"..."}',
   ].join('\n');
 }
