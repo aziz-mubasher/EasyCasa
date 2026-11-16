@@ -17,8 +17,8 @@ export const WA_OPERATOR_LOCALE_LABEL: Readonly<Record<WaOperatorLocale, string>
   hi: 'हिन्दी',
 };
 
-/** First-contact ice-breaker set — Claude drafts in any of these. */
-export const WA_AI_LOCALES = ['it', 'en', 'es', 'fr', 'de', 'pt', 'ur', 'hi', 'pa', 'ar'] as const;
+/** Desk draft languages — Claude writes in any of these. Includes Bengali (bn). */
+export const WA_AI_LOCALES = ['it', 'en', 'es', 'fr', 'de', 'pt', 'ur', 'hi', 'pa', 'bn', 'ar'] as const;
 export type WaAiLocale = (typeof WA_AI_LOCALES)[number];
 
 export const WA_AI_LOCALE_LABEL: Readonly<Record<WaAiLocale, string>> = {
@@ -31,6 +31,7 @@ export const WA_AI_LOCALE_LABEL: Readonly<Record<WaAiLocale, string>> = {
   ur: 'اردو',
   hi: 'हिन्दी',
   pa: 'ਪੰਜਾਬੀ',
+  bn: 'বাংলা',
   ar: 'العربية',
 };
 
@@ -44,6 +45,7 @@ export const WA_AI_LOCALE_ENGLISH: Readonly<Record<WaAiLocale, string>> = {
   ur: 'Urdu',
   hi: 'Hindi',
   pa: 'Punjabi (Gurmukhi)',
+  bn: 'Bengali',
   ar: 'Arabic',
 };
 
@@ -219,7 +221,7 @@ export function parseWaOperatorLocale(raw: string | null | undefined): WaOperato
   return 'it';
 }
 
-/** Keep the ice-breaker code when Claude is drafting (pt/fr/de/pa/ar stay themselves). */
+/** Keep the draft code when Claude is writing (pt/fr/de/pa/bn/ar stay themselves). */
 export function parseWaAiLocale(raw: string | null | undefined): WaAiLocale {
   if (isWaAiLocale(raw)) return raw;
   return parseWaOperatorLocale(raw);

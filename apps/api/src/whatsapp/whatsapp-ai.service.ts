@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { asc, eq } from 'drizzle-orm';
 
-import { parseWaAiLocale, type WaAiLocale } from '@easycasa/shared';
+import { parseWaAiLocale, WA_AI_LOCALES, type WaAiLocale } from '@easycasa/shared';
 
 import { AdminAuditService } from '../authority/admin-audit.service';
 import { DRIZZLE } from '../db/db.module';
@@ -63,7 +63,7 @@ export class WhatsAppAiService {
       configured: this.claude.configured,
       model: this.claude.model,
       autoSend: false,
-      locales: ['it', 'en', 'es', 'fr', 'de', 'pt', 'ur', 'hi', 'pa', 'ar'],
+      locales: [...WA_AI_LOCALES],
     };
   }
 

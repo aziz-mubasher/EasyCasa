@@ -972,7 +972,7 @@ select {
 
 .ecwa__chip-label {
   margin-left: 0.3rem;
-  font-family: var(--font-body);
+  font-family: var(--font-body), 'Noto Sans Bengali', 'Bangla Sangam MN', 'Kohinoor Bangla', sans-serif;
   letter-spacing: 0;
   text-transform: none;
   font-size: 0.72rem;
@@ -1046,10 +1046,26 @@ select {
   padding: 0;
   border: 0;
   background: transparent;
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ecwa__composer-note {
+  margin: 0;
+}
+
+/* Same row split as Banks4All: the message field takes the leftover width, Send stays beside it. */
+.ecwa__composer-row {
+  display: flex;
+  align-items: flex-end;
   gap: 0.5rem;
-  align-items: end;
+}
+
+.ecwa__composer-row > .ecwa__composer-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
 }
 
 .ecwa__composer-input {
@@ -1062,7 +1078,7 @@ select {
   border-radius: 18px;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-body);
+  font-family: var(--font-body), 'Noto Sans Bengali', 'Bangla Sangam MN', 'Kohinoor Bangla', sans-serif;
   font-size: 1rem;
   line-height: 1.35;
 }

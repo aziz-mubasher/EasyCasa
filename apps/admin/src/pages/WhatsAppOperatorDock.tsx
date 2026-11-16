@@ -192,34 +192,38 @@ export function WhatsAppOperatorDock({
           onSend();
         }}
       >
-        <p className="muted">No price opinion, no lot analysis, nothing about credit or Banks4All.</p>
+        <p className="muted ecwa__composer-note">
+          No price opinion, no lot analysis, nothing about credit or Banks4All.
+        </p>
         <label className="ec-sr-only" htmlFor="ecwa-reply">
           Reply
         </label>
-        <textarea
-          id="ecwa-reply"
-          className="ecwa__composer-input"
-          rows={2}
-          maxLength={4096}
-          dir={dir}
-          placeholder={canReply ? 'Type a message' : 'Window closed — reply unavailable'}
-          value={replyText}
-          disabled={!canReply || sending}
-          onChange={(e) => onReplyText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              onSend();
-            }
-          }}
-        />
-        <button
-          type="submit"
-          className="btn ecwa__send"
-          disabled={!canReply || sending || !replyText.trim()}
-        >
-          {sending ? '…' : 'Send'}
-        </button>
+        <div className="ecwa__composer-row">
+          <textarea
+            id="ecwa-reply"
+            className="ecwa__composer-input"
+            rows={2}
+            maxLength={4096}
+            dir={dir}
+            placeholder={canReply ? 'Type a message' : 'Window closed — reply unavailable'}
+            value={replyText}
+            disabled={!canReply || sending}
+            onChange={(e) => onReplyText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                onSend();
+              }
+            }}
+          />
+          <button
+            type="submit"
+            className="btn ecwa__send"
+            disabled={!canReply || sending || !replyText.trim()}
+          >
+            {sending ? '…' : 'Send'}
+          </button>
+        </div>
         {replyError ? <p className="error ecwa__composer-error">{replyError}</p> : null}
       </form>
     </div>

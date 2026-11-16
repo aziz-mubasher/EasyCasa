@@ -29,12 +29,14 @@ describe('WhatsApp operator templates', () => {
     expect(waOperatorTextDirection('hi')).toBe('ltr');
   });
 
-  it('Claude drafts keep the ten ice-breaker locales', () => {
-    expect([...WA_AI_LOCALES]).toEqual(['it', 'en', 'es', 'fr', 'de', 'pt', 'ur', 'hi', 'pa', 'ar']);
+  it('Claude drafts keep the ice-breaker locales, including Bengali', () => {
+    expect([...WA_AI_LOCALES]).toEqual(['it', 'en', 'es', 'fr', 'de', 'pt', 'ur', 'hi', 'pa', 'bn', 'ar']);
     expect(parseWaAiLocale('pt')).toBe('pt');
+    expect(parseWaAiLocale('bn')).toBe('bn');
     expect(parseWaAiLocale('ar')).toBe('ar');
     expect(parseWaAiLocale('xx')).toBe('it');
     expect(waAiTextDirection('ar')).toBe('rtl');
+    expect(waAiTextDirection('bn')).toBe('ltr');
     expect(waAiTextDirection('pa')).toBe('ltr');
   });
 
