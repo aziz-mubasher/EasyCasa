@@ -65,6 +65,9 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WHATSAPP_VIEWING_*_TEMPLATE / WHATSAPP_ENQUIRY_RECEIVED_TEMPLATE | api | K EC 8.7 Phase C utility templates. Empty name → skip that WhatsApp channel (email/in-app still run). |
 | WHATSAPP_PUBLIC_SITE_URL | api | K EC 7.4 session CTA for leftover `open_listings` taps (default `https://easycasaita.com`). Easy Legenda uses `https://legenda.easycasaita.com`. Not a secret. |
 | WHATSAPP_BUSINESS_NUMBER | api | Optional E.164 display on the Hub Connection tab. Empty hides it. **Never** the Banks4All number. |
+| ELEVENLABS_WEBHOOK_SECRET | api | EC-CALLBACKS-1 HMAC for `POST /voice/callbacks/webhook`. Empty rejects every delivery. Header `ElevenLabs-Signature`, 30-minute tolerance. |
+| VOICE_CALLBACK_NUMBERS | api | Comma-separated E.164 numbers the intake accepts. Default `+393793306605`. Any other called number is logged and ignored. |
+| WHATSAPP_CALLBACK_ACK_TEMPLATE / WHATSAPP_CALLBACK_CONFIRM_TEMPLATE / WHATSAPP_CALLBACK_OWNER_TEMPLATE | api | Utility template names. Empty → caller gets one session-text attempt (Meta’s 24h window opens on an inbound message, not on a call); owner alert falls back to email. |
 | PHONE_OTP_PEPPER | api | SHA-256 pepper for OTP hashes (min 16 chars). |
 | ANTHROPIC_API_KEY | api | K EC 7.3 — Claude Messages API for `#whatsapp` drafts + inbound simple-English translate. Empty → feature off (503). **Never auto-sends.** Not a Nest boot secret. |
 | ANTHROPIC_MODEL | api | Default `claude-sonnet-4-5`. Override only if Anthropic retires the alias. |

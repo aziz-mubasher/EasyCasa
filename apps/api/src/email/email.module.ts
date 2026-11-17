@@ -45,6 +45,6 @@ export function selectEmailProvider(config: ApiConfig): EmailPort {
     EmailService,
     EmailStartupService,
   ],
-  exports: [EmailService, EMAIL_OUTBOX],
+  exports: [EmailService, EMAIL_OUTBOX, EMAIL_PORT],
 })
 export class EmailModule {}

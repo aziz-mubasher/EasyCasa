@@ -46,7 +46,8 @@ export type CrmContactSource =
   | 'partner_intake'
   | 'whatsapp'
   | 'aste'
-  | 'call_request';
+  | 'call_request'
+  | 'whatsapp_voice';
 
 /** Operator-facing labels for `#crm` source badges. */
 export function crmSourceLabel(source: CrmContactSource | string): string {
@@ -55,6 +56,8 @@ export function crmSourceLabel(source: CrmContactSource | string): string {
       return 'Easy Legenda';
     case 'call_request':
       return 'Call request';
+    case 'whatsapp_voice':
+      return 'WhatsApp voice';
     case 'whatsapp':
       return 'WhatsApp';
     case 'enquiry':

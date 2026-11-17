@@ -903,6 +903,17 @@ export class DrizzleCrmRepository implements CrmRepository {
       .update(crmActivities)
       .set({ body: '[anonymized]', deletedAt: new Date(), updatedAt: new Date() })
       .where(eq(crmActivities.contactId, contactId));
+    await this.db.execute(sql`
+      UPDATE crm.voice_calls
+      SET summary = '[anonymized]', title = '[anonymized]', caller_name = '[anonymized]',
+          caller_number = NULL, callback_phone = NULL
+      WHERE contact_id = ${contactId}::uuid
+    `);
+    await this.db.execute(sql`
+      UPDATE crm.callback_requests
+      SET caller_words = '[anonymized]'
+      WHERE contact_id = ${contactId}::uuid
+    `);
   }
 
   async listSeekerUserIdsForConductor(conductorUserId: string): Promise<string[]> {

@@ -46,6 +46,14 @@ describe('capabilitiesFromRoles (EC-11)', () => {
     expect(capabilitiesFromRoles(['admin_dpo'])).not.toContain('whatsapp:inbound:read');
     expect(capabilitiesFromRoles(['admin_dpo'])).not.toContain('whatsapp:inbound:reply');
   });
+
+  it('grants callbacks read to support and routing only to operations', () => {
+    expect(capabilitiesFromRoles(['admin_support'])).toContain('callbacks:read');
+    expect(capabilitiesFromRoles(['admin_support'])).not.toContain('callbacks:route');
+    expect(capabilitiesFromRoles(['admin_operations'])).toContain('callbacks:route');
+    expect(capabilitiesFromRoles(['admin'])).not.toContain('callbacks:read');
+    expect(capabilitiesFromRoles(['crm-admin'])).not.toContain('callbacks:read');
+  });
 });
 
 describe('adminRolesFromRoles (EC-14 fail-closed)', () => {
