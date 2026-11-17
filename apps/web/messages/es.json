@@ -751,7 +751,7 @@
         "subtitle": "Revisamos lo que vas a firmar. No buscamos en tu nombre.",
         "asteTitle": "Informe del expediente de subasta",
         "asteNote": "Comprar en subasta es otro oficio.",
-        "asteNoteAfter": " lee la perizia y la ordinanza y te las explica en tu idioma. Primer expediente gratis.",
+        "asteNoteAfter": " lee la perizia y la ordinanza. Los informes de Easy Legenda están en italiano, inglés o español; a petición se pueden traducir, y un experto de nuestro equipo te los puede explicar en tu idioma. Primer expediente gratis.",
         "asteDeliver": "Informe escrito",
         "astePrice": "Desde €0"
       },
@@ -3250,7 +3250,7 @@
     "coming": {
       "badge": "Próximamente",
       "title": "Próximamente: Analisi Aste de EasyCasa",
-      "body": "Subes la perizia y el aviso de venta, recibes un análisis estructurado en tu idioma: criticidades con referencia a página y documento, semáforo de riesgo, y comparación del precio base con los valores OMI de la zona. Inscríbete para el acceso anticipado.",
+      "body": "Subes la perizia y el aviso de venta, recibes un análisis estructurado. Los informes de Easy Legenda están en italiano, inglés o español; a petición se pueden traducir, y un experto de nuestro equipo te los puede explicar en tu idioma. El análisis indica criticidades con referencia a página y documento, semáforo de riesgo y comparación del precio base con los valores OMI de la zona. Inscríbete para el acceso anticipado.",
       "semaforoTitle": "Motivo de semáforo de riesgo (ilustración)",
       "semaforoCaption": "Semáforo de riesgo — ilustración"
     },
@@ -3364,7 +3364,7 @@
       }
     ],
     "closeTitle": "EasyCasa y Analisi Aste",
-    "close": "EasyCasa está construyendo Analisi Aste: subes los documentos y recibes el análisis en tu idioma.",
+    "close": "EasyCasa está construyendo Analisi Aste: subes los documentos y recibes el análisis. Los informes de Easy Legenda están en italiano, inglés o español; a petición se pueden traducir, y un experto de nuestro equipo te los puede explicar en tu idioma.",
     "disclaimer": "EasyCasa proporciona análisis documentales con fines informativos. No proporciona asesoramiento legal, técnico ni peritajes con efectos legales.",
     "counselMark": "COUNSEL REVIEW PENDING"
   },
@@ -3521,7 +3521,7 @@
     "print": "Imprimir / Guardar como PDF",
     "counselMark": "COUNSEL REVIEW PENDING",
     "disclaimer": "EasyCasa provides document analysis for informational purposes. It does not provide legal or technical advice, or appraisals under law.",
-    "esNotice": "Informe en español próximamente — contenido del informe en italiano.",
+    "esNotice": "Los informes de Easy Legenda están en italiano, inglés o español; a petición se pueden traducir, y un experto de nuestro equipo te los puede explicar en tu idioma.",
     "notFound": "not found in the documents",
     "notFoundEmpty": "No fields flagged as not found.",
     "notFoundGuidance": "verify directly in the original documents",

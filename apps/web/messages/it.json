@@ -751,7 +751,7 @@
         "subtitle": "Controlliamo ciò che stai per firmare. Non cerchiamo al posto tuo.",
         "asteTitle": "Relazione sul fascicolo d’asta",
         "asteNote": "Comprare all’asta è un altro mestiere.",
-        "asteNoteAfter": " legge la perizia e l’ordinanza e te le spiega nella tua lingua. Primo fascicolo gratuito.",
+        "asteNoteAfter": " legge la perizia e l’ordinanza. I report di Easy Legenda sono in italiano, inglese o spagnolo; su richiesta si possono tradurre, e un esperto del nostro team può spiegarteli nella tua lingua. Primo fascicolo gratuito.",
         "asteDeliver": "Relazione scritta",
         "astePrice": "Da €0"
       },
@@ -3250,7 +3250,7 @@
     "coming": {
       "badge": "In arrivo",
       "title": "In arrivo: Analisi Aste di EasyCasa",
-      "body": "Carichi perizia e avviso di vendita, ricevi un’analisi strutturata nella tua lingua: criticità con riferimento a pagina e documento, semaforo di rischio, confronto del prezzo base con i valori OMI di zona. Iscriviti per l’accesso anticipato.",
+      "body": "Carichi perizia e avviso di vendita, ricevi un’analisi strutturata. I report di Easy Legenda sono in italiano, inglese o spagnolo; su richiesta si possono tradurre, e un esperto del nostro team può spiegarteli nella tua lingua. L’analisi indica criticità con riferimento a pagina e documento, semaforo di rischio e confronto del prezzo base con i valori OMI di zona. Iscriviti per l’accesso anticipato.",
       "semaforoTitle": "Motivo semaforo di rischio (illustrazione)",
       "semaforoCaption": "Semaforo di rischio — illustrazione"
     },
@@ -3364,7 +3364,7 @@
       }
     ],
     "closeTitle": "EasyCasa e Analisi Aste",
-    "close": "EasyCasa sta costruendo Analisi Aste: carichi i documenti, ricevi l’analisi nella tua lingua.",
+    "close": "EasyCasa sta costruendo Analisi Aste: carichi i documenti, ricevi l’analisi. I report di Easy Legenda sono in italiano, inglese o spagnolo; su richiesta si possono tradurre, e un esperto del nostro team può spiegarteli nella tua lingua.",
     "disclaimer": "EasyCasa fornisce analisi documentali a scopo informativo. Non fornisce consulenza legale, tecnica o perizie ai sensi di legge.",
     "counselMark": "COUNSEL REVIEW PENDING"
   },
@@ -3521,7 +3521,7 @@
     "print": "Stampa / Salva come PDF",
     "counselMark": "COUNSEL REVIEW PENDING",
     "disclaimer": "EasyCasa fornisce analisi documentali a scopo informativo. Non fornisce consulenza legale, tecnica o perizie ai sensi di legge.",
-    "esNotice": "Report in spagnolo in arrivo — contenuto del report in italiano.",
+    "esNotice": "I report di Easy Legenda sono in italiano, inglese o spagnolo; su richiesta si possono tradurre, e un esperto del nostro team può spiegarteli nella tua lingua.",
     "notFound": "non rilevato nei documenti",
     "notFoundEmpty": "Nessun campo segnalato come non rilevato.",
     "notFoundGuidance": "verificare direttamente sui documenti originali",

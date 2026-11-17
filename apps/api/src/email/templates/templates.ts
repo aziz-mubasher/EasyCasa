@@ -287,12 +287,12 @@ export function asteGuideDelivery(p: AsteGuideParams, locale: Locale = 'it'): Re
       text:
         `Gracias por registrarte.\n\n` +
         `Abre tu guía gratuita aquí:\n${p.guideUrl}\n\n` +
-        `También estás en la lista de acceso anticipado a Analisi Aste (próximamente) — análisis estructurado de documentos de subasta en tu idioma.\n\n` +
+        `También estás en la lista de acceso anticipado a Analisi Aste (próximamente) — análisis estructurado de documentos de subasta. Los informes de Easy Legenda están en italiano, inglés o español; a petición se pueden traducir, y un experto de nuestro equipo te los puede explicar en tu idioma.\n\n` +
         `Puedes darte de baja en cualquier momento respondiendo a este correo.\n\n— EasyCasa`,
       html: wrap(
         `<p>Gracias por registrarte.</p>` +
           `<p><a href="${esc(p.guideUrl)}">Abre tu guía gratuita</a></p>` +
-          `<p>También estás en la lista de acceso anticipado a <strong>Analisi Aste</strong> (próximamente) — análisis estructurado de documentos de subasta en tu idioma.</p>` +
+          `<p>También estás en la lista de acceso anticipado a <strong>Analisi Aste</strong> (próximamente) — análisis estructurado de documentos de subasta. Los informes de Easy Legenda están en italiano, inglés o español; a petición se pueden traducir, y un experto de nuestro equipo te los puede explicar en tu idioma.</p>` +
           `<p style="color:#6b6b6b;font-size:13px">Puedes darte de baja en cualquier momento respondiendo a este correo.</p>`,
       ),
     };
@@ -302,12 +302,12 @@ export function asteGuideDelivery(p: AsteGuideParams, locale: Locale = 'it'): Re
     text:
       `Grazie per l'iscrizione.\n\n` +
       `Apri la guida gratuita qui:\n${p.guideUrl}\n\n` +
-      `Sei anche in lista per l'accesso anticipato ad Analisi Aste (in arrivo) — analisi strutturata dei documenti d'asta nella tua lingua.\n\n` +
+      `Sei anche in lista per l'accesso anticipato ad Analisi Aste (in arrivo) — analisi strutturata dei documenti d'asta. I report di Easy Legenda sono in italiano, inglese o spagnolo; su richiesta si possono tradurre, e un esperto del nostro team può spiegarteli nella tua lingua.\n\n` +
       `Puoi annullare l'iscrizione in ogni momento rispondendo a questa email.\n\n— EasyCasa`,
     html: wrap(
       `<p>Grazie per l'iscrizione.</p>` +
         `<p><a href="${esc(p.guideUrl)}">Apri la guida gratuita</a></p>` +
-        `<p>Sei anche in lista per l'accesso anticipato ad <strong>Analisi Aste</strong> (in arrivo) — analisi strutturata dei documenti d'asta nella tua lingua.</p>` +
+        `<p>Sei anche in lista per l'accesso anticipato ad <strong>Analisi Aste</strong> (in arrivo) — analisi strutturata dei documenti d'asta. I report di Easy Legenda sono in italiano, inglese o spagnolo; su richiesta si possono tradurre, e un esperto del nostro team può spiegarteli nella tua lingua.</p>` +
         `<p style="color:#6b6b6b;font-size:13px">Puoi annullare l'iscrizione in ogni momento rispondendo a questa email.</p>`,
     ),
   };
