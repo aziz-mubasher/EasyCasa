@@ -85,6 +85,8 @@ const Schema = z
      * Header ElevenLabs-Signature, tolerance 30 minutes.
      */
     ELEVENLABS_WEBHOOK_SECRET: z.string().default(''),
+    /** xi-api-key. Superadmin playback only. The bytes are not stored. */
+    ELEVENLABS_API_KEY: z.string().default(''),
     /** Comma-separated E.164 numbers this intake accepts. Others are logged and ignored. */
     VOICE_CALLBACK_NUMBERS: z.string().default('+393793306605'),
     /** Empty → session text (24h window only). A call does not open that window. */

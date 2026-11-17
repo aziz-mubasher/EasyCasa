@@ -43,6 +43,7 @@ type Detail = {
   backupName: string | null;
   suggestions: Suggestion[];
   preview: string;
+  canListen: boolean;
   call: {
     summary: string;
     title: string;
@@ -305,6 +306,36 @@ function Inbox({ api }: { api: ReturnType<typeof useApi> }) {
   );
 }
 
+function Listen({ api, id }: { api: ReturnType<typeof useApi>; id: string }) {
+  const [src, setSrc] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (src) URL.revokeObjectURL(src);
+    };
+  }, [src]);
+
+  async function play() {
+    setError(null);
+    try {
+      const blob = await api.callbacksAudio(id);
+      if (src) URL.revokeObjectURL(src);
+      setSrc(URL.createObjectURL(blob));
+    } catch {
+      setError('Playback needs the ElevenLabs API key on the server. The file is not stored here.');
+    }
+  }
+
+  return (
+    <div className="cb__listen">
+      <button type="button" className="btn btn--sm" onClick={() => void play()}>Listen</button>
+      {src ? <audio controls autoPlay src={src} /> : null}
+      {error ? <p className="muted">{error}</p> : null}
+    </div>
+  );
+}
+
 function DetailPane({ api, id, onChanged }: { api: ReturnType<typeof useApi>; id: string; onChanged: () => void }) {
   const [detail, setDetail] = useState<Detail | null>(null);
   const [slot, setSlot] = useState<string>('');
@@ -425,10 +456,11 @@ function DetailPane({ api, id, onChanged }: { api: ReturnType<typeof useApi>; id
               <span key={k} className="badge badge--grey">{k}: {v || '—'}</span>
             ))}
           </p>
+          {detail.canListen ? <Listen api={api} id={id} /> : null}
           {detail.call.elevenlabsUrl ? (
             <a href={detail.call.elevenlabsUrl} target="_blank" rel="noreferrer">Open the conversation in ElevenLabs</a>
           ) : (
-            <p className="muted">ElevenLabs link is visible to operations.</p>
+            <p className="muted">The recording link is visible to operations and superadmin.</p>
           )}
         </section>
       ) : null}

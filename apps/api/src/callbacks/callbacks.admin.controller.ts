@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { EASY_CASA_VOICE_E164, randomId } from './ids';
 import { adminRolesFromRoles } from '@easycasa/shared';
 
@@ -10,9 +11,17 @@ import { UsersService } from '../users/users.service';
 import { CallbacksService } from './callbacks.service';
 import type { StoredProfile, StoredRoute } from './callbacks.types';
 
+function adminRoles(user: AuthUser) {
+  return user.adminRoles ?? adminRolesFromRoles(user.roles.map(String));
+}
+
 function canOpenEleven(user: AuthUser): boolean {
-  const roles = user.adminRoles ?? adminRolesFromRoles(user.roles.map(String));
+  const roles = adminRoles(user);
   return roles.includes('operations') || roles.includes('superadmin');
+}
+
+function isSuperadmin(user: AuthUser): boolean {
+  return adminRoles(user).includes('superadmin');
 }
 
 @Controller('admin/callbacks')
@@ -85,9 +94,16 @@ export class CallbacksAdminController {
     return this.callbacks.saveProfile({ ...body, id: body.id || randomId() });
   }
 
+  @Get(':id/audio')
+  @RequiresAdminRole('superadmin')
+  async audio(@Param('id') id: string, @Res() res: Response): Promise<void> {
+    const conversationId = await this.callbacks.conversationId(id);
+    await this.callbacks.pipeRecording(conversationId, res);
+  }
+
   @Get(':id')
   detail(@CurrentUser() user: AuthUser, @Param('id') id: string) {
-    return this.callbacks.detail(id, { elevenLabs: canOpenEleven(user) });
+    return this.callbacks.detail(id, { elevenLabs: canOpenEleven(user), canListen: isSuperadmin(user) });
   }
 
   @Post(':id/confirm')
