@@ -1,3 +1,5 @@
+import { Readable } from 'node:stream';
+import type { ReadableStream as WebReadableStream } from 'node:stream/web';
 import {
   BadRequestException,
   ConflictException,
@@ -302,7 +304,34 @@ export class CallbacksService {
     };
   }
 
-  async detail(id: string, opts: { elevenLabs: boolean }, now = new Date()) {
+  async conversationId(id: string): Promise<string> {
+    const row = await this.store.getCallback(id);
+    if (!row) throw new NotFoundException('callback not found');
+    return row.conversationId;
+  }
+
+  /** Stream the ElevenLabs recording to a superadmin. Nothing is written to disk or the database. */
+  async pipeRecording(conversationId: string, res: import('express').Response): Promise<void> {
+    const key = this.config.ELEVENLABS_API_KEY.trim();
+    if (!key) {
+      res.status(503).json({ error: 'listening is not configured' });
+      return;
+    }
+    const upstream = await fetch(
+      `https://api.elevenlabs.io/v1/convai/conversations/${encodeURIComponent(conversationId)}/audio`,
+      { headers: { 'xi-api-key': key } },
+    );
+    if (!upstream.ok || !upstream.body) {
+      res.status(502).json({ error: 'recording unavailable' });
+      return;
+    }
+    res.status(200);
+    res.setHeader('Content-Type', upstream.headers.get('content-type') || 'audio/mpeg');
+    res.setHeader('Cache-Control', 'private, no-store');
+    Readable.fromWeb(upstream.body as WebReadableStream).pipe(res);
+  }
+
+  async detail(id: string, opts: { elevenLabs: boolean; canListen: boolean }, now = new Date()) {
     const row = await this.store.getCallback(id);
     if (!row) throw new NotFoundException('callback not found');
     const call = await this.store.findCall(row.conversationId);
@@ -330,6 +359,7 @@ export class CallbacksService {
       suggestions,
       preview: callbackConfirmMessage(lang, when),
       ackPreview: callbackAckMessage(lang),
+      canListen: opts.canListen,
       call: call
         ? {
             summary: call.summary,

@@ -983,6 +983,14 @@ export class EasyCasaAdminApi {
   callbacksDetail(id: string): Promise<unknown> {
     return this.request(`/admin/callbacks/${encodeURIComponent(id)}`, z.unknown());
   }
+  async callbacksAudio(id: string): Promise<Blob> {
+    const headers = new Headers();
+    const token = await this.opts.getAccessToken?.();
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+    const res = await fetch(`${this.opts.baseUrl.replace(/\/$/, '')}/admin/callbacks/${encodeURIComponent(id)}/audio`, { headers });
+    if (!res.ok) throw new Error('recording unavailable');
+    return res.blob();
+  }
   callbacksConfirm(id: string, body: { slotStart: string; override?: boolean }): Promise<unknown> {
     return this.request(`/admin/callbacks/${encodeURIComponent(id)}/confirm`, z.unknown(), {
       method: 'POST',
