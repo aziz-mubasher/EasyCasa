@@ -5,6 +5,7 @@ export * from './energy-advert';
 export * from './authority';
 export * from './crm';
 export * from './call-booking';
+export * from './voice-callbacks';
 export * from './whatsapp-operator-templates';
 export * from './taxonomy';
 export * from './italian-geography';

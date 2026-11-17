@@ -80,6 +80,17 @@ const Schema = z
      * Not a secret. Sends still use WHATSAPP_PHONE_NUMBER_ID.
      */
     WHATSAPP_WABA_ID: z.string().default('61588757714987'),
+    /**
+     * EC-CALLBACKS-1. ElevenLabs post-call HMAC secret. Empty rejects every webhook.
+     * Header ElevenLabs-Signature, tolerance 30 minutes.
+     */
+    ELEVENLABS_WEBHOOK_SECRET: z.string().default(''),
+    /** Comma-separated E.164 numbers this intake accepts. Others are logged and ignored. */
+    VOICE_CALLBACK_NUMBERS: z.string().default('+393793306605'),
+    /** Empty → session text (24h window only). A call does not open that window. */
+    WHATSAPP_CALLBACK_ACK_TEMPLATE: z.string().default(''),
+    WHATSAPP_CALLBACK_CONFIRM_TEMPLATE: z.string().default(''),
+    WHATSAPP_CALLBACK_OWNER_TEMPLATE: z.string().default(''),
     /** EC-19 — base URL for admin SPA links in inbound alerts. */
     ADMIN_PUBLIC_URL: z.string().default('https://admin.easycasaita.com'),
     /**

@@ -24,6 +24,7 @@ import { AsteAdmin } from './pages/AsteAdmin';
 import { CrmShell } from './pages/crm/CrmShell';
 import { Analytics } from './pages/Analytics';
 import { WhatsAppPresence } from './pages/WhatsAppPresence';
+import { CallbacksShell } from './pages/callbacks/CallbacksShell';
 
 type View =
   | 'credentials'
@@ -41,11 +42,13 @@ type View =
   | 'aml'
   | 'rli'
   | 'crm'
-  | 'analytics';
+  | 'analytics'
+  | 'callbacks';
 
 const NAV: { key: View; label: string; hint: string }[] = [
   { key: 'analytics', label: 'Analytics', hint: 'Visits · sources · funnels' },
   { key: 'crm', label: 'CRM', hint: 'Contacts · pipelines' },
+  { key: 'callbacks', label: 'Callbacks', hint: 'Inbox · routing · hours' },
   { key: 'credentials', label: 'Credentials', hint: 'Ops · expiring first' },
   { key: 'coverage', label: 'Coverage', hint: 'Ops / support read' },
   { key: 'dsar', label: 'DSAR', hint: 'DPO only' },
@@ -64,6 +67,7 @@ const NAV: { key: View; label: string; hint: string }[] = [
 
 const VIEWS: Record<View, React.ReactNode> = {
   analytics: <Analytics />,
+  callbacks: <CallbacksShell />,
   crm: <CrmShell />,
   credentials: <Credentials />,
   coverage: <CoverageMatrix />,
@@ -178,6 +182,7 @@ export function App() {
       if (h === 'whatsapp' || h.startsWith('whatsapp/')) return 'whatsapp';
       if (h === 'aste' || h.startsWith('aste/')) return 'aste';
       if (h === 'crm' || h.startsWith('crm/')) return 'crm';
+      if (h === 'callbacks' || h.startsWith('callbacks/')) return 'callbacks';
     }
     return 'credentials';
   })();
@@ -200,6 +205,9 @@ export function App() {
       } else if (next === 'crm') {
         const cur = window.location.hash.replace(/^#/, '');
         if (!cur.startsWith('crm')) window.location.hash = 'crm';
+      } else if (next === 'callbacks') {
+        const cur = window.location.hash.replace(/^#/, '');
+        if (!cur.startsWith('callbacks')) window.location.hash = 'callbacks';
       } else {
         window.location.hash = '';
       }

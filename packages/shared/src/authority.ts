@@ -20,7 +20,11 @@ export type Capability =
   /** EC-S-T15 — Verified Owner moderation queue (not AML). */
   | 'vo_moderation'
   /** EC-S-T28 — curated partner directory admin CRUD. */
-  | 'partner_directory';
+  | 'partner_directory'
+  /** EC-CALLBACKS-1 — inbox, confirm, team hours. */
+  | 'callbacks:read'
+  /** EC-CALLBACKS-1 — routing and team-profile edits. Operations and superadmin. */
+  | 'callbacks:route';
 
 /** Fine-grained admin personas — never a single omniscient admin. */
 export type AdminRole =
@@ -80,6 +84,10 @@ export function capabilitiesFromRoles(roles: readonly string[]): Capability[] {
     ) {
       caps.add('whatsapp:inbound:read');
       caps.add('whatsapp:inbound:reply');
+      caps.add('callbacks:read');
+    }
+    if (r === 'admin_operations' || r === 'admin_superadmin') {
+      caps.add('callbacks:route');
     }
     // EC-S-T15 — VO moderation: operations + superadmin (not aml).
     if (r === 'admin_operations' || r === 'admin_superadmin') {

@@ -1720,6 +1720,104 @@ export const analyticsDailyProvinces = pgTable(
   }),
 );
 
+/** EC-CALLBACKS-1 — team member or the Team queue. No audio. */
+export const callbackProfiles = crmPg.table('callback_profiles', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  kind: text('kind').notNull(),
+  adminUserId: uuid('admin_user_id'),
+  displayName: text('display_name').notNull(),
+  whatsappE164: text('whatsapp_e164'),
+  email: text('email').notNull().default(''),
+  languages: text('languages').array().notNull().default([]),
+  callbackMinutes: integer('callback_minutes').notNull().default(20),
+  gapMinutes: integer('gap_minutes').notNull().default(10),
+  maxPerDay: integer('max_per_day'),
+  earliestBookableMinutes: integer('earliest_bookable_minutes').notNull().default(120),
+  weeklyHours: jsonb('weekly_hours').notNull().default([]),
+  timeOff: jsonb('time_off').notNull().default([]),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const callbackRouting = crmPg.table('callback_routing', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  calledNumber: text('called_number').notNull(),
+  language: text('language').notNull(),
+  line: text('line'),
+  forwardProfileId: uuid('forward_profile_id').notNull(),
+  backupProfileId: uuid('backup_profile_id'),
+  confirmWithin: text('confirm_within').notNull().default('4h'),
+  alertWhatsapp: boolean('alert_whatsapp').notNull().default(false),
+  alertEmail: boolean('alert_email').notNull().default(true),
+  offerRealSlots: boolean('offer_real_slots').notNull().default(false),
+});
+
+export const voiceCalls = crmPg.table('voice_calls', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  conversationId: text('conversation_id').notNull().unique(),
+  calledNumber: text('called_number').notNull(),
+  callerNumber: text('caller_number'),
+  contactId: uuid('contact_id'),
+  callerName: text('caller_name').notNull().default(''),
+  callbackPhone: text('callback_phone'),
+  callbackRequested: boolean('callback_requested').notNull().default(false),
+  preferredCallbackTime: text('preferred_callback_time').notNull().default(''),
+  language: text('language').notNull(),
+  topic: text('topic').notNull(),
+  callerRole: text('caller_role').notNull(),
+  summary: text('summary').notNull().default(''),
+  title: text('title').notNull().default(''),
+  durationSecs: integer('duration_secs').notNull().default(0),
+  evaluations: jsonb('evaluations').notNull().default({}),
+  elevenlabsUrl: text('elevenlabs_url').notNull().default(''),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const callbackRequests = crmPg.table('callback_requests', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  contactId: uuid('contact_id'),
+  voiceCallId: uuid('voice_call_id').notNull(),
+  conversationId: text('conversation_id').notNull().unique(),
+  calledNumber: text('called_number').notNull(),
+  callbackLanguage: text('callback_language').notNull(),
+  topic: text('topic').notNull(),
+  callerRole: text('caller_role').notNull(),
+  callerWords: text('caller_words').notNull().default(''),
+  ownerProfileId: uuid('owner_profile_id').notNull(),
+  backupProfileId: uuid('backup_profile_id'),
+  dueAt: timestamp('due_at', { withTimezone: true }).notNull(),
+  status: text('status').notNull().default('requested'),
+  heldStart: timestamp('held_start', { withTimezone: true }),
+  heldEnd: timestamp('held_end', { withTimezone: true }),
+  suggestedSlots: jsonb('suggested_slots').notNull().default([]),
+  confirmedStart: timestamp('confirmed_start', { withTimezone: true }),
+  confirmedEnd: timestamp('confirmed_end', { withTimezone: true }),
+  bookingId: uuid('booking_id'),
+  overdueOwnerAt: timestamp('overdue_owner_at', { withTimezone: true }),
+  overdueBackupAt: timestamp('overdue_backup_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const callbackEvents = crmPg.table('callback_events', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  callbackId: uuid('callback_id').notNull(),
+  actorUserId: uuid('actor_user_id'),
+  action: text('action').notNull(),
+  detail: jsonb('detail').notNull().default({}),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const callbackBookings = crmPg.table('callback_bookings', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  profileId: uuid('profile_id').notNull(),
+  callbackId: uuid('callback_id'),
+  startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
+  endsAt: timestamp('ends_at', { withTimezone: true }).notNull(),
+  kind: text('kind').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const schema = {
   users, categories, regions, provinces, listings, media, favorites, savedSearches, alertLogs,
   sellerProfile, listingDraft, moderationEvents, verifiedOwnerCase, sellerDocChecklist,
@@ -1748,6 +1846,7 @@ export const schema = {
   shareLinks, shareLinkViewDedup,
   crmContacts, crmSeekerProfiles, crmOwnerProfiles, crmB4aReferrals, crmPartnerProfiles,
   crmActivities, crmTasks, crmAuditLog,
+  callbackProfiles, callbackRouting, voiceCalls, callbackRequests, callbackEvents, callbackBookings,
   analyticsSalts, analyticsEvents, analyticsDailyPages, analyticsDailySources,
   analyticsDailyConversions, analyticsDailyDims, analyticsDailyFunnels,
   analyticsServerConversions, analyticsCampaignSpend, analyticsDailyTotals,

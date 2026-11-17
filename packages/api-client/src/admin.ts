@@ -953,6 +953,73 @@ export class EasyCasaAdminApi {
     return res.text();
   }
 
+  callbacksSummary(): Promise<Record<string, unknown>> {
+    return this.request('/admin/callbacks/summary', z.unknown()) as Promise<Record<string, unknown>>;
+  }
+  callbacksIdentity(): Promise<{
+    denominazione: string;
+    piva: string;
+    pivaPlaceholder: boolean;
+    signOff: string;
+    retention: string;
+  }> {
+    return this.request('/admin/callbacks/identity', z.unknown()) as Promise<{
+      denominazione: string;
+      piva: string;
+      pivaPlaceholder: boolean;
+      signOff: string;
+      retention: string;
+    }>;
+  }
+  callbacksInbox(params: { chip?: string; owner?: string; line?: string; role?: string }): Promise<unknown> {
+    const q = new URLSearchParams();
+    if (params.chip) q.set('chip', params.chip);
+    if (params.owner) q.set('owner', params.owner);
+    if (params.line) q.set('line', params.line);
+    if (params.role) q.set('role', params.role);
+    const qs = q.toString();
+    return this.request(`/admin/callbacks/inbox${qs ? `?${qs}` : ''}`, z.unknown());
+  }
+  callbacksDetail(id: string): Promise<unknown> {
+    return this.request(`/admin/callbacks/${encodeURIComponent(id)}`, z.unknown());
+  }
+  callbacksConfirm(id: string, body: { slotStart: string; override?: boolean }): Promise<unknown> {
+    return this.request(`/admin/callbacks/${encodeURIComponent(id)}/confirm`, z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+  callbacksAction(id: string, action: 'reassign' | 'no-answer' | 'cancel' | 'done', body?: unknown): Promise<unknown> {
+    return this.request(`/admin/callbacks/${encodeURIComponent(id)}/${action}`, z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify(body ?? {}),
+    });
+  }
+  callbacksCalls(page: number): Promise<unknown> {
+    return this.request(`/admin/callbacks/calls?page=${page}`, z.unknown());
+  }
+  callbacksRouting(): Promise<unknown> {
+    return this.request('/admin/callbacks/routing', z.unknown());
+  }
+  callbacksSaveRouting(body: unknown): Promise<unknown> {
+    return this.request('/admin/callbacks/routing', z.unknown(), {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+  }
+  callbacksTeam(): Promise<unknown> {
+    return this.request('/admin/callbacks/team', z.unknown());
+  }
+  callbacksStaff(q: string): Promise<unknown> {
+    return this.request(`/admin/callbacks/staff?q=${encodeURIComponent(q)}`, z.unknown());
+  }
+  callbacksSaveTeam(body: unknown): Promise<unknown> {
+    return this.request('/admin/callbacks/team', z.unknown(), {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
   crmPatchRole(
     contactId: string,
     role: string,
