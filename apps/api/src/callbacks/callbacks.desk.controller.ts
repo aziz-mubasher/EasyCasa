@@ -4,6 +4,9 @@ import {
   ForbiddenException,
   Get,
   Headers,
+  HttpException,
+  Param,
+  Post,
   Put,
   Query,
   UnauthorizedException,
@@ -14,7 +17,7 @@ import { Public } from '../auth/public.decorator';
 import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
 import { CallbacksService } from './callbacks.service';
-import { readDeskGrant, type DeskGrant } from './callbacks.desk-grant';
+import { deskMayWrite, readDeskGrant, type DeskGrant } from './callbacks.desk-grant';
 import type { StoredProfile, StoredRoute } from './callbacks.types';
 
 @Controller('desk/voice-callbacks')
@@ -166,6 +169,63 @@ export class CallbacksDeskController {
         kind: 'ai',
       })),
     };
+  }
+
+  private async writer(header: string | undefined, id: string, action: string): Promise<DeskGrant> {
+    const grant = this.grant(header);
+    const profile = await this.callbacks.deskOwnerProfile(id);
+    if (!deskMayWrite(grant.role, profile, grant.id, action)) throw new ForbiddenException('no-access');
+    return grant;
+  }
+
+  @Get(':id')
+  async one(@Headers('authorization') header: string | undefined, @Param('id') id: string) {
+    await this.writer(header, id, 'confirm');
+    return { ok: true, callback: await this.callbacks.deskCard(id) };
+  }
+
+  @Post(':id/confirm')
+  async confirmOne(
+    @Headers('authorization') header: string | undefined,
+    @Param('id') id: string,
+    @Body() body: { slotStart?: string; override?: boolean },
+  ) {
+    const grant = await this.writer(header, id, 'confirm');
+    try {
+      const saved = await this.callbacks.confirm(id, grant.id, String(body.slotStart || ''), Boolean(body.override));
+      return { ok: true, bookingId: saved.bookingId, callback: await this.callbacks.deskCard(id) };
+    } catch (error) {
+      if (error instanceof HttpException && error.getStatus() === 409) {
+        const card = await this.callbacks.deskCard(id);
+        throw new HttpException({ ok: false, error: 'slot-taken', suggestions: card.slots }, 409);
+      }
+      throw error;
+    }
+  }
+
+  @Post(':id/reassign')
+  async reassignOne(
+    @Headers('authorization') header: string | undefined,
+    @Param('id') id: string,
+    @Body() body: { ownerProfileId?: string },
+  ) {
+    const grant = await this.writer(header, id, 'reassign');
+    await this.callbacks.reassign(id, grant.id, String(body.ownerProfileId || ''));
+    return { ok: true, callback: await this.callbacks.deskCard(id) };
+  }
+
+  @Post(':id/no-answer')
+  async noAnswer(@Headers('authorization') header: string | undefined, @Param('id') id: string) {
+    const grant = await this.writer(header, id, 'no-answer');
+    await this.callbacks.setStatus(id, grant.id, 'no_answer');
+    return { ok: true, callback: await this.callbacks.deskCard(id) };
+  }
+
+  @Post(':id/cancel')
+  async cancelOne(@Headers('authorization') header: string | undefined, @Param('id') id: string) {
+    const grant = await this.writer(header, id, 'cancel');
+    await this.callbacks.setStatus(id, grant.id, 'cancelled');
+    return { ok: true, callback: await this.callbacks.deskCard(id) };
   }
 }
 

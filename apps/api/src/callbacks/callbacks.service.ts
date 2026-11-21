@@ -374,6 +374,35 @@ export class CallbacksService {
     };
   }
 
+  async deskOwnerProfile(id: string) {
+    const row = await this.store.getCallback(id);
+    if (!row) throw new NotFoundException('callback not found');
+    return this.store.getProfile(row.ownerProfileId);
+  }
+
+  async deskCard(id: string) {
+    const full = await this.detail(id, { elevenLabs: false, canListen: false });
+    const profiles = await this.store.profiles();
+    return {
+      id: full.id,
+      name: full.name,
+      language: full.language,
+      words: full.words,
+      status: full.status,
+      dueAt: full.dueAt,
+      owner: full.ownerName,
+      confirmation: full.preview,
+      slots: full.suggestions.map((slot) => ({
+        start: slot.start,
+        label: romeSlotLabel(slot.start),
+        reason: slot.reason,
+      })),
+      profiles: profiles
+        .filter((profile) => profile.kind === 'person')
+        .map((profile) => ({ id: profile.id, name: profile.name })),
+    };
+  }
+
   async confirm(id: string, actorId: string, slotStart: string, override: boolean, now = new Date()) {
     const row = await this.store.getCallback(id);
     if (!row) throw new NotFoundException('callback not found');
