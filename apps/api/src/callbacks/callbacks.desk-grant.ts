@@ -19,6 +19,18 @@ export function readDeskGrant(token: string, secret: string, now = Math.floor(Da
   return { id, line: 'easycasa', role };
 }
 
+export function deskMayWrite(
+  role: string,
+  profile: { id: string; adminUserId: string | null; kind: string } | null,
+  grantId: string,
+  action: string,
+): boolean {
+  if (role === 'admin') return true;
+  if (role !== 'agent' || action === 'reassign') return false;
+  if (!profile || profile.kind === 'team_queue') return false;
+  return profile.id === grantId || profile.adminUserId === grantId;
+}
+
 export function signDeskGrant(input: { id: string; role: DeskGrant['role']; expiry: number; secret: string }): string {
   const body = `${input.id}.easycasa.${input.role}.${input.expiry}`;
   const signature = createHmac('sha256', input.secret).update(body).digest('hex');

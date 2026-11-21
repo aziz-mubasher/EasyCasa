@@ -1,7 +1,7 @@
 import { createHmac } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 
-import { readDeskGrant, signDeskGrant } from './callbacks.desk-grant';
+import { deskMayWrite, readDeskGrant, signDeskGrant } from './callbacks.desk-grant';
 
 const SECRET = 'easy-secret';
 
@@ -15,5 +15,14 @@ describe('desk grant', () => {
     const foreign = `${body}.${createHmac('sha256', SECRET).update(body).digest('hex')}`;
     expect(readDeskGrant(foreign, SECRET, now)).toBeNull();
     expect(readDeskGrant(token, SECRET, 1_060)).toBeNull();
+  });
+
+  it('lets an admin write any row and an agent write only their own', () => {
+    const own = { id: 'p1', adminUserId: 'aima', kind: 'person' };
+    expect(deskMayWrite('admin', own, 'azm', 'reassign')).toBe(true);
+    expect(deskMayWrite('agent', own, 'aima', 'confirm')).toBe(true);
+    expect(deskMayWrite('agent', own, 'silvana', 'confirm')).toBe(false);
+    expect(deskMayWrite('agent', own, 'aima', 'reassign')).toBe(false);
+    expect(deskMayWrite('agent', { id: 'team', adminUserId: null, kind: 'team_queue' }, 'aima', 'cancel')).toBe(false);
   });
 });
