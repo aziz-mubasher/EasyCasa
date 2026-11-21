@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { UsersModule } from '../users/users.module';
 import { CallbacksAdminController } from './callbacks.admin.controller';
+import { CallbacksDeskController } from './callbacks.desk.controller';
 import { DrizzleCallbacksStore } from './callbacks.drizzle';
 import { CallbacksScheduler } from './callbacks.scheduler';
 import { CallbacksService } from './callbacks.service';
@@ -10,7 +11,7 @@ import { CallbacksWebhookController } from './callbacks.webhook.controller';
 
 @Module({
   imports: [UsersModule],
-  controllers: [CallbacksWebhookController, CallbacksAdminController],
+  controllers: [CallbacksWebhookController, CallbacksAdminController, CallbacksDeskController],
   providers: [
     CallbacksService,
     CallbacksScheduler,

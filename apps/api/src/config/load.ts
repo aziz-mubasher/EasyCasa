@@ -85,6 +85,8 @@ const Schema = z
      * Header ElevenLabs-Signature, tolerance 30 minutes.
      */
     ELEVENLABS_WEBHOOK_SECRET: z.string().default(''),
+    /** Desk grant HMAC. Empty rejects every desk call. Not the webhook secret. */
+    DESK_TO_EASYCASA_SECRET: z.string().default(''),
     /** xi-api-key. Superadmin playback only. The bytes are not stored. */
     ELEVENLABS_API_KEY: z.string().default(''),
     /** Comma-separated E.164 numbers this intake accepts. Others are logged and ignored. */
