@@ -1,5 +1,7 @@
 # EC WhatsApp channel (K EC 7.4 / EC-21)
 
+> **Number +39 379 330 6605 (AZM, 22 Nov 2026).** Meta delivers this number only to the ElevenLabs front desk and the ten language assistants. First contact is `docs/ec-chat-train-1.md`. This file describes the Nest inbox and Hub. That module no longer receives this number.
+
 Copy of the **Banks4All WhatsApp shape**, not B4A copy or number.
 
 T04 rows: **4** (viewing pointer) and **5** (staff reply transport). Does **not** collect or transmit offers (row 10), *proposta* / *caparra* (row 11), or negotiation advice (row 12). Search-brief text is a **search preference**, never an offer.
