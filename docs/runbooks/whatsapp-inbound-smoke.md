@@ -1,5 +1,7 @@
 # Live inbound smoke — operator checklist
 
+> **Superseded for +39 379 330 6605 (AZM, 22 Nov 2026).** Meta delivers this number only to ElevenLabs (WABA `1139868405295155`, phone number ID `1448737268325965`). The Nest journey on `https://easycasaita.com/api/whatsapp/webhook` no longer receives it. First-contact rules and copy: `docs/ec-chat-train-1.md`. The checklist below is the old Nest inbox smoke. Do not use it to judge the live WhatsApp line.
+
 **Who** Aziz, on a phone + VPS shell. **Not an agent task.**
 
 **When** Before EC-20 is briefed. Everything from EC-17 → EC-19a has run only against
