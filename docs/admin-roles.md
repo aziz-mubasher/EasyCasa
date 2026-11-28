@@ -12,6 +12,7 @@ do not build a role-management UI.
 | `admin_finance` | `finance` | Finance surfaces (when present) |
 | `admin_dpo` | `dpo` | DSAR queue, retention purge, email outbox |
 | `admin_aml` | `aml` | AML / KYC cases |
+| `admin_whatsapp` | `whatsapp` | **EC WhatsApp** read + reply only. Pair with one `crm-*` role for CRM. Does not open Coverage, Aste, callbacks, or operations screens |
 | `admin_superadmin` | `superadmin` | All of the above |
 | `admin` (bare) | _(none)_ | Capability `admin` only — **sees nothing** in the portal |
 

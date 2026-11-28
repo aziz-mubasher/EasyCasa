@@ -47,6 +47,18 @@ describe('capabilitiesFromRoles (EC-11)', () => {
     expect(capabilitiesFromRoles(['admin_dpo'])).not.toContain('whatsapp:inbound:reply');
   });
 
+  it('maps admin_whatsapp to the inbox only', () => {
+    expect(adminRolesFromRoles(['admin_whatsapp'])).toEqual(['whatsapp']);
+    const caps = capabilitiesFromRoles(['admin_whatsapp']);
+    expect(caps).toContain('admin');
+    expect(caps).toContain('whatsapp:inbound:read');
+    expect(caps).toContain('whatsapp:inbound:reply');
+    expect(caps).not.toContain('callbacks:read');
+    expect(caps).not.toContain('callbacks:route');
+    expect(caps).not.toContain('vo_moderation');
+    expect(caps).not.toContain('partner_directory');
+  });
+
   it('grants callbacks read to support and routing only to operations', () => {
     expect(capabilitiesFromRoles(['admin_support'])).toContain('callbacks:read');
     expect(capabilitiesFromRoles(['admin_support'])).not.toContain('callbacks:route');

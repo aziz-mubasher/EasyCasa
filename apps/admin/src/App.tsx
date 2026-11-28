@@ -231,7 +231,7 @@ export function App() {
               <span className="nav-item__hint">End session</span>
             </button>
           ) : null}
-          <nav>
+          <nav className="sidebar__nav" aria-label="Back office">
             {allowedNav.map((n) => (
               <button
                 key={n.key}
