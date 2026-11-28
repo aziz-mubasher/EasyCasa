@@ -84,6 +84,34 @@ export class WhatsAppCloudClient {
     return this.postMessages(url, body);
   }
 
+  /**
+   * Call-permission utility template on the live Easy Casa number.
+   * ElevenLabs outbound cannot send this: the server key has no convai_write,
+   * and the template lives on phone id 1448737268325965, not the Nest sender.
+   */
+  async sendCallPermissionTemplate(input: {
+    phoneE164: string;
+    templateName: string;
+    languageCode: string;
+  }): Promise<WhatsAppSendResult> {
+    if (this.config.DEMO_MODE || !this.config.WHATSAPP_TOKEN.trim()) {
+      return { ok: false, reason: 'not_configured' };
+    }
+    const phoneNumberId = this.config.WHATSAPP_LIVE_PHONE_NUMBER_ID.trim();
+    if (!phoneNumberId || !input.templateName.trim()) return { ok: false, reason: 'not_configured' };
+    const url = `https://graph.facebook.com/${this.config.WHATSAPP_GRAPH_VERSION}/${phoneNumberId}/messages`;
+    return this.postMessages(url, {
+      messaging_product: 'whatsapp',
+      to: input.phoneE164.replace(/^\+/, ''),
+      type: 'template',
+      template: {
+        name: input.templateName,
+        language: { code: input.languageCode },
+        components: [{ type: 'call_permission_request' }],
+      },
+    });
+  }
+
   /** Free-form text inside an open customer-service window (EC-17). No template. */
   async sendText(phoneE164: string, text: string): Promise<WhatsAppSendResult> {
     if (!this.configured) return { ok: false, reason: 'not_configured' };

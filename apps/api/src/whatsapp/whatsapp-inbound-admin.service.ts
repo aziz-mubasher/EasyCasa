@@ -727,7 +727,15 @@ export class WhatsAppInboundAdminService {
     if (approved && approved.length > 0 && !approved.includes(row.language)) {
       throw new BadRequestException('template not approved in this language');
     }
-    const providerMessageId = await this.deliverTemplate(waId, row.name, row.language, []);
+    const send = await this.cloud.sendCallPermissionTemplate({
+      phoneE164: toE164(waId),
+      templateName: row.name,
+      languageCode: row.language,
+    });
+    if (!send.ok) {
+      throw new BadRequestException(`whatsapp template failed (${send.message ?? send.reason})`);
+    }
+    const providerMessageId = send.messageId;
     const sentAt = new Date();
     await this.db.insert(waThreadOutbound).values({
       waId,
