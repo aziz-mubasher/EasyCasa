@@ -26,6 +26,9 @@ const DetailSchema = z.object({
 
 const StatusSchema = z.object({
   configured: z.boolean(),
+  inboxSource: z.enum(['elevenlabs', 'webhook']).optional(),
+  ecConsultLineEnabled: z.boolean().optional(),
+  ecConsultDryRun: z.boolean().optional(),
   phoneLast4: z.string().nullable(),
   callPermission: z.array(z.object({
     locale: z.string(),
@@ -125,6 +128,12 @@ export function WhatsAppLiveInbox() {
       <div className={`ecwa__panes${selected ? ' ecwa__panes--thread' : ''}`}>
         <aside className="ecwa__list" aria-label="Live conversations">
           <div className="ecwa__list-head">
+            {status.data?.inboxSource ? (
+              <p className="ecwa__hint">
+                Inbox source: <strong>{status.data.inboxSource}</strong>
+                {status.data.ecConsultDryRun ? ' · dry-run' : ''}
+              </p>
+            ) : null}
             <div className="ecwa__list-title-row">
               <h1 className="ecwa__title">Live line</h1>
               <span className="ecwa__stat-value mono">

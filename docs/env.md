@@ -71,6 +71,16 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | ELEVENLABS_API_BASE_URL | api | Default `https://api.elevenlabs.io`. |
 | WHATSAPP_LIVE_PHONE_NUMBER_ID | api | Easy Casa Italia WhatsApp phone number id. Default `1448737268325965`. Not a secret. |
 | WHATSAPP_LIVE_AGENT_ID | api | ElevenLabs front-desk agent for that number. Default `agent_4101m7mysnsyfv7v1bwh9gjp0r7b`. |
+| EC_CONSULT_LINE_ENABLED | api | **6605 text auto-reply.** Default `false`. Must stay off until Meta grant + cut-over. |
+| EC_CONSULT_DRY_RUN | api | Default `true`. When on, plans/log replies; never calls Graph send. |
+| EC_CONSULT_INBOX_SOURCE | api | `elevenlabs` (default) or `webhook` for `#whatsapp/live` primary list. |
+| EC_CONSULT_WABA_ID | api | Scuola Video WABA for 6605. Default `1139868405295155` (disabled until subscribed). |
+| EC_CONSULT_PHONE_NUMBER_ID | api | 6605 phone id. Default `1448737268325965`. |
+| META_6605_TOKEN | api | Graph token for WABA `1139868405295155`. Empty → KB sync + send no-op. |
+| WHATSAPP_6605_APP_SECRET | api | Webhook HMAC for 6605 line (Easy Casa Italy app). Empty → 6605 POSTs rejected unless Easycasaita secret matches. |
+| ELEVENLABS_KB_READ_KEY | api | Read-only ConvAI key for KB docs `u3uED8EeEjWCpdXZK05z` + `Rjd2JDRoArsWMHvcQn4T`. |
+| GOOGLE_GENERATIVE_AI_KEY | api | Gemini API for EC Consult text model (when dry-run off). |
+| EC_CONSULT_GEMINI_MODEL | api | Default `gemini-2.0-flash` (align with voice stack at go-live). |
 | VOICE_CALLBACK_NUMBERS | api | Comma-separated E.164 numbers the intake accepts. Default `+393793306605`. Any other called number is logged and ignored. |
 | WHATSAPP_CALLBACK_ACK_TEMPLATE / WHATSAPP_CALLBACK_CONFIRM_TEMPLATE / WHATSAPP_CALLBACK_OWNER_TEMPLATE | api | Utility template names. Empty → caller gets one session-text attempt (Meta’s 24h window opens on an inbound message, not on a call); owner alert falls back to email. |
 | PHONE_OTP_PEPPER | api | SHA-256 pepper for OTP hashes (min 16 chars). |

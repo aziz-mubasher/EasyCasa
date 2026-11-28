@@ -49,6 +49,9 @@ export class WhatsAppLiveInboxService {
     const phone = this.config.WHATSAPP_LIVE_PHONE_NUMBER_ID.trim();
     return {
       configured: this.config.ELEVENLABS_API_KEY.trim() !== '',
+      inboxSource: this.config.EC_CONSULT_INBOX_SOURCE,
+      ecConsultLineEnabled: this.config.EC_CONSULT_LINE_ENABLED,
+      ecConsultDryRun: this.config.EC_CONSULT_DRY_RUN,
       phoneLast4: phone.length >= 4 ? phone.slice(-4) : null,
       archiveSendsOnLiveNumber: archiveSendsOnLiveNumber(
         this.config.WHATSAPP_PHONE_NUMBER_ID,

@@ -93,6 +93,22 @@ const Schema = z
     /** Easy Casa Italia line on the Scuola Video WABA. Not the Nest Cloud API phone. */
     WHATSAPP_LIVE_PHONE_NUMBER_ID: z.string().default('1448737268325965'),
     WHATSAPP_LIVE_AGENT_ID: z.string().default('agent_4101m7mysnsyfv7v1bwh9gjp0r7b'),
+    /**
+     * EC-CONSULT-TEXT-1.B — +39 379 330 6605 Nest auto-reply (Scuola Video WABA).
+     * Defaults keep the line off and dry-run on until META grant + cut-over.
+     */
+    EC_CONSULT_LINE_ENABLED: bool(false),
+    EC_CONSULT_DRY_RUN: bool(true),
+    EC_CONSULT_INBOX_SOURCE: z.enum(['elevenlabs', 'webhook']).default('elevenlabs'),
+    /** WABA 1139868405295155 — present for ops docs; sending uses META_6605_TOKEN when enabled. */
+    EC_CONSULT_WABA_ID: z.string().default('1139868405295155'),
+    EC_CONSULT_PHONE_NUMBER_ID: z.string().default('1448737268325965'),
+    META_6605_TOKEN: z.string().default(''),
+    WHATSAPP_6605_APP_SECRET: z.string().default(''),
+    /** Read-only ElevenLabs key with convai KB read — not the live agent key. */
+    ELEVENLABS_KB_READ_KEY: z.string().default(''),
+    EC_CONSULT_GEMINI_MODEL: z.string().default('gemini-2.0-flash'),
+    GOOGLE_GENERATIVE_AI_KEY: z.string().default(''),
     /** Comma-separated E.164 numbers this intake accepts. Others are logged and ignored. */
     VOICE_CALLBACK_NUMBERS: z.string().default('+393793306605'),
     /** Empty → session text (24h window only). A call does not open that window. */

@@ -17,6 +17,7 @@ import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
 import { Public } from '../auth/public.decorator';
 import { whatsappInboundSignatureRejected } from '../observability/metrics';
+import { EcConsultWebhookService } from '../ec-consult/ec-consult-webhook.service';
 import { WhatsAppHubService } from './whatsapp-hub.service';
 import { WhatsAppService } from './whatsapp.service';
 
@@ -31,6 +32,7 @@ export class WhatsAppWebhookController {
   constructor(
     private readonly whatsapp: WhatsAppService,
     private readonly hub: WhatsAppHubService,
+    private readonly ecConsultWebhook: EcConsultWebhookService,
     @InjectConfig() private readonly config: ApiConfig,
   ) {}
 
@@ -78,12 +80,13 @@ export class WhatsAppWebhookController {
       throw new BadRequestException('raw body required');
     }
 
-    // EC-17: fail closed — empty APP_SECRET rejects (same posture as forged HMAC).
-    if (!this.config.WHATSAPP_APP_SECRET.trim()) {
-      whatsappInboundSignatureRejected.inc();
-      throw new ForbiddenException('webhook signature required');
-    }
-    if (!this.whatsapp.verifyWebhookSignature(raw, signature)) {
+    const sig6605 = this.ecConsultWebhook.verify6605Signature(raw, signature);
+    const sigDefault = this.whatsapp.verifyWebhookSignature(raw, signature);
+    if (!sig6605 && !sigDefault) {
+      if (!this.config.WHATSAPP_APP_SECRET.trim() && !this.config.WHATSAPP_6605_APP_SECRET.trim()) {
+        whatsappInboundSignatureRejected.inc();
+        throw new ForbiddenException('webhook signature required');
+      }
       whatsappInboundSignatureRejected.inc();
       throw new ForbiddenException('invalid webhook signature');
     }
@@ -93,6 +96,13 @@ export class WhatsAppWebhookController {
       payload = JSON.parse(raw.toString('utf8'));
     } catch {
       throw new BadRequestException('invalid json');
+    }
+
+    if (sig6605 && this.ecConsultWebhook.payloadTargets6605(payload)) {
+      void this.ecConsultWebhook.ingest(payload).catch((err) => {
+        this.log.warn(`ec-consult ingest failed: ${String(err)}`);
+      });
+      return { received: true };
     }
 
     // EC-16 status rows + EC-17 inbound persist; after-persist is fire-and-forget.

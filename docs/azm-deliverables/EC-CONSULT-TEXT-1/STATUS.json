@@ -1,16 +1,14 @@
 {
-  "taskCode": "S EC EC-CONSULT-TEXT-1",
-  "title": "EC Consult in Easy Casa WhatsApp admin — 6605 texts + full KB",
-  "phase": "0",
+  "taskCode": "S EC EC-CONSULT-TEXT-1.B",
+  "title": "EC Consult text on 6605 — build Phases A/B in dry-run",
+  "phase": "A-B",
   "lifecycle": "pr_ready",
-  "originMainSha": "c0df064a8849dd2ba0879c2bcb1f73a20b61a108",
-  "surveyedAt": "2026-11-28T12:00:00.000Z",
-  "stoppedAfterPhase0": true,
-  "summary": "Repo + production webhook status surveyed; 6605 on ElevenLabs WABA; Nest EC Consult not present; Graph survey script shipped; META_6605_TOKEN required for live Meta reads.",
-  "nextAction": "AZM: grant Easy Casa Italy app on WABA 1139868405295155, run meta-waba-6605-survey.mjs, then approve Phase A brief.",
+  "summary": "EcConsultModule: webhook path for 6605, inbox source flag, KB fixtures + sync, first-contact Messages 1–2, fences/gate, dry-run orchestrator, 14 CI tests.",
+  "nextAction": "AZM: merge PR, grant META_6605_TOKEN + ElevenLabs KB read key, run survey then setup --apply, dry-run day on VPS.",
   "blockers": [
-    "META_6605_TOKEN not on survey agent",
-    "Meta subscribed_apps not verified live",
-    "Phase A/B implementation deliberately not started"
+    "META_6605_TOKEN",
+    "ELEVENLABS_KB_READ_KEY",
+    "WHATSAPP_6605_APP_SECRET",
+    "Meta subscribe Easy Casa Italy app on WABA 1139868405295155"
   ]
 }
