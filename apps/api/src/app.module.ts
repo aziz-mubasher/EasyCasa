@@ -58,6 +58,7 @@ import { ObservabilityModule } from './observability/observability.module';
 import { CallRequestsModule } from './call-requests/call-requests.module';
 import { CrmModule } from './crm/crm.module';
 import { CallbacksModule } from './callbacks/callbacks.module';
+import { EcConsultModule } from './ec-consult/ec-consult.module';
 import { WebAnalyticsModule } from './web-analytics/web-analytics.module';
 import { HealthIndicatorRegistry } from './health/health-indicator.registry';
 import { EmailHealthIndicator } from './health/email.health';
@@ -123,6 +124,7 @@ import { RedisHealthIndicator } from './health/redis.health';
     ViewingsModule,
     ShareLinksModule,
     WhatsAppModule,
+    EcConsultModule,
     PhoneVerifyModule,
     ListingDraftsModule,
     OmiModule,

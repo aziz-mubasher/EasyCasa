@@ -1,0 +1,21 @@
+{
+  "_note": "Ported for EC Consult from mundida ec-consult claims shape (per-locale banned tokens).",
+  "global": [
+    "halal",
+    "sharia",
+    "certificati oam",
+    "oggi per te, domani per me",
+    " mettiamo in contatto",
+    "agency",
+    "agenzia immobiliare",
+    "provvigione",
+    "mediazione",
+    "sanabilità",
+    "sanabilita",
+    "banks4all"
+  ],
+  "it": ["legenda"],
+  "en": ["legenda"],
+  "ur": ["legenda"],
+  "ar": ["legenda"]
+}

@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 
 import { AuthorityModule } from '../authority/authority.module';
+import { EcConsultModule } from '../ec-consult/ec-consult.module';
 import { UsersModule } from '../users/users.module';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
 import { WhatsAppAiController } from './whatsapp-ai.controller';
@@ -26,7 +27,7 @@ import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
 /** K EC 7.1 + EC-16 + EC-17 inbound + EC-19 viewer + K EC 7.4 channel / Hub + K EC 7.3 Claude assist. */
 @Global()
 @Module({
-  imports: [AuthorityModule, UsersModule],
+  imports: [AuthorityModule, UsersModule, EcConsultModule],
   controllers: [
     WhatsAppWebhookController,
     WhatsAppInboundAdminController,

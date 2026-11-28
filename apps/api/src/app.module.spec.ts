@@ -57,6 +57,8 @@ import { SellerChecklistModule } from './seller-checklist/seller-checklist.modul
 import { SellerInboxModule } from './seller-inbox/seller-inbox.module';
 import { EnquiryMessagingModule } from './enquiry-messaging/enquiry-messaging.module';
 import { SellerAnalyticsModule } from './seller-analytics/seller-analytics.module';
+import { CallbacksModule } from './callbacks/callbacks.module';
+import { EcConsultModule } from './ec-consult/ec-consult.module';
 import { WebAnalyticsModule } from './web-analytics/web-analytics.module';
 import { SellerNudgesModule } from './nudges/seller-nudges.module';
 
@@ -103,6 +105,8 @@ const REQUIRED_STATIC = [
   ViewingsModule,
   ShareLinksModule,
   WhatsAppModule,
+  EcConsultModule,
+  CallbacksModule,
   PhoneVerifyModule,
   ListingDraftsModule,
   OmiModule,
@@ -134,7 +138,7 @@ describe('AppModule composition root (Phase 32/39.1)', () => {
     const imported = Reflect.getMetadata(MODULE_METADATA.IMPORTS, AppModule) as unknown[];
     expect(imported).toEqual(expect.arrayContaining([...REQUIRED_STATIC]));
     expect(imported.some(isPrivacyForRoot)).toBe(true);
-    expect(imported).toHaveLength(REQUIRED_STATIC.length + 1); // + PrivacyModule.forRootProduction()
+    expect(imported).toHaveLength(REQUIRED_STATIC.length + 1); // + PrivacyModule.forRootProduction() only
   });
 
   it('keeps Jwt/Roles APP_GUARD registration on AuthModule only (no double auth guards)', () => {

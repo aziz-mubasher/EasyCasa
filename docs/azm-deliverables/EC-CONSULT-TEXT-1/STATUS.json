@@ -1,0 +1,14 @@
+{
+  "taskCode": "S EC EC-CONSULT-TEXT-1.B",
+  "title": "EC Consult text on 6605 — build Phases A/B in dry-run",
+  "phase": "A-B",
+  "lifecycle": "pr_ready",
+  "summary": "EcConsultModule: webhook path for 6605, inbox source flag, KB fixtures + sync, first-contact Messages 1–2, fences/gate, dry-run orchestrator, 14 CI tests.",
+  "nextAction": "AZM: merge PR, grant META_6605_TOKEN + ElevenLabs KB read key, run survey then setup --apply, dry-run day on VPS.",
+  "blockers": [
+    "META_6605_TOKEN",
+    "ELEVENLABS_KB_READ_KEY",
+    "WHATSAPP_6605_APP_SECRET",
+    "Meta subscribe Easy Casa Italy app on WABA 1139868405295155"
+  ]
+}

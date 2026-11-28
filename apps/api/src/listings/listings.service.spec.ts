@@ -60,6 +60,7 @@ function makeService(repo: ListingsRepository) {
     usersMock as never,
     {} as never, // DRIZZLE — view recording fail-soft; unused in unit tests
     boostsMock as never,
+    { LISTING_VIEWS_FROM_WEB_ANALYTICS: false } as never,
   );
 }
 

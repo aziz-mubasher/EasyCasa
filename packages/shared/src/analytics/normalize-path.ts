@@ -161,7 +161,7 @@ function matchTemplate(parts: string[]): string {
 export function samplePathForPageFile(rel: string): { pathname: string; template: string } | null {
   const norm = rel.replace(/\\/g, '/');
   if (!norm.endsWith('/page.tsx') && !norm.endsWith('/page.ts')) return null;
-  let rest = norm.replace(/^app\//, '').replace(/\/page\.tsx$/, '').replace(/\/page\.ts$/, '');
+  const rest = norm.replace(/^app\//, '').replace(/\/page\.tsx$/, '').replace(/\/page\.ts$/, '');
   if (rest === 'page.tsx' || rest === '') return { pathname: '/it', template: '/' };
   const parts = rest.split('/').filter(Boolean);
   const underLocale = parts[0] === '[locale]';
