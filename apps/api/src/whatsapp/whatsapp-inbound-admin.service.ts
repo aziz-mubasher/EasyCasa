@@ -598,7 +598,10 @@ export class WhatsAppInboundAdminService {
 
     const waId = await this.resolveHandle(handle);
     const windowRow = await this.db
-      .select({ windowExpiresAt: waInboundMessages.windowExpiresAt })
+      .select({
+        windowExpiresAt: waInboundMessages.windowExpiresAt,
+        phoneNumberId: waInboundMessages.phoneNumberId,
+      })
       .from(waInboundMessages)
       .where(eq(waInboundMessages.waId, waId))
       .orderBy(desc(waInboundMessages.windowExpiresAt))
@@ -612,7 +615,9 @@ export class WhatsAppInboundAdminService {
       throw new BadRequestException('contact is blocked');
     }
 
-    const send = await this.cloud.sendText(toE164(waId), body);
+    const livePhoneId = this.config.WHATSAPP_LIVE_PHONE_NUMBER_ID?.trim() ?? '';
+    const fromPhoneId = windowRow[0]?.phoneNumberId === livePhoneId ? livePhoneId : this.config.WHATSAPP_PHONE_NUMBER_ID;
+    const send = await this.cloud.sendTextFrom(fromPhoneId, toE164(waId), body);
     if (!send.ok) {
       throw new BadRequestException(`whatsapp send failed (${send.reason})`);
     }

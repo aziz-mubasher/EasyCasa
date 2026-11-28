@@ -114,12 +114,20 @@ export class WhatsAppCloudClient {
 
   /** Free-form text inside an open customer-service window (EC-17). No template. */
   async sendText(phoneE164: string, text: string): Promise<WhatsAppSendResult> {
-    if (!this.configured) return { ok: false, reason: 'not_configured' };
+    return this.sendTextFrom(this.config.WHATSAPP_PHONE_NUMBER_ID, phoneE164, text);
+  }
+
+  /** Same as sendText, but from an explicit phone number id (the live 6605 line). */
+  async sendTextFrom(phoneNumberId: string, phoneE164: string, text: string): Promise<WhatsAppSendResult> {
+    const from = phoneNumberId.trim();
+    if (this.config.DEMO_MODE || !this.config.WHATSAPP_TOKEN.trim() || !from) {
+      return { ok: false, reason: 'not_configured' };
+    }
     const bodyText = text.trim();
     if (!bodyText) return { ok: false, reason: 'not_configured' };
 
     const to = phoneE164.replace(/^\+/, '');
-    const url = this.messagesUrl();
+    const url = `https://graph.facebook.com/${this.config.WHATSAPP_GRAPH_VERSION}/${from}/messages`;
     return this.postMessages(url, {
       messaging_product: 'whatsapp',
       to,
