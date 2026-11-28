@@ -67,7 +67,10 @@ Whenever you add a variable in code, add it here and to `.env.example`.
 | WHATSAPP_BUSINESS_NUMBER | api | Optional E.164 display on the Hub Connection tab. Empty hides it. **Never** the Banks4All number. |
 | ELEVENLABS_WEBHOOK_SECRET | api | EC-CALLBACKS-1 HMAC for `POST /voice/callbacks/webhook`. Empty rejects every delivery. Header `ElevenLabs-Signature`, 30-minute tolerance. |
 | DESK_TO_EASYCASA_SECRET | api | HMAC for `Authorization: Bearer` on `/api/desk/voice-callbacks`. Empty rejects every desk call. A different value from any other line. |
-| ELEVENLABS_API_KEY | api | ElevenLabs `xi-api-key`. Superadmin Listen streams the recording and does not store it. Empty disables playback. |
+| ELEVENLABS_API_KEY | api | ElevenLabs `xi-api-key`. Superadmin Listen streams the recording and does not store it. The same key loads `#whatsapp/live` and sends the follow-up template on the live number. Empty disables both. |
+| ELEVENLABS_API_BASE_URL | api | Default `https://api.elevenlabs.io`. |
+| WHATSAPP_LIVE_PHONE_NUMBER_ID | api | Easy Casa Italia WhatsApp phone number id. Default `1448737268325965`. Not a secret. |
+| WHATSAPP_LIVE_AGENT_ID | api | ElevenLabs front-desk agent for that number. Default `agent_4101m7mysnsyfv7v1bwh9gjp0r7b`. |
 | VOICE_CALLBACK_NUMBERS | api | Comma-separated E.164 numbers the intake accepts. Default `+393793306605`. Any other called number is logged and ignored. |
 | WHATSAPP_CALLBACK_ACK_TEMPLATE / WHATSAPP_CALLBACK_CONFIRM_TEMPLATE / WHATSAPP_CALLBACK_OWNER_TEMPLATE | api | Utility template names. Empty → caller gets one session-text attempt (Meta’s 24h window opens on an inbound message, not on a call); owner alert falls back to email. |
 | PHONE_OTP_PEPPER | api | SHA-256 pepper for OTP hashes (min 16 chars). |

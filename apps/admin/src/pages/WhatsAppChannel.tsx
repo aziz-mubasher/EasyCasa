@@ -6,15 +6,23 @@ import { useApi } from '../api';
 import { Badge } from '../components/ui';
 import { WhatsAppInbound } from './WhatsAppInbound';
 import { WhatsAppLeads } from './WhatsAppLeads';
+import { WhatsAppLiveInbox } from './WhatsAppLiveInbox';
 
 const HUB_TABS = ['inbox', 'leads', 'connection', 'templates', 'canned', 'analytics'] as const;
 type HubTab = (typeof HUB_TABS)[number];
+
+function isLiveHash(): boolean {
+  if (typeof window === 'undefined') return false;
+  const rest = window.location.hash.replace(/^#/, '').replace(/^whatsapp\/?/, '');
+  return rest === 'live' || rest.startsWith('live/');
+}
 
 function tabFromHash(): HubTab {
   if (typeof window === 'undefined') return 'inbox';
   const raw = window.location.hash.replace(/^#/, '');
   const rest = raw.replace(/^whatsapp\/?/, '');
   if (rest === 'leads' || rest.startsWith('leads/')) return 'leads';
+  if (rest === 'live' || rest.startsWith('live/')) return 'inbox';
   if (!rest || /^[0-9a-f]{32}$/i.test(rest)) return 'inbox';
   if ((HUB_TABS as readonly string[]).includes(rest)) return rest as HubTab;
   return 'inbox';
@@ -331,9 +339,13 @@ function AnalyticsTab() {
 
 export function WhatsAppChannel() {
   const [tab, setTab] = useState<HubTab>(() => tabFromHash());
+  const [live, setLive] = useState(() => isLiveHash());
 
   useEffect(() => {
-    const onHash = () => setTab(tabFromHash());
+    const onHash = () => {
+      setTab(tabFromHash());
+      setLive(isLiveHash());
+    };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
@@ -370,7 +382,8 @@ export function WhatsAppChannel() {
           </button>
         ))}
       </nav>
-      {tab === 'inbox' ? <WhatsAppInbound /> : null}
+      {tab === 'inbox' && live ? <WhatsAppLiveInbox /> : null}
+      {tab === 'inbox' && !live ? <WhatsAppInbound /> : null}
       {tab === 'leads' ? <WhatsAppLeads /> : null}
       {tab === 'connection' ? <ConnectionTab /> : null}
       {tab === 'templates' ? <TemplatesTab /> : null}

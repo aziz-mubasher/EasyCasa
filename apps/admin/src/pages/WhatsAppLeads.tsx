@@ -186,7 +186,7 @@ export function WhatsAppLeads() {
               <h2>Conversation</h2>
               <p className="muted">
                 Window {lead.windowOpen ? `open · ${windowLabel(lead.windowRemainingMs)} left` : 'closed'}.
-                Free text is rejected once it closes. Only an approved template can go out.
+                Free text is rejected once it closes. Open the thread to send the follow-up template.
               </p>
               <p>No price opinion, no lot analysis, nothing about credit or Banks4All.</p>
               <a href={lead.conversationHref}>Open the thread</a>
