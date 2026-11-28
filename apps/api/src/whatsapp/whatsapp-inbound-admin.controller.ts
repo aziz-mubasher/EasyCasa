@@ -66,6 +66,18 @@ class DetailInboundQuery {
   limit?: number;
 }
 
+class FollowUpBody {
+  @IsString()
+  @MinLength(1)
+  @MaxLength(80)
+  staffName!: string;
+
+  @IsString()
+  @MinLength(1)
+  @MaxLength(200)
+  subject!: string;
+}
+
 class ReplyBody {
   @IsString()
   @MinLength(1)
@@ -144,6 +156,17 @@ export class WhatsAppInboundAdminController {
       originalBody: body.originalBody,
       machineTranslated: body.machineTranslated,
     });
+  }
+
+  @Post(':handle/follow-up')
+  @RequiresCapability('whatsapp:inbound:reply')
+  async followUp(
+    @Param('handle') handle: string,
+    @Body() body: FollowUpBody,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    return this.inboundAdmin.sendFollowUp(handle, actor.id, body);
   }
 
   @Get(':handle/notes')

@@ -10,6 +10,7 @@ import {
   formatThreadWhen,
   threadPhone,
 } from './whatsapp-inbound-format';
+import { apiErrorText } from './WhatsAppLiveInbox';
 import { WhatsAppOperatorDock } from './WhatsAppOperatorDock';
 
 const ThreadSchema = z.object({
@@ -169,6 +170,10 @@ export function WhatsAppInbound() {
   const [windowFilter, setWindowFilter] = useState<'all' | 'open' | 'closed'>('all');
   const [replyText, setReplyText] = useState('');
   const [replyError, setReplyError] = useState<string | null>(null);
+  const [staffName, setStaffName] = useState('');
+  const [followSubject, setFollowSubject] = useState('');
+  const [followError, setFollowError] = useState<string | null>(null);
+  const [followSent, setFollowSent] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
   const [translations, setTranslations] = useState<Record<string, InboundTranslation>>({});
   const [translatingId, setTranslatingId] = useState<string | null>(null);
@@ -356,7 +361,26 @@ export function WhatsAppInbound() {
       await qc.invalidateQueries({ queryKey: ['wa-inbound-summary'] });
     },
     onError: (err: unknown) => {
-      setReplyError(err instanceof Error ? err.message : 'Reply failed');
+      setReplyError(apiErrorText(err, 'Reply failed'));
+    },
+  });
+
+  const followUp = useMutation({
+    mutationFn: async () => {
+      if (!selectedHandle) throw new Error('no handle');
+      return api.sendWhatsAppFollowUp(selectedHandle, { staffName, subject: followSubject });
+    },
+    onSuccess: async () => {
+      setFollowError(null);
+      setFollowSent(true);
+      setFollowSubject('');
+      stickToBottom.current = true;
+      await qc.invalidateQueries({ queryKey: ['wa-inbound', selectedHandle, 'messages'] });
+      await qc.invalidateQueries({ queryKey: ['wa-leads'] });
+    },
+    onError: (err: unknown) => {
+      setFollowSent(false);
+      setFollowError(apiErrorText(err, 'Follow-up failed'));
     },
   });
 
@@ -418,6 +442,9 @@ export function WhatsAppInbound() {
                 {summary.data?.openThreadCount ?? '—'}
               </span>
             </div>
+            <button type="button" className="ecwa__chip" onClick={() => { window.location.hash = 'whatsapp/live'; }}>
+              Live line
+            </button>
             <div className="ecwa__filters" role="group" aria-label="Window filter">
               {(
                 [
@@ -698,6 +725,24 @@ export function WhatsAppInbound() {
                   </form>
                 </div>
               ) : null}
+
+              <form
+                className="ecwa__composer"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  if (!staffName.trim() || !followSubject.trim() || followUp.isPending) return;
+                  followUp.mutate();
+                }}
+              >
+                <input className="ecwa__composer-input" placeholder="Your name" value={staffName} maxLength={80} onChange={(e) => setStaffName(e.target.value)} />
+                <input className="ecwa__composer-input" placeholder="What they asked about" value={followSubject} maxLength={200} onChange={(e) => setFollowSubject(e.target.value)} />
+                <button type="submit" className="btn btn--sm" disabled={!staffName.trim() || !followSubject.trim() || followUp.isPending}>
+                  Send follow-up
+                </button>
+              </form>
+              <p className="muted">Approved follow-up template. It can go out when the window is closed. If this archive is not the live number, use Live line.</p>
+              {followSent ? <p className="muted">Follow-up sent.</p> : null}
+              {followError ? <p className="ecwa__error">{followError}</p> : null}
 
               <WhatsAppOperatorDock
                 replyText={replyText}

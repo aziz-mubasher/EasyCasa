@@ -168,6 +168,10 @@ function stubConfig(over: Partial<ApiConfig> = {}): ApiConfig {
     LISTING_VIEWS_FROM_WEB_ANALYTICS: over.LISTING_VIEWS_FROM_WEB_ANALYTICS ?? false,
     WEB_ANALYTICS_SITE: over.WEB_ANALYTICS_SITE ?? 'easycasaita.com',
     WEB_ANALYTICS_ORIGINS: over.WEB_ANALYTICS_ORIGINS ?? 'https://easycasaita.com',
+    DESK_TO_EASYCASA_SECRET: over.DESK_TO_EASYCASA_SECRET ?? '',
+    ELEVENLABS_API_BASE_URL: over.ELEVENLABS_API_BASE_URL ?? 'https://api.elevenlabs.io',
+    WHATSAPP_LIVE_PHONE_NUMBER_ID: over.WHATSAPP_LIVE_PHONE_NUMBER_ID ?? '1448737268325965',
+    WHATSAPP_LIVE_AGENT_ID: over.WHATSAPP_LIVE_AGENT_ID ?? 'agent_4101m7mysnsyfv7v1bwh9gjp0r7b',
   };
 }
 

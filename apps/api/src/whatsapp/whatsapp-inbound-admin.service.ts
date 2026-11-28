@@ -20,6 +20,7 @@ import { maskWaId, redactPreview } from './redact';
 import { waHandleFor } from './wa-handle';
 import { toE164 } from './whatsapp-inbound.service';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
+import { archiveSendsOnLiveNumber } from './whatsapp-live-inbox.service';
 import { WaPresenceService } from './wa-presence';
 import { WhatsAppJourneyService } from './whatsapp-journey.service';
 
@@ -658,6 +659,65 @@ export class WhatsAppInboundAdminService {
       windowState: windowStateAt(expires, now),
       windowRemainingMs: remainingMs(expires, now),
     };
+  }
+
+  /**
+   * Approved follow-up template. Works after the 24-hour window closes.
+   * Refuses when this API's phone is not the live Easy Casa line, so staff
+   * do not message the lead from a different number.
+   */
+  async sendFollowUp(
+    handle: string,
+    actorUserId: string,
+    input: { staffName: string; subject: string },
+  ) {
+    const staffName = input.staffName.replace(/\s+/g, ' ').trim();
+    const subject = input.subject.replace(/\s+/g, ' ').trim();
+    if (!staffName || !subject) throw new BadRequestException('name and subject are required');
+    if (staffName.length > 80 || subject.length > 200) {
+      throw new BadRequestException('follow-up text is too long');
+    }
+    if (!archiveSendsOnLiveNumber(this.config.WHATSAPP_PHONE_NUMBER_ID, this.config.WHATSAPP_LIVE_PHONE_NUMBER_ID)) {
+      throw new BadRequestException('This inbox number is not the live line. Open Live line and send the follow-up there.');
+    }
+    const waId = await this.resolveHandle(handle);
+    const contact = await this.journey.getByWaId(waId);
+    if (contact?.blockedAt) throw new BadRequestException('contact is blocked');
+    const templateName = 'ec_request_followup';
+    const approved = approvedLanguageCodes(await this.cloud.templateLanguageStatuses(templateName));
+    const locale = chooseTemplateLocale(contact?.language ?? 'it', approved ?? []);
+    if (!locale) throw new BadRequestException('template not approved in this language');
+    const send = await this.cloud.sendTemplate({
+      phoneE164: toE164(waId),
+      templateName,
+      languageCode: metaLanguage(templateName, locale),
+      bodyParams: [staffName, subject],
+    });
+    if (!send.ok) throw new BadRequestException(`whatsapp template failed (${send.reason})`);
+    const sentAt = new Date();
+    await this.db.insert(waThreadOutbound).values({
+      waId,
+      waHandle: handle,
+      providerMessageId: send.messageId,
+      body: `Follow-up (${locale})\n${staffName} · ${subject}`,
+      templateName,
+      windowOpen: false,
+      source: 'operator',
+      actorUserId,
+      sentAt,
+    });
+    await this.db
+      .update(waIntakeLeads)
+      .set({ status: 'contacted', contactedAt: sentAt, updatedAt: sentAt })
+      .where(and(eq(waIntakeLeads.waId, waId), sql`${waIntakeLeads.status} in ('new', 'assigned')`));
+    await this.audit.record({
+      actorUserId,
+      action: 'whatsapp_inbound_template',
+      resourceType: 'wa_inbound_thread',
+      resourceId: waId,
+      reason: `template=${templateName} locale=${locale}`,
+    });
+    return { templateName, locale, providerMessageId: send.messageId };
   }
 
   /** EC-WA-INTAKE-2 — lead list for #whatsapp/leads. Link only; no message bodies. */

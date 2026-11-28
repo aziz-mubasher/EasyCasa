@@ -19,6 +19,8 @@ import { WaPresenceService } from './wa-presence';
 import { WhatsAppMessagesStore } from './whatsapp-messages.store';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppUnmatchedSendersGauge } from './whatsapp-unmatched-senders.gauge';
+import { WhatsAppLiveInboxController } from './whatsapp-live-inbox.controller';
+import { WhatsAppLiveInboxService } from './whatsapp-live-inbox.service';
 import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
 
 /** K EC 7.1 + EC-16 + EC-17 inbound + EC-19 viewer + K EC 7.4 channel / Hub + K EC 7.3 Claude assist. */
@@ -31,6 +33,7 @@ import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
     WhatsAppLeadsController,
     WhatsAppAiController,
     WhatsAppHubController,
+    WhatsAppLiveInboxController,
   ],
   providers: [
     WhatsAppCloudClient,
@@ -46,6 +49,7 @@ import { WhatsAppWebhookController } from './whatsapp.webhook.controller';
     WhatsAppHubService,
     WhatsAppService,
     WhatsAppUnmatchedSendersGauge,
+    WhatsAppLiveInboxService,
   ],
   exports: [WhatsAppService, WhatsAppMessagesStore],
 })

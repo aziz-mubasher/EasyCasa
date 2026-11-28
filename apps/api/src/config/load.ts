@@ -87,8 +87,12 @@ const Schema = z
     ELEVENLABS_WEBHOOK_SECRET: z.string().default(''),
     /** Desk grant HMAC. Empty rejects every desk call. Not the webhook secret. */
     DESK_TO_EASYCASA_SECRET: z.string().default(''),
-    /** xi-api-key. Superadmin playback only. The bytes are not stored. */
+    /** xi-api-key. Superadmin playback, and the live WhatsApp inbox. The bytes are not stored. */
     ELEVENLABS_API_KEY: z.string().default(''),
+    ELEVENLABS_API_BASE_URL: z.string().default('https://api.elevenlabs.io'),
+    /** Easy Casa Italia line on the Scuola Video WABA. Not the Nest Cloud API phone. */
+    WHATSAPP_LIVE_PHONE_NUMBER_ID: z.string().default('1448737268325965'),
+    WHATSAPP_LIVE_AGENT_ID: z.string().default('agent_4101m7mysnsyfv7v1bwh9gjp0r7b'),
     /** Comma-separated E.164 numbers this intake accepts. Others are logged and ignored. */
     VOICE_CALLBACK_NUMBERS: z.string().default('+393793306605'),
     /** Empty → session text (24h window only). A call does not open that window. */
