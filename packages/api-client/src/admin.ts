@@ -575,6 +575,20 @@ export class EasyCasaAdminApi {
       { method: 'POST', body: JSON.stringify(body) },
     );
   }
+  sendWhatsAppCallPermission(handle: string, locale: string): Promise<unknown> {
+    return this.request(
+      `/admin/whatsapp/inbound/${encodeURIComponent(handle)}/call-permission`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify({ locale }) },
+    );
+  }
+  sendWhatsAppLiveCallPermission(conversationId: string, locale: string): Promise<unknown> {
+    return this.request(
+      `/admin/whatsapp/live/${encodeURIComponent(conversationId)}/call-permission`,
+      z.unknown(),
+      { method: 'POST', body: JSON.stringify({ locale }) },
+    );
+  }
   getWhatsAppAiStatus(): Promise<unknown> {
     return this.request('/admin/whatsapp/ai/status', z.unknown());
   }

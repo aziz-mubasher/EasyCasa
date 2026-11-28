@@ -27,6 +27,11 @@ const DetailSchema = z.object({
 const StatusSchema = z.object({
   configured: z.boolean(),
   phoneLast4: z.string().nullable(),
+  callPermission: z.array(z.object({
+    locale: z.string(),
+    name: z.string(),
+    body: z.string(),
+  })).optional(),
 });
 
 function liveIdFromHash(): string | null {
@@ -52,8 +57,11 @@ export function WhatsAppLiveInbox() {
   const [staffName, setStaffName] = useState('');
   const [subject, setSubject] = useState('');
   const [locale, setLocale] = useState<(typeof LOCALES)[number]>('it');
+  const [callLocale, setCallLocale] = useState('it');
   const [sendError, setSendError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const [callError, setCallError] = useState<string | null>(null);
+  const [callSent, setCallSent] = useState(false);
 
   const status = useQuery({
     queryKey: ['wa-live-status'],
@@ -87,12 +95,29 @@ export function WhatsAppLiveInbox() {
     },
   });
 
+  const askCall = useMutation({
+    mutationFn: async () => {
+      if (!selected) throw new Error('Select a conversation');
+      return api.sendWhatsAppLiveCallPermission(selected, callLocale);
+    },
+    onSuccess: () => {
+      setCallError(null);
+      setCallSent(true);
+    },
+    onError: (err: unknown) => {
+      setCallSent(false);
+      setCallError(apiErrorText(err, 'Call permission failed'));
+    },
+  });
+
   const items = useMemo(() => list.data?.items ?? [], [list.data]);
 
   function open(id: string | null) {
     setSelected(id);
     setSent(false);
     setSendError(null);
+    setCallSent(false);
+    setCallError(null);
     window.location.hash = id ? `whatsapp/live/${id}` : 'whatsapp/live';
   }
 
@@ -171,6 +196,29 @@ export function WhatsAppLiveInbox() {
               <p className="muted">Template ec_request_followup. It can go out when free text is closed.</p>
               {sent ? <p className="muted">Follow-up sent.</p> : null}
               {sendError ? <p className="ecwa__error">{sendError}</p> : null}
+              <form
+                className="ecwa__composer"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  if (askCall.isPending) return;
+                  askCall.mutate();
+                }}
+              >
+                <select className="ecwa__composer-input" value={callLocale} onChange={(e) => setCallLocale(e.target.value)}>
+                  {(status.data?.callPermission ?? [{ locale: 'it', name: 'ec_callback_permission', body: '' }]).map((row) => (
+                    <option key={row.locale} value={row.locale}>{row.locale}</option>
+                  ))}
+                </select>
+                <button type="submit" className="btn btn--sm" disabled={askCall.isPending}>
+                  Ask to call on WhatsApp
+                </button>
+              </form>
+              <p className="muted">
+                {(status.data?.callPermission ?? []).find((row) => row.locale === callLocale)?.body
+                  || 'Asks permission to call this lead on their WhatsApp number. WhatsApp shows Allow and Don’t allow.'}
+              </p>
+              {callSent ? <p className="muted">Call permission sent.</p> : null}
+              {callError ? <p className="ecwa__error">{callError}</p> : null}
             </>
           )}
         </div>

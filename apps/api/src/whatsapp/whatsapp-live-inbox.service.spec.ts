@@ -103,6 +103,32 @@ describe('WhatsAppLiveInboxService', () => {
     vi.unstubAllGlobals();
   });
 
+  it('sends the call-permission template with no body parameters', async () => {
+    const fetchImpl = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          conversation_id: 'conv_abc12345',
+          metadata: {
+            whatsapp: { whatsapp_phone_number_id: '1448737268325965', whatsapp_user_id: '393001112233' },
+          },
+          transcript: [],
+        }),
+      })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ conversation_id: 'conv_perm1' }) });
+    vi.stubGlobal('fetch', fetchImpl);
+    const { svc } = service();
+    const sent = await svc.sendCallPermission('conv_abc12345', 'user-1', { locale: 'it' });
+    expect(sent.templateName).toBe('ec_callback_permission');
+    const body = JSON.parse(String(fetchImpl.mock.calls[1]?.[1]?.body));
+    expect(body.template_name).toBe('ec_callback_permission');
+    expect(body.template_language_code).toBe('it');
+    expect(body.template_params).toBeUndefined();
+    expect(body.whatsapp_user_id).toBe('393001112233');
+    expect(JSON.stringify(sent)).not.toContain('393001112233');
+    vi.unstubAllGlobals();
+  });
+
   it('refuses a language Meta has not approved when a status list exists', async () => {
     const { svc, cloud } = service();
     cloud.templateLanguageStatuses.mockResolvedValue([{ language: 'en', status: 'APPROVED' }]);

@@ -66,6 +66,13 @@ class DetailInboundQuery {
   limit?: number;
 }
 
+class CallPermissionBody {
+  @IsString()
+  @MinLength(2)
+  @MaxLength(8)
+  locale!: string;
+}
+
 class FollowUpBody {
   @IsString()
   @MinLength(1)
@@ -167,6 +174,17 @@ export class WhatsAppInboundAdminController {
   ) {
     const actor = await this.users.getOrCreate(user);
     return this.inboundAdmin.sendFollowUp(handle, actor.id, body);
+  }
+
+  @Post(':handle/call-permission')
+  @RequiresCapability('whatsapp:inbound:reply')
+  async callPermission(
+    @Param('handle') handle: string,
+    @Body() body: CallPermissionBody,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    return this.inboundAdmin.sendCallPermission(handle, actor.id, body);
   }
 
   @Get(':handle/notes')

@@ -7,6 +7,13 @@ import type { AuthUser } from '../auth/auth.types';
 import { UsersService } from '../users/users.service';
 import { WhatsAppLiveInboxService } from './whatsapp-live-inbox.service';
 
+class CallPermissionBody {
+  @IsString()
+  @MinLength(2)
+  @MaxLength(8)
+  locale!: string;
+}
+
 class FollowUpBody {
   @IsString()
   @MinLength(1)
@@ -57,5 +64,16 @@ export class WhatsAppLiveInboxController {
   ) {
     const actor = await this.users.getOrCreate(user);
     return this.live.sendFollowUp(conversationId, actor.id, body);
+  }
+
+  @Post(':conversationId/call-permission')
+  @RequiresCapability('whatsapp:inbound:reply')
+  async callPermission(
+    @Param('conversationId') conversationId: string,
+    @Body() body: CallPermissionBody,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const actor = await this.users.getOrCreate(user);
+    return this.live.sendCallPermission(conversationId, actor.id, body);
   }
 }

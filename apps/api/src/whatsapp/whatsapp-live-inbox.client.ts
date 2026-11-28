@@ -37,19 +37,22 @@ export function outboundTemplateBody(input: {
   bodyParams: string[];
   agentId: string;
 }): Record<string, unknown> {
-  return {
+  const body: Record<string, unknown> = {
     whatsapp_phone_number_id: input.phoneNumberId,
     whatsapp_user_id: input.whatsappUserId,
     template_name: input.templateName,
     template_language_code: input.languageCode,
-    template_params: [
+    agent_id: input.agentId,
+  };
+  if (input.bodyParams.length > 0) {
+    body.template_params = [
       {
         type: 'body',
         parameters: input.bodyParams.map((text) => ({ type: 'text', text })),
       },
-    ],
-    agent_id: input.agentId,
-  };
+    ];
+  }
+  return body;
 }
 
 export function mapLiveSummary(row: unknown): LiveSummary | null {
