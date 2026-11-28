@@ -37,6 +37,8 @@ import { DRIZZLE } from '../db/db.module';
 import type { Db } from '../db/drizzle';
 import { recordListingView } from '../seller-analytics/seller-analytics.service';
 import { ListingBoostService } from '../listing-boost/listing-boost.service';
+import type { ApiConfig } from '../config';
+import { InjectConfig } from '../config/inject-config.decorator';
 
 function slugify(title: string): string {
   return title.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '')
@@ -70,6 +72,7 @@ export class ListingsService {
     private readonly users: UsersService,
     @Inject(DRIZZLE) private readonly db: Db,
     private readonly boosts: ListingBoostService,
+    @InjectConfig() private readonly config: ApiConfig,
   ) {}
 
   /** Public-safe publisher contact for listing pages (no email / OIDC slug). */
@@ -100,7 +103,7 @@ export class ListingsService {
     const raw = await this.read.getRaw(idOrSlug);
     if (!raw) throw new NotFoundException(`Listing ${idOrSlug} not found`);
     // EC-S-T23 — fail-soft catalogue view increment (never breaks detail).
-    void recordListingView(this.db, raw.id);
+    void recordListingView(this.db, raw.id, new Date(), this.config.LISTING_VIEWS_FROM_WEB_ANALYTICS);
     const detail = buildListingDetail(raw);
     const boosted = await this.boosts.isListingBoosted(raw.id);
     return { ...detail, boosted };
@@ -128,7 +131,7 @@ export class ListingsService {
     const l = await this.repo.findBySlug(slug);
     if (!l) throw new NotFoundException('listing not found');
     // EC-S-T23 — fail-soft catalogue view increment (never breaks detail).
-    void recordListingView(this.db, l.id);
+    void recordListingView(this.db, l.id, new Date(), this.config.LISTING_VIEWS_FROM_WEB_ANALYTICS);
     const media = await this.repo.listMedia(l.id);
     const imageUrls = media
       .filter((m) => m.type === 'image' || m.type === 'floorplan')

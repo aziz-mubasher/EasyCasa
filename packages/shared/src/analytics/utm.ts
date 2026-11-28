@@ -1,9 +1,16 @@
-const CONTROL = /[\u0000-\u001F\u007F]/g;
+function stripControlChars(s: string): string {
+  let out = '';
+  for (const ch of s) {
+    const code = ch.charCodeAt(0);
+    if (code >= 0x20 && code !== 0x7f) out += ch;
+  }
+  return out;
+}
 
 /** Lowercase, strip controls, cap at 100. Reject emails and long digit runs. */
 export function cleanUtm(value: unknown): string | null {
   if (typeof value !== 'string') return null;
-  const cleaned = value.trim().toLowerCase().replace(CONTROL, '');
+  const cleaned = stripControlChars(value.trim().toLowerCase());
   if (!cleaned) return null;
   const clipped = cleaned.length > 100 ? cleaned.slice(0, 100) : cleaned;
   if (clipped.includes('@')) return null;

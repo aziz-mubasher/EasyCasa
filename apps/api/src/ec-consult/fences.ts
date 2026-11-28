@@ -1,8 +1,7 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { FIXTURE_KB_CANONICAL_TEXT } from './fixtures/kb-canonical.fixture';
 
 function loadFixtureKb(): string {
-  return readFileSync(join(__dirname, 'fixtures/FIXTURE-KB-v1.2-canonical.txt'), 'utf8');
+  return FIXTURE_KB_CANONICAL_TEXT;
 }
 
 const C2_IT = 'Questa linea non si occupa di mutui o finanziamenti.';
