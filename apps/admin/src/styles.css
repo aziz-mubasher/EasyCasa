@@ -970,6 +970,105 @@ select {
   padding-bottom: 0.1rem;
 }
 
+.ecwa__compose {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.ecwa__window-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(180, 120, 40, 0.16);
+  font-size: 0.82rem;
+}
+
+.ecwa__compose-tabs {
+  display: flex;
+  gap: 0.15rem;
+  padding: 0 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.ecwa__compose-tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.82rem;
+  padding: 0.45rem 0.75rem;
+}
+
+.ecwa__compose-tab--active {
+  color: var(--text);
+  border-bottom-color: #3d9a7a;
+  font-weight: 600;
+}
+
+.ecwa__template-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem 0.65rem;
+}
+
+.ecwa__compose .ecwa__notes {
+  border-top: 0;
+}
+
+.ecwa__compose .ecwa__dock {
+  border-top: 0;
+  padding-top: 0.45rem;
+}
+
+.ecwa__dock-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.ecwa__dock-bar .ecwa__dock-templates {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ecwa__lang-select select,
+.ecwa__line {
+  height: 2.1rem;
+  min-height: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.ecwa__lang-select select {
+  max-width: 9.5rem;
+  padding: 0 0.4rem;
+}
+
+.ecwa__line {
+  flex: 1 1 7rem;
+  min-width: 5.5rem;
+  width: auto;
+  padding: 0 0.65rem;
+}
+
+.ecwa__composer-row > .ecwa__line {
+  flex: 1 1 auto;
+}
+
 .ecwa__chip-label {
   margin-left: 0.3rem;
   font-family: var(--font-body), 'Noto Sans Bengali', 'Bangla Sangam MN', 'Kohinoor Bangla', sans-serif;

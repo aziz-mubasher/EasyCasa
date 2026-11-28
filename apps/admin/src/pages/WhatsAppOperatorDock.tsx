@@ -55,6 +55,7 @@ export function WhatsAppOperatorDock({
   const clientName = resolveCallInviteName({ formName, whatsappName });
   const [locale, setLocale] = React.useState<WaAiLocale>(() => parseWaAiLocale(contactLanguage));
   const [prompt, setPrompt] = React.useState('');
+  const [aiOpen, setAiOpen] = React.useState(false);
 
   React.useEffect(() => {
     setLocale(parseWaAiLocale(contactLanguage));
@@ -85,21 +86,15 @@ export function WhatsAppOperatorDock({
 
   return (
     <div className="ecwa__dock">
-      <div className="ecwa__dock-langs" role="tablist" aria-label="Reply language">
-        {WA_AI_LOCALES.map((code) => (
-          <button
-            key={code}
-            type="button"
-            role="tab"
-            aria-selected={locale === code}
-            className={`ecwa__chip${locale === code ? ' ecwa__chip--active' : ''}`}
-            onClick={() => setLocale(code)}
-          >
-            {code.toUpperCase()}
-            <span className="ecwa__chip-label">{WA_AI_LOCALE_LABEL[code]}</span>
-          </button>
-        ))}
-      </div>
+      <div className="ecwa__dock-bar">
+        <label className="ecwa__lang-select">
+          <span className="ec-sr-only">Reply language</span>
+          <select value={locale} onChange={(e) => setLocale(parseWaAiLocale(e.target.value))} aria-label="Reply language">
+            {WA_AI_LOCALES.map((code) => (
+              <option key={code} value={code}>{WA_AI_LOCALE_LABEL[code]}</option>
+            ))}
+          </select>
+        </label>
       <div className="ecwa__dock-templates" aria-label="Quick replies">
         {cannedLocale
           ? WA_OPERATOR_TEMPLATES.map((t) => {
@@ -132,6 +127,11 @@ export function WhatsAppOperatorDock({
           />
         ))}
       </div>
+        <button type="button" className="btn btn--sm" onClick={() => setAiOpen((open) => !open)}>
+          {aiOpen ? 'Hide AI' : 'Write with AI'}
+        </button>
+      </div>
+      {aiOpen ? (
       <form
         className="ecwa__ai"
         onSubmit={(e) => {
@@ -185,6 +185,7 @@ export function WhatsAppOperatorDock({
           advice.
         </p>
       </form>
+      ) : null}
       <form
         className="ecwa__composer"
         onSubmit={(e) => {

@@ -181,9 +181,10 @@ export function WhatsAppInbound() {
   const [translations, setTranslations] = useState<Record<string, InboundTranslation>>({});
   const [translatingId, setTranslatingId] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
-  const [notesOpen, setNotesOpen] = useState(false);
+  const [composeTab, setComposeTab] = useState<'reply' | 'template' | 'notes'>('reply');
   const threadScrollRef = useRef<HTMLDivElement>(null);
   const stickToBottom = useRef(true);
+  const templateForHandle = useRef<string | null>(null);
 
   useEffect(() => {
     if (selectedHandle) {
@@ -199,7 +200,7 @@ export function WhatsAppInbound() {
     setAiError(null);
     setTranslations({});
     setNoteText('');
-    setNotesOpen(false);
+    setComposeTab('reply');
     stickToBottom.current = true;
   }, [selectedHandle]);
 
@@ -423,6 +424,12 @@ export function WhatsAppInbound() {
   const empty = !list.isLoading && !list.isError && threads.length === 0;
   const selectedThread = threads.find((t) => t.waHandle === selectedHandle) ?? null;
   const canReply = Boolean(head?.canReply);
+  useEffect(() => {
+    if (!selectedHandle || !head || head.canReply !== false) return;
+    if (templateForHandle.current === selectedHandle) return;
+    templateForHandle.current = selectedHandle;
+    setComposeTab('template');
+  }, [selectedHandle, head]);
   const contactTitle =
     head?.contactName?.trim() ||
     selectedThread?.contactName?.trim() ||
@@ -590,8 +597,8 @@ export function WhatsAppInbound() {
                 </button>
                 <button
                   type="button"
-                  className={`btn btn--sm${notesOpen ? ' ecwa__notes-toggle--on' : ''}`}
-                  onClick={() => setNotesOpen((v) => !v)}
+                  className={`btn btn--sm${composeTab === 'notes' ? ' ecwa__notes-toggle--on' : ''}`}
+                  onClick={() => setComposeTab('notes')}
                 >
                   Notes{(notes.data?.items.length ?? 0) > 0 ? ` (${notes.data?.items.length})` : ''}
                 </button>
@@ -708,81 +715,99 @@ export function WhatsAppInbound() {
                 </ul>
               </div>
 
-              {notesOpen ? (
-                <div className="ecwa__notes">
-                  <p className="ecwa__notes-label muted">Staff notes (not sent to WhatsApp)</p>
-                  <ul className="ecwa__notes-list">
-                    {(notes.data?.items ?? []).map((n) => (
-                      <li key={n.id}>
-                        <span className="mono muted">{formatClock(n.createdAt)}</span> {n.body}
-                      </li>
-                    ))}
-                  </ul>
-                  <form
-                    className="ecwa__notes-form"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      const body = noteText.trim();
-                      if (!body || addNote.isPending) return;
-                      addNote.mutate(body);
-                    }}
-                  >
-                    <input
-                      className="ecwa__composer-input"
-                      placeholder="Add an internal note"
-                      value={noteText}
-                      maxLength={4096}
-                      onChange={(e) => setNoteText(e.target.value)}
-                    />
-                    <button
-                      type="submit"
-                      className="btn btn--sm"
-                      disabled={!noteText.trim() || addNote.isPending}
-                    >
-                      Note
+              <div className="ecwa__compose">
+                {head && !head.canReply ? (
+                  <div className="ecwa__window-banner">
+                    <span>Window closed — free text is blocked.</span>
+                    <button type="button" className="btn btn--sm" onClick={() => setComposeTab('template')}>
+                      Use template
                     </button>
-                  </form>
-                </div>
-              ) : null}
-
-              <form
-                className="ecwa__composer"
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  if (!staffName.trim() || !followSubject.trim() || followUp.isPending) return;
-                  followUp.mutate();
-                }}
-              >
-                <input className="ecwa__composer-input" placeholder="Your name" value={staffName} maxLength={80} onChange={(e) => setStaffName(e.target.value)} />
-                <input className="ecwa__composer-input" placeholder="What they asked about" value={followSubject} maxLength={200} onChange={(e) => setFollowSubject(e.target.value)} />
-                <button type="submit" className="btn btn--sm" disabled={!staffName.trim() || !followSubject.trim() || followUp.isPending}>
-                  Send follow-up
-                </button>
-              </form>
-              <p className="muted">Approved follow-up template. It can go out when the window is closed. If this archive is not the live number, use Live line.</p>
-              {followSent ? <p className="muted">Follow-up sent.</p> : null}
-              {followError ? <p className="ecwa__error">{followError}</p> : null}
-              <form
-                className="ecwa__composer"
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  if (askCall.isPending) return;
-                  askCall.mutate();
-                }}
-              >
-                <select className="ecwa__composer-input" value={callLocale} onChange={(e) => setCallLocale(e.target.value)}>
-                  {['it', 'en', 'es', 'fr', 'ro', 'ru', 'uk', 'ur', 'hi', 'pa', 'bn', 'ar'].map((code) => (
-                    <option key={code} value={code}>{code}</option>
+                  </div>
+                ) : null}
+                <div className="ecwa__compose-tabs" role="tablist">
+                  {(['reply', 'template', 'notes'] as const).map((key) => (
+                    <button
+                      key={key}
+                      type="button"
+                      role="tab"
+                      aria-selected={composeTab === key}
+                      className={`ecwa__compose-tab${composeTab === key ? ' ecwa__compose-tab--active' : ''}`}
+                      onClick={() => setComposeTab(key)}
+                    >
+                      {key === 'reply' ? 'Reply' : key === 'template' ? 'Template' : 'Notes'}
+                    </button>
                   ))}
-                </select>
-                <button type="submit" className="btn btn--sm" disabled={askCall.isPending}>
-                  Ask to call on WhatsApp
-                </button>
-              </form>
-              <p className="muted">Utility template. WhatsApp shows Allow and Don’t allow so we can call them on their number. If this archive is not the live number, use Live line.</p>
-              {callSent ? <p className="muted">Call permission sent.</p> : null}
-              {callError ? <p className="ecwa__error">{callError}</p> : null}
-
+                </div>
+                {composeTab === 'notes' ? (
+                  <div className="ecwa__notes">
+                    <p className="ecwa__notes-label muted">Staff notes (not sent to WhatsApp)</p>
+                    <ul className="ecwa__notes-list">
+                      {(notes.data?.items ?? []).map((n) => (
+                        <li key={n.id}>
+                          <span className="mono muted">{formatClock(n.createdAt)}</span> {n.body}
+                        </li>
+                      ))}
+                    </ul>
+                    <form
+                      className="ecwa__composer-row"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        const body = noteText.trim();
+                        if (!body || addNote.isPending) return;
+                        addNote.mutate(body);
+                      }}
+                    >
+                      <input
+                        className="ecwa__composer-input ecwa__line"
+                        placeholder="Add an internal note"
+                        value={noteText}
+                        maxLength={4096}
+                        onChange={(e) => setNoteText(e.target.value)}
+                      />
+                      <button type="submit" className="btn btn--sm" disabled={!noteText.trim() || addNote.isPending}>
+                        Note
+                      </button>
+                    </form>
+                  </div>
+                ) : null}
+                {composeTab === 'template' ? (
+                  <div className="ecwa__template-pane">
+                    <form
+                      className="ecwa__composer-row"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        if (askCall.isPending) return;
+                        askCall.mutate();
+                      }}
+                    >
+                      <select className="ecwa__line" value={callLocale} onChange={(e) => setCallLocale(e.target.value)} aria-label="Call permission language">
+                        {['it', 'en', 'es', 'fr', 'ro', 'ru', 'uk', 'ur', 'hi', 'pa', 'bn', 'ar'].map((code) => (
+                          <option key={code} value={code}>{code}</option>
+                        ))}
+                      </select>
+                      <button type="submit" className="btn btn--sm" disabled={askCall.isPending}>
+                        Ask to call on WhatsApp
+                      </button>
+                    </form>
+                    <form
+                      className="ecwa__composer-row"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        if (!staffName.trim() || !followSubject.trim() || followUp.isPending) return;
+                        followUp.mutate();
+                      }}
+                    >
+                      <input className="ecwa__line" placeholder="Your name" value={staffName} maxLength={80} onChange={(e) => setStaffName(e.target.value)} />
+                      <input className="ecwa__line" placeholder="What they asked about" value={followSubject} maxLength={200} onChange={(e) => setFollowSubject(e.target.value)} />
+                      <button type="submit" className="btn btn--sm" disabled={!staffName.trim() || !followSubject.trim() || followUp.isPending}>
+                        Send follow-up
+                      </button>
+                    </form>
+                    {followSent || callSent ? <p className="muted">Template sent.</p> : null}
+                    {followError || callError ? <p className="ecwa__error">{followError || callError}</p> : null}
+                  </div>
+                ) : null}
+                {composeTab === 'reply' ? (
               <WhatsAppOperatorDock
                 replyText={replyText}
                 replyError={replyError}
@@ -813,6 +838,8 @@ export function WhatsAppInbound() {
                   });
                 }}
               />
+                ) : null}
+              </div>
             </>
           )}
         </div>

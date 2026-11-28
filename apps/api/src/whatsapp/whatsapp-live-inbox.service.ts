@@ -141,6 +141,31 @@ export class WhatsAppLiveInboxService {
     };
   }
 
+  /** Send a template to a WhatsApp user id on the live Easy Casa number. */
+  async sendToWaId(input: {
+    waId: string;
+    templateName: string;
+    languageCode: string;
+    bodyParams: string[];
+  }): Promise<{ providerConversationId: string | null }> {
+    const whatsappUserId = input.waId.replace(/\D/g, '');
+    if (!whatsappUserId) throw new BadRequestException('this chat has no WhatsApp recipient');
+    const body = outboundTemplateBody({
+      phoneNumberId: this.config.WHATSAPP_LIVE_PHONE_NUMBER_ID.trim(),
+      whatsappUserId,
+      templateName: input.templateName,
+      languageCode: input.languageCode,
+      bodyParams: input.bodyParams,
+      agentId: this.config.WHATSAPP_LIVE_AGENT_ID.trim(),
+    });
+    const sent = await this.elevenFetch('/v1/convai/whatsapp/outbound-message', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    const conversation = sent && typeof sent === 'object' ? (sent as { conversation_id?: unknown }).conversation_id : null;
+    return { providerConversationId: typeof conversation === 'string' ? conversation : null };
+  }
+
   async sendCallPermission(
     conversationId: string,
     actorUserId: string,
