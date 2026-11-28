@@ -106,6 +106,12 @@ export class WhatsAppInboundService {
     if (!row) return;
 
     await this.journey.recordInboundLead(id);
+    const livePhoneId = this.config.WHATSAPP_LIVE_PHONE_NUMBER_ID?.trim() ?? '';
+    if (livePhoneId && row.phoneNumberId === livePhoneId) {
+      whatsappAutoReplySuppressed.inc({ reason: 'live_number_manual' });
+      await this.forwardToOps(row);
+      return;
+    }
     if (isStopWord(row.body)) {
       whatsappAutoReplySuppressed.inc({ reason: 'stop_word' });
     } else if (row.windowExpiresAt.getTime() <= Date.now()) {
