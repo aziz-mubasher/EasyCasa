@@ -1,0 +1,24 @@
+name: EAS iOS preview
+
+on:
+  workflow_dispatch:
+
+# Installable IPA for registered devices. Requires the EXPO_TOKEN repo secret
+# (an access token for the mundida-apps Expo account) and Apple credentials
+# already stored on the EAS project easycasa.
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build iOS preview on EAS
+        working-directory: apps/mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: npx --yes eas-cli@24.12.0 build --platform ios --profile preview --non-interactive --wait
