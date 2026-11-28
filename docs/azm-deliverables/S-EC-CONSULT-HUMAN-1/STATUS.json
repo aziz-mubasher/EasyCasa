@@ -1,0 +1,18 @@
+{
+  "taskCode": "S EC CONSULT-HUMAN-1",
+  "title": "EC Consult — human opening, short replies, AI-first call ladder, Corso Asta (Phase 0)",
+  "lifecycle": "pr_ready",
+  "phase": 0,
+  "summary": "Phase 0 survey: Message 1/2 map, output-gate extension point, callback unification gap, no scuolavideo enrolment API, voice-call detection via crm.voice_calls only, KB sync fixture-only until ELEVENLABS_KB_READ_KEY.",
+  "nextAction": "Review PR; approve Phase 1 brief wiring consult_human_v1, unified CallbacksService text ingest, KB v1.3 sync + drop archived §13 doc fetch.",
+  "blockers": [
+    "ELEVENLABS_KB_READ_KEY",
+    "CURSOR_CONSULT_HUMAN_OPENING_CALL_LADDER_v2.md not in repo",
+    "Scuola Video read-only enrolment API unspecified",
+    "AYNI Voice Desk outside EasyCasa repo"
+  ],
+  "relatedDeliverables": [
+    "docs/azm-deliverables/EC-CONSULT-TEXT-1/phase-0-survey.md",
+    "docs/azm-deliverables/EC-CONSULT-TEXT-1/phase-1b-build.md"
+  ]
+}
