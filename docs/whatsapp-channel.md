@@ -2,7 +2,7 @@
 
 > **Number +39 379 330 6605 (AZM, 22 Nov 2026).** Meta delivers this number only to the ElevenLabs front desk and the ten language assistants. First contact is `docs/ec-chat-train-1.md`. This file describes the Nest inbox and Hub. That module no longer receives this number.
 >
-> Staff read those chats at `#whatsapp/live` and send `ec_request_followup` from there, including after the 24-hour window closes. The archive inbox can send the same template only when `WHATSAPP_PHONE_NUMBER_ID` is this live number.
+> Staff read those chats at `#whatsapp/live` and send `ec_request_followup` from there, including after the 24-hour window closes. **Ask to call on WhatsApp** sends the approved utility template `ec_callback_permission`. Meta shows Allow / Don’t allow so the lead can permit a call on their number. The archive inbox can send either template only when `WHATSAPP_PHONE_NUMBER_ID` is this live number.
 
 Copy of the **Banks4All WhatsApp shape**, not B4A copy or number.
 

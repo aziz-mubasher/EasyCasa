@@ -174,6 +174,9 @@ export function WhatsAppInbound() {
   const [followSubject, setFollowSubject] = useState('');
   const [followError, setFollowError] = useState<string | null>(null);
   const [followSent, setFollowSent] = useState(false);
+  const [callLocale, setCallLocale] = useState('it');
+  const [callError, setCallError] = useState<string | null>(null);
+  const [callSent, setCallSent] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
   const [translations, setTranslations] = useState<Record<string, InboundTranslation>>({});
   const [translatingId, setTranslatingId] = useState<string | null>(null);
@@ -381,6 +384,22 @@ export function WhatsAppInbound() {
     onError: (err: unknown) => {
       setFollowSent(false);
       setFollowError(apiErrorText(err, 'Follow-up failed'));
+    },
+  });
+
+  const askCall = useMutation({
+    mutationFn: async () => {
+      if (!selectedHandle) throw new Error('no handle');
+      return api.sendWhatsAppCallPermission(selectedHandle, callLocale);
+    },
+    onSuccess: async () => {
+      setCallError(null);
+      setCallSent(true);
+      await qc.invalidateQueries({ queryKey: ['wa-inbound', selectedHandle, 'messages'] });
+    },
+    onError: (err: unknown) => {
+      setCallSent(false);
+      setCallError(apiErrorText(err, 'Call permission failed'));
     },
   });
 
@@ -743,6 +762,26 @@ export function WhatsAppInbound() {
               <p className="muted">Approved follow-up template. It can go out when the window is closed. If this archive is not the live number, use Live line.</p>
               {followSent ? <p className="muted">Follow-up sent.</p> : null}
               {followError ? <p className="ecwa__error">{followError}</p> : null}
+              <form
+                className="ecwa__composer"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  if (askCall.isPending) return;
+                  askCall.mutate();
+                }}
+              >
+                <select className="ecwa__composer-input" value={callLocale} onChange={(e) => setCallLocale(e.target.value)}>
+                  {['it', 'en', 'es', 'fr', 'ro', 'ru', 'uk', 'ur', 'hi', 'pa', 'bn', 'ar'].map((code) => (
+                    <option key={code} value={code}>{code}</option>
+                  ))}
+                </select>
+                <button type="submit" className="btn btn--sm" disabled={askCall.isPending}>
+                  Ask to call on WhatsApp
+                </button>
+              </form>
+              <p className="muted">Utility template. WhatsApp shows Allow and Don’t allow so we can call them on their number. If this archive is not the live number, use Live line.</p>
+              {callSent ? <p className="muted">Call permission sent.</p> : null}
+              {callError ? <p className="ecwa__error">{callError}</p> : null}
 
               <WhatsAppOperatorDock
                 replyText={replyText}

@@ -1,0 +1,17 @@
+{
+  "name": "ec_callback_permission",
+  "bodies": {
+    "it": "Grazie per la richiesta di richiamata a Easy Casa Italia ed Easy Legenda. Per ricevere la chiamata su WhatsApp, consenta le chiamate da questo numero. L'assistente risponde nella sua lingua.",
+    "en": "Thank you for your callback request to Easy Casa Italia and Easy Legenda. To receive the call on WhatsApp, please allow calls from this number. Our assistant will speak with you in your language.",
+    "es": "Gracias por su solicitud de llamada a Easy Casa Italia y Easy Legenda. Para recibir la llamada por WhatsApp, permita las llamadas de este número. La asistente le habla en su idioma.",
+    "fr": "Merci pour votre demande de rappel à Easy Casa Italia et Easy Legenda. Pour recevoir l'appel sur WhatsApp, autorisez les appels de ce numéro. L'assistante vous parle dans votre langue.",
+    "ro": "Vă mulțumim pentru cererea de apel înapoi către Easy Casa Italia și Easy Legenda. Pentru a primi apelul pe WhatsApp, permiteți apelurile de la acest număr. Asistenta vă vorbește în limba dumneavoastră.",
+    "ru": "Спасибо за запрос обратного звонка в Easy Casa Italia и Easy Legenda. Чтобы получить звонок в WhatsApp, разрешите звонки с этого номера. Ассистент поговорит с вами на вашем языке.",
+    "uk": "Дякуємо за запит на зворотний дзвінок до Easy Casa Italia та Easy Legenda. Щоб отримати дзвінок у WhatsApp, дозвольте дзвінки з цього номера. Асистентка говоритиме з вами вашою мовою.",
+    "ur": "Easy Casa Italia / Easy Legenda\nکال بیک کی درخواست کا شکریہ۔ واٹس ایپ پر کال وصول کرنے کے لیے اس نمبر سے کالز کی اجازت دیں۔ ہماری اسسٹنٹ آپ سے آپ کی زبان میں بات کرے گی۔",
+    "hi": "Easy Casa Italia / Easy Legenda\nकॉल बैक अनुरोध के लिए धन्यवाद। व्हाट्सऐप पर कॉल पाने के लिए इस नंबर से कॉल की अनुमति दें। हमारी असिस्टेंट आपसे आपकी भाषा में बात करेगी।",
+    "pa": "Easy Casa Italia / Easy Legenda\nਕਾਲ ਬੈਕ ਦੀ ਬੇਨਤੀ ਲਈ ਧੰਨਵਾਦ। ਵਟਸਐਪ 'ਤੇ ਕਾਲ ਲੈਣ ਲਈ ਇਸ ਨੰਬਰ ਤੋਂ ਕਾਲਾਂ ਦੀ ਇਜਾਜ਼ਤ ਦਿਓ। ਸਾਡੀ ਅਸਿਸਟੈਂਟ ਤੁਹਾਡੇ ਨਾਲ ਤੁਹਾਡੀ ਭਾਸ਼ਾ ਵਿੱਚ ਗੱਲ ਕਰੇਗੀ।",
+    "bn": "Easy Casa Italia / Easy Legenda\nকলব্যাক অনুরোধের জন্য ধন্যবাদ। হোয়াটসঅ্যাপে কল পেতে এই নম্বর থেকে কলের অনুমতি দিন। আমাদের সহকারী আপনার ভাষায় আপনার সাথে কথা বলবে।",
+    "ar": "Easy Casa Italia / Easy Legenda\nشكرًا على طلب معاودة الاتصال. لتلقي المكالمة على واتساب، يُرجى السماح بالمكالمات من هذا الرقم. ستتحدث معكم مساعدتنا بلغتكم."
+  }
+}

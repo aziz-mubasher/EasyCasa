@@ -9,6 +9,7 @@ import type { ApiConfig } from '../config';
 import { InjectConfig } from '../config/inject-config.decorator';
 import { AdminAuditService } from '../authority/admin-audit.service';
 import templateCorpus from './intake/EC_WA_templates_v1.json';
+import { callPermissionCatalog, callPermissionTemplate } from './call-permission-templates';
 import { approvedLanguageCodes } from './intake/rules';
 import { redactPreview } from './redact';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
@@ -55,6 +56,11 @@ export class WhatsAppLiveInboxService {
       ),
       templateName: FOLLOW_UP,
       locales: Object.keys(followUpLocales()),
+      callPermission: callPermissionCatalog().map((row) => ({
+        locale: row.locale,
+        name: row.name,
+        body: row.body,
+      })),
     };
   }
 
@@ -105,7 +111,7 @@ export class WhatsAppLiveInboxService {
     if (!staffName || !subject) throw new BadRequestException('name and subject are required');
     if (staffName.length > 80 || subject.length > 200) throw new BadRequestException('follow-up text is too long');
     if (!pack) throw new BadRequestException('follow-up language is not in the template pack');
-    await this.assertApproved(pack.meta_language, locale);
+    await this.assertApproved(FOLLOW_UP, pack.meta_language, locale);
     const detail = await this.loadOwn(conversationId);
     if (!detail.whatsappUserId) throw new BadRequestException('this chat has no WhatsApp recipient');
     const body = outboundTemplateBody({
@@ -135,8 +141,45 @@ export class WhatsAppLiveInboxService {
     };
   }
 
-  private async assertApproved(metaLanguage: string, locale: string): Promise<void> {
-    const rows = await this.cloud.templateLanguageStatuses(FOLLOW_UP);
+  async sendCallPermission(
+    conversationId: string,
+    actorUserId: string,
+    input: { locale: string },
+  ) {
+    const row = callPermissionTemplate(input.locale);
+    if (!row) throw new BadRequestException('call permission language is not in the pack');
+    await this.assertApproved(row.name, row.language, row.locale);
+    const detail = await this.loadOwn(conversationId);
+    if (!detail.whatsappUserId) throw new BadRequestException('this chat has no WhatsApp recipient');
+    const body = outboundTemplateBody({
+      phoneNumberId: this.config.WHATSAPP_LIVE_PHONE_NUMBER_ID.trim(),
+      whatsappUserId: detail.whatsappUserId,
+      templateName: row.name,
+      languageCode: row.language,
+      bodyParams: [],
+      agentId: this.config.WHATSAPP_LIVE_AGENT_ID.trim(),
+    });
+    const sent = await this.elevenFetch('/v1/convai/whatsapp/outbound-message', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    const conversation = sent && typeof sent === 'object' ? (sent as { conversation_id?: unknown }).conversation_id : null;
+    await this.audit.record({
+      actorUserId,
+      action: 'whatsapp_live_template',
+      resourceType: 'whatsapp_live_conversation',
+      resourceId: conversationId,
+      reason: `template=${row.name} locale=${row.locale}`,
+    });
+    return {
+      templateName: row.name,
+      locale: row.locale,
+      providerConversationId: typeof conversation === 'string' ? conversation : null,
+    };
+  }
+
+  private async assertApproved(templateName: string, metaLanguage: string, locale: string): Promise<void> {
+    const rows = await this.cloud.templateLanguageStatuses(templateName);
     const approved = approvedLanguageCodes(rows);
     if (approved == null || approved.length === 0) return;
     if (!approved.includes(metaLanguage) && !approved.includes(locale)) {

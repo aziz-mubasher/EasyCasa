@@ -479,3 +479,13 @@ body:
 example:
   {{1}}: 10:30
 ```
+
+## ec_callback_permission — call on the lead’s WhatsApp number
+
+One utility template, already APPROVED on WABA `1139868405295155` (the account that holds +39 379 330 6605). Languages: it, en, es, fr, ro, ru, uk, ur, hi, pa, bn, ar. No body variables. Meta draws Allow / Don’t allow from `CALL_PERMISSION_REQUEST`. The Nest `WHATSAPP_TOKEN` cannot read this account; status uses `META_6605_TOKEN` on the voice host.
+
+```bash
+META_6605_TOKEN=… node scripts/submit-ec-call-permission.mjs
+```
+
+The script only writes WABA `1139868405295155` and only creates a language that is missing. Bodies are the approved text in `apps/api/src/whatsapp/ec-call-permission.json`.

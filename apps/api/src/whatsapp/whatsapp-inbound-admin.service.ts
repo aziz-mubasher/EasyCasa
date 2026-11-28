@@ -20,6 +20,7 @@ import { maskWaId, redactPreview } from './redact';
 import { waHandleFor } from './wa-handle';
 import { toE164 } from './whatsapp-inbound.service';
 import { WhatsAppCloudClient } from './whatsapp-cloud.client';
+import { callPermissionTemplate } from './call-permission-templates';
 import { archiveSendsOnLiveNumber } from './whatsapp-live-inbox.service';
 import { WaPresenceService } from './wa-presence';
 import { WhatsAppJourneyService } from './whatsapp-journey.service';
@@ -718,6 +719,52 @@ export class WhatsAppInboundAdminService {
       reason: `template=${templateName} locale=${locale}`,
     });
     return { templateName, locale, providerMessageId: send.messageId };
+  }
+
+  /**
+   * Call-permission utility template. The lead sees Allow / Don't allow.
+   * Same live-number guard as the follow-up.
+   */
+  async sendCallPermission(handle: string, actorUserId: string, input: { locale: string }) {
+    const row = callPermissionTemplate(input.locale);
+    if (!row) throw new BadRequestException('call permission language is not in the pack');
+    if (!archiveSendsOnLiveNumber(this.config.WHATSAPP_PHONE_NUMBER_ID, this.config.WHATSAPP_LIVE_PHONE_NUMBER_ID)) {
+      throw new BadRequestException('This inbox number is not the live line. Open Live line and send the call permission there.');
+    }
+    const waId = await this.resolveHandle(handle);
+    const contact = await this.journey.getByWaId(waId);
+    if (contact?.blockedAt) throw new BadRequestException('contact is blocked');
+    const approved = approvedLanguageCodes(await this.cloud.templateLanguageStatuses(row.name));
+    if (approved && approved.length > 0 && !approved.includes(row.language)) {
+      throw new BadRequestException('template not approved in this language');
+    }
+    const send = await this.cloud.sendTemplate({
+      phoneE164: toE164(waId),
+      templateName: row.name,
+      languageCode: row.language,
+      bodyParams: [],
+    });
+    if (!send.ok) throw new BadRequestException(`whatsapp template failed (${send.reason})`);
+    const sentAt = new Date();
+    await this.db.insert(waThreadOutbound).values({
+      waId,
+      waHandle: handle,
+      providerMessageId: send.messageId,
+      body: `Call permission (${row.locale})\n${row.body}`,
+      templateName: row.name,
+      windowOpen: false,
+      source: 'operator',
+      actorUserId,
+      sentAt,
+    });
+    await this.audit.record({
+      actorUserId,
+      action: 'whatsapp_inbound_template',
+      resourceType: 'wa_inbound_thread',
+      resourceId: waId,
+      reason: `template=${row.name} locale=${row.locale}`,
+    });
+    return { templateName: row.name, locale: row.locale, providerMessageId: send.messageId };
   }
 
   /** EC-WA-INTAKE-2 — lead list for #whatsapp/leads. Link only; no message bodies. */
