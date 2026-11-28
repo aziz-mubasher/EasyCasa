@@ -60,6 +60,7 @@ describe('WhatsAppInboundAdminService listMessagesForHandle', () => {
       { getByWaId: vi.fn().mockResolvedValue(null), crmFormName: vi.fn().mockResolvedValue(null) } as never,
       { clearLead: vi.fn() } as never,
       { WA_HANDLE_SECRET: SECRET } as never,
+      { sendToWaId: vi.fn() } as never,
     );
     await expect(
       svc.listMessagesForHandle(handle, 'actor-1', {}, now),
@@ -81,10 +82,60 @@ describe('WhatsAppInboundAdminService listMessagesForHandle', () => {
       { getByWaId: vi.fn().mockResolvedValue(null), crmFormName: vi.fn().mockResolvedValue(null) } as never,
       { clearLead: vi.fn() } as never,
       { WA_HANDLE_SECRET: SECRET } as never,
+      { sendToWaId: vi.fn() } as never,
     );
     await expect(
       svc.listMessagesForHandle('deadbeefdeadbeefdeadbeefdeadbeef', 'actor-1', {}, now),
     ).rejects.toBeInstanceOf(NotFoundException);
     expect(audit.record).not.toHaveBeenCalled();
+  });
+});
+
+describe('WhatsAppInboundAdminService archive template send', () => {
+  const waId = '393331112233';
+  const handle = waHandleFor(waId, SECRET);
+
+  function writable() {
+    const self: Record<string, unknown> = {};
+    self.values = vi.fn(async () => undefined);
+    self.set = vi.fn(() => self);
+    self.where = vi.fn(async () => undefined);
+    return self;
+  }
+
+  it('sends call permission through the live line when this API owns a different number', async () => {
+    const sendToWaId = vi.fn().mockResolvedValue({ providerConversationId: 'conv_sent' });
+    const db = {
+      select: vi.fn().mockReturnValue(chain([{ waId }])),
+      insert: vi.fn(() => writable()),
+      update: vi.fn(() => writable()),
+      execute: vi.fn(),
+    };
+    const audit = { record: vi.fn().mockResolvedValue(undefined) };
+    const cloud = { templateLanguageStatuses: vi.fn().mockResolvedValue(null), sendTemplate: vi.fn() };
+    const svc = new WhatsAppInboundAdminService(
+      db as never,
+      audit as never,
+      cloud as never,
+      { getByWaId: vi.fn().mockResolvedValue(null) } as never,
+      { clearLead: vi.fn() } as never,
+      {
+        WA_HANDLE_SECRET: SECRET,
+        WHATSAPP_PHONE_NUMBER_ID: '2045',
+        WHATSAPP_LIVE_PHONE_NUMBER_ID: '1448737268325965',
+      } as never,
+      { sendToWaId } as never,
+    );
+    const sent = await svc.sendCallPermission(handle, 'actor-1', { locale: 'it' });
+    expect(sent.templateName).toBe('ec_callback_permission');
+    expect(sendToWaId).toHaveBeenCalledWith({
+      waId,
+      templateName: 'ec_callback_permission',
+      languageCode: 'it',
+      bodyParams: [],
+    });
+    expect(cloud.sendTemplate).not.toHaveBeenCalled();
+    expect(JSON.stringify(sent)).not.toContain(waId);
+    expect(audit.record.mock.calls[0]?.[0]?.reason).not.toContain(waId);
   });
 });

@@ -42,12 +42,11 @@ function liveIdFromHash(): string | null {
 }
 
 export function apiErrorText(err: unknown, fallback: string): string {
-  if (err && typeof err === 'object' && 'body' in err) {
-    const message = (err as { body?: { message?: unknown } }).body?.message;
-    if (typeof message === 'string' && message.trim()) return message;
-    if (Array.isArray(message) && message.every((item) => typeof item === 'string')) return message.join(', ');
-  }
-  return err instanceof Error ? err.message : fallback;
+  const body = err && typeof err === 'object' && 'body' in err ? (err as { body?: unknown }).body : undefined;
+  const message = body && typeof body === 'object' && 'message' in body ? (body as { message?: unknown }).message : body;
+  if (typeof message === 'string' && message.trim() && !message.startsWith('API ')) return message;
+  if (Array.isArray(message) && message.every((item) => typeof item === 'string')) return message.join(', ');
+  return err instanceof Error && !err.message.startsWith('API ') ? err.message : fallback;
 }
 
 export function WhatsAppLiveInbox() {
@@ -166,59 +165,57 @@ export function WhatsAppLiveInbox() {
             </div>
           ) : (
             <>
-              <ul className="wa-messages ecwa__bubbles">
+              <ul className="wa-messages ecwa__bubbles ecwa__thread-scroll">
                 {(detail.data?.turns ?? []).map((turn, index) => (
                   <li key={`${turn.role}-${index}`} className={turn.role === 'agent' ? 'ecwa__bubble ecwa__bubble--out' : 'ecwa__bubble'}>
                     {turn.text}
                   </li>
                 ))}
               </ul>
-              <div className="ecwa__thread-view">
-                {detail.isError ? <p className="ecwa__error">{apiErrorText(detail.error, 'Could not open this chat')}</p> : null}
+              {detail.isError ? <p className="ecwa__error">{apiErrorText(detail.error, 'Could not open this chat')}</p> : null}
+              <div className="ecwa__compose">
+                <div className="ecwa__compose-tabs" role="tablist">
+                  <button type="button" role="tab" aria-selected className="ecwa__compose-tab ecwa__compose-tab--active">Template</button>
+                </div>
+                <div className="ecwa__template-pane">
+                  <form
+                    className="ecwa__composer-row"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      if (askCall.isPending) return;
+                      askCall.mutate();
+                    }}
+                  >
+                    <select className="ecwa__line" value={callLocale} onChange={(e) => setCallLocale(e.target.value)} aria-label="Call permission language">
+                      {(status.data?.callPermission ?? [{ locale: 'it', name: 'ec_callback_permission', body: '' }]).map((row) => (
+                        <option key={row.locale} value={row.locale}>{row.locale}</option>
+                      ))}
+                    </select>
+                    <button type="submit" className="btn btn--sm" disabled={askCall.isPending}>
+                      Ask to call on WhatsApp
+                    </button>
+                  </form>
+                  <form
+                    className="ecwa__composer-row"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      if (!staffName.trim() || !subject.trim() || send.isPending) return;
+                      send.mutate();
+                    }}
+                  >
+                    <input className="ecwa__line" placeholder="Your name" value={staffName} maxLength={80} onChange={(e) => setStaffName(e.target.value)} />
+                    <input className="ecwa__line" placeholder="What they asked about" value={subject} maxLength={200} onChange={(e) => setSubject(e.target.value)} />
+                    <select className="ecwa__line" value={locale} onChange={(e) => setLocale(e.target.value as (typeof LOCALES)[number])} aria-label="Follow-up language">
+                      {LOCALES.map((code) => <option key={code} value={code}>{code}</option>)}
+                    </select>
+                    <button type="submit" className="btn btn--sm" disabled={!staffName.trim() || !subject.trim() || send.isPending}>
+                      Send follow-up
+                    </button>
+                  </form>
+                  {sent || callSent ? <p className="muted">Template sent.</p> : null}
+                  {sendError || callError ? <p className="ecwa__error">{sendError || callError}</p> : null}
+                </div>
               </div>
-              <form
-                className="ecwa__composer"
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  if (!staffName.trim() || !subject.trim() || send.isPending) return;
-                  send.mutate();
-                }}
-              >
-                <input className="ecwa__composer-input" placeholder="Your name" value={staffName} maxLength={80} onChange={(e) => setStaffName(e.target.value)} />
-                <input className="ecwa__composer-input" placeholder="What they asked about" value={subject} maxLength={200} onChange={(e) => setSubject(e.target.value)} />
-                <select className="ecwa__composer-input" value={locale} onChange={(e) => setLocale(e.target.value as (typeof LOCALES)[number])}>
-                  {LOCALES.map((code) => <option key={code} value={code}>{code}</option>)}
-                </select>
-                <button type="submit" className="btn btn--sm" disabled={!staffName.trim() || !subject.trim() || send.isPending}>
-                  Send follow-up
-                </button>
-              </form>
-              <p className="muted">Template ec_request_followup. It can go out when free text is closed.</p>
-              {sent ? <p className="muted">Follow-up sent.</p> : null}
-              {sendError ? <p className="ecwa__error">{sendError}</p> : null}
-              <form
-                className="ecwa__composer"
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  if (askCall.isPending) return;
-                  askCall.mutate();
-                }}
-              >
-                <select className="ecwa__composer-input" value={callLocale} onChange={(e) => setCallLocale(e.target.value)}>
-                  {(status.data?.callPermission ?? [{ locale: 'it', name: 'ec_callback_permission', body: '' }]).map((row) => (
-                    <option key={row.locale} value={row.locale}>{row.locale}</option>
-                  ))}
-                </select>
-                <button type="submit" className="btn btn--sm" disabled={askCall.isPending}>
-                  Ask to call on WhatsApp
-                </button>
-              </form>
-              <p className="muted">
-                {(status.data?.callPermission ?? []).find((row) => row.locale === callLocale)?.body
-                  || 'Asks permission to call this lead on their WhatsApp number. WhatsApp shows Allow and Don’t allow.'}
-              </p>
-              {callSent ? <p className="muted">Call permission sent.</p> : null}
-              {callError ? <p className="ecwa__error">{callError}</p> : null}
             </>
           )}
         </div>
