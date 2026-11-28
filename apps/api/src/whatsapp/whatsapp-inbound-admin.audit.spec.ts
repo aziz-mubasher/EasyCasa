@@ -103,8 +103,8 @@ describe('WhatsAppInboundAdminService archive template send', () => {
     return self;
   }
 
-  it('sends call permission through the live line when this API owns a different number', async () => {
-    const sendToWaId = vi.fn().mockResolvedValue({ providerConversationId: 'conv_sent' });
+  it('sends call permission through Graph on the live number, not ElevenLabs', async () => {
+    const sendToWaId = vi.fn();
     const db = {
       select: vi.fn().mockReturnValue(chain([{ waId }])),
       insert: vi.fn(() => writable()),
@@ -112,7 +112,11 @@ describe('WhatsAppInboundAdminService archive template send', () => {
       execute: vi.fn(),
     };
     const audit = { record: vi.fn().mockResolvedValue(undefined) };
-    const cloud = { templateLanguageStatuses: vi.fn().mockResolvedValue(null), sendTemplate: vi.fn() };
+    const cloud = {
+      templateLanguageStatuses: vi.fn().mockResolvedValue(null),
+      sendTemplate: vi.fn(),
+      sendCallPermissionTemplate: vi.fn().mockResolvedValue({ ok: true, messageId: 'wamid.1' }),
+    };
     const svc = new WhatsAppInboundAdminService(
       db as never,
       audit as never,
@@ -128,11 +132,12 @@ describe('WhatsAppInboundAdminService archive template send', () => {
     );
     const sent = await svc.sendCallPermission(handle, 'actor-1', { locale: 'it' });
     expect(sent.templateName).toBe('ec_callback_permission');
-    expect(sendToWaId).toHaveBeenCalledWith({
-      waId,
+    expect(sent.providerMessageId).toBe('wamid.1');
+    expect(sendToWaId).not.toHaveBeenCalled();
+    expect(cloud.sendCallPermissionTemplate).toHaveBeenCalledWith({
+      phoneE164: '+393331112233',
       templateName: 'ec_callback_permission',
       languageCode: 'it',
-      bodyParams: [],
     });
     expect(cloud.sendTemplate).not.toHaveBeenCalled();
     expect(JSON.stringify(sent)).not.toContain(waId);

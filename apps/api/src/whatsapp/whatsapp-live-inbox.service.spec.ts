@@ -4,7 +4,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { WhatsAppLiveInboxService, archiveSendsOnLiveNumber } from './whatsapp-live-inbox.service';
 
 function service(overrides?: { key?: string; fetchImpl?: typeof fetch }) {
-  const cloud = { templateLanguageStatuses: vi.fn().mockResolvedValue(null) };
+  const cloud = {
+    templateLanguageStatuses: vi.fn().mockResolvedValue(null),
+    sendCallPermissionTemplate: vi.fn().mockResolvedValue({ ok: true, messageId: 'wamid.perm' }),
+  };
   const audit = { record: vi.fn().mockResolvedValue(undefined) };
   const config = {
     ELEVENLABS_API_KEY: overrides?.key ?? 'test-key',
@@ -103,28 +106,28 @@ describe('WhatsAppLiveInboxService', () => {
     vi.unstubAllGlobals();
   });
 
-  it('sends the call-permission template with no body parameters', async () => {
-    const fetchImpl = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          conversation_id: 'conv_abc12345',
-          metadata: {
-            whatsapp: { whatsapp_phone_number_id: '1448737268325965', whatsapp_user_id: '393001112233' },
-          },
-          transcript: [],
-        }),
-      })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ conversation_id: 'conv_perm1' }) });
+  it('sends the call-permission template through Graph on the live number', async () => {
+    const fetchImpl = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        conversation_id: 'conv_abc12345',
+        metadata: {
+          whatsapp: { whatsapp_phone_number_id: '1448737268325965', whatsapp_user_id: '393001112233' },
+        },
+        transcript: [],
+      }),
+    });
     vi.stubGlobal('fetch', fetchImpl);
-    const { svc } = service();
+    const { svc, cloud } = service();
     const sent = await svc.sendCallPermission('conv_abc12345', 'user-1', { locale: 'it' });
     expect(sent.templateName).toBe('ec_callback_permission');
-    const body = JSON.parse(String(fetchImpl.mock.calls[1]?.[1]?.body));
-    expect(body.template_name).toBe('ec_callback_permission');
-    expect(body.template_language_code).toBe('it');
-    expect(body.template_params).toBeUndefined();
-    expect(body.whatsapp_user_id).toBe('393001112233');
+    expect(sent.providerConversationId).toBe('wamid.perm');
+    expect(cloud.sendCallPermissionTemplate).toHaveBeenCalledWith({
+      phoneE164: '393001112233',
+      templateName: 'ec_callback_permission',
+      languageCode: 'it',
+    });
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
     expect(JSON.stringify(sent)).not.toContain('393001112233');
     vi.unstubAllGlobals();
   });

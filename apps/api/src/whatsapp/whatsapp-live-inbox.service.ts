@@ -179,19 +179,14 @@ export class WhatsAppLiveInboxService {
     await this.assertApproved(row.name, row.language, row.locale);
     const detail = await this.loadOwn(conversationId);
     if (!detail.whatsappUserId) throw new BadRequestException('this chat has no WhatsApp recipient');
-    const body = outboundTemplateBody({
-      phoneNumberId: this.config.WHATSAPP_LIVE_PHONE_NUMBER_ID.trim(),
-      whatsappUserId: detail.whatsappUserId,
+    const send = await this.cloud.sendCallPermissionTemplate({
+      phoneE164: detail.whatsappUserId,
       templateName: row.name,
       languageCode: row.language,
-      bodyParams: [],
-      agentId: this.config.WHATSAPP_LIVE_AGENT_ID.trim(),
     });
-    const sent = await this.elevenFetch('/v1/convai/whatsapp/outbound-message', {
-      method: 'POST',
-      body: JSON.stringify(body),
-    });
-    const conversation = sent && typeof sent === 'object' ? (sent as { conversation_id?: unknown }).conversation_id : null;
+    if (!send.ok) {
+      throw new BadRequestException(`whatsapp template failed (${send.message ?? send.reason})`);
+    }
     await this.audit.record({
       actorUserId,
       action: 'whatsapp_live_template',
@@ -202,7 +197,7 @@ export class WhatsAppLiveInboxService {
     return {
       templateName: row.name,
       locale: row.locale,
-      providerConversationId: typeof conversation === 'string' ? conversation : null,
+      providerConversationId: send.messageId,
     };
   }
 
@@ -241,7 +236,12 @@ export class WhatsAppLiveInboxService {
     });
     const json = await res.json().catch(() => null);
     if (!res.ok) {
-      const detail = json && typeof json === 'object' && 'detail' in json ? String((json as { detail: unknown }).detail) : res.statusText;
+      const raw = json && typeof json === 'object' && 'detail' in json ? (json as { detail: unknown }).detail : null;
+      const detail = typeof raw === 'string'
+        ? raw
+        : raw && typeof raw === 'object' && 'message' in raw
+          ? String((raw as { message: unknown }).message)
+          : res.statusText;
       throw new BadRequestException(`live line refused the request (${detail})`);
     }
     return json;
