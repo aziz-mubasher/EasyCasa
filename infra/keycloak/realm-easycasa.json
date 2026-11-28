@@ -119,6 +119,10 @@
         "description": "Admin portal — marketing (Analytics only; no operations rights)"
       },
       {
+        "name": "admin_whatsapp",
+        "description": "Admin portal — EC WhatsApp inbox only (no other admin screens)"
+      },
+      {
         "name": "crm-admin",
         "description": "K EC 4.1 CRM — full access incl. export/erasure"
       },

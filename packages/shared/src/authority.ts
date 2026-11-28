@@ -34,7 +34,9 @@ export type AdminRole =
   | 'dpo'
   | 'aml'
   | 'superadmin'
-  | 'marketing';
+  | 'marketing'
+  /** EC WhatsApp inbox only — no other admin screens. */
+  | 'whatsapp';
 
 /** Realm role names that grant AdminRole. Bare `admin` grants capability only — fail closed. */
 export const ADMIN_ROLE_REALM: Readonly<Record<string, AdminRole>> = {
@@ -45,6 +47,7 @@ export const ADMIN_ROLE_REALM: Readonly<Record<string, AdminRole>> = {
   admin_aml: 'aml',
   admin_superadmin: 'superadmin',
   admin_marketing: 'marketing',
+  admin_whatsapp: 'whatsapp',
 };
 
 /**
@@ -75,15 +78,22 @@ export function capabilitiesFromRoles(roles: readonly string[]): Capability[] {
     if (r === 'admin' || r.startsWith('admin_')) caps.add('admin');
     // K EC 4.1 — CRM realm roles grant admin capability (portal + /admin/crm).
     if (r.startsWith('crm-')) caps.add('admin');
-    // EC-19 / EC-20 — inbound WhatsApp viewer + reply: support / operations / superadmin.
-    // Bare `admin` and other admin_* personas do not get these capabilities.
+    // EC-19 / EC-20 — inbound WhatsApp viewer + reply.
+    // admin_whatsapp is the inbox-only persona and does not get callbacks.
+    if (
+      r === 'admin_support' ||
+      r === 'admin_operations' ||
+      r === 'admin_superadmin' ||
+      r === 'admin_whatsapp'
+    ) {
+      caps.add('whatsapp:inbound:read');
+      caps.add('whatsapp:inbound:reply');
+    }
     if (
       r === 'admin_support' ||
       r === 'admin_operations' ||
       r === 'admin_superadmin'
     ) {
-      caps.add('whatsapp:inbound:read');
-      caps.add('whatsapp:inbound:reply');
       caps.add('callbacks:read');
     }
     if (r === 'admin_operations' || r === 'admin_superadmin') {
